@@ -150,6 +150,7 @@ td:first-child,th:first-child{white-space:nowrap;}
 td code{white-space:nowrap;}
 pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
+.fsum { margin: .2em 0 1.1em; color: var(--muted); font-size: .95em; line-height: 1.7; }
 </style>
 </head>
 <body>
@@ -289,6 +290,7 @@ pre code .cc{display:inline-block;vertical-align:top;}
 <h2 id="s1-overview">速览</h2><p><strong>本章速览</strong>——stdio.h 把"格式化"与"流"两件事捏在一起，先记住每个函数的返回值含义，一半的坑就绕过去了。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td><code>printf</code></td><td>按格式把数据写到标准输出</td><td>格式串与实参类型必须严格对应，否则是未定义行为；永远不要把变量直接当格式串传入</td></tr><tr><td><code>fprintf</code></td><td>按格式写入指定的文件流</td><td>目标流须以写或追加模式打开；诊断信息写 stderr，可绕开 stdout 的缓冲延迟</td></tr><tr><td><code>sprintf</code> / <code>snprintf</code></td><td>按格式写入字符串缓冲区</td><td><code>sprintf</code> 不限长度，溢出即踩内存 <span class="badge dead">禁用</span>；一律用 <code>snprintf</code> <span class="badge ok">推荐</span>，但它返回的是"本应写入的长度"，可能大于缓冲区</td></tr><tr><td><code>sscanf</code></td><td>从字符串中按格式解析数据</td><td>%s 不加宽度必然溢出，写成 %49s；判断成功与否要看返回的匹配项个数，而不是看变量</td></tr><tr><td><code>scanf</code></td><td>从标准输入按格式读取</td><td>会把换行留在输入缓冲里，和 <code>fgets</code> 混用即出错；交互式输入改用 <code>fgets</code> + <code>sscanf</code> <span class="badge ok">推荐</span></td></tr><tr><td><code>fopen</code> / <code>fopen_s</code></td><td>打开文件并返回流指针</td><td>返回值必须判空再用；处理非文本数据要加 "b"，否则 Windows 会改写换行符。<code>fopen_s</code> 属 C11 可选附录，跨平台不保证存在</td></tr><tr><td><code>fclose</code></td><td>关闭流并刷新其缓冲区</td><td>忘记关闭可能丢掉尾部数据；返回值能暴露最后一次写入失败，别一律忽略</td></tr><tr><td><code>fread</code></td><td>从流中读入若干个定长块</td><td>返回的是成功读取的"块数"而非字节数；数量不足时须用 <code>feof</code> / <code>ferror</code> 区分读完与出错</td></tr><tr><td><code>fwrite</code></td><td>把内存中的数据块写入流</td><td>直接整体写结构体不可移植，对齐填充和字节序都会变；返回块数同样要校验</td></tr><tr><td><code>fgets</code></td><td>读入一行，长度受缓冲区限制</td><td>安全但会把 '\n' 一并留下，通常需手动截断；它的前辈 <code>gets</code> 已从标准中删除 <span class="badge dead">禁用</span></td></tr><tr><td><code>fputs</code></td><td>把字符串原样写入流</td><td>不会自动补换行，这一点和 <code>puts</code> 相反，最常见的"输出粘一行"就源于此</td></tr><tr><td><code>fgetc</code> / <code>fputc</code></td><td>逐个字符地读入与写出</td><td><code>fgetc</code> 返回 int 不是 char；用 char 变量接收会把 0xFF 误判成 EOF</td></tr><tr><td><code>fseek</code> / <code>ftell</code> / <code>rewind</code></td><td>定位、查询与重置读写位置</td><td>文本模式下的偏移量只能原样回传，不能做加减；超 2GB 文件需 <code>fseeko</code> 或 <code>_fseeki64</code>。<code>rewind</code> 会顺手清掉错误标志</td></tr><tr><td><code>fflush</code></td><td>强制把缓冲中的数据写出</td><td>仅对输出流有定义，<code>fflush(stdin)</code> 是未定义行为 <span class="badge dead">禁用</span>，清输入请循环读到换行</td></tr><tr><td><code>feof</code> / <code>ferror</code></td><td>查询流的结束标志与错误标志</td><td><code>feof</code> 要读失败之后才为真，拿它当循环条件会多处理一次数据；正确写法是判断读取函数本身的返回值</td></tr><tr><td><code>remove</code> / <code>rename</code></td><td>删除文件、重命名或移动文件</td><td>目标已存在时的行为由实现决定，可能失败也可能覆盖；操作不可撤销，动手前先确认路径</td></tr><tr><td><code>perror</code></td><td>按 errno 打印带前缀的错误信息</td><td>必须紧接在失败调用之后使用，中间插入任何库调用都可能改写 errno</td></tr><tr><td><code>setvbuf</code></td><td>设置流的缓冲方式与缓冲区大小</td><td>只能在打开之后、任何 I/O 之前调用；若自备缓冲区，其生命周期必须长于该流</td></tr></tbody></table>
 
 <h2 id="s1-printf">printf</h2>
+<p class="fsum">按格式串把变量拼接成文本写到标准输出，是最常用的屏幕打印函数。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> printf(<span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
@@ -325,6 +327,7 @@ pre code .cc{display:inline-block;vertical-align:top;}
 <div class="note new"><span class="t">现代提示</span><p>C++ 中优先用类型安全的 <code>std::format</code>(C++20)/<code>std::print</code>(C++23),占位符写错在编译期即可发现。</p></div>
 
 <h2 id="s1-fprintf">fprintf</h2>
+<p class="fsum">和 printf 一样做格式化输出，但可以指定写到哪个流，写日志、往 stderr 报错都靠它。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> fprintf(FILE *stream, <span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
@@ -344,6 +347,7 @@ pre code .cc{display:inline-block;vertical-align:top;}
 <p><code>printf(...)</code> 等价于 <code>fprintf(stdout, ...)</code>。<code>stderr</code> 默认无缓冲(或行缓冲),诊断信息应写这里而不是 <code>stdout</code>,否则程序异常终止时缓冲中的提示可能根本没来得及输出。</p>
 
 <h2 id="s1-sprintf">sprintf / snprintf</h2>
+<p class="fsum">把格式化结果写进内存里的字符串而不是屏幕；snprintf 多一个容量上限，sprintf 毫无防护、极易写爆缓冲区。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> sprintf(<span class="kw">char</span> *buf, <span class="kw">const</span> <span class="kw">char</span> *format, ...);
 <span class="kw">int</span> snprintf(<span class="kw">char</span> *buf, <span class="kw">size_t</span> n, <span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
@@ -369,6 +373,7 @@ pre code .cc{display:inline-block;vertical-align:top;}
 <div class="note new"><span class="t">现代提示</span><p>MSVC 对 <code>sprintf</code> 报 C4996 弃用警告,并提供 <code>sprintf_s</code>(越界时直接终止而非静默截断)。C++ 里直接用 <code>std::string</code> + <code>std::format</code>,缓冲区大小问题整个消失。</p></div>
 
 <h2 id="s1-sscanf">sscanf</h2>
+<p class="fsum">从一段字符串里按格式抠出数字、单词等字段，常配合 fgets 用来逐行解析文本。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> sscanf(<span class="kw">const</span> <span class="kw">char</span> *src, <span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
@@ -393,6 +398,7 @@ sscanf(line, <span>"%19s"</span>, word);   <span class="cm">// %s 必须带宽�
 <p>"<code>fgets</code> 读一行 + <code>sscanf</code> 解析"是替代 <code>scanf</code> 的标准安全套路:行边界由 <code>fgets</code> 控制,解析失败也不会污染输入流。需要精确错误定位的数值解析用 <code>strtol</code>/<code>strtod</code> 更好。</p>
 
 <h2 id="s1-scanf">scanf</h2>
+<p class="fsum">直接从键盘输入按格式读取数据，写起来省事，但残留换行和缓冲区溢出的坑特别多。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> scanf(<span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
@@ -416,6 +422,7 @@ sscanf(line, <span>"%19s"</span>, word);   <span class="cm">// %s 必须带宽�
 <p>MSVC 对 <code>scanf</code> 报 C4996,其 <code>scanf_s</code>(C11 附录 K)要求 <code>%s</code>/<code>%c</code> 后额外传缓冲区大小实参,如 <code>scanf_s("%s", name, (rsize_t)sizeof name)</code>;该扩展可移植性有限。C++ 等价物是 <code>std::cin &gt;&gt; x</code> 配合状态检查。</p>
 
 <h2 id="s1-fopen">fopen / fopen_s</h2>
+<p class="fsum">按指定模式打开文件并拿到流指针，是后续一切文件读写的起点；fopen_s 改用参数传出流、返回错误码。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>FILE *fopen(<span class="kw">const</span> <span class="kw">char</span> *filename, <span class="kw">const</span> <span class="kw">char</span> *mode);
 errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</span> *filename, <span class="kw">const</span> <span class="kw">char</span> *mode);</code></pre>
@@ -447,6 +454,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p>MSVC 下 <code>fopen</code> 触发 C4996,可换 <code>fopen_s</code> 或定义 <code>_CRT_SECURE_NO_WARNINGS</code>;<code>fopen_s</code> 属 C11 可选附录,跨平台不保证存在。C++ 等价物为 <code>std::ifstream</code>/<code>std::ofstream</code>(RAII 自动关闭)。</p>
 
 <h2 id="s1-fclose">fclose</h2>
+<p class="fsum">关闭文件流，顺带把缓冲区里还没写出去的数据刷到磁盘，漏掉它就可能丢数据。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> fclose(FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
@@ -464,6 +472,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p>对同一指针重复 <code>fclose</code> 是未定义行为;关闭后置 <code>NULL</code> 是廉价的保险。</p>
 
 <h2 id="s1-fread">fread</h2>
+<p class="fsum">从流里按「元素大小 × 个数」成块读入内存，是读二进制文件的主力函数。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">size_t</span> fread(<span class="kw">void</span> *ptr, <span class="kw">size_t</span> size, <span class="kw">size_t</span> count, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
@@ -486,6 +495,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 }</code></pre>
 
 <h2 id="s1-fwrite">fwrite</h2>
+<p class="fsum">把内存里的一块数据按元素成块写进流，是把数据原样存盘的主力函数。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">size_t</span> fwrite(<span class="kw">const</span> <span class="kw">void</span> *ptr, <span class="kw">size_t</span> size, <span class="kw">size_t</span> count, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
@@ -509,6 +519,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p>直接落盘结构体会把填充字节和本机字节序一并写进文件,跨平台读取会出问题;需要可移植格式时应逐字段序列化。</p>
 
 <h2 id="s1-fgets">fgets</h2>
+<p class="fsum">从流里读一整行文本到定长缓冲区，读多少受容量限制，是已被删除的 gets 的安全替代品。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *fgets(<span class="kw">char</span> *buf, <span class="kw">int</span> n, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
@@ -533,6 +544,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <div class="note dead"><span class="t">禁用</span><p>老教材里的 <code>gets</code> 无法限制读入长度,是教科书级溢出漏洞,已被 C11 从标准中<strong>删除</strong>,任何场合都不要用。C++ 等价物是 <code>std::getline(std::cin, s)</code>,自动扩容且不留换行。</p></div>
 
 <h2 id="s1-fputs">fputs</h2>
+<p class="fsum">把一个字符串原样写到流里，既不做格式化，也不会自动补上换行符。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> fputs(<span class="kw">const</span> <span class="kw">char</span> *s, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
@@ -551,6 +563,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p><code>puts</code> 只能写 <code>stdout</code> 且自动补 <code>\n</code>,与 <code>fputs</code> 行为相反,最常见的"输出粘成一行"就源于此。输出固定字符串时 <code>fputs</code> 比 <code>printf</code> 更快,也没有格式串风险。</p>
 
 <h2 id="s1-fgetc">fgetc / fputc</h2>
+<p class="fsum">一次只读或只写一个字符，用于逐字符扫描、复制文件这类最细粒度的流操作。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> fgetc(FILE *stream);
 <span class="kw">int</span> fputc(<span class="kw">int</span> c, FILE *stream);</code></pre>
@@ -570,6 +583,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <div class="note dead"><span class="t">经典错误</span><p>用 <code>char c</code> 接收 <code>fgetc</code> 的返回值:若 <code>char</code> 无符号,<code>c != EOF</code> 永远为真造成死循环;若有符号,字节 0xFF 会被误判成 <code>EOF</code> 提前退出。接收变量必须声明为 <code>int</code>。</p></div>
 
 <h2 id="s1-fseek">fseek / ftell / rewind</h2>
+<p class="fsum">移动、查询和重置文件的读写位置，让文件可以随机访问，而不只是从头读到尾。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> fseek(FILE *stream, <span class="kw">long</span> offset, <span class="kw">int</span> origin);
 <span class="kw">long</span> ftell(FILE *stream);
@@ -591,6 +605,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p>文本模式下 <code>ftell</code> 的值只保证能原样传回 <code>fseek</code>,不宜当字节数做算术;超过 2GB 的文件用 <code>_fseeki64</code>/<code>_ftelli64</code>(MSVC)或 <code>fseeko</code>/<code>ftello</code>(POSIX)。</p>
 
 <h2 id="s1-fflush">fflush</h2>
+<p class="fsum">把输出流缓冲区里积攒的数据立刻写出去，让进度提示、日志能及时出现而不被延迟。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> fflush(FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
@@ -608,6 +623,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <div class="note dead"><span class="t">禁用写法</span><p><code>fflush(stdin)</code> 对输入流是<strong>未定义行为</strong>——MSVC 曾自行赋予其"清空输入缓冲"的含义,但这不可移植。要丢弃输入残留,老老实实循环 <code>fgetc</code> 直到读到 <code>\n</code> 或 <code>EOF</code>。</p></div>
 
 <h2 id="s1-feof">feof / ferror</h2>
+<p class="fsum">读写失败之后查流的两个状态标志，用来区分是正常读到文件尾还是中途发生了 I/O 错误。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> feof(FILE *stream);
 <span class="kw">int</span> ferror(FILE *stream);</code></pre>
@@ -626,6 +642,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p>循环正常结束后,用 <code>ferror(fp)</code> 区分"读完了"和"读坏了";<code>clearerr(fp)</code> 可同时清除两个标志。</p>
 
 <h2 id="s1-remove">remove / rename</h2>
+<p class="fsum">删除文件，或给文件改名、在同一文件系统内移动，直接作用于磁盘且无法撤销。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> remove(<span class="kw">const</span> <span class="kw">char</span> *filename);
 <span class="kw">int</span> rename(<span class="kw">const</span> <span class="kw">char</span> *oldname, <span class="kw">const</span> <span class="kw">char</span> *newname);</code></pre>
@@ -649,6 +666,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p>目标文件已存在时,POSIX 的 <code>rename</code> 原子覆盖,Windows 则直接失败——跨平台代码不能依赖覆盖语义。删除已被打开的文件在 Windows 上通常也会失败。</p>
 
 <h2 id="s1-perror">perror</h2>
+<p class="fsum">取当前 errno 配上你给的前缀，向 stderr 打印一行人类可读的失败原因。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> perror(<span class="kw">const</span> <span class="kw">char</span> *prefix);</code></pre>
 <p><strong>参数</strong></p>
@@ -670,6 +688,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p><code>errno</code> 仅在函数<strong>确认失败之后</strong>才有意义,成功调用不保证把它清零;想把错误文字拼进自己的日志用 <code>strerror(errno)</code>(MSVC 提供线程安全的 <code>strerror_s</code>)。</p>
 
 <h2 id="s1-setvbuf">setvbuf</h2>
+<p class="fsum">设定流用全缓冲、行缓冲还是不缓冲以及缓冲区多大，用来调优 I/O 或让输出即时可见。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> setvbuf(FILE *stream, <span class="kw">char</span> *buf, <span class="kw">int</span> mode, <span class="kw">size_t</span> size);</code></pre>
 <p><strong>参数</strong></p>
@@ -720,6 +739,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 </table>
 
 <h2 id="s2-malloc">malloc</h2>
+<p class="fsum">在堆上要一块指定字节数的内存,内容是垃圾值,用完必须自己 free 归还。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> *malloc(size_t size);</code></pre>
 <p><strong>参数</strong></p>
@@ -735,6 +755,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p>返回的内存内容是垃圾值,必须先写后读。C 中不要给 malloc 的返回值加 <code>(int *)</code> 之类的强制转换——它会掩盖忘记包含头文件的错误(C++ 中才需要转换,但 C++ 应直接用容器或 <code>new</code>)。分配数组时更推荐 <code>calloc</code>,它顺带做了乘法溢出检查。</p>
 
 <h2 id="s2-calloc">calloc</h2>
+<p class="fsum">按「元素个数 × 每个大小」申请内存并全部清零,还顺带替你挡住乘法溢出。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> *calloc(size_t nmemb, size_t size);</code></pre>
 <p><strong>参数</strong></p>
@@ -757,6 +778,7 @@ free(arr);</code></pre>
 <div class="note ok"><span class="t">推荐</span><p>calloc 相比 <code>malloc(n * size)</code> 有两个优势:一是内存清零,二是标准要求实现检查 <code>nmemb * size</code> 的乘法溢出。手写 <code>malloc(n * size)</code> 当 n 来自外部输入时,乘法回绕可能导致分配远小于预期的缓冲区——这是一类经典的堆溢出漏洞。注意:清的是“全零字节”,对指针和浮点数在个别古董平台上不等于 NULL/0.0,现代主流平台可放心。</p></div>
 
 <h2 id="s2-realloc">realloc</h2>
+<p class="fsum">把已分配的内存块改成新的总大小,可能整块搬家,原有数据会跟着迁过去。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> *realloc(<span class="kw">void</span> *ptr, size_t size);</code></pre>
 <p><strong>参数</strong></p>
@@ -773,6 +795,7 @@ free(arr);</code></pre>
 <div class="note dead"><span class="t">搬家陷阱</span><p>realloc 可能原地扩容,也可能“搬家”——把数据复制到新地址并释放旧块。因此:① 必须使用返回值,搬家后旧指针立即失效;② 绝不能写 <code>p = realloc(p, n)</code>,失败返回 NULL 会把唯一指向旧块的指针冲掉,造成内存泄漏;③ 其他指向该块内部的指针(别名、迭代位置)在搬家后全部作废,需按偏移量重建。</p></div>
 
 <h2 id="s2-free">free</h2>
+<p class="fsum">把 malloc 家族借来的内存还给堆;还完指针就作废,重复释放会砸坏堆结构。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> free(<span class="kw">void</span> *ptr);</code></pre>
 <p><strong>参数</strong></p>
@@ -789,6 +812,7 @@ free(arr);</code></pre>
 
 <h2 id="s2-atoi">atoi / atol / atof</h2>
 <span class="badge old">已过时</span>
+<p class="fsum">把字符串开头的数字读成 int、long、double,失败也只返回 0,无法分辨对错。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> atoi(<span class="kw">const</span> <span class="kw">char</span> *nptr);
 <span class="kw">long</span> atol(<span class="kw">const</span> <span class="kw">char</span> *nptr);
@@ -807,6 +831,7 @@ free(arr);</code></pre>
 
 <h2 id="s2-strtol">strtol / strtoul / strtod</h2>
 <span class="badge ok">推荐</span>
+<p class="fsum">把字符串解析成整数或浮点数,并通过 endptr 和 errno 告诉你在哪停下、是否溢出。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">long</span> strtol(<span class="kw">const</span> <span class="kw">char</span> *nptr, <span class="kw">char</span> **endptr, <span class="kw">int</span> base);
 <span class="kw">unsigned</span> <span class="kw">long</span> strtoul(<span class="kw">const</span> <span class="kw">char</span> *nptr, <span class="kw">char</span> **endptr, <span class="kw">int</span> base);
@@ -837,6 +862,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p>三步检查(endptr 未前进、errno == ERANGE、尾部残留)缺一不可。另有 <code>strtoll</code>/<code>strtoull</code>(C99)对应 long long,<code>strtof</code>/<code>strtold</code> 对应 float/long double。C++ 可用 <code>std::stoi</code> 系(抛异常)或 C++17 的 <code>std::from_chars</code>(无异常、不看 locale、性能最好)。</p>
 
 <h2 id="s2-rand">rand / srand</h2>
+<p class="fsum">生成一串伪随机数,srand 决定用哪颗种子起头,同一种子必然得到同一序列。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> rand(<span class="kw">void</span>);
 <span class="kw">void</span> srand(<span class="kw">unsigned</span> <span class="kw">int</span> seed);</code></pre>
@@ -854,6 +880,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <div class="note new"><span class="t">现代提示</span><p>rand 的质量普遍很差:序列周期短、低位随机性弱、<code>rand() % n</code> 存在取模偏差,且绝不可用于任何密码学场景。C++ 请使用 &lt;random&gt;:<code>std::mt19937</code> 配 <code>std::uniform_int_distribution</code> 才是均匀分布的正确写法。纯 C 下,Windows 可用 <code>rand_s</code>/BCryptGenRandom,POSIX 可用 <code>getrandom</code>/<code>arc4random</code> 获取加密级随机数。</p></div>
 
 <h2 id="s2-abs">abs / labs / llabs</h2>
+<p class="fsum">取整数的绝对值,三个版本分别对应 int、long、long long 三种宽度。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> abs(<span class="kw">int</span> j);
 <span class="kw">long</span> labs(<span class="kw">long</span> j);
@@ -871,6 +898,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p>浮点数的绝对值是 &lt;math.h&gt; 里的 <code>fabs</code>,不要拿 abs 截断 double。C++ 中 <code>std::abs</code> 有各类型重载,含浮点。</p>
 
 <h2 id="s2-div">div</h2>
+<p class="fsum">一次调用同时算出商和余数,两个结果打包在 div_t 结构体里一起返回。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>div_t div(<span class="kw">int</span> numer, <span class="kw">int</span> denom);</code></pre>
 <p><strong>参数</strong></p>
@@ -887,6 +915,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p>历史上它能一条指令同时算出商和余数;现代编译器对相邻的 <code>/</code> 和 <code>%</code> 会自动合并,div 的性能意义已基本消失,但一次调用同时拿到两个结果的语义仍然清晰。</p>
 
 <h2 id="s2-qsort">qsort</h2>
+<p class="fsum">对任意类型的数组做原地排序,元素之间怎么比大小由你传进去的比较函数决定。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> qsort(
     <span class="kw">void</span> *base,
@@ -910,6 +939,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p>比较函数三要素——① 参数固定是两个 <code>const void *</code>,指向的是<em>数组元素本身</em>(排指针数组时它是“指向指针的指针”,要解引用两层);② 内部先转型回元素类型;③ 返回负/零/正,且必须构成严格弱序(自洽、可传递),否则行为未定义,某些实现会越界崩溃。排字符串数组的经典写法:<code>return strcmp(*(const char *const *)pa, *(const char *const *)pb);</code>。C++ 首选 <code>std::sort</code>——比较器可内联,通常明显快于 qsort 的函数指针调用。</p>
 
 <h2 id="s2-bsearch">bsearch</h2>
+<p class="fsum">在已排好序的数组里二分查找,命中返回元素地址,落空返回 NULL。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> *bsearch(
     <span class="kw">const</span> <span class="kw">void</span> *key,
@@ -935,6 +965,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p>两个前提缺一不可——数组必须<strong>已按同一个比较函数升序排好</strong>,且 compar 的第一个参数固定是 key、第二个是数组元素(键与元素类型不同时要按此约定写)。数组无序时结果是未定义的,不会报错,只会静默找错。</p>
 
 <h2 id="s2-exit">exit / atexit</h2>
+<p class="fsum">exit 让程序正常收场并冲刷缓冲,atexit 用来登记退出前要执行的清理函数。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> exit(<span class="kw">int</span> status);
 <span class="kw">int</span> atexit(<span class="kw">void</span> (*func)(<span class="kw">void</span>));</code></pre>
@@ -960,6 +991,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p>exit 会按<strong>注册的逆序</strong>执行所有 atexit 回调、冲刷并关闭打开的流、删除 tmpfile 临时文件;main 中 <code>return n</code> 等价于 <code>exit(n)</code>。另有 <code>_Exit</code>(C99)立即终止、不做任何清理。注意 exit 不会展开调用栈——C++ 中经 exit 退出时局部对象的析构函数不会执行,C++ 程序更应让 main 自然返回。</p>
 
 <h2 id="s2-abort">abort</h2>
+<p class="fsum">立刻掀桌子终止进程,不做任何清理,只留下崩溃现场供事后调试。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> abort(<span class="kw">void</span>);</code></pre>
 <p><strong>参数</strong>：无。</p>
@@ -974,6 +1006,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p>abort 与 exit 的分工——exit 是“正常收工”,abort 是“出大事了,原地保留现场”。它跳过 atexit 与流冲刷,在 Unix 上产生 core dump、在 Windows 上触发崩溃报告,便于事后调试。<code>assert</code> 失败时内部调用的就是它。MSVC 调试版下 abort 会先弹出中止/重试/忽略对话框。</p>
 
 <h2 id="s2-system">system</h2>
+<p class="fsum">把一整条命令丢给系统 shell 去执行,拼入外部输入就等于开门迎接命令注入。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> system(<span class="kw">const</span> <span class="kw">char</span> *command);</code></pre>
 <p><strong>参数</strong></p>
@@ -995,6 +1028,7 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 <div class="note dead"><span class="t">安全警告</span><p>system 把整串文本交给 shell 解释,任何拼入命令的外部输入(文件名、表单字段、环境变量)都可能携带 <code>;</code>、<code>|</code>、<code>&amp;&amp;</code>、反引号等元字符实现<strong>命令注入</strong>;它还继承当前环境的 PATH,可能被劫持执行同名恶意程序。需要启动子进程时,优先用不经过 shell 的接口:POSIX 的 <code>fork</code>+<code>execv</code>/<code>posix_spawn</code>,Windows 的 <code>CreateProcess</code>。在 setuid 程序中调用 system 应视为绝对禁区。</p></div>
 
 <h2 id="s2-getenv">getenv</h2>
+<p class="fsum">按名字取环境变量的值,拿到的是运行库的只读字符串,要长期留就自己拷贝。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *getenv(<span class="kw">const</span> <span class="kw">char</span> *name);</code></pre>
 <p><strong>参数</strong></p>
@@ -1018,6 +1052,7 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 <h2 id="s3-overview">速览</h2><p><strong>本章速览</strong>——字符串与内存操作是 C 里最常用、也最容易写出越界漏洞的一族函数，先用下表建立整体印象，再看各条目的详解。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td><code>strlen</code></td><td>数出字符串长度，不含结尾空字符</td><td>没有终止符就会一直读下去，先确保串是合法的</td></tr><tr><td><code>strcpy</code> / <code>strcpy_s</code></td><td>把源字符串整个复制到目标缓冲区</td><td><span class="badge old">已过时</span> strcpy 不知道目标多大，写多少都不拦；<span class="badge ok">推荐</span> strcpy_s 需显式传入目标容量</td></tr><tr><td><code>strncpy</code></td><td>最多复制 n 个字符到目标</td><td>源串够长时不会补结尾空字符，必须自己手动补上</td></tr><tr><td><code>strcat</code> / <code>strcat_s</code></td><td>把源字符串接到目标串尾部</td><td><span class="badge old">已过时</span> strcat 同样不查容量，反复拼接极易溢出；<span class="badge ok">推荐</span> strcat_s</td></tr><tr><td><code>strcmp</code> / <code>strncmp</code></td><td>按字典序比较整串或前 n 个字符</td><td>返回值只保证正负号和零，别当作字符差值来用</td></tr><tr><td><code>strchr</code> / <code>strrchr</code></td><td>找某字符第一次、最后一次出现处</td><td>找不到返回空指针，用之前务必判空</td></tr><tr><td><code>strstr</code></td><td>在主串里定位子串首次出现位置</td><td>朴素匹配，长文本高频查找时另选算法</td></tr><tr><td><code>strtok</code> / <code>strtok_s</code></td><td>按分隔符把字符串逐段切开</td><td><span class="badge old">已过时</span> strtok 靠内部静态状态，会改写原串且不可重入；<span class="badge ok">推荐</span> strtok_s 自带上下文指针</td></tr><tr><td><code>memcpy</code></td><td>复制 n 个字节到另一块内存</td><td>两块内存重叠属未定义行为，此时改用 memmove</td></tr><tr><td><code>memmove</code></td><td>复制 n 字节，允许区域重叠</td><td><span class="badge ok">推荐</span> 不确定是否重叠时的稳妥选择</td></tr><tr><td><code>memset</code></td><td>把一段内存按字节填成同一个值</td><td>填充值按字节生效，别指望它把数组填成非零整数</td></tr><tr><td><code>memcmp</code></td><td>逐字节比较两块内存内容</td><td>结构体含填充字节，不能靠它判断是否相等</td></tr><tr><td><code>memchr</code></td><td>在指定长度内存中找某个字节</td><td>不看结尾空字符，适合处理二进制数据</td></tr><tr><td><code>strerror</code> / <code>strerror_s</code></td><td>把错误码翻译成可读的描述文字</td><td><span class="badge old">已过时</span> strerror 返回共享静态缓冲区，多线程下会串；<span class="badge ok">推荐</span> strerror_s 写入自备缓冲区</td></tr></tbody></table>
 
 <h2 id="s3-strlen">strlen <span class="badge ok">推荐</span></h2>
+<p class="fsum">数一数字符串里到结尾符之前有多少个字符，最常用来判断内容长度和计算该分配多大的缓冲区。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>size_t strlen(<span class="kw">const</span> <span class="kw">char</span> *s);</code></pre>
 <p><strong>参数</strong></p>
@@ -1033,6 +1068,7 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 <p>传入未以 <code>'\0'</code> 结尾的缓冲区是未定义行为——它会一直读下去。</p>
 
 <h2 id="s3-strcpy">strcpy / strcpy_s <span class="badge old">已过时</span></h2>
+<p class="fsum">把一个字符串连同结尾符整串搬进另一块缓冲区；strcpy_s 多要一个目标容量参数，装不下时报错而不是直接越界写。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *strcpy(<span class="kw">char</span> *dest, <span class="kw">const</span> <span class="kw">char</span> *src);
 errno_t strcpy_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class="kw">const</span> <span class="kw">char</span> *src);</code></pre>
@@ -1051,6 +1087,7 @@ errno_t strcpy_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class
 <div class="note dead"><span class="t">禁用</span><p><code>strcpy</code> 完全不检查目标容量,是缓冲区溢出漏洞的头号来源。MSVC 会对其发出 C4996 警告;新代码请一律使用 <code>strcpy_s</code>(或明确长度后用 <code>memcpy</code>)。C++ 中直接用 <code>std::string</code> 赋值即可。</p></div>
 
 <h2 id="s3-strncpy">strncpy</h2>
+<p class="fsum">最多只往目标里写 n 个字符，原本是为定长记录字段设计的；源串够长时不会补结尾符，并不是"安全版的 strcpy"。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *strncpy(<span class="kw">char</span> *dest, <span class="kw">const</span> <span class="kw">char</span> *src, size_t count);</code></pre>
 <p><strong>参数</strong></p>
@@ -1068,6 +1105,7 @@ errno_t strcpy_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class
 <div class="note old"><span class="t">经典陷阱</span><p><code>strncpy</code> 不是"安全版 strcpy":当 <code>src</code> 长度 ≥ <code>count</code> 时,它<strong>不会写结尾 <code>'\0'</code></strong>,后续对 <code>buf</code> 调用任何 <code>str*</code> 函数都是未定义行为;而当 <code>src</code> 较短时它又会用 <code>'\0'</code> 把剩余空间全部填满,白白浪费写入。它本是为定长记录字段设计的,做普通字符串复制请改用 <code>strcpy_s</code> 或 <code>snprintf</code>。</p></div>
 
 <h2 id="s3-strcat">strcat / strcat_s <span class="badge old">已过时</span></h2>
+<p class="fsum">把一个字符串接到另一个串的末尾拼成一串；strcat_s 要求传入目标总容量，剩余空间不够时报错而不是越界。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *strcat(<span class="kw">char</span> *dest, <span class="kw">const</span> <span class="kw">char</span> *src);
 errno_t strcat_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class="kw">const</span> <span class="kw">char</span> *src);</code></pre>
@@ -1087,6 +1125,7 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <p>与 <code>strcpy</code> 同理,<code>strcat</code> 无容量检查且触发 C4996,新代码用 <code>strcat_s</code>。另注意:在循环里反复 <code>strcat</code> 的复杂度是 O(n²),因为每次都要从头找结尾符;大量拼接请记录当前长度或改用 <code>snprintf</code>,C++ 里用 <code>std::string::operator+=</code>。</p>
 
 <h2 id="s3-strcmp">strcmp / strncmp</h2>
+<p class="fsum">按字典序比较两个字符串谁大谁小或是否相同，strncmp 只比前 n 个字符，常用来判等和做前缀匹配。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> strcmp(<span class="kw">const</span> <span class="kw">char</span> *lhs, <span class="kw">const</span> <span class="kw">char</span> *rhs);
 <span class="kw">int</span> strncmp(<span class="kw">const</span> <span class="kw">char</span> *lhs, <span class="kw">const</span> <span class="kw">char</span> *rhs, size_t count);</code></pre>
@@ -1105,6 +1144,7 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <p>新手常把 <code>if (strcmp(a, b))</code> 当成"相等",实际恰好相反。C++ 中 <code>std::string</code> 直接用 <code>==</code>,前缀判断用 <code>starts_with</code>(C++20)。</p>
 
 <h2 id="s3-strchr">strchr / strrchr</h2>
+<p class="fsum">在字符串里定位某个字符出现的位置，strchr 从头找第一次出现，strrchr 从尾找最后一次，常用于取扩展名、拆路径。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *strchr(<span class="kw">const</span> <span class="kw">char</span> *s, <span class="kw">int</span> ch);
 <span class="kw">char</span> *strrchr(<span class="kw">const</span> <span class="kw">char</span> *s, <span class="kw">int</span> ch);</code></pre>
@@ -1122,6 +1162,7 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <p>取文件扩展名、拆分路径最后一段是 <code>strrchr</code> 的高频场景。使用返回值前务必判 <code>NULL</code>。</p>
 
 <h2 id="s3-strstr">strstr</h2>
+<p class="fsum">在一段文本里查找某个子串首次出现的位置，也常直接拿返回值真假来判断"这段文字包不包含某个关键词"。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *strstr(<span class="kw">const</span> <span class="kw">char</span> *haystack, <span class="kw">const</span> <span class="kw">char</span> *needle);</code></pre>
 <p><strong>参数</strong></p>
@@ -1141,6 +1182,7 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <p>比较是大小写敏感的;需要不区分大小写时标准库没有对应函数(MSVC 有非标准的 <code>_stricmp</code> 系列,可自行逐字符实现)。C++20 可用 <code>std::string::contains</code>。实现通常是朴素匹配,长文本上高频查找请另选算法。</p>
 
 <h2 id="s3-strtok">strtok / strtok_s <span class="badge old">已过时</span></h2>
+<p class="fsum">按分隔符把一个字符串就地切成一段段记号，逐次取出；strtok_s 把切分进度交给调用方保存，因而可重入、能嵌套和多线程用。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *strtok(<span class="kw">char</span> *str, <span class="kw">const</span> <span class="kw">char</span> *delims);
 <span class="kw">char</span> *strtok_s(<span class="kw">char</span> *str, <span class="kw">const</span> <span class="kw">char</span> *delims, <span class="kw">char</span> **context);</code></pre>
@@ -1160,6 +1202,7 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <div class="note dead"><span class="t">状态陷阱</span><p><code>strtok</code> 把切分进度存在一个隐藏的静态变量里,因此<strong>不可重入</strong>:不能在两个字符串上交替切分,不能在多线程中同时使用,也不能在回调里嵌套调用——后一次会悄悄冲掉前一次的进度。它还会就地改写原串(写入 <code>'\0'</code>),字符串字面量传进去直接崩溃。请改用把状态交给调用方的 <code>strtok_s</code>。另注意:C11 附录 K 的 <code>strtok_s</code> 比 MSVC 版多一个长度参数,两者签名不同,跨平台代码需留意。</p></div>
 
 <h2 id="s3-memcpy">memcpy <span class="badge ok">推荐</span></h2>
+<p class="fsum">按指定字节数把一块内存整体复制到另一处，不认结尾符，结构体和数组都能整块搬，前提是两块区域互不重叠。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> *memcpy(<span class="kw">void</span> *dest, <span class="kw">const</span> <span class="kw">void</span> *src, size_t count);</code></pre>
 <p><strong>参数</strong></p>
@@ -1179,6 +1222,7 @@ memcpy(dst, src, <span class="kw">sizeof</span> dst);   <span class="cm">// 按�
 <div class="note dead"><span class="t">区域不可重叠</span><p><code>memcpy</code> 的前提是源和目标<strong>互不重叠</strong>,重叠即未定义行为——实现可能按任意方向、任意块宽复制,重叠时部分数据会在被读取前就被覆盖。凡是"在同一缓冲区内挪动数据"(如数组元素前移),必须用 <code>memmove</code>。字节数按 <code>sizeof</code> 计算,复制含指针的结构体时复制的是指针值本身(浅拷贝)。</p></div>
 
 <h2 id="s3-memmove">memmove</h2>
+<p class="fsum">同样是按字节复制内存，与 memcpy 的区别是允许源和目标重叠，在同一个缓冲区里挪动数据时只能用它。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> *memmove(<span class="kw">void</span> *dest, <span class="kw">const</span> <span class="kw">void</span> *src, size_t count);</code></pre>
 <p><strong>参数</strong></p>
@@ -1197,6 +1241,7 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 <p>与 <code>memcpy</code> 的唯一语义区别:<code>memmove</code> 保证结果等同于"先复制到临时缓冲区再写回",因此重叠也正确。代价是可能略慢;确定不重叠时用 <code>memcpy</code>,拿不准就用 <code>memmove</code>——正确性永远优先。</p>
 
 <h2 id="s3-memset">memset</h2>
+<p class="fsum">把一段内存逐字节填成同一个值，最常见的用途是给结构体或缓冲区整块清零，注意填非零值时是按字节生效的。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> *memset(<span class="kw">void</span> *dest, <span class="kw">int</span> ch, size_t count);</code></pre>
 <p><strong>参数</strong></p>
@@ -1214,6 +1259,7 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 <div class="note new"><span class="t">现代提示</span><p>定义时初始化可直接写 <code>struct Config cfg = {0};</code>,更简洁且不易把参数顺序写反(<code>memset(&amp;cfg, sizeof cfg, 0)</code> 是常见笔误,编译不报错但什么也没清)。另注意 <code>memset</code> 按字节填充:想把 <code>int</code> 数组填成 1,填出来的是 <code>0x01010101</code>;清敏感数据(密码等)时编译器可能把"死后无人读"的 <code>memset</code> 优化掉,C11 提供 <code>memset_s</code> 保证不被删除。C++ 里对非平凡类型用 <code>= {}</code> 或构造函数,不要 <code>memset</code>。</p></div>
 
 <h2 id="s3-memcmp">memcmp</h2>
+<p class="fsum">逐字节比较两块内存的前若干字节是否一致，不在结尾符处停下，常用于比对文件魔数等定长二进制数据。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> memcmp(<span class="kw">const</span> <span class="kw">void</span> *lhs, <span class="kw">const</span> <span class="kw">void</span> *rhs, size_t count);</code></pre>
 <p><strong>参数</strong></p>
@@ -1234,6 +1280,7 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 <p>不要用 <code>memcmp</code> 比较整个结构体判等:成员之间的填充字节内容不确定,相等的结构体可能比出不等。逐成员比较才可靠。</p>
 
 <h2 id="s3-memchr">memchr</h2>
+<p class="fsum">在给定长度的内存范围里找某个字节第一次出现的位置，不依赖结尾符，适合处理中间可能含 '\0' 的二进制数据。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> *memchr(<span class="kw">const</span> <span class="kw">void</span> *s, <span class="kw">int</span> ch, size_t count);</code></pre>
 <p><strong>参数</strong></p>
@@ -1253,6 +1300,7 @@ size_t n = fread(raw, 1, <span class="kw">sizeof</span> raw, fp);
 <p>相当于"带长度上限、不依赖结尾符的 <code>strchr</code>",处理网络包、文件块等可能内含 <code>'\0'</code> 的数据时应选它。</p>
 
 <h2 id="s3-strerror">strerror / strerror_s</h2>
+<p class="fsum">把 errno 之类的错误码翻译成人能看懂的文字描述；strerror 返回共享静态缓冲区，strerror_s 写进调用方自备的缓冲区，多线程下更稳。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *strerror(<span class="kw">int</span> errnum);
 errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class="kw">int</span> errnum);</code></pre>
@@ -1303,6 +1351,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 
 <h2 id="s4-wcslen">wcslen</h2>
 <span class="badge ok">推荐</span>
+<p class="fsum">数出宽字符串里有多少个 wchar_t 单元,分配内存时还要乘 sizeof(wchar_t) 才是字节数</p>
 <p><strong>函数原型</strong></p>
 <pre><code>size_t wcslen(<span class="kw">const</span> <span class="kw">wchar_t</span> *str);</code></pre>
 <p><strong>参数</strong></p>
@@ -1319,6 +1368,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 
 <h2 id="s4-wcscpy_s">wcscpy_s</h2>
 <span class="badge ok">推荐</span>
+<p class="fsum">把一个宽字符串整体复制到目标缓冲,复制前先核对容量,放不下就返回错误而不是越界写</p>
 <p><strong>函数原型</strong></p>
 <pre><code>errno_t wcscpy_s(<span class="kw">wchar_t</span> *dest, rsize_t destsz, <span class="kw">const</span> <span class="kw">wchar_t</span> *src);</code></pre>
 <p><strong>参数</strong></p>
@@ -1341,6 +1391,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 
 <h2 id="s4-wcscat_s">wcscat_s</h2>
 <span class="badge ok">推荐</span>
+<p class="fsum">把一段宽字符串接到已有宽字符串的末尾,容量按整个缓冲算,装不下时报错并清空目标</p>
 <p><strong>函数原型</strong></p>
 <pre><code>errno_t wcscat_s(<span class="kw">wchar_t</span> *dest, rsize_t destsz, <span class="kw">const</span> <span class="kw">wchar_t</span> *src);</code></pre>
 <p><strong>参数</strong></p>
@@ -1359,6 +1410,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 }</code></pre>
 
 <h2 id="s4-wcscmp">wcscmp / wcsncmp</h2>
+<p class="fsum">按编码值逐个比较两个宽字符串的大小,wcsncmp 只比前 n 个宽字符,常用来判断前缀</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> wcscmp(<span class="kw">const</span> <span class="kw">wchar_t</span> *lhs, <span class="kw">const</span> <span class="kw">wchar_t</span> *rhs);
 <span class="kw">int</span> wcsncmp(<span class="kw">const</span> <span class="kw">wchar_t</span> *lhs, <span class="kw">const</span> <span class="kw">wchar_t</span> *rhs, size_t n);</code></pre>
@@ -1380,6 +1432,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <div class="note new"><span class="t">现代提示</span><p>Windows 文件系统不区分大小写,比较路径应使用 <code>_wcsicmp</code>(MSVC 扩展)或 Win32 的 <code>CompareStringOrdinal</code>;需要按用户语言排序时用 <code>wcscoll</code> 或 Win32 <code>CompareStringEx</code>,不要用 <code>wcscmp</code> 做界面排序。</p></div>
 
 <h2 id="s4-wcschr">wcschr / wcsstr</h2>
+<p class="fsum">在宽字符串里查找某个宽字符或某段子串,找到返回指向该处的指针,找不到返回 NULL</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">wchar_t</span> *wcschr(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, <span class="kw">wchar_t</span> ch);
 <span class="kw">wchar_t</span> *wcsstr(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, <span class="kw">const</span> <span class="kw">wchar_t</span> *substr);</code></pre>
@@ -1403,6 +1456,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 
 <h2 id="s4-swprintf_s">swprintf_s</h2>
 <span class="badge ok">推荐</span>
+<p class="fsum">把数字、字符串等按格式拼装成一个宽字符串写进缓冲区,即宽字符版的字符串格式化</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> swprintf_s(<span class="kw">wchar_t</span> *buffer, size_t sizeOfBuffer, <span class="kw">const</span> <span class="kw">wchar_t</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
@@ -1426,6 +1480,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>与 snprintf 的关键差异:</strong>① <code>snprintf</code> 空间不足时安全截断,并返回"假如空间够会写多少"的长度,可据此二次分配;而 <code>swprintf_s</code> 空间不足视为运行期约束违规——触发无效参数处理程序、缓冲区置空串、返回负值,<em>不截断也不告诉你需要多大</em>。② 长度单位是宽字符数而非字节。③ MSVC 特有陷阱:宽字符格式化函数里 <code>%s</code> 默认按 <code>wchar_t*</code> 解释(与 C 标准相反),跨平台代码应显式写 <code>%ls</code>(宽)/<code>%hs</code>(窄)。需要"截断也算成功"的语义时,用 <code>_snwprintf_s(buf, size, _TRUNCATE, ...)</code>。</p>
 
 <h2 id="s4-swscanf_s">swscanf_s</h2>
+<p class="fsum">从一个宽字符串里按格式抠出数字和文本,是宽字符版的反向格式化,专用于解析</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> swscanf_s(<span class="kw">const</span> <span class="kw">wchar_t</span> *buffer, <span class="kw">const</span> <span class="kw">wchar_t</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
@@ -1451,6 +1506,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 
 <h2 id="s4-wcstok_s">wcstok_s</h2>
 <span class="badge ok">推荐</span>
+<p class="fsum">按指定的分隔符集合把宽字符串就地切成一段段记号,切分进度由调用方变量保存</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">wchar_t</span> *wcstok_s(<span class="kw">wchar_t</span> *str, <span class="kw">const</span> <span class="kw">wchar_t</span> *delim, <span class="kw">wchar_t</span> **context);</code></pre>
 <p><strong>参数</strong></p>
@@ -1474,6 +1530,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p>显式的 <code>context</code> 使其线程安全,也允许嵌套切分两个字符串——这正是旧 <code>wcstok</code>/<code>strtok</code> 靠静态变量做不到的,后者已属 <span class="badge old">已过时</span> 用法。注意 MSVC 的 <code>wcstok</code> 本身在不同版本间签名有过变化,统一用 <code>wcstok_s</code> 最稳妥。</p>
 
 <h2 id="s4-wcstol">wcstol / wcstod</h2>
+<p class="fsum">把宽字符串开头的数字文本转成 long 或 double,并带出解析停在哪个字符上</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">long</span> wcstol(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, <span class="kw">wchar_t</span> **endptr, <span class="kw">int</span> base);
 <span class="kw">double</span> wcstod(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, <span class="kw">wchar_t</span> **endptr);</code></pre>
@@ -1498,6 +1555,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <div class="note new"><span class="t">现代提示</span><p>宽字符命令行(<code>wmain</code> 的 <code>argv</code>)转数字首选这一对,而不是 <code>_wtoi</code>——后者无法报告错误。C++ 中可先转窄串再用 <code>std::from_chars</code>,它无 locale 开销且错误处理更清晰。</p></div>
 
 <h2 id="s4-fgetws">fgetws / fputws</h2>
+<p class="fsum">从文件流按行读入一行宽字符,或把一段宽字符串写出到流,是宽字符版的行读写</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">wchar_t</span> *fgetws(<span class="kw">wchar_t</span> *str, <span class="kw">int</span> count, FILE *stream);
 <span class="kw">int</span> fputws(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, FILE *stream);</code></pre>
@@ -1524,6 +1582,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 
 <h2 id="s4-mbstowcs_s">mbstowcs_s / wcstombs_s</h2>
 <span class="badge new">现代提示</span>
+<p class="fsum">在多字节窄串与宽字符串之间做编码转换,采用哪种编码取决于当前 locale 的代码页</p>
 <p><strong>函数原型</strong></p>
 <pre><code>errno_t mbstowcs_s(
     size_t *pReturnValue,
@@ -1558,6 +1617,7 @@ errno_t wcstombs_s(
 
 <h2 id="s4-_wfopen_s">_wfopen_s</h2>
 <span class="badge ok">推荐</span>
+<p class="fsum">用 UTF-16 宽字符路径打开文件,是 Windows 上处理中文及任意 Unicode 文件名的正解</p>
 <p><strong>函数原型</strong></p>
 <pre><code>errno_t _wfopen_s(FILE **pFile, <span class="kw">const</span> <span class="kw">wchar_t</span> *filename, <span class="kw">const</span> <span class="kw">wchar_t</span> *mode);</code></pre>
 <p><strong>参数</strong></p>
@@ -1588,6 +1648,7 @@ fclose(fp);</code></pre>
 <h2 id="s5-overview">速览</h2><p><strong>本章速览</strong>——这组函数看着简单,真正的坑几乎全在参数类型和当前 locale 上,先扫一遍再逐条细读。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td><code>isalpha</code></td><td>判断字符是否为字母</td><td>结果随 locale 变化,C locale 下只认 A-Z、a-z</td></tr><tr><td><code>isdigit</code></td><td>判断字符是否为十进制数字</td><td>只认 '0'-'9',任何 locale 都不扩展;别用它做数值转换</td></tr><tr><td><code>isalnum</code></td><td>判断是否为字母或数字</td><td>等价于 <code>isalpha</code> 或 <code>isdigit</code> 成立,下划线不算</td></tr><tr><td><code>isspace</code></td><td>判断是否为空白字符</td><td>含空格与 \t \n \v \f \r 六种,不止空格</td></tr><tr><td><code>isupper</code> / <code>islower</code></td><td>判断字母是大写还是小写</td><td>非字母一律返回 0,两者同时为假很正常</td></tr><tr><td><code>toupper</code> / <code>tolower</code></td><td>字母大小写互转</td><td>非字母原样返回;返回 <code>int</code>,存回 <code>char</code> 前先确认无截断</td></tr><tr><td><code>isxdigit</code></td><td>判断是否为十六进制数字</td><td>只管 0-9A-Fa-f,不认 "0x" 前缀</td></tr><tr><td><code>ispunct</code></td><td>判断是否为标点或符号</td><td>定义为"可打印且非空格非字母数字",范围比直觉大</td></tr><tr><td><code>iscntrl</code> / <code>isprint</code> / <code>isgraph</code></td><td>控制字符 / 可打印 / 可见字符</td><td><code>isprint</code> 含空格,<code>isgraph</code> 不含,这一格之差最常错</td></tr><tr><td><code>isXXX((unsigned char)c)</code></td><td>传参前必须先转无符号</td><td><span class="badge dead">禁用</span> 直接传可能为负的 <code>char</code>,是未定义行为;<span class="badge ok">推荐</span> 一律套 <code>(unsigned char)</code>,仅 <code>EOF</code> 可为负</td></tr><tr><td><code>iswalpha</code> / <code>iswdigit</code> / <code>towupper</code></td><td>宽字符版的分类与转换</td><td>参数为 <code>wint_t</code>,处理多字节文本时用它替代窄字符版</td></tr></tbody></table>
 
 <h2 id="s5-isalpha">isalpha</h2>
+<p class="fsum">判断一个字符是不是字母,是词法分析切分单词、校验标识符首字符时的第一道过滤。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> isalpha(<span class="kw">int</span> c);</code></pre>
 <p><strong>参数</strong></p>
@@ -1608,6 +1669,7 @@ fclose(fp);</code></pre>
 <p>在非 "C" locale 下,某些扩展字符(如 Latin-1 的带音标字母)也可能被判定为字母;需要严格 ASCII 语义时不要依赖 locale,自己写 <code>(c &gt;= 'a' &amp;&amp; c &lt;= 'z') || (c &gt;= 'A' &amp;&amp; c &lt;= 'Z')</code> 反而更可靠。C++ 中对应 <code>&lt;cctype&gt;</code> 的 <code>std::isalpha</code>,同样的坑原样存在。</p>
 
 <h2 id="s5-isdigit">isdigit</h2>
+<p class="fsum">判断一个字符是不是 0~9 的十进制数字,扫描数字串、校验输入格式时用它逐字符探路。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> isdigit(<span class="kw">int</span> c);</code></pre>
 <p><strong>参数</strong></p>
@@ -1628,6 +1690,7 @@ fclose(fp);</code></pre>
 <p>注意它不识别全角数字、上标数字等 Unicode 数字——那些需要宽字符或第三方库处理。它只做"是不是"的判定,真正把数字串转成数值应交给 <code>strtol</code> 一类函数。</p>
 
 <h2 id="s5-isalnum">isalnum</h2>
+<p class="fsum">判断一个字符是不是字母或数字(下划线不算),常用于校验标识符、用户名和过滤非法输入。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> isalnum(<span class="kw">int</span> c);</code></pre>
 <p><strong>参数</strong></p>
@@ -1647,6 +1710,7 @@ fclose(fp);</code></pre>
 }</code></pre>
 
 <h2 id="s5-isspace">isspace</h2>
+<p class="fsum">判断字符是不是空格、制表符、换行等六种空白,跳过行首缩进和清掉行尾 \r 全靠它。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> isspace(<span class="kw">int</span> c);</code></pre>
 <p><strong>参数</strong></p>
@@ -1674,6 +1738,7 @@ fclose(fp);</code></pre>
 <div class="note new"><span class="t">现代提示</span><p>常见误区:以为空白只有空格和 \t。解析跨平台文本时,行尾残留的 \r 正是靠 isspace 顺手清掉的;反之,若只想匹配"空格或制表符"(不含换行),C11 起没有专门函数,POSIX 有 isblank(C99 标准化,只认 ' ' 和 '\t')。</p></div>
 
 <h2 id="s5-isupper">isupper / islower</h2>
+<p class="fsum">分别判断一个字母是大写还是小写;非字母时两者都返回 0,所以不能拿一个取反当另一个用。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> isupper(<span class="kw">int</span> c);
 <span class="kw">int</span> islower(<span class="kw">int</span> c);</code></pre>
@@ -1695,6 +1760,7 @@ fclose(fp);</code></pre>
 <p>不要用 <code>c &gt;= 'A' &amp;&amp; c &lt;= 'Z'</code> 之外还依赖 <code>'a' - 'A' == 32</code> 这类 ASCII 假设做判定——EBCDIC 平台上字母甚至不连续;分类交给库函数最稳。</p>
 
 <h2 id="s5-toupper">toupper / tolower</h2>
+<p class="fsum">把字母转成大写或小写,非字母原样返回,因此可以对任意字符直接调用而不必先判断类别。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> toupper(<span class="kw">int</span> c);
 <span class="kw">int</span> tolower(<span class="kw">int</span> c);</code></pre>
@@ -1713,6 +1779,7 @@ fclose(fp);</code></pre>
 <p>标准 C 没有"整串转大写"的函数;MSVC 的 <code>_strupr</code> <span class="badge old">已过时</span> 是私有扩展且会触发 C4996 警告(<span class="badge ok">推荐</span> 用带缓冲区大小的 <code>_strupr_s</code>,或干脆自己写上面的循环,可移植)。C++ 中大小写不敏感比较更常用 <code>std::tolower</code> 逐字符处理,注意同样要先转 unsigned char。</p>
 
 <h2 id="s5-isxdigit">isxdigit</h2>
+<p class="fsum">判断字符是不是十六进制数字 0-9、a-f、A-F,校验颜色值、哈希串、转义序列时逐字符过一遍。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> isxdigit(<span class="kw">int</span> c);</code></pre>
 <p><strong>参数</strong></p>
@@ -1734,6 +1801,7 @@ fclose(fp);</code></pre>
 <p>它只做"是不是"的判定;要把十六进制串转成数值,配合 <code>strtol(s, NULL, 16)</code> 使用。</p>
 
 <h2 id="s5-ispunct">ispunct</h2>
+<p class="fsum">判断字符是不是标点符号,标准按排除法定义,下划线、$、@ 也都算,过滤文本时别误伤。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> ispunct(<span class="kw">int</span> c);</code></pre>
 <p><strong>参数</strong></p>
@@ -1754,6 +1822,7 @@ fclose(fp);</code></pre>
 <p>注意 <code>_</code>、<code>$</code>、<code>@</code> 都算标点——过滤用户名之类的场景别误伤下划线。</p>
 
 <h2 id="s5-iscntrl">iscntrl / isprint / isgraph</h2>
+<p class="fsum">分别判断字符是控制字符、可打印字符、有字形的可见字符;三者的差别只在空格算不算,hexdump 与日志过滤常用。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> iscntrl(<span class="kw">int</span> c);
 <span class="kw">int</span> isprint(<span class="kw">int</span> c);
@@ -1790,6 +1859,7 @@ fclose(fp);</code></pre>
 <div class="note new"><span class="t">现代提示</span><p>把 <code>isalpha((unsigned char)c)</code> 当成肌肉记忆;团队里可封装一层 <code>static inline int my_isalpha(char c) { return isalpha((unsigned char)c); }</code> 一劳永逸。C++ 同理:<code>std::isalpha</code> 的 &lt;cctype&gt; 版本继承同样的约束,给 <code>std::find_if</code> 传裸 <code>::isalpha</code> 处理 std::string 是经典错误;另外注意还存在 &lt;locale&gt; 中的模板重载 <code>std::isalpha(ch, loc)</code>,两者签名不同,混用会导致费解的编译错误。</p></div>
 
 <h2 id="s5-iswalpha">iswalpha / iswdigit / towupper <span class="badge new">现代提示</span></h2>
+<p class="fsum">宽字符版的字母判定、数字判定与转大写,处理中文、法文等非 ASCII 文本时替代窄字符版,须先 setlocale。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> iswalpha(wint_t wc);
 <span class="kw">int</span> iswdigit(wint_t wc);
@@ -1815,6 +1885,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-fabs">fabs</h2>
 <p><span class="badge ok">推荐</span> 浮点绝对值。</p>
+<p class="fsum">把浮点数的负号抹掉,只保留大小,常用于浮点数「差值小于阈值即视为相等」的比较;整数取绝对值要用 abs/labs。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> fabs(<span class="kw">double</span> x);</code></pre>
 <p><strong>参数</strong></p>
@@ -1831,6 +1902,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-sqrt">sqrt</h2>
 <p><span class="badge ok">推荐</span> 平方根,通常由硬件指令实现,速度很快。</p>
+<p class="fsum">求一个非负数的算术平方根,底层多由 CPU 指令直接完成,速度很快;传入负数属定义域错误,只会得到 NaN。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> sqrt(<span class="kw">double</span> x);</code></pre>
 <p><strong>参数</strong></p>
@@ -1845,6 +1917,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-pow">pow</h2>
 <p>通用幂运算 x 的 y 次方,y 可以是任意实数。</p>
+<p class="fsum">算 x 的 y 次幂,指数可以是小数、负数;内部走对数—指数通路,开销比乘法大一个数量级,求平方直接写 x*x 更划算。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> pow(<span class="kw">double</span> x, <span class="kw">double</span> y);</code></pre>
 <p><strong>参数</strong></p>
@@ -1862,6 +1935,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-exp">exp / log / log10 / log2</h2>
 <p>自然指数与三种常用底的对数。<code>log2</code> 为 C99 新增。</p>
+<p class="fsum">一组指数与对数运算:exp 求 e 的 x 次方,log 给的是自然对数 ln,常用对数得写 log10,以 2 为底则用 log2。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> exp(<span class="kw">double</span> x);
 <span class="kw">double</span> log(<span class="kw">double</span> x);
@@ -1884,6 +1958,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-sin">sin / cos / tan</h2>
 <p>基本三角函数,参数单位是<strong>弧度</strong>,不是角度。</p>
+<p class="fsum">由一个角求它的正弦、余弦、正切值,几何计算与波形生成的基础;入参一律是弧度,角度要先乘 π/180 再传进来。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> sin(<span class="kw">double</span> x);
 <span class="kw">double</span> cos(<span class="kw">double</span> x);
@@ -1904,6 +1979,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-asin">asin / acos / atan</h2>
 <p>反三角函数,返回值是弧度。</p>
+<p class="fsum">由三角函数值反推出角度(结果为弧度),典型用途是从向量点积求夹角;asin、acos 的入参只能落在 [-1,1],atan 不限。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> asin(<span class="kw">double</span> x);
 <span class="kw">double</span> acos(<span class="kw">double</span> x);
@@ -1922,6 +1998,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-atan2">atan2</h2>
 <p><span class="badge ok">推荐</span> 双参数反正切:由坐标 (x, y) 直接求方向角,实战中几乎总应替代 <code>atan</code>。</p>
+<p class="fsum">由纵、横两个坐标分量求点相对原点的方位角,靠 x、y 各自的符号还原出完整象限,x 为 0 也不会除零。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> atan2(<span class="kw">double</span> y, <span class="kw">double</span> x);</code></pre>
 <p><strong>参数</strong></p>
@@ -1939,6 +2016,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-ceil">ceil / floor / trunc / round</h2>
 <p>四种取整,方向各不相同;<code>trunc</code>、<code>round</code> 为 C99 新增。返回的仍是 <code>double</code>。</p>
+<p class="fsum">四种方向的取整:ceil 向上、floor 向下、trunc 向零截断、round 四舍五入且 .5 远离零;返回的仍是 double,不会自动变成整型。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> ceil(<span class="kw">double</span> x);
 <span class="kw">double</span> floor(<span class="kw">double</span> x);
@@ -1968,6 +2046,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-fmod">fmod</h2>
 <p>浮点取余。<code>%</code> 运算符只接受整数,对 <code>double</code> 求余必须用它。</p>
+<p class="fsum">求两个浮点数相除后剩下的余数,填补 <code>%</code> 只能用于整数的空白,常用来把角度、相位归一化到一个周期内;余数符号跟着被除数走。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> fmod(<span class="kw">double</span> x, <span class="kw">double</span> y);</code></pre>
 <p><strong>参数</strong></p>
@@ -1985,6 +2064,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-hypot">hypot</h2>
 <p><span class="badge new">现代提示</span> 直角边求斜边(C99),专为规避中间量溢出而生。</p>
+<p class="fsum">由两条直角边算斜边长度,也就是两点间的直线距离;内部先缩放再开方,边长极大或极小时不会像 sqrt(x*x+y*y) 那样中途溢出。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> hypot(<span class="kw">double</span> x, <span class="kw">double</span> y);</code></pre>
 <p><strong>参数</strong></p>
@@ -2002,6 +2082,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-cbrt">cbrt</h2>
 <p>立方根(C99),对负数也正确。</p>
+<p class="fsum">求实数的立方根,负数照样能算并给出同号结果,这正是它优于 <code>pow(x, 1.0/3)</code> 的地方,精度也更好。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> cbrt(<span class="kw">double</span> x);</code></pre>
 <p><strong>参数</strong></p>
@@ -2018,6 +2099,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-isnan">isnan / isinf / isfinite</h2>
 <p><span class="badge ok">推荐</span> C99 的浮点分类宏,配合常量宏 <code>NAN</code> 与 <code>INFINITY</code> 使用,对 float/double/long double 通吃。</p>
+<p class="fsum">三个分类宏,分别查一个浮点值是不是 NaN、是不是 ±无穷、是不是有限数;由于 NaN 与自身都不相等,只能靠它们检出脏数据。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> isnan(<span class="kw">double</span> x);
 <span class="kw">int</span> isinf(<span class="kw">double</span> x);
@@ -2039,6 +2121,7 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <h2 id="s6-fsuffix">f 后缀 float 版</h2>
 <p><span class="badge new">现代提示</span> C99 起,本章每个函数都有 <code>f</code> 后缀的 float 版与 <code>l</code> 后缀的 long double 版。</p>
+<p class="fsum">本章每个函数的单精度分身(sqrtf、powf、fabsf)与扩展精度分身(sqrtl 等),让 float 数据全程走单精度通路,省掉来回转 double 的开销。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">float</span> sqrtf(<span class="kw">float</span> x);
 <span class="kw">float</span> powf(<span class="kw">float</span> x, <span class="kw">float</span> y);
@@ -2061,12 +2144,13 @@ wint_t towupper(wint_t wc);</code></pre>
 
 <section class="chapter">
 <h1 id="s7"><span class="part">分类 7</span>time.h 时间日期</h1>
-<p>&lt;time.h&gt; 提供两套时间表示:一是 <code>time_t</code> 表示的"日历时间"(通常是自 1970-01-01 00:00:00 UTC 起的秒数),二是 <code>struct tm</code> 表示的"拆分时间"(年月日时分秒各一个字段)。两者之间用 <code>mktime</code>/<code>localtime_s</code>/<code>gmtime_s</code> 互相转换,格式化输出交给 <code>strftime</code>。此外还有测 CPU 耗时的 <code>clock</code> 和 C11 引入的高精度 <code>timespec_get</code>。本章的两大经典陷阱——<code>tm_year</code> 要加 1900、<code>tm_mon</code> 从 0 起——请务必先看 <a href="#s7-struct-tm">struct tm</a> 一节。</p>
-<div class="note new"><span class="t">现代提示</span><p>C++ 项目请优先使用 <code>std::chrono</code>(C++11 起):类型安全的时长与时间点运算,C++20 还内建了日历与时区库,能从编译期杜绝"秒当毫秒用"这类单位错误。&lt;time.h&gt; 主要用于 C 代码和与旧接口交互。</p></div>
+<p>&lt;time.h&gt; 提供两套时间表示:一是 <code>time_t</code> 表示的“日历时间”(通常是自 1970-01-01 00:00:00 UTC 起的秒数),二是 <code>struct tm</code> 表示的“拆分时间”(年月日时分秒各一个字段)。两者之间用 <code>mktime</code>/<code>localtime_s</code>/<code>gmtime_s</code> 互相转换,格式化输出交给 <code>strftime</code>。此外还有测 CPU 耗时的 <code>clock</code> 和 C11 引入的高精度 <code>timespec_get</code>。本章的两大经典陷阱——<code>tm_year</code> 要加 1900、<code>tm_mon</code> 从 0 起——请务必先看 <a href="#s7-struct-tm">struct tm</a> 一节。</p>
+<div class="note new"><span class="t">现代提示</span><p>C++ 项目请优先使用 <code>std::chrono</code>(C++11 起):类型安全的时长与时间点运算,C++20 还内建了日历与时区库,能从编译期杜绝“秒当毫秒用”这类单位错误。&lt;time.h&gt; 主要用于 C 代码和与旧接口交互。</p></div>
 
 <h2 id="s7-overview">速览</h2><p><strong>本章速览</strong>——时间只有三种形态:秒级的 time_t、拆开的 struct tm、给人看的字符串;本章函数做的全是它们之间的来回搬运。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td><code>time</code></td><td>取当前日历时间,秒级时间戳</td><td>time_t 的内部编码由实现定义,别拿它直接做加减,失败时返回 (time_t)-1。</td></tr><tr><td><code>clock</code></td><td>返回程序耗用的处理器时钟数</td><td>不是墙钟时间;须除以 CLOCKS_PER_SEC 才得到秒,多线程程序里含义会失真。</td></tr><tr><td><code>difftime</code></td><td>求两个时间点相差多少秒</td><td>唯一可移植的时间差算法,结果是 double <span class="badge ok">推荐</span>。</td></tr><tr><td><code>struct tm</code></td><td>分解时间:年月日时分秒的结构</td><td>tm_year 以 1900 为起点、tm_mon 从 0 计,差一错误的重灾区。</td></tr><tr><td><code>mktime</code></td><td>分解时间归一化并转回 time_t</td><td>按本地时区解释,并就地修正越界字段;tm_isdst 置 -1 才让它自行判断夏令时。</td></tr><tr><td><code>localtime_s</code> / <code>gmtime_s</code></td><td>时间戳转本地时区或 UTC 分解时间</td><td>取代返回静态缓冲、非线程安全的 <code>localtime</code>/<code>gmtime</code> <span class="badge old">已过时</span>;注意 C11 附录 K 与 MSVC 版参数顺序相反 <span class="badge ok">推荐</span>。</td></tr><tr><td><code>strftime</code></td><td>按格式把分解时间输出为字符串</td><td>返回 0 只代表缓冲区不足,必须检查;用它替代定长输出的 <code>asctime</code>/<code>ctime</code> <span class="badge old">已过时</span>。</td></tr><tr><td><code>timespec_get</code></td><td>取带纳秒字段的当前时间</td><td>C11 起提供,基准传 TIME_UTC;实际精度取决于系统,别默认真有纳秒级分辨率 <span class="badge ok">推荐</span>。</td></tr></tbody></table>
 
 <h2 id="s7-time">time</h2>
+<p class="fsum">读取系统当前的日历时间,通常就是 1970 年至今的秒数,程序里问“现在几点”都从它开始。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>time_t time(time_t *arg);</code></pre>
 <p><strong>参数</strong></p>
@@ -2075,34 +2159,36 @@ wint_t towupper(wint_t wc);</code></pre>
 <tr><td>arg</td><td>time_t *</td><td>可为 <code>NULL</code>,惯用写法就是传 NULL、只取返回值;非空时当前日历时间会同时写入 <code>*arg</code>,此时返回值与 <code>*arg</code> 内容相同</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
-<p>成功返回当前日历时间(<code>time_t</code>);失败(极罕见,如系统时钟不可用)返回 <code>(time_t)(-1)</code>;标准未规定它设置 <code>errno</code>,因此拿不到更细的错误原因,只能按"时钟不可用"处理。</p>
+<p>成功返回当前日历时间(<code>time_t</code>);失败(极罕见,如系统时钟不可用)返回 <code>(time_t)(-1)</code>;标准未规定它设置 <code>errno</code>,因此拿不到更细的错误原因,只能按“时钟不可用”处理。</p>
 <p><strong>示例</strong></p>
 <pre><code>time_t now = time(NULL);            <span class="cm">// 惯用写法:传 NULL,只用返回值</span>
 printf("since epoch: %lld s\n", (<span class="kw">long long</span>)now);</code></pre>
 <p><strong>其他说明</strong></p>
-<p><code>time_t</code> 是什么:标准只说它是"能表示时间的算术类型",但在所有主流平台上它就是"1970-01-01 00:00:00 UTC 至今的秒数"(Unix 时间戳),现代系统均为 64 位整数。打印或存储时先强转 <code>long long</code>,不要假定它是 <code>int</code> 或 <code>long</code>。</p>
+<p><code>time_t</code> 是什么:标准只说它是“能表示时间的算术类型”,但在所有主流平台上它就是“1970-01-01 00:00:00 UTC 至今的秒数”(Unix 时间戳),现代系统均为 64 位整数。打印或存储时先强转 <code>long long</code>,不要假定它是 <code>int</code> 或 <code>long</code>。</p>
 
 <h2 id="s7-clock">clock</h2>
+<p class="fsum">测程序自启动以来烧掉的处理器时间,除以 CLOCKS_PER_SEC 换成秒,用来给一段代码算性能账。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>clock_t clock(<span class="kw">void</span>);</code></pre>
 <p><strong>参数</strong>：无。</p>
 <p><strong>返回值</strong></p>
-<p>成功返回程序启动以来消耗的<em>处理器时间</em>,单位是"时钟节拍",除以宏 <code>CLOCKS_PER_SEC</code> 才折算成秒;失败(处理器时间不可用或无法表示)返回 <code>(clock_t)(-1)</code>;标准不提供额外的错误详情接口,只能靠与 <code>(clock_t)(-1)</code> 比较来判断。</p>
+<p>成功返回程序启动以来消耗的<em>处理器时间</em>,单位是“时钟节拍”,除以宏 <code>CLOCKS_PER_SEC</code> 才折算成秒;失败(处理器时间不可用或无法表示)返回 <code>(clock_t)(-1)</code>;标准不提供额外的错误详情接口,只能靠与 <code>(clock_t)(-1)</code> 比较来判断。</p>
 <p><strong>示例</strong></p>
 <pre><code>clock_t t0 = clock();
 heavy_work();                        <span class="cm">// 被测代码</span>
 clock_t t1 = clock();
 printf("CPU: %.3f s\n", (<span class="kw">double</span>)(t1 - t0) / CLOCKS_PER_SEC);</code></pre>
 <p><strong>其他说明</strong></p>
-<p>注意它测的是 <em>CPU 时间</em>:程序在 <code>sleep</code>、等 I/O 时它几乎不走;多线程满载时它可能比墙钟快好几倍(POSIX 下累计所有线程)。要测"实际过了多久"请用 <code>timespec_get</code> 或平台高精度计时器(Windows 的 <code>QueryPerformanceCounter</code>);另外 MSVC 的 <code>clock</code> 实测返回的是墙钟时间,与标准语义不符,跨平台代码别依赖它。</p>
+<p>注意它测的是 <em>CPU 时间</em>:程序在 <code>sleep</code>、等 I/O 时它几乎不走;多线程满载时它可能比墙钟快好几倍(POSIX 下累计所有线程)。要测“实际过了多久”请用 <code>timespec_get</code> 或平台高精度计时器(Windows 的 <code>QueryPerformanceCounter</code>);另外 MSVC 的 <code>clock</code> 实测返回的是墙钟时间,与标准语义不符,跨平台代码别依赖它。</p>
 
 <h2 id="s7-difftime">difftime</h2>
+<p class="fsum">算出两个时间点相隔多少秒,是标准里唯一保证可移植的时间相减方式,结束时刻要写在前面。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">double</span> difftime(time_t end, time_t beg);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>end</td><td>time_t</td><td>较晚的时间(结束时刻)。<strong>易错点</strong>:它排在第一个,与"开始在前"的直觉相反,写反会得到负数</td></tr>
+<tr><td>end</td><td>time_t</td><td>较晚的时间(结束时刻)。<strong>易错点</strong>:它排在第一个,与“开始在前”的直觉相反,写反会得到负数</td></tr>
 <tr><td>beg</td><td>time_t</td><td>较早的时间(起始时刻)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
@@ -2113,9 +2199,10 @@ run_task();
 <span class="kw">double</span> secs = difftime(time(NULL), start);   <span class="cm">// 注意:晚的在前</span>
 printf("elapsed: %.0f s\n", secs);</code></pre>
 <p><strong>其他说明</strong></p>
-<p>存在的意义:标准不保证 <code>time_t</code> 能直接做减法(理论上可以是任意算术类型),<code>difftime</code> 是可移植的减法。实践中直接 <code>t1 - t0</code> 也能工作,但写库代码时用它更稳妥。参数顺序是"结束在前、开始在后",与直觉相反,容易写反得到负数。</p>
+<p>存在的意义:标准不保证 <code>time_t</code> 能直接做减法(理论上可以是任意算术类型),<code>difftime</code> 是可移植的减法。实践中直接 <code>t1 - t0</code> 也能工作,但写库代码时用它更稳妥。参数顺序是“结束在前、开始在后”,与直觉相反,容易写反得到负数。</p>
 
 <h2 id="s7-struct-tm">struct tm</h2>
+<p class="fsum">把时间摊开成年月日时分秒各一个字段的结构体,是时间戳和人类可读日期之间的中转站。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">struct</span> tm {
     <span class="kw">int</span> tm_sec;
@@ -2146,24 +2233,26 @@ printf("elapsed: %.0f s\n", secs);</code></pre>
 <p><strong>示例</strong></p>
 <pre><code><span class="cl"><span class="cm">// 千年虫式经典 bug:直接打印 tm_year 得到 126</span></span><span class="cl">printf("%d-%02d-%02d\n",</span><span class="cl"><span class="cc" style="min-width:26.0ch">       t.tm_year + 1900,</span><span class="cm">// 正确:126 + 1900 = 2026</span></span><span class="cl"><span class="cc" style="min-width:26.0ch">       t.tm_mon  + 1,</span><span class="cm">// 正确:7 + 1 = 8 月</span></span><span class="cl"><span class="cc" style="min-width:26.0ch">       t.tm_mday);</span><span class="cm">// mday 本来就从 1 起,不加</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note old"><span class="t">高频翻车点</span><p>"年份显示成 126""日期总是差一个月"几乎全是忘了 <code>+1900</code> / <code>+1</code>。规律可以这样记:<em>凡是当"数组下标/偏移量"用的从 0 起(月、星期、年内天数),凡是人类日历上直接念出来的从 1 起(日)</em>。</p></div>
+<div class="note old"><span class="t">高频翻车点</span><p>“年份显示成 126”“日期总是差一个月”几乎全是忘了 <code>+1900</code> / <code>+1</code>。规律可以这样记:<em>凡是当“数组下标/偏移量”用的从 0 起(月、星期、年内天数),凡是人类日历上直接念出来的从 1 起(日)</em>。</p></div>
 
 <h2 id="s7-mktime">mktime</h2>
+<p class="fsum">把填好的年月日按本地时区折算回时间戳,顺手把越界字段进位归一,做日期加减最省事的办法。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>time_t mktime(<span class="kw">struct</span> tm *tp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>tp</td><td>struct tm *</td><td>要转换的分解时间,按<strong>本地时区</strong>解释;<strong>会被原地修改</strong>——越界字段归一化(如"1 月 45 日"变成 2 月 14 日),并回填 <code>tm_wday</code>/<code>tm_yday</code>。调用前把 <code>tm_isdst</code> 置 <code>-1</code>,夏令时交由实现判断</td></tr>
+<tr><td>tp</td><td>struct tm *</td><td>要转换的分解时间,按<strong>本地时区</strong>解释;<strong>会被原地修改</strong>——越界字段归一化(如“1 月 45 日”变成 2 月 14 日),并回填 <code>tm_wday</code>/<code>tm_yday</code>。调用前把 <code>tm_isdst</code> 置 <code>-1</code>,夏令时交由实现判断</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 <code>*tp</code> 对应的日历时间 <code>time_t</code>,同时 <code>*tp</code> 已被归一化;失败(时间无法用 <code>time_t</code> 表示,例如年份超出范围)返回 <code>(time_t)(-1)</code>,此时 <code>*tp</code> 的内容不可信;标准不规定 <code>errno</code>,只能靠这个哨兵值判断。</p>
 <p><strong>示例</strong></p>
-<pre><code><span class="cl"><span class="kw">struct</span> tm t = {0};</span><span class="cl"><span class="cc" style="min-width:58.0ch">t.tm_year = 2026 - 1900;  t.tm_mon = 0;  t.tm_mday = 45;</span><span class="cm">// "1 月 45 日"</span></span><span class="cl"><span class="cc" style="min-width:58.0ch">t.tm_isdst = -1;</span><span class="cm">// 夏令时交给它判断</span></span><span class="cl"><span class="cc" style="min-width:58.0ch">mktime(&amp;t);</span><span class="cm">// 归一化为 2 月 14 日,并填好星期几</span></span><span class="cl">printf("%d-%02d-%02d wday=%d\n",</span><span class="cl">       t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, t.tm_wday);</span></code></pre>
+<pre><code><span class="cl"><span class="kw">struct</span> tm t = {0};</span><span class="cl"><span class="cc" style="min-width:58.0ch">t.tm_year = 2026 - 1900;  t.tm_mon = 0;  t.tm_mday = 45;</span><span class="cm">// “1 月 45 日”</span></span><span class="cl"><span class="cc" style="min-width:58.0ch">t.tm_isdst = -1;</span><span class="cm">// 夏令时交给它判断</span></span><span class="cl"><span class="cc" style="min-width:58.0ch">mktime(&amp;t);</span><span class="cm">// 归一化为 2 月 14 日,并填好星期几</span></span><span class="cl">printf("%d-%02d-%02d wday=%d\n",</span><span class="cl">       t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, t.tm_wday);</span></code></pre>
 <p><strong>其他说明</strong></p>
-<p>"归一化"是它最好用的隐藏功能:字段允许越界,越界部分自动进位/借位。于是"某天 +30 天""这个月最后一天是几号""某日期是星期几"都不用自己写闰年判断——把字段改了再调一次 <code>mktime</code> 即可。注意它按<em>本地时区</em>解释输入;标准 C 没有对应的 UTC 版本(POSIX 有 <code>timegm</code>,MSVC 有 <code>_mkgmtime</code>)。</p>
+<p>“归一化”是它最好用的隐藏功能:字段允许越界,越界部分自动进位/借位。于是“某天 +30 天”“这个月最后一天是几号”“某日期是星期几”都不用自己写闰年判断——把字段改了再调一次 <code>mktime</code> 即可。注意它按<em>本地时区</em>解释输入;标准 C 没有对应的 UTC 版本(POSIX 有 <code>timegm</code>,MSVC 有 <code>_mkgmtime</code>)。</p>
 
 <h2 id="s7-localtime-s">localtime_s / gmtime_s <span class="badge ok">推荐</span></h2>
+<p class="fsum">把时间戳拆成年月日时分秒,前者按本地时区、后者按 UTC;结果写进调用者自备的缓冲,因而线程安全。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>errno_t localtime_s(<span class="kw">struct</span> tm *result, <span class="kw">const</span> time_t *timer);
 errno_t gmtime_s(<span class="kw">struct</span> tm *result, <span class="kw">const</span> time_t *timer);</code></pre>
@@ -2183,9 +2272,10 @@ errno_t gmtime_s(<span class="kw">struct</span> tm *result, <span class="kw">con
     printf("%d:%02d\n", local.tm_hour, local.tm_min);</code></pre>
 <p><strong>其他说明</strong></p>
 <p>为什么用 _s 版:老的 <code>localtime</code>/<code>gmtime</code> 返回<em>指向内部静态缓冲区</em>的指针——全程序共享一份。第二次调用会覆盖第一次的结果,多线程下更是直接竞态,拿到的字段可能是两次调用的混合体。<code>_s</code> 版让调用者自备缓冲,彻底消除该问题;MSVC 对旧版报 C4996 警告。POSIX 平台的等价物是 <code>localtime_r(&amp;timer, &amp;result)</code>(注意与 MSVC 的 <code>_s</code> 参数顺序又相反)。跨平台代码建议包一层薄封装。</p>
-<div class="note dead"><span class="t">禁用</span><p>不要保存 <code>localtime()</code> 返回的指针"稍后再用"——任何后续的 <code>localtime</code>/<code>gmtime</code>/<code>ctime</code> 调用都可能悄悄改写它指向的内容。</p></div>
+<div class="note dead"><span class="t">禁用</span><p>不要保存 <code>localtime()</code> 返回的指针“稍后再用”——任何后续的 <code>localtime</code>/<code>gmtime</code>/<code>ctime</code> 调用都可能悄悄改写它指向的内容。</p></div>
 
 <h2 id="s7-strftime">strftime</h2>
+<p class="fsum">按 “%Y-%m-%d” 这类模板把分解时间渲染成字符串,是输出给人看的日期时间的标准做法。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">size_t</span> strftime(<span class="kw">char</span> *buf, <span class="kw">size_t</span> maxsize, <span class="kw">const</span> <span class="kw">char</span> *fmt, <span class="kw">const</span> <span class="kw">struct</span> tm *tp);</code></pre>
 <p><strong>参数</strong></p>
@@ -2193,11 +2283,11 @@ errno_t gmtime_s(<span class="kw">struct</span> tm *result, <span class="kw">con
 <tbody>
 <tr><td>buf</td><td>char *</td><td>输出缓冲区,格式化结果连同结尾 <code>'\0'</code> 写在这里</td></tr>
 <tr><td>maxsize</td><td>size_t</td><td>缓冲区容量(含结尾 <code>'\0'</code> 的字节数),惯用 <code><span class="kw">sizeof</span> buf</code>;容量不足时函数返回 0 且 buf 内容不可用</td></tr>
-<tr><td>fmt</td><td>const char *</td><td>含 <code>%</code> 转换符的模板,常用组合如 <code>"%Y-%m-%d %H:%M:%S"</code>;非 <code>%</code> 字符原样复制。完整格式符见下方"其他说明"</td></tr>
+<tr><td>fmt</td><td>const char *</td><td>含 <code>%</code> 转换符的模板,常用组合如 <code>"%Y-%m-%d %H:%M:%S"</code>;非 <code>%</code> 字符原样复制。完整格式符见下方“其他说明”</td></tr>
 <tr><td>tp</td><td>const struct tm *</td><td>已拆分的时间,通常来自 <code>localtime_s</code>/<code>gmtime_s</code>;函数只读不改</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
-<p>成功返回写入 <code>buf</code> 的字符数(不含结尾 <code>'\0'</code>);缓冲区放不下时返回 <code>0</code>,此时 <code>buf</code> 的内容不可用。<strong>易错点</strong>:0 也可能是"格式串本身就产生空串"这一合法结果,所以判断失败时要结合 <code>fmt</code> 是否为空一起看;标准不设置 <code>errno</code>,没有更细的错误详情。</p>
+<p>成功返回写入 <code>buf</code> 的字符数(不含结尾 <code>'\0'</code>);缓冲区放不下时返回 <code>0</code>,此时 <code>buf</code> 的内容不可用。<strong>易错点</strong>:0 也可能是“格式串本身就产生空串”这一合法结果,所以判断失败时要结合 <code>fmt</code> 是否为空一起看;标准不设置 <code>errno</code>,没有更细的错误详情。</p>
 <p><strong>示例</strong></p>
 <pre><code><span class="kw">char</span> buf[64];
 <span class="kw">struct</span> tm t;
@@ -2226,6 +2316,7 @@ puts(buf);</code></pre>
 <p>格式化日期的首选:用它就不必手动处理 +1900/+1,也比拼接 <code>sprintf</code> 安全。反向解析(字符串转 tm)标准 C 没有,POSIX 提供 <code>strptime</code>,Windows 上需自己 <code>sscanf</code> 或用 C++ 的 <code>std::get_time</code>。</p>
 
 <h2 id="s7-timespec-get">timespec_get <span class="badge new">现代提示</span></h2>
+<p class="fsum">取当前时间并附带纳秒字段,比只有秒级的 time 精细得多,适合打日志时间戳和测墙钟耗时。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">struct</span> timespec {
     time_t tv_sec;
@@ -2250,7 +2341,7 @@ timespec_get(&amp;b, TIME_UTC);
           + (b.tv_nsec - a.tv_nsec) / 1e6;   <span class="cm">// 毫秒级墙钟耗时</span>
 printf("%.2f ms\n", ms);</code></pre>
 <p><strong>其他说明</strong></p>
-<p><code>time()</code> 只有秒级精度,<code>timespec_get</code>(C11)把分辨率提升到纳秒字段(实际精度取决于系统,通常微秒到百纳秒级),适合给日志打时间戳、测墙钟耗时。它测的是可能被对时调整的"真实时间",做精密基准测试仍应选单调时钟(POSIX <code>clock_gettime(CLOCK_MONOTONIC)</code>,或 C++ 的 <code>std::chrono::steady_clock</code>)。</p>
+<p><code>time()</code> 只有秒级精度,<code>timespec_get</code>(C11)把分辨率提升到纳秒字段(实际精度取决于系统,通常微秒到百纳秒级),适合给日志打时间戳、测墙钟耗时。它测的是可能被对时调整的“真实时间”,做精密基准测试仍应选单调时钟(POSIX <code>clock_gettime(CLOCK_MONOTONIC)</code>,或 C++ 的 <code>std::chrono::steady_clock</code>)。</p>
 </section>
 
 <section class="chapter">
@@ -2313,6 +2404,7 @@ printf("%.2f ms\n", ms);</code></pre>
 
 <h2 id="s8-assert">assert</h2>
 <span class="badge ok">推荐</span>
+<p class="fsum">运行期检查程序内部不变量,条件为假就打印文件行号并 abort 终止;发布版定义 NDEBUG 后整条语句蒸发。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;assert.h&gt;
 
@@ -2331,6 +2423,7 @@ printf("%.2f ms\n", ms);</code></pre>
 <div class="note new"><span class="t">现代提示</span><p>断言哲学:<code>assert</code> 检查的是"程序员的错"(违反内部不变量、契约、不可能到达的分支),而不是"用户的错"(非法输入、文件不存在)。后者应当用正常的错误处理路径,因为发布版里断言会整体消失。编译期能判定的条件请改用下文的 <code>static_assert</code>;C++ 中运行期契约还可考虑异常。</p></div>
 
 <h2 id="s8-errno">errno</h2>
+<p class="fsum">库函数出错时写进去的错误码左值,读它可以问出"到底哪儿失败了",再交给 strerror/perror 翻成人话。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;errno.h&gt;
 
@@ -2352,6 +2445,7 @@ errno</code></pre>
 <p>把错误码转成文字用 <code>strerror(errno)</code>;MSVC 对 <code>strerror</code> 报 C4996 警告,可改用 <code>strerror_s</code>(C11 附录 K),POSIX 下线程安全版本是 <code>strerror_r</code>。C++ 的现代等价物是 <code>std::error_code</code> / <code>std::system_error</code>。</p>
 
 <h2 id="s8-va-list">va_list / va_start / va_arg / va_end</h2>
+<p class="fsum">让函数能吃下不定个数的参数并逐个取出:va_start 起头、va_arg 取一个、va_end 收尾、va_copy 备份游标以便二次遍历。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;stdarg.h&gt;
 
@@ -2379,6 +2473,7 @@ type va_arg(va_list ap, type);
 <div class="note new"><span class="t">现代提示</span><p>自己封装 printf 风格接口时,接受 <code>va_list</code> 并转发给 <code>vsnprintf</code> 是标准做法;若需二次遍历,用 <code>va_copy</code> 复制而不是重用。C++ 中优先用变参模板或 <code>std::format</code>,类型安全且无提升陷阱。</p></div>
 
 <h2 id="s8-offsetof">offsetof</h2>
+<p class="fsum">在编译期算出某个成员距结构体开头有多少字节,用来看清对齐填充、做二进制序列化,以及由成员指针反推外层对象。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;stddef.h&gt;
 
@@ -2400,6 +2495,7 @@ printf("len 位于偏移 %zu\n", off);   <span class="cm">// 通常输出 4:tag 
 <p>典型用途:观察对齐填充、二进制序列化,以及内核风格的 <code>container_of</code>——由成员指针反推外层结构体指针。自己用指针减法模拟 <code>offsetof</code>(如 <code>(size_t)&amp;((T*)0)-&gt;m</code>)在标准层面是未定义行为,应始终使用这个宏。</p>
 
 <h2 id="s8-size-t">size_t / ptrdiff_t / NULL</h2>
+<p class="fsum">分别表示对象大小、两个指针之差和空指针:前者无符号、后者有符号,用它们而不是 int 表达长度与下标,代码才能在 32/64 位平台通吃。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;stddef.h&gt;
 
@@ -2424,6 +2520,7 @@ printf("len 位于偏移 %zu\n", off);   <span class="cm">// 通常输出 4:tag 
 
 <h2 id="s8-stdint">int8_t ~ uint64_t 与 PRId64</h2>
 <span class="badge ok">推荐</span>
+<p class="fsum">把整数位宽写死的类型(如 int32_t)加上配套的打印格式宏,协议解析、文件格式和跨平台代码靠它们避免位宽随平台漂移。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;stdint.h&gt;
 #include &lt;inttypes.h&gt;
@@ -2453,6 +2550,7 @@ printf("big=%" PRId64 " mask=%08" PRIx32 "\n", big, mask);
 <p>另有"最快"与"最小"系列:<code>int_fast32_t</code>(至少 32 位中最快的)与 <code>int_least32_t</code>(至少 32 位中最小的);精确宽度类型在极老平台上是可选的,但现实中凡是你会遇到的平台都有。C++ 中对应 <code>&lt;cstdint&gt;</code>,类型位于 <code>std::</code> 命名空间。</p>
 
 <h2 id="s8-stdbool">bool / true / false</h2>
+<p class="fsum">给 C99 补上 bool、true、false 这套写法,让真假值不必再拿 int 冒充;C23 起它们已是关键字,这个头文件只剩兼容作用。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;stdbool.h&gt;
 
@@ -2481,6 +2579,7 @@ printf("big=%" PRId64 " mask=%08" PRIx32 "\n", big, mask);
 <div class="note new"><span class="t">现代提示</span><p>C23 起 <code>bool</code>、<code>true</code>、<code>false</code> 成为真正的关键字,<code>&lt;stdbool.h&gt;</code> 仅为兼容保留;C++ 从一开始就内建 <code>bool</code>,无需任何头文件。写接口时用 <code>bool</code> 而不是 <code>int</code> 表达真假,可读性与自文档性都更好。</p></div>
 
 <h2 id="s8-limits">limits.h / float.h 常量</h2>
+<p class="fsum">查各种类型到底能装多大、精度到哪一位的编译期常量,用来在溢出发生前拦住它,并给浮点比较定一个靠谱的容差。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;limits.h&gt;
 #include &lt;float.h&gt;</code></pre>
@@ -2511,6 +2610,7 @@ printf("big=%" PRId64 " mask=%08" PRIx32 "\n", big, mask);
 
 <h2 id="s8-static-assert">static_assert</h2>
 <span class="badge new">现代提示</span>
+<p class="fsum">在编译期校验一个常量条件,不满足就直接编译报错,常用来锁死结构体大小、字节位数等 ABI 与平台假设。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;assert.h&gt;
 

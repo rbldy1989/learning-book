@@ -150,6 +150,7 @@ td:first-child,th:first-child{white-space:nowrap;}
 td code{white-space:nowrap;}
 pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
+.fsum { margin: .2em 0 1.1em; color: var(--muted); font-size: .95em; line-height: 1.7; }
 </style>
 </head>
 <body>
@@ -568,6 +569,7 @@ typedef struct tagMSG {
 <div class="note new"><span class="t">🔵 HeapAlloc 还是 VirtualAlloc？</span><p>几字节到几百 KB 的常规对象用 <code>HeapAlloc</code>——堆管理器帮你处理碎片和小块合并。一次性的大缓冲（MB 级）、需要页对齐、需要改保护属性或“先预定后分批提交”的场景才用 <code>VirtualAlloc</code>。用 VirtualAlloc 分配 32 字节是巨大的浪费：它最少也占一页，且预定粒度是 64 KB。</p></div>
 
 <h3>HeapAlloc</h3>
+<p class="fsum">从指定的堆里要一块内存，相当于 Win32 版的 malloc，日常动态分配首选；失败只给 NULL，不留错误码。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">LPVOID</span> HeapAlloc(<span class="kw">HANDLE</span> hHeap, <span class="kw">DWORD</span>  dwFlags, <span class="kw">SIZE_T</span> dwBytes);</code></pre>
 <p><strong>参数</strong></p>
@@ -582,6 +584,7 @@ typedef struct tagMSG {
 <pre><code><span class="cl"><span class="cc" style="min-width:38.0ch"><span class="kw">HANDLE</span> hHeap = GetProcessHeap();</span><span class="cm">// 进程默认堆，取来即用，不要销毁</span></span><span class="cl"><span class="kw">wchar_t</span> *buf = (<span class="kw">wchar_t</span> *)HeapAlloc(hHeap, HEAP_ZERO_MEMORY,</span><span class="cl">                                        260 * <span class="kw">sizeof</span>(<span class="kw">wchar_t</span>));</span><span class="cl"><span class="kw">if</span> (buf != NULL) {</span><span class="cl"><span class="cc" style="min-width:38.0ch">    wcscpy_s(buf, 260, L"kernel32");</span><span class="cm">// 已清零，可安全当字符串用</span></span><span class="cl"><span class="cc" style="min-width:38.0ch">    HeapFree(hHeap, 0, buf);</span><span class="cm">// 必须交还给同一个堆</span></span><span class="cl">}</span></code></pre>
 
 <h3>VirtualAlloc</h3>
+<p class="fsum">以页为单位直接向进程地址空间预定或提交内存，适合 MB 级大缓冲、页对齐和自定的分段提交策略。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">LPVOID</span> VirtualAlloc(
     <span class="kw">LPVOID</span> lpAddress,
@@ -602,6 +605,7 @@ typedef struct tagMSG {
 <pre><code><span class="cl"><span class="cm">// 一次预定并提交 1 MB，页面自动清零</span></span><span class="cl"><span class="kw">SIZE_T</span> cb = 1 &lt;&lt; 20;</span><span class="cl"><span class="kw">void</span> *p = VirtualAlloc(NULL, cb,</span><span class="cl">                       MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);</span><span class="cl"><span class="kw">if</span> (p != NULL) {</span><span class="cl"><span class="cc" style="min-width:37.0ch">    memset(p, 0x5A, cb);</span><span class="cm">// 已提交页可直接读写</span></span><span class="cl"><span class="cc" style="min-width:37.0ch">    VirtualFree(p, 0, MEM_RELEASE);</span><span class="cm">// 整块释放：dwSize 必须为 0</span></span><span class="cl">}</span></code></pre>
 
 <h3>GetProcessHeap</h3>
+<p class="fsum">取回进程默认堆的句柄，Heap 系列函数的第一个参数几乎都靠它；取来即用，既不用缓存也不用释放。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HANDLE</span> GetProcessHeap(<span class="kw">void</span>);</code></pre>
 <p><strong>参数</strong>：无。</p>
@@ -613,6 +617,7 @@ typedef struct tagMSG {
 <p>默认堆由系统随进程创建、随进程退出自动回收，<strong>绝不要</strong>对它调用 HeapDestroy。同一进程内多次调用返回的是同一个句柄，无需缓存也无需释放。</p>
 
 <h3>HeapReAlloc</h3>
+<p class="fsum">把已分配的堆块改大或改小，内存可能被整体搬到新地址，所以必须用返回值更新指针而不能覆盖原指针。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">LPVOID</span> HeapReAlloc(<span class="kw">HANDLE</span> hHeap, <span class="kw">DWORD</span>  dwFlags, <span class="kw">LPVOID</span> lpMem, <span class="kw">SIZE_T</span> dwBytes);</code></pre>
 <p><strong>参数</strong></p>
@@ -636,6 +641,7 @@ p = tmp;   <span class="cm">// 成功才覆盖；旧地址此时可能已失效<
 <p><strong>搬家陷阱：</strong>切勿写成 <code>p = HeapReAlloc(h, 0, p, n);</code>——一旦失败返回 NULL，就把仍然有效的原指针冲掉、造成泄漏；务必先用临时指针接住，判成功后再覆盖。同理，搬家之后所有指向旧地址的指针、迭代器都要一并更新。</p>
 
 <h3>HeapFree</h3>
+<p class="fsum">把 HeapAlloc / HeapReAlloc 拿到的内存块交还给同一个堆，重复释放会破坏堆元数据、连累后续所有分配。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> HeapFree(<span class="kw">HANDLE</span> hHeap, <span class="kw">DWORD</span>  dwFlags, <span class="kw">LPVOID</span> lpMem);</code></pre>
 <p><strong>参数</strong></p>
@@ -655,6 +661,7 @@ p = NULL;   <span class="cm">// 立刻断掉悬空指针</span></code></pre>
 <p>同一块内存重复释放属未定义行为，会破坏整个堆的元数据、导致后续任意分配崩溃；释放后建议立刻把指针置 NULL。</p>
 
 <h3>HeapCreate / HeapDestroy</h3>
+<p class="fsum">建立和销毁一个私有堆：把大量同生命周期的小对象装进去，结束时整堆一次清空，无需逐块释放。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HANDLE</span> HeapCreate(<span class="kw">DWORD</span>  flOptions, <span class="kw">SIZE_T</span> dwInitialSize, <span class="kw">SIZE_T</span> dwMaximumSize);
 <span class="kw">BOOL</span> HeapDestroy(<span class="kw">HANDLE</span> hHeap);</code></pre>
@@ -673,6 +680,7 @@ p = NULL;   <span class="cm">// 立刻断掉悬空指针</span></code></pre>
 <p>销毁时堆内所有块一并回收，无须逐块 HeapFree，句柄随之失效——这正是私有堆的价值：把大量同生命周期的小对象装进去，结束时一次清空。把 <code>GetProcessHeap()</code> 的句柄交给 HeapDestroy 是严重错误，会摧毁整个进程的默认堆。</p>
 
 <h3>VirtualFree</h3>
+<p class="fsum">归还 VirtualAlloc 拿到的页：可以只解除物理提交、保留地址空间，也可以连地址空间一起还给系统。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> VirtualFree(<span class="kw">LPVOID</span> lpAddress, <span class="kw">SIZE_T</span> dwSize, <span class="kw">DWORD</span>  dwFreeType);</code></pre>
 <p><strong>参数</strong></p>
@@ -689,6 +697,7 @@ p = NULL;   <span class="cm">// 立刻断掉悬空指针</span></code></pre>
 VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize 只能是 0</span></code></pre>
 
 <h3>VirtualProtect</h3>
+<p class="fsum">修改一段内存页的读/写/执行权限，并带回原属性以便还原；JIT、热补丁、哨兵页都靠它。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> VirtualProtect(
     <span class="kw">LPVOID</span> lpAddress,
@@ -715,6 +724,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 <p>JIT / 自修改代码的标准流程是：先以 <code>PAGE_READWRITE</code> 写入，再改成 <code>PAGE_EXECUTE_READ</code>；长期保持“可写又可执行”的页会被安全软件重点盯防。</p>
 
 <h3>GlobalAlloc / GlobalLock / GlobalUnlock / GlobalFree</h3>
+<p class="fsum">16 位遗留的可移动内存四件套：分配得到句柄、锁定换取指针、用完解锁、最后释放，今天只在剪贴板和 OLE 传数据时还需要。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HGLOBAL</span> GlobalAlloc(<span class="kw">UINT</span>   uFlags, <span class="kw">SIZE_T</span> dwBytes);
 <span class="kw">LPVOID</span> GlobalLock(<span class="kw">HGLOBAL</span> hMem);
@@ -734,6 +744,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 <p><span class="badge old">已过时</span> 16 位时代的遗留内存 API。如今基本只在剪贴板（<code>SetClipboardData</code>）和 OLE 数据传输里还需要它——那些场景要求内存以 <code>GMEM_MOVEABLE</code> 分配。普通动态内存请改用 HeapAlloc / HeapFree。内存句柄一旦交给 <code>SetClipboardData</code>，所有权即转移给系统，不能再自行 GlobalFree。</p>
 
 <h3>LocalFree</h3>
+<p class="fsum">释放局部堆内存块，今天最常见的用途是回收系统替你分配的缓冲区，典型如 FormatMessage 生成的消息串。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HLOCAL</span> LocalFree(<span class="kw">HLOCAL</span> hMem);</code></pre>
 <p><strong>参数</strong></p>
@@ -772,6 +783,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 </tbody></table>
 
 <h3>CreateFileW</h3>
+<p class="fsum">把一条路径变成可读写的句柄，文件、目录、管道、设备都由它打开或创建，是 Windows 一切 I/O 的总入口。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HANDLE</span> CreateFileW(
     <span class="kw">LPCWSTR</span>               lpFileName,
@@ -807,6 +819,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 </tbody></table>
 
 <h3>ReadFile</h3>
+<p class="fsum">从文件、管道、串口等句柄读一批字节到缓冲区；读到 0 字节仍算成功，那正是到达文件尾的标志。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> ReadFile(
     <span class="kw">HANDLE</span>       hFile,
@@ -834,6 +847,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 }</code></pre>
 
 <h3>WriteFile</h3>
+<p class="fsum">往文件或管道句柄写一批字节；返回成功只说明数据进了系统缓存，要保证落盘还得配 FlushFileBuffers。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> WriteFile(
     <span class="kw">HANDLE</span>       hFile,
@@ -856,6 +870,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 <pre><code><span class="cl"><span class="kw">const char</span> line[] = "hello, kernel32\r\n";</span><span class="cl"><span class="kw">DWORD</span> written = 0;</span><span class="cl"><span class="kw">BOOL</span> ok = WriteFile(h, line, (<span class="kw">DWORD</span>)(<span class="kw">sizeof</span>(line) - 1),</span><span class="cl"><span class="cc" style="min-width:38.0ch">                    &amp;written, NULL);</span><span class="cm">// -1：不把结尾 \0 写进文件</span></span><span class="cl"><span class="kw">if</span> (!ok || written != <span class="kw">sizeof</span>(line) - 1) {</span><span class="cl">    wprintf(L"write failed: %lu\n", GetLastError());</span><span class="cl">}</span><span class="cl"><span class="cc" style="min-width:38.0ch">FlushFileBuffers(h);</span><span class="cm">// 关键数据先落盘，再关句柄</span></span></code></pre>
 
 <h3>FindFirstFileW</h3>
+<p class="fsum">按通配符开始枚举目录内容，取回第一条匹配项并返回一个专用查找句柄，供后续遍历和关闭使用。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HANDLE</span> FindFirstFileW(
     <span class="kw">LPCWSTR</span>            lpFileName,
@@ -881,6 +896,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 </tbody></table>
 
 <h3>CloseHandle</h3>
+<p class="fsum">关掉一个内核对象句柄并减少其引用计数，文件、进程、线程、事件通用，是防句柄泄漏的收尾动作。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> CloseHandle(<span class="kw">HANDLE</span> hObject);</code></pre>
 <p><strong>参数</strong></p>
@@ -901,6 +917,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 <p>对同一句柄重复关闭或传入无效句柄，在调试器下会直接触发异常——一个句柄只关一次，关完最好把变量置 NULL。</p>
 
 <h3>GetFileSizeEx</h3>
+<p class="fsum">一次调用取回文件的完整 64 位字节数，不用像老版那样拼接高低位，天然支持超过 4 GB 的大文件。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> GetFileSizeEx(<span class="kw">HANDLE</span>         hFile, <span class="kw">PLARGE_INTEGER</span> lpFileSize);</code></pre>
 <p><strong>参数</strong></p>
@@ -919,6 +936,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 <p><span class="badge ok">推荐</span> 老函数 GetFileSize 要把 64 位大小拆成返回值加出参两截，还得用 <code>INVALID_FILE_SIZE</code> 做二义性判断；Ex 版一次给全，天然支持超过 4 GB 的文件，新代码一律用它。</p>
 
 <h3>SetFilePointerEx</h3>
+<p class="fsum">把文件的读写位置挪到指定偏移，支持 64 位偏移量，可从文件头、当前位置或文件尾三种基准起算。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> SetFilePointerEx(
     <span class="kw">HANDLE</span>         hFile,
@@ -941,6 +959,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 <p><span class="badge ok">推荐</span> 允许把指针移到文件末尾之后，这本身不算错，真正写入时文件才会被扩展（中间形成稀疏区或零填充）。本函数取代了返回值语义混乱的老函数 SetFilePointer。</p>
 
 <h3>DeleteFileW</h3>
+<p class="fsum">删掉一个文件（不能删目录）；若文件仍被别处以共享删除方式打开，删除会推迟到最后一个句柄关闭时生效。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> DeleteFileW(<span class="kw">LPCWSTR</span> lpFileName);</code></pre>
 <p><strong>参数</strong></p>
@@ -961,6 +980,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 <p>若文件以 <code>FILE_SHARE_DELETE</code> 方式被别处打开，删除会标记成功，但要推迟到最后一个句柄关闭时才真正生效——此时目录里仍能短暂看到它。</p>
 
 <h3>CopyFileW</h3>
+<p class="fsum">把一个文件整份复制到新路径并带上原有属性，可选择目标已存在时直接失败以防误覆盖。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> CopyFileW(
     <span class="kw">LPCWSTR</span> lpExistingFileName,
@@ -986,6 +1006,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 <p>复制会连同文件属性一起带过去。需要进度回调或可取消的大文件复制，改用扩展版 <code>CopyFileExW</code>。</p>
 
 <h3>MoveFileW / MoveFileExW</h3>
+<p class="fsum">移动或重命名文件与目录，同卷内是瞬时改名；Ex 版多了覆盖目标、跨卷复制、推迟到重启执行等选项。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> MoveFileW(<span class="kw">LPCWSTR</span> lpExistingFileName, <span class="kw">LPCWSTR</span> lpNewFileName);
 <span class="kw">BOOL</span> MoveFileExW(
@@ -1011,6 +1032,7 @@ MoveFileExW(L"C:\\out\\a.dat", L"D:\\arch\\a.dat",
 <p><code>MoveFileW(a, b)</code> 等价于 <code>MoveFileExW(a, b, MOVEFILE_COPY_ALLOWED)</code>；需要覆盖目标或重启替换时必须用 Ex 版。</p>
 
 <h3>CreateDirectoryW</h3>
+<p class="fsum">建一层新目录，父目录必须已经存在；已存在时返回失败，但那个错误码通常可以当成成功放行。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> CreateDirectoryW(
     <span class="kw">LPCWSTR</span>               lpPathName,
@@ -1033,6 +1055,7 @@ MoveFileExW(L"C:\\out\\a.dat", L"D:\\arch\\a.dat",
 <p>要一次创建多级目录，可自己逐级循环调用，或改用 Shell 提供的 <code>SHCreateDirectoryExW</code>。</p>
 
 <h3>GetFileAttributesW</h3>
+<p class="fsum">一次调用查出路径的属性位掩码，是判断“文件在不在、是不是目录”最轻量的方式，全程不打开句柄。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">DWORD</span> GetFileAttributesW(<span class="kw">LPCWSTR</span> lpFileName);</code></pre>
 <p><strong>参数</strong></p>
@@ -1051,6 +1074,7 @@ MoveFileExW(L"C:\\out\\a.dat", L"D:\\arch\\a.dat",
 <p>这是 Win32 下最快的存在性判断——一次调用、不打开句柄、文件和目录通吃，比 CreateFileW 试开或 FindFirstFileW 都轻。</p>
 
 <h3>FindNextFileW</h3>
+<p class="fsum">用查找句柄取出目录里的下一条项目；返回 0 且错误码为 ERROR_NO_MORE_FILES 表示已正常遍历完，不是出错。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> FindNextFileW(
     <span class="kw">HANDLE</span>             hFindFile,
@@ -1069,6 +1093,7 @@ MoveFileExW(L"C:\\out\\a.dat", L"D:\\arch\\a.dat",
 <p>FindFirstFileW 已经带回了第一项，所以标准写法是 do-while 而不是 while，否则会漏掉第一个文件。枚举目录时记得跳过 <code>.</code> 和 <code>..</code>。</p>
 
 <h3>FindClose</h3>
+<p class="fsum">关闭 FindFirstFileW 开出来的查找句柄；它不是内核对象，绝不能拿 CloseHandle 顶替。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> FindClose(<span class="kw">HANDLE</span> hFindFile);</code></pre>
 <p><strong>参数</strong></p>
@@ -1101,6 +1126,7 @@ FindClose(hFind);        <span class="cm">// 正确：搜索句柄专用</span>
 <div class="note new"><span class="t">🔵 DLL 搜索顺序与劫持</span><p>不带路径调用 <code>LoadLibraryW(L"foo.dll")</code> 时，系统按固定顺序搜索多个目录，应用程序目录排在系统目录之前——攻击者把同名恶意 DLL 放进你的下载目录或工作目录就可能被优先加载。加载系统 DLL 请写绝对路径（<code>GetSystemDirectoryW</code> 拼接），或改用 <code>LoadLibraryExW</code> + <code>LOAD_LIBRARY_SEARCH_SYSTEM32</code>。</p></div>
 
 <h3>LoadLibraryW</h3>
+<p class="fsum">把一个 DLL 加载进当前进程并让它的引用计数加一，是插件机制和运行时动态调用 API 的第一步。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HMODULE</span> LoadLibraryW(<span class="kw">LPCWSTR</span> lpLibFileName);</code></pre>
 <p><strong>参数</strong></p>
@@ -1120,6 +1146,7 @@ FindClose(hFind);        <span class="cm">// 正确：搜索句柄专用</span>
 FreeLibrary(hDll);                      <span class="cm">// 计数减一；之后取到的函数指针全部作废</span></code></pre>
 
 <h3>GetProcAddress</h3>
+<p class="fsum">在已加载的模块里按函数名或导出序号找到函数入口地址，也是探测系统是否支持某个新 API 的经典手法。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">FARPROC</span> GetProcAddress(<span class="kw">HMODULE</span> hModule, <span class="kw">LPCSTR</span>  lpProcName);</code></pre>
 <p><strong>参数</strong></p>
@@ -1143,6 +1170,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 <p>用它探测“当前系统是否支持某新 API”是经典技巧：取不到就走降级路径，这样程序在老系统上也能启动，而不是一加载就报缺少入口点。</p>
 
 <h3>GetModuleFileNameW</h3>
+<p class="fsum">查出某个模块在磁盘上的完整路径，传 NULL 就是“我这个 EXE 到底在哪”的标准答案，常用来定位程序目录。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">DWORD</span> GetModuleFileNameW(<span class="kw">HMODULE</span> hModule, <span class="kw">LPWSTR</span>  lpFilename, <span class="kw">DWORD</span>   nSize);</code></pre>
 <p><strong>参数</strong></p>
@@ -1157,6 +1185,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 <pre><code><span class="cl"><span class="kw">wchar_t</span> path[MAX_PATH];</span><span class="cl"><span class="cc" style="min-width:53.0ch"><span class="kw">DWORD</span> n = GetModuleFileNameW(NULL, path, MAX_PATH);</span><span class="cm">// NULL = 本 EXE</span></span><span class="cl"><span class="kw">if</span> (n &gt; 0 &amp;&amp; n &lt; MAX_PATH) {</span><span class="cl"><span class="cc" style="min-width:53.0ch">    wprintf(L"exe: %s\n", path);</span><span class="cm">// 去掉文件名部分即可得到程序目录</span></span><span class="cl">} <span class="kw">else</span> {</span><span class="cl">    <span class="cm">// n == MAX_PATH：路径被截断，应换更大缓冲区重试</span></span><span class="cl">}</span></code></pre>
 
 <h3>GetModuleHandleW</h3>
+<p class="fsum">在进程已加载的模块列表里查句柄，只查不加载、也不加引用计数；传 NULL 得到本 EXE 自身的基址。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HMODULE</span> GetModuleHandleW(<span class="kw">LPCWSTR</span> lpModuleName);</code></pre>
 <p><strong>参数</strong></p>
@@ -1171,6 +1200,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 <p>两条铁律：一，它<em>只查不加载</em>，想加载新 DLL 用 LoadLibraryW；二，它<em>不增加</em>模块引用计数，所以返回的句柄绝不能拿去 FreeLibrary，否则会把别人正在用的模块提前卸掉。</p>
 
 <h3>FreeLibrary</h3>
+<p class="fsum">把 DLL 的引用计数减一，归零时模块才真正卸载，此后从它取到的所有函数指针立即变成悬空指针。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> FreeLibrary(<span class="kw">HMODULE</span> hLibModule);</code></pre>
 <p><strong>参数</strong></p>
@@ -1200,6 +1230,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 </tbody></table>
 
 <h3>FormatMessageW</h3>
+<p class="fsum">把冷冰冰的 Win32 错误码翻译成人能读懂的文字，是日志和用户提示里显示失败原因的标准手段。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">DWORD</span> FormatMessageW(
     <span class="kw">DWORD</span>    dwFlags,
@@ -1228,6 +1259,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 <p>用 ALLOCATE_BUFFER 拿到的缓冲区必须用 <code>LocalFree</code> 释放——这是 LocalAlloc 家族在现代代码里仅存的几个出场机会之一。</p>
 
 <h3>GetLastError</h3>
+<p class="fsum">领取当前线程最近一次 API 失败留下的错误码；必须在判定失败后立刻读，中间任何调用都可能把它冲掉。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">DWORD</span> GetLastError(<span class="kw">void</span>);</code></pre>
 <p><strong>参数</strong>：无。</p>
@@ -1239,6 +1271,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 <p>三个关键点：一，错误码是<em>线程局部</em>存储，各线程互不干扰；二，必须在失败判定后<em>立刻</em>读取——中间再调任何 API（甚至某些 C 运行库函数）都可能把它覆盖掉；三，只有 API 返回失败时读它才有意义，成功路径上残留的值不可信。</p>
 
 <h3>SetLastError</h3>
+<p class="fsum">往本线程的错误码槽里写一个值，让自己封装的函数也能遵循“返回 FALSE ＋ 调用方查错误码”的 Win32 约定。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> SetLastError(<span class="kw">DWORD</span> dwErrCode);</code></pre>
 <p><strong>参数</strong></p>
@@ -1279,6 +1312,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 </table>
 
 <h3>CreateProcessW</h3>
+<p class="fsum">创建一个新进程去运行指定程序，并把新进程与其主线程的句柄交回来，是 Windows 启动外部程序的标准入口。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL CreateProcessW(
     LPCWSTR               lpApplicationName,
@@ -1316,6 +1350,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 <div class="note new"><span class="t">🔵 为什么命令行必须可写</span><p>CreateProcessW 在解析时会向 lpCommandLine 缓冲区临时写入（例如插入结束符再复原）。字符串字面量位于只读段，传进去轻则未定义行为、重则访问违例。A 版没有这个限制，但本书统一用 W 版，请养成"命令行放数组里"的习惯。</p></div>
 
 <h3>OpenProcess</h3>
+<p class="fsum">按 PID 打开一个已经存在的进程，拿到句柄后才能查询它的状态、等它结束或把它终止掉。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HANDLE OpenProcess(
     DWORD dwDesiredAccess,
@@ -1359,6 +1394,7 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 </table>
 
 <h3>GetExitCodeProcess</h3>
+<p class="fsum">读取指定进程的退出码，用来判断子进程是正常完成还是失败收场；须先确认它已退出再取值。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL GetExitCodeProcess(HANDLE  hProcess, LPDWORD lpExitCode);</code></pre>
 <p><strong>参数</strong></p>
@@ -1382,6 +1418,7 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 <p>经典陷阱：不要用"退出码是否等于 STILL_ACTIVE(259)"来轮询判断进程是否还活着——真的以 259 退出的进程会被误判为仍在运行。可靠做法是先用 <code>WaitForSingleObject(hProcess, 0)</code> 探测（返回 WAIT_TIMEOUT 说明还在跑）或以 INFINITE 等到句柄受信，再去读退出码。</p>
 
 <h3>ExitProcess</h3>
+<p class="fsum">立刻结束当前进程及其全部线程，并把指定退出码留给父进程读取，调用后不再返回。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> ExitProcess(UINT uExitCode);</code></pre>
 <p><strong>参数</strong></p>
@@ -1399,6 +1436,7 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 <p>它立即终止调用进程及其全部线程。已加载的 DLL 会收到 DLL_PROCESS_DETACH 通知，但 CRT 的 atexit 回调和 C++ 全局对象析构<strong>不会</strong>执行——正常退出应从 main 返回或调用 exit，把 ExitProcess 留给必须立刻停止的场合。</p>
 
 <h3>TerminateProcess</h3>
+<p class="fsum">从外部强行杀掉另一个进程，对方拿不到任何通知、来不及做清理，只应作为对付无响应进程的最后手段。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL TerminateProcess(HANDLE hProcess, UINT   uExitCode);</code></pre>
 <p><strong>参数</strong></p>
@@ -1431,6 +1469,7 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 </table>
 
 <h3>CreateThread</h3>
+<p class="fsum">在当前进程内开一条新线程去跑指定函数，属于纯 Win32 层，不会为新线程初始化 C 运行库的每线程状态。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HANDLE CreateThread(
     LPSECURITY_ATTRIBUTES  lpThreadAttributes,
@@ -1460,6 +1499,7 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 <p><strong>为什么 CRT 下改用 _beginthreadex：</strong>CreateThread 只建"裸"线程，不初始化 C 运行库为每个线程维护的私有状态（errno、strtok 上下文、区域设置缓存等）。_beginthreadex 在调用你的函数前先做这层初始化、线程退出时再清理，老版本静态 CRT 下还能避免每线程内存泄漏。规则很简单：<strong>线程函数里只要碰 CRT，就用 _beginthreadex</strong>。</p>
 
 <h3>_beginthreadex</h3>
+<p class="fsum">CRT 版的线程创建：先为新线程备好 errno、strtok 等每线程数据再执行你的函数，线程里用到 C 运行库时应选它而非 CreateThread。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>uintptr_t _beginthreadex(
     <span class="kw">void</span>     *security,
@@ -1489,6 +1529,7 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 <p>使用 C/C++ 运行库的程序应以它代替裸 CreateThread：它为新线程初始化 CRT 的每线程数据（errno、strtok 状态等），线程函数返回时再经 _endthreadex 正确回收，不会泄漏。声明在 <code>&lt;process.h&gt;</code>。</p>
 
 <h3>ExitThread</h3>
+<p class="fsum">就地结束当前线程并留下退出码，但栈上对象一个都不析构，实际代码里应改成让线程函数自然 return。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> ExitThread(DWORD dwExitCode);</code></pre>
 <p><strong>参数</strong></p>
@@ -1506,6 +1547,7 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 <p>C++ 代码里几乎不该直接调用它：栈上对象的析构函数一个都不会执行，RAII 持有的锁、文件、内存就此泄漏；在 _beginthreadex 创建的线程里调用它还绕过了 CRT 的收尾流程。让线程函数自然 return 是效果相同的安全写法——返回值就是退出码，析构照常发生。</p>
 
 <h3>GetCurrentThreadId</h3>
+<p class="fsum">取得调用线程自己的数字 ID，常用来在多线程日志里标出这行是谁打印的，便于调试定位。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>DWORD GetCurrentThreadId(<span class="kw">void</span>);</code></pre>
 <p><strong>参数</strong>：无。</p>
@@ -1518,6 +1560,7 @@ printf("[TID %lu] 任务开始\n", GetCurrentThreadId());</code></pre>
 <p>该 ID 在线程存活期间全系统唯一，但线程结束后可能被新线程复用，因此不适合作为长期存储的标识。另外要分清：ID 只是数字标识，不是句柄，不能拿去 WaitForSingleObject / CloseHandle——需要句柄请用 OpenThread。</p>
 
 <h3>SuspendThread / ResumeThread</h3>
+<p class="fsum">一对增减线程挂起计数的函数：前者把目标线程冻结在任意位置（极易死锁，基本只属调试器），后者放行，常用来启动 CREATE_SUSPENDED 创建的线程。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>DWORD SuspendThread(HANDLE hThread);
 DWORD ResumeThread(HANDLE hThread);</code></pre>
@@ -1537,6 +1580,7 @@ DWORD ResumeThread(HANDLE hThread);</code></pre>
 <p>这是一对操作线程挂起计数的函数：Suspend 加一，Resume 减一。生产代码要慎用 SuspendThread——线程被冻结在一个你无法预知的位置，若它恰好持有堆锁或 CRT 内部锁，其他线程一分配内存就集体死锁；它本质上是给调试器准备的。线程间协作应改用事件、条件变量等让目标"自己停在安全点"的机制。ResumeThread 倒有一个正当的常见用途：放行以 CREATE_SUSPENDED 创建的线程。</p>
 
 <h3>SetThreadPriority</h3>
+<p class="fsum">调整线程相对于进程优先级类的调度偏移，让关键线程抢先响应，或让后台线程给交互线程让路。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL SetThreadPriority(HANDLE hThread, <span class="kw">int</span>    nPriority);</code></pre>
 <p><strong>参数</strong></p>
@@ -1581,6 +1625,7 @@ DWORD ResumeThread(HANDLE hThread);</code></pre>
 </table>
 
 <h3>WaitForSingleObject</h3>
+<p class="fsum">阻塞当前线程，直到指定内核对象变为「有信号」或超时，是等进程结束、等线程收工、抢互斥量的通用手段。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>DWORD WaitForSingleObject(HANDLE hHandle, DWORD  dwMilliseconds);</code></pre>
 <p><strong>参数</strong></p>
@@ -1613,6 +1658,7 @@ DWORD ResumeThread(HANDLE hThread);</code></pre>
 </table>
 
 <h3>WaitForMultipleObjects</h3>
+<p class="fsum">一次等待一组内核对象，可选「任一受信就返回」或「全部受信才返回」，并由返回值告诉你是数组里的哪一个。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>DWORD WaitForMultipleObjects(
     DWORD        nCount,
@@ -1655,6 +1701,7 @@ DWORD ResumeThread(HANDLE hThread);</code></pre>
 </table>
 
 <h3>CreateMutexW</h3>
+<p class="fsum">创建或打开一个互斥量，用于跨线程乃至跨进程的互斥；命名互斥量也是程序单实例检测的标准做法。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HANDLE CreateMutexW(
     LPSECURITY_ATTRIBUTES lpMutexAttributes,
@@ -1684,6 +1731,7 @@ HANDLE hMx = CreateMutexW(NULL, FALSE, L"Global\\MyApp.SingleInstance");
 <p>程序单实例检测就靠"同名已存在时返回旧对象 + ERROR_ALREADY_EXISTS"这一行为，因此那个互斥量句柄必须留到进程退出前才关闭，提前 CloseHandle 会让第二个实例照样启动。</p>
 
 <h3>CreateEventW</h3>
+<p class="fsum">创建或打开一个事件对象，用作线程间的信号通知；手动重置像总闸一次放行所有等待者，自动重置一次只放行一个。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HANDLE CreateEventW(
     LPSECURITY_ATTRIBUTES lpEventAttributes,
@@ -1716,6 +1764,7 @@ HANDLE g_hStop = CreateEventW(NULL, TRUE, FALSE, NULL);
 SetEvent(g_hStop);        <span class="cm">// 手动重置 =&gt; 所有等待者都被放行</span></code></pre>
 
 <h3>CreateSemaphoreW</h3>
+<p class="fsum">创建或打开一个信号量，用一个可用计数限制同时进入某段代码的线程数，适合并发限流和资源池。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HANDLE CreateSemaphoreW(
     LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
@@ -1741,6 +1790,7 @@ SetEvent(g_hStop);        <span class="cm">// 手动重置 =&gt; 所有等待者
 <p>信号量适合"限制并发数"和"资源池"两类场景：把池中可用资源数设为初始计数，取用前 Wait、用完 Release 即可。与互斥量不同，它没有所有权概念——占名额和还名额可以是不同线程。</p>
 
 <h3>ReleaseMutex</h3>
+<p class="fsum">归还当前线程持有的互斥量所有权，让排队的其他线程得以进入；谁拿的必须谁放，别人放会失败。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL ReleaseMutex(HANDLE hMutex);</code></pre>
 <p><strong>参数</strong></p>
@@ -1758,6 +1808,7 @@ SetEvent(g_hStop);        <span class="cm">// 手动重置 =&gt; 所有等待者
 <p>同一线程重复等待同一互斥体会递归计数：Wait 了几次就要 Release 几次，计数归零其他线程才进得来。若持有线程没释放就退出，其他等待者会收到 WAIT_ABANDONED——此时你虽然拿到了互斥体，但它保护的数据可能已处于不一致状态，需要自行校验或修复。</p>
 
 <h3>SetEvent / ResetEvent</h3>
+<p class="fsum">把事件置为有信号以放行等待者，或复位为无信号重新拦人；放行几个由事件创建时选的手动/自动重置类型决定。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL SetEvent(HANDLE hEvent);
 BOOL ResetEvent(HANDLE hEvent);</code></pre>
@@ -1777,6 +1828,7 @@ BOOL ResetEvent(HANDLE hEvent);</code></pre>
 <p>效果取决于事件创建时（CreateEventW 的 bManualReset）选的类型。<strong>手动重置</strong>事件被 SetEvent 后一直保持有信号，所有等待线程统统放行，直到有人调 ResetEvent 才重新关闸——像一扇推开就不会自动合上的大门；<strong>自动重置</strong>事件每次只放行一个等待线程，随即自动变回无信号，相当于一次只发一张通行证。</p>
 
 <h3>ReleaseSemaphore</h3>
+<p class="fsum">把用完的名额加回信号量计数并唤醒等待者，可一次归还多个；加过上限则整个调用失败、计数保持原样。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL ReleaseSemaphore(
     HANDLE hSemaphore,
@@ -1816,6 +1868,7 @@ BOOL ResetEvent(HANDLE hEvent);</code></pre>
 </table>
 
 <h3>EnterCriticalSection</h3>
+<p class="fsum">进入临界区给共享数据加锁，被别的线程占着就一直阻塞到拿到为止，是进程内互斥最快的常规选择。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection);</code></pre>
 <p><strong>参数</strong></p>
@@ -1833,6 +1886,7 @@ BOOL ResetEvent(HANDLE hEvent);</code></pre>
 <div class="note new"><span class="t">🔵 更轻的选择：SRWLock</span><p>Vista 之后新增的 SRWLOCK（InitializeSRWLock / AcquireSRWLockExclusive / AcquireSRWLockShared）只占一个指针大小、支持读写分离、可静态初始化为 SRWLOCK_INIT 且无需 Delete。不需要递归加锁时，新代码可优先考虑 SRWLock；需要"同线程重入"语义时仍用临界区。</p></div>
 
 <h3>InitializeCriticalSection</h3>
+<p class="fsum">给一个 CRITICAL_SECTION 变量做初始化，任何 Enter 之前必须先做一次，漏掉就是未定义行为。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection);</code></pre>
 <p><strong>参数</strong></p>
@@ -1850,6 +1904,7 @@ BOOL ResetEvent(HANDLE hEvent);</code></pre>
 <p>临界区是用户态锁，只能在同一进程内使用（跨进程互斥请改用命名互斥量）；未初始化就 Enter 属于未定义行为。</p>
 
 <h3>LeaveCriticalSection</h3>
+<p class="fsum">离开临界区解锁放行排队线程，与 Enter 严格成对：进了几层就要出几层，否则锁会永久失灵。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection);</code></pre>
 <p><strong>参数</strong></p>
@@ -1867,6 +1922,7 @@ BOOL ResetEvent(HANDLE hEvent);</code></pre>
 <p>与 EnterCriticalSection 严格成对：同一线程可以递归 Enter，进了几层就要 Leave 几层，最外层 Leave 之后其他线程才能进入。含多个 return、异常路径的函数尤其容易漏掉解锁，建议用 RAII 包装（构造 Enter、析构 Leave）来保证配对。</p>
 
 <h3>DeleteCriticalSection</h3>
+<p class="fsum">释放临界区占用的内部系统资源，必须确认再无线程持有或等待它才能调，之后不得再 Enter。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection);</code></pre>
 <p><strong>参数</strong></p>
@@ -1896,6 +1952,7 @@ BOOL ResetEvent(HANDLE hEvent);</code></pre>
 </table>
 
 <h3>InterlockedCompareExchange</h3>
+<p class="fsum">原子的「比较并交换」：只有变量当前值等于期望值时才写入新值，是自旋锁与各类无锁算法的核心原语。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>LONG InterlockedCompareExchange(
     LONG <span class="kw">volatile</span> *Destination,
@@ -1919,6 +1976,7 @@ BOOL ResetEvent(HANDLE hEvent);</code></pre>
 <p>交换失败时的标准处理是拿新值重算再试，形成所谓 CAS 循环——这是无锁算法的核心套路。64 位数据请用 InterlockedCompareExchange64（变量需 8 字节对齐），指针用 InterlockedCompareExchangePointer。</p>
 
 <h3>InterlockedIncrement / InterlockedDecrement</h3>
+<p class="fsum">原子地把一个 32 位变量加 1 或减 1 并返回运算后的新值，多线程同时调用也不会丢数，是引用计数与并发计数器的首选。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>LONG InterlockedIncrement(LONG <span class="kw">volatile</span> *Addend);
 LONG InterlockedDecrement(LONG <span class="kw">volatile</span> *Addend);</code></pre>
@@ -1938,6 +1996,7 @@ LONG InterlockedDecrement(LONG <span class="kw">volatile</span> *Addend);</code>
 <p>64 位量用 InterlockedIncrement64 / InterlockedDecrement64（变量需 8 字节对齐）。开销远低于临界区，是计数器和引用计数的首选。</p>
 
 <h3>InterlockedExchange</h3>
+<p class="fsum">原子地把新值写进变量同时取回旧值，靠这个旧值就能判断自己是不是第一个改动者，常用于一次性初始化和标志位。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>LONG InterlockedExchange(LONG <span class="kw">volatile</span> *Target, LONG          Value);</code></pre>
 <p><strong>参数</strong></p>
@@ -1969,6 +2028,7 @@ LONG InterlockedDecrement(LONG <span class="kw">volatile</span> *Addend);</code>
 </table>
 
 <h3>QueryPerformanceCounter</h3>
+<p class="fsum">读取高精度计数器的当前值，前后取两次再除以频率即得微秒级耗时，是给代码测速的首选时钟。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount);</code></pre>
 <p><strong>参数</strong></p>
@@ -1987,6 +2047,7 @@ LONG InterlockedDecrement(LONG <span class="kw">volatile</span> *Addend);</code>
 <div class="note new"><span class="t">🔵 三种时钟怎么选</span><p>做<strong>性能测量</strong>用 QueryPerformanceCounter（分辨率最高）；做<strong>超时/心跳</strong>判断用 GetTickCount64（便宜、单调、不回绕）；要<strong>日历时间</strong>（年月日）则是 GetSystemTimeAsFileTime / GetLocalTime 的领域（见文件与系统信息章节）。不要用 Sleep 的时长做计时依据——它只保证"至少睡这么久"。</p></div>
 
 <h3>Sleep</h3>
+<p class="fsum">让当前线程停下来休息指定毫秒数，只保证「至少睡这么久」；传 0 则不睡，只主动让出剩余时间片。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> Sleep(DWORD dwMilliseconds);</code></pre>
 <p><strong>参数</strong></p>
@@ -2007,6 +2068,7 @@ LONG InterlockedDecrement(LONG <span class="kw">volatile</span> *Addend);</code>
 <p>普通时长的精度受时钟节拍限制（默认约 15.6 ms），Sleep(1) 实际可能睡十几毫秒，且系统只保证"至少睡这么久"，别拿它做精确定时或计时依据。</p>
 
 <h3>GetTickCount64</h3>
+<p class="fsum">取系统开机以来经过的毫秒数，64 位不回绕，做超时判断、心跳检测和粗粒度计时最省事。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>ULONGLONG GetTickCount64(<span class="kw">void</span>);</code></pre>
 <p><strong>参数</strong>：无。</p>
@@ -2020,6 +2082,7 @@ printf("耗时约 %llu ms\n", GetTickCount64() - t0);  <span class="cm">// 64 �
 <p>旧版 <span class="badge dead">禁用</span> GetTickCount 返回 32 位值，约 49.7 天就回绕归零，跨过回绕点的两次取样相减会得到离谱结果——新代码一律改用 GetTickCount64。</p>
 
 <h3>QueryPerformanceFrequency</h3>
+<p class="fsum">取高精度计数器每秒跳多少次，开机后恒定不变，查一次存起来即可，专供把计数差换算成秒或毫秒。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency);</code></pre>
 <p><strong>参数</strong></p>
@@ -2061,6 +2124,8 @@ QueryPerformanceCounter(&amp;t1);
 
 <h3>RegisterClassExW</h3>
 
+<p class="fsum">向系统登记一个"窗口模板"：把窗口过程、图标、光标、背景刷打包成一个类名，之后才能凭它批量造窗口。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>ATOM RegisterClassExW(<span class="kw">const</span> WNDCLASSEXW *lpwcx);</code></pre>
 
@@ -2091,6 +2156,8 @@ QueryPerformanceCounter(&amp;t1);
 <pre><code><span class="cl"><span class="cc" style="min-width:50.0ch">WNDCLASSEXW wc = { 0 };</span><span class="cm">// 先整体清零，再逐字段赋值</span></span><span class="cl"><span class="cc" style="min-width:50.0ch">wc.cbSize        = <span class="kw">sizeof</span>(wc);</span><span class="cm">// 忘了这行，注册必失败</span></span><span class="cl">wc.style         = CS_HREDRAW | CS_VREDRAW;</span><span class="cl">wc.lpfnWndProc   = WndProc;</span><span class="cl">wc.hInstance     = GetModuleHandleW(NULL);</span><span class="cl"><span class="cc" style="min-width:50.0ch">wc.hCursor       = LoadCursorW(NULL, IDC_ARROW);</span><span class="cm">// 不填光标会"卡住"上一形状</span></span><span class="cl"><span class="cc" style="min-width:50.0ch">wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);</span><span class="cm">// 系统色要 +1</span></span><span class="cl">wc.lpszClassName = L"DemoMainWnd";</span><span class="cl"><span class="kw">if</span> (!RegisterClassExW(&amp;wc))</span><span class="cl"><span class="cc" style="min-width:50.0ch">    <span class="kw">return</span> 1;</span><span class="cm">// GetLastError() 查详情</span></span></code></pre>
 
 <h3>UnregisterClassW</h3>
+
+<p class="fsum">把之前注册的窗口类从系统里撤掉；EXE 退出会自动清理，真正非做不可的是 DLL 卸载前的自我清理。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL UnregisterClassW(LPCWSTR   lpClassName, HINSTANCE hInstance);</code></pre>
@@ -2139,6 +2206,8 @@ QueryPerformanceCounter(&amp;t1);
 
 <h3>CreateWindowExW</h3>
 
+<p class="fsum">按已注册的类名生产出一个窗口或控件并返回句柄，屏幕上一切界面元素——主窗口、按钮、编辑框——都从这里诞生。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>HWND CreateWindowExW(
     DWORD     dwExStyle,
@@ -2178,6 +2247,8 @@ QueryPerformanceCounter(&amp;t1);
 <pre><code><span class="cl">HWND hwnd = CreateWindowExW(</span><span class="cl"><span class="cc" style="min-width:35.0ch">    0,</span><span class="cm">// 无扩展风格</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">    L"DemoMainWnd",</span><span class="cm">// 必须已 RegisterClassExW</span></span><span class="cl">    L"演示窗口",</span><span class="cl"><span class="cc" style="min-width:35.0ch">    WS_OVERLAPPEDWINDOW,</span><span class="cm">// 常规主窗口组合</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">    CW_USEDEFAULT, CW_USEDEFAULT,</span><span class="cm">// 位置交给系统</span></span><span class="cl">    800, 600,</span><span class="cl"><span class="cc" style="min-width:35.0ch">    NULL, NULL,</span><span class="cm">// 顶层：无父、无菜单</span></span><span class="cl">    GetModuleHandleW(NULL),</span><span class="cl">    NULL);</span><span class="cl"><span class="kw">if</span> (!hwnd) <span class="kw">return</span> 1;</span><span class="cl"><span class="cc" style="min-width:35.0ch">ShowWindow(hwnd, SW_SHOW);</span><span class="cm">// 创建时没给 WS_VISIBLE 就要手动显示</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">UpdateWindow(hwnd);</span><span class="cm">// 立即触发首次 WM_PAINT</span></span></code></pre>
 
 <h3>SetWindowPos</h3>
+
+<p class="fsum">一次调用同时管窗口的位置、大小、Z 序和显隐，用 SWP_ 标志声明"哪几项别动"，也是改完风格后强制刷新边框的必经之路。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL SetWindowPos(
@@ -2224,6 +2295,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 
 <h3>SetWindowLongPtrW</h3>
 
+<p class="fsum">改写窗口内部的属性槽位——风格位、窗口过程、附带的用户数据；子类化和"把对象指针存进窗口"都靠它，返回的是被替换掉的旧值。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>LONG_PTR SetWindowLongPtrW(HWND     hWnd, <span class="kw">int</span>      nIndex, LONG_PTR dwNewLong);</code></pre>
 
@@ -2245,6 +2318,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 
 <h3>FindWindowW</h3>
 
+<p class="fsum">按类名或标题在整个桌面上捞出一个顶层窗口的句柄，是给别的程序发消息、做进程间控制的第一步。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>HWND FindWindowW(LPCWSTR lpClassName, LPCWSTR lpWindowName);</code></pre>
 
@@ -2264,6 +2339,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <p>只搜顶层窗口——要下钻子窗口用 <code>FindWindowExW</code>，逐层给父句柄。另注意固有竞态：拿到句柄的下一毫秒窗口就可能被关掉，用前的 <code>IsWindow</code> 检查也只是降低概率，不是保证。</p>
 
 <h3>EnumWindows</h3>
+
+<p class="fsum">把桌面上所有顶层窗口逐个丢进你的回调函数，用来做"筛出符合条件的那一个"或统计全局窗口，比手写 GetWindow 循环更抗中途销毁。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL EnumWindows(WNDENUMPROC lpEnumFunc, LPARAM      lParam);</code></pre>
@@ -2285,6 +2362,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 
 <h3>DestroyWindow</h3>
 
+<p class="fsum">真正拆掉一个窗口并连带拆掉它的所有子窗口，沿途发出 WM_DESTROY、WM_NCDESTROY；只有创建它的线程能调。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL DestroyWindow(HWND hWnd);</code></pre>
 
@@ -2303,6 +2382,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <p>销毁窗口会触发一整条消息链：窗口先收到 <strong>WM_DESTROY</strong>（此时窗口已从屏幕移除，但子窗口还活着），随后收到 <strong>WM_NCDESTROY</strong>——这是窗口一生的最后一条消息，处理完后句柄即失效；接着系统自动递归销毁它的所有子窗口和被拥有窗口，每个都走同样的两步。主窗口惯例是在 WM_DESTROY 里调用 PostQuitMessage(0) 结束消息循环。</p>
 
 <h3>DefWindowProcW</h3>
+
+<p class="fsum">替你的窗口过程兜底处理所有没接管的消息——边框绘制、拖动缩放、系统菜单等全部默认行为都出自这里，漏掉它窗口就成了残废。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>LRESULT DefWindowProcW(HWND   hWnd, UINT   Msg, WPARAM wParam, LPARAM lParam);</code></pre>
@@ -2331,6 +2412,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <p>为何必须兜底：系统发给窗口的消息有几百种，你的窗口过程只挑自己关心的几种处理，<strong>其余全部必须原封不动交给 DefWindowProcW</strong>。窗口的全部"默认行为"都由它实现——非客户区绘制（标题栏、边框）、鼠标拖动与缩放、系统菜单、WM_CLOSE 时默认调用 DestroyWindow 等等。漏掉兜底的典型症状：窗口没有边框和标题栏、拖不动、关不掉。也不要对没处理的消息随手 return 0——那等于向系统谎报"我已处理"，默认行为就全丢了。</p>
 
 <h3>ShowWindow</h3>
+
+<p class="fsum">切换窗口的显示状态：显示、隐藏、最小化、最大化或还原；返回的是调用之前是否可见，而不是成败。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL ShowWindow(HWND hWnd, <span class="kw">int</span>  nCmdShow);</code></pre>
@@ -2366,6 +2449,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 
 <h3>UpdateWindow</h3>
 
+<p class="fsum">窗口若有脏区，就绕过消息队列把 WM_PAINT 直接送进窗口过程，让重绘当场发生，常紧跟在 InvalidateRect 之后。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL UpdateWindow(HWND hWnd);</code></pre>
 
@@ -2384,6 +2469,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <p>与 Invalidate 的关系：InvalidateRect 只是把某块区域标成"脏"，真正的 WM_PAINT 要等消息队列里没有其他消息时才由系统合成发出——这是刻意的低优先级设计。UpdateWindow 则检查窗口的更新区域，只要非空，就<strong>绕过消息队列</strong>把 WM_PAINT 直接送进窗口过程，让重绘当场发生。它自己并不产生脏区，所以惯用搭配是：InvalidateRect 标脏 + UpdateWindow 立刷。不追求当帧刷新时，只调 InvalidateRect 让系统攒一攒反而更高效。</p>
 
 <h3>MoveWindow</h3>
+
+<p class="fsum">一次把窗口挪到指定位置并改成指定大小（尺寸按含边框的整窗算），是 SetWindowPos 的简化版，四个几何参数必须全给。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL MoveWindow(
@@ -2416,6 +2503,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 
 <h3>GetWindowRect / GetClientRect</h3>
 
+<p class="fsum">量窗口尺寸的一对：前者给整窗外框（含边框标题栏，屏幕坐标），后者给可绘图的客户区（left/top 恒为 0，即宽高）。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL GetWindowRect(HWND   hWnd, LPRECT lpRect);
 BOOL GetClientRect(HWND   hWnd, LPRECT lpRect);</code></pre>
@@ -2438,6 +2527,8 @@ BOOL GetClientRect(HWND   hWnd, LPRECT lpRect);</code></pre>
 
 <h3>SetWindowTextW</h3>
 
+<p class="fsum">改窗口标题栏的文字，或改按钮、编辑框等控件里的文本，内部就是发一条 WM_SETTEXT，传空串即可清空。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL SetWindowTextW(HWND    hWnd, LPCWSTR lpString);</code></pre>
 
@@ -2458,6 +2549,8 @@ SetWindowTextW(hEdit, L"");  <span class="cm">// 清空编辑框：控件文本�
 <p>改窗口标题、改按钮文字、改编辑框内容都是它——对本进程的窗口，内部就是发一条 WM_SETTEXT；对其他进程的窗口，系统同样改为投递 WM_SETTEXT 处理。</p>
 
 <h3>GetWindowTextW</h3>
+
+<p class="fsum">把窗口标题或控件里的文字读进你给的缓冲区；跨进程时只能拿到顶层窗口的标题，别人的编辑框内容读不出来。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> GetWindowTextW(HWND   hWnd, LPWSTR lpString, <span class="kw">int</span>    nMaxCount);</code></pre>
@@ -2482,6 +2575,8 @@ SetWindowTextW(hEdit, L"");  <span class="cm">// 清空编辑框：控件文本�
 
 <h3>GetParent / SetParent</h3>
 
+<p class="fsum">查询和改写窗口的从属关系：前者取父窗口（对弹出窗口取到的其实是属主），后者把窗口改挂到新父窗口下并返回原父窗口。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>HWND GetParent(HWND hWnd);
 HWND SetParent(HWND hWndChild, HWND hWndNewParent);</code></pre>
@@ -2504,6 +2599,8 @@ HWND SetParent(HWND hWndChild, HWND hWndNewParent);</code></pre>
 
 <h3>GetDlgItem</h3>
 
+<p class="fsum">用创建时给的控件 ID 换回子窗口句柄；名字带 Dlg，其实任何父窗口下有 ID 的子窗口都能查。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>HWND GetDlgItem(HWND hDlg, <span class="kw">int</span>  nIDDlgItem);</code></pre>
 
@@ -2524,6 +2621,8 @@ EnableWindow(hOk, FALSE);  <span class="cm">// 表单没填完之前禁用「确
 <p>名字里带 Dlg，其实任何父子窗口都能用：只要子窗口创建时给了 ID，就能按 ID 找回句柄。</p>
 
 <h3>GetWindowLongPtrW</h3>
+
+<p class="fsum">读出窗口的属性槽位：风格位、窗口过程地址、控件 ID，以及最常用的 GWLP_USERDATA——取回你先前寄存的对象指针。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>LONG_PTR GetWindowLongPtrW(HWND hWnd, <span class="kw">int</span>  nIndex);</code></pre>
@@ -2573,6 +2672,8 @@ AppState* s = (AppState*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);</code></pre>
 
 <h3>GetMessageW</h3>
 
+<p class="fsum">从本线程消息队列里取一条消息，没消息就阻塞等着；取到 WM_QUIT 返回 0，正是消息循环的正常出口。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL GetMessageW(
     LPMSG lpMsg,
@@ -2598,6 +2699,8 @@ AppState* s = (AppState*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);</code></pre>
 <div class="note new"><span class="t">🔵 三态返回值的安全写法</span><p>返回类型标着 BOOL 纯属历史误导。要么用上面示例的"先存后判"式，要么在确认 hWnd 恒为 NULL（不会 -1 的最常见来源）后用 <code>&gt; 0</code> 作循环条件。永远不要拿它和 TRUE 比较。</p></div>
 
 <h3>PeekMessageW</h3>
+
+<p class="fsum">查看或取走队列里的消息，队列空时立刻返回而不像 GetMessage 那样干等——游戏、渲染这类"没消息也要干活"的循环全靠它。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL PeekMessageW(
@@ -2626,6 +2729,8 @@ AppState* s = (AppState*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);</code></pre>
 <p>忙等会吃满一个核，空闲帧应配合 <code>MsgWaitForMultipleObjects</code> 或垂直同步让出 CPU。</p>
 
 <h3>SendMessageW / PostMessageW（同步 vs 异步）</h3>
+
+<p class="fsum">给窗口发消息的两条路：Send 直接调用对方窗口过程、等它处理完并带回结果；Post 只把消息塞进队列就返回，拿不到结果且严禁传栈上指针。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>LRESULT SendMessageW(HWND   hWnd, UINT   Msg, WPARAM wParam, LPARAM lParam);
@@ -2667,6 +2772,8 @@ p-&gt;value = 42;
 
 <h3>TranslateMessage / DispatchMessageW</h3>
 
+<p class="fsum">消息循环里的固定二人组：前者把按键消息翻译成字符消息追加进队列，后者按 msg.hwnd 把消息交到对应窗口过程手上，顺序不能颠倒。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL TranslateMessage(<span class="kw">const</span> MSG *lpMsg);
 LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
@@ -2687,6 +2794,8 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 <p>TranslateMessage 只干一件事：遇到 WM_KEYDOWN / WM_SYSKEYDOWN 时，按当前键盘布局把虚拟键码翻译成字符，往队列里<strong>追加</strong>一条 WM_CHAR / WM_SYSCHAR——原消息一个字都不改。不调它，编辑框就永远等不到字符输入。DispatchMessageW 则按 msg.hwnd 找到对应的窗口过程并调用之，是消息去往 WndProc 的最后一跳；调用顺序必须是先翻译、后派发。</p>
 
 <h3>PostQuitMessage</h3>
+
+<p class="fsum">往当前线程队列里标一条 WM_QUIT，让 GetMessage 返回 0、消息循环自己走到尽头；参数就是进程的退出码。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">void</span> PostQuitMessage(<span class="kw">int</span> nExitCode);</code></pre>
@@ -2720,6 +2829,8 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 
 <h3>SetTimer</h3>
 
+<p class="fsum">给窗口挂一个周期性定时器，到点投 WM_TIMER 或调回调；同 ID 再调是改间隔而非新建，精度只到十几毫秒。</p>
+
 <p><strong>函数原型</strong></p>
 <pre><code>UINT_PTR SetTimer(
     HWND      hWnd,
@@ -2747,6 +2858,8 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 <div class="note new"><span class="t">🔵 需要真·高精度时别用 SetTimer</span><p>SetTimer 的定位是"UI 节奏器"：闪烁光标、轮询刷新、延迟提示。要毫秒级精度或后台线程定时，改用等待定时器（<code>CreateWaitableTimerExW</code> + 高分辨率标志）或线程池定时器（<code>CreateThreadpoolTimer</code>），它们不依赖消息循环、也不受 WM_TIMER 合并的影响。</p></div>
 
 <h3>KillTimer</h3>
+
+<p class="fsum">停掉 SetTimer 建立的定时器，窗口句柄和 ID 必须与当初配对；已经排进队列的 WM_TIMER 不会被撤回，还可能再来一条。</p>
 
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL KillTimer(HWND     hWnd, UINT_PTR uIDEvent);</code></pre>
@@ -2795,6 +2908,7 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 <div class="note new"><span class="t">🔵 重绘触发链</span><p>InvalidateRect 只是把矩形并入窗口的"更新区"，并不画任何东西。系统在线程消息队列<strong>空闲</strong>时才合成一条 WM_PAINT，期间多次失效会合并为一次绘制——所以 WM_PAINT 被称为"低优先级合成消息"。想跳过排队立即绘制，在标脏之后调用 UpdateWindow 或 RedrawWindow(RDW_UPDATENOW)。</p></div>
 
 <h3>BeginPaint</h3>
+<p class="fsum">在 WM_PAINT 里领取绘制用的 DC，同时读出本次真正需要重画的无效区，并清空窗口的更新区。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HDC BeginPaint(HWND          hWnd, LPPAINTSTRUCT lpPaint);</code></pre>
 <p><strong>参数</strong></p>
@@ -2813,6 +2927,7 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 <p>BeginPaint 内部会把窗口的更新区清空，因此即使什么都不画，只要正确成对调用，这条 WM_PAINT 也算"了结"。反过来，如果既不调 BeginPaint、也不把 WM_PAINT 交给 DefWindowProc，更新区永远不会被清空，系统会无限重发 WM_PAINT，表现为 CPU 空转。</p>
 
 <h3>EndPaint</h3>
+<p class="fsum">给一次绘制收尾：归还 BeginPaint 借出的 DC，并恢复被它隐藏的插入符，必须与 BeginPaint 成对。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL EndPaint(HWND              hWnd, <span class="kw">const</span> PAINTSTRUCT *lpPaint);</code></pre>
 <p><strong>参数</strong></p>
@@ -2834,6 +2949,7 @@ EndPaint(hwnd, &amp;ps);   <span class="cm">// 释放 DC，并恢复被 BeginPai
 <p>EndPaint 之后 ps.hdc 立即失效——绝不要把它存起来下次再用。若忘记调用：公共 DC 会泄漏（系统总量有限），编辑框光标也可能"消失"，因为被 BeginPaint 隐藏的插入符没有被恢复。</p>
 
 <h3>InvalidateRect</h3>
+<p class="fsum">把一块矩形登记为"脏区"，请求系统日后合成 WM_PAINT 来重画，它自己不画任何一个像素。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL InvalidateRect(HWND       hWnd, <span class="kw">const</span> RECT *lpRect, BOOL       bErase);</code></pre>
 <p><strong>参数</strong></p>
@@ -2853,6 +2969,7 @@ EndPaint(hwnd, &amp;ps);   <span class="cm">// 释放 DC，并恢复被 BeginPai
 <p>本函数只"记账"不"干活"：矩形进入更新区后，要等消息队列空闲才会收到系统合成的 WM_PAINT；多次调用标脏的矩形会自动合并成一次绘制。需要立刻见效时，紧接着调用 UpdateWindow(hwnd)。</p>
 
 <h3>GetDC</h3>
+<p class="fsum">在 WM_PAINT 之外的任意时刻临时借一块窗口客户区画布，用完必须立刻 ReleaseDC 归还。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HDC GetDC(HWND hWnd);</code></pre>
 <p><strong>参数</strong></p>
@@ -2873,6 +2990,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 <p>这是"公共 DC"：用完必须立刻 ReleaseDC 归还，而且每次取到的都是默认属性——上次选入的字体、画笔、映射模式统统不保留（除非窗口类注册时带了 CS_OWNDC）。与 BeginPaint 的分工很清楚：<strong>WM_PAINT 里用 BeginPaint，其他一切时机用 GetDC</strong>；GetDC 不关心更新区，也不会清除它。另外要注意，这样画上去的内容不在"数据模型"里，窗口一重画就会消失；需要持久显示的图形应改成"改数据 + InvalidateRect"，统一在 WM_PAINT 里画。</p>
 
 <h3>ReleaseDC</h3>
+<p class="fsum">把 GetDC / GetWindowDC 借来的公共 DC 还回去，不还就会耗尽系统总量有限的 DC 资源。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> ReleaseDC(HWND hWnd, HDC  hDC);</code></pre>
 <p><strong>参数</strong></p>
@@ -2891,6 +3009,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 <p>必须在调用 GetDC 的同一线程里归还。三组配对规则务必分清：GetDC / GetWindowDC 对 ReleaseDC；BeginPaint 对 EndPaint；CreateDC / CreateCompatibleDC 对 DeleteDC——张冠李戴不会崩溃，但会静默泄漏资源。</p>
 
 <h3>GetWindowDC</h3>
+<p class="fsum">取一块覆盖整个窗口（含标题栏、边框、滚动条）的画布，原点在窗口左上角，用于自绘非客户区。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HDC GetWindowDC(HWND hWnd);</code></pre>
 <p><strong>参数</strong></p>
@@ -2908,6 +3027,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 <p>与 GetDC 的区别只在覆盖范围与原点：GetDC 只给客户区、原点在客户区左上角；GetWindowDC 把标题栏、边框、滚动条这些非客户区全都包含在内。想自绘标题栏或边框时才需要它。</p>
 
 <h3>ValidateRect</h3>
+<p class="fsum">把一块矩形从窗口更新区里划掉，宣告它不必重画，防止 WM_PAINT 被无休止地重发。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL ValidateRect(HWND       hWnd, <span class="kw">const</span> RECT *lpRect);</code></pre>
 <p><strong>参数</strong></p>
@@ -2929,6 +3049,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 <p>把指定矩形从窗口的更新区域中移除。更新区域不清空，系统就会一直重发 WM_PAINT。正常绘制流程里 BeginPaint / EndPaint 已自动完成验收，不用管它；需要手动调用的典型场景有两个：一是窗口过程收到 WM_PAINT 却不打算绘制，二是在 WM_PAINT 之外已经自行画好了某块区域，不想再挨一次多余的重绘。</p>
 
 <h3>GetUpdateRect</h3>
+<p class="fsum">查询窗口当前待重绘区域的外接矩形，必须赶在 BeginPaint 之前问，之后答案永远是空。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL GetUpdateRect(HWND   hWnd, LPRECT lpRect, BOOL   bErase);</code></pre>
 <p><strong>参数</strong></p>
@@ -2973,6 +3094,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 <div class="note new"><span class="t">🔵 谁在用哪套坐标</span><p>鼠标消息（WM_MOUSEMOVE 等）的 lParam 给的是<strong>客户区坐标</strong>；GetCursorPos、SetCursorPos、TrackPopupMenu 以及 WM_CONTEXTMENU 的 lParam 用的是<strong>屏幕坐标</strong>。两边互转就靠 ClientToScreen / ScreenToClient，它们直接改写传入的 POINT。混用坐标系是右键菜单"弹错位置"的头号原因。</p></div>
 
 <h3>SetCapture</h3>
+<p class="fsum">让指定窗口独占后续所有鼠标消息，使拖拽即便划出窗口外也照样收得到移动和抬起。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HWND SetCapture(HWND hWnd);</code></pre>
 <p><strong>参数</strong></p>
@@ -2990,6 +3112,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 <p>捕获生效后，即使指针拖出客户区甚至拖出整个窗口，WM_MOUSEMOVE / WM_LBUTTONUP 依然发给你——没有捕获的拖拽会在鼠标离开窗口的一瞬间"断线"，永远收不到那记 ButtonUp。捕获随时可能被系统或其他窗口夺走（切换窗口、弹出菜单），届时会收到 WM_CAPTURECHANGED。</p>
 
 <h3>ReleaseCapture</h3>
+<p class="fsum">交还鼠标捕获，让消息回到"指针在谁上面就发给谁"的常规路由，并触发 WM_CAPTURECHANGED。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL ReleaseCapture(<span class="kw">void</span>);</code></pre>
 <p><strong>参数</strong>：无。</p>
@@ -3001,6 +3124,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 <p>释放的是当前线程的鼠标捕获，之后鼠标消息恢复"指针在谁上面就发给谁"的常规路由。健壮的拖拽代码应把"结束拖拽"的清理统一写在 WM_CAPTURECHANGED 里——因为捕获不仅会被你主动释放，还可能被 Alt+Tab、弹出窗口等外力夺走。</p>
 
 <h3>GetAsyncKeyState</h3>
+<p class="fsum">查某个键此刻的物理按下状态，适合游戏循环、定时器这类轮询场景，只有 0x8000 位可信。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>SHORT GetAsyncKeyState(<span class="kw">int</span> vKey);</code></pre>
 <p><strong>参数</strong></p>
@@ -3022,6 +3146,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 <p>与 GetKeyState 的分工：处理键盘 / 鼠标消息时用 GetKeyState（读消息发生那一刻的同步快照），游戏循环等轮询场景用 GetAsyncKeyState（读键盘的物理现状）。</p>
 
 <h3>GetKeyState</h3>
+<p class="fsum">读当前这条消息发生那一刻的按键快照，用来判断用户点击时是否按着 Shift、Ctrl 等修饰键。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>SHORT GetKeyState(<span class="kw">int</span> nVirtKey);</code></pre>
 <p><strong>参数</strong></p>
@@ -3043,6 +3168,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 <p>返回的是<strong>当前消息被取出队列那一刻</strong>的按键状态，与消息流同步；GetAsyncKeyState 读的则是调用瞬间键盘的物理状态，两者可能不一致（消息处理有延迟时，键可能已经松开）。在窗口过程里判断"用户点鼠标时是否按着 Shift"应当用 GetKeyState；游戏轮询、检测"现在到底按没按"才用 GetAsyncKeyState。</p>
 
 <h3>SetFocus / GetFocus</h3>
+<p class="fsum">设置与查询本线程内的键盘焦点，也就是决定 WM_KEYDOWN、WM_CHAR 这些按键消息发给哪个窗口。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HWND SetFocus(HWND hWnd);
 HWND GetFocus(<span class="kw">void</span>);</code></pre>
@@ -3062,6 +3188,7 @@ HWND GetFocus(<span class="kw">void</span>);</code></pre>
 <p>键盘焦点决定 WM_KEYDOWN、WM_CHAR 发给谁。SetFocus 切换焦点时，旧窗口会收到 WM_KILLFOCUS，新窗口收到 WM_SETFOCUS。注意 GetFocus 只看得到<strong>本线程</strong>的焦点：别的线程里谁持有焦点，它一律答 NULL——跨线程查询要用 GetGUIThreadInfo。</p>
 
 <h3>GetCursorPos / SetCursorPos</h3>
+<p class="fsum">一读一写地取得和设定鼠标指针的屏幕坐标位置，写入会真的挪动指针并产生鼠标移动消息。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL GetCursorPos(LPPOINT lpPoint);
 BOOL SetCursorPos(<span class="kw">int</span> X, <span class="kw">int</span> Y);</code></pre>
@@ -3082,6 +3209,7 @@ BOOL SetCursorPos(<span class="kw">int</span> X, <span class="kw">int</span> Y);
 <p>一读一写的一对，坐标都是屏幕坐标。要与某窗口内的内容比较，需先经 ScreenToClient 转换。SetCursorPos 会真的移动鼠标指针并产生真实的 WM_MOUSEMOVE，常用于"把光标钉在窗口中心"的相机控制类场景。</p>
 
 <h3>ScreenToClient / ClientToScreen</h3>
+<p class="fsum">互为逆运算的一对坐标换算，在屏幕坐标与某窗口客户区坐标之间转换，原地改写传入的 POINT。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL ScreenToClient(HWND    hWnd, LPPOINT lpPoint);
 BOOL ClientToScreen(HWND    hWnd, LPPOINT lpPoint);</code></pre>
@@ -3119,6 +3247,7 @@ BOOL ClientToScreen(HWND    hWnd, LPPOINT lpPoint);</code></pre>
 <div class="note new"><span class="t">🔵 菜单句柄归谁销毁</span><p>三条规则：用 SetMenu 挂到窗口上的菜单，随窗口销毁，不用管；用 MF_POPUP 挂进父菜单的子菜单，归父菜单所有，随父菜单一起销毁；<strong>既没挂窗口也没挂父菜单的孤儿菜单</strong>（典型就是 TrackPopupMenu 用的临时右键菜单）必须自己 DestroyMenu，否则每弹一次漏一份。</p></div>
 
 <h3>TrackPopupMenu</h3>
+<p class="fsum">在指定屏幕坐标弹出菜单，并阻塞到用户选定或取消为止，是实现右键菜单的核心动作。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL TrackPopupMenu(
     HMENU      hMenu,
@@ -3150,6 +3279,7 @@ BOOL ClientToScreen(HWND    hWnd, LPPOINT lpPoint);</code></pre>
 <p>经典陷阱：在通知区域（托盘）图标上弹菜单之前，要先调用 SetForegroundWindow(hwnd)，否则用户点击菜单外部时菜单不会自动收起。</p>
 
 <h3>AppendMenuW</h3>
+<p class="fsum">往菜单末尾追加一项：文本命令、分隔线，或挂一层子菜单，是手工拼装菜单最简洁的写法。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL AppendMenuW(
     HMENU    hMenu,
@@ -3175,6 +3305,7 @@ BOOL ClientToScreen(HWND    hWnd, LPPOINT lpPoint);</code></pre>
 <p>改动已显示在窗口上的菜单栏之后，要调 DrawMenuBar(hwnd) 才会重画。<span class="badge new">现代提示</span>微软把它标记为"被 InsertMenuItemW 取代"（后者支持位图、自定义数据等完整属性），但顺序拼一个普通菜单，AppendMenuW 至今仍是最简洁的写法。</p>
 
 <h3>LoadMenuW / SetMenu</h3>
+<p class="fsum">前者把资源脚本里画好的菜单模板读成句柄，后者把这个句柄挂到窗口上变成真正显示的菜单栏。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HMENU LoadMenuW(HINSTANCE hInstance, LPCWSTR   lpMenuName);
 BOOL SetMenu(HWND  hWnd, HMENU hMenu);</code></pre>
@@ -3198,6 +3329,7 @@ SetMenu(hwnd, hMenu);  <span class="cm">// 挂上后生命周期归窗口托管<
 <p>LoadMenuW 只是把 .rc 脚本里的 MENU 资源读成句柄，真正显示还得靠 SetMenu 挂到窗口上。挂上之后菜单的生命周期归窗口托管，窗口销毁时一并销毁；没挂上的菜单则要自己 DestroyMenu。</p>
 
 <h3>CreatePopupMenu</h3>
+<p class="fsum">造一个空的弹出菜单，供运行期动态填项后拿去当右键菜单弹出，或挂进别的菜单当子菜单。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HMENU CreatePopupMenu(<span class="kw">void</span>);</code></pre>
 <p><strong>参数</strong>：无。</p>
@@ -3214,6 +3346,7 @@ DestroyMenu(hPop);  <span class="cm">// 没挂到窗口上的菜单，用完必�
 <p>建出来的是空菜单，用 AppendMenuW / InsertMenuItemW 逐项填充，再交给 TrackPopupMenu 当右键菜单弹出，或作为子菜单挂进其他菜单。适合菜单项需要运行期动态生成的场合，比如"最近打开的文件"列表。</p>
 
 <h3>EnableMenuItem</h3>
+<p class="fsum">启用、禁用或置灰某个菜单项，用来告诉用户这条命令在当前状态下点不动。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL EnableMenuItem(HMENU hMenu, UINT  uIDEnableItem, UINT  uEnable);</code></pre>
 <p><strong>参数</strong></p>
@@ -3236,6 +3369,7 @@ EnableMenuItem(hFileMenu, 3, MF_BYPOSITION | MF_ENABLED);</code></pre>
 <p>两种定位方式的取舍：MF_BYCOMMAND（值为 0，是缺省行为）按命令 ID 查找，会连同子菜单一起搜，适合普通命令项；而带下拉的项（如菜单栏上的"文件"）没有命令 ID，只能用 MF_BYPOSITION 按位置定位。定位标志要或进第三个参数里，漏写就默认按 ID 找。</p>
 
 <h3>CheckMenuItem</h3>
+<p class="fsum">给菜单项加上或去掉前面的对勾，用来显示开关型选项当前是开还是关。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>DWORD CheckMenuItem(HMENU hMenu, UINT  uIDCheckItem, UINT  uCheck);</code></pre>
 <p><strong>参数</strong></p>
@@ -3258,6 +3392,7 @@ CheckMenuItem(hMenu, IDM_WRAP,
 <p>给菜单项加上或去掉前面的对勾，常用来展示开关型选项的当前状态。注意它只管画勾，不替你记状态——开关值得自己存，每次切换后同步调用一次。互斥单选组用 CheckMenuRadioItem 更省事（画的是圆点）。</p>
 
 <h3>GetSubMenu</h3>
+<p class="fsum">按位置取出某个菜单项底下那层下拉菜单的句柄，是把资源菜单拿去弹右键菜单前的必备一步。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HMENU GetSubMenu(HMENU hMenu, <span class="kw">int</span>   nPos);</code></pre>
 <p><strong>参数</strong></p>
@@ -3276,6 +3411,7 @@ CheckMenuItem(hMenu, IDM_WRAP,
 <p>TrackPopupMenu 之前常要先调它的原因：LoadMenuW 载入的 MENU 资源是一根"菜单栏"，菜单栏本身不能当右键菜单弹出，能弹的是它某一项下面那层下拉。所以做右键菜单的惯用套路是在资源里定义一个只有一项的菜单，弹出时用 GetSubMenu(hBar, 0) 取出那层下拉再交给 TrackPopupMenu。</p>
 
 <h3>DestroyMenu</h3>
+<p class="fsum">递归销毁菜单及其全部子菜单，用来回收没挂在窗口上、无人代管的孤儿菜单。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL DestroyMenu(HMENU hMenu);</code></pre>
 <p><strong>参数</strong></p>
@@ -3311,6 +3447,7 @@ CheckMenuItem(hMenu, IDM_WRAP,
 <div class="note new"><span class="t">🔵 无模式对话框要配 IsDialogMessage</span><p>CreateDialogParamW 创建后立即返回，需要自己 ShowWindow 显示；更关键的是主消息循环必须先调 IsDialogMessage(hDlg, &amp;msg)——它返回 TRUE 表示这条消息已被对话框吃掉（Tab 切换焦点、方向键在单选组里移动、Enter 触发默认按钮全靠它），此时不要再 TranslateMessage / DispatchMessage。漏掉这一步的典型症状：无模式对话框里 Tab 键完全失灵。</p></div>
 
 <h3>DialogBoxParamW</h3>
+<p class="fsum">按资源模板弹出模态对话框并阻塞调用方，直到对话框过程调用 EndDialog，返回值就是它给的结果码。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>INT_PTR DialogBoxParamW(
     HINSTANCE hInstance,
@@ -3338,6 +3475,7 @@ CheckMenuItem(hMenu, IDM_WRAP,
 <p>函数内部自带消息循环，所以它阻塞的只是调用方代码，界面并不冻结。</p>
 
 <h3>CreateDialogParamW</h3>
+<p class="fsum">按模板创建非模态对话框并立刻返回句柄，需要自己 ShowWindow，并在消息循环里配 IsDialogMessage。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HWND CreateDialogParamW(
     HINSTANCE hInstance,
@@ -3365,6 +3503,7 @@ CheckMenuItem(hMenu, IDM_WRAP,
 <p>与 DialogBoxParamW 不同，本函数创建的是<strong>非模态</strong>对话框：调用后立即返回、不阻塞。除非模板带 WS_VISIBLE 样式，否则要自己 ShowWindow；主消息循环里须先经 IsDialogMessageW 过滤，Tab 键切换焦点才能生效；关闭时用 DestroyWindow，而不是 EndDialog。</p>
 
 <h3>EndDialog</h3>
+<p class="fsum">在对话框过程里给模态对话框打上"该收场了"的标记，并指定带回给调用方的结果码。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL EndDialog(HWND    hDlg, INT_PTR nResult);</code></pre>
 <p><strong>参数</strong></p>
@@ -3388,6 +3527,7 @@ CheckMenuItem(hMenu, IDM_WRAP,
 <p><strong>只能</strong>用于结束 DialogBox 系列创建的模态对话框，且必须在其对话框过程内部调用。它并不立即销毁窗口，而是打一个"该收场了"的标记，系统处理完当前消息后才真正关闭。对非模态对话框调用它是常见错误——那种要用 DestroyWindow。</p>
 
 <h3>GetDlgItemTextW / SetDlgItemTextW</h3>
+<p class="fsum">按控件 ID 读写对话框里子控件的文本，实质是替你向控件发 WM_GETTEXT / WM_SETTEXT。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>UINT GetDlgItemTextW(
     HWND   hDlg,
@@ -3414,6 +3554,7 @@ BOOL SetDlgItemTextW(HWND    hDlg, <span class="kw">int</span>     nIDDlgItem, L
 <p>这对函数本质上是对控件发 WM_GETTEXT / WM_SETTEXT 的便捷包装，最常用于编辑框与静态文本控件。</p>
 
 <h3>GetDlgItemInt</h3>
+<p class="fsum">把编辑框里用户输入的文本按十进制解析成整数，成败要看出参标志而不是返回值。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>UINT GetDlgItemInt(HWND hDlg, <span class="kw">int</span>  nIDDlgItem, BOOL *lpTranslated, BOOL bSigned);</code></pre>
 <p><strong>参数</strong></p>
@@ -3438,6 +3579,7 @@ BOOL SetDlgItemTextW(HWND    hDlg, <span class="kw">int</span>     nIDDlgItem, L
 <p>反向写入数字用配套的 SetDlgItemInt。</p>
 
 <h3>CheckDlgButton / IsDlgButtonChecked</h3>
+<p class="fsum">设置和查询复选框、单选钮的勾选状态，取值是 BST_ 系列三态值，不能当简单的真假用。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL CheckDlgButton(HWND hDlg, <span class="kw">int</span>  nIDButton, UINT uCheck);
 UINT IsDlgButtonChecked(HWND hDlg, <span class="kw">int</span>  nIDButton);</code></pre>
@@ -3458,6 +3600,7 @@ UINT IsDlgButtonChecked(HWND hDlg, <span class="kw">int</span>  nIDButton);</cod
 <p>判断状态时建议与 BST_CHECKED 显式比较，不要当布尔值用——三态复选框的 BST_INDETERMINATE 也是非零。成组的单选按钮互斥切换用 CheckRadioButton 更省事。</p>
 
 <h3>SendDlgItemMessageW</h3>
+<p class="fsum">按控件 ID 直接向对话框里的子控件发任意消息，省掉先 GetDlgItem 取句柄那一步。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>LRESULT SendDlgItemMessageW(
     HWND   hDlg,
@@ -3502,6 +3645,7 @@ SendDlgItemMessageW(hDlg, IDC_EDIT, EM_SETLIMITTEXT, 16, 0);</code></pre>
 </table>
 
 <h3>MessageBoxW</h3>
+<p class="fsum">弹出一个标准模态提示框，用 uType 拼出按钮与图标，返回值告诉你用户点的是哪个按钮。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> MessageBoxW(HWND    hWnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT    uType);</code></pre>
 <p><strong>参数</strong></p>
@@ -3540,6 +3684,7 @@ SendDlgItemMessageW(hDlg, IDC_EDIT, EM_SETLIMITTEXT, 16, 0);</code></pre>
 </table>
 
 <h3>GetSystemMetrics</h3>
+<p class="fsum">查询屏幕尺寸、标题栏高度、鼠标左右键是否交换等系统度量与配置开关，用来算布局或适配环境。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> GetSystemMetrics(<span class="kw">int</span> nIndex);</code></pre>
 <p><strong>参数</strong></p>
@@ -3574,6 +3719,7 @@ SendDlgItemMessageW(hDlg, IDC_EDIT, EM_SETLIMITTEXT, 16, 0);</code></pre>
 <div class="note new"><span class="t">🔵 DPI 与度量</span><p>GetSystemMetrics 的像素值按<strong>系统 DPI</strong> 换算。声明了 Per-Monitor V2 DPI 感知的程序里，各显示器 DPI 可能不同，应改用 GetSystemMetricsForDpi(nIndex, dpi)（Win10 1607+），其中 dpi 用 GetDpiForWindow(hwnd) 取当前窗口所在屏的实际值——否则窗口挪到高分屏上，按旧度量算出的布局会整体偏小。</p></div>
 
 <h3>LoadIconW</h3>
+<p class="fsum">加载自己资源里的图标或系统内置图标，尺寸固定为系统默认大图标，属共享对象无需销毁。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HICON LoadIconW(HINSTANCE hInstance, LPCWSTR   lpIconName);</code></pre>
 <p><strong>参数</strong></p>
@@ -3592,6 +3738,7 @@ SendDlgItemMessageW(hDlg, IDC_EDIT, EM_SETLIMITTEXT, 16, 0);</code></pre>
 <p><span class="badge new">现代提示</span>只能按系统默认大图标尺寸（SM_CXICON，通常 32×32）加载；要 16×16 小图标或从 .ico 文件加载，请改用更灵活的 LoadImageW，高 DPI 场景则用 LoadIconMetric。</p>
 
 <h3>LoadCursorW</h3>
+<p class="fsum">加载光标资源或 IDC_ARROW、IDC_WAIT 等系统光标，注册窗口类时几乎必写的一行。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HCURSOR LoadCursorW(HINSTANCE hInstance, LPCWSTR   lpCursorName);</code></pre>
 <p><strong>参数</strong></p>
@@ -3610,6 +3757,7 @@ SendDlgItemMessageW(hDlg, IDC_EDIT, EM_SETLIMITTEXT, 16, 0);</code></pre>
 <p><span class="badge new">现代提示</span>加载系统光标（NULL + IDC_ARROW 等）至今仍是惯用法；但需要自定义尺寸或从 .cur 文件加载时，应改用 LoadImageW。</p>
 
 <h3>LoadStringW</h3>
+<p class="fsum">按 ID 从字符串表资源里取出一段文本，是把界面文案与代码分离、实现多语言本地化的基础。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> LoadStringW(
     HINSTANCE hInstance,
@@ -3637,6 +3785,7 @@ SetWindowTextW(hwnd, szTitle);  <span class="cm">// 标题来自字符串表，�
 <p>本地化的基础做法：界面文字全放进字符串表而不是写死在代码里，每种语言编一份资源（或独立资源 DLL），程序按用户语言加载对应模块取字符串，代码一行不用改。</p>
 
 <h3>LoadImageW</h3>
+<p class="fsum">统一加载图标、光标或位图，能指定尺寸、也能直接从磁盘文件读，比 LoadIconW 灵活得多。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HANDLE LoadImageW(
     HINSTANCE hInst,
@@ -3693,6 +3842,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 <div class="note new"><span class="t">🔵 排查 GDI 泄漏的土办法</span><p>每个进程的 GDI 句柄默认上限约 10000 个。在任务管理器"详细信息"页右键列标题，勾选"GDI 对象"列：如果这个数字随程序运行一路上涨，几乎一定是忘了 DeleteObject 或忘了换回旧对象。这是最廉价、最有效的泄漏体检。</p></div>
 
 <h3>SelectObject</h3>
+<p class="fsum">把画笔、画刷、字体或位图装进 DC，同时交还被顶出来的旧对象，是 GDI 绘图前的必经一步。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HGDIOBJ</span> SelectObject(<span class="kw">HDC</span> hdc, <span class="kw">HGDIOBJ</span> h);</code></pre>
 <p><strong>参数</strong></p>
@@ -3706,6 +3856,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 <pre><code><span class="cl"><span class="cm">// 经典四步舞：选入 → 用 → 换回 → 删除</span></span><span class="cl"><span class="kw">HPEN</span> hPen = CreatePen(PS_SOLID, 2, RGB(200, 0, 0));</span><span class="cl"><span class="cc" style="min-width:41.0ch"><span class="kw">HGDIOBJ</span> hOld = SelectObject(hdc, hPen);</span><span class="cm">// 1. 选入：接住被顶出来的旧画笔</span></span><span class="cl">MoveToEx(hdc, 10, 10, NULL);</span><span class="cl"><span class="cc" style="min-width:41.0ch">LineTo(hdc, 200, 10);</span><span class="cm">// 2. 用：这条线就是 2 像素宽的红线</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">SelectObject(hdc, hOld);</span><span class="cm">// 3. 换回：恢复 DC 原样</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">DeleteObject(hPen);</span><span class="cm">// 4. 删除：此刻 hPen 已不在 DC 里，可以安全删</span></span></code></pre>
 
 <h3>GetStockObject</h3>
+<p class="fsum">取一个系统预置的画笔、画刷或字体，拿来即用，既不需要创建也不需要删除，是最省心的画具来源。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HGDIOBJ</span> GetStockObject(<span class="kw">int</span> i);</code></pre>
 <p><strong>参数</strong></p>
@@ -3729,6 +3880,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 </tbody></table>
 
 <h3>CreateCompatibleDC</h3>
+<p class="fsum">开辟一块与屏幕格式兼容的内存画布，让绘制先在离屏进行，是双缓冲消除闪烁的地基。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HDC</span> CreateCompatibleDC(<span class="kw">HDC</span> hdc);</code></pre>
 <p><strong>参数</strong></p>
@@ -3741,6 +3893,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 <pre><code><span class="cl"><span class="cm">// 内存 DC 三件套：兼容 DC + 兼容位图 + 选入，双缓冲的地基</span></span><span class="cl"><span class="kw">HDC</span> hdcMem = CreateCompatibleDC(hdc);</span><span class="cl"><span class="cc" style="min-width:52.0ch"><span class="kw">HBITMAP</span> hbm = CreateCompatibleBitmap(hdc, cx, cy);</span><span class="cm">// 注意：用真实 hdc！用 hdcMem 会得到单色位图</span></span><span class="cl"><span class="kw">HGDIOBJ</span> oldBm = SelectObject(hdcMem, hbm);</span><span class="cl"><span class="cc" style="min-width:52.0ch">FillRect(hdcMem, &amp;rc, (<span class="kw">HBRUSH</span>)(COLOR_WINDOW + 1));</span><span class="cm">// 先在内存里随便画</span></span><span class="cl">Ellipse(hdcMem, 10, 10, cx - 10, cy - 10);</span><span class="cl"><span class="cc" style="min-width:52.0ch">BitBlt(hdc, 0, 0, cx, cy, hdcMem, 0, 0, SRCCOPY);</span><span class="cm">// 一次性拷上屏，无闪烁</span></span><span class="cl"><span class="cc" style="min-width:52.0ch">SelectObject(hdcMem, oldBm);</span><span class="cm">// 换回占位位图，hbm 才能删</span></span><span class="cl">DeleteObject(hbm);</span><span class="cl">DeleteDC(hdcMem);</span></code></pre>
 
 <h3>DeleteObject</h3>
+<p class="fsum">释放自己创建的画笔、画刷、字体、位图等 GDI 对象；对象若仍选在某个 DC 里，删除会静默失败并导致泄漏。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> DeleteObject(<span class="kw">HGDIOBJ</span> ho);</code></pre>
 <p><strong>参数</strong></p>
@@ -3753,6 +3906,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 <pre><code><span class="cl"><span class="cm">// 错误示范与正确顺序的对比</span></span><span class="cl"><span class="kw">HBRUSH</span> hbr = CreateSolidBrush(RGB(0, 120, 215));</span><span class="cl"><span class="kw">HGDIOBJ</span> old = SelectObject(hdc, hbr);</span><span class="cl">Rectangle(hdc, 0, 0, 100, 60);</span><span class="cl"><span class="cm">// DeleteObject(hbr);        // 错！hbr 还在 DC 里，返回 FALSE，悄悄泄漏</span></span><span class="cl"><span class="cc" style="min-width:25.0ch">SelectObject(hdc, old);</span><span class="cm">// 正确：先换回</span></span><span class="cl"><span class="cc" style="min-width:25.0ch">DeleteObject(hbr);</span><span class="cm">// 再删除，此时才真正释放</span></span></code></pre>
 
 <h3>DeleteDC</h3>
+<p class="fsum">销毁由 CreateDC / CreateCompatibleDC / CreateIC 创建出来的 DC；GetDC、BeginPaint 拿到的 DC 不归它管。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> DeleteDC(<span class="kw">HDC</span> hdc);</code></pre>
 <p><strong>参数</strong></p>
@@ -3765,6 +3919,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 <pre><code><span class="cl"><span class="cc" style="min-width:37.0ch"><span class="kw">HDC</span> hMem = CreateCompatibleDC(hdc);</span><span class="cm">// Create 出来的 DC 归自己管</span></span><span class="cl"><span class="cm">// …… 在 hMem 上完成离屏绘制 ……</span></span><span class="cl"><span class="cc" style="min-width:37.0ch">DeleteDC(hMem);</span><span class="cm">// 用完必须删，否则泄漏 GDI 句柄</span></span><span class="cl"><span class="cm">// GetDC / BeginPaint 拿到的 DC 要用 ReleaseDC / EndPaint 归还，不能 DeleteDC</span></span></code></pre>
 
 <h3>SaveDC / RestoreDC</h3>
+<p class="fsum">把 DC 的整套绘图状态压栈保存、再一次性还原，省去逐个 SelectObject 换回旧对象的琐碎收尾。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> SaveDC(<span class="kw">HDC</span> hdc);
 <span class="kw">BOOL</span> RestoreDC(<span class="kw">HDC</span> hdc, <span class="kw">int</span> nSavedDC);</code></pre>
@@ -3797,6 +3952,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 </tbody></table>
 
 <h3>MoveToEx</h3>
+<p class="fsum">只把画笔尖挪到指定坐标而不落墨，为随后的 LineTo 连笔序列定下起点。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> MoveToEx(<span class="kw">HDC</span> hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">LPPOINT</span> lppt);</code></pre>
 <p><strong>参数</strong></p>
@@ -3811,6 +3967,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 <pre><code><span class="cl"><span class="cm">// 抬笔落点：先定位，后连笔</span></span><span class="cl"><span class="cc" style="min-width:31.0ch">MoveToEx(hdc, 30, 100, NULL);</span><span class="cm">// 笔尖挪到 (30,100)，纸上无痕</span></span><span class="cl"><span class="cc" style="min-width:31.0ch">LineTo(hdc, 90, 40);</span><span class="cm">// 此后每一笔都接着上一笔的终点</span></span></code></pre>
 
 <h3>LineTo</h3>
+<p class="fsum">用当前画笔从当前位置画一条直线到指定点，不画终点像素，画完终点就成为新的当前位置。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> LineTo(<span class="kw">HDC</span> hdc, <span class="kw">int</span> x, <span class="kw">int</span> y);</code></pre>
 <p><strong>参数</strong></p>
@@ -3829,6 +3986,7 @@ MoveToEx(hdc, zig[0].x, zig[0].y, NULL);
 <span class="cm">// 点很多时更推荐 Polyline(hdc, zig, 5)：一次调用，效率更高</span></code></pre>
 
 <h3>Polyline</h3>
+<p class="fsum">按顶点数组一次画完整条折线，比连环调用 LineTo 更快，且不闭合、不填充、也不改动当前位置。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> Polyline(<span class="kw">HDC</span> hdc, <span class="kw">const</span> <span class="kw">POINT</span> *apt, <span class="kw">int</span> cpt);</code></pre>
 <p><strong>参数</strong></p>
@@ -3844,6 +4002,7 @@ MoveToEx(hdc, zig[0].x, zig[0].y, NULL);
 Polyline(hdc, pts, 4);   <span class="cm">// 用当前画笔连 3 段折线；不闭合、不填充，也不影响“当前位置”</span></code></pre>
 
 <h3>Rectangle</h3>
+<p class="fsum">画一个矩形，边框用当前画笔描、内部用当前画刷填，右下边界按半开区间不计入图形。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> Rectangle(<span class="kw">HDC</span> hdc, <span class="kw">int</span> left, <span class="kw">int</span> top, <span class="kw">int</span> right, <span class="kw">int</span> bottom);</code></pre>
 <p><strong>参数</strong></p>
@@ -3858,6 +4017,7 @@ Polyline(hdc, pts, 4);   <span class="cm">// 用当前画笔连 3 段折线；�
 <pre><code><span class="cl"><span class="cm">// 两个矩形共用 x=100 这条边：不重叠、不留缝</span></span><span class="cl"><span class="kw">HGDIOBJ</span> old = SelectObject(hdc, GetStockObject(LTGRAY_BRUSH));</span><span class="cl"><span class="cc" style="min-width:35.0ch">Rectangle(hdc, 20, 20, 100, 80);</span><span class="cm">// 覆盖 x∈[20,100)</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">Rectangle(hdc, 100, 20, 180, 80);</span><span class="cm">// 覆盖 x∈[100,180)，严丝合缝</span></span><span class="cl">SelectObject(hdc, old);</span></code></pre>
 
 <h3>RoundRect</h3>
+<p class="fsum">画带圆角的矩形，圆角的弧度由末两个参数给出的椭圆宽高决定，其余行为与 Rectangle 一致。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> RoundRect(
     <span class="kw">HDC</span> hdc,
@@ -3881,6 +4041,7 @@ Polyline(hdc, pts, 4);   <span class="cm">// 用当前画笔连 3 段折线；�
 <pre><code><span class="cl"><span class="cc" style="min-width:50.0ch">SelectObject(hdc, GetStockObject(LTGRAY_BRUSH));</span><span class="cm">// 内部由当前画刷填充</span></span><span class="cl"><span class="cc" style="min-width:50.0ch">RoundRect(hdc, 20, 20, 220, 120, 30, 30);</span><span class="cm">// 圆角大小由 30×30 的椭圆决定</span></span></code></pre>
 
 <h3>Ellipse</h3>
+<p class="fsum">画一个内切于给定矩形的椭圆，给正方形即得正圆，同样是当前画笔描边、当前画刷填充。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> Ellipse(<span class="kw">HDC</span> hdc, <span class="kw">int</span> left, <span class="kw">int</span> top, <span class="kw">int</span> right, <span class="kw">int</span> bottom);</code></pre>
 <p><strong>参数</strong></p>
@@ -3898,6 +4059,7 @@ Ellipse(hdc, cx - r, cy - r, cx + r, cy + r);  <span class="cm">// 外接正方�
 SelectObject(hdc, old);</code></pre>
 
 <h3>Arc</h3>
+<p class="fsum">只画一段椭圆弧线，起止点由从外接矩形中心射向两个参考点的射线与椭圆的交点确定，不闭合也不填充。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> Arc(
     <span class="kw">HDC</span> hdc,
@@ -3923,6 +4085,7 @@ SelectObject(hdc, old);</code></pre>
 <pre><code><span class="cl"><span class="cm">// 椭圆内切于 (0,0)-(200,100)，中心在 (100,50)</span></span><span class="cl">Arc(hdc, 0, 0, 200, 100,</span><span class="cl"><span class="cc" style="min-width:14.0ch">    200, 50,</span><span class="cm">// 起点射线指向正右（3 点钟方向）</span></span><span class="cl"><span class="cc" style="min-width:14.0ch">    100, 0);</span><span class="cm">// 终点射线指向正上（12 点钟）：逆时针扫过右上四分之一弧</span></span></code></pre>
 
 <h3>Pie</h3>
+<p class="fsum">画扇形：定弧规则与 Arc 完全相同，但弧的两端各连一条半径回到中心，自动闭合并用当前画刷填充。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> Pie(
     <span class="kw">HDC</span> hdc,
@@ -3947,6 +4110,7 @@ SelectObject(hdc, old);</code></pre>
 <pre><code><span class="cl">SelectObject(hdc, GetStockObject(WHITE_BRUSH));</span><span class="cl"><span class="cc" style="min-width:26.0ch">Pie(hdc, 0, 0, 120, 120,</span><span class="cm">// 圆心在 (60,60)</span></span><span class="cl"><span class="cc" style="min-width:26.0ch">    120, 60,</span><span class="cm">// 3 点钟方向</span></span><span class="cl"><span class="cc" style="min-width:26.0ch">    60, 0);</span><span class="cm">// 12 点钟方向：逆时针 90° 的扇形，自动闭合并填充</span></span></code></pre>
 
 <h3>Polygon</h3>
+<p class="fsum">按顶点数组画多边形，末点自动连回首点闭合并填充内部，这正是它与 Polyline 的分野。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">BOOL</span> Polygon(<span class="kw">HDC</span> hdc, <span class="kw">const</span> <span class="kw">POINT</span> *apt, <span class="kw">int</span> cpt);</code></pre>
 <p><strong>参数</strong></p>
@@ -3963,6 +4127,7 @@ SelectObject(hdc, GetStockObject(GRAY_BRUSH));
 Polygon(hdc, tri, 3);   <span class="cm">// 自动把 (10,90) 连回 (60,10) 闭合，再填充</span></code></pre>
 
 <h3>FillRect</h3>
+<p class="fsum">用参数直接给出的画刷填满一块矩形，不描边、不经 SelectObject，也不留下任何 DC 状态。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> FillRect(<span class="kw">HDC</span> hDC, <span class="kw">const</span> <span class="kw">RECT</span> *lprc, <span class="kw">HBRUSH</span> hbr);</code></pre>
 <p><strong>参数</strong></p>
@@ -3977,6 +4142,7 @@ Polygon(hdc, tri, 3);   <span class="cm">// 自动把 (10,90) 连回 (60,10) 闭
 <pre><code><span class="cl">RECT rc = { 10, 10, 200, 60 };</span><span class="cl"><span class="cc" style="min-width:49.0ch">FillRect(hdc, &amp;rc, (<span class="kw">HBRUSH</span>)(COLOR_WINDOW + 1));</span><span class="cm">// 系统颜色写法：索引 +1 再强转</span></span><span class="cl"><span class="kw">HBRUSH</span> hbr = CreateSolidBrush(RGB(0, 120, 215));</span><span class="cl"><span class="cc" style="min-width:49.0ch">FillRect(hdc, &amp;rc, hbr);</span><span class="cm">// 自建画刷同样直接传入，无需 SelectObject</span></span><span class="cl">DeleteObject(hbr);</span></code></pre>
 
 <h3>FrameRect</h3>
+<p class="fsum">用画刷（而非画笔）给矩形描一圈 1 逻辑单位宽的空心边框，内部像素完全不动。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> FrameRect(<span class="kw">HDC</span> hDC, <span class="kw">const</span> <span class="kw">RECT</span> *lprc, <span class="kw">HBRUSH</span> hbr);</code></pre>
 <p><strong>参数</strong></p>
@@ -3992,6 +4158,7 @@ Polygon(hdc, tri, 3);   <span class="cm">// 自动把 (10,90) 连回 (60,10) 闭
 FrameRect(hdc, &amp;rc, (<span class="kw">HBRUSH</span>)GetStockObject(BLACK_BRUSH));   <span class="cm">// 空心黑框，内部保持原样</span></code></pre>
 
 <h3>SetPixel / GetPixel</h3>
+<p class="fsum">读写单个像素的颜色，SetPixel 写入并返回实际落色、GetPixel 读取；逐点调用极慢，成片处理请改用 DIB。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">COLORREF</span> SetPixel(<span class="kw">HDC</span> hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">COLORREF</span> color);
 <span class="kw">COLORREF</span> GetPixel(<span class="kw">HDC</span> hdc, <span class="kw">int</span> x, <span class="kw">int</span> y);</code></pre>
@@ -4024,6 +4191,7 @@ FrameRect(hdc, &amp;rc, (<span class="kw">HBRUSH</span>)GetStockObject(BLACK_BRU
 </tbody></table>
 
 <h3>CreatePen</h3>
+<p class="fsum">造一支画线用的笔，指定线型、宽度和颜色；宽度大于 1 时虚线样式会被悄悄画成实线。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HPEN</span> CreatePen(<span class="kw">int</span> iStyle, <span class="kw">int</span> cWidth, <span class="kw">COLORREF</span> color);</code></pre>
 <p><strong>参数</strong></p>
@@ -4055,6 +4223,7 @@ DeleteObject(pen);</code></pre>
 </tbody></table>
 
 <h3>ExtCreatePen</h3>
+<p class="fsum">创建几何画笔，能画出宽虚线并指定端帽、拐角和自定义虚线节奏，专补 CreatePen 的短板。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HPEN</span> ExtCreatePen(
     <span class="kw">DWORD</span> iPenStyle,
@@ -4079,6 +4248,7 @@ DeleteObject(pen);</code></pre>
 <p>宽虚线的正解：CreatePen 在宽度大于 1 时会把 PS_DASH 等虚线样式悄悄画成实线，这是老 API 的既定行为，不是你的 bug。想要一条又宽又虚的线，必须改用 ExtCreatePen 创建 PS_GEOMETRIC | PS_DASH 的几何画笔。</p>
 
 <h3>CreateSolidBrush</h3>
+<p class="fsum">造一把纯色填充刷，给矩形椭圆的内部、FillRect 和窗口背景上色，是最常用的颜料来源。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HBRUSH</span> CreateSolidBrush(<span class="kw">COLORREF</span> color);</code></pre>
 <p><strong>参数</strong></p>
@@ -4091,6 +4261,7 @@ DeleteObject(pen);</code></pre>
 <pre><code><span class="cl"><span class="cm">// FillRect 直接吃画刷参数，连 SelectObject 都省了</span></span><span class="cl"><span class="kw">HBRUSH</span> hbr = CreateSolidBrush(RGB(255, 200, 0));</span><span class="cl">RECT rc = { 10, 10, 210, 90 };</span><span class="cl"><span class="cc" style="min-width:26.0ch">FillRect(hdc, &amp;rc, hbr);</span><span class="cm">// 画刷作为参数传入，不经过 DC 状态</span></span><span class="cl"><span class="cc" style="min-width:26.0ch">DeleteObject(hbr);</span><span class="cm">// 没选入过 DC，画完直接删</span></span></code></pre>
 
 <h3>CreateHatchBrush</h3>
+<p class="fsum">造一把阴影线画刷，用横线、竖线、斜线或网格填充图形，线间空隙透不透由背景模式决定。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HBRUSH</span> CreateHatchBrush(<span class="kw">int</span> iHatch, <span class="kw">COLORREF</span> color);</code></pre>
 <p><strong>参数</strong></p>
@@ -4119,6 +4290,7 @@ DeleteObject(hbr);</code></pre>
 <p>线条之间的空隙归背景模式管：SetBkMode(hdc, TRANSPARENT) 让空隙透出底色；OPAQUE（默认）则用 SetBkColor 设定的颜色填满空隙。</p>
 
 <h3>CreatePatternBrush</h3>
+<p class="fsum">拿一张位图当图案平铺成画刷；画刷只是引用位图并不拥有它，两者要各自 DeleteObject。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HBRUSH</span> CreatePatternBrush(<span class="kw">HBITMAP</span> hbm);</code></pre>
 <p><strong>参数</strong></p>
@@ -4133,6 +4305,7 @@ DeleteObject(hbr);</code></pre>
 <p>画刷只是引用位图，并不拥有它：画刷存续期间位图不能删，用完后两者要分别 DeleteObject。早期 Win9x 只取位图左上角 8×8 区域，现代 Windows 用整幅位图平铺填充。</p>
 
 <h3>CreateDIBPatternBrushPt</h3>
+<p class="fsum">直接拿内存里的打包 DIB 数据做图案画刷，适合把图案以资源形式嵌进程序，建好后不再依赖那块内存。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HBRUSH</span> CreateDIBPatternBrushPt(<span class="kw">const</span> <span class="kw">void</span> *lpPackedDIB, <span class="kw">UINT</span> iUsage);</code></pre>
 <p><strong>参数</strong></p>
@@ -4160,6 +4333,7 @@ DeleteObject(hbr);</code></pre>
 </tbody></table>
 
 <h3>CreateFontIndirectW</h3>
+<p class="fsum">用填好的 LOGFONTW 结构创建一个逻辑字体，字段带名字、可读性好，是建字体的推荐写法。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HFONT</span> CreateFontIndirectW(<span class="kw">const</span> <span class="kw">LOGFONTW</span> *lplf);</code></pre>
 <p><strong>参数</strong></p>
@@ -4182,6 +4356,7 @@ DeleteObject(hbr);</code></pre>
 </tbody></table>
 
 <h3>CreateFontW</h3>
+<p class="fsum">把字高、字重、斜体、字符集等 14 项参数平铺着传进去创建逻辑字体，功能同 Indirect 版但极易错位。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">HFONT</span> CreateFontW(
     <span class="kw">int</span> cHeight,
@@ -4256,6 +4431,7 @@ DeleteObject(hFont);</code></pre>
 <div class="note new"><span class="t">🔵 本章串讲：一次完整的 WM_PAINT</span><p>把全章连起来就是一套标准动作：BeginPaint 拿到 hdc → CreateCompatibleDC + CreateCompatibleBitmap 搭双缓冲 → 创建并选入自己的画笔画刷字体 → Rectangle / Ellipse / LineTo / TextOutW 作画 → BitBlt 上屏 → 逐一换回旧对象、DeleteObject、DeleteDC → EndPaint。只要每个 Create 都有对应的 Delete、每个 SelectObject 都有对应的换回，GDI 程序就能常年零泄漏地跑下去。</p></div>
 
 <h3>SetROP2</h3>
+<p class="fsum">设定新画上去的颜色与屏幕已有像素如何混合，R2_NOT 可实现"同一图形画两次即擦除"的橡皮筋选框。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> SetROP2(<span class="kw">HDC</span> hdc, <span class="kw">int</span> rop2);</code></pre>
 <p><strong>参数</strong></p>
@@ -4279,6 +4455,7 @@ DeleteObject(hFont);</code></pre>
 <p>R2_NOT 橡皮筋技巧：反色结果不依赖画笔颜色，在任何背景上都可见，并且满足“画两次等于没画”。鼠标拖动画选框的经典写法：每次移动先在旧位置重画一次把旧框擦掉，再在新位置画新框；配合 GetStockObject(NULL_BRUSH) 可保证矩形内部不被填充。</p>
 
 <h3>GetDeviceCaps</h3>
+<p class="fsum">查询一个 DC 背后设备的能力参数，如 DPI、可绘制区尺寸、色深，以及它到底是屏幕还是打印机。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> GetDeviceCaps(<span class="kw">HDC</span> hdc, <span class="kw">int</span> index);</code></pre>
 <p><strong>参数</strong></p>
@@ -4330,6 +4507,7 @@ DeleteObject(hFont);</code></pre>
 <div class="note new"><span class="t">🔵 链接提示</span><p><code>AlphaBlend</code> 和 <code>TransparentBlt</code> 不在 gdi32.lib 里，需要额外链接 <code>msimg32.lib</code>（MSVC 下 <code>#pragma comment(lib, "msimg32.lib")</code>）。头文件仍是 wingdi.h，无需单独包含。</p></div>
 
 <h3>CreateCompatibleBitmap</h3>
+<p class="fsum">建一张与指定 DC 颜色格式一致的位图，双缓冲绘图的画布就靠它；参照 DC 必须传窗口或屏幕 DC。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HBITMAP CreateCompatibleBitmap(HDC hdc, <span class="kw">int</span> cx, <span class="kw">int</span> cy);</code></pre>
 <p><strong>参数</strong></p>
@@ -4346,6 +4524,7 @@ DeleteObject(hFont);</code></pre>
 <p>位图用完必须 DeleteObject 释放，且删除前要先把它从内存 DC 中换出（SelectObject 换回旧位图）——仍选在某个 DC 里的位图是删不掉的，这是 GDI 对象泄漏的头号来源。</p>
 
 <h3>CreateDIBSection</h3>
+<p class="fsum">创建一张能拿到像素指针、直接按内存读写的位图，软件渲染和逐像素图像处理的首选。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>HBITMAP CreateDIBSection(
     HDC hdc,
@@ -4372,6 +4551,7 @@ DeleteObject(hFont);</code></pre>
 <p>混用"GDI 绘制"和"直接写内存"时，先调 GdiFlush() 确保 GDI 的批处理队列已落盘，再去动像素指针，否则会读到尚未生效的旧内容。</p>
 
 <h3>BitBlt</h3>
+<p class="fsum">在两个 DC 之间原样搬运一块矩形像素，不缩放；双缓冲最后一步「上屏」和窗口截图都靠它。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL BitBlt(
     HDC hdc,
@@ -4413,6 +4593,7 @@ DeleteObject(hFont);</code></pre>
 <p>源和目标像素格式不同（如 DDB→DIB）时 GDI 会自动转换，但同格式传输最快，性能敏感的路径应让两端格式一致。</p>
 
 <h3>StretchBlt</h3>
+<p class="fsum">带缩放的块传输，宽高传负数还能镜像；画质取决于事先用 SetStretchBltMode 设的拉伸模式。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL StretchBlt(
     HDC hdcDest,
@@ -4449,6 +4630,7 @@ DeleteObject(hFont);</code></pre>
 <p>缩放质量完全由目标 DC 当时的拉伸模式决定，忘了设模式是"图片缩放为什么这么糊/这么黑"的头号原因。</p>
 
 <h3>AlphaBlend</h3>
+<p class="fsum">按 alpha 把源图半透明地混合到目标上并可同时缩放；要求源像素预乘 alpha，需链接 msimg32.lib。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL AlphaBlend(
     HDC hdcDest,
@@ -4490,6 +4672,7 @@ AlphaBlend(hdc, 0, 0, w, h, hMemDC, 0, 0, w, h, bf2);</code></pre>
 <p>最常见的"没效果／画出黑块"并不是函数失败，而是忘了预乘：AC_SRC_ALPHA 模式下每个像素要先把 R、G、B 各乘以 alpha/255 再存入位图，PNG 解码出来的直通（straight）alpha 必须先做这一步转换。此外该函数由 msimg32.dll 导出，需额外链接 msimg32.lib。</p>
 
 <h3>GetDIBits</h3>
+<p class="fsum">把位图像素按指定的设备无关格式拷进自己的缓冲区，截屏存盘、导出图像必用；此时位图不能选在任何 DC 里。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> GetDIBits(
     HDC hdc,
@@ -4515,6 +4698,7 @@ AlphaBlend(hdc, 0, 0, w, h, hMemDC, 0, 0, w, h, bf2);</code></pre>
 <pre><code><span class="cl">BITMAPINFO bmi = { 0 };</span><span class="cl">bmi.bmiHeader.biSize = <span class="kw">sizeof</span>(BITMAPINFOHEADER);</span><span class="cl"><span class="cc" style="min-width:60.0ch">GetDIBits(hdcMem, hBmp, 0, 0, NULL, &amp;bmi, DIB_RGB_COLORS);</span><span class="cm">// 第一遍：只探测尺寸与格式</span></span><span class="cl">BYTE *buf = (BYTE *)HeapAlloc(GetProcessHeap(), 0, bmi.bmiHeader.biSizeImage);</span><span class="cl"><span class="cc" style="min-width:60.0ch">bmi.bmiHeader.biCompression = BI_RGB;</span><span class="cm">// 第二遍前指定要无压缩原始像素</span></span><span class="cl">GetDIBits(hdcMem, hBmp, 0, bmi.bmiHeader.biHeight, buf, &amp;bmi, DIB_RGB_COLORS);</span></code></pre>
 
 <h3>SetDIBits</h3>
+<p class="fsum">把一块内存中的 DIB 像素整体灌回位图，是 GetDIBits 的逆操作，适合一次性导入而非反复改像素。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> SetDIBits(
     HDC hdc,
@@ -4545,6 +4729,7 @@ SetDIBits(NULL, hBmp, 0, bmi.bmiHeader.biHeight, buf, &amp;bmi, DIB_RGB_COLORS);
 <p>SetDIBits 适合"一次性导入"整幅像素；如果要反复逐像素改图，用 CreateDIBSection 拿到常驻像素指针直接写内存效率高得多。</p>
 
 <h3>StretchDIBits</h3>
+<p class="fsum">直接把内存里的 DIB 像素缩放画到 DC 上，全程不用创建位图句柄，软件渲染器把帧缓冲上屏最省事。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> StretchDIBits(
     HDC hdc,
@@ -4576,6 +4761,7 @@ SetDIBits(NULL, hBmp, 0, bmi.bmiHeader.biHeight, buf, &amp;bmi, DIB_RGB_COLORS);
 <pre><code><span class="cl"><span class="cc" style="min-width:52.0ch">SetStretchBltMode(hdc, HALFTONE);</span><span class="cm">// 缩小时插值更平滑</span></span><span class="cl"><span class="cc" style="min-width:52.0ch">SetBrushOrgEx(hdc, 0, 0, NULL);</span><span class="cm">// 设 HALFTONE 后按惯例重置画刷原点</span></span><span class="cl">StretchDIBits(hdc, 0, 0, cxClient, cyClient,</span><span class="cl">              0, 0, bmi.bmiHeader.biWidth, bmi.bmiHeader.biHeight,</span><span class="cl"><span class="cc" style="min-width:52.0ch">              buf, &amp;bmi, DIB_RGB_COLORS, SRCCOPY);</span><span class="cm">// 内存像素一步拉伸上屏</span></span></code></pre>
 
 <h3>TransparentBlt</h3>
+<p class="fsum">传输时把源图中某个指定颜色当作透明跳过，即色键抠图；只能全透或不透，渐变透明得用 AlphaBlend。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL TransparentBlt(
     HDC hdcDest,
@@ -4610,6 +4796,7 @@ DeleteDC(hMem);</code></pre>
 <p>函数由 msimg32.dll 导出，需链接 msimg32.lib。它只认单一色键，做不到逐像素半透明；需要渐变透明请改用 AlphaBlend。</p>
 
 <h3>PatBlt</h3>
+<p class="fsum">用 DC 当前选入的画刷按光栅操作填一块矩形，不需要源图；常用来铺底色或把选区反色。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL PatBlt(HDC hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">int</span> w, <span class="kw">int</span> h, DWORD rop);</code></pre>
 <p><strong>参数</strong></p>
@@ -4641,6 +4828,7 @@ DeleteDC(hMem);</code></pre>
 </tbody></table>
 
 <h3>TextOutW</h3>
+<p class="fsum">在指定坐标画一行 UTF-16 文字，字体与颜色全取自 DC；不折行、不认换行符，且字符数必须自己传。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL TextOutW(HDC hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, LPCWSTR lpString, <span class="kw">int</span> c);</code></pre>
 <p><strong>参数</strong></p>
@@ -4658,6 +4846,7 @@ DeleteDC(hMem);</code></pre>
 <p>它不折行、也不认换行符——换行符会被画成方框。多行文本请交给 DrawTextW，或自己按行高逐行调用 TextOutW。</p>
 
 <h3>DrawTextW</h3>
+<p class="fsum">在一个矩形里排版文字：自动折行、对齐、加省略号，还能用 DT_CALCRECT 只量尺寸不绘制。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> DrawTextW(HDC hdc, LPCWSTR lpchText, <span class="kw">int</span> cchText, LPRECT lprc, UINT format);</code></pre>
 <p><strong>参数</strong></p>
@@ -4689,6 +4878,7 @@ DeleteDC(hMem);</code></pre>
 <p>DrawTextW 每次调用都要做排版计算，比 TextOutW 慢；海量文字或高频重绘时应改用 TextOutW 自行按行输出。</p>
 
 <h3>SetBkMode</h3>
+<p class="fsum">切换文字底色是填一块背景色（OPAQUE）还是只画字形（TRANSPARENT），把字叠到图上第一步就设它。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> SetBkMode(HDC hdc, <span class="kw">int</span> mode);</code></pre>
 <p><strong>参数</strong></p>
@@ -4704,6 +4894,7 @@ DeleteDC(hMem);</code></pre>
 <p>这个开关不只管文字：虚线画笔的间隙、阴影线画刷的空隙是否填背景色，同样由它控制。</p>
 
 <h3>GetTextExtentPoint32W</h3>
+<p class="fsum">量出一段文字在当前字体下占多宽多高，是自绘控件做居中与排版前的必备一步。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL GetTextExtentPoint32W(HDC hdc, LPCWSTR lpString, <span class="kw">int</span> c, LPSIZE psizl);</code></pre>
 <p><strong>参数</strong></p>
@@ -4727,6 +4918,7 @@ TextOutW(hdc, x, y, label, (<span class="kw">int</span>)wcslen(label));</code></
 <p>它测的是"排版占位宽"，斜体等字形有少量像素溢出属正常现象；做居中布局完全够用，要精确墨水边界则需别的接口。</p>
 
 <h3>ExtTextOutW</h3>
+<p class="fsum">TextOutW 的加强版：一次调用同时完成刷背景矩形、裁剪超界笔画和按自定义字距输出。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL ExtTextOutW(
     HDC hdc,
@@ -4756,6 +4948,7 @@ ExtTextOutW(hdc, 12, 10, ETO_OPAQUE | ETO_CLIPPED, &amp;rc,
             L"下载中…", 4, NULL);   <span class="cm">// 一次调用：刷底色 + 画字 + 裁剪</span></code></pre>
 
 <h3>SetTextColor / SetBkColor</h3>
+<p class="fsum">分别设置 DC 的文字前景色与文字底色，都返回旧值便于恢复；底色只在 OPAQUE 背景模式下才真的画出来。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>COLORREF SetTextColor(HDC hdc, COLORREF color);
 COLORREF SetBkColor(HDC hdc, COLORREF color);</code></pre>
@@ -4773,6 +4966,7 @@ COLORREF SetBkColor(HDC hdc, COLORREF color);</code></pre>
 <p>SetBkColor 设的颜色除了字符底色，还影响虚线画笔的间隙色和单色位图的颜色映射，改动它可能波及看似无关的绘制结果。</p>
 
 <h3>SetTextAlign</h3>
+<p class="fsum">改变 TextOut 系函数把坐标当作文本的哪个角（左中右、顶部或基线），也能切成「当前位置」连续输出模式。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>UINT SetTextAlign(HDC hdc, UINT align);</code></pre>
 <p><strong>参数</strong></p>
@@ -4786,6 +4980,7 @@ COLORREF SetBkColor(HDC hdc, COLORREF color);</code></pre>
 <pre><code><span class="cl">SetTextAlign(hdc, TA_RIGHT | TA_TOP);</span><span class="cl"><span class="cc" style="min-width:53.2ch">TextOutW(hdc, rcClient.right - 4, 4, L"第1页", 3);</span><span class="cm">// 参考点贴右上角→右对齐</span></span><span class="cl"><span class="cc" style="min-width:53.2ch">SetTextAlign(hdc, TA_LEFT | TA_UPDATECP);</span><span class="cm">// 进入连续输出模式</span></span><span class="cl"><span class="cc" style="min-width:53.2ch">MoveToEx(hdc, 4, 40, NULL);</span><span class="cm">// 起点由当前位置决定</span></span><span class="cl"><span class="cc" style="min-width:53.2ch">TextOutW(hdc, 0, 0, L"Hello, ", 7);</span><span class="cm">// 坐标参数被忽略</span></span><span class="cl"><span class="cc" style="min-width:53.2ch">TextOutW(hdc, 0, 0, L"GDI", 3);</span><span class="cm">// 自动接在上一段末尾</span></span></code></pre>
 
 <h3>GetTextMetricsW</h3>
+<p class="fsum">取当前字体的整体度量：行高、升部降部、平均字宽，逐行输出文字时算行距全靠它。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL GetTextMetricsW(HDC hdc, LPTEXTMETRICW lptm);</code></pre>
 <p><strong>参数</strong></p>
@@ -4818,6 +5013,7 @@ GetTextMetricsW(hdc, &amp;tm);
 <div class="note new"><span class="t">🔵 映射模式不是 DPI 方案</span><p>映射模式解决的是"逻辑单位"问题，不会自动适配高 DPI 显示器。现代做法是：声明 Per-Monitor V2 感知，用 GetDpiForWindow(hwnd) 拿到实际 DPI，按 dpi/96.0 自己缩放尺寸；MM_HIMETRIC 等物理单位模式主要战场在打印 DC 上——打印机 DC 的"每英寸点数"由驱动如实上报，物理单位才真正靠谱。</p></div>
 
 <h3>SetMapMode</h3>
+<p class="fsum">选择 DC 的逻辑坐标单位与 Y 轴方向，把像素换成毫米、英寸或自定义比例，打印排版与数学绘图必用。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> SetMapMode(HDC hdc, <span class="kw">int</span> iMode);</code></pre>
 <p><strong>参数</strong></p>
@@ -4844,6 +5040,7 @@ GetTextMetricsW(hdc, &amp;tm);
 <p>切到非 MM_TEXT 模式后要记住两件事：鼠标消息给的仍是设备坐标，参与命中判断前先 DPtoLP；Y 轴向上的模式里，矩形 top 的逻辑值反而比 bottom 更大，按老习惯填 RECT 容易画出空矩形。</p>
 
 <h3>SetViewportOrgEx / SetWindowOrgEx</h3>
+<p class="fsum">挪动坐标原点实现画面整体平移（滚动的经典做法）；前者给设备坐标、后者给逻辑坐标，方向相反而效果等价。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL SetViewportOrgEx(HDC hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, LPPOINT lppt);
 BOOL SetWindowOrgEx(HDC hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, LPPOINT lppt);</code></pre>
@@ -4859,6 +5056,7 @@ BOOL SetWindowOrgEx(HDC hdc, <span class="kw">int</span> x, <span class="kw">int
 <pre><code><span class="cl"><span class="cc" style="min-width:63.0ch">SetViewportOrgEx(hdc, 100, 50, NULL);</span><span class="cm">// 逻辑(0,0)钉在客户区(100,50)</span></span><span class="cl"><span class="cc" style="min-width:63.0ch">Rectangle(hdc, 0, 0, 40, 40);</span><span class="cm">// 实际出现在(100,50)~(140,90)</span></span><span class="cl">SetViewportOrgEx(hdc, 0, 0, NULL);</span><span class="cl"><span class="cc" style="min-width:63.0ch">SetWindowOrgEx(hdc, xScroll, yScroll, NULL);</span><span class="cm">// 滚动惯用法：让该逻辑点成为左上角</span></span><span class="cl"><span class="cc" style="min-width:63.0ch">Rectangle(hdc, xScroll, yScroll, xScroll + 40, yScroll + 40);</span><span class="cm">// 仍贴左上角</span></span></code></pre>
 
 <h3>DPtoLP / LPtoDP</h3>
+<p class="fsum">按 DC 当前的映射设置在设备坐标与逻辑坐标之间互转，鼠标消息进入自定义坐标系前必转。</p>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL DPtoLP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);
 BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
