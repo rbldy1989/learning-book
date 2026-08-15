@@ -290,10 +290,7 @@ pre code .cc{display:inline-block;vertical-align:top;}
 
 <h2 id="s1-printf">printf</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> printf(
-    <span class="kw">const</span> <span class="kw">char</span> *format,
-    ...
-);</code></pre>
+<pre><code><span class="kw">int</span> printf(<span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -329,11 +326,7 @@ pre code .cc{display:inline-block;vertical-align:top;}
 
 <h2 id="s1-fprintf">fprintf</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> fprintf(
-    FILE *stream,
-    <span class="kw">const</span> <span class="kw">char</span> *format,
-    ...
-);</code></pre>
+<pre><code><span class="kw">int</span> fprintf(FILE *stream, <span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -352,17 +345,8 @@ pre code .cc{display:inline-block;vertical-align:top;}
 
 <h2 id="s1-sprintf">sprintf / snprintf</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> sprintf(
-    <span class="kw">char</span> *buf,
-    <span class="kw">const</span> <span class="kw">char</span> *format,
-    ...
-);
-<span class="kw">int</span> snprintf(
-    <span class="kw">char</span> *buf,
-    <span class="kw">size_t</span> n,
-    <span class="kw">const</span> <span class="kw">char</span> *format,
-    ...
-);</code></pre>
+<pre><code><span class="kw">int</span> sprintf(<span class="kw">char</span> *buf, <span class="kw">const</span> <span class="kw">char</span> *format, ...);
+<span class="kw">int</span> snprintf(<span class="kw">char</span> *buf, <span class="kw">size_t</span> n, <span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -386,11 +370,7 @@ pre code .cc{display:inline-block;vertical-align:top;}
 
 <h2 id="s1-sscanf">sscanf</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> sscanf(
-    <span class="kw">const</span> <span class="kw">char</span> *src,
-    <span class="kw">const</span> <span class="kw">char</span> *format,
-    ...
-);</code></pre>
+<pre><code><span class="kw">int</span> sscanf(<span class="kw">const</span> <span class="kw">char</span> *src, <span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -414,10 +394,7 @@ sscanf(line, <span>"%19s"</span>, word);   <span class="cm">// %s 必须带宽�
 
 <h2 id="s1-scanf">scanf</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> scanf(
-    <span class="kw">const</span> <span class="kw">char</span> *format,
-    ...
-);</code></pre>
+<pre><code><span class="kw">int</span> scanf(<span class="kw">const</span> <span class="kw">char</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -440,15 +417,8 @@ sscanf(line, <span>"%19s"</span>, word);   <span class="cm">// %s 必须带宽�
 
 <h2 id="s1-fopen">fopen / fopen_s</h2>
 <p><strong>函数原型</strong></p>
-<pre><code>FILE *fopen(
-    <span class="kw">const</span> <span class="kw">char</span> *filename,
-    <span class="kw">const</span> <span class="kw">char</span> *mode
-);
-errno_t fopen_s(
-    FILE **fp,
-    <span class="kw">const</span> <span class="kw">char</span> *filename,
-    <span class="kw">const</span> <span class="kw">char</span> *mode
-);</code></pre>
+<pre><code>FILE *fopen(<span class="kw">const</span> <span class="kw">char</span> *filename, <span class="kw">const</span> <span class="kw">char</span> *mode);
+errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</span> *filename, <span class="kw">const</span> <span class="kw">char</span> *mode);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -495,12 +465,7 @@ errno_t fopen_s(
 
 <h2 id="s1-fread">fread</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">size_t</span> fread(
-    <span class="kw">void</span> *ptr,
-    <span class="kw">size_t</span> size,
-    <span class="kw">size_t</span> count,
-    FILE *stream
-);</code></pre>
+<pre><code><span class="kw">size_t</span> fread(<span class="kw">void</span> *ptr, <span class="kw">size_t</span> size, <span class="kw">size_t</span> count, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -522,12 +487,7 @@ errno_t fopen_s(
 
 <h2 id="s1-fwrite">fwrite</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">size_t</span> fwrite(
-    <span class="kw">const</span> <span class="kw">void</span> *ptr,
-    <span class="kw">size_t</span> size,
-    <span class="kw">size_t</span> count,
-    FILE *stream
-);</code></pre>
+<pre><code><span class="kw">size_t</span> fwrite(<span class="kw">const</span> <span class="kw">void</span> *ptr, <span class="kw">size_t</span> size, <span class="kw">size_t</span> count, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -550,11 +510,7 @@ errno_t fopen_s(
 
 <h2 id="s1-fgets">fgets</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">char</span> *fgets(
-    <span class="kw">char</span> *buf,
-    <span class="kw">int</span> n,
-    FILE *stream
-);</code></pre>
+<pre><code><span class="kw">char</span> *fgets(<span class="kw">char</span> *buf, <span class="kw">int</span> n, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -578,10 +534,7 @@ errno_t fopen_s(
 
 <h2 id="s1-fputs">fputs</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> fputs(
-    <span class="kw">const</span> <span class="kw">char</span> *s,
-    FILE *stream
-);</code></pre>
+<pre><code><span class="kw">int</span> fputs(<span class="kw">const</span> <span class="kw">char</span> *s, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -600,10 +553,7 @@ errno_t fopen_s(
 <h2 id="s1-fgetc">fgetc / fputc</h2>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> fgetc(FILE *stream);
-<span class="kw">int</span> fputc(
-    <span class="kw">int</span> c,
-    FILE *stream
-);</code></pre>
+<span class="kw">int</span> fputc(<span class="kw">int</span> c, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -621,11 +571,7 @@ errno_t fopen_s(
 
 <h2 id="s1-fseek">fseek / ftell / rewind</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> fseek(
-    FILE *stream,
-    <span class="kw">long</span> offset,
-    <span class="kw">int</span> origin
-);
+<pre><code><span class="kw">int</span> fseek(FILE *stream, <span class="kw">long</span> offset, <span class="kw">int</span> origin);
 <span class="kw">long</span> ftell(FILE *stream);
 <span class="kw">void</span> rewind(FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
@@ -682,10 +628,7 @@ errno_t fopen_s(
 <h2 id="s1-remove">remove / rename</h2>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> remove(<span class="kw">const</span> <span class="kw">char</span> *filename);
-<span class="kw">int</span> rename(
-    <span class="kw">const</span> <span class="kw">char</span> *oldname,
-    <span class="kw">const</span> <span class="kw">char</span> *newname
-);</code></pre>
+<span class="kw">int</span> rename(<span class="kw">const</span> <span class="kw">char</span> *oldname, <span class="kw">const</span> <span class="kw">char</span> *newname);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -728,12 +671,7 @@ errno_t fopen_s(
 
 <h2 id="s1-setvbuf">setvbuf</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> setvbuf(
-    FILE *stream,
-    <span class="kw">char</span> *buf,
-    <span class="kw">int</span> mode,
-    <span class="kw">size_t</span> size
-);</code></pre>
+<pre><code><span class="kw">int</span> setvbuf(FILE *stream, <span class="kw">char</span> *buf, <span class="kw">int</span> mode, <span class="kw">size_t</span> size);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -798,10 +736,7 @@ errno_t fopen_s(
 
 <h2 id="s2-calloc">calloc</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">void</span> *calloc(
-    size_t nmemb,
-    size_t size
-);</code></pre>
+<pre><code><span class="kw">void</span> *calloc(size_t nmemb, size_t size);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -823,10 +758,7 @@ free(arr);</code></pre>
 
 <h2 id="s2-realloc">realloc</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">void</span> *realloc(
-    <span class="kw">void</span> *ptr,
-    size_t size
-);</code></pre>
+<pre><code><span class="kw">void</span> *realloc(<span class="kw">void</span> *ptr, size_t size);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -876,20 +808,9 @@ free(arr);</code></pre>
 <h2 id="s2-strtol">strtol / strtoul / strtod</h2>
 <span class="badge ok">推荐</span>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">long</span> strtol(
-    <span class="kw">const</span> <span class="kw">char</span> *nptr,
-    <span class="kw">char</span> **endptr,
-    <span class="kw">int</span> base
-);
-<span class="kw">unsigned</span> <span class="kw">long</span> strtoul(
-    <span class="kw">const</span> <span class="kw">char</span> *nptr,
-    <span class="kw">char</span> **endptr,
-    <span class="kw">int</span> base
-);
-<span class="kw">double</span> strtod(
-    <span class="kw">const</span> <span class="kw">char</span> *nptr,
-    <span class="kw">char</span> **endptr
-);</code></pre>
+<pre><code><span class="kw">long</span> strtol(<span class="kw">const</span> <span class="kw">char</span> *nptr, <span class="kw">char</span> **endptr, <span class="kw">int</span> base);
+<span class="kw">unsigned</span> <span class="kw">long</span> strtoul(<span class="kw">const</span> <span class="kw">char</span> *nptr, <span class="kw">char</span> **endptr, <span class="kw">int</span> base);
+<span class="kw">double</span> strtod(<span class="kw">const</span> <span class="kw">char</span> *nptr, <span class="kw">char</span> **endptr);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -951,10 +872,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 
 <h2 id="s2-div">div</h2>
 <p><strong>函数原型</strong></p>
-<pre><code>div_t div(
-    <span class="kw">int</span> numer,
-    <span class="kw">int</span> denom
-);</code></pre>
+<pre><code>div_t div(<span class="kw">int</span> numer, <span class="kw">int</span> denom);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1116,15 +1034,8 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 
 <h2 id="s3-strcpy">strcpy / strcpy_s <span class="badge old">已过时</span></h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">char</span> *strcpy(
-    <span class="kw">char</span> *dest,
-    <span class="kw">const</span> <span class="kw">char</span> *src
-);
-errno_t strcpy_s(
-    <span class="kw">char</span> *dest,
-    rsize_t destsz,
-    <span class="kw">const</span> <span class="kw">char</span> *src
-);</code></pre>
+<pre><code><span class="kw">char</span> *strcpy(<span class="kw">char</span> *dest, <span class="kw">const</span> <span class="kw">char</span> *src);
+errno_t strcpy_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class="kw">const</span> <span class="kw">char</span> *src);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1141,11 +1052,7 @@ errno_t strcpy_s(
 
 <h2 id="s3-strncpy">strncpy</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">char</span> *strncpy(
-    <span class="kw">char</span> *dest,
-    <span class="kw">const</span> <span class="kw">char</span> *src,
-    size_t count
-);</code></pre>
+<pre><code><span class="kw">char</span> *strncpy(<span class="kw">char</span> *dest, <span class="kw">const</span> <span class="kw">char</span> *src, size_t count);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1162,15 +1069,8 @@ errno_t strcpy_s(
 
 <h2 id="s3-strcat">strcat / strcat_s <span class="badge old">已过时</span></h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">char</span> *strcat(
-    <span class="kw">char</span> *dest,
-    <span class="kw">const</span> <span class="kw">char</span> *src
-);
-errno_t strcat_s(
-    <span class="kw">char</span> *dest,
-    rsize_t destsz,
-    <span class="kw">const</span> <span class="kw">char</span> *src
-);</code></pre>
+<pre><code><span class="kw">char</span> *strcat(<span class="kw">char</span> *dest, <span class="kw">const</span> <span class="kw">char</span> *src);
+errno_t strcat_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class="kw">const</span> <span class="kw">char</span> *src);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1188,15 +1088,8 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 
 <h2 id="s3-strcmp">strcmp / strncmp</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> strcmp(
-    <span class="kw">const</span> <span class="kw">char</span> *lhs,
-    <span class="kw">const</span> <span class="kw">char</span> *rhs
-);
-<span class="kw">int</span> strncmp(
-    <span class="kw">const</span> <span class="kw">char</span> *lhs,
-    <span class="kw">const</span> <span class="kw">char</span> *rhs,
-    size_t count
-);</code></pre>
+<pre><code><span class="kw">int</span> strcmp(<span class="kw">const</span> <span class="kw">char</span> *lhs, <span class="kw">const</span> <span class="kw">char</span> *rhs);
+<span class="kw">int</span> strncmp(<span class="kw">const</span> <span class="kw">char</span> *lhs, <span class="kw">const</span> <span class="kw">char</span> *rhs, size_t count);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1213,14 +1106,8 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 
 <h2 id="s3-strchr">strchr / strrchr</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">char</span> *strchr(
-    <span class="kw">const</span> <span class="kw">char</span> *s,
-    <span class="kw">int</span> ch
-);
-<span class="kw">char</span> *strrchr(
-    <span class="kw">const</span> <span class="kw">char</span> *s,
-    <span class="kw">int</span> ch
-);</code></pre>
+<pre><code><span class="kw">char</span> *strchr(<span class="kw">const</span> <span class="kw">char</span> *s, <span class="kw">int</span> ch);
+<span class="kw">char</span> *strrchr(<span class="kw">const</span> <span class="kw">char</span> *s, <span class="kw">int</span> ch);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1236,10 +1123,7 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 
 <h2 id="s3-strstr">strstr</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">char</span> *strstr(
-    <span class="kw">const</span> <span class="kw">char</span> *haystack,
-    <span class="kw">const</span> <span class="kw">char</span> *needle
-);</code></pre>
+<pre><code><span class="kw">char</span> *strstr(<span class="kw">const</span> <span class="kw">char</span> *haystack, <span class="kw">const</span> <span class="kw">char</span> *needle);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1258,15 +1142,8 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 
 <h2 id="s3-strtok">strtok / strtok_s <span class="badge old">已过时</span></h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">char</span> *strtok(
-    <span class="kw">char</span> *str,
-    <span class="kw">const</span> <span class="kw">char</span> *delims
-);
-<span class="kw">char</span> *strtok_s(
-    <span class="kw">char</span> *str,
-    <span class="kw">const</span> <span class="kw">char</span> *delims,
-    <span class="kw">char</span> **context
-);</code></pre>
+<pre><code><span class="kw">char</span> *strtok(<span class="kw">char</span> *str, <span class="kw">const</span> <span class="kw">char</span> *delims);
+<span class="kw">char</span> *strtok_s(<span class="kw">char</span> *str, <span class="kw">const</span> <span class="kw">char</span> *delims, <span class="kw">char</span> **context);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1284,11 +1161,7 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 
 <h2 id="s3-memcpy">memcpy <span class="badge ok">推荐</span></h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">void</span> *memcpy(
-    <span class="kw">void</span> *dest,
-    <span class="kw">const</span> <span class="kw">void</span> *src,
-    size_t count
-);</code></pre>
+<pre><code><span class="kw">void</span> *memcpy(<span class="kw">void</span> *dest, <span class="kw">const</span> <span class="kw">void</span> *src, size_t count);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1307,11 +1180,7 @@ memcpy(dst, src, <span class="kw">sizeof</span> dst);   <span class="cm">// 按�
 
 <h2 id="s3-memmove">memmove</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">void</span> *memmove(
-    <span class="kw">void</span> *dest,
-    <span class="kw">const</span> <span class="kw">void</span> *src,
-    size_t count
-);</code></pre>
+<pre><code><span class="kw">void</span> *memmove(<span class="kw">void</span> *dest, <span class="kw">const</span> <span class="kw">void</span> *src, size_t count);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1329,11 +1198,7 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 
 <h2 id="s3-memset">memset</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">void</span> *memset(
-    <span class="kw">void</span> *dest,
-    <span class="kw">int</span> ch,
-    size_t count
-);</code></pre>
+<pre><code><span class="kw">void</span> *memset(<span class="kw">void</span> *dest, <span class="kw">int</span> ch, size_t count);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1350,11 +1215,7 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 
 <h2 id="s3-memcmp">memcmp</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> memcmp(
-    <span class="kw">const</span> <span class="kw">void</span> *lhs,
-    <span class="kw">const</span> <span class="kw">void</span> *rhs,
-    size_t count
-);</code></pre>
+<pre><code><span class="kw">int</span> memcmp(<span class="kw">const</span> <span class="kw">void</span> *lhs, <span class="kw">const</span> <span class="kw">void</span> *rhs, size_t count);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1374,11 +1235,7 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 
 <h2 id="s3-memchr">memchr</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">void</span> *memchr(
-    <span class="kw">const</span> <span class="kw">void</span> *s,
-    <span class="kw">int</span> ch,
-    size_t count
-);</code></pre>
+<pre><code><span class="kw">void</span> *memchr(<span class="kw">const</span> <span class="kw">void</span> *s, <span class="kw">int</span> ch, size_t count);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1398,11 +1255,7 @@ size_t n = fread(raw, 1, <span class="kw">sizeof</span> raw, fp);
 <h2 id="s3-strerror">strerror / strerror_s</h2>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">char</span> *strerror(<span class="kw">int</span> errnum);
-errno_t strerror_s(
-    <span class="kw">char</span> *buf,
-    rsize_t bufsz,
-    <span class="kw">int</span> errnum
-);</code></pre>
+errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class="kw">int</span> errnum);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1467,11 +1320,7 @@ errno_t strerror_s(
 <h2 id="s4-wcscpy_s">wcscpy_s</h2>
 <span class="badge ok">推荐</span>
 <p><strong>函数原型</strong></p>
-<pre><code>errno_t wcscpy_s(
-    <span class="kw">wchar_t</span> *dest,
-    rsize_t destsz,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *src
-);</code></pre>
+<pre><code>errno_t wcscpy_s(<span class="kw">wchar_t</span> *dest, rsize_t destsz, <span class="kw">const</span> <span class="kw">wchar_t</span> *src);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1493,11 +1342,7 @@ errno_t strerror_s(
 <h2 id="s4-wcscat_s">wcscat_s</h2>
 <span class="badge ok">推荐</span>
 <p><strong>函数原型</strong></p>
-<pre><code>errno_t wcscat_s(
-    <span class="kw">wchar_t</span> *dest,
-    rsize_t destsz,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *src
-);</code></pre>
+<pre><code>errno_t wcscat_s(<span class="kw">wchar_t</span> *dest, rsize_t destsz, <span class="kw">const</span> <span class="kw">wchar_t</span> *src);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1515,15 +1360,8 @@ errno_t strerror_s(
 
 <h2 id="s4-wcscmp">wcscmp / wcsncmp</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> wcscmp(
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *lhs,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *rhs
-);
-<span class="kw">int</span> wcsncmp(
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *lhs,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *rhs,
-    size_t n
-);</code></pre>
+<pre><code><span class="kw">int</span> wcscmp(<span class="kw">const</span> <span class="kw">wchar_t</span> *lhs, <span class="kw">const</span> <span class="kw">wchar_t</span> *rhs);
+<span class="kw">int</span> wcsncmp(<span class="kw">const</span> <span class="kw">wchar_t</span> *lhs, <span class="kw">const</span> <span class="kw">wchar_t</span> *rhs, size_t n);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1543,14 +1381,8 @@ errno_t strerror_s(
 
 <h2 id="s4-wcschr">wcschr / wcsstr</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">wchar_t</span> *wcschr(
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *str,
-    <span class="kw">wchar_t</span> ch
-);
-<span class="kw">wchar_t</span> *wcsstr(
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *str,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *substr
-);</code></pre>
+<pre><code><span class="kw">wchar_t</span> *wcschr(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, <span class="kw">wchar_t</span> ch);
+<span class="kw">wchar_t</span> *wcsstr(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, <span class="kw">const</span> <span class="kw">wchar_t</span> *substr);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1572,12 +1404,7 @@ errno_t strerror_s(
 <h2 id="s4-swprintf_s">swprintf_s</h2>
 <span class="badge ok">推荐</span>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> swprintf_s(
-    <span class="kw">wchar_t</span> *buffer,
-    size_t sizeOfBuffer,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *format,
-    ...
-);</code></pre>
+<pre><code><span class="kw">int</span> swprintf_s(<span class="kw">wchar_t</span> *buffer, size_t sizeOfBuffer, <span class="kw">const</span> <span class="kw">wchar_t</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1600,11 +1427,7 @@ errno_t strerror_s(
 
 <h2 id="s4-swscanf_s">swscanf_s</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> swscanf_s(
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *buffer,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *format,
-    ...
-);</code></pre>
+<pre><code><span class="kw">int</span> swscanf_s(<span class="kw">const</span> <span class="kw">wchar_t</span> *buffer, <span class="kw">const</span> <span class="kw">wchar_t</span> *format, ...);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1629,11 +1452,7 @@ errno_t strerror_s(
 <h2 id="s4-wcstok_s">wcstok_s</h2>
 <span class="badge ok">推荐</span>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">wchar_t</span> *wcstok_s(
-    <span class="kw">wchar_t</span> *str,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *delim,
-    <span class="kw">wchar_t</span> **context
-);</code></pre>
+<pre><code><span class="kw">wchar_t</span> *wcstok_s(<span class="kw">wchar_t</span> *str, <span class="kw">const</span> <span class="kw">wchar_t</span> *delim, <span class="kw">wchar_t</span> **context);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1656,15 +1475,8 @@ errno_t strerror_s(
 
 <h2 id="s4-wcstol">wcstol / wcstod</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">long</span> wcstol(
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *str,
-    <span class="kw">wchar_t</span> **endptr,
-    <span class="kw">int</span> base
-);
-<span class="kw">double</span> wcstod(
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *str,
-    <span class="kw">wchar_t</span> **endptr
-);</code></pre>
+<pre><code><span class="kw">long</span> wcstol(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, <span class="kw">wchar_t</span> **endptr, <span class="kw">int</span> base);
+<span class="kw">double</span> wcstod(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, <span class="kw">wchar_t</span> **endptr);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1687,15 +1499,8 @@ errno_t strerror_s(
 
 <h2 id="s4-fgetws">fgetws / fputws</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">wchar_t</span> *fgetws(
-    <span class="kw">wchar_t</span> *str,
-    <span class="kw">int</span> count,
-    FILE *stream
-);
-<span class="kw">int</span> fputws(
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *str,
-    FILE *stream
-);</code></pre>
+<pre><code><span class="kw">wchar_t</span> *fgetws(<span class="kw">wchar_t</span> *str, <span class="kw">int</span> count, FILE *stream);
+<span class="kw">int</span> fputws(<span class="kw">const</span> <span class="kw">wchar_t</span> *str, FILE *stream);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -1754,11 +1559,7 @@ errno_t wcstombs_s(
 <h2 id="s4-_wfopen_s">_wfopen_s</h2>
 <span class="badge ok">推荐</span>
 <p><strong>函数原型</strong></p>
-<pre><code>errno_t _wfopen_s(
-    FILE **pFile,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *filename,
-    <span class="kw">const</span> <span class="kw">wchar_t</span> *mode
-);</code></pre>
+<pre><code>errno_t _wfopen_s(FILE **pFile, <span class="kw">const</span> <span class="kw">wchar_t</span> *filename, <span class="kw">const</span> <span class="kw">wchar_t</span> *mode);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2045,10 +1846,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <h2 id="s6-pow">pow</h2>
 <p>通用幂运算 x 的 y 次方,y 可以是任意实数。</p>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">double</span> pow(
-    <span class="kw">double</span> x,
-    <span class="kw">double</span> y
-);</code></pre>
+<pre><code><span class="kw">double</span> pow(<span class="kw">double</span> x, <span class="kw">double</span> y);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2125,10 +1923,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <h2 id="s6-atan2">atan2</h2>
 <p><span class="badge ok">推荐</span> 双参数反正切:由坐标 (x, y) 直接求方向角,实战中几乎总应替代 <code>atan</code>。</p>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">double</span> atan2(
-    <span class="kw">double</span> y,
-    <span class="kw">double</span> x
-);</code></pre>
+<pre><code><span class="kw">double</span> atan2(<span class="kw">double</span> y, <span class="kw">double</span> x);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2174,10 +1969,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <h2 id="s6-fmod">fmod</h2>
 <p>浮点取余。<code>%</code> 运算符只接受整数,对 <code>double</code> 求余必须用它。</p>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">double</span> fmod(
-    <span class="kw">double</span> x,
-    <span class="kw">double</span> y
-);</code></pre>
+<pre><code><span class="kw">double</span> fmod(<span class="kw">double</span> x, <span class="kw">double</span> y);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2194,10 +1986,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <h2 id="s6-hypot">hypot</h2>
 <p><span class="badge new">现代提示</span> 直角边求斜边(C99),专为规避中间量溢出而生。</p>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">double</span> hypot(
-    <span class="kw">double</span> x,
-    <span class="kw">double</span> y
-);</code></pre>
+<pre><code><span class="kw">double</span> hypot(<span class="kw">double</span> x, <span class="kw">double</span> y);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2252,10 +2041,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><span class="badge new">现代提示</span> C99 起,本章每个函数都有 <code>f</code> 后缀的 float 版与 <code>l</code> 后缀的 long double 版。</p>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">float</span> sqrtf(<span class="kw">float</span> x);
-<span class="kw">float</span> powf(
-    <span class="kw">float</span> x,
-    <span class="kw">float</span> y
-);
+<span class="kw">float</span> powf(<span class="kw">float</span> x, <span class="kw">float</span> y);
 <span class="kw">float</span> fabsf(<span class="kw">float</span> x);
 <span class="kw">long</span> <span class="kw">double</span> sqrtl(<span class="kw">long</span> <span class="kw">double</span> x);</code></pre>
 <p><strong>参数</strong></p>
@@ -2312,10 +2098,7 @@ printf("CPU: %.3f s\n", (<span class="kw">double</span>)(t1 - t0) / CLOCKS_PER_S
 
 <h2 id="s7-difftime">difftime</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">double</span> difftime(
-    time_t end,
-    time_t beg
-);</code></pre>
+<pre><code><span class="kw">double</span> difftime(time_t end, time_t beg);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2382,14 +2165,8 @@ printf("elapsed: %.0f s\n", secs);</code></pre>
 
 <h2 id="s7-localtime-s">localtime_s / gmtime_s <span class="badge ok">推荐</span></h2>
 <p><strong>函数原型</strong></p>
-<pre><code>errno_t localtime_s(
-    <span class="kw">struct</span> tm *result,
-    <span class="kw">const</span> time_t *timer
-);
-errno_t gmtime_s(
-    <span class="kw">struct</span> tm *result,
-    <span class="kw">const</span> time_t *timer
-);</code></pre>
+<pre><code>errno_t localtime_s(<span class="kw">struct</span> tm *result, <span class="kw">const</span> time_t *timer);
+errno_t gmtime_s(<span class="kw">struct</span> tm *result, <span class="kw">const</span> time_t *timer);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2410,12 +2187,7 @@ errno_t gmtime_s(
 
 <h2 id="s7-strftime">strftime</h2>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">size_t</span> strftime(
-    <span class="kw">char</span> *buf,
-    <span class="kw">size_t</span> maxsize,
-    <span class="kw">const</span> <span class="kw">char</span> *fmt,
-    <span class="kw">const</span> <span class="kw">struct</span> tm *tp
-);</code></pre>
+<pre><code><span class="kw">size_t</span> strftime(<span class="kw">char</span> *buf, <span class="kw">size_t</span> maxsize, <span class="kw">const</span> <span class="kw">char</span> *fmt, <span class="kw">const</span> <span class="kw">struct</span> tm *tp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2460,10 +2232,7 @@ puts(buf);</code></pre>
     <span class="kw">long</span> tv_nsec;
 };
 
-<span class="kw">int</span> timespec_get(
-    <span class="kw">struct</span> timespec *ts,
-    <span class="kw">int</span> base
-);</code></pre>
+<span class="kw">int</span> timespec_get(<span class="kw">struct</span> timespec *ts, <span class="kw">int</span> base);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2588,19 +2357,10 @@ errno</code></pre>
 
 <span class="kw">typedef</span> ... va_list;
 
-<span class="kw">void</span> va_start(
-    va_list ap,
-    parmN
-);
-type va_arg(
-    va_list ap,
-    type
-);
+<span class="kw">void</span> va_start(va_list ap, parmN);
+type va_arg(va_list ap, type);
 <span class="kw">void</span> va_end(va_list ap);
-<span class="kw">void</span> va_copy(
-    va_list dst,
-    va_list src
-);</code></pre>
+<span class="kw">void</span> va_copy(va_list dst, va_list src);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2622,10 +2382,7 @@ type va_arg(
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;stddef.h&gt;
 
-size_t offsetof(
-    type,
-    member
-);</code></pre>
+size_t offsetof(type, member);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -2757,10 +2514,7 @@ printf("big=%" PRId64 " mask=%08" PRIx32 "\n", big, mask);
 <p><strong>函数原型</strong></p>
 <pre><code>#include &lt;assert.h&gt;
 
-static_assert(
-    constant-expression,
-    "message"
-);
+static_assert(constant-expression, "message");
 static_assert(constant-expression);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>

@@ -569,11 +569,7 @@ typedef struct tagMSG {
 
 <h3>HeapAlloc</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">LPVOID</span> HeapAlloc(
-    <span class="kw">HANDLE</span> hHeap,
-    <span class="kw">DWORD</span>  dwFlags,
-    <span class="kw">SIZE_T</span> dwBytes
-);</code></pre>
+<pre><code><span class="kw">LPVOID</span> HeapAlloc(<span class="kw">HANDLE</span> hHeap, <span class="kw">DWORD</span>  dwFlags, <span class="kw">SIZE_T</span> dwBytes);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hHeap</td><td>HANDLE</td><td>从哪个堆分配。绝大多数情况传 <code>GetProcessHeap()</code>（进程默认堆）；也可以是 <code>HeapCreate</code> 创建的私有堆。易错点：释放时必须用同一个堆句柄。</td></tr>
@@ -618,12 +614,7 @@ typedef struct tagMSG {
 
 <h3>HeapReAlloc</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">LPVOID</span> HeapReAlloc(
-    <span class="kw">HANDLE</span> hHeap,
-    <span class="kw">DWORD</span>  dwFlags,
-    <span class="kw">LPVOID</span> lpMem,
-    <span class="kw">SIZE_T</span> dwBytes
-);</code></pre>
+<pre><code><span class="kw">LPVOID</span> HeapReAlloc(<span class="kw">HANDLE</span> hHeap, <span class="kw">DWORD</span>  dwFlags, <span class="kw">LPVOID</span> lpMem, <span class="kw">SIZE_T</span> dwBytes);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hHeap</td><td>HANDLE</td><td>原块所在的目标堆句柄，须与当初分配时一致。</td></tr>
@@ -646,11 +637,7 @@ p = tmp;   <span class="cm">// 成功才覆盖；旧地址此时可能已失效<
 
 <h3>HeapFree</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> HeapFree(
-    <span class="kw">HANDLE</span> hHeap,
-    <span class="kw">DWORD</span>  dwFlags,
-    <span class="kw">LPVOID</span> lpMem
-);</code></pre>
+<pre><code><span class="kw">BOOL</span> HeapFree(<span class="kw">HANDLE</span> hHeap, <span class="kw">DWORD</span>  dwFlags, <span class="kw">LPVOID</span> lpMem);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hHeap</td><td>HANDLE</td><td>内存块所属的堆句柄，必须是分配该块时用的同一个，张冠李戴会破坏堆。</td></tr>
@@ -669,11 +656,7 @@ p = NULL;   <span class="cm">// 立刻断掉悬空指针</span></code></pre>
 
 <h3>HeapCreate / HeapDestroy</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">HANDLE</span> HeapCreate(
-    <span class="kw">DWORD</span>  flOptions,
-    <span class="kw">SIZE_T</span> dwInitialSize,
-    <span class="kw">SIZE_T</span> dwMaximumSize
-);
+<pre><code><span class="kw">HANDLE</span> HeapCreate(<span class="kw">DWORD</span>  flOptions, <span class="kw">SIZE_T</span> dwInitialSize, <span class="kw">SIZE_T</span> dwMaximumSize);
 <span class="kw">BOOL</span> HeapDestroy(<span class="kw">HANDLE</span> hHeap);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -691,11 +674,7 @@ p = NULL;   <span class="cm">// 立刻断掉悬空指针</span></code></pre>
 
 <h3>VirtualFree</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> VirtualFree(
-    <span class="kw">LPVOID</span> lpAddress,
-    <span class="kw">SIZE_T</span> dwSize,
-    <span class="kw">DWORD</span>  dwFreeType
-);</code></pre>
+<pre><code><span class="kw">BOOL</span> VirtualFree(<span class="kw">LPVOID</span> lpAddress, <span class="kw">SIZE_T</span> dwSize, <span class="kw">DWORD</span>  dwFreeType);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>lpAddress</td><td>LPVOID</td><td>目标区域地址。<code>MEM_RELEASE</code> 时必须是 VirtualAlloc 返回的原始基址；<code>MEM_DECOMMIT</code> 时可为区域内任意页地址。</td></tr>
@@ -737,10 +716,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 
 <h3>GlobalAlloc / GlobalLock / GlobalUnlock / GlobalFree</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">HGLOBAL</span> GlobalAlloc(
-    <span class="kw">UINT</span>   uFlags,
-    <span class="kw">SIZE_T</span> dwBytes
-);
+<pre><code><span class="kw">HGLOBAL</span> GlobalAlloc(<span class="kw">UINT</span>   uFlags, <span class="kw">SIZE_T</span> dwBytes);
 <span class="kw">LPVOID</span> GlobalLock(<span class="kw">HGLOBAL</span> hMem);
 <span class="kw">BOOL</span> GlobalUnlock(<span class="kw">HGLOBAL</span> hMem);
 <span class="kw">HGLOBAL</span> GlobalFree(<span class="kw">HGLOBAL</span> hMem);</code></pre>
@@ -926,10 +902,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 
 <h3>GetFileSizeEx</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> GetFileSizeEx(
-    <span class="kw">HANDLE</span>         hFile,
-    <span class="kw">PLARGE_INTEGER</span> lpFileSize
-);</code></pre>
+<pre><code><span class="kw">BOOL</span> GetFileSizeEx(<span class="kw">HANDLE</span>         hFile, <span class="kw">PLARGE_INTEGER</span> lpFileSize);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hFile</td><td>HANDLE</td><td>已打开的文件句柄（至少需要读取或查询权限）。</td></tr>
@@ -1014,10 +987,7 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 
 <h3>MoveFileW / MoveFileExW</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> MoveFileW(
-    <span class="kw">LPCWSTR</span> lpExistingFileName,
-    <span class="kw">LPCWSTR</span> lpNewFileName
-);
+<pre><code><span class="kw">BOOL</span> MoveFileW(<span class="kw">LPCWSTR</span> lpExistingFileName, <span class="kw">LPCWSTR</span> lpNewFileName);
 <span class="kw">BOOL</span> MoveFileExW(
     <span class="kw">LPCWSTR</span> lpExistingFileName,
     <span class="kw">LPCWSTR</span> lpNewFileName,
@@ -1151,10 +1121,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 
 <h3>GetProcAddress</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">FARPROC</span> GetProcAddress(
-    <span class="kw">HMODULE</span> hModule,
-    <span class="kw">LPCSTR</span>  lpProcName
-);</code></pre>
+<pre><code><span class="kw">FARPROC</span> GetProcAddress(<span class="kw">HMODULE</span> hModule, <span class="kw">LPCSTR</span>  lpProcName);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hModule</td><td>HMODULE</td><td>要在哪个模块里找，取自 LoadLibraryW 或 GetModuleHandleW 的返回值。传 NULL 不会像有些函数那样默认本进程——直接失败。</td></tr>
@@ -1177,11 +1144,7 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 
 <h3>GetModuleFileNameW</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">DWORD</span> GetModuleFileNameW(
-    <span class="kw">HMODULE</span> hModule,
-    <span class="kw">LPWSTR</span>  lpFilename,
-    <span class="kw">DWORD</span>   nSize
-);</code></pre>
+<pre><code><span class="kw">DWORD</span> GetModuleFileNameW(<span class="kw">HMODULE</span> hModule, <span class="kw">LPWSTR</span>  lpFilename, <span class="kw">DWORD</span>   nSize);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hModule</td><td>HMODULE</td><td>要查询的模块。传 <code>NULL</code> 取当前进程 EXE 的路径。在 DLL 里想取 DLL 自己的路径，用 DllMain 收到的句柄，或用 GetModuleHandleExW + <code>GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS</code> 从任意自身函数地址反查。</td></tr>
@@ -1397,10 +1360,7 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 
 <h3>GetExitCodeProcess</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL GetExitCodeProcess(
-    HANDLE  hProcess,
-    LPDWORD lpExitCode
-);</code></pre>
+<pre><code>BOOL GetExitCodeProcess(HANDLE  hProcess, LPDWORD lpExitCode);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -1440,10 +1400,7 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 
 <h3>TerminateProcess</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL TerminateProcess(
-    HANDLE hProcess,
-    UINT   uExitCode
-);</code></pre>
+<pre><code>BOOL TerminateProcess(HANDLE hProcess, UINT   uExitCode);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -1581,10 +1538,7 @@ DWORD ResumeThread(HANDLE hThread);</code></pre>
 
 <h3>SetThreadPriority</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL SetThreadPriority(
-    HANDLE hThread,
-    <span class="kw">int</span>    nPriority
-);</code></pre>
+<pre><code>BOOL SetThreadPriority(HANDLE hThread, <span class="kw">int</span>    nPriority);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -1628,10 +1582,7 @@ DWORD ResumeThread(HANDLE hThread);</code></pre>
 
 <h3>WaitForSingleObject</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>DWORD WaitForSingleObject(
-    HANDLE hHandle,
-    DWORD  dwMilliseconds
-);</code></pre>
+<pre><code>DWORD WaitForSingleObject(HANDLE hHandle, DWORD  dwMilliseconds);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -1988,10 +1939,7 @@ LONG InterlockedDecrement(LONG <span class="kw">volatile</span> *Addend);</code>
 
 <h3>InterlockedExchange</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>LONG InterlockedExchange(
-    LONG <span class="kw">volatile</span> *Target,
-    LONG          Value
-);</code></pre>
+<pre><code>LONG InterlockedExchange(LONG <span class="kw">volatile</span> *Target, LONG          Value);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -2145,10 +2093,7 @@ QueryPerformanceCounter(&amp;t1);
 <h3>UnregisterClassW</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL UnregisterClassW(
-    LPCWSTR   lpClassName,
-    HINSTANCE hInstance
-);</code></pre>
+<pre><code>BOOL UnregisterClassW(LPCWSTR   lpClassName, HINSTANCE hInstance);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2280,11 +2225,7 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <h3>SetWindowLongPtrW</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>LONG_PTR SetWindowLongPtrW(
-    HWND     hWnd,
-    <span class="kw">int</span>      nIndex,
-    LONG_PTR dwNewLong
-);</code></pre>
+<pre><code>LONG_PTR SetWindowLongPtrW(HWND     hWnd, <span class="kw">int</span>      nIndex, LONG_PTR dwNewLong);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2305,10 +2246,7 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <h3>FindWindowW</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>HWND FindWindowW(
-    LPCWSTR lpClassName,
-    LPCWSTR lpWindowName
-);</code></pre>
+<pre><code>HWND FindWindowW(LPCWSTR lpClassName, LPCWSTR lpWindowName);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2328,10 +2266,7 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <h3>EnumWindows</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL EnumWindows(
-    WNDENUMPROC lpEnumFunc,
-    LPARAM      lParam
-);</code></pre>
+<pre><code>BOOL EnumWindows(WNDENUMPROC lpEnumFunc, LPARAM      lParam);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2370,12 +2305,7 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <h3>DefWindowProcW</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>LRESULT DefWindowProcW(
-    HWND   hWnd,
-    UINT   Msg,
-    WPARAM wParam,
-    LPARAM lParam
-);</code></pre>
+<pre><code>LRESULT DefWindowProcW(HWND   hWnd, UINT   Msg, WPARAM wParam, LPARAM lParam);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2403,10 +2333,7 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <h3>ShowWindow</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL ShowWindow(
-    HWND hWnd,
-    <span class="kw">int</span>  nCmdShow
-);</code></pre>
+<pre><code>BOOL ShowWindow(HWND hWnd, <span class="kw">int</span>  nCmdShow);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2490,14 +2417,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <h3>GetWindowRect / GetClientRect</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL GetWindowRect(
-    HWND   hWnd,
-    LPRECT lpRect
-);
-BOOL GetClientRect(
-    HWND   hWnd,
-    LPRECT lpRect
-);</code></pre>
+<pre><code>BOOL GetWindowRect(HWND   hWnd, LPRECT lpRect);
+BOOL GetClientRect(HWND   hWnd, LPRECT lpRect);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2518,10 +2439,7 @@ BOOL GetClientRect(
 <h3>SetWindowTextW</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL SetWindowTextW(
-    HWND    hWnd,
-    LPCWSTR lpString
-);</code></pre>
+<pre><code>BOOL SetWindowTextW(HWND    hWnd, LPCWSTR lpString);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2542,11 +2460,7 @@ SetWindowTextW(hEdit, L"");  <span class="cm">// 清空编辑框：控件文本�
 <h3>GetWindowTextW</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> GetWindowTextW(
-    HWND   hWnd,
-    LPWSTR lpString,
-    <span class="kw">int</span>    nMaxCount
-);</code></pre>
+<pre><code><span class="kw">int</span> GetWindowTextW(HWND   hWnd, LPWSTR lpString, <span class="kw">int</span>    nMaxCount);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2570,10 +2484,7 @@ SetWindowTextW(hEdit, L"");  <span class="cm">// 清空编辑框：控件文本�
 
 <p><strong>函数原型</strong></p>
 <pre><code>HWND GetParent(HWND hWnd);
-HWND SetParent(
-    HWND hWndChild,
-    HWND hWndNewParent
-);</code></pre>
+HWND SetParent(HWND hWndChild, HWND hWndNewParent);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2594,10 +2505,7 @@ HWND SetParent(
 <h3>GetDlgItem</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>HWND GetDlgItem(
-    HWND hDlg,
-    <span class="kw">int</span>  nIDDlgItem
-);</code></pre>
+<pre><code>HWND GetDlgItem(HWND hDlg, <span class="kw">int</span>  nIDDlgItem);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2618,10 +2526,7 @@ EnableWindow(hOk, FALSE);  <span class="cm">// 表单没填完之前禁用「确
 <h3>GetWindowLongPtrW</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>LONG_PTR GetWindowLongPtrW(
-    HWND hWnd,
-    <span class="kw">int</span>  nIndex
-);</code></pre>
+<pre><code>LONG_PTR GetWindowLongPtrW(HWND hWnd, <span class="kw">int</span>  nIndex);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2723,18 +2628,8 @@ AppState* s = (AppState*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);</code></pre>
 <h3>SendMessageW / PostMessageW（同步 vs 异步）</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>LRESULT SendMessageW(
-    HWND   hWnd,
-    UINT   Msg,
-    WPARAM wParam,
-    LPARAM lParam
-);
-BOOL PostMessageW(
-    HWND   hWnd,
-    UINT   Msg,
-    WPARAM wParam,
-    LPARAM lParam
-);</code></pre>
+<pre><code>LRESULT SendMessageW(HWND   hWnd, UINT   Msg, WPARAM wParam, LPARAM lParam);
+BOOL PostMessageW(HWND   hWnd, UINT   Msg, WPARAM wParam, LPARAM lParam);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2854,10 +2749,7 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 <h3>KillTimer</h3>
 
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL KillTimer(
-    HWND     hWnd,
-    UINT_PTR uIDEvent
-);</code></pre>
+<pre><code>BOOL KillTimer(HWND     hWnd, UINT_PTR uIDEvent);</code></pre>
 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
@@ -2904,10 +2796,7 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 
 <h3>BeginPaint</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>HDC BeginPaint(
-    HWND          hWnd,
-    LPPAINTSTRUCT lpPaint
-);</code></pre>
+<pre><code>HDC BeginPaint(HWND          hWnd, LPPAINTSTRUCT lpPaint);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -2925,10 +2814,7 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 
 <h3>EndPaint</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL EndPaint(
-    HWND              hWnd,
-    <span class="kw">const</span> PAINTSTRUCT *lpPaint
-);</code></pre>
+<pre><code>BOOL EndPaint(HWND              hWnd, <span class="kw">const</span> PAINTSTRUCT *lpPaint);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -2949,11 +2835,7 @@ EndPaint(hwnd, &amp;ps);   <span class="cm">// 释放 DC，并恢复被 BeginPai
 
 <h3>InvalidateRect</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL InvalidateRect(
-    HWND       hWnd,
-    <span class="kw">const</span> RECT *lpRect,
-    BOOL       bErase
-);</code></pre>
+<pre><code>BOOL InvalidateRect(HWND       hWnd, <span class="kw">const</span> RECT *lpRect, BOOL       bErase);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -2992,10 +2874,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 
 <h3>ReleaseDC</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> ReleaseDC(
-    HWND hWnd,
-    HDC  hDC
-);</code></pre>
+<pre><code><span class="kw">int</span> ReleaseDC(HWND hWnd, HDC  hDC);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3030,10 +2909,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 
 <h3>ValidateRect</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL ValidateRect(
-    HWND       hWnd,
-    <span class="kw">const</span> RECT *lpRect
-);</code></pre>
+<pre><code>BOOL ValidateRect(HWND       hWnd, <span class="kw">const</span> RECT *lpRect);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3054,11 +2930,7 @@ ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完�
 
 <h3>GetUpdateRect</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL GetUpdateRect(
-    HWND   hWnd,
-    LPRECT lpRect,
-    BOOL   bErase
-);</code></pre>
+<pre><code>BOOL GetUpdateRect(HWND   hWnd, LPRECT lpRect, BOOL   bErase);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3192,10 +3064,7 @@ HWND GetFocus(<span class="kw">void</span>);</code></pre>
 <h3>GetCursorPos / SetCursorPos</h3>
 <p><strong>函数原型</strong></p>
 <pre><code>BOOL GetCursorPos(LPPOINT lpPoint);
-BOOL SetCursorPos(
-    <span class="kw">int</span> X,
-    <span class="kw">int</span> Y
-);</code></pre>
+BOOL SetCursorPos(<span class="kw">int</span> X, <span class="kw">int</span> Y);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3214,14 +3083,8 @@ BOOL SetCursorPos(
 
 <h3>ScreenToClient / ClientToScreen</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL ScreenToClient(
-    HWND    hWnd,
-    LPPOINT lpPoint
-);
-BOOL ClientToScreen(
-    HWND    hWnd,
-    LPPOINT lpPoint
-);</code></pre>
+<pre><code>BOOL ScreenToClient(HWND    hWnd, LPPOINT lpPoint);
+BOOL ClientToScreen(HWND    hWnd, LPPOINT lpPoint);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3313,14 +3176,8 @@ BOOL ClientToScreen(
 
 <h3>LoadMenuW / SetMenu</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>HMENU LoadMenuW(
-    HINSTANCE hInstance,
-    LPCWSTR   lpMenuName
-);
-BOOL SetMenu(
-    HWND  hWnd,
-    HMENU hMenu
-);</code></pre>
+<pre><code>HMENU LoadMenuW(HINSTANCE hInstance, LPCWSTR   lpMenuName);
+BOOL SetMenu(HWND  hWnd, HMENU hMenu);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3358,11 +3215,7 @@ DestroyMenu(hPop);  <span class="cm">// 没挂到窗口上的菜单，用完必�
 
 <h3>EnableMenuItem</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL EnableMenuItem(
-    HMENU hMenu,
-    UINT  uIDEnableItem,
-    UINT  uEnable
-);</code></pre>
+<pre><code>BOOL EnableMenuItem(HMENU hMenu, UINT  uIDEnableItem, UINT  uEnable);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3384,11 +3237,7 @@ EnableMenuItem(hFileMenu, 3, MF_BYPOSITION | MF_ENABLED);</code></pre>
 
 <h3>CheckMenuItem</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>DWORD CheckMenuItem(
-    HMENU hMenu,
-    UINT  uIDCheckItem,
-    UINT  uCheck
-);</code></pre>
+<pre><code>DWORD CheckMenuItem(HMENU hMenu, UINT  uIDCheckItem, UINT  uCheck);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3410,10 +3259,7 @@ CheckMenuItem(hMenu, IDM_WRAP,
 
 <h3>GetSubMenu</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>HMENU GetSubMenu(
-    HMENU hMenu,
-    <span class="kw">int</span>   nPos
-);</code></pre>
+<pre><code>HMENU GetSubMenu(HMENU hMenu, <span class="kw">int</span>   nPos);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3520,10 +3366,7 @@ CheckMenuItem(hMenu, IDM_WRAP,
 
 <h3>EndDialog</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL EndDialog(
-    HWND    hDlg,
-    INT_PTR nResult
-);</code></pre>
+<pre><code>BOOL EndDialog(HWND    hDlg, INT_PTR nResult);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3552,11 +3395,7 @@ CheckMenuItem(hMenu, IDM_WRAP,
     LPWSTR lpString,
     <span class="kw">int</span>    cchMax
 );
-BOOL SetDlgItemTextW(
-    HWND    hDlg,
-    <span class="kw">int</span>     nIDDlgItem,
-    LPCWSTR lpString
-);</code></pre>
+BOOL SetDlgItemTextW(HWND    hDlg, <span class="kw">int</span>     nIDDlgItem, LPCWSTR lpString);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3576,12 +3415,7 @@ BOOL SetDlgItemTextW(
 
 <h3>GetDlgItemInt</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>UINT GetDlgItemInt(
-    HWND hDlg,
-    <span class="kw">int</span>  nIDDlgItem,
-    BOOL *lpTranslated,
-    BOOL bSigned
-);</code></pre>
+<pre><code>UINT GetDlgItemInt(HWND hDlg, <span class="kw">int</span>  nIDDlgItem, BOOL *lpTranslated, BOOL bSigned);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3605,15 +3439,8 @@ BOOL SetDlgItemTextW(
 
 <h3>CheckDlgButton / IsDlgButtonChecked</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL CheckDlgButton(
-    HWND hDlg,
-    <span class="kw">int</span>  nIDButton,
-    UINT uCheck
-);
-UINT IsDlgButtonChecked(
-    HWND hDlg,
-    <span class="kw">int</span>  nIDButton
-);</code></pre>
+<pre><code>BOOL CheckDlgButton(HWND hDlg, <span class="kw">int</span>  nIDButton, UINT uCheck);
+UINT IsDlgButtonChecked(HWND hDlg, <span class="kw">int</span>  nIDButton);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3676,12 +3503,7 @@ SendDlgItemMessageW(hDlg, IDC_EDIT, EM_SETLIMITTEXT, 16, 0);</code></pre>
 
 <h3>MessageBoxW</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> MessageBoxW(
-    HWND    hWnd,
-    LPCWSTR lpText,
-    LPCWSTR lpCaption,
-    UINT    uType
-);</code></pre>
+<pre><code><span class="kw">int</span> MessageBoxW(HWND    hWnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT    uType);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3753,10 +3575,7 @@ SendDlgItemMessageW(hDlg, IDC_EDIT, EM_SETLIMITTEXT, 16, 0);</code></pre>
 
 <h3>LoadIconW</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>HICON LoadIconW(
-    HINSTANCE hInstance,
-    LPCWSTR   lpIconName
-);</code></pre>
+<pre><code>HICON LoadIconW(HINSTANCE hInstance, LPCWSTR   lpIconName);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3774,10 +3593,7 @@ SendDlgItemMessageW(hDlg, IDC_EDIT, EM_SETLIMITTEXT, 16, 0);</code></pre>
 
 <h3>LoadCursorW</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>HCURSOR LoadCursorW(
-    HINSTANCE hInstance,
-    LPCWSTR   lpCursorName
-);</code></pre>
+<pre><code>HCURSOR LoadCursorW(HINSTANCE hInstance, LPCWSTR   lpCursorName);</code></pre>
 <p><strong>参数</strong></p>
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
@@ -3878,10 +3694,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 
 <h3>SelectObject</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">HGDIOBJ</span> SelectObject(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">HGDIOBJ</span> h
-);</code></pre>
+<pre><code><span class="kw">HGDIOBJ</span> SelectObject(<span class="kw">HDC</span> hdc, <span class="kw">HGDIOBJ</span> h);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>要更换画具的目标设备上下文。当前画笔、画刷、字体、位图都是这个 DC 的状态，换具就是改它。</td></tr>
@@ -3954,10 +3767,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 <h3>SaveDC / RestoreDC</h3>
 <p><strong>函数原型</strong></p>
 <pre><code><span class="kw">int</span> SaveDC(<span class="kw">HDC</span> hdc);
-<span class="kw">BOOL</span> RestoreDC(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">int</span> nSavedDC
-);</code></pre>
+<span class="kw">BOOL</span> RestoreDC(<span class="kw">HDC</span> hdc, <span class="kw">int</span> nSavedDC);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>两个函数操作同一个设备环境。SaveDC 把该 DC 当前的全部绘图状态（画笔、画刷、字体、文字颜色、背景模式、映射模式等）一次性压入内部栈，可嵌套多层。</td></tr>
@@ -3988,12 +3798,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 
 <h3>MoveToEx</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> MoveToEx(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">int</span> x,
-    <span class="kw">int</span> y,
-    <span class="kw">LPPOINT</span> lppt
-);</code></pre>
+<pre><code><span class="kw">BOOL</span> MoveToEx(<span class="kw">HDC</span> hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">LPPOINT</span> lppt);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>目标设备上下文。"当前位置"是 DC 的状态之一，每个 DC 各记各的。</td></tr>
@@ -4007,11 +3812,7 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
 
 <h3>LineTo</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> LineTo(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">int</span> x,
-    <span class="kw">int</span> y
-);</code></pre>
+<pre><code><span class="kw">BOOL</span> LineTo(<span class="kw">HDC</span> hdc, <span class="kw">int</span> x, <span class="kw">int</span> y);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>用 DC 里当前选入的画笔画线；线的颜色宽度想变，先换笔再画。</td></tr>
@@ -4029,11 +3830,7 @@ MoveToEx(hdc, zig[0].x, zig[0].y, NULL);
 
 <h3>Polyline</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> Polyline(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">const</span> <span class="kw">POINT</span> *apt,
-    <span class="kw">int</span> cpt
-);</code></pre>
+<pre><code><span class="kw">BOOL</span> Polyline(<span class="kw">HDC</span> hdc, <span class="kw">const</span> <span class="kw">POINT</span> *apt, <span class="kw">int</span> cpt);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>目标设备环境，用其中当前选入的画笔连线。</td></tr>
@@ -4048,13 +3845,7 @@ Polyline(hdc, pts, 4);   <span class="cm">// 用当前画笔连 3 段折线；�
 
 <h3>Rectangle</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> Rectangle(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">int</span> left,
-    <span class="kw">int</span> top,
-    <span class="kw">int</span> right,
-    <span class="kw">int</span> bottom
-);</code></pre>
+<pre><code><span class="kw">BOOL</span> Rectangle(<span class="kw">HDC</span> hdc, <span class="kw">int</span> left, <span class="kw">int</span> top, <span class="kw">int</span> right, <span class="kw">int</span> bottom);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>边框用当前画笔、内部用当前画刷，一次成型。只想要边框就先选入 NULL_BRUSH；只想要填充就选入 NULL_PEN。</td></tr>
@@ -4091,13 +3882,7 @@ Polyline(hdc, pts, 4);   <span class="cm">// 用当前画笔连 3 段折线；�
 
 <h3>Ellipse</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> Ellipse(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">int</span> left,
-    <span class="kw">int</span> top,
-    <span class="kw">int</span> right,
-    <span class="kw">int</span> bottom
-);</code></pre>
+<pre><code><span class="kw">BOOL</span> Ellipse(<span class="kw">HDC</span> hdc, <span class="kw">int</span> left, <span class="kw">int</span> top, <span class="kw">int</span> right, <span class="kw">int</span> bottom);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>与 Rectangle 相同：当前画笔描轮廓、当前画刷填内部。</td></tr>
@@ -4163,11 +3948,7 @@ SelectObject(hdc, old);</code></pre>
 
 <h3>Polygon</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">BOOL</span> Polygon(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">const</span> <span class="kw">POINT</span> *apt,
-    <span class="kw">int</span> cpt
-);</code></pre>
+<pre><code><span class="kw">BOOL</span> Polygon(<span class="kw">HDC</span> hdc, <span class="kw">const</span> <span class="kw">POINT</span> *apt, <span class="kw">int</span> cpt);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>目标设备环境：轮廓用当前画笔画，内部用当前画刷填充。</td></tr>
@@ -4183,11 +3964,7 @@ Polygon(hdc, tri, 3);   <span class="cm">// 自动把 (10,90) 连回 (60,10) 闭
 
 <h3>FillRect</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> FillRect(
-    <span class="kw">HDC</span> hDC,
-    <span class="kw">const</span> <span class="kw">RECT</span> *lprc,
-    <span class="kw">HBRUSH</span> hbr
-);</code></pre>
+<pre><code><span class="kw">int</span> FillRect(<span class="kw">HDC</span> hDC, <span class="kw">const</span> <span class="kw">RECT</span> *lprc, <span class="kw">HBRUSH</span> hbr);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hDC</td><td>HDC</td><td>目标设备环境。注意本函数其实由 user32 导出。</td></tr>
@@ -4201,11 +3978,7 @@ Polygon(hdc, tri, 3);   <span class="cm">// 自动把 (10,90) 连回 (60,10) 闭
 
 <h3>FrameRect</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> FrameRect(
-    <span class="kw">HDC</span> hDC,
-    <span class="kw">const</span> <span class="kw">RECT</span> *lprc,
-    <span class="kw">HBRUSH</span> hbr
-);</code></pre>
+<pre><code><span class="kw">int</span> FrameRect(<span class="kw">HDC</span> hDC, <span class="kw">const</span> <span class="kw">RECT</span> *lprc, <span class="kw">HBRUSH</span> hbr);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hDC</td><td>HDC</td><td>目标设备环境。与 FillRect 一样由 user32 导出。</td></tr>
@@ -4220,17 +3993,8 @@ FrameRect(hdc, &amp;rc, (<span class="kw">HBRUSH</span>)GetStockObject(BLACK_BRU
 
 <h3>SetPixel / GetPixel</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">COLORREF</span> SetPixel(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">int</span> x,
-    <span class="kw">int</span> y,
-    <span class="kw">COLORREF</span> color
-);
-<span class="kw">COLORREF</span> GetPixel(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">int</span> x,
-    <span class="kw">int</span> y
-);</code></pre>
+<pre><code><span class="kw">COLORREF</span> SetPixel(<span class="kw">HDC</span> hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">COLORREF</span> color);
+<span class="kw">COLORREF</span> GetPixel(<span class="kw">HDC</span> hdc, <span class="kw">int</span> x, <span class="kw">int</span> y);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>目标设备环境。</td></tr>
@@ -4261,11 +4025,7 @@ FrameRect(hdc, &amp;rc, (<span class="kw">HBRUSH</span>)GetStockObject(BLACK_BRU
 
 <h3>CreatePen</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">HPEN</span> CreatePen(
-    <span class="kw">int</span> iStyle,
-    <span class="kw">int</span> cWidth,
-    <span class="kw">COLORREF</span> color
-);</code></pre>
+<pre><code><span class="kw">HPEN</span> CreatePen(<span class="kw">int</span> iStyle, <span class="kw">int</span> cWidth, <span class="kw">COLORREF</span> color);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>iStyle</td><td>int</td><td>线型常量 PS_*，取值见下方"其他说明"的线型速览表。最大的坑：cWidth &gt; 1 时 PS_DASH / PS_DOT 等虚线样式统统失效、强制按实线画——想要"又宽又虚"必须改用 ExtCreatePen 的几何画笔。</td></tr>
@@ -4332,10 +4092,7 @@ DeleteObject(pen);</code></pre>
 
 <h3>CreateHatchBrush</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">HBRUSH</span> CreateHatchBrush(
-    <span class="kw">int</span> iHatch,
-    <span class="kw">COLORREF</span> color
-);</code></pre>
+<pre><code><span class="kw">HBRUSH</span> CreateHatchBrush(<span class="kw">int</span> iHatch, <span class="kw">COLORREF</span> color);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>iHatch</td><td>int</td><td>阴影线样式，取 HS_ 系列常量，共六种图案，见下方"其他说明"的样式表。</td></tr>
@@ -4377,10 +4134,7 @@ DeleteObject(hbr);</code></pre>
 
 <h3>CreateDIBPatternBrushPt</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">HBRUSH</span> CreateDIBPatternBrushPt(
-    <span class="kw">const</span> <span class="kw">void</span> *lpPackedDIB,
-    <span class="kw">UINT</span> iUsage
-);</code></pre>
+<pre><code><span class="kw">HBRUSH</span> CreateDIBPatternBrushPt(<span class="kw">const</span> <span class="kw">void</span> *lpPackedDIB, <span class="kw">UINT</span> iUsage);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>lpPackedDIB</td><td>const void*</td><td>指向“打包 DIB”内存块：BITMAPINFOHEADER + 颜色表 + 像素位在内存中紧挨着连续排列。注意这是原始内存，不是 HBITMAP。</td></tr>
@@ -4503,10 +4257,7 @@ DeleteObject(hFont);</code></pre>
 
 <h3>SetROP2</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> SetROP2(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">int</span> rop2
-);</code></pre>
+<pre><code><span class="kw">int</span> SetROP2(<span class="kw">HDC</span> hdc, <span class="kw">int</span> rop2);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>目标设备上下文。绘图模式是 DC 的状态，会影响此后所有用画笔/画刷的绘制。</td></tr>
@@ -4529,10 +4280,7 @@ DeleteObject(hFont);</code></pre>
 
 <h3>GetDeviceCaps</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> GetDeviceCaps(
-    <span class="kw">HDC</span> hdc,
-    <span class="kw">int</span> index
-);</code></pre>
+<pre><code><span class="kw">int</span> GetDeviceCaps(<span class="kw">HDC</span> hdc, <span class="kw">int</span> index);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>要查询的设备上下文，屏幕、打印机的 DC 均可。</td></tr>
@@ -4583,11 +4331,7 @@ DeleteObject(hFont);</code></pre>
 
 <h3>CreateCompatibleBitmap</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>HBITMAP CreateCompatibleBitmap(
-    HDC hdc,
-    <span class="kw">int</span> cx,
-    <span class="kw">int</span> cy
-);</code></pre>
+<pre><code>HBITMAP CreateCompatibleBitmap(HDC hdc, <span class="kw">int</span> cx, <span class="kw">int</span> cy);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>参照的 DC：新位图的颜色格式（位深、调色板）向它看齐。<strong>最大陷阱：</strong>传刚 CreateCompatibleDC 出来的内存 DC，会照抄其默认 1×1 单色位图的格式，得到一张黑白图。永远传窗口 DC 或屏幕 DC。</td></tr>
@@ -4867,14 +4611,7 @@ DeleteDC(hMem);</code></pre>
 
 <h3>PatBlt</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL PatBlt(
-    HDC hdc,
-    <span class="kw">int</span> x,
-    <span class="kw">int</span> y,
-    <span class="kw">int</span> w,
-    <span class="kw">int</span> h,
-    DWORD rop
-);</code></pre>
+<pre><code>BOOL PatBlt(HDC hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">int</span> w, <span class="kw">int</span> h, DWORD rop);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>目标 DC，填充用的是它<strong>当前选入的画刷</strong>；想换填充图案就先 SelectObject 换画刷。</td></tr>
@@ -4905,13 +4642,7 @@ DeleteDC(hMem);</code></pre>
 
 <h3>TextOutW</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL TextOutW(
-    HDC hdc,
-    <span class="kw">int</span> x,
-    <span class="kw">int</span> y,
-    LPCWSTR lpString,
-    <span class="kw">int</span> c
-);</code></pre>
+<pre><code>BOOL TextOutW(HDC hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, LPCWSTR lpString, <span class="kw">int</span> c);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>输出目标 DC，字体、颜色、背景模式都取自它。字体要提前 SelectObject 进去，否则用系统默认字体。</td></tr>
@@ -4928,13 +4659,7 @@ DeleteDC(hMem);</code></pre>
 
 <h3>DrawTextW</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> DrawTextW(
-    HDC hdc,
-    LPCWSTR lpchText,
-    <span class="kw">int</span> cchText,
-    LPRECT lprc,
-    UINT format
-);</code></pre>
+<pre><code><span class="kw">int</span> DrawTextW(HDC hdc, LPCWSTR lpchText, <span class="kw">int</span> cchText, LPRECT lprc, UINT format);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>输出目标，字体、颜色、背景模式均取自 DC 状态。</td></tr>
@@ -4965,10 +4690,7 @@ DeleteDC(hMem);</code></pre>
 
 <h3>SetBkMode</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> SetBkMode(
-    HDC hdc,
-    <span class="kw">int</span> mode
-);</code></pre>
+<pre><code><span class="kw">int</span> SetBkMode(HDC hdc, <span class="kw">int</span> mode);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>要修改状态的目标 DC；这是 DC 状态，影响之后所有文字与阴影线绘制。</td></tr>
@@ -4983,12 +4705,7 @@ DeleteDC(hMem);</code></pre>
 
 <h3>GetTextExtentPoint32W</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL GetTextExtentPoint32W(
-    HDC hdc,
-    LPCWSTR lpString,
-    <span class="kw">int</span> c,
-    LPSIZE psizl
-);</code></pre>
+<pre><code>BOOL GetTextExtentPoint32W(HDC hdc, LPCWSTR lpString, <span class="kw">int</span> c, LPSIZE psizl);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>用哪个 DC 的当前字体来测量。结果完全取决于此 DC 当前选入的字体——<strong>先 SelectObject 字体再测</strong>，用错 DC 是布局偏移的常见根源。</td></tr>
@@ -5040,14 +4757,8 @@ ExtTextOutW(hdc, 12, 10, ETO_OPAQUE | ETO_CLIPPED, &amp;rc,
 
 <h3>SetTextColor / SetBkColor</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>COLORREF SetTextColor(
-    HDC hdc,
-    COLORREF color
-);
-COLORREF SetBkColor(
-    HDC hdc,
-    COLORREF color
-);</code></pre>
+<pre><code>COLORREF SetTextColor(HDC hdc, COLORREF color);
+COLORREF SetBkColor(HDC hdc, COLORREF color);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>目标 DC。两者设的都是 DC 状态，影响其后所有文字输出，直到再次修改或 DC 释放。</td></tr>
@@ -5063,10 +4774,7 @@ COLORREF SetBkColor(
 
 <h3>SetTextAlign</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>UINT SetTextAlign(
-    HDC hdc,
-    UINT align
-);</code></pre>
+<pre><code>UINT SetTextAlign(HDC hdc, UINT align);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>目标 DC；设置后影响之后所有 TextOut / ExtTextOut 调用。</td></tr>
@@ -5079,10 +4787,7 @@ COLORREF SetBkColor(
 
 <h3>GetTextMetricsW</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL GetTextMetricsW(
-    HDC hdc,
-    LPTEXTMETRICW lptm
-);</code></pre>
+<pre><code>BOOL GetTextMetricsW(HDC hdc, LPTEXTMETRICW lptm);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>要度量其当前选入字体的 DC；结果随该 DC 当前字体而变，SelectObject 换字体后必须重新获取。</td></tr>
@@ -5114,10 +4819,7 @@ GetTextMetricsW(hdc, &amp;tm);
 
 <h3>SetMapMode</h3>
 <p><strong>函数原型</strong></p>
-<pre><code><span class="kw">int</span> SetMapMode(
-    HDC hdc,
-    <span class="kw">int</span> iMode
-);</code></pre>
+<pre><code><span class="kw">int</span> SetMapMode(HDC hdc, <span class="kw">int</span> iMode);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>要切换坐标系的 DC。映射是 DC 状态，影响其后所有绘制、测量与 Ext/Org 设置。</td></tr>
@@ -5143,18 +4845,8 @@ GetTextMetricsW(hdc, &amp;tm);
 
 <h3>SetViewportOrgEx / SetWindowOrgEx</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL SetViewportOrgEx(
-    HDC hdc,
-    <span class="kw">int</span> x,
-    <span class="kw">int</span> y,
-    LPPOINT lppt
-);
-BOOL SetWindowOrgEx(
-    HDC hdc,
-    <span class="kw">int</span> x,
-    <span class="kw">int</span> y,
-    LPPOINT lppt
-);</code></pre>
+<pre><code>BOOL SetViewportOrgEx(HDC hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, LPPOINT lppt);
+BOOL SetWindowOrgEx(HDC hdc, <span class="kw">int</span> x, <span class="kw">int</span> y, LPPOINT lppt);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>目标 DC。两个函数调的是同一套映射机制，一般选一个用到底，混用容易把自己绕晕。</td></tr>
@@ -5168,16 +4860,8 @@ BOOL SetWindowOrgEx(
 
 <h3>DPtoLP / LPtoDP</h3>
 <p><strong>函数原型</strong></p>
-<pre><code>BOOL DPtoLP(
-    HDC hdc,
-    LPPOINT lppt,
-    <span class="kw">int</span> c
-);
-BOOL LPtoDP(
-    HDC hdc,
-    LPPOINT lppt,
-    <span class="kw">int</span> c
-);</code></pre>
+<pre><code>BOOL DPtoLP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);
+BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead><tbody>
 <tr><td>hdc</td><td>HDC</td><td>提供映射模式与原点设置的 DC。换算完全取决于该 DC 此刻的映射模式、窗口/视口原点与比例，必须与绘制时的设置一致，否则算出的坐标对不上。</td></tr>
