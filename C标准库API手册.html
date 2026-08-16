@@ -169,6 +169,11 @@ table tr>:first-child:nth-last-child(3){width:26%;}
 table tr>:first-child:nth-last-child(3)+*{width:22%;}
 table tr>:first-child:nth-last-child(4){width:22%;}
 table tr>:first-child:nth-last-child(4)+*{width:20%;}
+
+/* 性能:视口外内容跳过渲染(表格除外,避免绘制干扰) */
+section.chapter{content-visibility:auto;contain-intrinsic-size:auto 4000px;}
+figure{content-visibility:auto;contain-intrinsic-size:auto 400px;}
+main pre{content-visibility:auto;contain-intrinsic-size:auto 240px;}
 </style>
 </head>
 <body>
