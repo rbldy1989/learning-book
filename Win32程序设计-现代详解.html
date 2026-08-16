@@ -154,8 +154,12 @@ figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
 pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
 table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
 #sidebar,#toc{will-change:scroll-position;}
-table th, table td { white-space: normal; }
+
+/* 表格：短内容不折行，长文本正常折行 */
+table th { white-space: nowrap; }
 table td:first-child, table th:first-child { white-space: nowrap; }
+table td { overflow-wrap: break-word; }
+table td.nw { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -343,17 +347,7 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <a class="sec" href="#w14-ipc">进程间通信一瞥</a>
 <a class="sec" href="#w14-deploy">部署与运行库</a>
 </details>
-<details><summary><a class="ch" href="#w15">第 15 章 现代 Win32 必修补遗</a></summary>
-<a class="sec" href="#w15-dpi">15.1 高 DPI 与感知档位</a>
-<a class="sec" href="#w15-dpichanged">15.2 WM_DPICHANGED 动态适配</a>
-<a class="sec" href="#w15-visualstyle">15.3 视觉样式与 SxS 清单</a>
-<a class="sec" href="#w15-darkmode">15.4 深色模式</a>
-<a class="sec" href="#w15-coords">15.5 坐标陷阱与 DLU</a>
-<a class="sec" href="#w15-ifiledialog">15.6 IFileDialog 文件对话框</a>
-<a class="sec" href="#w15-dropfiles">15.7 WM_DROPFILES 拖放</a>
-<a class="sec" href="#w15-longpath">15.8 长路径与 Unicode 收尾</a>
-</details>
-<details><summary><a class="ch" href="#w16">第 16 章 文件、注册表与剪贴板</a></summary>
+<details><summary><a class="ch" href="#w16">第 15 章 文件、注册表与剪贴板</a></summary>
 <a class="sec" href="#w16-createfile">CreateFileW 七个参数</a>
 <a class="sec" href="#w16-rw">读写与收尾</a>
 <a class="sec" href="#w16-find">遍历目录三件套与递归</a>
@@ -364,12 +358,22 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <a class="sec" href="#w16-sysinfo">系统信息拼盘</a>
 <a class="sec" href="#w16-clipboard">剪贴板写入与读取</a>
 </details>
-<details><summary><a class="ch" href="#w17">第 17 章 调试与排错工具箱</a></summary>
+<details><summary><a class="ch" href="#w17">第 16 章 调试与排错工具箱</a></summary>
 <a class="sec" href="#w17-ods">OutputDebugString</a>
 <a class="sec" href="#w17-debugger">VS 调试器四招</a>
 <a class="sec" href="#w17-spy">Spy++ 三板斧</a>
 <a class="sec" href="#w17-leak">泄漏监控三列</a>
 <a class="sec" href="#w17-crash">崩溃速查表</a>
+</details>
+<details><summary><a class="ch" href="#w15">第 17 章 现代 Win32 必修补遗</a></summary>
+<a class="sec" href="#w15-dpi">15.1 高 DPI 与感知档位</a>
+<a class="sec" href="#w15-dpichanged">15.2 WM_DPICHANGED 动态适配</a>
+<a class="sec" href="#w15-visualstyle">15.3 视觉样式与 SxS 清单</a>
+<a class="sec" href="#w15-darkmode">15.4 深色模式</a>
+<a class="sec" href="#w15-coords">15.5 坐标陷阱与 DLU</a>
+<a class="sec" href="#w15-ifiledialog">15.6 IFileDialog 文件对话框</a>
+<a class="sec" href="#w15-dropfiles">15.7 WM_DROPFILES 拖放</a>
+<a class="sec" href="#w15-longpath">15.8 长路径与 Unicode 收尾</a>
 </details>
 
 </nav>
@@ -386,7 +390,7 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>方式</th><th>操作</th><th>适合</th></tr></thead>
 <tbody>
-<tr><td><strong>空项目(学习推荐)</strong></td><td>新建项目 → C++「空项目」→ 手动添加 .cpp</td><td>每一行都是自己写的，理解最透</td></tr>
+<tr><td class="nw"><strong>空项目(学习推荐)</strong></td><td>新建项目 → C++「空项目」→ 手动添加 .cpp</td><td>每一行都是自己写的，理解最透</td></tr>
 <tr><td>Windows 桌面应用程序模板</td><td>新建项目 →「Windows 桌面应用程序」</td><td>直接生成完整骨架，可当参考答案看</td></tr>
 </tbody>
 </table>
@@ -410,8 +414,8 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <tr><td>LNK2019：无法解析 main</td><td>子系统是「窗口」但你写了 main</td><td>入口改成 wWinMain，或子系统改回控制台</td></tr>
 <tr><td>LNK2019：无法解析 WinMain</td><td>入口签名与子系统/字符集不匹配</td><td>用本书标准签名的 <code>wWinMain</code></td></tr>
 <tr><td>C2664：LPCWSTR 类型不兼容</td><td>给 W 函数传了窄字符串 "..."</td><td>字符串加 L 前缀：<code>L"..."</code></td></tr>
-<tr><td>找不到 windows.h</td><td>没装「使用 C++ 的桌面开发」工作负载</td><td>打开 VS 安装器补装</td></tr>
-<tr><td>中文注释乱码/编译错</td><td>源文件编码问题</td><td>项目加编译选项 <code>/utf-8</code>(推荐)，源文件统一存 UTF-8</td></tr>
+<tr><td class="nw">找不到 windows.h</td><td>没装「使用 C++ 的桌面开发」工作负载</td><td>打开 VS 安装器补装</td></tr>
+<tr><td>中文注释乱码/编译错</td><td class="nw">源文件编码问题</td><td>项目加编译选项 <code>/utf-8</code>(推荐)，源文件统一存 UTF-8</td></tr>
 </tbody>
 </table>
 <div class="note new"><span class="t">🔵 一次到位</span><p>直接给项目加 <code>/utf-8</code> 编译选项(属性 → C/C++ → 命令行 → 附加选项)，源文件统一 UTF-8，从此告别中文乱码。</p></div>
@@ -429,7 +433,7 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 
 <h2 id="w0-tools">顺手认识两个自带工具</h2>
 <ul>
-<li><strong>Spy++</strong>(VS 菜单 → 工具 → Spy++)：实时列出系统里<strong>所有</strong>窗口、查看任意窗口的类名/句柄/样式、监视消息流动——学消息机制的神器，第 17 章教具体用法。64 位程序请用「Spy++ (64 位)」。</li>
+<li><strong>Spy++</strong>(VS 菜单 → 工具 → Spy++)：实时列出系统里<strong>所有</strong>窗口、查看任意窗口的类名/句柄/样式、监视消息流动——学消息机制的神器，第 16 章教具体用法。64 位程序请用「Spy++ (64 位)」。</li>
 <li><strong>错误查找(Error Lookup)</strong>：工具 → 错误查找，输入错误码(如 5)直接翻译成文字(「拒绝访问」)。</li>
 </ul>
 </section>
@@ -480,9 +484,9 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <tr><th>DLL</th><th>管什么</th><th>典型函数举例</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>kernel32.dll</strong></td><td>内核基础服务:内存分配、文件、进程与线程、模块加载</td><td><code>VirtualAlloc</code>、<code>CreateFileW</code>、<code>CreateThread</code></td></tr>
-<tr><td><strong>user32.dll</strong></td><td>用户界面:窗口、消息、鼠标键盘输入、菜单、对话框</td><td><code>CreateWindowExW</code>、<code>GetMessageW</code>、<code>MessageBoxW</code></td></tr>
-<tr><td><strong>gdi32.dll</strong></td><td>图形设备接口:画线、画文字、位图、字体、颜色</td><td><code>TextOutW</code>、<code>Rectangle</code>、<code>BitBlt</code></td></tr>
+<tr><td class="nw"><strong>kernel32.dll</strong></td><td>内核基础服务:内存分配、文件、进程与线程、模块加载</td><td><code>VirtualAlloc</code>、<code>CreateFileW</code>、<code>CreateThread</code></td></tr>
+<tr><td class="nw"><strong>user32.dll</strong></td><td>用户界面:窗口、消息、鼠标键盘输入、菜单、对话框</td><td><code>CreateWindowExW</code>、<code>GetMessageW</code>、<code>MessageBoxW</code></td></tr>
+<tr><td class="nw"><strong>gdi32.dll</strong></td><td>图形设备接口:画线、画文字、位图、字体、颜色</td><td><code>TextOutW</code>、<code>Rectangle</code>、<code>BitBlt</code></td></tr>
 </tbody>
 </table>
 
@@ -517,8 +521,8 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <tr><th>句柄类型</th><th>指代什么</th><th>你会在哪用到</th></tr>
 </thead>
 <tbody>
-<tr><td><code>HINSTANCE</code></td><td>本程序在内存中被加载的那个「实例/模块」。可粗略理解为「你这个 exe 加载后的身份标识与基地址」</td><td>注册窗口类、创建窗口时都要交出它,系统才知道资源(图标、菜单等)从哪个模块里找</td></tr>
-<tr><td><code>HWND</code></td><td>一个具体的窗口(Handle to a WINDOW)。屏幕上每个窗口、甚至每个按钮,都有自己的 HWND</td><td>移动、缩放、重画、销毁窗口,发消息给它——全靠这张号牌</td></tr>
+<tr><td class="nw"><code>HINSTANCE</code></td><td>本程序在内存中被加载的那个「实例/模块」。可粗略理解为「你这个 exe 加载后的身份标识与基地址」</td><td>注册窗口类、创建窗口时都要交出它,系统才知道资源(图标、菜单等)从哪个模块里找</td></tr>
+<tr><td class="nw"><code>HWND</code></td><td>一个具体的窗口(Handle to a WINDOW)。屏幕上每个窗口、甚至每个按钮,都有自己的 HWND</td><td>移动、缩放、重画、销毁窗口,发消息给它——全靠这张号牌</td></tr>
 </tbody>
 </table>
 
@@ -529,12 +533,12 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th></th><th>内核对象 <code>HANDLE</code></th><th>USER / GDI 对象</th><th>模块 <code>HINSTANCE</code></th></tr></thead>
 <tbody>
-<tr><td><strong>代表</strong></td><td>文件、进程、线程、事件、互斥量</td><td>窗口 <code>HWND</code>、设备上下文 <code>HDC</code>、画笔 <code>HPEN</code></td><td>已加载的 EXE/DLL 映像</td></tr>
-<tr><td><strong>本质是</strong></td><td>进程句柄表的<strong>索引</strong></td><td>系统全局表的<strong>索引</strong></td><td><strong>内存基地址</strong></td></tr>
-<tr><td><strong>作用域</strong></td><td>进程私有</td><td>会话全局</td><td>本进程地址空间</td></tr>
-<tr><td><strong>怎么得到</strong></td><td><code>CreateFile</code> / <code>CreateThread</code> / <code>OpenProcess</code></td><td><code>CreateWindow</code> / <code>GetDC</code> / <code>CreatePen</code></td><td><code>wWinMain</code> 参数 / <code>GetModuleHandle</code> / <code>LoadLibrary</code></td></tr>
-<tr><td><strong>怎么释放</strong></td><td><code>CloseHandle</code></td><td><code>DestroyWindow</code> / <code>ReleaseDC</code> / <code>DeleteObject</code></td><td>通常不用释放（<code>LoadLibrary</code> 得来的配 <code>FreeLibrary</code>）</td></tr>
-<tr><td><strong>打个比方</strong></td><td>钥匙（私有，要还）</td><td>门牌号（公开，谁都能用）</td><td>楼在地图上的坐标</td></tr>
+<tr><td class="nw"><strong>代表</strong></td><td>文件、进程、线程、事件、互斥量</td><td>窗口 <code>HWND</code>、设备上下文 <code>HDC</code>、画笔 <code>HPEN</code></td><td>已加载的 EXE/DLL 映像</td></tr>
+<tr><td class="nw"><strong>本质是</strong></td><td class="nw">进程句柄表的<strong>索引</strong></td><td class="nw">系统全局表的<strong>索引</strong></td><td class="nw"><strong>内存基地址</strong></td></tr>
+<tr><td class="nw"><strong>作用域</strong></td><td class="nw">进程私有</td><td class="nw">会话全局</td><td class="nw">本进程地址空间</td></tr>
+<tr><td class="nw"><strong>怎么得到</strong></td><td><code>CreateFile</code> / <code>CreateThread</code> / <code>OpenProcess</code></td><td><code>CreateWindow</code> / <code>GetDC</code> / <code>CreatePen</code></td><td><code>wWinMain</code> 参数 / <code>GetModuleHandle</code> / <code>LoadLibrary</code></td></tr>
+<tr><td class="nw"><strong>怎么释放</strong></td><td class="nw"><code>CloseHandle</code></td><td><code>DestroyWindow</code> / <code>ReleaseDC</code> / <code>DeleteObject</code></td><td>通常不用释放（<code>LoadLibrary</code> 得来的配 <code>FreeLibrary</code>）</td></tr>
+<tr><td class="nw"><strong>打个比方</strong></td><td>钥匙（私有，要还）</td><td>门牌号（公开，谁都能用）</td><td class="nw">楼在地图上的坐标</td></tr>
 </tbody>
 </table>
 <div class="note ok">
@@ -552,11 +556,11 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <tr><th>#</th><th>组成块</th><th>它负责什么</th></tr>
 </thead>
 <tbody>
-<tr><td>1</td><td><strong>WinMain 入口</strong></td><td>GUI 程序的起点(相当于控制台的 main)。系统从这里开始执行你的代码</td></tr>
-<tr><td>2</td><td><strong>注册窗口类</strong></td><td>向系统「报备」你要造一种什么样的窗口:它的消息由哪个函数处理、用什么图标光标、叫什么类名</td></tr>
-<tr><td>3</td><td><strong>创建并显示窗口</strong></td><td>按注册好的「窗口类」实际造出一个窗口实例,并让它显示到屏幕上</td></tr>
-<tr><td>4</td><td><strong>消息循环</strong></td><td>不停地从系统取出投递给本程序的消息,派发给对应窗口去处理。程序的「心跳」</td></tr>
-<tr><td>5</td><td><strong>窗口过程</strong></td><td>你写的回调函数,真正处理每一条消息(要不要重画、按了什么键、窗口被关了……)</td></tr>
+<tr><td class="nw">1</td><td class="nw"><strong>WinMain 入口</strong></td><td>GUI 程序的起点(相当于控制台的 main)。系统从这里开始执行你的代码</td></tr>
+<tr><td class="nw">2</td><td class="nw"><strong>注册窗口类</strong></td><td>向系统「报备」你要造一种什么样的窗口:它的消息由哪个函数处理、用什么图标光标、叫什么类名</td></tr>
+<tr><td class="nw">3</td><td class="nw"><strong>创建并显示窗口</strong></td><td>按注册好的「窗口类」实际造出一个窗口实例,并让它显示到屏幕上</td></tr>
+<tr><td class="nw">4</td><td class="nw"><strong>消息循环</strong></td><td>不停地从系统取出投递给本程序的消息,派发给对应窗口去处理。程序的「心跳」</td></tr>
+<tr><td class="nw">5</td><td class="nw"><strong>窗口过程</strong></td><td>你写的回调函数,真正处理每一条消息(要不要重画、按了什么键、窗口被关了……)</td></tr>
 </tbody>
 </table>
 
@@ -614,9 +618,9 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>风格</th><th>失败表现</th><th>拿详情</th><th>代表</th></tr></thead>
 <tbody>
-<tr><td>BOOL 型</td><td>返回 0/FALSE</td><td><code>GetLastError()</code></td><td>多数函数</td></tr>
-<tr><td>句柄型</td><td>返回 NULL <strong>或</strong> <code>INVALID_HANDLE_VALUE</code>(查文档！)</td><td><code>GetLastError()</code></td><td>CreateWindowEx(NULL)、CreateFile(INVALID_HANDLE_VALUE)</td></tr>
-<tr><td>错误码直返型</td><td>返回值即错误码，<code>ERROR_SUCCESS</code>(0) 为成功</td><td>返回值本身</td><td>注册表 Reg 系列</td></tr>
+<tr><td class="nw">BOOL 型</td><td class="nw">返回 0/FALSE</td><td class="nw"><code>GetLastError()</code></td><td class="nw">多数函数</td></tr>
+<tr><td class="nw">句柄型</td><td>返回 NULL <strong>或</strong> <code>INVALID_HANDLE_VALUE</code>(查文档！)</td><td class="nw"><code>GetLastError()</code></td><td>CreateWindowEx(NULL)、CreateFile(INVALID_HANDLE_VALUE)</td></tr>
+<tr><td class="nw">错误码直返型</td><td>返回值即错误码，<code>ERROR_SUCCESS</code>(0) 为成功</td><td class="nw">返回值本身</td><td class="nw">注册表 Reg 系列</td></tr>
 </tbody>
 </table>
 <p><code>GetLastError</code> 返回的是数字，用 <code>FormatMessage</code> 翻译成人话。下面这个工具函数建议放进你每个练习项目：</p>
@@ -648,10 +652,10 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>代码页</th><th>地区/文字</th><th>结构</th><th>典型问题</th></tr></thead>
 <tbody>
-<tr><td>1252</td><td>西欧</td><td>单字节</td><td>只能容纳一种语言的补充字符</td></tr>
-<tr><td>936（GBK）</td><td>简体中文</td><td>单/双字节混合</td><td>不能按字节下标取字</td></tr>
-<tr><td>932（Shift-JIS）</td><td>日文</td><td>单/双字节混合</td><td>前导字节判断易出错</td></tr>
-<tr><td>950（Big5）</td><td>繁体中文</td><td>单/双字节混合</td><td>与 GBK 互不兼容</td></tr>
+<tr><td class="nw">1252</td><td class="nw">西欧</td><td class="nw">单字节</td><td>只能容纳一种语言的补充字符</td></tr>
+<tr><td class="nw">936（GBK）</td><td class="nw">简体中文</td><td class="nw">单/双字节混合</td><td>不能按字节下标取字</td></tr>
+<tr><td class="nw">932（Shift-JIS）</td><td class="nw">日文</td><td class="nw">单/双字节混合</td><td>前导字节判断易出错</td></tr>
+<tr><td class="nw">950（Big5）</td><td class="nw">繁体中文</td><td class="nw">单/双字节混合</td><td class="nw">与 GBK 互不兼容</td></tr>
 </tbody>
 </table>
 <p>DBCS 让 CJK 能上机，但代价很大。<span class="badge old">已过时</span>你没法再天真地写 <code>s[i]</code> 去取「第 i 个字」——因为一个字可能占一个字节，也可能占两个，字符边界是浮动的；你更没法把中文文件和日文文件放进同一份文本，因为它们各说各话。这就好比全世界的邮局各自编了一套邮编，本地寄信没问题，一跨地区就全乱套。</p>
@@ -664,9 +668,9 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>编码</th><th>基本单位</th><th>每字符字节数</th><th>特点</th></tr></thead>
 <tbody>
-<tr><td>UTF-8</td><td>8 位</td><td>1–4</td><td>兼容 ASCII，网络与文件的事实标准</td></tr>
-<tr><td>UTF-16</td><td>16 位</td><td>2 或 4（代理对）</td><td>Windows 内部原生编码</td></tr>
-<tr><td>UTF-32</td><td>32 位</td><td>4（定长）</td><td>下标简单，但最占空间</td></tr>
+<tr><td class="nw">UTF-8</td><td class="nw">8 位</td><td class="nw">1–4</td><td>兼容 ASCII，网络与文件的事实标准</td></tr>
+<tr><td class="nw">UTF-16</td><td class="nw">16 位</td><td class="nw">2 或 4（代理对）</td><td>Windows 内部原生编码</td></tr>
+<tr><td class="nw">UTF-32</td><td class="nw">32 位</td><td class="nw">4（定长）</td><td>下标简单，但最占空间</td></tr>
 </tbody>
 </table>
 <div class="note old"><span class="t">🟡 一个常见误会</span><p>记事本另存为里那个「Unicode」选项，其实指的是 UTF-16（小端），并不是什么单独的编码。严格说来「Unicode 编码」这个说法是不准确的——Unicode 是字符集，你要选的是它的某一种 UTF 编码。</p></div>
@@ -696,7 +700,7 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>层面</th><th>是什么编码</th><th>谁决定</th></tr></thead>
 <tbody>
-<tr><td>① 源文件在磁盘上</td><td>你的 <code>.cpp</code> 文件字节，VS 默认 <strong>UTF-8</strong></td><td>编辑器 / 你自己</td></tr>
+<tr><td class="nw">① 源文件在磁盘上</td><td>你的 <code>.cpp</code> 文件字节，VS 默认 <strong>UTF-8</strong></td><td class="nw">编辑器 / 你自己</td></tr>
 <tr><td>② 编译后 exe 里的字符串</td><td>带 <code>L</code> 的是 <strong>UTF-16</strong>；不带 <code>L</code> 的是 GBK 或 UTF-8</td><td><strong>编译器</strong> + 你写不写 <code>L</code></td></tr>
 <tr><td>③ Windows API 内部</td><td><strong>UTF-16</strong>（<code>wchar_t</code>）</td><td>操作系统，改不了</td></tr>
 </tbody>
@@ -707,10 +711,10 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>阶段</th><th><code>L"你好"</code></th><th><code>"你好"</code>（无 L）</th></tr></thead>
 <tbody>
-<tr><td>源文件磁盘上</td><td>UTF-8：<strong>6 字节</strong></td><td>UTF-8：<strong>6 字节</strong>（同一个文件，编码只有一种）</td></tr>
-<tr><td>编译器处理</td><td>按 <code>L</code> 语义 → <strong>转成 UTF-16</strong></td><td>按窄字符集 → 转成 GBK（默认）或保持 UTF-8（加 <code>/utf-8</code>）</td></tr>
+<tr><td class="nw">源文件磁盘上</td><td class="nw">UTF-8：<strong>6 字节</strong></td><td>UTF-8：<strong>6 字节</strong>（同一个文件，编码只有一种）</td></tr>
+<tr><td class="nw">编译器处理</td><td>按 <code>L</code> 语义 → <strong>转成 UTF-16</strong></td><td>按窄字符集 → 转成 GBK（默认）或保持 UTF-8（加 <code>/utf-8</code>）</td></tr>
 <tr><td>exe 里 / 运行内存</td><td>UTF-16：<strong>4 字节</strong>（每字 2 字节）</td><td>GBK：4 字节，或 UTF-8：6 字节</td></tr>
-<tr><td>交给 API</td><td>直接喂 <code>MessageBoxW</code></td><td><code>MessageBoxA</code> 内部再转一次成 UTF-16 才进系统</td></tr>
+<tr><td class="nw">交给 API</td><td>直接喂 <code>MessageBoxW</code></td><td><code>MessageBoxA</code> 内部再转一次成 UTF-16 才进系统</td></tr>
 </tbody>
 </table>
 <div class="note ok">
@@ -729,8 +733,8 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>平台</th><th><code>wchar_t</code> 大小</th><th>编码</th></tr></thead>
 <tbody>
-<tr><td>Windows（MSVC）</td><td>2 字节</td><td>UTF-16</td></tr>
-<tr><td>Linux / macOS（GCC/Clang）</td><td><strong>4 字节</strong></td><td><strong>UTF-32</strong></td></tr>
+<tr><td class="nw">Windows（MSVC）</td><td class="nw">2 字节</td><td class="nw">UTF-16</td></tr>
+<tr><td>Linux / macOS（GCC/Clang）</td><td class="nw"><strong>4 字节</strong></td><td class="nw"><strong>UTF-32</strong></td></tr>
 </tbody>
 </table>
 <p>所以同一句 <code>L"你好"</code>，在 Windows 上占 4 字节，在 Linux 上占 8 字节——<strong><code>wchar_t</code> 根本不可移植</strong>，这是它最大的设计缺陷。</p>
@@ -771,10 +775,10 @@ HWND hwnd = CreateWindowExW(
 <table>
 <thead><tr><th>老函数</th><th>毛病</th><th>现代替代</th></tr></thead>
 <tbody>
-<tr><td><code>lstrlenW</code></td><td>能用，但没必要绕这一层</td><td><code>wcslen</code> / <code>std::wstring::size</code></td></tr>
+<tr><td class="nw"><code>lstrlenW</code></td><td>能用，但没必要绕这一层</td><td><code>wcslen</code> / <code>std::wstring::size</code></td></tr>
 <tr><td><code>lstrcpyW</code> / <code>lstrcatW</code></td><td>无缓冲区大小，易越界</td><td><code>StringCchCopyW</code> / <code>StringCchCatW</code></td></tr>
-<tr><td><code>wsprintfW</code></td><td>不支持浮点、易越界</td><td><code>StringCchPrintfW</code> / <code>swprintf_s</code></td></tr>
-<tr><td><code>lstrcmpiW</code></td><td>大小写与区域规则不透明</td><td><code>CompareStringEx</code> / <code>_wcsicmp</code></td></tr>
+<tr><td class="nw"><code>wsprintfW</code></td><td>不支持浮点、易越界</td><td><code>StringCchPrintfW</code> / <code>swprintf_s</code></td></tr>
+<tr><td class="nw"><code>lstrcmpiW</code></td><td>大小写与区域规则不透明</td><td><code>CompareStringEx</code> / <code>_wcsicmp</code></td></tr>
 </tbody>
 </table>
 <p>现代的替代路线有两条。偏 C 风格的 Win32 代码，推荐用 <code>strsafe.h</code> 里的 StrSafe 系列：函数名里的 <code>Cch</code> 表示「按字符计数（count of characters）」，<code>Cb</code> 表示「按字节计数」；它们<strong>强制你传入缓冲区大小、并保证结尾补 0</strong>，从设计上堵住了溢出。</p>
@@ -805,12 +809,12 @@ StringCchPrintfW(dst, ARRAYSIZE(dst), L"%d 项 / %.1f%%", count, ratio);
 <table>
 <thead><tr><th>层面</th><th>怎么做</th></tr></thead>
 <tbody>
-<tr><td>项目配置</td><td>字符集设为 Unicode（定义 <code>UNICODE</code>、<code>_UNICODE</code>），绝不编译成多字节/ANSI 版本。</td></tr>
-<tr><td>程序内部</td><td>文字统一用 UTF-16 保存：<code>std::wstring</code> / <code>wchar_t</code>；只调用 W 版 API。</td></tr>
-<tr><td>字面量</td><td>一律加 <code>L</code> 前缀写 <code>L"..."</code>。</td></tr>
-<tr><td>与外界交界</td><td>文件、网络、JSON、跨平台库一律走 UTF-8；在边界上用转换函数换成 UTF-16，并加 <code>MB_ERR_INVALID_CHARS</code>。</td></tr>
-<tr><td>字符串操作</td><td>用 <code>std::wstring</code> / <code>std::format</code> 或 StrSafe，弃用 <code>lstrcpy</code>、<code>wsprintf</code>、<code>TCHAR</code>。</td></tr>
-<tr><td>计数与截断</td><td>记住一个宽字符不等于一个字符，别在代理对中间切断。</td></tr>
+<tr><td class="nw">项目配置</td><td>字符集设为 Unicode（定义 <code>UNICODE</code>、<code>_UNICODE</code>），绝不编译成多字节/ANSI 版本。</td></tr>
+<tr><td class="nw">程序内部</td><td>文字统一用 UTF-16 保存：<code>std::wstring</code> / <code>wchar_t</code>；只调用 W 版 API。</td></tr>
+<tr><td class="nw">字面量</td><td>一律加 <code>L</code> 前缀写 <code>L"..."</code>。</td></tr>
+<tr><td class="nw">与外界交界</td><td>文件、网络、JSON、跨平台库一律走 UTF-8；在边界上用转换函数换成 UTF-16，并加 <code>MB_ERR_INVALID_CHARS</code>。</td></tr>
+<tr><td class="nw">字符串操作</td><td>用 <code>std::wstring</code> / <code>std::format</code> 或 StrSafe，弃用 <code>lstrcpy</code>、<code>wsprintf</code>、<code>TCHAR</code>。</td></tr>
+<tr><td class="nw">计数与截断</td><td>记住一个宽字符不等于一个字符，别在代理对中间切断。</td></tr>
 </tbody>
 </table>
 <p>下面这段小代码把整条链路串起来，展示「边界读 UTF-8 → 进门转 UTF-16 → 交给 W 版 API」是什么样子：</p>
@@ -903,16 +907,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 <table>
 <thead><tr><th>字段</th><th>作用</th><th>现代实务提示</th></tr></thead>
 <tbody>
-<tr><td><span class="kw">cbSize</span></td><td>结构体自身的字节数</td><td>务必先填 <span class="kw">sizeof(WNDCLASSEXW)</span>，系统靠它判断版本。用 <span class="kw">{ sizeof(wc) }</span> 初始化最省事。</td></tr>
-<tr><td><span class="kw">style</span></td><td>类风格，如 <span class="kw">CS_HREDRAW</span> / <span class="kw">CS_VREDRAW</span>（尺寸变化时重绘）、<span class="kw">CS_DBLCLKS</span>（接收双击）</td><td>大多数场景留 0 即可；需要双击消息才加 <span class="kw">CS_DBLCLKS</span>。</td></tr>
-<tr><td><span class="kw">lpfnWndProc</span></td><td>指向本类的<strong>窗口过程</strong>——这类窗口收到消息由谁处理</td><td>整张图纸最核心的字段。你的逻辑都挂在这里。</td></tr>
+<tr><td class="nw"><span class="kw">cbSize</span></td><td>结构体自身的字节数</td><td>务必先填 <span class="kw">sizeof(WNDCLASSEXW)</span>，系统靠它判断版本。用 <span class="kw">{ sizeof(wc) }</span> 初始化最省事。</td></tr>
+<tr><td class="nw"><span class="kw">style</span></td><td>类风格，如 <span class="kw">CS_HREDRAW</span> / <span class="kw">CS_VREDRAW</span>（尺寸变化时重绘）、<span class="kw">CS_DBLCLKS</span>（接收双击）</td><td>大多数场景留 0 即可；需要双击消息才加 <span class="kw">CS_DBLCLKS</span>。</td></tr>
+<tr><td class="nw"><span class="kw">lpfnWndProc</span></td><td>指向本类的<strong>窗口过程</strong>——这类窗口收到消息由谁处理</td><td>整张图纸最核心的字段。你的逻辑都挂在这里。</td></tr>
 <tr><td><span class="kw">cbClsExtra</span> / <span class="kw">cbWndExtra</span></td><td>为「类」或「每个窗口」额外预留的字节数</td><td>现代代码通常填 0，需要挂私有数据用 <span class="kw">SetWindowLongPtr</span> 更清晰。</td></tr>
-<tr><td><span class="kw">hInstance</span></td><td>拥有此类的模块实例句柄</td><td>由 <span class="kw">wWinMain</span> 传入，或用 <span class="kw">GetModuleHandleW(nullptr)</span> 取。</td></tr>
-<tr><td><span class="kw">hIcon</span> / <span class="kw">hIconSm</span></td><td>大图标（Alt+Tab）与小图标（标题栏）</td><td>用 <span class="kw">LoadIconW</span> 加载；留 <span class="kw">nullptr</span> 则用默认。</td></tr>
-<tr><td><span class="kw">hCursor</span></td><td>鼠标移到窗口上时显示的光标</td><td>几乎必填：<span class="kw">LoadCursorW(nullptr, IDC_ARROW)</span>。忘了填，鼠标进窗口会变成上一个残留的形状。</td></tr>
-<tr><td><span class="kw">hbrBackground</span></td><td>系统用来擦除背景的画刷</td><td>常见写法 <span class="kw">(HBRUSH)(COLOR_WINDOW + 1)</span>。若你打算在 <span class="kw">WM_PAINT</span> 里画满整块，可留 <span class="kw">nullptr</span> 自行擦除。</td></tr>
-<tr><td><span class="kw">lpszMenuName</span></td><td>类默认菜单的资源名</td><td>无菜单填 <span class="kw">nullptr</span>。</td></tr>
-<tr><td><span class="kw">lpszClassName</span></td><td>类名字符串——造窗口时凭它找图纸</td><td>唯一「身份证」。<span class="kw">CreateWindowExW</span> 的第二个参数必须与它一字不差。</td></tr>
+<tr><td class="nw"><span class="kw">hInstance</span></td><td>拥有此类的模块实例句柄</td><td>由 <span class="kw">wWinMain</span> 传入，或用 <span class="kw">GetModuleHandleW(nullptr)</span> 取。</td></tr>
+<tr><td class="nw"><span class="kw">hIcon</span> / <span class="kw">hIconSm</span></td><td>大图标（Alt+Tab）与小图标（标题栏）</td><td>用 <span class="kw">LoadIconW</span> 加载；留 <span class="kw">nullptr</span> 则用默认。</td></tr>
+<tr><td class="nw"><span class="kw">hCursor</span></td><td>鼠标移到窗口上时显示的光标</td><td>几乎必填：<span class="kw">LoadCursorW(nullptr, IDC_ARROW)</span>。忘了填，鼠标进窗口会变成上一个残留的形状。</td></tr>
+<tr><td class="nw"><span class="kw">hbrBackground</span></td><td>系统用来擦除背景的画刷</td><td>常见写法 <span class="kw">(HBRUSH)(COLOR_WINDOW + 1)</span>。若你打算在 <span class="kw">WM_PAINT</span> 里画满整块，可留 <span class="kw">nullptr</span> 自行擦除。</td></tr>
+<tr><td class="nw"><span class="kw">lpszMenuName</span></td><td>类默认菜单的资源名</td><td>无菜单填 <span class="kw">nullptr</span>。</td></tr>
+<tr><td class="nw"><span class="kw">lpszClassName</span></td><td>类名字符串——造窗口时凭它找图纸</td><td>唯一「身份证」。<span class="kw">CreateWindowExW</span> 的第二个参数必须与它一字不差。</td></tr>
 </tbody>
 </table>
 
@@ -932,11 +936,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 <thead><tr><th>常见风格</th><th>含义</th></tr></thead>
 <tbody>
 <tr><td><span class="kw">WS_OVERLAPPEDWINDOW</span></td><td>标准顶层窗口套餐（标题栏+边框+三个按钮）</td></tr>
-<tr><td><span class="kw">WS_CHILD</span></td><td>子窗口，坐标相对父窗口，随父窗口裁剪</td></tr>
-<tr><td><span class="kw">WS_VISIBLE</span></td><td>创建后立即可见（省去一次 <span class="kw">ShowWindow</span>）</td></tr>
+<tr><td class="nw"><span class="kw">WS_CHILD</span></td><td>子窗口，坐标相对父窗口，随父窗口裁剪</td></tr>
+<tr><td class="nw"><span class="kw">WS_VISIBLE</span></td><td>创建后立即可见（省去一次 <span class="kw">ShowWindow</span>）</td></tr>
 <tr><td><span class="kw">WS_VSCROLL</span> / <span class="kw">WS_HSCROLL</span></td><td>带垂直 / 水平滚动条</td></tr>
-<tr><td><span class="kw">WS_EX_TOPMOST</span></td><td>始终置顶（扩展风格）</td></tr>
-<tr><td><span class="kw">WS_EX_ACCEPTFILES</span></td><td>接受拖入的文件</td></tr>
+<tr><td class="nw"><span class="kw">WS_EX_TOPMOST</span></td><td>始终置顶（扩展风格）</td></tr>
+<tr><td><span class="kw">WS_EX_ACCEPTFILES</span></td><td class="nw">接受拖入的文件</td></tr>
 </tbody>
 </table>
 
@@ -963,10 +967,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 <table>
 <thead><tr><th></th><th>队列消息</th><th>非队列消息</th></tr></thead>
 <tbody>
-<tr><td>典型来源</td><td>键盘/鼠标输入、<span class="kw">WM_TIMER</span>、<span class="kw">PostMessage</span></td><td>创建/尺寸/焦点变化、<span class="kw">SendMessage</span></td></tr>
-<tr><td>送达路径</td><td>先进线程消息队列排队，等 <span class="kw">GetMessage</span> 取出</td><td>直接调用窗口过程，不经队列</td></tr>
-<tr><td>时序</td><td>异步：投递后立即返回，稍后处理</td><td>同步：处理完才返回</td></tr>
-<tr><td>比方</td><td>投进邮箱的信，等人来取</td><td>当面敲门，说完等答复</td></tr>
+<tr><td class="nw">典型来源</td><td>键盘/鼠标输入、<span class="kw">WM_TIMER</span>、<span class="kw">PostMessage</span></td><td>创建/尺寸/焦点变化、<span class="kw">SendMessage</span></td></tr>
+<tr><td class="nw">送达路径</td><td>先进线程消息队列排队，等 <span class="kw">GetMessage</span> 取出</td><td>直接调用窗口过程，不经队列</td></tr>
+<tr><td class="nw">时序</td><td>异步：投递后立即返回，稍后处理</td><td>同步：处理完才返回</td></tr>
+<tr><td class="nw">比方</td><td>投进邮箱的信，等人来取</td><td>当面敲门，说完等答复</td></tr>
 </tbody>
 </table>
 
@@ -1025,11 +1029,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 <table>
 <thead><tr><th></th><th>SendMessage</th><th>PostMessage</th></tr></thead>
 <tbody>
-<tr><td>路径</td><td>直接调用窗口过程（非队列）</td><td>投入线程消息队列（队列）</td></tr>
-<tr><td>时序</td><td>同步，阻塞到处理完</td><td>异步，投递后立即返回</td></tr>
-<tr><td>返回值</td><td>能拿到窗口过程的 <span class="kw">LRESULT</span></td><td>只返回「投递是否成功」的布尔</td></tr>
-<tr><td>典型用途</td><td>需要立即结果的查询/命令</td><td>发个通知、请求稍后重绘、给自己排后续动作</td></tr>
-<tr><td>比方</td><td>当面把事说完等答复</td><td>投一封信到邮箱走人</td></tr>
+<tr><td class="nw">路径</td><td>直接调用窗口过程（非队列）</td><td>投入线程消息队列（队列）</td></tr>
+<tr><td class="nw">时序</td><td>同步，阻塞到处理完</td><td>异步，投递后立即返回</td></tr>
+<tr><td class="nw">返回值</td><td>能拿到窗口过程的 <span class="kw">LRESULT</span></td><td>只返回「投递是否成功」的布尔</td></tr>
+<tr><td class="nw">典型用途</td><td>需要立即结果的查询/命令</td><td>发个通知、请求稍后重绘、给自己排后续动作</td></tr>
+<tr><td class="nw">比方</td><td>当面把事说完等答复</td><td>投一封信到邮箱走人</td></tr>
 </tbody>
 </table>
 
@@ -1154,9 +1158,9 @@ InvalidateRect(hWnd, <span class="kw">nullptr</span>, TRUE);</code></pre>
 <table>
 <thead><tr><th>来源</th><th>谁标记的</th><th>典型场景</th></tr></thead>
 <tbody>
-<tr><td>被遮挡后重新暴露</td><td><strong>系统</strong></td><td>别的窗口移开、从最小化恢复、切换回本窗口</td></tr>
-<tr><td>窗口尺寸或位置变化</td><td><strong>系统</strong></td><td>拖大窗口时新露出来的区域</td></tr>
-<tr><td>你主动请求</td><td><strong>你</strong></td><td><code>InvalidateRect(hwnd, &amp;rc, TRUE)</code></td></tr>
+<tr><td class="nw">被遮挡后重新暴露</td><td class="nw"><strong>系统</strong></td><td>别的窗口移开、从最小化恢复、切换回本窗口</td></tr>
+<tr><td>窗口尺寸或位置变化</td><td class="nw"><strong>系统</strong></td><td>拖大窗口时新露出来的区域</td></tr>
+<tr><td class="nw">你主动请求</td><td class="nw"><strong>你</strong></td><td><code>InvalidateRect(hwnd, &amp;rc, TRUE)</code></td></tr>
 </tbody>
 </table>
 <p>第三种是你唯一能主动触发的。记住这个用法上的分寸：<strong>数据变了想刷新界面，不要自己抓个 DC 直接画，而是把对应区域标脏，让系统按它的节奏发 <code>WM_PAINT</code></strong>——这样连续多次修改会被合并成一次重绘，比你每改一次画一次高效得多。</p>
@@ -1265,9 +1269,9 @@ std::vector&lt;POINT&gt; g_circles;                 <span class="cm">// ← 状�
 <table>
 <thead><tr><th></th><th>你以为要回答的问题</th><th>实际要回答的问题</th></tr></thead>
 <tbody>
-<tr><td>系统在问什么</td><td>「刚才丢了什么？」</td><td><strong>「现在该显示什么？」</strong></td></tr>
-<tr><td>你需要保存什么</td><td>历史操作记录</td><td><strong>当前数据状态</strong></td></tr>
-<tr><td>rcPaint 的地位</td><td>必须严格遵守</td><td>可选的性能优化</td></tr>
+<tr><td class="nw">系统在问什么</td><td>「刚才丢了什么？」</td><td><strong>「现在该显示什么？」</strong></td></tr>
+<tr><td class="nw">你需要保存什么</td><td class="nw">历史操作记录</td><td class="nw"><strong>当前数据状态</strong></td></tr>
+<tr><td class="nw">rcPaint 的地位</td><td class="nw">必须严格遵守</td><td class="nw">可选的性能优化</td></tr>
 </tbody>
 </table>
 
@@ -1334,13 +1338,13 @@ PostMessageW(hwndMain, WM_APP_WORKDONE, resultCode, 0);</code></pre>
 <table>
 <thead><tr><th>属性</th><th>默认值</th><th>改它的函数</th></tr></thead>
 <tbody>
-<tr><td>画笔（描边）</td><td>BLACK_PEN（黑、宽 1）</td><td>SelectObject</td></tr>
-<tr><td>画刷（填充）</td><td>WHITE_BRUSH（白）</td><td>SelectObject</td></tr>
-<tr><td>文字颜色</td><td>黑 RGB(0,0,0)</td><td>SetTextColor</td></tr>
-<tr><td>背景颜色</td><td>白 RGB(255,255,255)</td><td>SetBkColor</td></tr>
-<tr><td>背景模式</td><td>OPAQUE（不透明）</td><td>SetBkMode</td></tr>
-<tr><td>映射模式</td><td>MM_TEXT（1 单位 = 1 像素）</td><td>SetMapMode</td></tr>
-<tr><td>当前位置</td><td>(0, 0)</td><td>MoveToEx</td></tr>
+<tr><td class="nw">画笔（描边）</td><td>BLACK_PEN（黑、宽 1）</td><td class="nw">SelectObject</td></tr>
+<tr><td class="nw">画刷（填充）</td><td>WHITE_BRUSH（白）</td><td class="nw">SelectObject</td></tr>
+<tr><td class="nw">文字颜色</td><td class="nw">黑 RGB(0,0,0)</td><td class="nw">SetTextColor</td></tr>
+<tr><td class="nw">背景颜色</td><td>白 RGB(255,255,255)</td><td class="nw">SetBkColor</td></tr>
+<tr><td class="nw">背景模式</td><td class="nw">OPAQUE（不透明）</td><td class="nw">SetBkMode</td></tr>
+<tr><td class="nw">映射模式</td><td>MM_TEXT（1 单位 = 1 像素）</td><td class="nw">SetMapMode</td></tr>
+<tr><td class="nw">当前位置</td><td class="nw">(0, 0)</td><td class="nw">MoveToEx</td></tr>
 </tbody>
 </table>
 <h3>那「画布」到底是什么</h3>
@@ -1386,9 +1390,9 @@ PostMessageW(hwndMain, WM_APP_WORKDONE, resultCode, 0);</code></pre>
 <table>
 <thead><tr><th>获取方式</th><th>拿到的画布是</th><th>典型场景</th></tr></thead>
 <tbody>
-<tr><td><code>BeginPaint</code></td><td>客户区中<strong>当前无效的那一块</strong>（已自动设好裁剪区）</td><td>只能在 <code>WM_PAINT</code> 里用</td></tr>
-<tr><td><code>GetDC</code></td><td><strong>整个客户区</strong></td><td>响应鼠标拖动等临时绘制</td></tr>
-<tr><td><code>GetWindowDC</code></td><td><strong>整个窗口</strong>，含标题栏与边框</td><td>自绘非客户区，少用</td></tr>
+<tr><td class="nw"><code>BeginPaint</code></td><td>客户区中<strong>当前无效的那一块</strong>（已自动设好裁剪区）</td><td>只能在 <code>WM_PAINT</code> 里用</td></tr>
+<tr><td class="nw"><code>GetDC</code></td><td class="nw"><strong>整个客户区</strong></td><td>响应鼠标拖动等临时绘制</td></tr>
+<tr><td class="nw"><code>GetWindowDC</code></td><td><strong>整个窗口</strong>，含标题栏与边框</td><td>自绘非客户区，少用</td></tr>
 <tr><td><code>CreateCompatibleDC</code></td><td>一块<strong>内存位图</strong>（离屏）</td><td>双缓冲、图像处理</td></tr>
 </tbody>
 </table>
@@ -1476,10 +1480,10 @@ DeleteObject(hBrush);</code></pre>
 <table>
 <thead><tr><th>函数</th><th>作用</th><th>用不用当前笔/刷</th></tr></thead>
 <tbody>
-<tr><td>FillRect(hdc, &amp;rc, hBrush)</td><td>用指定刷填满矩形，无边框</td><td>只用你给的刷</td></tr>
-<tr><td>FrameRect(hdc, &amp;rc, hBrush)</td><td>用刷画矩形边框（1 像素宽）</td><td>只用你给的刷</td></tr>
-<tr><td>InvertRect(hdc, &amp;rc)</td><td>反转矩形内像素颜色</td><td>都不用</td></tr>
-<tr><td>Rectangle(hdc, l,t,r,b)</td><td>描边并填充矩形</td><td>用 DC 当前笔 + 当前刷</td></tr>
+<tr><td>FillRect(hdc, &amp;rc, hBrush)</td><td>用指定刷填满矩形，无边框</td><td class="nw">只用你给的刷</td></tr>
+<tr><td>FrameRect(hdc, &amp;rc, hBrush)</td><td>用刷画矩形边框（1 像素宽）</td><td class="nw">只用你给的刷</td></tr>
+<tr><td>InvertRect(hdc, &amp;rc)</td><td>反转矩形内像素颜色</td><td class="nw">都不用</td></tr>
+<tr><td>Rectangle(hdc, l,t,r,b)</td><td class="nw">描边并填充矩形</td><td>用 DC 当前笔 + 当前刷</td></tr>
 </tbody>
 </table>
 <div class="note ok"><span class="t">🟢 小结</span><p>直线和 <code>LineTo</code> 依赖“当前位置”，<code>Polyline</code> 不依赖；封闭图形一步完成描边+填充；右下边界不含。想清楚“这次谁描边、谁填充、要不要边/心”，再选合适的笔刷和函数。</p></div>
@@ -1490,14 +1494,14 @@ DeleteObject(hBrush);</code></pre>
 <table>
 <thead><tr><th>映射模式</th><th>1 个逻辑单位 =</th><th>y 轴方向</th></tr></thead>
 <tbody>
-<tr><td>MM_TEXT（默认）</td><td>1 像素</td><td>向下</td></tr>
-<tr><td>MM_LOMETRIC</td><td>0.1 毫米</td><td>向上</td></tr>
-<tr><td>MM_HIMETRIC</td><td>0.01 毫米</td><td>向上</td></tr>
-<tr><td>MM_LOENGLISH</td><td>0.01 英寸</td><td>向上</td></tr>
-<tr><td>MM_HIENGLISH</td><td>0.001 英寸</td><td>向上</td></tr>
-<tr><td>MM_TWIPS</td><td>1/1440 英寸（1/20 磅）</td><td>向上</td></tr>
-<tr><td>MM_ISOTROPIC</td><td>你定，x/y 同比例</td><td>你定</td></tr>
-<tr><td>MM_ANISOTROPIC</td><td>你定，x/y 可不同比例</td><td>你定</td></tr>
+<tr><td class="nw">MM_TEXT（默认）</td><td class="nw">1 像素</td><td class="nw">向下</td></tr>
+<tr><td class="nw">MM_LOMETRIC</td><td class="nw">0.1 毫米</td><td class="nw">向上</td></tr>
+<tr><td class="nw">MM_HIMETRIC</td><td class="nw">0.01 毫米</td><td class="nw">向上</td></tr>
+<tr><td class="nw">MM_LOENGLISH</td><td class="nw">0.01 英寸</td><td class="nw">向上</td></tr>
+<tr><td class="nw">MM_HIENGLISH</td><td class="nw">0.001 英寸</td><td class="nw">向上</td></tr>
+<tr><td class="nw">MM_TWIPS</td><td>1/1440 英寸（1/20 磅）</td><td class="nw">向上</td></tr>
+<tr><td class="nw">MM_ISOTROPIC</td><td>你定，x/y 同比例</td><td class="nw">你定</td></tr>
+<tr><td class="nw">MM_ANISOTROPIC</td><td>你定，x/y 可不同比例</td><td class="nw">你定</td></tr>
 </tbody>
 </table>
 <p>注意公制/英制那几种模式 <strong>y 是向上为正</strong>的（符合数学直觉），和 MM_TEXT 相反。这意味着切过去以后，你想画在可见区域里，y 坐标往往得用负数——很多人第一次用这些模式时“东西画到窗口外去了”，就是没意识到 y 翻了向。</p>
@@ -1592,11 +1596,11 @@ DeleteObject(hBrush);</code></pre>
 <table>
 <thead><tr><th>步骤</th><th>做什么</th><th>为什么</th></tr></thead>
 <tbody>
-<tr><td>1. 创建</td><td>CreatePen / CreateSolidBrush …</td><td>拿到句柄</td></tr>
-<tr><td>2. 选入</td><td>hOld = SelectObject(hdc, hNew)</td><td>让 DC 用它，并<strong>接住旧对象</strong></td></tr>
-<tr><td>3. 使用</td><td>画你的图</td><td>—</td></tr>
-<tr><td>4. 选回</td><td>SelectObject(hdc, hOld)</td><td>让新对象<strong>离开</strong> DC</td></tr>
-<tr><td>5. 删除</td><td>DeleteObject(hNew)</td><td>归还系统资源</td></tr>
+<tr><td class="nw">1. 创建</td><td>CreatePen / CreateSolidBrush …</td><td class="nw">拿到句柄</td></tr>
+<tr><td class="nw">2. 选入</td><td>hOld = SelectObject(hdc, hNew)</td><td>让 DC 用它，并<strong>接住旧对象</strong></td></tr>
+<tr><td class="nw">3. 使用</td><td class="nw">画你的图</td><td class="nw">—</td></tr>
+<tr><td class="nw">4. 选回</td><td>SelectObject(hdc, hOld)</td><td class="nw">让新对象<strong>离开</strong> DC</td></tr>
+<tr><td class="nw">5. 删除</td><td>DeleteObject(hNew)</td><td class="nw">归还系统资源</td></tr>
 </tbody>
 </table>
 <p>为什么第 4 步不能省？因为<strong>一个正被某个 DC 选用的对象是删不掉的</strong>——<code>DeleteObject</code> 会失败，对象和它占的资源都还在。你必须先用旧对象把它替换出来（或者销毁那个 DC），它才“自由”，才能删。这就是每次 <code>SelectObject</code> 都要接住返回值的全部理由。</p>
@@ -1746,9 +1750,9 @@ g.SetSmoothingMode(SmoothingModeAntiAlias);</code></pre>
 <table>
 <thead><tr><th>技术</th><th>特点</th><th>适合</th></tr></thead>
 <tbody>
-<tr><td><strong>GDI</strong></td><td>最轻、随处可用；无抗锯齿、无 alpha、整数坐标</td><td>简单 UI、自绘控件、打印、和旧代码打交道</td></tr>
-<tr><td><strong>GDI+</strong></td><td>抗锯齿、alpha、渐变、浮点坐标、能读写 PNG/JPEG；但偏软件、较慢、年代也不新</td><td>需要抗锯齿/渐变又不想上重型框架的中间地带</td></tr>
-<tr><td><strong>Direct2D</strong></td><td>建在 Direct3D 之上，<strong>硬件加速 + 抗锯齿</strong>的即时模式 2D；配 DirectWrite 排字，可与 Direct3D/DirectComposition 互操作</td><td>新项目里追求高质量、高性能 2D 的首选</td></tr>
+<tr><td class="nw"><strong>GDI</strong></td><td>最轻、随处可用；无抗锯齿、无 alpha、整数坐标</td><td>简单 UI、自绘控件、打印、和旧代码打交道</td></tr>
+<tr><td class="nw"><strong>GDI+</strong></td><td>抗锯齿、alpha、渐变、浮点坐标、能读写 PNG/JPEG；但偏软件、较慢、年代也不新</td><td>需要抗锯齿/渐变又不想上重型框架的中间地带</td></tr>
+<tr><td class="nw"><strong>Direct2D</strong></td><td>建在 Direct3D 之上，<strong>硬件加速 + 抗锯齿</strong>的即时模式 2D；配 DirectWrite 排字，可与 Direct3D/DirectComposition 互操作</td><td>新项目里追求高质量、高性能 2D 的首选</td></tr>
 </tbody>
 </table>
 <div class="note new"><span class="t">🔵 选型建议</span><p>写全新的、对画面质量或性能有要求的二维绘制，直接上 <strong>Direct2D + DirectWrite</strong>。只是想给老程序加一点抗锯齿或渐变、又不愿大改，<strong>GDI+</strong> 是够用的过渡。而画一块纯色背景、描个边框、伺候自绘控件这类朴素活儿，<strong>GDI</strong> 依旧简单直接、没必要换。工具没有高下，对上场景才算用对。</p></div>
@@ -1874,14 +1878,14 @@ ExtTextOutW(hdc, 20, 60, ETO_OPAQUE | ETO_CLIPPED, &amp;box,
 
 <p>下面这张表是你真正需要盯住的几个字段。理解它们，就理解了一行字在垂直方向是怎么"搭"起来的：</p>
 <table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody>
-<tr><td><code>tmHeight</code></td><td>字符总高度 = 上伸部 + 下伸部（tmAscent + tmDescent），<strong>不含</strong>行间空白</td></tr>
-<tr><td><code>tmAscent</code></td><td>基线（baseline）以上的高度</td></tr>
-<tr><td><code>tmDescent</code></td><td>基线以下的高度（像 g、y、p 的尾巴）</td></tr>
+<tr><td class="nw"><code>tmHeight</code></td><td>字符总高度 = 上伸部 + 下伸部（tmAscent + tmDescent），<strong>不含</strong>行间空白</td></tr>
+<tr><td class="nw"><code>tmAscent</code></td><td>基线（baseline）以上的高度</td></tr>
+<tr><td class="nw"><code>tmDescent</code></td><td>基线以下的高度（像 g、y、p 的尾巴）</td></tr>
 <tr><td><code>tmInternalLeading</code></td><td>已<strong>包含在</strong> tmHeight 顶部内、留给重音符号/声调的空白</td></tr>
 <tr><td><code>tmExternalLeading</code></td><td>字体设计者<strong>建议</strong>的行与行之间额外空白，<strong>不含在</strong> tmHeight 里</td></tr>
-<tr><td><code>tmAveCharWidth</code></td><td>平均字符宽度（用于粗略估算，不精确）</td></tr>
-<tr><td><code>tmMaxCharWidth</code></td><td>最宽字符的宽度</td></tr>
-<tr><td><code>tmPitchAndFamily</code></td><td>标志位：是否等宽（fixed/variable pitch）、字体族分类</td></tr>
+<tr><td class="nw"><code>tmAveCharWidth</code></td><td>平均字符宽度（用于粗略估算，不精确）</td></tr>
+<tr><td class="nw"><code>tmMaxCharWidth</code></td><td class="nw">最宽字符的宽度</td></tr>
+<tr><td class="nw"><code>tmPitchAndFamily</code></td><td>标志位：是否等宽（fixed/variable pitch）、字体族分类</td></tr>
 </tbody></table>
 <p>打个比方：<code>tmHeight</code> 是一格"活字"金属块的高度，<code>tmAscent</code>/<code>tmDescent</code> 是这个字在块内以基线为界的上下分配，而 <code>tmExternalLeading</code> 是排版工人在两行活字之间垫的那一小条铅片。所以<strong>标准行距 = tmHeight + tmExternalLeading</strong>——这是你换行时该加的 y 增量。</p>
 <div class="note ok"><span class="t">🟢 为什么不能假设字宽</span><p>只有<strong>等宽字体</strong>（如 Consolas）才谈得上"每个字符一样宽"。绝大多数界面字体（Segoe UI、微软雅黑）是<strong>变宽</strong>的：i 很窄、W 很宽。所以 <code>tmAveCharWidth</code> 只能用来估行长，真要知道"这串字画出来占多宽"，必须用下一节的 <code>GetTextExtentPoint32</code> 去实测。</p></div>
@@ -1951,7 +1955,7 @@ ExtTextOutW(hdc, 20, 60, ETO_OPAQUE | ETO_CLIPPED, &amp;box,
 <table><thead><tr><th>标志</th><th>作用</th></tr></thead><tbody>
 <tr><td><code>TA_LEFT</code> / <code>TA_RIGHT</code> / <code>TA_CENTER</code></td><td>把坐标当作文字的左端 / 右端 / 水平中点</td></tr>
 <tr><td><code>TA_TOP</code> / <code>TA_BOTTOM</code> / <code>TA_BASELINE</code></td><td>把坐标当作文字的顶 / 底 / 基线</td></tr>
-<tr><td><code>TA_UPDATECP</code></td><td>忽略你传的 x,y，改用 DC 的"当前位置"，并在画完后自动前移</td></tr>
+<tr><td class="nw"><code>TA_UPDATECP</code></td><td>忽略你传的 x,y，改用 DC 的"当前位置"，并在画完后自动前移</td></tr>
 </tbody></table>
 <pre><code><span class="cm">// 让 (x, y) 成为"右对齐 + 基线"参考点，适合把数字贴右画</span>
 SetTextAlign(hdc, TA_RIGHT | TA_BASELINE);
@@ -1962,14 +1966,14 @@ TextOutW(hdc, rc.right - 8, y, L"1,234.50", 8);</code></pre>
 <p>到这里你一直用的是 DC 里默认那个系统字体。真正的"换字体"，是本章的重头戏。Win32 的做法很有意思：你<strong>不直接指定某个物理字体文件</strong>，而是填一张"我想要的字体的愿望清单"——<strong>逻辑字体</strong>（logical font，结构体 <code>LOGFONTW</code>）——描述你要的高度、字重、斜体、字体名等；然后交给系统的<strong>字体映射器</strong>（font mapper），由它在已安装的物理字体里挑一个"最接近你愿望"的来用。</p>
 <p>为什么要绕这一层？因为你不能假设用户装了哪些字体。你说"我要 12 号、加粗、Segoe UI"，如果没有，映射器会拿一个最相近的顶上，程序不会崩。这是一种<strong>优雅降级</strong>的设计。下面是最常用的字段：</p>
 <table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody>
-<tr><td><code>lfHeight</code></td><td>字符高度。<strong>负值</strong> = 字符（em）高度，<strong>正值</strong> = 含内部行距的单元格高度，0 = 默认。日常用负值，见下方换算</td></tr>
-<tr><td><code>lfWidth</code></td><td>平均字符宽，填 0 让系统按字体纵横比自动定（推荐）</td></tr>
-<tr><td><code>lfWeight</code></td><td>字重，<code>FW_NORMAL</code>(400) / <code>FW_BOLD</code>(700) / <code>FW_SEMIBOLD</code>(600) 等</td></tr>
+<tr><td class="nw"><code>lfHeight</code></td><td>字符高度。<strong>负值</strong> = 字符（em）高度，<strong>正值</strong> = 含内部行距的单元格高度，0 = 默认。日常用负值，见下方换算</td></tr>
+<tr><td class="nw"><code>lfWidth</code></td><td>平均字符宽，填 0 让系统按字体纵横比自动定（推荐）</td></tr>
+<tr><td class="nw"><code>lfWeight</code></td><td>字重，<code>FW_NORMAL</code>(400) / <code>FW_BOLD</code>(700) / <code>FW_SEMIBOLD</code>(600) 等</td></tr>
 <tr><td><code>lfItalic</code> / <code>lfUnderline</code> / <code>lfStrikeOut</code></td><td>斜体 / 下划线 / 删除线，各为一个字节的布尔</td></tr>
-<tr><td><code>lfCharSet</code></td><td>字符集，现代统一填 <code>DEFAULT_CHARSET</code>，交给系统按字体名判断</td></tr>
-<tr><td><code>lfQuality</code></td><td>渲染质量，<code>CLEARTYPE_QUALITY</code>（次像素抗锯齿）/ <code>ANTIALIASED_QUALITY</code>（灰度抗锯齿）</td></tr>
-<tr><td><code>lfPitchAndFamily</code></td><td>字距（等宽/变宽）与字体族，通常填 <code>DEFAULT_PITCH | FF_DONTCARE</code></td></tr>
-<tr><td><code>lfFaceName</code></td><td>字体名字符串，如 <code>L"Segoe UI"</code>、<code>L"Consolas"</code></td></tr>
+<tr><td class="nw"><code>lfCharSet</code></td><td>字符集，现代统一填 <code>DEFAULT_CHARSET</code>，交给系统按字体名判断</td></tr>
+<tr><td class="nw"><code>lfQuality</code></td><td>渲染质量，<code>CLEARTYPE_QUALITY</code>（次像素抗锯齿）/ <code>ANTIALIASED_QUALITY</code>（灰度抗锯齿）</td></tr>
+<tr><td class="nw"><code>lfPitchAndFamily</code></td><td>字距（等宽/变宽）与字体族，通常填 <code>DEFAULT_PITCH | FF_DONTCARE</code></td></tr>
+<tr><td class="nw"><code>lfFaceName</code></td><td>字体名字符串，如 <code>L"Segoe UI"</code>、<code>L"Consolas"</code></td></tr>
 </tbody></table>
 <p><code>lfHeight</code> 的正负号是最常让人困惑的地方，务必记住这个换算：<strong>要按"磅"（point）指定字号，用负值，并按 DC 的纵向 DPI 换算</strong>。</p>
 <pre><code><span class="cl"><span class="cm">// 想要一个 12 磅的 Segoe UI</span></span><span class="cl">LOGFONTW lf = {0};</span><span class="cl"><span class="kw">int</span> pt = 12;</span><span class="cl"><span class="cc" style="min-width:65.0ch">lf.lfHeight  = -MulDiv(pt, GetDeviceCaps(hdc, LOGPIXELSY), 72);</span><span class="cm">// 磅 → 设备像素，取负</span></span><span class="cl">lf.lfWeight  = FW_NORMAL;</span><span class="cl">lf.lfCharSet = DEFAULT_CHARSET;</span><span class="cl">lf.lfQuality = CLEARTYPE_QUALITY;</span><span class="cl">lstrcpyW(lf.lfFaceName, L"Segoe UI");</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:65.0ch">HFONT hFont = CreateFontIndirectW(&amp;lf);</span><span class="cm">// 由逻辑字体生成一个可用字体句柄</span></span><span class="cl"><span class="cc" style="min-width:65.0ch">HFONT hOld  = (HFONT)SelectObject(hdc, hFont);</span><span class="cm">// 选进 DC，之后的文字都用它</span></span><span class="cl"> </span><span class="cl">TextOutW(hdc, 20, 20, L"这行字用的是 12pt Segoe UI", 22);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:65.0ch">SelectObject(hdc, hOld);</span><span class="cm">// 选回原字体</span></span><span class="cl"><span class="cc" style="min-width:65.0ch">DeleteObject(hFont);</span><span class="cm">// 释放：GDI 对象必须删，否则泄漏</span></span></code></pre>
@@ -2019,15 +2023,15 @@ DrawTextW(hdc, para, -1, &amp;rc, DT_WORDBREAK | DT_LEFT);</code></pre>
 
 <p>第三个参数传 <code>-1</code> 表示"字符串以 <code>\0</code> 结尾，长度你自己数"。真正的表达力在最后那个标志位。下面是最常用的一组：</p>
 <table><thead><tr><th>标志</th><th>作用</th></tr></thead><tbody>
-<tr><td><code>DT_SINGLELINE</code></td><td>强制单行，忽略文本里的换行符</td></tr>
-<tr><td><code>DT_WORDBREAK</code></td><td>多行模式，到右边界按词折行</td></tr>
-<tr><td><code>DT_LEFT</code> / <code>DT_CENTER</code> / <code>DT_RIGHT</code></td><td>水平对齐</td></tr>
+<tr><td class="nw"><code>DT_SINGLELINE</code></td><td>强制单行，忽略文本里的换行符</td></tr>
+<tr><td class="nw"><code>DT_WORDBREAK</code></td><td>多行模式，到右边界按词折行</td></tr>
+<tr><td><code>DT_LEFT</code> / <code>DT_CENTER</code> / <code>DT_RIGHT</code></td><td class="nw">水平对齐</td></tr>
 <tr><td><code>DT_TOP</code> / <code>DT_VCENTER</code> / <code>DT_BOTTOM</code></td><td>垂直对齐（VCENTER、BOTTOM 需与 <code>DT_SINGLELINE</code> 同用）</td></tr>
-<tr><td><code>DT_END_ELLIPSIS</code></td><td>放不下时结尾截断并加省略号 …</td></tr>
-<tr><td><code>DT_PATH_ELLIPSIS</code></td><td>针对文件路径，在中间省略、保留头尾</td></tr>
-<tr><td><code>DT_CALCRECT</code></td><td>只计算容纳文本所需的矩形，<strong>不实际绘制</strong></td></tr>
-<tr><td><code>DT_NOPREFIX</code></td><td>不把 <code>&amp;</code> 当作助记键下划线来处理</td></tr>
-<tr><td><code>DT_EXPANDTABS</code></td><td>把制表符展开为对齐位</td></tr>
+<tr><td class="nw"><code>DT_END_ELLIPSIS</code></td><td>放不下时结尾截断并加省略号 …</td></tr>
+<tr><td class="nw"><code>DT_PATH_ELLIPSIS</code></td><td>针对文件路径，在中间省略、保留头尾</td></tr>
+<tr><td class="nw"><code>DT_CALCRECT</code></td><td>只计算容纳文本所需的矩形，<strong>不实际绘制</strong></td></tr>
+<tr><td class="nw"><code>DT_NOPREFIX</code></td><td>不把 <code>&amp;</code> 当作助记键下划线来处理</td></tr>
+<tr><td class="nw"><code>DT_EXPANDTABS</code></td><td>把制表符展开为对齐位</td></tr>
 </tbody></table>
 <p><code>DT_CALCRECT</code> 特别值得记住：它是"排版预演"——不画，只把矩形改成刚好容纳文本的大小。你可以先用它算出一段话需要多高，据此决定窗口/控件布局，再去真正绘制。<code>DT_END_ELLIPSIS</code> 则是列表、状态栏里"名字太长省略号"效果的标准做法，不用自己写截断逻辑。</p>
 <div class="note new"><span class="t">🔵 需要更细的控制时</span><p>有个增强版 <code>DrawTextExW</code>，通过 <code>DRAWTEXTPARAMS</code> 结构可以设置左右额外边距、Tab 长度、返回实际绘制的行数等。当 <code>DrawTextW</code> 的对齐/省略够用时就用它；只有当你需要混合多种字体样式、真正的双向文字（如阿拉伯语）或连字时，才需要升级到本章最后讲的 DirectWrite。</p></div>
@@ -2043,11 +2047,11 @@ DrawTextW(hdc, para, -1, &amp;rc, DT_WORDBREAK | DT_LEFT);</code></pre>
 <p>本章讲的 GDI 文字 API（TextOut / DrawText / LOGFONT）今天<strong>依然适用</strong> <span class="badge ok">仍适用</span>：画个标签、状态提示、简单界面文字，它们简单直接、开销小，没必要动重武器。但一旦你要做<strong>高质量、国际化、可缩放</strong>的文字，GDI 就显出年龄了——它的抗锯齿有限、对复杂文字（阿拉伯语、印度系文字）的整形（shaping）能力弱、也不懂 OpenType 的连字与花式特性。</p>
 <p>微软给出的现代答案是 <strong>DirectWrite</strong>（配合 Direct2D 绘制）<span class="badge new">现代更新</span>。它把"文字长什么样"和"文字画在哪"彻底分离，能力上是另一个层级：</p>
 <table><thead><tr><th>能力</th><th>DirectWrite 相比 GDI 的进步</th></tr></thead><tbody>
-<tr><td>抗锯齿</td><td>次像素（ClearType）+ 灰度，边缘更平滑，且支持<strong>次像素级定位</strong>，缩放/动画时不抖</td></tr>
-<tr><td>复杂脚本</td><td>内建 Unicode 整形与双向（BiDi）排版，正确渲染阿拉伯语、泰语、天城文等</td></tr>
-<tr><td>字体特性</td><td>直接启用 OpenType 连字（ligature）、花体、上下标、旧式数字等</td></tr>
-<tr><td>分辨率无关</td><td>与 Direct2D 硬件加速协作，天然适配高 DPI 与任意缩放</td></tr>
-<tr><td>命中测试</td><td>提供文本布局的精确坐标↔字符映射，做可选中/可编辑文本的基础</td></tr>
+<tr><td class="nw">抗锯齿</td><td>次像素（ClearType）+ 灰度，边缘更平滑，且支持<strong>次像素级定位</strong>，缩放/动画时不抖</td></tr>
+<tr><td class="nw">复杂脚本</td><td>内建 Unicode 整形与双向（BiDi）排版，正确渲染阿拉伯语、泰语、天城文等</td></tr>
+<tr><td class="nw">字体特性</td><td>直接启用 OpenType 连字（ligature）、花体、上下标、旧式数字等</td></tr>
+<tr><td class="nw">分辨率无关</td><td>与 Direct2D 硬件加速协作，天然适配高 DPI 与任意缩放</td></tr>
+<tr><td class="nw">命中测试</td><td>提供文本布局的精确坐标↔字符映射，做可选中/可编辑文本的基础</td></tr>
 </tbody></table>
 <p>用法轮廓是这样的（仅示意，接口是 COM 风格）：</p>
 <pre><code><span class="cm">// 1) 建工厂  2) 建文本格式(字体/字号)  3) 用 Direct2D 渲染目标画出来</span>
@@ -2098,12 +2102,12 @@ pRT-&gt;DrawTextW(text, len, pFmt, layoutRect, pBrush);</code></pre>
 <table>
 <thead><tr><th>位</th><th>名字</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td>0–15</td><td>重复次数</td><td>自动重复时,一条消息可能代表不止一次按下(队列积压时合并)</td></tr>
-<tr><td>16–23</td><td>扫描码</td><td>硬件相关的原始键码,通常你用不到</td></tr>
-<tr><td>24</td><td>扩展键标志</td><td>区分小键盘 Enter 与主键盘 Enter、右 Alt/Ctrl、方向键区等</td></tr>
-<tr><td>29</td><td>上下文码</td><td>Alt 是否按下,主要在 <code>WM_SYSKEY*</code> 里有意义</td></tr>
-<tr><td>30</td><td>前一次状态</td><td>1 表示这颗键之前已经是按下的——据此可判断是否为自动重复</td></tr>
-<tr><td>31</td><td>转换状态</td><td>0 = 正在按下,1 = 正在松开</td></tr>
+<tr><td class="nw">0–15</td><td class="nw">重复次数</td><td>自动重复时,一条消息可能代表不止一次按下(队列积压时合并)</td></tr>
+<tr><td class="nw">16–23</td><td class="nw">扫描码</td><td>硬件相关的原始键码,通常你用不到</td></tr>
+<tr><td class="nw">24</td><td class="nw">扩展键标志</td><td>区分小键盘 Enter 与主键盘 Enter、右 Alt/Ctrl、方向键区等</td></tr>
+<tr><td class="nw">29</td><td class="nw">上下文码</td><td>Alt 是否按下,主要在 <code>WM_SYSKEY*</code> 里有意义</td></tr>
+<tr><td class="nw">30</td><td class="nw">前一次状态</td><td>1 表示这颗键之前已经是按下的——据此可判断是否为自动重复</td></tr>
+<tr><td class="nw">31</td><td class="nw">转换状态</td><td>0 = 正在按下,1 = 正在松开</td></tr>
 </tbody>
 </table>
 <p>举两个实际会用到的场景:游戏里想让"首次按下"触发跳跃、而按住不放不重复触发,就检查第 30 位——它为 0 才是真正的第一次;做终端或密码框时想区分主键盘回车和小键盘回车,就检查第 24 位的扩展键标志。取这些位不需要什么魔法,普通位运算即可:</p>
@@ -2122,12 +2126,12 @@ pRT-&gt;DrawTextW(text, len, pFmt, layoutRect, pBrush);</code></pre>
 <table>
 <thead><tr><th>维度</th><th>按键消息 WM_KEYDOWN / WM_KEYUP</th><th>字符消息 WM_CHAR</th></tr></thead>
 <tbody>
-<tr><td>关注</td><td>物理键位——"哪颗键动了"</td><td>产生的字符——"打出了什么字"</td></tr>
-<tr><td>wParam</td><td>虚拟键码 <code>VK_*</code></td><td>字符编码(UTF-16 码元)</td></tr>
-<tr><td>大小写/符号</td><td>不体现(<code>A</code> 键恒为大写码)</td><td>分明(<code>a</code>/<code>A</code>/<code>@</code> 各不同)</td></tr>
-<tr><td>键盘布局</td><td>基本无关</td><td>强相关(换布局就换字符)</td></tr>
-<tr><td>非字符键(F1、方向键、Home)</td><td>收得到</td><td>收不到(它们不产生字符)</td></tr>
-<tr><td>最适合处理</td><td>命令、导航、快捷键</td><td>正文文本录入</td></tr>
+<tr><td class="nw">关注</td><td>物理键位——"哪颗键动了"</td><td>产生的字符——"打出了什么字"</td></tr>
+<tr><td class="nw">wParam</td><td class="nw">虚拟键码 <code>VK_*</code></td><td>字符编码(UTF-16 码元)</td></tr>
+<tr><td class="nw">大小写/符号</td><td>不体现(<code>A</code> 键恒为大写码)</td><td>分明(<code>a</code>/<code>A</code>/<code>@</code> 各不同)</td></tr>
+<tr><td class="nw">键盘布局</td><td class="nw">基本无关</td><td>强相关(换布局就换字符)</td></tr>
+<tr><td>非字符键(F1、方向键、Home)</td><td class="nw">收得到</td><td>收不到(它们不产生字符)</td></tr>
+<tr><td class="nw">最适合处理</td><td>命令、导航、快捷键</td><td class="nw">正文文本录入</td></tr>
 </tbody>
 </table>
 <p>由此得到一条好用的经验法则:<strong>凡是"命令性、导航性"的键——方向键、功能键、Esc、以及被当作"确认/换行"用的 Enter——在 <code>WM_KEYDOWN</code> 里认虚拟键码;凡是"往文档里填正文字符"的输入,一律在 <code>WM_CHAR</code> 里认字符。</strong> 你几乎不会两边都处理同一颗键。</p>
@@ -2141,9 +2145,9 @@ pRT-&gt;DrawTextW(text, len, pFmt, layoutRect, pBrush);</code></pre>
 <table>
 <thead><tr><th>函数</th><th>时机语义</th><th>典型用途</th></tr></thead>
 <tbody>
-<tr><td><code>GetKeyState</code></td><td>与消息同步:当前这条消息生成时的状态</td><td>在按键/字符处理里判断 Ctrl / Shift / Caps</td></tr>
-<tr><td><code>GetAsyncKeyState</code></td><td>实时物理状态,不看队列</td><td>游戏主循环、实时轮询</td></tr>
-<tr><td><code>GetKeyboardState</code></td><td>一次取整张 256 键状态表(同步语义)</td><td>需要同时参照多个键时</td></tr>
+<tr><td class="nw"><code>GetKeyState</code></td><td>与消息同步:当前这条消息生成时的状态</td><td>在按键/字符处理里判断 Ctrl / Shift / Caps</td></tr>
+<tr><td class="nw"><code>GetAsyncKeyState</code></td><td>实时物理状态,不看队列</td><td>游戏主循环、实时轮询</td></tr>
+<tr><td class="nw"><code>GetKeyboardState</code></td><td>一次取整张 256 键状态表(同步语义)</td><td>需要同时参照多个键时</td></tr>
 </tbody>
 </table>
 <div class="note ok"><span class="t">🟢 处理组合键,请用 GetKeyState,别用 Async 去凑</span><p>在按键消息里判断"是不是按住了 Ctrl",一定用 <code>GetKeyState</code>。若图省事改用 <code>GetAsyncKeyState</code>,你查到的是"现在"的物理态——用户可能已经松手,或消息在队列里排了一会儿,状态早变了,于是你会莫名其妙地漏判或误判组合键。同步的消息,配同步的查询,才对得上。</p></div>
@@ -2157,7 +2161,7 @@ pRT-&gt;DrawTextW(text, len, pFmt, layoutRect, pBrush);</code></pre>
 <tr><td><code>CreateCaret(hwnd, hbmp, w, h)</code></td><td>为窗口创建一个 w×h 的 caret(位图传 <code>NULL</code> 即实心竖条)</td></tr>
 <tr><td><code>SetCaretPos(x, y)</code></td><td>把它挪到客户区坐标 (x, y)</td></tr>
 <tr><td><code>ShowCaret(hwnd)</code> / <code>HideCaret(hwnd)</code></td><td>显示 / 隐藏(隐藏可嵌套,须成对配平)</td></tr>
-<tr><td><code>DestroyCaret()</code></td><td>销毁并归还给系统</td></tr>
+<tr><td class="nw"><code>DestroyCaret()</code></td><td class="nw">销毁并归还给系统</td></tr>
 </tbody>
 </table>
 <p>正因为它<strong>全系统唯一、是借来的</strong>,使用纪律就很硬:只有当你的窗口握着键盘焦点时,才该占用它。于是标准套路正好落在上一节讲的那两条焦点消息里——拿到焦点时创建并显示,失去焦点时隐藏并销毁:</p>
@@ -2215,11 +2219,11 @@ HIMC himc = ImmGetContext(hwnd);
 <table>
 <thead><tr><th>查询项</th><th><code>GetSystemMetrics</code> 索引</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td>是否有鼠标</td><td><code>SM_MOUSEPRESENT</code></td><td>非零表示装了鼠标</td></tr>
-<tr><td>按键数量</td><td><code>SM_CMOUSEBUTTONS</code></td><td>返回可用按键个数</td></tr>
-<tr><td>左右键是否互换</td><td><code>SM_SWAPBUTTON</code></td><td>惯用左手的用户会互换；但消息里报的已是"逻辑主键"，你无需自己换</td></tr>
-<tr><td>竖直滚轮</td><td><code>SM_MOUSEWHEELPRESENT</code></td><td>非零表示有竖直滚轮</td></tr>
-<tr><td>水平滚轮</td><td><code>SM_MOUSEHORIZONTALWHEELPRESENT</code></td><td>非零表示有水平(倾斜)滚轮</td></tr>
+<tr><td class="nw">是否有鼠标</td><td class="nw"><code>SM_MOUSEPRESENT</code></td><td class="nw">非零表示装了鼠标</td></tr>
+<tr><td class="nw">按键数量</td><td class="nw"><code>SM_CMOUSEBUTTONS</code></td><td class="nw">返回可用按键个数</td></tr>
+<tr><td class="nw">左右键是否互换</td><td class="nw"><code>SM_SWAPBUTTON</code></td><td>惯用左手的用户会互换；但消息里报的已是"逻辑主键"，你无需自己换</td></tr>
+<tr><td class="nw">竖直滚轮</td><td><code>SM_MOUSEWHEELPRESENT</code></td><td>非零表示有竖直滚轮</td></tr>
+<tr><td class="nw">水平滚轮</td><td><code>SM_MOUSEHORIZONTALWHEELPRESENT</code></td><td>非零表示有水平(倾斜)滚轮</td></tr>
 </tbody>
 </table>
 <div class="note ok"><span class="t">🟢 一个让人安心的事实</span><p><span class="badge ok">仍适用</span> 就算用户在系统设置里把左右键对调了，你收到的 <code>WM_LBUTTONDOWN</code> 永远代表"主键"、<code>WM_RBUTTONDOWN</code> 永远代表"次键"。系统在投递之前已经替你把物理按键翻译成逻辑按键了，所以千万别自己去读 <code>SM_SWAPBUTTON</code> 再手动对调，那只会翻两次、把好人写成坏人。</p></div>
@@ -2229,11 +2233,11 @@ HIMC himc = ImmGetContext(hwnd);
 <table>
 <thead><tr><th>按键</th><th>按下</th><th>松开</th><th>双击</th></tr></thead>
 <tbody>
-<tr><td>移动(无关按键)</td><td colspan="3"><code>WM_MOUSEMOVE</code></td></tr>
-<tr><td>左键(主键)</td><td><code>WM_LBUTTONDOWN</code></td><td><code>WM_LBUTTONUP</code></td><td><code>WM_LBUTTONDBLCLK</code></td></tr>
-<tr><td>右键(次键)</td><td><code>WM_RBUTTONDOWN</code></td><td><code>WM_RBUTTONUP</code></td><td><code>WM_RBUTTONDBLCLK</code></td></tr>
-<tr><td>中键(滚轮按下)</td><td><code>WM_MBUTTONDOWN</code></td><td><code>WM_MBUTTONUP</code></td><td><code>WM_MBUTTONDBLCLK</code></td></tr>
-<tr><td>侧键 X1/X2</td><td><code>WM_XBUTTONDOWN</code></td><td><code>WM_XBUTTONUP</code></td><td><code>WM_XBUTTONDBLCLK</code></td></tr>
+<tr><td class="nw">移动(无关按键)</td><td colspan="3"><code>WM_MOUSEMOVE</code></td></tr>
+<tr><td class="nw">左键(主键)</td><td class="nw"><code>WM_LBUTTONDOWN</code></td><td class="nw"><code>WM_LBUTTONUP</code></td><td class="nw"><code>WM_LBUTTONDBLCLK</code></td></tr>
+<tr><td class="nw">右键(次键)</td><td class="nw"><code>WM_RBUTTONDOWN</code></td><td class="nw"><code>WM_RBUTTONUP</code></td><td class="nw"><code>WM_RBUTTONDBLCLK</code></td></tr>
+<tr><td class="nw">中键(滚轮按下)</td><td class="nw"><code>WM_MBUTTONDOWN</code></td><td class="nw"><code>WM_MBUTTONUP</code></td><td class="nw"><code>WM_MBUTTONDBLCLK</code></td></tr>
+<tr><td class="nw">侧键 X1/X2</td><td class="nw"><code>WM_XBUTTONDOWN</code></td><td class="nw"><code>WM_XBUTTONUP</code></td><td class="nw"><code>WM_XBUTTONDBLCLK</code></td></tr>
 </tbody>
 </table>
 <p>前三行(左、右、中)是几十年来的老班底；<strong>侧键那一行是现代补充</strong>——现在鼠标侧面常有"前进 / 后退"两个拇指键，它们统一走 <code>WM_XBUTTON*</code>,具体是哪个键要从 <code>wParam</code> 的高位读(下一节讲)。你在 <code>WndProc</code> 里处理它们，和处理任何消息一样,就是在 <code>switch</code> 里加分支：</p>
@@ -2249,12 +2253,12 @@ HIMC himc = ImmGetContext(hwnd);
 <table>
 <thead><tr><th>标志</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td><code>MK_LBUTTON</code></td><td>主键按下</td></tr>
-<tr><td><code>MK_RBUTTON</code></td><td>次键按下</td></tr>
-<tr><td><code>MK_MBUTTON</code></td><td>中键按下</td></tr>
+<tr><td class="nw"><code>MK_LBUTTON</code></td><td class="nw">主键按下</td></tr>
+<tr><td class="nw"><code>MK_RBUTTON</code></td><td class="nw">次键按下</td></tr>
+<tr><td class="nw"><code>MK_MBUTTON</code></td><td class="nw">中键按下</td></tr>
 <tr><td><code>MK_XBUTTON1</code> / <code>MK_XBUTTON2</code></td><td>侧键 X1 / X2 按下</td></tr>
-<tr><td><code>MK_SHIFT</code></td><td>Shift 按下</td></tr>
-<tr><td><code>MK_CONTROL</code></td><td>Ctrl 按下</td></tr>
+<tr><td class="nw"><code>MK_SHIFT</code></td><td class="nw">Shift 按下</td></tr>
+<tr><td class="nw"><code>MK_CONTROL</code></td><td class="nw">Ctrl 按下</td></tr>
 </tbody>
 </table>
 <p>对于 <code>WM_XBUTTON*</code>,还要多读一步:<strong>究竟是 X1 还是 X2</strong> 藏在 <code>wParam</code> 的高位里,用 <code>GET_XBUTTON_WPARAM(wParam)</code> 取,值为 <code>XBUTTON1</code> 或 <code>XBUTTON2</code>。</p>
@@ -2273,10 +2277,10 @@ RegisterClassExW(&amp;wc);</code></pre>
 <table>
 <thead><tr><th>顺序</th><th>消息</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>1</td><td><code>WM_LBUTTONDOWN</code></td><td>第一次按下——还是普通的按下</td></tr>
-<tr><td>2</td><td><code>WM_LBUTTONUP</code></td><td>第一次松开</td></tr>
-<tr><td>3</td><td><code>WM_LBUTTONDBLCLK</code></td><td>第二次按下被"升级"成了双击</td></tr>
-<tr><td>4</td><td><code>WM_LBUTTONUP</code></td><td>第二次松开</td></tr>
+<tr><td class="nw">1</td><td class="nw"><code>WM_LBUTTONDOWN</code></td><td>第一次按下——还是普通的按下</td></tr>
+<tr><td class="nw">2</td><td class="nw"><code>WM_LBUTTONUP</code></td><td class="nw">第一次松开</td></tr>
+<tr><td class="nw">3</td><td class="nw"><code>WM_LBUTTONDBLCLK</code></td><td>第二次按下被"升级"成了双击</td></tr>
+<tr><td class="nw">4</td><td class="nw"><code>WM_LBUTTONUP</code></td><td class="nw">第二次松开</td></tr>
 </tbody>
 </table>
 <p>看清楚这个序列你就明白一个设计要点:<strong>第一次点击照样触发了 DOWN/UP</strong>,双击并不会"取消"它。所以你不能让单击立刻做不可逆的重活,否则双击时那件重活会先干一遍。经典的处理原则是——<strong>单击选中,双击打开</strong>:单击只做轻量的、可被双击覆盖的动作(选中、定位光标),双击再做"进入 / 展开 / 打开"这类重动作。这样两次 DOWN 各司其职,不打架。</p>
@@ -2301,12 +2305,12 @@ RegisterClassExW(&amp;wc);</code></pre>
 <table>
 <thead><tr><th>返回码</th><th>指针所在部位</th></tr></thead>
 <tbody>
-<tr><td><code>HTCLIENT</code></td><td>客户区——于是你收到 <code>WM_MOUSEMOVE</code> 那一组</td></tr>
-<tr><td><code>HTCAPTION</code></td><td>标题栏——按下拖动就能移动窗口</td></tr>
+<tr><td class="nw"><code>HTCLIENT</code></td><td>客户区——于是你收到 <code>WM_MOUSEMOVE</code> 那一组</td></tr>
+<tr><td class="nw"><code>HTCAPTION</code></td><td>标题栏——按下拖动就能移动窗口</td></tr>
 <tr><td><code>HTLEFT</code>/<code>HTRIGHT</code>/<code>HTTOP</code>/<code>HTBOTTOM</code>…</td><td>各条边和角——按下拖动就能改窗口大小</td></tr>
 <tr><td><code>HTSYSMENU</code>/<code>HTMINBUTTON</code>/<code>HTMAXBUTTON</code>/<code>HTCLOSE</code></td><td>系统菜单、最小化 / 最大化 / 关闭按钮</td></tr>
-<tr><td><code>HTTRANSPARENT</code></td><td>"当我透明"——让命中穿透到下层窗口</td></tr>
-<tr><td><code>HTNOWHERE</code></td><td>不属于任何有意义的部位</td></tr>
+<tr><td class="nw"><code>HTTRANSPARENT</code></td><td>"当我透明"——让命中穿透到下层窗口</td></tr>
+<tr><td class="nw"><code>HTNOWHERE</code></td><td>不属于任何有意义的部位</td></tr>
 </tbody>
 </table>
 <p>当命中落在<strong>非客户区</strong>(标题栏、边框等),系统投的是另一族消息:<code>WM_NCMOUSEMOVE</code>、<code>WM_NCLBUTTONDOWN</code>、<code>WM_NCLBUTTONUP</code>……和客户区那族一一对应,只是多了个 <code>NC</code>。它们的 <code>lParam</code> 装的是<strong>屏幕坐标</strong>(不是客户区坐标),<code>wParam</code> 装的正是那个命中码。<strong>你几乎永远不该自己处理它们</strong>——把它们交给 <code>DefWindowProc</code>,系统才会帮你完成"拖标题栏移动窗口""拖边框缩放""点关闭按钮关窗"这些天经地义的事。截胡了,窗口就残废了。</p>
@@ -2435,9 +2439,9 @@ SetTimer(hwnd, 1, 1000, OnTimer);</code></pre>
 <table>
 <thead><tr><th>调用方式</th><th>nIDEvent 的含义</th><th>返回值</th><th>怎么撤销</th></tr></thead>
 <tbody>
-<tr><td>hWnd 为真实窗口</td><td>你指定，作用域限于该窗口</td><td>成功即为该编号（非零）</td><td>KillTimer(hwnd, 编号)</td></tr>
-<tr><td>hWnd 为 NULL</td><td>被忽略</td><td>系统新分配的编号</td><td>KillTimer(NULL, 返回值)</td></tr>
-<tr><td>同编号再次 Set</td><td>命中已存在的定时器</td><td>沿用原编号</td><td>不新增，只是重置计时</td></tr>
+<tr><td class="nw">hWnd 为真实窗口</td><td>你指定，作用域限于该窗口</td><td>成功即为该编号（非零）</td><td>KillTimer(hwnd, 编号)</td></tr>
+<tr><td class="nw">hWnd 为 NULL</td><td class="nw">被忽略</td><td class="nw">系统新分配的编号</td><td>KillTimer(NULL, 返回值)</td></tr>
+<tr><td class="nw">同编号再次 Set</td><td>命中已存在的定时器</td><td class="nw">沿用原编号</td><td>不新增，只是重置计时</td></tr>
 </tbody>
 </table>
 
@@ -2490,12 +2494,12 @@ SetThreadpoolTimer(timer, &amp;due, 1000, 0);</code></pre>
 <table>
 <thead><tr><th>机制</th><th>精度</th><th>回调运行线程</th><th>现代评价</th></tr></thead>
 <tbody>
-<tr><td>SetTimer / WM_TIMER</td><td>低（约 15ms、低优先级）</td><td>UI 线程消息循环</td><td> UI 层轻量周期任务仍适用</td></tr>
-<tr><td>多媒体定时器 timeSetEvent</td><td>高</td><td>独立系统线程</td><td> 老旧，官方建议改用其他</td></tr>
-<tr><td>等待定时器 CreateWaitableTimerEx</td><td>高（可高分辨率）</td><td>你自己等待的线程</td><td> 精确等待推荐</td></tr>
-<tr><td>线程池定时器 CreateThreadpoolTimer</td><td>中高</td><td>线程池工作线程</td><td> 后台周期任务首选</td></tr>
-<tr><td>可合并定时器 SetCoalescableTimer</td><td>低（换省电）</td><td>UI 线程消息循环</td><td> 续航敏感场景</td></tr>
-<tr><td>合成器动画 DirectComposition</td><td>与屏幕刷新对齐</td><td>系统合成线程</td><td> 平滑动画正解</td></tr>
+<tr><td>SetTimer / WM_TIMER</td><td>低（约 15ms、低优先级）</td><td class="nw">UI 线程消息循环</td><td> UI 层轻量周期任务仍适用</td></tr>
+<tr><td>多媒体定时器 timeSetEvent</td><td class="nw">高</td><td class="nw">独立系统线程</td><td> 老旧，官方建议改用其他</td></tr>
+<tr><td>等待定时器 CreateWaitableTimerEx</td><td class="nw">高（可高分辨率）</td><td class="nw">你自己等待的线程</td><td class="nw"> 精确等待推荐</td></tr>
+<tr><td>线程池定时器 CreateThreadpoolTimer</td><td class="nw">中高</td><td class="nw">线程池工作线程</td><td class="nw"> 后台周期任务首选</td></tr>
+<tr><td>可合并定时器 SetCoalescableTimer</td><td class="nw">低（换省电）</td><td class="nw">UI 线程消息循环</td><td class="nw"> 续航敏感场景</td></tr>
+<tr><td>合成器动画 DirectComposition</td><td class="nw">与屏幕刷新对齐</td><td class="nw">系统合成线程</td><td class="nw"> 平滑动画正解</td></tr>
 </tbody>
 </table>
 <div class="note ok"><span class="t">🟢 本章要点回顾</span><p><code>SetTimer</code>/<code>KillTimer</code> 装拆闹钟，<code>WM_TIMER</code> 是一条低优先级、不堆积、有空才送的合成消息；它够用于秒级的界面更新，但不精确、会迟到。<strong>永远用真实时钟计时，把定时器当提醒而非计数器。</strong>需要高精度、后台并发或平滑动画时，转向等待定时器、线程池定时器与合成器，并记得跨线程更新界面要用 <code>PostMessage</code> 回到 UI 线程。</p></div>
@@ -2583,15 +2587,15 @@ CloseThreadpoolTimer(t);</code></pre>
 <table>
 <thead><tr><th></th><th><code>SetTimer</code></th><th>等待定时器</th><th>线程池定时器</th></tr></thead>
 <tbody>
-<tr><td><strong>本质</strong></td><td>消息队列里的一条消息</td><td>内核对象（信号源）</td><td>线程池的调度服务</td></tr>
-<tr><td><strong>谁执行代码</strong></td><td><strong>你的 UI 线程</strong></td><td><strong>你自己的线程</strong></td><td><strong>池里的线程</strong></td></tr>
-<tr><td><strong>要写等待循环吗</strong></td><td>不要（消息循环兼任）</td><td><strong>要</strong></td><td>不要</td></tr>
-<tr><td><strong>能直接改界面吗</strong></td><td><strong>能</strong></td><td>不能，需 PostMessage</td><td>不能，需 PostMessage</td></tr>
-<tr><td><strong>N 个定时器的代价</strong></td><td>很小</td><td>可能要 N 个线程<sup>※</sup></td><td><strong>不额外占线程</strong></td></tr>
-<tr><td><strong>能与其他事件一起等吗</strong></td><td>不能</td><td><strong>能</strong>（可塞进 WaitForMultipleObjects）</td><td>不能（它不是可等待对象）</td></tr>
-<tr><td><strong>能唤醒待机的电脑吗</strong></td><td>不能</td><td><strong>能</strong>（fResume 参数）</td><td>不能</td></tr>
-<tr><td><strong>可跨进程共享吗</strong></td><td>不能</td><td><strong>能</strong>（可命名）</td><td>不能</td></tr>
-<tr><td><strong>典型精度</strong></td><td>约 15ms，受队列拥堵影响</td><td>较高</td><td>较高</td></tr>
+<tr><td class="nw"><strong>本质</strong></td><td>消息队列里的一条消息</td><td>内核对象（信号源）</td><td class="nw">线程池的调度服务</td></tr>
+<tr><td class="nw"><strong>谁执行代码</strong></td><td class="nw"><strong>你的 UI 线程</strong></td><td class="nw"><strong>你自己的线程</strong></td><td class="nw"><strong>池里的线程</strong></td></tr>
+<tr><td class="nw"><strong>要写等待循环吗</strong></td><td>不要（消息循环兼任）</td><td class="nw"><strong>要</strong></td><td class="nw">不要</td></tr>
+<tr><td class="nw"><strong>能直接改界面吗</strong></td><td class="nw"><strong>能</strong></td><td>不能，需 PostMessage</td><td>不能，需 PostMessage</td></tr>
+<tr><td class="nw"><strong>N 个定时器的代价</strong></td><td class="nw">很小</td><td class="nw">可能要 N 个线程<sup>※</sup></td><td class="nw"><strong>不额外占线程</strong></td></tr>
+<tr><td><strong>能与其他事件一起等吗</strong></td><td class="nw">不能</td><td><strong>能</strong>（可塞进 WaitForMultipleObjects）</td><td>不能（它不是可等待对象）</td></tr>
+<tr><td><strong>能唤醒待机的电脑吗</strong></td><td class="nw">不能</td><td><strong>能</strong>（fResume 参数）</td><td class="nw">不能</td></tr>
+<tr><td class="nw"><strong>可跨进程共享吗</strong></td><td class="nw">不能</td><td class="nw"><strong>能</strong>（可命名）</td><td class="nw">不能</td></tr>
+<tr><td class="nw"><strong>典型精度</strong></td><td>约 15ms，受队列拥堵影响</td><td class="nw">较高</td><td class="nw">较高</td></tr>
 </tbody>
 </table>
 <p><sup>※</sup> 可以用 <code>WaitForMultipleObjects</code> 让一个线程同时等多个，但上限是 64 个对象。</p>
@@ -2606,12 +2610,12 @@ CloseThreadpoolTimer(t);</code></pre>
 <table>
 <thead><tr><th>方案</th><th>典型精度</th><th>代价与说明</th></tr></thead>
 <tbody>
-<tr><td><code>SetTimer</code> / <code>WM_TIMER</code></td><td>约 15.6ms</td><td>受系统时钟节拍与队列拥堵双重限制，且 <code>WM_TIMER</code> 是低优先级消息</td></tr>
-<tr><td>等待定时器 / 线程池定时器</td><td>约 1~15ms</td><td>不走消息队列，明显好于 <code>SetTimer</code>，仍受调度节拍影响</td></tr>
-<tr><td><strong>高分辨率等待定时器</strong><br><code>CREATE_WAITABLE_TIMER_HIGH_RESOLUTION</code></td><td><strong>亚毫秒</strong></td><td><span class="badge new">现代提示</span> Win10 1803 起可用，<strong>今天高精度定时的首选</strong>：创建时加这个标志即可，无全局副作用</td></tr>
-<tr><td><code>timeBeginPeriod(1)</code> + 普通定时器</td><td>约 1ms</td><td><span class="badge old">已过时</span> 老办法：把<strong>全系统</strong>时钟节拍调快。副作用是增加整机功耗、影响其他进程，现代 Windows 也已限制其效果，不建议再用</td></tr>
-<tr><td>忙等 + <code>QueryPerformanceCounter</code></td><td>微秒级</td><td>精度最高但<strong>吃满一个 CPU 核</strong>，只适合极短的自旋等待，绝不能用于长间隔</td></tr>
-<tr><td>多媒体定时器 <code>timeSetEvent</code></td><td>约 1ms</td><td><span class="badge dead">禁用</span> 官方已标记为弃用，新代码不要再用，用高分辨率等待定时器替代</td></tr>
+<tr><td><code>SetTimer</code> / <code>WM_TIMER</code></td><td class="nw">约 15.6ms</td><td>受系统时钟节拍与队列拥堵双重限制，且 <code>WM_TIMER</code> 是低优先级消息</td></tr>
+<tr><td>等待定时器 / 线程池定时器</td><td class="nw">约 1~15ms</td><td>不走消息队列，明显好于 <code>SetTimer</code>，仍受调度节拍影响</td></tr>
+<tr><td><strong>高分辨率等待定时器</strong><br><code>CREATE_WAITABLE_TIMER_HIGH_RESOLUTION</code></td><td class="nw"><strong>亚毫秒</strong></td><td><span class="badge new">现代提示</span> Win10 1803 起可用，<strong>今天高精度定时的首选</strong>：创建时加这个标志即可，无全局副作用</td></tr>
+<tr><td><code>timeBeginPeriod(1)</code> + 普通定时器</td><td class="nw">约 1ms</td><td><span class="badge old">已过时</span> 老办法：把<strong>全系统</strong>时钟节拍调快。副作用是增加整机功耗、影响其他进程，现代 Windows 也已限制其效果，不建议再用</td></tr>
+<tr><td>忙等 + <code>QueryPerformanceCounter</code></td><td class="nw">微秒级</td><td>精度最高但<strong>吃满一个 CPU 核</strong>，只适合极短的自旋等待，绝不能用于长间隔</td></tr>
+<tr><td>多媒体定时器 <code>timeSetEvent</code></td><td class="nw">约 1ms</td><td><span class="badge dead">禁用</span> 官方已标记为弃用，新代码不要再用，用高分辨率等待定时器替代</td></tr>
 </tbody>
 </table>
 <pre><code><span class="cm">// 现代高精度定时的正确姿势：创建时加 HIGH_RESOLUTION 标志</span>
@@ -2647,12 +2651,12 @@ SetWaitableTimer(hTimer, &amp;due, 1, NULL, NULL, FALSE);</code></pre>
 <p>控件和父窗口之间的往来只有两条路，方向相反：</p>
 
 <table><thead><tr><th>方向</th><th>途径</th><th>说明</th></tr></thead><tbody>
-<tr><td>子 → 父</td><td><code>WM_COMMAND</code></td><td>六类经典控件的通知。<code>LOWORD(wParam)</code>=控件 ID，<code>HIWORD(wParam)</code>=通知码（<code>BN_CLICKED</code>、<code>EN_CHANGE</code>…），<code>lParam</code>=控件句柄。菜单项的 <code>lParam</code> 为 NULL、通知码为 0，加速键为 1——靠这个区分消息来源</td></tr>
-<tr><td>子 → 父</td><td><code>WM_NOTIFY</code></td><td>ComCtl32 通用控件的通知。<code>lParam</code> 指向 <code>NMHDR</code> 结构（或以它开头的扩展结构），能携带远比 16 位通知码丰富的信息</td></tr>
-<tr><td>子 → 父</td><td><code>WM_HSCROLL</code> / <code>WM_VSCROLL</code></td><td>滚动条与滑块的特例：不走 WM_COMMAND，<code>lParam</code> 为控件句柄</td></tr>
-<tr><td>子 → 父</td><td><code>WM_CTLCOLOR*</code>、<code>WM_DRAWITEM</code>、<code>WM_MEASUREITEM</code></td><td>"征询类"消息：控件画自己之前，先问父窗口要颜色画刷，或干脆请父窗口代画（见 9.13）</td></tr>
-<tr><td>父 → 子</td><td>控件专属消息</td><td><code>SendMessageW</code> 发 <code>BM_</code>/<code>EM_</code>/<code>LB_</code>/<code>CB_</code>/<code>LVM_</code>/<code>TVM_</code>… 前缀的消息，命令控件干活或查询状态。这是本章大量表格的主角</td></tr>
-<tr><td>父 → 子</td><td>通用窗口消息</td><td>控件也是普通 HWND：<code>WM_SETTEXT</code>/<code>WM_GETTEXT</code>（即 <code>SetWindowTextW</code>/<code>GetWindowTextW</code>）、<code>WM_SETFONT</code>、<code>EnableWindow</code>、<code>MoveWindow</code>、<code>ShowWindow</code> 全部照常有效</td></tr>
+<tr><td class="nw">子 → 父</td><td class="nw"><code>WM_COMMAND</code></td><td>六类经典控件的通知。<code>LOWORD(wParam)</code>=控件 ID，<code>HIWORD(wParam)</code>=通知码（<code>BN_CLICKED</code>、<code>EN_CHANGE</code>…），<code>lParam</code>=控件句柄。菜单项的 <code>lParam</code> 为 NULL、通知码为 0，加速键为 1——靠这个区分消息来源</td></tr>
+<tr><td class="nw">子 → 父</td><td class="nw"><code>WM_NOTIFY</code></td><td>ComCtl32 通用控件的通知。<code>lParam</code> 指向 <code>NMHDR</code> 结构（或以它开头的扩展结构），能携带远比 16 位通知码丰富的信息</td></tr>
+<tr><td class="nw">子 → 父</td><td><code>WM_HSCROLL</code> / <code>WM_VSCROLL</code></td><td>滚动条与滑块的特例：不走 WM_COMMAND，<code>lParam</code> 为控件句柄</td></tr>
+<tr><td class="nw">子 → 父</td><td><code>WM_CTLCOLOR*</code>、<code>WM_DRAWITEM</code>、<code>WM_MEASUREITEM</code></td><td>"征询类"消息：控件画自己之前，先问父窗口要颜色画刷，或干脆请父窗口代画（见 9.13）</td></tr>
+<tr><td class="nw">父 → 子</td><td class="nw">控件专属消息</td><td><code>SendMessageW</code> 发 <code>BM_</code>/<code>EM_</code>/<code>LB_</code>/<code>CB_</code>/<code>LVM_</code>/<code>TVM_</code>… 前缀的消息，命令控件干活或查询状态。这是本章大量表格的主角</td></tr>
+<tr><td class="nw">父 → 子</td><td class="nw">通用窗口消息</td><td>控件也是普通 HWND：<code>WM_SETTEXT</code>/<code>WM_GETTEXT</code>（即 <code>SetWindowTextW</code>/<code>GetWindowTextW</code>）、<code>WM_SETFONT</code>、<code>EnableWindow</code>、<code>MoveWindow</code>、<code>ShowWindow</code> 全部照常有效</td></tr>
 </tbody></table>
 
 <p>父窗口这边的典型接收代码：</p>
@@ -2666,12 +2670,12 @@ SetWaitableTimer(hTimer, &amp;due, 1, NULL, NULL, FALSE);</code></pre>
 <p>user32 预注册的六个基础控件类如下，接下来六节逐一拆解：</p>
 
 <table><thead><tr><th>窗口类名</th><th>控件</th><th>主要通知途径</th></tr></thead><tbody>
-<tr><td><code>L"BUTTON"</code></td><td>按钮、复选框、单选按钮、分组框</td><td><code>WM_COMMAND</code>（<code>BN_</code>）</td></tr>
-<tr><td><code>L"STATIC"</code></td><td>静态文本、图像、分隔线</td><td><code>WM_COMMAND</code>（<code>STN_</code>，须 <code>SS_NOTIFY</code>）</td></tr>
-<tr><td><code>L"EDIT"</code></td><td>单行/多行文本编辑框</td><td><code>WM_COMMAND</code>（<code>EN_</code>）</td></tr>
-<tr><td><code>L"LISTBOX"</code></td><td>列表框</td><td><code>WM_COMMAND</code>（<code>LBN_</code>，须 <code>LBS_NOTIFY</code>）</td></tr>
-<tr><td><code>L"COMBOBOX"</code></td><td>组合框（编辑框+下拉列表）</td><td><code>WM_COMMAND</code>（<code>CBN_</code>）</td></tr>
-<tr><td><code>L"SCROLLBAR"</code></td><td>独立滚动条、尺寸抓手</td><td><code>WM_HSCROLL</code> / <code>WM_VSCROLL</code></td></tr>
+<tr><td class="nw"><code>L"BUTTON"</code></td><td>按钮、复选框、单选按钮、分组框</td><td><code>WM_COMMAND</code>（<code>BN_</code>）</td></tr>
+<tr><td class="nw"><code>L"STATIC"</code></td><td>静态文本、图像、分隔线</td><td><code>WM_COMMAND</code>（<code>STN_</code>，须 <code>SS_NOTIFY</code>）</td></tr>
+<tr><td class="nw"><code>L"EDIT"</code></td><td>单行/多行文本编辑框</td><td><code>WM_COMMAND</code>（<code>EN_</code>）</td></tr>
+<tr><td class="nw"><code>L"LISTBOX"</code></td><td class="nw">列表框</td><td><code>WM_COMMAND</code>（<code>LBN_</code>，须 <code>LBS_NOTIFY</code>）</td></tr>
+<tr><td class="nw"><code>L"COMBOBOX"</code></td><td>组合框（编辑框+下拉列表）</td><td><code>WM_COMMAND</code>（<code>CBN_</code>）</td></tr>
+<tr><td class="nw"><code>L"SCROLLBAR"</code></td><td>独立滚动条、尺寸抓手</td><td><code>WM_HSCROLL</code> / <code>WM_VSCROLL</code></td></tr>
 </tbody></table>
 
 <p>它们的默认外观如下图：</p>
@@ -2683,37 +2687,37 @@ SetWaitableTimer(hTimer, &amp;due, 1, NULL, NULL, FALSE);</code></pre>
 <p><code>"BUTTON"</code> 类是"一类多形"的典型：普通按钮、复选框、单选按钮、分组框乃至 Vista 引入的分割按钮和命令链接，全靠 <code>BS_</code> 风格切换。注意 <code>BS_PUSHBUTTON</code> 到 <code>BS_OWNERDRAW</code> 这一段是<strong>互斥的枚举值</strong>而非位标志，一个按钮只能选其一，再叠加 <code>BS_LEFTTEXT</code>、<code>BS_NOTIFY</code> 之类的修饰位。</p>
 
 <table><thead><tr><th>风格</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>BS_PUSHBUTTON</code></td><td>普通下压按钮，点击后向父窗口发 <code>BN_CLICKED</code></td></tr>
-<tr><td><code>BS_DEFPUSHBUTTON</code></td><td>默认按钮：加粗边框；在对话框中按 Enter 即触发它</td></tr>
-<tr><td><code>BS_CHECKBOX</code></td><td>复选框（手动版：点击后勾选态不变，得由程序自己发 <code>BM_SETCHECK</code>）</td></tr>
-<tr><td><code>BS_AUTOCHECKBOX</code></td><td>自动复选框：点击自动在选中/未选间切换。<strong>实际开发几乎总用这个</strong></td></tr>
+<tr><td class="nw"><code>BS_PUSHBUTTON</code></td><td>普通下压按钮，点击后向父窗口发 <code>BN_CLICKED</code></td></tr>
+<tr><td class="nw"><code>BS_DEFPUSHBUTTON</code></td><td>默认按钮：加粗边框；在对话框中按 Enter 即触发它</td></tr>
+<tr><td class="nw"><code>BS_CHECKBOX</code></td><td>复选框（手动版：点击后勾选态不变，得由程序自己发 <code>BM_SETCHECK</code>）</td></tr>
+<tr><td class="nw"><code>BS_AUTOCHECKBOX</code></td><td>自动复选框：点击自动在选中/未选间切换。<strong>实际开发几乎总用这个</strong></td></tr>
 <tr><td><code>BS_3STATE</code> / <code>BS_AUTO3STATE</code></td><td>三态复选框，多出一个"不确定"灰态（<code>BST_INDETERMINATE</code>），常用于"部分选中"</td></tr>
-<tr><td><code>BS_RADIOBUTTON</code></td><td>单选按钮（手动版）</td></tr>
+<tr><td class="nw"><code>BS_RADIOBUTTON</code></td><td>单选按钮（手动版）</td></tr>
 <tr><td><code>BS_AUTORADIOBUTTON</code></td><td>自动单选按钮：点击自动选中自己、清除同组其他项</td></tr>
-<tr><td><code>BS_GROUPBOX</code></td><td>分组框：带标题的围线。纯视觉容器，不响应点击，也别指望它管理组——分组靠 <code>WS_GROUP</code></td></tr>
-<tr><td><code>BS_PUSHLIKE</code></td><td>修饰位：把复选/单选按钮画成"按下/弹起"的按钮外观（工具栏那种开关钮）</td></tr>
+<tr><td class="nw"><code>BS_GROUPBOX</code></td><td>分组框：带标题的围线。纯视觉容器，不响应点击，也别指望它管理组——分组靠 <code>WS_GROUP</code></td></tr>
+<tr><td class="nw"><code>BS_PUSHLIKE</code></td><td>修饰位：把复选/单选按钮画成"按下/弹起"的按钮外观（工具栏那种开关钮）</td></tr>
 <tr><td><code>BS_LEFTTEXT</code>（=<code>BS_RIGHTBUTTON</code>）</td><td>文字在左、勾选方块在右</td></tr>
 <tr><td><code>BS_ICON</code> / <code>BS_BITMAP</code></td><td>按钮显示图标/位图，配合 <code>BM_SETIMAGE</code></td></tr>
-<tr><td><code>BS_MULTILINE</code></td><td>按钮文本允许换行</td></tr>
-<tr><td><code>BS_NOTIFY</code></td><td>额外发送 <code>BN_SETFOCUS</code>/<code>BN_KILLFOCUS</code>/<code>BN_DBLCLK</code> 通知</td></tr>
-<tr><td><code>BS_FLAT</code></td><td>平面外观（启用视觉样式后差别不大）</td></tr>
-<tr><td><code>BS_OWNERDRAW</code></td><td>所有者绘制：外观全部由父窗口在 <code>WM_DRAWITEM</code> 里画（见 9.13）</td></tr>
+<tr><td class="nw"><code>BS_MULTILINE</code></td><td class="nw">按钮文本允许换行</td></tr>
+<tr><td class="nw"><code>BS_NOTIFY</code></td><td>额外发送 <code>BN_SETFOCUS</code>/<code>BN_KILLFOCUS</code>/<code>BN_DBLCLK</code> 通知</td></tr>
+<tr><td class="nw"><code>BS_FLAT</code></td><td>平面外观（启用视觉样式后差别不大）</td></tr>
+<tr><td class="nw"><code>BS_OWNERDRAW</code></td><td>所有者绘制：外观全部由父窗口在 <code>WM_DRAWITEM</code> 里画（见 9.13）</td></tr>
 <tr><td><code>BS_SPLITBUTTON</code> / <code>BS_DEFSPLITBUTTON</code></td><td>分割按钮：右侧带下拉箭头（Vista+，箭头点击发 <code>BCN_DROPDOWN</code>）</td></tr>
 <tr><td><code>BS_COMMANDLINK</code> / <code>BS_DEFCOMMANDLINK</code></td><td>命令链接按钮：大字标题+小字说明（Vista+，说明文字用 <code>BCM_SETNOTE</code> 设置）</td></tr>
 </tbody></table>
 
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>BM_CLICK</code></td><td>模拟一次完整点击（内部发按下/抬起，最终触发 <code>BN_CLICKED</code>）</td></tr>
-<tr><td><code>BM_GETCHECK</code></td><td>取勾选态：返回 <code>BST_UNCHECKED</code>(0) / <code>BST_CHECKED</code>(1) / <code>BST_INDETERMINATE</code>(2)</td></tr>
-<tr><td><code>BM_SETCHECK</code></td><td>设勾选态，wParam 取上述 <code>BST_</code> 值</td></tr>
-<tr><td><code>BM_GETSTATE</code></td><td>取综合状态位：勾选态 | <code>BST_PUSHED</code> | <code>BST_FOCUS</code></td></tr>
-<tr><td><code>BM_SETSTATE</code></td><td>设置/取消"按下"的高亮外观（不触发点击）</td></tr>
-<tr><td><code>BM_SETSTYLE</code></td><td>运行时更换 <code>BS_</code> 风格（如普通按钮临时变默认按钮）</td></tr>
+<tr><td class="nw"><code>BM_CLICK</code></td><td>模拟一次完整点击（内部发按下/抬起，最终触发 <code>BN_CLICKED</code>）</td></tr>
+<tr><td class="nw"><code>BM_GETCHECK</code></td><td>取勾选态：返回 <code>BST_UNCHECKED</code>(0) / <code>BST_CHECKED</code>(1) / <code>BST_INDETERMINATE</code>(2)</td></tr>
+<tr><td class="nw"><code>BM_SETCHECK</code></td><td>设勾选态，wParam 取上述 <code>BST_</code> 值</td></tr>
+<tr><td class="nw"><code>BM_GETSTATE</code></td><td>取综合状态位：勾选态 | <code>BST_PUSHED</code> | <code>BST_FOCUS</code></td></tr>
+<tr><td class="nw"><code>BM_SETSTATE</code></td><td>设置/取消"按下"的高亮外观（不触发点击）</td></tr>
+<tr><td class="nw"><code>BM_SETSTYLE</code></td><td>运行时更换 <code>BS_</code> 风格（如普通按钮临时变默认按钮）</td></tr>
 <tr><td><code>BM_GETIMAGE</code> / <code>BM_SETIMAGE</code></td><td>取/设按钮图像，wParam 指明 <code>IMAGE_ICON</code> 或 <code>IMAGE_BITMAP</code></td></tr>
-<tr><td><code>BCM_GETIDEALSIZE</code></td><td>按当前文本测算按钮的理想尺寸（v6，做自适应布局的利器）</td></tr>
+<tr><td class="nw"><code>BCM_GETIDEALSIZE</code></td><td>按当前文本测算按钮的理想尺寸（v6，做自适应布局的利器）</td></tr>
 <tr><td><code>BCM_SETNOTE</code> / <code>BCM_GETNOTE</code></td><td>命令链接按钮的说明文字</td></tr>
-<tr><td><code>BCM_SETSHIELD</code></td><td>在按钮上显示 UAC 盾牌图标（提示该操作将请求提权）</td></tr>
-<tr><td><code>BCM_SETSPLITINFO</code></td><td>配置分割按钮的箭头部分</td></tr>
+<tr><td class="nw"><code>BCM_SETSHIELD</code></td><td>在按钮上显示 UAC 盾牌图标（提示该操作将请求提权）</td></tr>
+<tr><td class="nw"><code>BCM_SETSPLITINFO</code></td><td>配置分割按钮的箭头部分</td></tr>
 </tbody></table>
 
 <p>通知码方面：<code>BN_CLICKED</code> 人人都发；<code>BN_DBLCLK</code>、<code>BN_SETFOCUS</code>、<code>BN_KILLFOCUS</code> 要 <code>BS_NOTIFY</code> 才发；分割按钮的下拉箭头走 <code>WM_NOTIFY</code> 发 <code>BCN_DROPDOWN</code>。</p>
@@ -2746,21 +2750,21 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 
 <table><thead><tr><th>风格</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>SS_LEFT</code> / <code>SS_CENTER</code> / <code>SS_RIGHT</code></td><td>左/居中/右对齐文本，超宽自动换行</td></tr>
-<tr><td><code>SS_SIMPLE</code></td><td>单行简单文本，不换行不裁剪，绘制最快</td></tr>
+<tr><td class="nw"><code>SS_SIMPLE</code></td><td>单行简单文本，不换行不裁剪，绘制最快</td></tr>
 <tr><td><code>SS_LEFTNOWORDWRAP</code></td><td>左对齐但不换行，超出部分裁掉</td></tr>
-<tr><td><code>SS_NOPREFIX</code></td><td>不把 <code>&amp;</code> 解释成助记符下划线。<strong>显示文件路径时必加</strong>，否则"A&amp;B.txt"会显示成"A<u>B</u>.txt"</td></tr>
+<tr><td class="nw"><code>SS_NOPREFIX</code></td><td>不把 <code>&amp;</code> 解释成助记符下划线。<strong>显示文件路径时必加</strong>，否则"A&amp;B.txt"会显示成"A<u>B</u>.txt"</td></tr>
 <tr><td><code>SS_ICON</code> / <code>SS_BITMAP</code></td><td>显示图标/位图（配 <code>STM_SETICON</code>/<code>STM_SETIMAGE</code>，控件自动调整为图像大小）</td></tr>
-<tr><td><code>SS_ENHMETAFILE</code></td><td>显示增强图元文件</td></tr>
+<tr><td class="nw"><code>SS_ENHMETAFILE</code></td><td class="nw">显示增强图元文件</td></tr>
 <tr><td><code>SS_BLACKRECT</code> / <code>SS_GRAYRECT</code> / <code>SS_WHITERECT</code></td><td>实心矩形；颜色实际取系统配色（边框色/背景色/窗口色），不是字面的黑灰白</td></tr>
-<tr><td><code>SS_BLACKFRAME</code> / <code>SS_GRAYFRAME</code> / <code>SS_WHITEFRAME</code></td><td>同上的空心边框版</td></tr>
+<tr><td><code>SS_BLACKFRAME</code> / <code>SS_GRAYFRAME</code> / <code>SS_WHITEFRAME</code></td><td class="nw">同上的空心边框版</td></tr>
 <tr><td><code>SS_ETCHEDHORZ</code> / <code>SS_ETCHEDVERT</code> / <code>SS_ETCHEDFRAME</code></td><td>蚀刻横线/竖线/框——对话框里那种分隔细线就是它</td></tr>
-<tr><td><code>SS_SUNKEN</code></td><td>下凹边框修饰位</td></tr>
-<tr><td><code>SS_CENTERIMAGE</code></td><td>图像居中不拉伸；对单行文本则做垂直居中</td></tr>
+<tr><td class="nw"><code>SS_SUNKEN</code></td><td class="nw">下凹边框修饰位</td></tr>
+<tr><td class="nw"><code>SS_CENTERIMAGE</code></td><td>图像居中不拉伸；对单行文本则做垂直居中</td></tr>
 <tr><td><code>SS_REALSIZEIMAGE</code> / <code>SS_REALSIZECONTROL</code></td><td>图像保持原尺寸 / 拉伸填满控件</td></tr>
 <tr><td><code>SS_ENDELLIPSIS</code> / <code>SS_PATHELLIPSIS</code> / <code>SS_WORDELLIPSIS</code></td><td>文本过长时的省略号策略：截尾 / 保留文件名截路径中段 / 按词截</td></tr>
-<tr><td><code>SS_NOTIFY</code></td><td>让静态控件上报 <code>STN_CLICKED</code>/<code>STN_DBLCLK</code>（做"可点击的标签"）</td></tr>
-<tr><td><code>SS_EDITCONTROL</code></td><td>换行规则模拟多行编辑框（预览编辑框内容时保证折行一致）</td></tr>
-<tr><td><code>SS_OWNERDRAW</code></td><td>所有者绘制</td></tr>
+<tr><td class="nw"><code>SS_NOTIFY</code></td><td>让静态控件上报 <code>STN_CLICKED</code>/<code>STN_DBLCLK</code>（做"可点击的标签"）</td></tr>
+<tr><td class="nw"><code>SS_EDITCONTROL</code></td><td>换行规则模拟多行编辑框（预览编辑框内容时保证折行一致）</td></tr>
+<tr><td class="nw"><code>SS_OWNERDRAW</code></td><td class="nw">所有者绘制</td></tr>
 </tbody></table>
 
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
@@ -2778,35 +2782,35 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 <p><code>"EDIT"</code> 是六类中功能最重的：单行模式是普通输入框，加上 <code>ES_MULTILINE</code> 就是一个五脏俱全的纯文本编辑器——记事本的编辑区在很长的历史时期里就是一个多行 EDIT 控件。文本的读写走通用消息：<code>SetWindowTextW</code>/<code>GetWindowTextW</code>，或按 ID 一步到位的 <code>SetDlgItemTextW</code>/<code>GetDlgItemTextW</code>（还有读整数的 <code>GetDlgItemInt</code>）。</p>
 
 <table><thead><tr><th>风格</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>ES_LEFT</code> / <code>ES_CENTER</code> / <code>ES_RIGHT</code></td><td>文本对齐</td></tr>
-<tr><td><code>ES_MULTILINE</code></td><td>多行编辑器；通常配 <code>WS_VSCROLL</code>、<code>ES_AUTOVSCROLL</code></td></tr>
-<tr><td><code>ES_AUTOHSCROLL</code></td><td>光标到右缘时自动水平滚动。<strong>单行框不加它就打不进超宽文本</strong>；多行框不加则自动折行</td></tr>
-<tr><td><code>ES_AUTOVSCROLL</code></td><td>多行：满页后自动上滚</td></tr>
-<tr><td><code>ES_WANTRETURN</code></td><td>多行：对话框里 Enter 键插入换行而不是触发默认按钮</td></tr>
-<tr><td><code>ES_PASSWORD</code></td><td>密码框，显示 ●（可用 <code>EM_SETPASSWORDCHAR</code> 换字符）</td></tr>
-<tr><td><code>ES_READONLY</code></td><td>只读（运行时用 <code>EM_SETREADONLY</code> 切换）</td></tr>
-<tr><td><code>ES_NUMBER</code></td><td>只许输入 0-9（注意：挡不住粘贴负号小数点，严格校验还得自己来）</td></tr>
+<tr><td><code>ES_LEFT</code> / <code>ES_CENTER</code> / <code>ES_RIGHT</code></td><td class="nw">文本对齐</td></tr>
+<tr><td class="nw"><code>ES_MULTILINE</code></td><td>多行编辑器；通常配 <code>WS_VSCROLL</code>、<code>ES_AUTOVSCROLL</code></td></tr>
+<tr><td class="nw"><code>ES_AUTOHSCROLL</code></td><td>光标到右缘时自动水平滚动。<strong>单行框不加它就打不进超宽文本</strong>；多行框不加则自动折行</td></tr>
+<tr><td class="nw"><code>ES_AUTOVSCROLL</code></td><td>多行：满页后自动上滚</td></tr>
+<tr><td class="nw"><code>ES_WANTRETURN</code></td><td>多行：对话框里 Enter 键插入换行而不是触发默认按钮</td></tr>
+<tr><td class="nw"><code>ES_PASSWORD</code></td><td>密码框，显示 ●（可用 <code>EM_SETPASSWORDCHAR</code> 换字符）</td></tr>
+<tr><td class="nw"><code>ES_READONLY</code></td><td>只读（运行时用 <code>EM_SETREADONLY</code> 切换）</td></tr>
+<tr><td class="nw"><code>ES_NUMBER</code></td><td>只许输入 0-9（注意：挡不住粘贴负号小数点，严格校验还得自己来）</td></tr>
 <tr><td><code>ES_UPPERCASE</code> / <code>ES_LOWERCASE</code></td><td>输入自动转大写/小写</td></tr>
-<tr><td><code>ES_NOHIDESEL</code></td><td>失去焦点时选区仍然高亮（默认会隐藏）</td></tr>
-<tr><td><code>ES_OEMCONVERT</code></td><td>ANSI↔OEM 字符集转换，DOS 文件名时代的遗物，别再用</td></tr>
+<tr><td class="nw"><code>ES_NOHIDESEL</code></td><td>失去焦点时选区仍然高亮（默认会隐藏）</td></tr>
+<tr><td class="nw"><code>ES_OEMCONVERT</code></td><td>ANSI↔OEM 字符集转换，DOS 文件名时代的遗物，别再用</td></tr>
 </tbody></table>
 
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>EM_GETSEL</code> / <code>EM_SETSEL</code></td><td>取/设选区。<code>EM_SETSEL(0, -1)</code> 全选；<code>(-1, 0)</code> 取消选择并把光标放到末尾</td></tr>
-<tr><td><code>EM_REPLACESEL</code></td><td>用 lParam 文本替换当前选区（无选区=在光标处插入）。wParam=TRUE 时可被撤销。<strong>向多行框追加日志的标准姿势</strong>：先 <code>EM_SETSEL(-1,-1)</code> 再 REPLACESEL</td></tr>
+<tr><td class="nw"><code>EM_REPLACESEL</code></td><td>用 lParam 文本替换当前选区（无选区=在光标处插入）。wParam=TRUE 时可被撤销。<strong>向多行框追加日志的标准姿势</strong>：先 <code>EM_SETSEL(-1,-1)</code> 再 REPLACESEL</td></tr>
 <tr><td><code>EM_SETLIMITTEXT</code>（=<code>EM_LIMITTEXT</code>）/ <code>EM_GETLIMITTEXT</code></td><td>限制/查询可输入的最大字符数</td></tr>
-<tr><td><code>EM_GETLINECOUNT</code></td><td>多行：总行数（至少返回 1）</td></tr>
-<tr><td><code>EM_GETLINE</code></td><td>复制指定行文本。<strong>陷阱</strong>：调用前须把缓冲区首个 WORD 预填为缓冲区容量</td></tr>
+<tr><td class="nw"><code>EM_GETLINECOUNT</code></td><td>多行：总行数（至少返回 1）</td></tr>
+<tr><td class="nw"><code>EM_GETLINE</code></td><td>复制指定行文本。<strong>陷阱</strong>：调用前须把缓冲区首个 WORD 预填为缓冲区容量</td></tr>
 <tr><td><code>EM_LINEINDEX</code> / <code>EM_LINELENGTH</code> / <code>EM_LINEFROMCHAR</code></td><td>行号 ↔ 字符偏移的三件换算工具</td></tr>
 <tr><td><code>EM_LINESCROLL</code> / <code>EM_SCROLLCARET</code></td><td>滚动若干行/列；把插入点滚入视野</td></tr>
 <tr><td><code>EM_GETMODIFY</code> / <code>EM_SETMODIFY</code></td><td>取/清"内容已修改"脏标志——做"退出前是否保存"提示全靠它</td></tr>
 <tr><td><code>EM_SETPASSWORDCHAR</code></td><td>更改密码遮盖字符（0 = 取消遮盖）</td></tr>
-<tr><td><code>EM_SETREADONLY</code></td><td>运行时切换只读态</td></tr>
+<tr><td class="nw"><code>EM_SETREADONLY</code></td><td class="nw">运行时切换只读态</td></tr>
 <tr><td><code>EM_UNDO</code> / <code>EM_CANUNDO</code> / <code>EM_EMPTYUNDOBUFFER</code></td><td>撤销上一步 / 查询可否撤销 / 清空撤销缓冲（经典 EDIT 只有一级撤销）</td></tr>
-<tr><td><code>EM_SETTABSTOPS</code></td><td>设置制表位（单位为对话框单位的 1/4）</td></tr>
-<tr><td><code>EM_SETMARGINS</code></td><td>设置左右内边距（<code>EC_LEFTMARGIN</code>/<code>EC_RIGHTMARGIN</code>）</td></tr>
+<tr><td class="nw"><code>EM_SETTABSTOPS</code></td><td>设置制表位（单位为对话框单位的 1/4）</td></tr>
+<tr><td class="nw"><code>EM_SETMARGINS</code></td><td>设置左右内边距（<code>EC_LEFTMARGIN</code>/<code>EC_RIGHTMARGIN</code>）</td></tr>
 <tr><td><code>EM_CHARFROMPOS</code> / <code>EM_POSFROMCHAR</code></td><td>客户区坐标 ↔ 字符位置互查</td></tr>
-<tr><td><code>EM_SETCUEBANNER</code></td><td>空白时显示灰色提示文字（占位符）。wParam=TRUE 则获得焦点时也显示。需 ComCtl32 v6</td></tr>
+<tr><td class="nw"><code>EM_SETCUEBANNER</code></td><td>空白时显示灰色提示文字（占位符）。wParam=TRUE 则获得焦点时也显示。需 ComCtl32 v6</td></tr>
 </tbody></table>
 
 <p>通知码（经 <code>WM_COMMAND</code>）：<code>EN_CHANGE</code>（文本<strong>已</strong>改变，此刻读到的是新内容——实时校验就挂这里）、<code>EN_UPDATE</code>（即将重绘，早于 CHANGE）、<code>EN_SETFOCUS</code>/<code>EN_KILLFOCUS</code>、<code>EN_MAXTEXT</code>（撞到长度上限）、<code>EN_HSCROLL</code>/<code>EN_VSCROLL</code>、<code>EN_ERRSPACE</code>（内存不足）。</p>
@@ -2820,40 +2824,40 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 <p>列表框维护一列条目（通常是字符串），负责显示、滚动、选择。它是理解"父窗口发消息控制控件"的最佳教材：增删查改、取选中项，全是一条条 <code>LB_</code> 消息。想收到 <code>LBN_</code> 通知别忘了 <code>LBS_NOTIFY</code>（或直接用打包好的 <code>LBS_STANDARD</code>）。</p>
 
 <table><thead><tr><th>风格</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>LBS_NOTIFY</code></td><td>向父窗口发 <code>LBN_</code> 通知。<strong>不加它连双击都收不到</strong></td></tr>
-<tr><td><code>LBS_STANDARD</code></td><td>= <code>LBS_NOTIFY | LBS_SORT | WS_VSCROLL | WS_BORDER</code>，日常够用的组合</td></tr>
-<tr><td><code>LBS_SORT</code></td><td>新增条目自动按字母序插入</td></tr>
-<tr><td><code>LBS_MULTIPLESEL</code></td><td>简单多选：每次点击切换该项选中态</td></tr>
-<tr><td><code>LBS_EXTENDEDSEL</code></td><td>扩展多选：Shift 连选、Ctrl 点选，符合现代习惯</td></tr>
-<tr><td><code>LBS_HASSTRINGS</code></td><td>控件内部保存字符串副本（非所有者绘制时默认如此）</td></tr>
+<tr><td class="nw"><code>LBS_NOTIFY</code></td><td>向父窗口发 <code>LBN_</code> 通知。<strong>不加它连双击都收不到</strong></td></tr>
+<tr><td class="nw"><code>LBS_STANDARD</code></td><td>= <code>LBS_NOTIFY | LBS_SORT | WS_VSCROLL | WS_BORDER</code>，日常够用的组合</td></tr>
+<tr><td class="nw"><code>LBS_SORT</code></td><td>新增条目自动按字母序插入</td></tr>
+<tr><td class="nw"><code>LBS_MULTIPLESEL</code></td><td>简单多选：每次点击切换该项选中态</td></tr>
+<tr><td class="nw"><code>LBS_EXTENDEDSEL</code></td><td>扩展多选：Shift 连选、Ctrl 点选，符合现代习惯</td></tr>
+<tr><td class="nw"><code>LBS_HASSTRINGS</code></td><td>控件内部保存字符串副本（非所有者绘制时默认如此）</td></tr>
 <tr><td><code>LBS_OWNERDRAWFIXED</code> / <code>LBS_OWNERDRAWVARIABLE</code></td><td>所有者绘制：条目等高/不等高（后者配 <code>WM_MEASUREITEM</code>）</td></tr>
-<tr><td><code>LBS_MULTICOLUMN</code></td><td>多列横向排布，水平滚动（配 <code>LB_SETCOLUMNWIDTH</code>）</td></tr>
-<tr><td><code>LBS_USETABSTOPS</code></td><td>展开条目文本中的 Tab（配 <code>LB_SETTABSTOPS</code> 可做穷人版多列表格）</td></tr>
+<tr><td class="nw"><code>LBS_MULTICOLUMN</code></td><td>多列横向排布，水平滚动（配 <code>LB_SETCOLUMNWIDTH</code>）</td></tr>
+<tr><td class="nw"><code>LBS_USETABSTOPS</code></td><td>展开条目文本中的 Tab（配 <code>LB_SETTABSTOPS</code> 可做穷人版多列表格）</td></tr>
 <tr><td><code>LBS_NOINTEGRALHEIGHT</code></td><td>控件高度精确等于你给的值，不向条目整数倍取整。<strong>自己布局时几乎必加</strong></td></tr>
 <tr><td><code>LBS_WANTKEYBOARDINPUT</code></td><td>按键时父窗口收 <code>WM_VKEYTOITEM</code>/<code>WM_CHARTOITEM</code>，可自定义键盘定位</td></tr>
 <tr><td><code>LBS_DISABLENOSCROLL</code></td><td>不需要滚动时显示禁用滚动条，而不是隐藏</td></tr>
-<tr><td><code>LBS_NOSEL</code></td><td>只能看不能选</td></tr>
+<tr><td class="nw"><code>LBS_NOSEL</code></td><td class="nw">只能看不能选</td></tr>
 </tbody></table>
 
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>LB_ADDSTRING</code></td><td>追加条目（有 <code>LBS_SORT</code> 则按序插入），返回新条目索引</td></tr>
-<tr><td><code>LB_INSERTSTRING</code></td><td>插入到 wParam 指定索引处（-1=追加），不理会排序</td></tr>
-<tr><td><code>LB_DELETESTRING</code></td><td>删除指定项，返回剩余条目数</td></tr>
-<tr><td><code>LB_RESETCONTENT</code></td><td>清空全部条目</td></tr>
-<tr><td><code>LB_GETCOUNT</code></td><td>条目总数</td></tr>
+<tr><td class="nw"><code>LB_ADDSTRING</code></td><td>追加条目（有 <code>LBS_SORT</code> 则按序插入），返回新条目索引</td></tr>
+<tr><td class="nw"><code>LB_INSERTSTRING</code></td><td>插入到 wParam 指定索引处（-1=追加），不理会排序</td></tr>
+<tr><td class="nw"><code>LB_DELETESTRING</code></td><td>删除指定项，返回剩余条目数</td></tr>
+<tr><td class="nw"><code>LB_RESETCONTENT</code></td><td class="nw">清空全部条目</td></tr>
+<tr><td class="nw"><code>LB_GETCOUNT</code></td><td class="nw">条目总数</td></tr>
 <tr><td><code>LB_GETCURSEL</code> / <code>LB_SETCURSEL</code></td><td>单选：取/设当前选中项索引；无选中返回 <code>LB_ERR</code>(-1)</td></tr>
 <tr><td><code>LB_GETTEXT</code> / <code>LB_GETTEXTLEN</code></td><td>取条目文本/长度。<strong>先问长度再备缓冲区</strong>是标准流程</td></tr>
 <tr><td><code>LB_FINDSTRING</code> / <code>LB_FINDSTRINGEXACT</code></td><td>前缀查找 / 全串查找（都不分大小写），wParam 为起始索引-1</td></tr>
-<tr><td><code>LB_SELECTSTRING</code></td><td>查找并顺手选中（单选框）</td></tr>
+<tr><td class="nw"><code>LB_SELECTSTRING</code></td><td>查找并顺手选中（单选框）</td></tr>
 <tr><td><code>LB_GETSEL</code> / <code>LB_SETSEL</code></td><td>多选：查询某项是否选中 / 设置某项（lParam=-1 时对全部生效）</td></tr>
 <tr><td><code>LB_GETSELCOUNT</code> / <code>LB_GETSELITEMS</code></td><td>多选：选中项数量 / 把选中索引批量拷入数组</td></tr>
 <tr><td><code>LB_GETITEMDATA</code> / <code>LB_SETITEMDATA</code></td><td>给每个条目挂一个指针大小的私有数据——把界面文本和后台对象关联起来的钩子</td></tr>
 <tr><td><code>LB_GETTOPINDEX</code> / <code>LB_SETTOPINDEX</code></td><td>取/设第一个可见条目（即滚动位置）</td></tr>
 <tr><td><code>LB_SETHORIZONTALEXTENT</code></td><td>设水平可滚动宽度（像素）；配 <code>WS_HSCROLL</code> 让超宽条目可以横向看全</td></tr>
-<tr><td><code>LB_SETTABSTOPS</code></td><td>设制表位（配 <code>LBS_USETABSTOPS</code>）</td></tr>
-<tr><td><code>LB_ITEMFROMPOINT</code></td><td>命中测试：坐标→条目索引</td></tr>
+<tr><td class="nw"><code>LB_SETTABSTOPS</code></td><td>设制表位（配 <code>LBS_USETABSTOPS</code>）</td></tr>
+<tr><td class="nw"><code>LB_ITEMFROMPOINT</code></td><td>命中测试：坐标→条目索引</td></tr>
 <tr><td><code>LB_GETITEMHEIGHT</code> / <code>LB_SETITEMHEIGHT</code></td><td>取/设条目高度（所有者绘制常用）</td></tr>
-<tr><td><code>LB_DIR</code></td><td>按通配符把文件名灌进列表框。<code>DlgDirList</code> 时代的遗物，现代代码请自己枚举目录</td></tr>
+<tr><td class="nw"><code>LB_DIR</code></td><td>按通配符把文件名灌进列表框。<code>DlgDirList</code> 时代的遗物，现代代码请自己枚举目录</td></tr>
 </tbody></table>
 
 <p>通知码：<code>LBN_SELCHANGE</code>（选择变化——注意键盘改选也算）、<code>LBN_DBLCLK</code>（双击，通常当"确认打开"）、<code>LBN_SELCANCEL</code>、<code>LBN_SETFOCUS</code>/<code>LBN_KILLFOCUS</code>、<code>LBN_ERRSPACE</code>。</p>
@@ -2877,15 +2881,15 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 <p>组合框 = 编辑框 + 列表框的组合体，因此它的消息集几乎是 <code>EM_</code> 与 <code>LB_</code> 两家的并集换了个 <code>CB_</code> 前缀。三种形态由风格决定，其中"只许选不许打"的 <code>CBS_DROPDOWNLIST</code> 在实际界面中占绝对多数。</p>
 
 <table><thead><tr><th>风格</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>CBS_SIMPLE</code></td><td>列表永远摊开显示在编辑框下方</td></tr>
-<tr><td><code>CBS_DROPDOWN</code></td><td>可自由输入 + 可下拉选择</td></tr>
-<tr><td><code>CBS_DROPDOWNLIST</code></td><td>只能从列表中选，编辑区变为只显示。<strong>最常用</strong></td></tr>
-<tr><td><code>CBS_AUTOHSCROLL</code></td><td>编辑部分自动水平滚动（同 <code>ES_AUTOHSCROLL</code>）</td></tr>
-<tr><td><code>CBS_SORT</code></td><td>条目自动排序</td></tr>
-<tr><td><code>CBS_HASSTRINGS</code></td><td>保存字符串副本（同列表框）</td></tr>
+<tr><td class="nw"><code>CBS_SIMPLE</code></td><td>列表永远摊开显示在编辑框下方</td></tr>
+<tr><td class="nw"><code>CBS_DROPDOWN</code></td><td>可自由输入 + 可下拉选择</td></tr>
+<tr><td class="nw"><code>CBS_DROPDOWNLIST</code></td><td>只能从列表中选，编辑区变为只显示。<strong>最常用</strong></td></tr>
+<tr><td class="nw"><code>CBS_AUTOHSCROLL</code></td><td>编辑部分自动水平滚动（同 <code>ES_AUTOHSCROLL</code>）</td></tr>
+<tr><td class="nw"><code>CBS_SORT</code></td><td class="nw">条目自动排序</td></tr>
+<tr><td class="nw"><code>CBS_HASSTRINGS</code></td><td>保存字符串副本（同列表框）</td></tr>
 <tr><td><code>CBS_OWNERDRAWFIXED</code> / <code>CBS_OWNERDRAWVARIABLE</code></td><td>所有者绘制条目——经典的"字体选择框里每项用自己的字体画"就靠它</td></tr>
-<tr><td><code>CBS_NOINTEGRALHEIGHT</code></td><td>严格使用给定高度</td></tr>
-<tr><td><code>CBS_UPPERCASE</code> / <code>CBS_LOWERCASE</code></td><td>输入自动转大小写</td></tr>
+<tr><td><code>CBS_NOINTEGRALHEIGHT</code></td><td class="nw">严格使用给定高度</td></tr>
+<tr><td><code>CBS_UPPERCASE</code> / <code>CBS_LOWERCASE</code></td><td class="nw">输入自动转大小写</td></tr>
 <tr><td><code>CBS_DISABLENOSCROLL</code></td><td>列表不需滚动时显示禁用滚动条</td></tr>
 </tbody></table>
 
@@ -2893,18 +2897,18 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>CB_ADDSTRING</code> / <code>CB_INSERTSTRING</code></td><td>追加（按排序插入）/ 定点插入条目</td></tr>
-<tr><td><code>CB_DELETESTRING</code> / <code>CB_RESETCONTENT</code></td><td>删除一项 / 清空</td></tr>
-<tr><td><code>CB_GETCOUNT</code></td><td>条目数</td></tr>
+<tr><td><code>CB_DELETESTRING</code> / <code>CB_RESETCONTENT</code></td><td class="nw">删除一项 / 清空</td></tr>
+<tr><td class="nw"><code>CB_GETCOUNT</code></td><td class="nw">条目数</td></tr>
 <tr><td><code>CB_GETCURSEL</code> / <code>CB_SETCURSEL</code></td><td>取/设当前选中索引（无选中为 <code>CB_ERR</code>；SETCURSEL 传 -1 清空选择）</td></tr>
 <tr><td><code>CB_GETLBTEXT</code> / <code>CB_GETLBTEXTLEN</code></td><td>取列表条目文本/长度（编辑区文字用 <code>GetWindowTextW</code> 取）</td></tr>
 <tr><td><code>CB_FINDSTRING</code> / <code>CB_FINDSTRINGEXACT</code> / <code>CB_SELECTSTRING</code></td><td>前缀查找 / 精确查找 / 查找并选中</td></tr>
 <tr><td><code>CB_SHOWDROPDOWN</code> / <code>CB_GETDROPPEDSTATE</code></td><td>代码展开/收起下拉列表；查询是否展开</td></tr>
 <tr><td><code>CB_SETDROPPEDWIDTH</code></td><td>下拉列表最小宽度——让长条目不被窄框截断的常用招</td></tr>
 <tr><td><code>CB_GETEDITSEL</code> / <code>CB_SETEDITSEL</code></td><td>编辑区选区（对应 <code>EM_GETSEL</code>/<code>EM_SETSEL</code>）</td></tr>
-<tr><td><code>CB_LIMITTEXT</code></td><td>限制编辑区输入长度</td></tr>
+<tr><td class="nw"><code>CB_LIMITTEXT</code></td><td>限制编辑区输入长度</td></tr>
 <tr><td><code>CB_GETITEMDATA</code> / <code>CB_SETITEMDATA</code></td><td>每条目挂私有数据（同 <code>LB_SETITEMDATA</code>）</td></tr>
-<tr><td><code>CB_SETMINVISIBLE</code></td><td>下拉列表至少显示多少行才出滚动条（v6）</td></tr>
-<tr><td><code>CB_SETCUEBANNER</code></td><td>空白占位提示文字（v6）</td></tr>
+<tr><td class="nw"><code>CB_SETMINVISIBLE</code></td><td>下拉列表至少显示多少行才出滚动条（v6）</td></tr>
+<tr><td class="nw"><code>CB_SETCUEBANNER</code></td><td>空白占位提示文字（v6）</td></tr>
 </tbody></table>
 
 <p>通知码：<code>CBN_SELCHANGE</code>（选择已变；注意此时编辑区文字<strong>尚未</strong>更新，要读新选择用 <code>CB_GETCURSEL</code>）、<code>CBN_DROPDOWN</code>/<code>CBN_CLOSEUP</code>（展开/收起——惰性填充列表的好时机）、<code>CBN_SELENDOK</code>/<code>CBN_SELENDCANCEL</code>（用户确认/放弃选择）、<code>CBN_EDITCHANGE</code>/<code>CBN_EDITUPDATE</code>（编辑区文字变化，对应 <code>EN_CHANGE</code>/<code>EN_UPDATE</code>）、<code>CBN_DBLCLK</code>（仅 <code>CBS_SIMPLE</code>）、<code>CBN_SETFOCUS</code>/<code>CBN_KILLFOCUS</code>。</p>
@@ -2924,18 +2928,18 @@ SendMessageW(hCombo, CB_SETCURSEL, 1, 0);        <span class="cm">// 默认选"�
 <p>先分清两个东西：给窗口加 <code>WS_HSCROLL</code>/<code>WS_VSCROLL</code> 得到的滚动条是<strong>窗口的非客户区部件</strong>，不是窗口；而 <code>"SCROLLBAR"</code> 类创建的是一个<strong>独立的滚动条控件</strong>，可以摆在任何位置当数值选择器用（虽然这个角色如今多半让位给了 9.11 的滑块）。两者共用同一套 <code>SCROLLINFO</code> API，只是第二个参数不同：窗口版传 <code>SB_HORZ</code>/<code>SB_VERT</code>，控件版传 <code>SB_CTL</code>。</p>
 
 <table><thead><tr><th>风格</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>SBS_HORZ</code> / <code>SBS_VERT</code></td><td>横向 / 纵向</td></tr>
+<tr><td><code>SBS_HORZ</code> / <code>SBS_VERT</code></td><td class="nw">横向 / 纵向</td></tr>
 <tr><td><code>SBS_TOPALIGN</code> / <code>SBS_BOTTOMALIGN</code></td><td>横条贴创建矩形上/下缘，并取系统标准高度</td></tr>
 <tr><td><code>SBS_LEFTALIGN</code> / <code>SBS_RIGHTALIGN</code></td><td>竖条贴左/右缘，取系统标准宽度</td></tr>
-<tr><td><code>SBS_SIZEBOX</code></td><td>尺寸盒（两条滚动条交角的方块）</td></tr>
-<tr><td><code>SBS_SIZEGRIP</code></td><td>右下角带斜纹的窗口缩放抓手</td></tr>
+<tr><td class="nw"><code>SBS_SIZEBOX</code></td><td>尺寸盒（两条滚动条交角的方块）</td></tr>
+<tr><td class="nw"><code>SBS_SIZEGRIP</code></td><td>右下角带斜纹的窗口缩放抓手</td></tr>
 </tbody></table>
 
 <table><thead><tr><th>消息 / 函数</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>SetScrollInfo</code> / <code>GetScrollInfo</code></td><td>用 <code>SCROLLINFO</code> 结构一次设/取范围、页大小、位置（<code>SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS</code>）。<strong>现代标准做法</strong></td></tr>
 <tr><td><code>SBM_SETSCROLLINFO</code> / <code>SBM_GETSCROLLINFO</code></td><td>上面两个函数对控件版滚动条的消息形式</td></tr>
 <tr><td><code>SBM_SETPOS</code> / <code>SBM_GETPOS</code>、<code>SetScrollPos</code>/<code>GetScrollPos</code></td><td>只设/取位置。16 位时代接口，能用但不如 SCROLLINFO 完整</td></tr>
-<tr><td><code>SBM_SETRANGE</code> / <code>SBM_GETRANGE</code>、<code>SetScrollRange</code></td><td>只设/取范围</td></tr>
+<tr><td><code>SBM_SETRANGE</code> / <code>SBM_GETRANGE</code>、<code>SetScrollRange</code></td><td class="nw">只设/取范围</td></tr>
 <tr><td><code>SBM_ENABLE_ARROWS</code>、<code>EnableScrollBar</code></td><td>启用/禁用两端箭头（<code>ESB_DISABLE_LTUP</code> 等）</td></tr>
 </tbody></table>
 
@@ -2944,10 +2948,10 @@ SendMessageW(hCombo, CB_SETCURSEL, 1, 0);        <span class="cm">// 默认选"�
 <table><thead><tr><th>动作码</th><th>含义</th></tr></thead><tbody>
 <tr><td><code>SB_LINELEFT</code> / <code>SB_LINERIGHT</code>（= <code>SB_LINEUP</code> / <code>SB_LINEDOWN</code>）</td><td>点了两端箭头：走一行</td></tr>
 <tr><td><code>SB_PAGELEFT</code> / <code>SB_PAGERIGHT</code>（= <code>SB_PAGEUP</code> / <code>SB_PAGEDOWN</code>）</td><td>点了滑块两侧空槽：走一页</td></tr>
-<tr><td><code>SB_THUMBTRACK</code></td><td>正在拖动滑块（连续发送——想要实时跟随就处理它）</td></tr>
-<tr><td><code>SB_THUMBPOSITION</code></td><td>拖动结束松手</td></tr>
+<tr><td class="nw"><code>SB_THUMBTRACK</code></td><td>正在拖动滑块（连续发送——想要实时跟随就处理它）</td></tr>
+<tr><td class="nw"><code>SB_THUMBPOSITION</code></td><td class="nw">拖动结束松手</td></tr>
 <tr><td><code>SB_TOP</code> / <code>SB_BOTTOM</code></td><td>滚到头（Home/End）</td></tr>
-<tr><td><code>SB_ENDSCROLL</code></td><td>一轮滚动操作结束（通常忽略）</td></tr>
+<tr><td class="nw"><code>SB_ENDSCROLL</code></td><td>一轮滚动操作结束（通常忽略）</td></tr>
 </tbody></table>
 
 <pre><code><span class="cl">SCROLLINFO si = { <span class="kw">sizeof</span>(si) };</span><span class="cl">si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;</span><span class="cl">si.nMin = 0;  si.nMax = 99;  si.nPage = 10;  si.nPos = 0;</span><span class="cl"><span class="cc" style="min-width:62.0ch">SetScrollInfo(hScroll, SB_CTL, &amp;si, TRUE);</span><span class="cm">// SB_CTL = 独立控件</span></span><span class="cl"> </span><span class="cl"><span class="kw">case</span> WM_HSCROLL:</span><span class="cl">    <span class="kw">if</span> ((HWND)lParam == hScroll)</span><span class="cl">    {</span><span class="cl">        si.fMask = SIF_ALL;</span><span class="cl">        GetScrollInfo(hScroll, SB_CTL, &amp;si);</span><span class="cl">        <span class="kw">switch</span> (LOWORD(wParam))</span><span class="cl">        {</span><span class="cl">        <span class="kw">case</span> SB_LINELEFT:   si.nPos -= 1;             <span class="kw">break</span>;</span><span class="cl">        <span class="kw">case</span> SB_LINERIGHT:  si.nPos += 1;             <span class="kw">break</span>;</span><span class="cl">        <span class="kw">case</span> SB_PAGELEFT:   si.nPos -= si.nPage;      <span class="kw">break</span>;</span><span class="cl">        <span class="kw">case</span> SB_PAGERIGHT:  si.nPos += si.nPage;      <span class="kw">break</span>;</span><span class="cl"><span class="cc" style="min-width:62.0ch">        <span class="kw">case</span> SB_THUMBTRACK: si.nPos  = si.nTrackPos;  <span class="kw">break</span>;</span><span class="cm">// 32 位安全</span></span><span class="cl">        }</span><span class="cl">        si.fMask = SIF_POS;</span><span class="cl"><span class="cc" style="min-width:62.0ch">        SetScrollInfo(hScroll, SB_CTL, &amp;si, TRUE);</span><span class="cm">// 会自动夹到合法范围</span></span><span class="cl">    }</span><span class="cl">    <span class="kw">return</span> 0;</span></code></pre>
@@ -2974,13 +2978,13 @@ InitCommonControlsEx(&amp;icc);      <span class="cm">// WinMain 里、建窗口
 <tr><td><code>ICC_STANDARD_CLASSES</code></td><td>六个基础控件的 v6 版本（用了 v6 清单就顺手加上）</td></tr>
 <tr><td><code>ICC_LISTVIEW_CLASSES</code></td><td>ListView、Header（报表列头）</td></tr>
 <tr><td><code>ICC_TREEVIEW_CLASSES</code></td><td>TreeView、Tooltip</td></tr>
-<tr><td><code>ICC_BAR_CLASSES</code></td><td>工具栏、状态栏、滑块、Tooltip</td></tr>
-<tr><td><code>ICC_TAB_CLASSES</code></td><td>Tab、Tooltip</td></tr>
-<tr><td><code>ICC_PROGRESS_CLASS</code></td><td>进度条</td></tr>
-<tr><td><code>ICC_UPDOWN_CLASS</code></td><td>UpDown 微调按钮</td></tr>
-<tr><td><code>ICC_DATE_CLASSES</code></td><td>日期时间选择器、月历</td></tr>
-<tr><td><code>ICC_LINK_CLASS</code></td><td>SysLink 超链接控件</td></tr>
-<tr><td><code>ICC_COOL_CLASSES</code></td><td>Rebar（可拖动工具条容器）</td></tr>
+<tr><td class="nw"><code>ICC_BAR_CLASSES</code></td><td>工具栏、状态栏、滑块、Tooltip</td></tr>
+<tr><td class="nw"><code>ICC_TAB_CLASSES</code></td><td>Tab、Tooltip</td></tr>
+<tr><td><code>ICC_PROGRESS_CLASS</code></td><td class="nw">进度条</td></tr>
+<tr><td class="nw"><code>ICC_UPDOWN_CLASS</code></td><td class="nw">UpDown 微调按钮</td></tr>
+<tr><td class="nw"><code>ICC_DATE_CLASSES</code></td><td>日期时间选择器、月历</td></tr>
+<tr><td class="nw"><code>ICC_LINK_CLASS</code></td><td>SysLink 超链接控件</td></tr>
+<tr><td class="nw"><code>ICC_COOL_CLASSES</code></td><td>Rebar（可拖动工具条容器）</td></tr>
 </tbody></table>
 
 <h3 id="w9-comctl-manifest">第二件：清单文件启用 v6 视觉样式</h3>
@@ -3007,17 +3011,17 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 <p>通用控件的通知统一走 <code>WM_NOTIFY</code>（9.1 已见过 <code>NMHDR</code>）。本章后半覆盖的控件与类名速查如下，外观见图：</p>
 
 <table><thead><tr><th>控件</th><th>窗口类名</th><th>头文件常量</th><th>小节</th></tr></thead><tbody>
-<tr><td>列表视图</td><td><code>"SysListView32"</code></td><td><code>WC_LISTVIEW</code></td><td>9.9</td></tr>
-<tr><td>树视图</td><td><code>"SysTreeView32"</code></td><td><code>WC_TREEVIEW</code></td><td>9.10</td></tr>
-<tr><td>Tab 选项卡</td><td><code>"SysTabControl32"</code></td><td><code>WC_TABCONTROL</code></td><td>9.11</td></tr>
-<tr><td>进度条</td><td><code>"msctls_progress32"</code></td><td><code>PROGRESS_CLASS</code></td><td>9.11</td></tr>
-<tr><td>滑块</td><td><code>"msctls_trackbar32"</code></td><td><code>TRACKBAR_CLASS</code></td><td>9.11</td></tr>
-<tr><td>UpDown 微调</td><td><code>"msctls_updown32"</code></td><td><code>UPDOWN_CLASS</code></td><td>9.11</td></tr>
-<tr><td>日期时间选择器</td><td><code>"SysDateTimePick32"</code></td><td><code>DATETIMEPICK_CLASS</code></td><td>9.12</td></tr>
-<tr><td>月历</td><td><code>"SysMonthCal32"</code></td><td><code>MONTHCAL_CLASS</code></td><td>9.12</td></tr>
-<tr><td>状态栏</td><td><code>"msctls_statusbar32"</code></td><td><code>STATUSCLASSNAME</code></td><td>9.12</td></tr>
-<tr><td>工具栏</td><td><code>"ToolbarWindow32"</code></td><td><code>TOOLBARCLASSNAME</code></td><td>9.12</td></tr>
-<tr><td>Tooltip 提示</td><td><code>"tooltips_class32"</code></td><td><code>TOOLTIPS_CLASS</code></td><td>9.12</td></tr>
+<tr><td class="nw">列表视图</td><td class="nw"><code>"SysListView32"</code></td><td class="nw"><code>WC_LISTVIEW</code></td><td class="nw">9.9</td></tr>
+<tr><td class="nw">树视图</td><td class="nw"><code>"SysTreeView32"</code></td><td class="nw"><code>WC_TREEVIEW</code></td><td class="nw">9.10</td></tr>
+<tr><td class="nw">Tab 选项卡</td><td><code>"SysTabControl32"</code></td><td class="nw"><code>WC_TABCONTROL</code></td><td class="nw">9.11</td></tr>
+<tr><td class="nw">进度条</td><td><code>"msctls_progress32"</code></td><td class="nw"><code>PROGRESS_CLASS</code></td><td class="nw">9.11</td></tr>
+<tr><td class="nw">滑块</td><td><code>"msctls_trackbar32"</code></td><td class="nw"><code>TRACKBAR_CLASS</code></td><td class="nw">9.11</td></tr>
+<tr><td class="nw">UpDown 微调</td><td><code>"msctls_updown32"</code></td><td class="nw"><code>UPDOWN_CLASS</code></td><td class="nw">9.11</td></tr>
+<tr><td class="nw">日期时间选择器</td><td><code>"SysDateTimePick32"</code></td><td><code>DATETIMEPICK_CLASS</code></td><td class="nw">9.12</td></tr>
+<tr><td class="nw">月历</td><td class="nw"><code>"SysMonthCal32"</code></td><td class="nw"><code>MONTHCAL_CLASS</code></td><td class="nw">9.12</td></tr>
+<tr><td class="nw">状态栏</td><td><code>"msctls_statusbar32"</code></td><td class="nw"><code>STATUSCLASSNAME</code></td><td class="nw">9.12</td></tr>
+<tr><td class="nw">工具栏</td><td><code>"ToolbarWindow32"</code></td><td class="nw"><code>TOOLBARCLASSNAME</code></td><td class="nw">9.12</td></tr>
+<tr><td class="nw">Tooltip 提示</td><td><code>"tooltips_class32"</code></td><td class="nw"><code>TOOLTIPS_CLASS</code></td><td class="nw">9.12</td></tr>
 </tbody></table>
 
 <figure><svg viewBox="0 0 720 138" font-family="system-ui,'Segoe UI','Microsoft YaHei',sans-serif" role="img" aria-label="通用控件外观示意（一）">
@@ -3147,11 +3151,11 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 
 <table><thead><tr><th>风格</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>LVS_REPORT</code> / <code>LVS_ICON</code> / <code>LVS_SMALLICON</code> / <code>LVS_LIST</code></td><td>四种视图模式（互斥，可运行时用 <code>SetWindowLongPtr</code> 换）</td></tr>
-<tr><td><code>LVS_SINGLESEL</code></td><td>限制单选（默认允许多选）</td></tr>
+<tr><td class="nw"><code>LVS_SINGLESEL</code></td><td>限制单选（默认允许多选）</td></tr>
 <tr><td><code>LVS_SHOWSELALWAYS</code></td><td>失焦时选中项保持高亮</td></tr>
-<tr><td><code>LVS_EDITLABELS</code></td><td>允许就地重命名（配 <code>LVN_ENDLABELEDIT</code>）</td></tr>
+<tr><td class="nw"><code>LVS_EDITLABELS</code></td><td>允许就地重命名（配 <code>LVN_ENDLABELEDIT</code>）</td></tr>
 <tr><td><code>LVS_SORTASCENDING</code> / <code>LVS_SORTDESCENDING</code></td><td>按标签自动排序插入</td></tr>
-<tr><td><code>LVS_OWNERDATA</code></td><td>虚拟列表：控件不存数据，显示谁就来问你要谁（见下面的提示框）</td></tr>
+<tr><td class="nw"><code>LVS_OWNERDATA</code></td><td>虚拟列表：控件不存数据，显示谁就来问你要谁（见下面的提示框）</td></tr>
 <tr><td><code>LVS_NOCOLUMNHEADER</code> / <code>LVS_NOSORTHEADER</code></td><td>报表不显示列头 / 列头不可点击</td></tr>
 </tbody></table>
 
@@ -3159,44 +3163,44 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 
 <table><thead><tr><th>扩展风格（LVM_SETEXTENDEDLISTVIEWSTYLE）</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>LVS_EX_FULLROWSELECT</code></td><td>报表模式整行选中（不加只有第一列可点，用户会骂）</td></tr>
-<tr><td><code>LVS_EX_GRIDLINES</code></td><td>报表网格线</td></tr>
+<tr><td class="nw"><code>LVS_EX_GRIDLINES</code></td><td class="nw">报表网格线</td></tr>
 <tr><td><code>LVS_EX_CHECKBOXES</code></td><td>每项带复选框（勾选态藏在 state 的 <code>LVIS_STATEIMAGEMASK</code> 里，宏 <code>ListView_GetCheckState</code> 直取）</td></tr>
-<tr><td><code>LVS_EX_HEADERDRAGDROP</code></td><td>列头可拖动换列序</td></tr>
+<tr><td><code>LVS_EX_HEADERDRAGDROP</code></td><td class="nw">列头可拖动换列序</td></tr>
 <tr><td><code>LVS_EX_DOUBLEBUFFER</code></td><td>双缓冲绘制，消除闪烁。<strong>建议总是打开</strong></td></tr>
 <tr><td><code>LVS_EX_INFOTIP</code> / <code>LVS_EX_LABELTIP</code></td><td>悬停提示 / 截断标签的展开提示</td></tr>
-<tr><td><code>LVS_EX_SUBITEMIMAGES</code></td><td>子项也能显示图标</td></tr>
+<tr><td><code>LVS_EX_SUBITEMIMAGES</code></td><td class="nw">子项也能显示图标</td></tr>
 </tbody></table>
 
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>LVM_INSERTCOLUMN</code> / <code>LVM_DELETECOLUMN</code></td><td>插入/删除报表列（<code>LVCOLUMNW</code>：掩码+文本+宽度+对齐）</td></tr>
 <tr><td><code>LVM_SETCOLUMNWIDTH</code></td><td>调列宽；特殊值 <code>LVSCW_AUTOSIZE</code>、<code>LVSCW_AUTOSIZE_USEHEADER</code></td></tr>
 <tr><td><code>LVM_INSERTITEM</code> / <code>LVM_DELETEITEM</code> / <code>LVM_DELETEALLITEMS</code></td><td>插入项（<code>LVITEMW</code>）/ 删一项 / 清空</td></tr>
-<tr><td><code>LVM_SETITEMTEXT</code></td><td>设项或子项文本（填子项最常用的一条）</td></tr>
+<tr><td class="nw"><code>LVM_SETITEMTEXT</code></td><td>设项或子项文本（填子项最常用的一条）</td></tr>
 <tr><td><code>LVM_GETITEM</code> / <code>LVM_SETITEM</code></td><td>按掩码取/设 <code>LVITEMW</code>（文本、图标、lParam 私有数据、状态）</td></tr>
-<tr><td><code>LVM_GETITEMCOUNT</code></td><td>项数</td></tr>
-<tr><td><code>LVM_GETNEXTITEM</code></td><td>按条件找项：<code>LVNI_SELECTED</code> 遍历选中项、<code>LVNI_FOCUSED</code> 找焦点项（从 -1 开始循环调）</td></tr>
+<tr><td class="nw"><code>LVM_GETITEMCOUNT</code></td><td class="nw">项数</td></tr>
+<tr><td class="nw"><code>LVM_GETNEXTITEM</code></td><td>按条件找项：<code>LVNI_SELECTED</code> 遍历选中项、<code>LVNI_FOCUSED</code> 找焦点项（从 -1 开始循环调）</td></tr>
 <tr><td><code>LVM_GETITEMSTATE</code> / <code>LVM_SETITEMSTATE</code></td><td>取/设 <code>LVIS_SELECTED</code>/<code>LVIS_FOCUSED</code> 等状态位（全选 = 对索引 -1 设 SELECTED）</td></tr>
-<tr><td><code>LVM_GETSELECTEDCOUNT</code></td><td>选中项个数</td></tr>
-<tr><td><code>LVM_ENSUREVISIBLE</code></td><td>把某项滚入视野</td></tr>
+<tr><td><code>LVM_GETSELECTEDCOUNT</code></td><td class="nw">选中项个数</td></tr>
+<tr><td><code>LVM_ENSUREVISIBLE</code></td><td class="nw">把某项滚入视野</td></tr>
 <tr><td><code>LVM_HITTEST</code> / <code>LVM_SUBITEMHITTEST</code></td><td>坐标 → 项/子项（右键菜单必备）</td></tr>
-<tr><td><code>LVM_SORTITEMS</code></td><td>用你给的比较回调排序（回调收到的是各项 lParam）</td></tr>
-<tr><td><code>LVM_FINDITEM</code></td><td>按文本或 lParam 查找项</td></tr>
-<tr><td><code>LVM_SETIMAGELIST</code></td><td>挂图像列表：<code>LVSIL_NORMAL</code>（大图标）/<code>LVSIL_SMALL</code>（小图标与报表）</td></tr>
+<tr><td class="nw"><code>LVM_SORTITEMS</code></td><td>用你给的比较回调排序（回调收到的是各项 lParam）</td></tr>
+<tr><td class="nw"><code>LVM_FINDITEM</code></td><td>按文本或 lParam 查找项</td></tr>
+<tr><td class="nw"><code>LVM_SETIMAGELIST</code></td><td>挂图像列表：<code>LVSIL_NORMAL</code>（大图标）/<code>LVSIL_SMALL</code>（小图标与报表）</td></tr>
 <tr><td><code>LVM_SETEXTENDEDLISTVIEWSTYLE</code></td><td>设上面那批 <code>LVS_EX_</code></td></tr>
-<tr><td><code>LVM_SETITEMCOUNT</code></td><td>虚拟列表：告知总项数</td></tr>
-<tr><td><code>LVM_EDITLABEL</code></td><td>程序化进入就地重命名</td></tr>
+<tr><td class="nw"><code>LVM_SETITEMCOUNT</code></td><td>虚拟列表：告知总项数</td></tr>
+<tr><td class="nw"><code>LVM_EDITLABEL</code></td><td>程序化进入就地重命名</td></tr>
 </tbody></table>
 
 <table><thead><tr><th>通知（WM_NOTIFY）</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>LVN_ITEMCHANGED</code></td><td>项状态变化（选中/取消选中都来，检查 <code>NMLISTVIEW.uNewState &amp; LVIS_SELECTED</code>）</td></tr>
-<tr><td><code>LVN_COLUMNCLICK</code></td><td>报表列头被点击——实现点列排序的入口</td></tr>
-<tr><td><code>LVN_ITEMACTIVATE</code></td><td>项被激活（双击或 Enter），比裸的 NM_DBLCLK 更语义化</td></tr>
-<tr><td><code>LVN_GETDISPINFO</code></td><td>虚拟列表：控件向你索要某项的文本/图标</td></tr>
-<tr><td><code>LVN_ODCACHEHINT</code></td><td>虚拟列表：预告即将访问的范围，方便你预取缓存</td></tr>
+<tr><td class="nw"><code>LVN_ITEMCHANGED</code></td><td>项状态变化（选中/取消选中都来，检查 <code>NMLISTVIEW.uNewState &amp; LVIS_SELECTED</code>）</td></tr>
+<tr><td class="nw"><code>LVN_COLUMNCLICK</code></td><td>报表列头被点击——实现点列排序的入口</td></tr>
+<tr><td class="nw"><code>LVN_ITEMACTIVATE</code></td><td>项被激活（双击或 Enter），比裸的 NM_DBLCLK 更语义化</td></tr>
+<tr><td class="nw"><code>LVN_GETDISPINFO</code></td><td>虚拟列表：控件向你索要某项的文本/图标</td></tr>
+<tr><td class="nw"><code>LVN_ODCACHEHINT</code></td><td>虚拟列表：预告即将访问的范围，方便你预取缓存</td></tr>
 <tr><td><code>LVN_BEGINLABELEDIT</code> / <code>LVN_ENDLABELEDIT</code></td><td>就地重命名开始/结束（返回 FALSE 可拒绝改名）</td></tr>
-<tr><td><code>LVN_KEYDOWN</code></td><td>键盘按下（做 Del 删除、F2 重命名）</td></tr>
+<tr><td class="nw"><code>LVN_KEYDOWN</code></td><td>键盘按下（做 Del 删除、F2 重命名）</td></tr>
 <tr><td><code>NM_CLICK</code> / <code>NM_DBLCLK</code> / <code>NM_RCLICK</code></td><td>通用点击族，<code>NMITEMACTIVATE.iItem</code> 告诉你点了哪项</td></tr>
-<tr><td><code>NM_CUSTOMDRAW</code></td><td>自绘微调：改某行颜色、某格字体（见 9.13）</td></tr>
+<tr><td class="nw"><code>NM_CUSTOMDRAW</code></td><td>自绘微调：改某行颜色、某格字体（见 9.13）</td></tr>
 </tbody></table>
 
 <pre><code><span class="cl">HWND hLV = CreateWindowExW(0, WC_LISTVIEW, L"",</span><span class="cl">    WS_CHILD | WS_VISIBLE | WS_TABSTOP | LVS_REPORT | LVS_SINGLESEL,</span><span class="cl">    0, 0, 420, 260, hwnd, (HMENU)(INT_PTR)IDC_LV, hInst, NULL);</span><span class="cl">ListView_SetExtendedListViewStyle(hLV,</span><span class="cl">    LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);</span><span class="cl"> </span><span class="cl">LVCOLUMNW col = {};</span><span class="cl">col.mask = LVCF_TEXT | LVCF_WIDTH;</span><span class="cl">col.pszText = (LPWSTR)L"文件名"; col.cx = 220;</span><span class="cl">ListView_InsertColumn(hLV, 0, &amp;col);</span><span class="cl">col.pszText = (LPWSTR)L"大小";   col.cx = 100;</span><span class="cl">ListView_InsertColumn(hLV, 1, &amp;col);</span><span class="cl"> </span><span class="cl">LVITEMW it = {};</span><span class="cl">it.mask = LVIF_TEXT;</span><span class="cl">it.iItem = 0; it.pszText = (LPWSTR)L"readme.txt";</span><span class="cl"><span class="cc" style="min-width:58.2ch">ListView_InsertItem(hLV, &amp;it);</span><span class="cm">// 第 0 列</span></span><span class="cl"><span class="cc" style="min-width:58.2ch">ListView_SetItemText(hLV, 0, 1, (LPWSTR)L"1,024 字节");</span><span class="cm">// 第 1 列（子项）</span></span></code></pre>
@@ -3208,40 +3212,40 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 <p>资源管理器左侧的文件夹树、注册表编辑器的键树，都是 TreeView。与 ListView 用整数索引不同，树的节点用不透明句柄 <code>HTREEITEM</code> 标识；插入时用三个伪句柄定位：<code>TVI_ROOT</code>（作顶层节点）、<code>TVI_FIRST</code>/<code>TVI_LAST</code>（兄弟中的位置）、<code>TVI_SORT</code>（按序插入）。</p>
 
 <table><thead><tr><th>风格</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>TVS_HASBUTTONS</code></td><td>节点前显示 +/-（新主题下是 ▶/▼）展开按钮</td></tr>
+<tr><td class="nw"><code>TVS_HASBUTTONS</code></td><td>节点前显示 +/-（新主题下是 ▶/▼）展开按钮</td></tr>
 <tr><td><code>TVS_HASLINES</code> / <code>TVS_LINESATROOT</code></td><td>节点间连线 / 根节点也带线和按钮（三个通常一起加）</td></tr>
-<tr><td><code>TVS_EDITLABELS</code></td><td>允许就地重命名</td></tr>
-<tr><td><code>TVS_SHOWSELALWAYS</code></td><td>失焦保持选中高亮</td></tr>
-<tr><td><code>TVS_CHECKBOXES</code></td><td>节点带复选框</td></tr>
+<tr><td class="nw"><code>TVS_EDITLABELS</code></td><td class="nw">允许就地重命名</td></tr>
+<tr><td><code>TVS_SHOWSELALWAYS</code></td><td class="nw">失焦保持选中高亮</td></tr>
+<tr><td class="nw"><code>TVS_CHECKBOXES</code></td><td class="nw">节点带复选框</td></tr>
 <tr><td><code>TVS_FULLROWSELECT</code></td><td>整行选中（与 HASLINES 互斥）</td></tr>
-<tr><td><code>TVS_TRACKSELECT</code></td><td>悬停热点高亮</td></tr>
+<tr><td class="nw"><code>TVS_TRACKSELECT</code></td><td class="nw">悬停热点高亮</td></tr>
 <tr><td><code>TVS_DISABLEDRAGDROP</code></td><td>禁止发 <code>TVN_BEGINDRAG</code></td></tr>
-<tr><td><code>TVS_INFOTIP</code></td><td>发 <code>TVN_GETINFOTIP</code> 索要悬停提示</td></tr>
+<tr><td class="nw"><code>TVS_INFOTIP</code></td><td>发 <code>TVN_GETINFOTIP</code> 索要悬停提示</td></tr>
 </tbody></table>
 
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>TVM_INSERTITEM</code></td><td>插入节点（<code>TVINSERTSTRUCTW</code>：父节点+位置+<code>TVITEMW</code>），返回 <code>HTREEITEM</code></td></tr>
-<tr><td><code>TVM_DELETEITEM</code></td><td>删除节点及其整棵子树；传 <code>TVI_ROOT</code> 清空整棵树</td></tr>
+<tr><td class="nw"><code>TVM_INSERTITEM</code></td><td>插入节点（<code>TVINSERTSTRUCTW</code>：父节点+位置+<code>TVITEMW</code>），返回 <code>HTREEITEM</code></td></tr>
+<tr><td class="nw"><code>TVM_DELETEITEM</code></td><td>删除节点及其整棵子树；传 <code>TVI_ROOT</code> 清空整棵树</td></tr>
 <tr><td><code>TVM_GETITEM</code> / <code>TVM_SETITEM</code></td><td>按掩码取/设节点属性（文本、图标索引、lParam、状态）</td></tr>
-<tr><td><code>TVM_GETNEXTITEM</code></td><td>树的导航中枢：wParam 给方向——<code>TVGN_ROOT</code>/<code>TVGN_CHILD</code>/<code>TVGN_NEXT</code>/<code>TVGN_PREVIOUS</code>/<code>TVGN_PARENT</code>/<code>TVGN_CARET</code>(当前选中)。递归遍历全靠它</td></tr>
-<tr><td><code>TVM_SELECTITEM</code></td><td>选中/滚动到指定节点（<code>TVGN_CARET</code>）</td></tr>
-<tr><td><code>TVM_EXPAND</code></td><td>展开/折叠（<code>TVE_EXPAND</code>/<code>TVE_COLLAPSE</code>/<code>TVE_TOGGLE</code>）</td></tr>
+<tr><td class="nw"><code>TVM_GETNEXTITEM</code></td><td>树的导航中枢：wParam 给方向——<code>TVGN_ROOT</code>/<code>TVGN_CHILD</code>/<code>TVGN_NEXT</code>/<code>TVGN_PREVIOUS</code>/<code>TVGN_PARENT</code>/<code>TVGN_CARET</code>(当前选中)。递归遍历全靠它</td></tr>
+<tr><td class="nw"><code>TVM_SELECTITEM</code></td><td>选中/滚动到指定节点（<code>TVGN_CARET</code>）</td></tr>
+<tr><td class="nw"><code>TVM_EXPAND</code></td><td>展开/折叠（<code>TVE_EXPAND</code>/<code>TVE_COLLAPSE</code>/<code>TVE_TOGGLE</code>）</td></tr>
 <tr><td><code>TVM_ENSUREVISIBLE</code></td><td>滚动+展开祖先，保证节点可见</td></tr>
-<tr><td><code>TVM_GETCOUNT</code></td><td>节点总数</td></tr>
-<tr><td><code>TVM_EDITLABEL</code></td><td>进入就地重命名</td></tr>
+<tr><td class="nw"><code>TVM_GETCOUNT</code></td><td class="nw">节点总数</td></tr>
+<tr><td class="nw"><code>TVM_EDITLABEL</code></td><td class="nw">进入就地重命名</td></tr>
 <tr><td><code>TVM_SORTCHILDREN</code> / <code>TVM_SORTCHILDRENCB</code></td><td>子节点按字母/按回调排序</td></tr>
-<tr><td><code>TVM_HITTEST</code></td><td>坐标 → 节点（右键菜单）</td></tr>
-<tr><td><code>TVM_SETIMAGELIST</code></td><td>挂图像列表；<code>TVITEMW.iImage</code>/<code>iSelectedImage</code> 分别是常态/选中态图标</td></tr>
+<tr><td class="nw"><code>TVM_HITTEST</code></td><td>坐标 → 节点（右键菜单）</td></tr>
+<tr><td class="nw"><code>TVM_SETIMAGELIST</code></td><td>挂图像列表；<code>TVITEMW.iImage</code>/<code>iSelectedImage</code> 分别是常态/选中态图标</td></tr>
 </tbody></table>
 
 <table><thead><tr><th>通知（WM_NOTIFY）</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>TVN_SELCHANGING</code> / <code>TVN_SELCHANGED</code></td><td>选择将变（返回 TRUE 可拦截）/ 已变（<code>NMTREEVIEWW.itemNew</code>）</td></tr>
 <tr><td><code>TVN_ITEMEXPANDING</code> / <code>TVN_ITEMEXPANDED</code></td><td>展开/折叠前后。<strong>惰性加载的关键</strong>：先给节点挂 <code>cChildren=1</code> 假装有孩子，EXPANDING 时才真正填充子节点</td></tr>
-<tr><td><code>TVN_BEGINLABELEDIT</code> / <code>TVN_ENDLABELEDIT</code></td><td>重命名开始/提交</td></tr>
-<tr><td><code>TVN_DELETEITEM</code></td><td>节点被删——释放挂在 lParam 上的私有数据就在这里</td></tr>
-<tr><td><code>TVN_GETDISPINFO</code></td><td>回调式供文（<code>LPSTR_TEXTCALLBACK</code>）</td></tr>
-<tr><td><code>TVN_BEGINDRAG</code></td><td>用户开始拖节点（自己实现拖放的起点）</td></tr>
-<tr><td><code>TVN_KEYDOWN</code>、<code>NM_DBLCLK</code>、<code>NM_RCLICK</code></td><td>键盘与鼠标杂项</td></tr>
+<tr><td><code>TVN_BEGINLABELEDIT</code> / <code>TVN_ENDLABELEDIT</code></td><td class="nw">重命名开始/提交</td></tr>
+<tr><td class="nw"><code>TVN_DELETEITEM</code></td><td>节点被删——释放挂在 lParam 上的私有数据就在这里</td></tr>
+<tr><td class="nw"><code>TVN_GETDISPINFO</code></td><td>回调式供文（<code>LPSTR_TEXTCALLBACK</code>）</td></tr>
+<tr><td class="nw"><code>TVN_BEGINDRAG</code></td><td>用户开始拖节点（自己实现拖放的起点）</td></tr>
+<tr><td><code>TVN_KEYDOWN</code>、<code>NM_DBLCLK</code>、<code>NM_RCLICK</code></td><td class="nw">键盘与鼠标杂项</td></tr>
 </tbody></table>
 
 <pre><code><span class="cl">TVINSERTSTRUCTW tvis = {};</span><span class="cl">tvis.hParent      = TVI_ROOT;</span><span class="cl">tvis.hInsertAfter = TVI_LAST;</span><span class="cl">tvis.item.mask    = TVIF_TEXT;</span><span class="cl">tvis.item.pszText = (LPWSTR)L"项目";</span><span class="cl">HTREEITEM hRoot = TreeView_InsertItem(hTree, &amp;tvis);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:44.0ch">tvis.hParent      = hRoot;</span><span class="cm">// 挂到根下面</span></span><span class="cl">tvis.item.pszText = (LPWSTR)L"源代码";</span><span class="cl">TreeView_InsertItem(hTree, &amp;tvis);</span><span class="cl">tvis.item.pszText = (LPWSTR)L"文档";</span><span class="cl">TreeView_InsertItem(hTree, &amp;tvis);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:44.0ch">TreeView_Expand(hTree, hRoot, TVE_EXPAND);</span><span class="cm">// 展开根节点</span></span></code></pre>
@@ -3258,8 +3262,8 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 <tr><td><code>TCS_MULTILINE</code> / <code>TCS_BUTTONS</code> / <code>TCS_FIXEDWIDTH</code> / <code>TCS_BOTTOM</code> / <code>TCS_VERTICAL</code> / <code>TCS_TOOLTIPS</code></td><td>多行标签 / 按钮外观 / 等宽标签 / 标签在下 / 竖排 / 带提示</td></tr>
 <tr><td><code>TCM_INSERTITEM</code> / <code>TCM_DELETEITEM</code> / <code>TCM_DELETEALLITEMS</code></td><td>增删标签页（<code>TCITEMW</code>，<code>TCIF_TEXT</code>/<code>TCIF_IMAGE</code>/<code>TCIF_PARAM</code>）</td></tr>
 <tr><td><code>TCM_GETCURSEL</code> / <code>TCM_SETCURSEL</code></td><td>取/设当前页索引（SETCURSEL <strong>不会</strong>发 TCN_SELCHANGE，切页逻辑要自己再调一遍）</td></tr>
-<tr><td><code>TCM_GETITEMCOUNT</code> / <code>TCM_GETITEM</code> / <code>TCM_SETITEM</code></td><td>页数与页属性</td></tr>
-<tr><td><code>TCM_ADJUSTRECT</code></td><td>控件矩形 ↔ 内容显示区矩形互算</td></tr>
+<tr><td><code>TCM_GETITEMCOUNT</code> / <code>TCM_GETITEM</code> / <code>TCM_SETITEM</code></td><td class="nw">页数与页属性</td></tr>
+<tr><td class="nw"><code>TCM_ADJUSTRECT</code></td><td>控件矩形 ↔ 内容显示区矩形互算</td></tr>
 <tr><td><code>TCM_SETIMAGELIST</code> / <code>TCM_SETPADDING</code></td><td>标签图标 / 标签内边距</td></tr>
 <tr><td><code>TCN_SELCHANGING</code> / <code>TCN_SELCHANGE</code></td><td>将切页（返回 TRUE 可阻止离开当前页）/ 已切页（在此切换面板）</td></tr>
 </tbody></table>
@@ -3283,8 +3287,8 @@ ShowWindow(hPageAdvanced, cur == 1 ? SW_SHOW : SW_HIDE);</code></pre>
 <tr><td><code>PBM_SETRANGE</code> / <code>PBM_SETRANGE32</code> / <code>PBM_GETRANGE</code></td><td>设范围：前者 lParam 打包 16 位 (min,max)，超过 65535 用 32 位版</td></tr>
 <tr><td><code>PBM_SETPOS</code> / <code>PBM_GETPOS</code> / <code>PBM_DELTAPOS</code></td><td>设/取/增量推进位置</td></tr>
 <tr><td><code>PBM_SETSTEP</code> / <code>PBM_STEPIT</code></td><td>设步长 + 走一步（循环里最顺手的组合）</td></tr>
-<tr><td><code>PBM_SETMARQUEE</code></td><td>开/关跑马灯，lParam 为动画间隔毫秒</td></tr>
-<tr><td><code>PBM_SETSTATE</code></td><td><code>PBST_NORMAL</code>(绿) / <code>PBST_ERROR</code>(红) / <code>PBST_PAUSED</code>(黄)，Vista+ 的状态配色</td></tr>
+<tr><td class="nw"><code>PBM_SETMARQUEE</code></td><td>开/关跑马灯，lParam 为动画间隔毫秒</td></tr>
+<tr><td class="nw"><code>PBM_SETSTATE</code></td><td><code>PBST_NORMAL</code>(绿) / <code>PBST_ERROR</code>(红) / <code>PBST_PAUSED</code>(黄)，Vista+ 的状态配色</td></tr>
 <tr><td><code>PBM_SETBARCOLOR</code> / <code>PBM_SETBKCOLOR</code></td><td>自定义颜色——<strong>启用 v6 视觉样式后被忽略</strong>，别指望它</td></tr>
 </tbody></table>
 
@@ -3296,9 +3300,9 @@ ShowWindow(hPageAdvanced, cur == 1 ? SW_SHOW : SW_HIDE);</code></pre>
 <tr><td><code>TBS_HORZ</code> / <code>TBS_VERT</code> / <code>TBS_AUTOTICKS</code> / <code>TBS_NOTICKS</code> / <code>TBS_BOTH</code> / <code>TBS_ENABLESELRANGE</code> / <code>TBS_TOOLTIPS</code></td><td>方向 / 每格自动刻度 / 无刻度 / 两侧刻度 / 允许选择区间 / 拖动时冒数值提示</td></tr>
 <tr><td><code>TBM_SETRANGE</code>（或 <code>TBM_SETRANGEMIN</code>/<code>MAX</code>）</td><td>设范围，lParam=<code>MAKELPARAM(min, max)</code></td></tr>
 <tr><td><code>TBM_GETPOS</code> / <code>TBM_SETPOS</code></td><td>取/设滑块位置（SETPOS 时 wParam=TRUE 重绘）</td></tr>
-<tr><td><code>TBM_SETTICFREQ</code></td><td>刻度间隔（配 AUTOTICKS）</td></tr>
+<tr><td class="nw"><code>TBM_SETTICFREQ</code></td><td>刻度间隔（配 AUTOTICKS）</td></tr>
 <tr><td><code>TBM_SETLINESIZE</code> / <code>TBM_SETPAGESIZE</code></td><td>方向键步长 / PgUp·PgDn 步长</td></tr>
-<tr><td><code>TBM_SETSEL</code></td><td>高亮一段选择区间（配 ENABLESELRANGE）</td></tr>
+<tr><td class="nw"><code>TBM_SETSEL</code></td><td>高亮一段选择区间（配 ENABLESELRANGE）</td></tr>
 <tr><td><code>TBM_SETBUDDY</code> / <code>TBM_SETTIPSIDE</code></td><td>两端伙伴标签 / 提示出现的方位</td></tr>
 </tbody></table>
 
@@ -3310,10 +3314,10 @@ ShowWindow(hPageAdvanced, cur == 1 ? SW_SHOW : SW_HIDE);</code></pre>
 <tr><td><code>UDS_SETBUDDYINT</code> / <code>UDS_AUTOBUDDY</code> / <code>UDS_ALIGNRIGHT</code>(<code>LEFT</code>) / <code>UDS_ARROWKEYS</code> / <code>UDS_WRAP</code> / <code>UDS_NOTHOUSANDS</code> / <code>UDS_HORZ</code></td><td>自动写伙伴整数 / Z 序前一个窗口自动当伙伴 / 停靠边 / 接管方向键 / 到头回绕 / 不加千分位逗号 / 横向箭头</td></tr>
 <tr><td><code>UDM_SETRANGE32</code> / <code>UDM_GETRANGE32</code></td><td>设/取范围（32 位版；老的 <code>UDM_SETRANGE</code> 只有 16 位。min &gt; max 时箭头方向反转）</td></tr>
 <tr><td><code>UDM_SETPOS32</code> / <code>UDM_GETPOS32</code></td><td>设/取当前值（GETPOS32 顺带校验伙伴文本合法性）</td></tr>
-<tr><td><code>UDM_SETBUDDY</code> / <code>UDM_GETBUDDY</code></td><td>手动指定伙伴窗口</td></tr>
-<tr><td><code>UDM_SETBASE</code></td><td>10 或 16 进制显示</td></tr>
-<tr><td><code>UDM_SETACCEL</code></td><td>按住不放时的加速表（<code>UDACCEL</code> 数组）</td></tr>
-<tr><td><code>UDN_DELTAPOS</code></td><td>值将改变（<code>NMUPDOWN</code>：改 <code>iDelta</code> 可变步长，返回非零可否决）</td></tr>
+<tr><td><code>UDM_SETBUDDY</code> / <code>UDM_GETBUDDY</code></td><td class="nw">手动指定伙伴窗口</td></tr>
+<tr><td class="nw"><code>UDM_SETBASE</code></td><td>10 或 16 进制显示</td></tr>
+<tr><td class="nw"><code>UDM_SETACCEL</code></td><td>按住不放时的加速表（<code>UDACCEL</code> 数组）</td></tr>
+<tr><td class="nw"><code>UDN_DELTAPOS</code></td><td>值将改变（<code>NMUPDOWN</code>：改 <code>iDelta</code> 可变步长，返回非零可否决）</td></tr>
 </tbody></table>
 
 <h2 id="w9-barctl">9.12 日期时间、状态栏、工具栏与 Tooltip</h2>
@@ -3324,15 +3328,15 @@ ShowWindow(hPageAdvanced, cur == 1 ? SW_SHOW : SW_HIDE);</code></pre>
 
 <table><thead><tr><th>风格 / 消息 / 通知</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>DTS_SHORTDATEFORMAT</code> / <code>DTS_LONGDATEFORMAT</code> / <code>DTS_TIMEFORMAT</code></td><td>短日期(2026/8/14) / 长日期(2026年8月14日) / 时间模式(时间模式自动带 UpDown)</td></tr>
-<tr><td><code>DTS_SHOWNONE</code></td><td>前置复选框，允许"无日期"状态</td></tr>
-<tr><td><code>DTS_UPDOWN</code></td><td>用上下箭头代替下拉月历</td></tr>
-<tr><td><code>DTS_RIGHTALIGN</code></td><td>下拉月历右对齐弹出</td></tr>
+<tr><td class="nw"><code>DTS_SHOWNONE</code></td><td>前置复选框，允许"无日期"状态</td></tr>
+<tr><td class="nw"><code>DTS_UPDOWN</code></td><td>用上下箭头代替下拉月历</td></tr>
+<tr><td class="nw"><code>DTS_RIGHTALIGN</code></td><td>下拉月历右对齐弹出</td></tr>
 <tr><td><code>DTM_GETSYSTEMTIME</code> / <code>DTM_SETSYSTEMTIME</code></td><td>取/设 <code>SYSTEMTIME</code>；返回/传入 <code>GDT_VALID</code>，勾了"无日期"则是 <code>GDT_NONE</code></td></tr>
-<tr><td><code>DTM_SETRANGE</code></td><td>限制可选范围（<code>GDTR_MIN | GDTR_MAX</code> + SYSTEMTIME[2]）</td></tr>
-<tr><td><code>DTM_SETFORMAT</code></td><td>自定义格式串，如 <code>L"yyyy'-'MM'-'dd HH':'mm"</code></td></tr>
-<tr><td><code>DTM_GETMONTHCAL</code></td><td>下拉展开期间取内嵌月历的 HWND</td></tr>
+<tr><td class="nw"><code>DTM_SETRANGE</code></td><td>限制可选范围（<code>GDTR_MIN | GDTR_MAX</code> + SYSTEMTIME[2]）</td></tr>
+<tr><td class="nw"><code>DTM_SETFORMAT</code></td><td>自定义格式串，如 <code>L"yyyy'-'MM'-'dd HH':'mm"</code></td></tr>
+<tr><td class="nw"><code>DTM_GETMONTHCAL</code></td><td>下拉展开期间取内嵌月历的 HWND</td></tr>
 <tr><td><code>DTN_DATETIMECHANGE</code></td><td>日期/时间已改变（<code>NMDATETIMECHANGE</code>）</td></tr>
-<tr><td><code>DTN_DROPDOWN</code> / <code>DTN_CLOSEUP</code></td><td>月历弹出/收起</td></tr>
+<tr><td><code>DTN_DROPDOWN</code> / <code>DTN_CLOSEUP</code></td><td class="nw">月历弹出/收起</td></tr>
 </tbody></table>
 
 <h3 id="w9-statusbar">状态栏（STATUSCLASSNAME）</h3>
@@ -3340,13 +3344,13 @@ ShowWindow(hPageAdvanced, cur == 1 ? SW_SHOW : SW_HIDE);</code></pre>
 <p>窗口底部那条信息带，可切分成多个"部件（part）"分别写字。它继承了 <code>CCS_BOTTOM</code> 默认行为：自动贴底、自动定高，你只需在父窗口 <code>WM_SIZE</code> 时转发一下让它重排。</p>
 
 <table><thead><tr><th>风格 / 消息</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>SBARS_SIZEGRIP</code></td><td>右端带窗口缩放抓手</td></tr>
-<tr><td><code>SBARS_TOOLTIPS</code></td><td>文字被截断时悬停显示全文</td></tr>
-<tr><td><code>SB_SETPARTS</code></td><td>切分部件：传"各部件右边缘 x 坐标"数组，最后一个 -1 表示到窗口右缘</td></tr>
+<tr><td class="nw"><code>SBARS_SIZEGRIP</code></td><td>右端带窗口缩放抓手</td></tr>
+<tr><td class="nw"><code>SBARS_TOOLTIPS</code></td><td>文字被截断时悬停显示全文</td></tr>
+<tr><td class="nw"><code>SB_SETPARTS</code></td><td>切分部件：传"各部件右边缘 x 坐标"数组，最后一个 -1 表示到窗口右缘</td></tr>
 <tr><td><code>SB_SETTEXT</code> / <code>SB_GETTEXT</code> / <code>SB_GETTEXTLENGTH</code></td><td>写/读某部件文本；wParam 低字节为部件索引，可或上 <code>SBT_NOBORDERS</code>/<code>SBT_POPOUT</code>/<code>SBT_OWNERDRAW</code></td></tr>
-<tr><td><code>SB_SETICON</code></td><td>部件前加小图标</td></tr>
-<tr><td><code>SB_SIMPLE</code></td><td>切换"单格模式"（菜单导航提示时经典用法）</td></tr>
-<tr><td><code>SB_GETRECT</code></td><td>取某部件矩形（在上面叠进度条就靠它）</td></tr>
+<tr><td class="nw"><code>SB_SETICON</code></td><td class="nw">部件前加小图标</td></tr>
+<tr><td class="nw"><code>SB_SIMPLE</code></td><td>切换"单格模式"（菜单导航提示时经典用法）</td></tr>
+<tr><td class="nw"><code>SB_GETRECT</code></td><td>取某部件矩形（在上面叠进度条就靠它）</td></tr>
 <tr><td><code>NM_CLICK</code> / <code>NM_DBLCLK</code></td><td>点击通知（<code>NMMOUSE.dwItemSpec</code> 为部件号）</td></tr>
 </tbody></table>
 
@@ -3374,12 +3378,12 @@ SendMessageW(hStatus, SB_SETTEXTW, 1, (LPARAM)L"行 1, 列 1");
 <tr><td><code>TB_BUTTONSTRUCTSIZE</code></td><td><strong>必须最先发送</strong>：告知 <code>sizeof(TBBUTTON)</code>，历史版本兼容仪式</td></tr>
 <tr><td><code>TB_ADDBUTTONS</code> / <code>TB_INSERTBUTTON</code> / <code>TB_DELETEBUTTON</code></td><td>批量加 / 插入 / 删除按钮</td></tr>
 <tr><td><code>TB_ADDBITMAP</code> / <code>TB_LOADIMAGES</code> / <code>TB_SETIMAGELIST</code></td><td>三种供图方式；<code>TB_LOADIMAGES</code> 可用 <code>HINST_COMMCTRL</code>+<code>IDB_STD_SMALL_COLOR</code> 借系统标准图标</td></tr>
-<tr><td><code>TB_ADDSTRING</code></td><td>加按钮文字（<code>iString</code>）</td></tr>
+<tr><td class="nw"><code>TB_ADDSTRING</code></td><td>加按钮文字（<code>iString</code>）</td></tr>
 <tr><td><code>TB_ENABLEBUTTON</code> / <code>TB_CHECKBUTTON</code> / <code>TB_PRESSBUTTON</code> / <code>TB_HIDEBUTTON</code></td><td>按命令 ID 控制按钮状态（灰/勾/按下/隐藏）</td></tr>
 <tr><td><code>TB_GETSTATE</code> / <code>TB_SETSTATE</code></td><td>整套 <code>TBSTATE_</code> 位一次读写</td></tr>
-<tr><td><code>TB_AUTOSIZE</code></td><td>按内容重算自身尺寸（父窗口 WM_SIZE 里也转发它）</td></tr>
+<tr><td class="nw"><code>TB_AUTOSIZE</code></td><td>按内容重算自身尺寸（父窗口 WM_SIZE 里也转发它）</td></tr>
 <tr><td><code>TB_SETEXTENDEDSTYLE</code></td><td>如 <code>TBSTYLE_EX_DRAWDDARROWS</code> 给下拉按钮画箭头</td></tr>
-<tr><td><code>TBN_DROPDOWN</code></td><td>下拉按钮被点（弹菜单的时机）</td></tr>
+<tr><td class="nw"><code>TBN_DROPDOWN</code></td><td>下拉按钮被点（弹菜单的时机）</td></tr>
 <tr><td><code>TBN_GETINFOTIP</code> / <code>TTN_GETDISPINFO</code></td><td>动态提供按钮提示文字</td></tr>
 </tbody></table>
 
@@ -3392,13 +3396,13 @@ SendMessageW(hStatus, SB_SETTEXTW, 1, (LPARAM)L"行 1, 列 1");
 <table><thead><tr><th>风格 / 消息 / 通知</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>TTS_ALWAYSTIP</code> / <code>TTS_NOPREFIX</code> / <code>TTS_BALLOON</code></td><td>父窗口未激活也弹 / 不解析 &amp; / 气球外形</td></tr>
 <tr><td><code>TTM_ADDTOOL</code> / <code>TTM_DELTOOL</code></td><td>注册/注销工具（<code>TOOLINFOW</code>；<code>TTF_IDISHWND</code> 表示 uId 是控件句柄）</td></tr>
-<tr><td><code>TTM_UPDATETIPTEXT</code></td><td>改提示文字</td></tr>
+<tr><td><code>TTM_UPDATETIPTEXT</code></td><td class="nw">改提示文字</td></tr>
 <tr><td><code>TTM_SETMAXTIPWIDTH</code></td><td>设最大宽度——<strong>顺带解锁多行提示</strong>（文本里的 \n 才会生效）</td></tr>
-<tr><td><code>TTM_SETDELAYTIME</code></td><td>弹出/停留/重弹三种延时</td></tr>
-<tr><td><code>TTM_SETTITLE</code></td><td>加粗标题行+小图标</td></tr>
-<tr><td><code>TTM_ACTIVATE</code></td><td>整体开/关</td></tr>
+<tr><td class="nw"><code>TTM_SETDELAYTIME</code></td><td>弹出/停留/重弹三种延时</td></tr>
+<tr><td class="nw"><code>TTM_SETTITLE</code></td><td>加粗标题行+小图标</td></tr>
+<tr><td class="nw"><code>TTM_ACTIVATE</code></td><td class="nw">整体开/关</td></tr>
 <tr><td><code>TTM_TRACKACTIVATE</code> / <code>TTM_TRACKPOSITION</code></td><td>跟踪模式：程序手动控制何时何地显示</td></tr>
-<tr><td><code>TTN_GETDISPINFO</code></td><td>弹出前向你要文字（惰性供文，代替预先写死）</td></tr>
+<tr><td class="nw"><code>TTN_GETDISPINFO</code></td><td>弹出前向你要文字（惰性供文，代替预先写死）</td></tr>
 </tbody></table>
 
 <pre><code>HWND hTip = CreateWindowExW(0, TOOLTIPS_CLASS, NULL,
@@ -3440,12 +3444,12 @@ WNDPROC g_oldProc = (WNDPROC)SetWindowLongPtrW(hEdit, GWLP_WNDPROC,
 <p>按钮、静态、列表框、组合框（还有菜单和 Tab）支持<strong>所有者绘制（owner draw）</strong>：加上 <code>BS_OWNERDRAW</code> / <code>LBS_OWNERDRAWFIXED</code> 之类的风格后，控件不再画自己，改为在需要重绘时给父窗口发 <code>WM_DRAWITEM</code>，把画笔交到你手上。<code>lParam</code> 指向的 <code>DRAWITEMSTRUCT</code> 给齐了作画所需的一切：</p>
 
 <table><thead><tr><th>DRAWITEMSTRUCT 字段</th><th>含义</th></tr></thead><tbody>
-<tr><td><code>CtlType</code> / <code>CtlID</code></td><td>控件类型（<code>ODT_BUTTON</code>/<code>ODT_LISTBOX</code>/<code>ODT_COMBOBOX</code>/<code>ODT_MENU</code>…）与 ID</td></tr>
-<tr><td><code>itemID</code></td><td>列表/组合框：正在画第几项</td></tr>
-<tr><td><code>itemAction</code></td><td>为何而画：<code>ODA_DRAWENTIRE</code> 整个重画 / <code>ODA_SELECT</code> 选中态变了 / <code>ODA_FOCUS</code> 焦点变了</td></tr>
-<tr><td><code>itemState</code></td><td>当前状态位：<code>ODS_SELECTED</code>、<code>ODS_FOCUS</code>、<code>ODS_DISABLED</code>…</td></tr>
-<tr><td><code>hDC</code> / <code>rcItem</code></td><td>往这个 DC 的这个矩形里画——不许越界</td></tr>
-<tr><td><code>itemData</code></td><td>该项的私有数据（就是 <code>LB_SETITEMDATA</code> 存的那个）</td></tr>
+<tr><td class="nw"><code>CtlType</code> / <code>CtlID</code></td><td>控件类型（<code>ODT_BUTTON</code>/<code>ODT_LISTBOX</code>/<code>ODT_COMBOBOX</code>/<code>ODT_MENU</code>…）与 ID</td></tr>
+<tr><td class="nw"><code>itemID</code></td><td>列表/组合框：正在画第几项</td></tr>
+<tr><td class="nw"><code>itemAction</code></td><td>为何而画：<code>ODA_DRAWENTIRE</code> 整个重画 / <code>ODA_SELECT</code> 选中态变了 / <code>ODA_FOCUS</code> 焦点变了</td></tr>
+<tr><td class="nw"><code>itemState</code></td><td>当前状态位：<code>ODS_SELECTED</code>、<code>ODS_FOCUS</code>、<code>ODS_DISABLED</code>…</td></tr>
+<tr><td class="nw"><code>hDC</code> / <code>rcItem</code></td><td>往这个 DC 的这个矩形里画——不许越界</td></tr>
+<tr><td class="nw"><code>itemData</code></td><td>该项的私有数据（就是 <code>LB_SETITEMDATA</code> 存的那个）</td></tr>
 </tbody></table>
 
 <p>配套规则：不等高列表（<code>LBS_OWNERDRAWVARIABLE</code>）会先发 <code>WM_MEASUREITEM</code> 问每项多高；没开 <code>LBS_HASSTRINGS</code> 的所有者绘制列表框销毁条目时发 <code>WM_DELETEITEM</code>，让你释放 itemData。</p>
@@ -3479,8 +3483,8 @@ WNDPROC g_oldProc = (WNDPROC)SetWindowLongPtrW(hEdit, GWLP_WNDPROC,
 </thead>
 <tbody>
 <tr><td>本地化（localization）</td><td>翻译人员只需改资源里的文字，完全不碰源码，也不需要会编程。同一份代码可以配多套语言资源。</td></tr>
-<tr><td>按需加载</td><td>一张图标、一段文字，只有真正要用时才从可执行文件里读进内存，平时躺在磁盘上不占运行内存。</td></tr>
-<tr><td>工具协作</td><td>美工用图标编辑器画图、界面设计师用可视化编辑器摆菜单，各自产出资源，程序员只管写逻辑，分工清晰。</td></tr>
+<tr><td class="nw">按需加载</td><td>一张图标、一段文字，只有真正要用时才从可执行文件里读进内存，平时躺在磁盘上不占运行内存。</td></tr>
+<tr><td class="nw">工具协作</td><td>美工用图标编辑器画图、界面设计师用可视化编辑器摆菜单，各自产出资源，程序员只管写逻辑，分工清晰。</td></tr>
 </tbody>
 </table>
 
@@ -3637,9 +3641,9 @@ WNDPROC g_oldProc = (WNDPROC)SetWindowLongPtrW(hEdit, GWLP_WNDPROC,
 <tr><th>阶段</th><th>输入</th><th>工具</th><th>输出</th></tr>
 </thead>
 <tbody>
-<tr><td>编写</td><td>你的手</td><td>文本编辑器</td><td><code>app.rc</code>（资源脚本）</td></tr>
-<tr><td>资源编译</td><td><code>app.rc</code> + 图标/图片等素材</td><td>资源编译器 <code>rc.exe</code></td><td><code>app.res</code>（二进制资源）</td></tr>
-<tr><td>链接</td><td>目标文件 <code>.obj</code> + <code>app.res</code></td><td>链接器 <code>link.exe</code></td><td>最终 <code>app.exe</code>（资源已嵌入）</td></tr>
+<tr><td class="nw">编写</td><td class="nw">你的手</td><td class="nw">文本编辑器</td><td><code>app.rc</code>（资源脚本）</td></tr>
+<tr><td class="nw">资源编译</td><td><code>app.rc</code> + 图标/图片等素材</td><td>资源编译器 <code>rc.exe</code></td><td><code>app.res</code>（二进制资源）</td></tr>
+<tr><td class="nw">链接</td><td>目标文件 <code>.obj</code> + <code>app.res</code></td><td class="nw">链接器 <code>link.exe</code></td><td>最终 <code>app.exe</code>（资源已嵌入）</td></tr>
 </tbody>
 </table>
 
@@ -3746,8 +3750,8 @@ IDC_HAND    CURSOR  "hand.cur"</code></pre>
 <tr><th>类型</th><th>句柄</th><th>典型用途</th><th>加载函数</th></tr>
 </thead>
 <tbody>
-<tr><td>图标</td><td><code>HICON</code></td><td>窗口左上角小图标、任务栏、Alt+Tab、桌面快捷方式</td><td><code>LoadIconW</code> / <code>LoadImageW</code></td></tr>
-<tr><td>光标</td><td><code>HCURSOR</code></td><td>鼠标指针形状（箭头、手形、十字）</td><td><code>LoadCursorW</code> / <code>LoadImageW</code></td></tr>
+<tr><td class="nw">图标</td><td class="nw"><code>HICON</code></td><td>窗口左上角小图标、任务栏、Alt+Tab、桌面快捷方式</td><td><code>LoadIconW</code> / <code>LoadImageW</code></td></tr>
+<tr><td class="nw">光标</td><td class="nw"><code>HCURSOR</code></td><td>鼠标指针形状（箭头、手形、十字）</td><td><code>LoadCursorW</code> / <code>LoadImageW</code></td></tr>
 </tbody>
 </table>
 
@@ -3877,9 +3881,9 @@ LoadStringW      (hInstance, IDS_ERR_OPENFILE, buf, ARRAYSIZE(buf));</code></pre
 <tr><th>时代</th><th>界面声明（数据）</th><th>逻辑（代码）</th><th>对接方式</th></tr>
 </thead>
 <tbody>
-<tr><td>经典 Win32</td><td><code>.rc</code> 资源脚本</td><td>C/C++ 窗口过程</td><td>整数 ID + WM_COMMAND</td></tr>
+<tr><td class="nw">经典 Win32</td><td class="nw"><code>.rc</code> 资源脚本</td><td class="nw">C/C++ 窗口过程</td><td>整数 ID + WM_COMMAND</td></tr>
 <tr><td>现代原生（WinUI 3 / WPF）</td><td>XAML（XML 界面标记）</td><td>C# / C++ 后端代码</td><td>数据绑定 + 事件处理器</td></tr>
-<tr><td>Web</td><td>HTML / CSS</td><td>JavaScript</td><td>DOM 事件 + 事件监听器</td></tr>
+<tr><td class="nw">Web</td><td class="nw">HTML / CSS</td><td class="nw">JavaScript</td><td>DOM 事件 + 事件监听器</td></tr>
 </tbody>
 </table>
 
@@ -3993,11 +3997,11 @@ END</code></pre>
 <table>
 <thead><tr><th>方面</th><th>普通窗口过程 WndProc</th><th>对话框过程 DlgProc</th></tr></thead>
 <tbody>
-<tr><td>返回类型</td><td><code>LRESULT</code></td><td><code>INT_PTR</code>（老代码写 BOOL）</td></tr>
-<tr><td>谁是真正的窗口过程</td><td>你写的这个就是</td><td>系统对话框类的窗口过程；DlgProc 只是被它回调</td></tr>
+<tr><td class="nw">返回类型</td><td class="nw"><code>LRESULT</code></td><td><code>INT_PTR</code>（老代码写 BOOL）</td></tr>
+<tr><td>谁是真正的窗口过程</td><td class="nw">你写的这个就是</td><td>系统对话框类的窗口过程；DlgProc 只是被它回调</td></tr>
 <tr><td>没处理的消息怎么办</td><td>自己转交 <code>DefWindowProc</code></td><td><code>return FALSE</code>，系统默认对话框过程接手</td></tr>
-<tr><td>返回值含义</td><td>消息的结果值</td><td>TRUE=已处理 / FALSE=未处理</td></tr>
-<tr><td>初始化时机</td><td><code>WM_CREATE</code></td><td><code>WM_INITDIALOG</code></td></tr>
+<tr><td class="nw">返回值含义</td><td class="nw">消息的结果值</td><td>TRUE=已处理 / FALSE=未处理</td></tr>
+<tr><td class="nw">初始化时机</td><td class="nw"><code>WM_CREATE</code></td><td class="nw"><code>WM_INITDIALOG</code></td></tr>
 </tbody>
 </table>
 <div class="note old"><span class="t">🟡 一个隐蔽的例外：需要"回传值"的消息</span><p>少数消息期望对话框过程回传一个具体值，比如 <code>WM_CTLCOLOREDIT</code> 要求返回一个画刷句柄。对话框过程没法直接返回它（返回值被 TRUE/FALSE 占用了）。正确做法是：<code>return TRUE</code> 表示"我处理了"，同时用 <code>SetWindowLongPtr(hDlg, DWLP_MSGRESULT, (LONG_PTR)hBrush)</code> 把真正的结果塞进去。忘了这一步、直接 <code>return (INT_PTR)hBrush</code> 是老教程里的常见错误，在 64 位下尤其容易出问题。</p></div>
@@ -4033,12 +4037,12 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <table>
 <thead><tr><th>方面</th><th>模态 DialogBox</th><th>非模态 CreateDialog</th></tr></thead>
 <tbody>
-<tr><td>函数何时返回</td><td>对话框关闭后才返回</td><td>立即返回</td></tr>
-<tr><td>返回值</td><td><code>EndDialog</code> 传入的结果</td><td>对话框 <code>HWND</code></td></tr>
-<tr><td>消息循环</td><td>系统内部自带</td><td>用你的主循环 + <code>IsDialogMessage</code></td></tr>
-<tr><td>拥有者窗口</td><td>被禁用</td><td>照常可用</td></tr>
-<tr><td>关闭用</td><td><code>EndDialog</code></td><td><code>DestroyWindow</code></td></tr>
-<tr><td>模板是否需 WS_VISIBLE</td><td>不需要</td><td>需要，或自己 <code>ShowWindow</code></td></tr>
+<tr><td class="nw">函数何时返回</td><td>对话框关闭后才返回</td><td class="nw">立即返回</td></tr>
+<tr><td class="nw">返回值</td><td><code>EndDialog</code> 传入的结果</td><td class="nw">对话框 <code>HWND</code></td></tr>
+<tr><td class="nw">消息循环</td><td class="nw">系统内部自带</td><td>用你的主循环 + <code>IsDialogMessage</code></td></tr>
+<tr><td class="nw">拥有者窗口</td><td class="nw">被禁用</td><td class="nw">照常可用</td></tr>
+<tr><td class="nw">关闭用</td><td class="nw"><code>EndDialog</code></td><td class="nw"><code>DestroyWindow</code></td></tr>
+<tr><td>模板是否需 WS_VISIBLE</td><td class="nw">不需要</td><td>需要，或自己 <code>ShowWindow</code></td></tr>
 </tbody>
 </table>
 <div class="note new"><span class="t">🔵 非模态查找框的正规联络方式</span><p>Windows 自带的"查找/替换"通用对话框（<code>FindText</code>/<code>ReplaceText</code>）就是非模态的，它靠一条注册消息 <code>FINDMSGSTRING</code> 把用户的操作通知回主窗口。你自制非模态对话框时也建议照此思路：对话框只管收集用户意图，用 <code>SendMessage</code>/自定义消息把"要查找 xxx"发回主窗口去执行，别让对话框直接去操作文档。这是"界面与业务解耦"的经典练手。</p></div>
@@ -4056,8 +4060,8 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <table>
 <thead><tr><th>风格 / 关键字</th><th>作用</th></tr></thead>
 <tbody>
-<tr><td><code>WS_TABSTOP</code></td><td>该控件能被 Tab 键停靠。没这位的控件（如静态文本）会被 Tab 跳过。</td></tr>
-<tr><td><code>WS_GROUP</code></td><td>标记一"组"的起点。方向键只在同一组内移动——单选按钮组必须靠它划界。</td></tr>
+<tr><td class="nw"><code>WS_TABSTOP</code></td><td>该控件能被 Tab 键停靠。没这位的控件（如静态文本）会被 Tab 跳过。</td></tr>
+<tr><td class="nw"><code>WS_GROUP</code></td><td>标记一"组"的起点。方向键只在同一组内移动——单选按钮组必须靠它划界。</td></tr>
 <tr><td><code>DEFPUSHBUTTON</code>（=<code>BS_DEFPUSHBUTTON</code>）</td><td>默认按钮，边框加粗，回车即触发。一个对话框应恰有一个。</td></tr>
 </tbody>
 </table>
@@ -4089,9 +4093,9 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <table>
 <thead><tr><th>函数</th><th>状态</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>PrintDlg</code> / <code>PRINTDLG</code></td><td><span class="badge old">已过时</span></td><td>老式打印对话框，仍能用，但界面与能力落后。</td></tr>
-<tr><td><code>PrintDlgEx</code> / <code>PRINTDLGEX</code></td><td><span class="badge new">现代更新</span></td><td>基于属性页的现代打印对话框，支持打印范围、页设置等，新代码首选。</td></tr>
-<tr><td><code>PageSetupDlg</code> / <code>PAGESETUPDLG</code></td><td><span class="badge ok">仍适用</span></td><td>页边距、纸张、方向的"页面设置"对话框，配合打印使用。</td></tr>
+<tr><td><code>PrintDlg</code> / <code>PRINTDLG</code></td><td class="nw"><span class="badge old">已过时</span></td><td>老式打印对话框，仍能用，但界面与能力落后。</td></tr>
+<tr><td><code>PrintDlgEx</code> / <code>PRINTDLGEX</code></td><td class="nw"><span class="badge new">现代更新</span></td><td>基于属性页的现代打印对话框，支持打印范围、页设置等，新代码首选。</td></tr>
+<tr><td><code>PageSetupDlg</code> / <code>PAGESETUPDLG</code></td><td class="nw"><span class="badge ok">仍适用</span></td><td>页边距、纸张、方向的"页面设置"对话框，配合打印使用。</td></tr>
 </tbody>
 </table>
 <div class="note ok"><span class="t">🟢 通用对话框的共同套路，记住就一劳永逸</span><p>回头看这几个函数，你会发现它们是同一个模具刻出来的：<strong>①</strong> 声明结构并把首字段设成结构大小（<code>{ sizeof(x) }</code> 一步到位）；<strong>②</strong> 填 <code>hwndOwner</code> 和各项输入；<strong>③</strong> 用 <code>Flags</code> 里的一堆常量微调行为，其中不少字段"进去是初值、出来是结果"；<strong>④</strong> 函数返回非零表示"用户确认"，去读结构里的结果字段，返回零多半是用户取消。抓住这个共同节奏，任何一个通用对话框你都能查着文档现用现填。</p></div>
@@ -4117,12 +4121,12 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <div class="scroll"><table>
 <thead><tr><th>维度</th><th>DDB（设备相关）</th><th>DIB（设备无关）</th></tr></thead>
 <tbody>
-<tr><td>像素格式</td><td>跟随设备，不透明</td><td>自我描述，确定</td></tr>
-<tr><td>创建函数</td><td><code>CreateCompatibleBitmap</code></td><td><code>CreateDIBSection</code> / 从 <code>.bmp</code> 加载</td></tr>
-<tr><td>直接读写像素</td><td>难（需 GetDIBits 转出）</td><td>易（有确定内存布局）</td></tr>
-<tr><td>往屏幕搬</td><td>无需转换，最快</td><td>可能需一次格式匹配</td></tr>
-<tr><td>能否存盘</td><td>不能直接存</td><td>就是 .bmp 的内容</td></tr>
-<tr><td>适用场景</td><td>纯屏上缓存、双缓冲后台</td><td>图像处理、加载/保存、逐像素</td></tr>
+<tr><td class="nw">像素格式</td><td>跟随设备，不透明</td><td>自我描述，确定</td></tr>
+<tr><td class="nw">创建函数</td><td><code>CreateCompatibleBitmap</code></td><td><code>CreateDIBSection</code> / 从 <code>.bmp</code> 加载</td></tr>
+<tr><td class="nw">直接读写像素</td><td>难（需 GetDIBits 转出）</td><td>易（有确定内存布局）</td></tr>
+<tr><td class="nw">往屏幕搬</td><td>无需转换，最快</td><td>可能需一次格式匹配</td></tr>
+<tr><td class="nw">能否存盘</td><td class="nw">不能直接存</td><td class="nw">就是 .bmp 的内容</td></tr>
+<tr><td class="nw">适用场景</td><td>纯屏上缓存、双缓冲后台</td><td>图像处理、加载/保存、逐像素</td></tr>
 </tbody>
 </table></div>
 <div class="note new"><span class="t">🔵 现代建议</span><p>过去教材爱教纯 DDB 的玩法，因为早年设备格式五花八门、DDB 能省转换开销。今天绝大多数显示器都是 32 位真彩，两者的格式差异往往消失了。更重要的是，有一种叫 <strong>DIB Section</strong> 的东西（本章后面细讲）几乎吃掉了 DDB 的全部优势：它既能像 DDB 一样被 DC 直接使用、快速搬到屏幕，又能像 DIB 一样让你直接拿指针读写像素。所以现代代码里，凡是需要碰像素的场合，优先用 DIB Section，几乎不用再手写纯 DDB。</p></div>
@@ -4142,12 +4146,12 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <div class="scroll"><table>
 <thead><tr><th>ROP 码</th><th>运算</th><th>典型用途</th></tr></thead>
 <tbody>
-<tr><td><code>SRCCOPY</code></td><td>目标 = 源</td><td>直接复制，最常用</td></tr>
-<tr><td><code>SRCAND</code></td><td>目标 = 源 AND 目标</td><td>用掩码"抠洞"，做透明的第一步</td></tr>
-<tr><td><code>SRCPAINT</code></td><td>目标 = 源 OR 目标</td><td>把图案填进抠好的洞里</td></tr>
-<tr><td><code>SRCINVERT</code></td><td>目标 = 源 XOR 目标</td><td>异或，可用于"画两次即还原"的橡皮筋</td></tr>
-<tr><td><code>PATCOPY</code></td><td>目标 = 当前画刷图案</td><td>用画刷平铺填充</td></tr>
-<tr><td><code>WHITENESS</code>/<code>BLACKNESS</code></td><td>目标 = 全白 / 全黑</td><td>快速清屏</td></tr>
+<tr><td class="nw"><code>SRCCOPY</code></td><td class="nw">目标 = 源</td><td>直接复制，最常用</td></tr>
+<tr><td class="nw"><code>SRCAND</code></td><td>目标 = 源 AND 目标</td><td>用掩码"抠洞"，做透明的第一步</td></tr>
+<tr><td class="nw"><code>SRCPAINT</code></td><td>目标 = 源 OR 目标</td><td>把图案填进抠好的洞里</td></tr>
+<tr><td class="nw"><code>SRCINVERT</code></td><td>目标 = 源 XOR 目标</td><td>异或，可用于"画两次即还原"的橡皮筋</td></tr>
+<tr><td class="nw"><code>PATCOPY</code></td><td>目标 = 当前画刷图案</td><td class="nw">用画刷平铺填充</td></tr>
+<tr><td><code>WHITENESS</code>/<code>BLACKNESS</code></td><td>目标 = 全白 / 全黑</td><td class="nw">快速清屏</td></tr>
 </tbody>
 </table></div>
 <div class="note old"><span class="t">🟡 SRCAND + SRCPAINT 的老式透明贴图</span><p>在没有 alpha 通道的年代，人们靠"两次 BitBlt"实现精灵透明：先准备一张<strong>单色掩码</strong>（透明处为白、不透明处为黑），用 <code>SRCAND</code> 把它和目标做与，在背景上"抠"出一个黑洞；再用 <code>SRCPAINT</code> 把彩色前景（透明处为黑）或进那个洞里。两步之后，前景就"悬浮"在背景上，边缘生硬但有效。这套技巧你在老游戏和老控件源码里会反复见到，理解它有助于读旧代码——但请看下面的现代替代。</p></div>
@@ -4160,9 +4164,9 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <div class="scroll"><table>
 <thead><tr><th>模式</th><th>做法</th><th>效果</th></tr></thead>
 <tbody>
-<tr><td><code>COLORONCOLOR</code></td><td>缩小时整行整列地丢像素</td><td>快，但缩小彩图会花、会丢细节</td></tr>
-<tr><td><code>HALFTONE</code></td><td>对邻近像素做平均</td><td>放大缩小都更平滑，质量最好，稍慢</td></tr>
-<tr><td><code>BLACKONWHITE</code>/<code>WHITEONBLACK</code></td><td>缩小时保留黑/白像素</td><td>专为单色位图设计</td></tr>
+<tr><td class="nw"><code>COLORONCOLOR</code></td><td>缩小时整行整列地丢像素</td><td>快，但缩小彩图会花、会丢细节</td></tr>
+<tr><td class="nw"><code>HALFTONE</code></td><td class="nw">对邻近像素做平均</td><td>放大缩小都更平滑，质量最好，稍慢</td></tr>
+<tr><td><code>BLACKONWHITE</code>/<code>WHITEONBLACK</code></td><td>缩小时保留黑/白像素</td><td class="nw">专为单色位图设计</td></tr>
 </tbody>
 </table></div>
 <div class="note ok"><span class="t">🟢 HALFTONE 的隐藏陷阱</span><p>选了 <code>HALFTONE</code> 之后，你<strong>必须</strong>紧接着调用一次 <code>SetBrushOrgEx(hdc, 0, 0, NULL)</code> 重设画刷原点，否则文档规定行为不确定，实测可能出现半色调网格的错位纹理。这是个几乎人人踩过的坑，记住"HALFTONE 后面跟一句 SetBrushOrgEx"就对了。</p></div>
@@ -4302,12 +4306,12 @@ conv-&gt;CopyPixels(<span class="kw">nullptr</span>, stride, stride * height, pB
 <div class="scroll"><table>
 <thead><tr><th>你想做的事</th><th>GDI 老办法</th><th>现代办法</th></tr></thead>
 <tbody>
-<tr><td>解码 PNG/JPEG</td><td>做不到（只读 BMP）</td><td>WIC 解码器</td></tr>
-<tr><td>高质量缩放</td><td>StretchBlt + HALFTONE（一般）</td><td>WIC Scaler / Direct2D 插值</td></tr>
-<tr><td>逐像素半透明</td><td>AlphaBlend（要预乘、无加速）</td><td>Direct2D（硬件加速、原生 alpha）</td></tr>
-<tr><td>搬运/贴图</td><td>BitBlt</td><td>Direct2D DrawBitmap</td></tr>
-<tr><td>把整帧画完再显示</td><td>手搭双缓冲</td><td>框架默认双/三缓冲</td></tr>
-<tr><td>图 + 高质量文字</td><td>GDI 逐个拼</td><td>Direct2D + DirectWrite</td></tr>
+<tr><td class="nw">解码 PNG/JPEG</td><td>做不到（只读 BMP）</td><td class="nw">WIC 解码器</td></tr>
+<tr><td class="nw">高质量缩放</td><td>StretchBlt + HALFTONE（一般）</td><td>WIC Scaler / Direct2D 插值</td></tr>
+<tr><td class="nw">逐像素半透明</td><td>AlphaBlend（要预乘、无加速）</td><td>Direct2D（硬件加速、原生 alpha）</td></tr>
+<tr><td class="nw">搬运/贴图</td><td class="nw">BitBlt</td><td>Direct2D DrawBitmap</td></tr>
+<tr><td class="nw">把整帧画完再显示</td><td class="nw">手搭双缓冲</td><td>框架默认双/三缓冲</td></tr>
+<tr><td class="nw">图 + 高质量文字</td><td class="nw">GDI 逐个拼</td><td>Direct2D + DirectWrite</td></tr>
 </tbody>
 </table></div>
 <p>Direct2D 是构建在 Direct3D 之上的 2D 绘图 API：它用 GPU 加速，原生支持抗锯齿、每像素透明、任意仿射变换和高质量插值，还能和 DirectWrite 的文字排版、WIC 的图像编解码无缝配合。它的编程模型是 COM、比 GDI 啰嗦一些，但换来的是今天用户期待的画质和流畅度。</p>
@@ -4326,12 +4330,12 @@ conv-&gt;CopyPixels(<span class="kw">nullptr</span>, stride, stride * height, pB
 <table>
 <thead><tr><th>对比项</th><th>屏幕 DC</th><th>打印机 DC</th></tr></thead>
 <tbody>
-<tr><td>怎么拿到</td><td><code>BeginPaint</code> / <code>GetDC</code></td><td><code>PrintDlgW</code> 或 <code>CreateDCW</code></td></tr>
-<tr><td>绘图 API</td><td><code>TextOutW</code>、<code>Rectangle</code>…</td><td>完全相同</td></tr>
-<tr><td>分辨率</td><td>约 96 DPI（逻辑）</td><td>常见 300～1200 DPI</td></tr>
-<tr><td>成像时机</td><td>调用后立即可见</td><td>要等 <code>EndPage</code> / <code>EndDoc</code></td></tr>
-<tr><td>「一页」的概念</td><td>无（一块连续画布）</td><td>有（必须显式换页）</td></tr>
-<tr><td>用完怎么办</td><td><code>EndPaint</code> / <code>ReleaseDC</code></td><td><code>DeleteDC</code></td></tr>
+<tr><td class="nw">怎么拿到</td><td><code>BeginPaint</code> / <code>GetDC</code></td><td><code>PrintDlgW</code> 或 <code>CreateDCW</code></td></tr>
+<tr><td class="nw">绘图 API</td><td><code>TextOutW</code>、<code>Rectangle</code>…</td><td class="nw">完全相同</td></tr>
+<tr><td class="nw">分辨率</td><td>约 96 DPI（逻辑）</td><td>常见 300～1200 DPI</td></tr>
+<tr><td class="nw">成像时机</td><td class="nw">调用后立即可见</td><td>要等 <code>EndPage</code> / <code>EndDoc</code></td></tr>
+<tr><td class="nw">「一页」的概念</td><td>无（一块连续画布）</td><td>有（必须显式换页）</td></tr>
+<tr><td class="nw">用完怎么办</td><td><code>EndPaint</code> / <code>ReleaseDC</code></td><td class="nw"><code>DeleteDC</code></td></tr>
 </tbody>
 </table>
 
@@ -4347,10 +4351,10 @@ conv-&gt;CopyPixels(<span class="kw">nullptr</span>, stride, stride * height, pB
 <table>
 <thead><tr><th>函数</th><th>含义</th><th>类比</th></tr></thead>
 <tbody>
-<tr><td><code>StartDocW</code></td><td>开始整份文档（作业）</td><td>把一叠信纸装进信封、写好封面</td></tr>
-<tr><td><code>StartPage</code></td><td>开始新的一页</td><td>往打印机里放一张空白纸</td></tr>
-<tr><td><code>EndPage</code></td><td>结束当前页</td><td>这张写完了，推出去</td></tr>
-<tr><td><code>EndDoc</code></td><td>结束整份文档</td><td>封口投进邮筒，真正寄出</td></tr>
+<tr><td class="nw"><code>StartDocW</code></td><td>开始整份文档（作业）</td><td>把一叠信纸装进信封、写好封面</td></tr>
+<tr><td class="nw"><code>StartPage</code></td><td class="nw">开始新的一页</td><td>往打印机里放一张空白纸</td></tr>
+<tr><td class="nw"><code>EndPage</code></td><td class="nw">结束当前页</td><td>这张写完了，推出去</td></tr>
+<tr><td class="nw"><code>EndDoc</code></td><td class="nw">结束整份文档</td><td>封口投进邮筒，真正寄出</td></tr>
 </tbody>
 </table>
 <p>它们像括号一样必须成对、按层次嵌套：一个 <code>StartDoc</code> 里可以有多组 <code>StartPage</code>/<code>EndPage</code>，最后一个 <code>EndDoc</code> 收尾。你所有的 <code>TextOutW</code>、<code>Rectangle</code> 都必须落在某一对 <code>StartPage</code>/<code>EndPage</code> 之间——落在这个区间外的绘图调用会被无声地丢掉。</p>
@@ -4478,10 +4482,10 @@ StartDocW(hdcPrn, &amp;di);
 <table>
 <thead><tr><th>技术</th><th>状态</th><th>适合什么</th></tr></thead>
 <tbody>
-<tr><td>GDI 打印（本章）</td><td><span class="badge ok">仍适用</span></td><td>传统桌面程序、简单到中等复杂度的打印</td></tr>
-<tr><td>XPS 打印 API</td><td><span class="badge new">现代更新</span></td><td>高保真、以「文档」为单位的现代打印管线</td></tr>
-<tr><td>Direct2D 打印</td><td><span class="badge new">现代更新</span></td><td>已用 Direct2D 绘图的应用，直接把绘制命令送去打印</td></tr>
-<tr><td>「打印到 PDF」</td><td><span class="badge new">现代更新</span></td><td>不装任何库就导出 PDF——它其实就是一台虚拟打印机</td></tr>
+<tr><td class="nw">GDI 打印（本章）</td><td class="nw"><span class="badge ok">仍适用</span></td><td>传统桌面程序、简单到中等复杂度的打印</td></tr>
+<tr><td class="nw">XPS 打印 API</td><td class="nw"><span class="badge new">现代更新</span></td><td>高保真、以「文档」为单位的现代打印管线</td></tr>
+<tr><td class="nw">Direct2D 打印</td><td class="nw"><span class="badge new">现代更新</span></td><td>已用 Direct2D 绘图的应用，直接把绘制命令送去打印</td></tr>
+<tr><td class="nw">「打印到 PDF」</td><td class="nw"><span class="badge new">现代更新</span></td><td>不装任何库就导出 PDF——它其实就是一台虚拟打印机</td></tr>
 </tbody>
 </table>
 <p><strong>XPS 打印 API</strong>是现代 Windows 打印子系统的底座。XPS（XML Paper Specification）是一种固定版式的文档格式，思路类似 PDF。现代打印路径下，即便你用的是 GDI，系统底层也常把它转成 XPS 再送打印机（所谓 XPSDrv 驱动模型）。如果你要做高保真、色彩管理严格、或需要把「一份文档」整体交给打印系统的应用，可以直接面向 XPS Print API（<code>IXpsOMPackage</code>、<code>IXpsPrintJob</code> 等）编程，绕过 GDI 的一些历史限制。</p>
@@ -4586,10 +4590,10 @@ MATHLIB_API <span class="kw">int</span> AddNumbers(<span class="kw">int</span> a
 <tr><th>工具</th><th>作用范围</th><th>典型用途</th><th>性格</th></tr>
 </thead>
 <tbody>
-<tr><td>临界区 CRITICAL_SECTION</td><td>同一进程内</td><td>保护共享数据，最常用</td><td>轻量、快</td></tr>
-<tr><td>互斥体 Mutex</td><td>可跨进程</td><td>多个进程抢一个资源</td><td>较重、可命名</td></tr>
-<tr><td>事件 Event</td><td>可跨进程</td><td>一个线程通知另一个「可以开始了」</td><td>信号式</td></tr>
-<tr><td>信号量 Semaphore</td><td>可跨进程</td><td>限制同时访问的线程数量</td><td>计数式</td></tr>
+<tr><td>临界区 CRITICAL_SECTION</td><td class="nw">同一进程内</td><td>保护共享数据，最常用</td><td>轻量、快</td></tr>
+<tr><td class="nw">互斥体 Mutex</td><td class="nw">可跨进程</td><td>多个进程抢一个资源</td><td>较重、可命名</td></tr>
+<tr><td class="nw">事件 Event</td><td class="nw">可跨进程</td><td>一个线程通知另一个「可以开始了」</td><td class="nw">信号式</td></tr>
+<tr><td class="nw">信号量 Semaphore</td><td class="nw">可跨进程</td><td>限制同时访问的线程数量</td><td class="nw">计数式</td></tr>
 </tbody>
 </table>
 <p><strong>临界区（CRITICAL_SECTION）</strong>是你最该先掌握、也最常用的。它把一段「同一时刻只能有一个线程进入」的代码围起来，像给房间装一把锁：一个线程 <code>EnterCriticalSection</code> 进屋并反锁，别的线程想进就得在门口排队等，直到里面的人 <code>LeaveCriticalSection</code> 出来。它只在进程内部有效，但正因为不跨进程、不用陷入内核，所以非常轻快。</p>
@@ -4615,11 +4619,11 @@ MATHLIB_API <span class="kw">int</span> AddNumbers(<span class="kw">int</span> a
 <tr><th>你要做的事</th><th>老的 Win32 写法</th><th>现代 C++ 写法</th></tr>
 </thead>
 <tbody>
-<tr><td>创建线程</td><td><code>_beginthreadex</code></td><td><code>std::thread</code> / <code>std::jthread</code></td></tr>
-<tr><td>拿后台计算的返回值</td><td>事件 + 共享变量</td><td><code>std::async</code> + <code>std::future</code></td></tr>
-<tr><td>互斥保护共享数据</td><td><code>CRITICAL_SECTION</code></td><td><code>std::mutex</code> + <code>std::lock_guard</code></td></tr>
-<tr><td>一个整数的原子自增</td><td><code>InterlockedIncrement</code></td><td><code>std::atomic&lt;int&gt;</code></td></tr>
-<tr><td>线程间通知</td><td>Event 对象</td><td><code>std::condition_variable</code></td></tr>
+<tr><td class="nw">创建线程</td><td class="nw"><code>_beginthreadex</code></td><td><code>std::thread</code> / <code>std::jthread</code></td></tr>
+<tr><td>拿后台计算的返回值</td><td class="nw">事件 + 共享变量</td><td><code>std::async</code> + <code>std::future</code></td></tr>
+<tr><td class="nw">互斥保护共享数据</td><td class="nw"><code>CRITICAL_SECTION</code></td><td><code>std::mutex</code> + <code>std::lock_guard</code></td></tr>
+<tr><td>一个整数的原子自增</td><td><code>InterlockedIncrement</code></td><td class="nw"><code>std::atomic&lt;int&gt;</code></td></tr>
+<tr><td class="nw">线程间通知</td><td class="nw">Event 对象</td><td><code>std::condition_variable</code></td></tr>
 </tbody>
 </table>
 <pre><code><span class="cl"><span class="kw">#include</span> &lt;thread&gt;</span><span class="cl"><span class="kw">#include</span> &lt;future&gt;</span><span class="cl"><span class="kw">#include</span> &lt;mutex&gt;</span><span class="cl"><span class="kw">#include</span> &lt;atomic&gt;</span><span class="cl"> </span><span class="cl"><span class="cm">// 1) 原子量：不用锁就能安全自增，编译器保证「读-改-写」一步到位</span></span><span class="cl">std::atomic&lt;<span class="kw">int</span>&gt; g_counter{<span class="kw">0</span>};</span><span class="cl"><span class="cc" style="min-width:27.0ch">g_counter++;</span><span class="cm">// 天然线程安全，无竞态</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 2) 互斥量 + RAII 锁：lock_guard 出作用域自动解锁，绝不会漏掉 Leave</span></span><span class="cl">std::mutex g_mtx;</span><span class="cl">{</span><span class="cl">    std::lock_guard&lt;std::mutex&gt; lock(g_mtx);</span><span class="cl">    <span class="cm">// ... 这段受保护，离开花括号自动解锁 ...</span></span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="cm">// 3) std::async：把耗时活儿丢后台，用 future 优雅地取回结果</span></span><span class="cl">std::future&lt;<span class="kw">int</span>&gt; fut = std::async(std::launch::async, []{</span><span class="cl"><span class="cc" style="min-width:27.0ch">    <span class="kw">return</span> DoHeavyWork();</span><span class="cm">// 在别的线程跑</span></span><span class="cl">});</span><span class="cl"><span class="cm">// ... 主线程干别的 ...</span></span><span class="cl"><span class="cc" style="min-width:27.0ch"><span class="kw">int</span> result = fut.get();</span><span class="cm">// 需要时来取，没算完就在这等</span></span><span class="cl"> </span></code></pre>
@@ -4642,8 +4646,8 @@ MATHLIB_API <span class="kw">int</span> AddNumbers(<span class="kw">int</span> a
 <table>
 <thead><tr><th>手段</th><th>一句话</th><th>适合</th></tr></thead>
 <tbody>
-<tr><td><strong>WM_COPYDATA</strong></td><td>借窗口消息带一块数据过去，系统替你跨进程拷贝</td><td>小数据、单向、对方有窗口——小工具首选</td></tr>
-<tr><td>文件 + 命名事件/互斥体</td><td>数据落盘，命名内核对象当「到货铃」</td><td>简单可靠</td></tr>
+<tr><td class="nw"><strong>WM_COPYDATA</strong></td><td>借窗口消息带一块数据过去，系统替你跨进程拷贝</td><td>小数据、单向、对方有窗口——小工具首选</td></tr>
+<tr><td>文件 + 命名事件/互斥体</td><td>数据落盘，命名内核对象当「到货铃」</td><td class="nw">简单可靠</td></tr>
 <tr><td>命名管道 Named Pipe</td><td>双向流式读写(CreateNamedPipe / CreateFile)</td><td>持续对话、可跨机器</td></tr>
 <tr><td>共享内存 File Mapping</td><td>CreateFileMapping + MapViewOfFile，两进程映射同一块内存</td><td>大数据、高频</td></tr>
 </tbody>
@@ -4664,7 +4668,148 @@ MATHLIB_API <span class="kw">int</span> AddNumbers(<span class="kw">int</span> a
 </section>
 
 <section class="chapter">
-<h1 id="w15"><span class="part">第 15 章</span>现代 Win32 必修补遗</h1>
+<h1 id="w16"><span class="part">第 15 章</span>文件、注册表与剪贴板</h1>
+<p>窗口画得再漂亮，程序总要落地干活：读写文件、记住配置、和别的程序交换数据。这一章把三样日常武器一次配齐。</p>
+
+<h2 id="w16-createfile">CreateFileW：七个参数一次讲清</h2>
+<p>Win32 用同一个函数打开文件、串口、管道、设备——所以参数多。逐个过一遍，以后就是填空题：</p>
+<pre><code><span class="cl">HANDLE h = CreateFileW(</span><span class="cl"><span class="cc" style="min-width:34.0ch">    L"D:\\demo\\log.txt",</span><span class="cm">// ① 路径</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    GENERIC_WRITE,</span><span class="cm">// ② 想干嘛：GENERIC_READ / WRITE，可 | 组合</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    0,</span><span class="cm">// ③ 共享模式：0=独占；FILE_SHARE_READ=允许别人同时读</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    NULL,</span><span class="cm">// ④ 安全属性：入门恒 NULL</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    CREATE_ALWAYS,</span><span class="cm">// ⑤ 处置方式(关键！见下表)</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    FILE_ATTRIBUTE_NORMAL,</span><span class="cm">// ⑥ 属性/标志</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    NULL);</span><span class="cm">// ⑦ 模板：恒 NULL</span></span><span class="cl"><span class="cc" style="min-width:34.0ch"><span class="kw">if</span> (h == INVALID_HANDLE_VALUE) {</span><span class="cm">// ⚠ 不是 NULL！</span></span><span class="cl">    ShowLastError(L"CreateFile");</span><span class="cl">}</span></code></pre>
+<table>
+<thead><tr><th>⑤ 处置方式</th><th>文件已存在</th><th>文件不存在</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>CREATE_ALWAYS</code></td><td class="nw">清空覆盖</td><td class="nw">创建</td></tr>
+<tr><td class="nw"><code>CREATE_NEW</code></td><td class="nw">失败</td><td class="nw">创建</td></tr>
+<tr><td class="nw"><code>OPEN_EXISTING</code></td><td class="nw">打开</td><td class="nw">失败</td></tr>
+<tr><td class="nw"><code>OPEN_ALWAYS</code></td><td class="nw">打开</td><td class="nw">创建</td></tr>
+<tr><td><code>TRUNCATE_EXISTING</code></td><td class="nw">清空打开</td><td class="nw">失败</td></tr>
+</tbody>
+</table>
+
+<h2 id="w16-rw">读写与收尾</h2>
+<pre><code><span class="cm">// 写</span>
+<span class="kw">const char</span> text[] = "hello win32\r\n";        <span class="cm">// 文件内容是字节，编码自己负责(见本章选型节)</span>
+DWORD written = 0;
+WriteFile(h, text, (DWORD)strlen(text), &amp;written, NULL);
+CloseHandle(h);
+
+<span class="cm">// 读</span>
+HANDLE hr = CreateFileW(L"D:\\demo\\log.txt", GENERIC_READ,
+                        FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+<span class="kw">if</span> (hr != INVALID_HANDLE_VALUE) {
+    <span class="kw">char</span> buf[4096];
+    DWORD read = 0;
+    ReadFile(hr, buf, <span class="kw">sizeof</span>(buf) - 1, &amp;read, NULL);
+    buf[read] = '\0';
+    CloseHandle(hr);
+}</code></pre>
+<p>相关常用：<code>GetFileSizeEx</code>(取大小)、<code>SetFilePointerEx</code>(移动读写位置)、<code>DeleteFileW</code>、<code>MoveFileW</code>、<code>CopyFileW</code>、<code>CreateDirectoryW</code>、<code>GetFileAttributesW</code>——顺带是最快的「文件是否存在」判断(<code>!= INVALID_FILE_ATTRIBUTES</code>)。</p>
+
+<h2 id="w16-find">遍历目录：FindFirstFile 三件套</h2>
+<pre><code><span class="cl">WIN32_FIND_DATAW fd;</span><span class="cl"><span class="cc" style="min-width:60.0ch">HANDLE hFind = FindFirstFileW(L"C:\\Windows\\*.exe", &amp;fd);</span><span class="cm">// 支持通配符</span></span><span class="cl"><span class="kw">if</span> (hFind != INVALID_HANDLE_VALUE) {</span><span class="cl">    <span class="kw">do</span> {</span><span class="cl">        <span class="kw">if</span> (fd.dwFileAttributes &amp; FILE_ATTRIBUTE_DIRECTORY) {</span><span class="cl">            <span class="cm">// 目录。递归遍历时务必跳过 "." 和 ".."</span></span><span class="cl">        } <span class="kw">else</span> {</span><span class="cl">            <span class="cm">// fd.cFileName 文件名，fd.nFileSizeLow 大小</span></span><span class="cl">        }</span><span class="cl">    } <span class="kw">while</span> (FindNextFileW(hFind, &amp;fd));</span><span class="cl"><span class="cc" style="min-width:60.0ch">    FindClose(hFind);</span><span class="cm">// ⚠ 是 FindClose，不是 CloseHandle</span></span><span class="cl">}</span></code></pre>
+<p>递归版(子目录也钻进去)是「文件搜索器」类工具的核心，可直接复用：</p>
+<pre><code><span class="cl"><span class="cm">// 递归搜索：dir 形如 L"D:\\code"(不带尾斜杠)，找出文件名含 key 的文件</span></span><span class="cl"><span class="kw">void</span> SearchDir(<span class="kw">const</span> wchar_t* dir, <span class="kw">const</span> wchar_t* key)</span><span class="cl">{</span><span class="cl">    wchar_t pattern[MAX_PATH];</span><span class="cl"><span class="cc" style="min-width:44.0ch">    swprintf_s(pattern, L"%s\\*", dir);</span><span class="cm">// 本层通配</span></span><span class="cl"> </span><span class="cl">    WIN32_FIND_DATAW fd;</span><span class="cl">    HANDLE h = FindFirstFileW(pattern, &amp;fd);</span><span class="cl"><span class="cc" style="min-width:44.0ch">    <span class="kw">if</span> (h == INVALID_HANDLE_VALUE) <span class="kw">return</span>;</span><span class="cm">// 没权限的目录：跳过就好</span></span><span class="cl"> </span><span class="cl">    <span class="kw">do</span> {</span><span class="cl">        <span class="kw">if</span> (wcscmp(fd.cFileName, L".") == 0 || wcscmp(fd.cFileName, L"..") == 0)</span><span class="cl">            <span class="kw">continue</span>;</span><span class="cl"> </span><span class="cl">        wchar_t full[MAX_PATH];</span><span class="cl">        swprintf_s(full, L"%s\\%s", dir, fd.cFileName);</span><span class="cl"> </span><span class="cl">        <span class="kw">if</span> (fd.dwFileAttributes &amp; FILE_ATTRIBUTE_DIRECTORY)</span><span class="cl"><span class="cc" style="min-width:44.0ch">            SearchDir(full, key);</span><span class="cm">// 目录：钻进去</span></span><span class="cl">        <span class="kw">else if</span> (wcsstr(fd.cFileName, key) != NULL)</span><span class="cl"><span class="cc" style="min-width:44.0ch">            wprintf(L"%s\n", full);</span><span class="cm">// 实战中换成 PostMessage 报给 UI(第 14 章黄金模式)</span></span><span class="cl">    } <span class="kw">while</span> (FindNextFileW(h, &amp;fd));</span><span class="cl">    FindClose(h);</span><span class="cl">}</span></code></pre>
+<p>两处实战提醒：① 深目录树会超出 MAX_PATH，健壮版把定长缓冲换成 <code>std::wstring</code> 拼接；② 放进工作线程跑时，循环里加一句 <code>if (g_stop) break;</code> 就是「停止」按钮的全部实现。</p>
+
+<h2 id="w16-filetime">文件时间怎么显示</h2>
+<p>目录项(<code>fd.ftLastWriteTime</code>)和 <code>GetFileTime</code> 给的都是 <code>FILETIME</code>(1601 年起的 100 纳秒计数，UTC 时区)，给用户看要转两步：</p>
+<pre><code><span class="cl">SYSTEMTIME utc, local;</span><span class="cl"><span class="cc" style="min-width:54.0ch">FileTimeToSystemTime(&amp;fd.ftLastWriteTime, &amp;utc);</span><span class="cm">// FILETIME → 年月日时分秒(UTC)</span></span><span class="cl"><span class="cc" style="min-width:54.0ch">SystemTimeToTzSpecificLocalTime(NULL, &amp;utc, &amp;local);</span><span class="cm">// UTC → 本地时区</span></span><span class="cl">wchar_t when[64];</span><span class="cl">swprintf_s(when, L"%04d-%02d-%02d %02d:%02d",</span><span class="cl">           local.wYear, local.wMonth, local.wDay, local.wHour, local.wMinute);</span></code></pre>
+<p>只是比较两个文件谁新不用转换，<code>CompareFileTime</code> 直接比。</p>
+
+<h2 id="w16-path">路径常用 API</h2>
+<pre><code><span class="cl">wchar_t exePath[MAX_PATH];</span><span class="cl"><span class="cc" style="min-width:46.0ch">GetModuleFileNameW(NULL, exePath, MAX_PATH);</span><span class="cm">// 自己 exe 的完整路径("配置放 exe 旁边"必备)</span></span><span class="cl"><span class="cc" style="min-width:46.0ch">GetCurrentDirectoryW(MAX_PATH, buf);</span><span class="cm">// 当前目录(⚠ 会随打开文件对话框等操作漂移，别依赖)</span></span></code></pre>
+<p>拼接/拆分路径别手写字符串：<code>PathCchCombine</code>、<code>PathCchRemoveFileSpec</code>(<code>#include &lt;pathcch.h&gt;</code> + <code>pathcch.lib</code>)。<code>MAX_PATH</code>=260 是经典限制，入门按它来即可。</p>
+
+<h2 id="w16-choose">选型与编码两个提醒</h2>
+<p><strong>CreateFile vs CRT(fopen)/C++(fstream)怎么选</strong>：只是读写普通文件，三者皆可，标准库更省事。需要以下能力时必须 CreateFile：共享模式控制、异步 I/O(OVERLAPPED)、锁定区域、访问设备/管道/串口、精确的错误码。另外 fopen/fstream 在 Windows 底层最终也是调 CreateFile——又是一层「楼上楼下」。</p>
+<p><strong>编码</strong>：文件里是字节，<code>wchar_t</code> 字符串(UTF-16)直接写进文本文件会成「乱码」。写 UTF-8 文本的正确姿势：</p>
+<pre><code><span class="cm">// wchar_t* → UTF-8 字节</span>
+<span class="kw">int</span> cb = WideCharToMultiByte(CP_UTF8, 0, wtext, -1, NULL, 0, NULL, NULL);
+<span class="kw">char</span>* utf8 = <span class="kw">new char</span>[cb];
+WideCharToMultiByte(CP_UTF8, 0, wtext, -1, utf8, cb, NULL, NULL);
+WriteFile(h, utf8, cb - 1, &amp;written, NULL);    <span class="cm">// -1 去掉结尾 \0</span>
+<span class="kw">delete</span>[] utf8;
+<span class="cm">// 反方向读取用 MultiByteToWideChar(CP_UTF8, ...)</span></code></pre>
+
+<h2 id="w16-registry">注册表：系统的配置数据库</h2>
+<p>树形结构：根键 → 子键(像目录) → 值(名字 + 类型 + 数据)。你的程序该用的位置：<strong><code>HKEY_CURRENT_USER\Software\你的程序名</code></strong>。</p>
+<table>
+<thead><tr><th>根键</th><th>内容</th><th>写入权限</th></tr></thead>
+<tbody>
+<tr><td>HKEY_CURRENT_USER (HKCU)</td><td class="nw">当前用户的配置</td><td class="nw">普通权限即可 ✔</td></tr>
+<tr><td>HKEY_LOCAL_MACHINE (HKLM)</td><td class="nw">全机器配置</td><td class="nw">需要管理员(UAC)</td></tr>
+<tr><td>HKEY_CLASSES_ROOT</td><td>文件关联/COM 注册</td><td class="nw">——</td></tr>
+</tbody>
+</table>
+<p>现代读写一对 API 就够(内部帮你打开/关闭键)：</p>
+<pre><code><span class="cl"><span class="cm">// 写一个字符串值(键不存在会自动创建)</span></span><span class="cl"><span class="kw">const</span> wchar_t* v = L"D:\\work";</span><span class="cl">RegSetKeyValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath",</span><span class="cl"><span class="cc" style="min-width:73.0ch">                REG_SZ, v, (DWORD)((wcslen(v) + 1) * <span class="kw">sizeof</span>(wchar_t)));</span><span class="cm">// cb：字节数！</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 读回来</span></span><span class="cl">wchar_t buf[260];</span><span class="cl">DWORD cb = <span class="kw">sizeof</span>(buf);</span><span class="cl">LSTATUS s = RegGetValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath",</span><span class="cl">                         RRF_RT_REG_SZ, NULL, buf, &amp;cb);</span><span class="cl"><span class="cc" style="min-width:73.0ch"><span class="kw">if</span> (s == ERROR_SUCCESS) { <span class="cm">/* buf 可用 */</span> }</span><span class="cm">// 注意：错误码直返风格</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 删除</span></span><span class="cl">RegDeleteKeyValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath");</span></code></pre>
+<p>维护老代码会见到经典五步族：<code>RegOpenKeyExW → RegQueryValueExW / RegSetValueExW → RegCloseKey</code>，逻辑相同、更啰嗦而已。</p>
+<div class="note new"><span class="t">🔵 要写 HKLM / 需要管理员权限怎么办</span><p>进程不能运行到一半「升权」——提权是<strong>启动那一刻</strong>决定的。两条路：① 整个程序要求管理员：项目属性 → 清单工具 → UAC 执行级别 = <code>requireAdministrator</code>；② 只在需要时提权：<code>ShellExecuteW(NULL, L"runas", 自己的exe路径, 参数, NULL, SW_SHOWNORMAL)</code> 以管理员身份再启动一个自己。另外，小工具存配置的另一条路是 INI 文件放 exe 旁边(<code>GetPrivateProfileStringW</code>/<code>WritePrivateProfileStringW</code>)，绿色免安装软件的常规做法。</p></div>
+
+<h2 id="w16-sysinfo">常用系统信息拼盘</h2>
+<pre><code><span class="cl"><span class="cc" style="min-width:59.0ch">GetTickCount64();</span><span class="cm">// 开机以来毫秒数(测耗时够用；高精度用 QueryPerformanceCounter)</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">Sleep(200);</span><span class="cm">// 当前线程睡 200ms(别在 UI 线程用！)</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">GetSystemMetrics(SM_CXSCREEN);</span><span class="cm">// 主屏宽度像素；SM_CYSCREEN 高度</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">GetComputerNameW(buf, &amp;size);</span><span class="cm">// 计算机名；GetUserNameW 在 advapi32</span></span><span class="cl">GetEnvironmentVariableW(L"PATH", buf, n);<span class="cm">// 环境变量</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 标准目录(别硬编码 C:\Users\...)：</span></span><span class="cl">#include &lt;shlobj.h&gt;</span><span class="cl">PWSTR docs = NULL;</span><span class="cl"><span class="cc" style="min-width:59.0ch">SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &amp;docs);</span><span class="cm">// 我的文档</span></span><span class="cl"><span class="cm">// 用完：CoTaskMemFree(docs);</span></span></code></pre>
+
+<h2 id="w16-clipboard">剪贴板：写入与读取</h2>
+<pre><code><span class="cl"><span class="cm">// 写入一段文本</span></span><span class="cl"><span class="kw">if</span> (OpenClipboard(hwnd)) {</span><span class="cl">    EmptyClipboard();</span><span class="cl">    <span class="kw">const</span> wchar_t* text = L"来自 Win32 的文本";</span><span class="cl">    SIZE_T bytes = (wcslen(text) + 1) * <span class="kw">sizeof</span>(wchar_t);</span><span class="cl">    HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, bytes);</span><span class="cl">    memcpy(GlobalLock(hMem), text, bytes);</span><span class="cl">    GlobalUnlock(hMem);</span><span class="cl"><span class="cc" style="min-width:45.0ch">    SetClipboardData(CF_UNICODETEXT, hMem);</span><span class="cm">// 所有权移交系统：不要再 GlobalFree！</span></span><span class="cl">    CloseClipboard();</span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="cm">// 读取(所有权方向反过来：内存是系统的，只能看不能动)</span></span><span class="cl"><span class="kw">if</span> (OpenClipboard(hwnd)) {</span><span class="cl">    HANDLE hData = GetClipboardData(CF_UNICODETEXT);</span><span class="cl">    <span class="kw">if</span> (hData) {</span><span class="cl">        <span class="kw">const</span> wchar_t* text = (<span class="kw">const</span> wchar_t*)GlobalLock(hData);</span><span class="cl">        <span class="kw">if</span> (text) {</span><span class="cl">            <span class="cm">// 使用 text(想留住内容就自己拷贝一份)</span></span><span class="cl"><span class="cc" style="min-width:45.0ch">            GlobalUnlock(hData);</span><span class="cm">// 只 Unlock，不要 GlobalFree</span></span><span class="cl">        }</span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:45.0ch">    CloseClipboard();</span><span class="cm">// 剪贴板是全系统共享资源，开关之间动作要快</span></span><span class="cl">}</span></code></pre>
+</section>
+
+<section class="chapter">
+<h1 id="w17"><span class="part">第 16 章</span>调试与排错工具箱</h1>
+<p>会写只是一半功夫，另一半是「出了问题能自己查」。这一章把 Win32 排错的五样趁手工具一次交给你。</p>
+
+<h2 id="w17-ods">OutputDebugString：GUI 程序的 printf</h2>
+<p>窗口程序没有控制台，调试输出用它——文字出现在 VS 的「输出」窗口(或独立工具 DebugView)：</p>
+<pre><code><span class="kw">void</span> DbgPrintf(LPCWSTR fmt, ...)
+{
+    wchar_t buf[512];
+    va_list ap; va_start(ap, fmt);
+    vswprintf_s(buf, fmt, ap);
+    va_end(ap);
+    OutputDebugStringW(buf);
+}
+<span class="cm">// 用法：DbgPrintf(L"[%s] hwnd=%p, code=%d\n", L"paint", hwnd, code);</span></code></pre>
+
+<h2 id="w17-debugger">VS 调试器四招</h2>
+<ol>
+<li><strong>条件断点</strong>：断点右键 → 条件，如 <code>msg == WM_COMMAND &amp;&amp; LOWORD(wParam) == 1002</code>——WndProc 每秒被调几百次，无条件断点没法用。</li>
+<li><strong>监视 <code>$err,hr</code></strong>：实时显示 GetLastError 的码与文字。</li>
+<li><strong>调用堆栈</strong>：崩溃/断住时看「谁调的谁」。看到栈里穿过 user32.dll 又回到你的函数——那正是「系统回调你的 WndProc」的现场，亲眼看一次胜读十遍书。</li>
+<li><strong>数据断点</strong>(调试 → 新建断点 → 数据断点)：变量被谁改的？填地址，改的瞬间自动断住。查「莫名其妙变了」的神器。</li>
+</ol>
+
+<h2 id="w17-spy">Spy++ 三板斧</h2>
+<ul>
+<li><strong>找窗口</strong>：搜索 → 查找窗口，把靶心图标拖到任意窗口上 → 立刻显示其句柄、类名、样式、父子关系。想知道「某程序的输入框是什么控件」？拖上去便知。</li>
+<li><strong>看消息流</strong>：右键某窗口 → 消息，勾选想看的组 → 实时滚动该窗口收到的每一条消息。<strong>学消息机制阶段强烈建议对着自己的窗口开一次</strong>，第 3 章的「关窗三部曲」能亲眼看见。</li>
+<li><strong>看窗口树</strong>：整个系统的窗口层级一目了然，验证「控件就是子窗口」。</li>
+</ul>
+
+<h2 id="w17-leak">泄漏监控：任务管理器三列</h2>
+<p>任务管理器 → 详细信息 → 右键列标题 → 选择列 → 勾上<strong>句柄、USER 对象、GDI 对象</strong>。让你的程序反复执行某操作(开关对话框一百次、反复重绘)，三个数字稳定 = 健康；单调上涨 = 泄漏，涨哪列查哪类：</p>
+<table>
+<thead><tr><th>上涨的列</th><th>查什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">句柄</td><td><code>CloseHandle</code> 漏了(文件/线程/事件…)</td></tr>
+<tr><td class="nw">GDI 对象</td><td><code>DeleteObject</code> 漏了(画笔/画刷/字体/位图…)</td></tr>
+<tr><td class="nw">USER 对象</td><td class="nw">窗口/菜单没销毁</td></tr>
+</tbody>
+</table>
+<p>更强的观察用微软官方工具 <strong>Process Explorer</strong>。</p>
+
+<h2 id="w17-crash">崩溃速查表</h2>
+<table>
+<thead><tr><th>现象</th><th>高频原因</th></tr></thead>
+<tbody>
+<tr><td>一启动就崩在陌生地址</td><td>回调签名不对(少了 CALLBACK / 参数不符) → 栈损坏</td></tr>
+<tr><td>CreateWindow 返回 NULL</td><td>类没注册成功 / WM_CREATE 里返回了 -1 / 类名拼错</td></tr>
+<tr><td class="nw">界面未响应</td><td>WndProc 里干了耗时活(第 14 章黄金模式伺候)</td></tr>
+<tr><td>绘图 API 集体失败、界面花</td><td>GDI 对象泄漏到上限</td></tr>
+<tr><td class="nw">关了窗口进程还在</td><td>WM_DESTROY 没 PostQuitMessage</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter">
+<h1 id="w15"><span class="part">第 17 章</span>现代 Win32 必修补遗</h1>
 
 <p>经典教材成书的年代，显示器清一色 96 DPI，控件只有一种长相，主题只有一种颜色，路径不超过 260 字符似乎是天经地义。这些前提在 2026 年一条也不成立了。本章补齐经典内容之外、今天写 Win32 程序<strong>必须懂</strong>的几件事：高 DPI、视觉样式清单、深色模式、现代文件对话框、拖放，以及长路径与 Unicode 的最后叮嘱。它们的共同点是：不做也能跑，但一眼就能看出"这程序是上个时代的"。</p>
 
@@ -4675,10 +4820,10 @@ MATHLIB_API <span class="kw">int</span> AddNumbers(<span class="kw">int</span> a
 <p>要摆脱拉伸，就得向系统声明自己的 DPI 感知级别。感知分三档，外加一个"第三档加强版"：</p>
 
 <table><thead><tr><th>档位</th><th>清单声明</th><th>系统怎么对待你</th><th>现状</th></tr></thead><tbody>
-<tr><td>Unaware（无感知）</td><td>什么都不写</td><td>永远谎报 96 DPI，整窗位图拉伸，必糊</td><td> 只配跑遗留程序</td></tr>
-<tr><td>System（系统级）</td><td><code>&lt;dpiAware&gt;true&lt;/dpiAware&gt;</code></td><td>按<em>登录时主屏</em>的 DPI 渲染一次；拖到不同缩放的副屏、或用户中途改缩放，照样被拉伸</td><td> 单屏勉强够用</td></tr>
-<tr><td>Per-Monitor（V1）</td><td><code>PerMonitor</code></td><td>跨屏时发 <code>WM_DPICHANGED</code> 让你自己缩放，但标题栏、菜单、系统对话框不跟着变，得手动调 <code>EnableNonClientDpiScaling</code> 补救</td><td> 半成品，已被 V2 取代</td></tr>
-<tr><td>Per-Monitor <strong>V2</strong></td><td><code>PerMonitorV2</code></td><td>全套服务：非客户区、菜单、消息框、对话框模板自动按所在显示器缩放，再配合 <code>WM_DPICHANGED</code> 缩放客户区</td><td> 唯一正确答案（Win10 1703+）</td></tr>
+<tr><td>Unaware（无感知）</td><td class="nw">什么都不写</td><td>永远谎报 96 DPI，整窗位图拉伸，必糊</td><td class="nw"> 只配跑遗留程序</td></tr>
+<tr><td class="nw">System（系统级）</td><td><code>&lt;dpiAware&gt;true&lt;/dpiAware&gt;</code></td><td>按<em>登录时主屏</em>的 DPI 渲染一次；拖到不同缩放的副屏、或用户中途改缩放，照样被拉伸</td><td class="nw"> 单屏勉强够用</td></tr>
+<tr><td>Per-Monitor（V1）</td><td class="nw"><code>PerMonitor</code></td><td>跨屏时发 <code>WM_DPICHANGED</code> 让你自己缩放，但标题栏、菜单、系统对话框不跟着变，得手动调 <code>EnableNonClientDpiScaling</code> 补救</td><td> 半成品，已被 V2 取代</td></tr>
+<tr><td class="nw">Per-Monitor <strong>V2</strong></td><td class="nw"><code>PerMonitorV2</code></td><td>全套服务：非客户区、菜单、消息框、对话框模板自动按所在显示器缩放，再配合 <code>WM_DPICHANGED</code> 缩放客户区</td><td> 唯一正确答案（Win10 1703+）</td></tr>
 </tbody></table>
 
 <p>声明方式是往应用程序清单（manifest）里写一段 XML。Visual Studio 里也可以直接在"项目属性 → 清单工具 → DPI 感知"下拉选择"每监视器高 DPI 感知 V2"，效果等同于：</p>
@@ -4791,11 +4936,11 @@ BOOL fDarkNow = (value == 0);
 <p>多显示器 + 不同缩放，是坐标 bug 的高产区。PerMonitorV2 进程里的一切坐标都是<strong>物理像素</strong>，屏幕坐标系横跨所有显示器——同样 100 物理像素，在 100% 的外接屏上是一节拇指，在 200% 的笔记本屏上只有半节。常见的翻车姿势和解法：</p>
 
 <table><thead><tr><th>陷阱</th><th>翻车现场</th><th>正确做法</th></tr></thead><tbody>
-<tr><td>启动时缓存 DPI</td><td>程序在 A 屏启动时存下 DPI，拖到 B 屏后布局全按旧值算</td><td> 每次布局现调 <code>GetDpiForWindow</code>，DPI 永不落地存盘</td></tr>
-<tr><td><code>GetSystemMetrics</code></td><td>返回值基于系统 DPI，与窗口所在屏无关</td><td> <code>GetSystemMetricsForDpi(nIndex, dpi)</code></td></tr>
+<tr><td class="nw">启动时缓存 DPI</td><td>程序在 A 屏启动时存下 DPI，拖到 B 屏后布局全按旧值算</td><td> 每次布局现调 <code>GetDpiForWindow</code>，DPI 永不落地存盘</td></tr>
+<tr><td class="nw"><code>GetSystemMetrics</code></td><td>返回值基于系统 DPI，与窗口所在屏无关</td><td> <code>GetSystemMetricsForDpi(nIndex, dpi)</code></td></tr>
 <tr><td><code>AdjustWindowRectEx</code></td><td>按系统 DPI 估算边框，非主屏上客户区尺寸算错</td><td> <code>AdjustWindowRectExForDpi</code></td></tr>
 <tr><td><code>GetDeviceCaps(hdc, LOGPIXELSX)</code></td><td>System 感知下被虚拟化成常数，跨屏拿不到真值</td><td> <code>GetDpiForWindow</code> / <code>GetDpiForMonitor</code></td></tr>
-<tr><td>累积换算取整</td><td>96→144→96 来回 <code>MulDiv</code>，四舍五入误差越滚越大，控件慢慢"漂移"</td><td> 永远从<strong>逻辑尺寸模型</strong>一步换算到当前 DPI，不做"物理→物理"的二次换算</td></tr>
+<tr><td class="nw">累积换算取整</td><td>96→144→96 来回 <code>MulDiv</code>，四舍五入误差越滚越大，控件慢慢"漂移"</td><td> 永远从<strong>逻辑尺寸模型</strong>一步换算到当前 DPI，不做"物理→物理"的二次换算</td></tr>
 </tbody></table>
 
 <p>再说对话框。资源脚本里 <code>DIALOGEX 0, 0, 240, 120</code> 的单位不是像素，而是<strong>对话框单位（DLU，Dialog Unit）</strong>：1 水平 DLU = 对话框字体平均字符宽度的 ¼，1 垂直 DLU = 字符高度的 ⅛。单位锚定在字体上，字体随 DPI 放大，整个对话框就跟着等比放大——这套 1985 年的设计歪打正着地"天生 DPI 无关"。PerMonitorV2 下系统会在对话框跨屏时自动换字体、重算 DLU 布局，模板对话框基本白得缩放。需要在代码里往对话框上追加控件时，用 <code>MapDialogRect</code> 把 DLU 矩形换算成当前像素，别硬写像素值。</p>
@@ -4885,147 +5030,6 @@ BOOL fDarkNow = (value == 0);
 
 <p>消息循环还是那个消息循环，<code>WndProc</code> 还是那个 <code>WndProc</code>——但加上这一章的补遗，你的程序在 4K 屏上是锐利的，控件是现代的，标题栏懂得跟随夜色，文件对话框认识这十年的新事物，拖进来的超长路径也接得住。经典打的地基，现代盖的楼，这才是 2026 年的 Win32。</p>
 
-</section>
-
-<section class="chapter">
-<h1 id="w16"><span class="part">第 16 章</span>文件、注册表与剪贴板</h1>
-<p>窗口画得再漂亮，程序总要落地干活：读写文件、记住配置、和别的程序交换数据。这一章把三样日常武器一次配齐。</p>
-
-<h2 id="w16-createfile">CreateFileW：七个参数一次讲清</h2>
-<p>Win32 用同一个函数打开文件、串口、管道、设备——所以参数多。逐个过一遍，以后就是填空题：</p>
-<pre><code><span class="cl">HANDLE h = CreateFileW(</span><span class="cl"><span class="cc" style="min-width:34.0ch">    L"D:\\demo\\log.txt",</span><span class="cm">// ① 路径</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    GENERIC_WRITE,</span><span class="cm">// ② 想干嘛：GENERIC_READ / WRITE，可 | 组合</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    0,</span><span class="cm">// ③ 共享模式：0=独占；FILE_SHARE_READ=允许别人同时读</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    NULL,</span><span class="cm">// ④ 安全属性：入门恒 NULL</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    CREATE_ALWAYS,</span><span class="cm">// ⑤ 处置方式(关键！见下表)</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    FILE_ATTRIBUTE_NORMAL,</span><span class="cm">// ⑥ 属性/标志</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    NULL);</span><span class="cm">// ⑦ 模板：恒 NULL</span></span><span class="cl"><span class="cc" style="min-width:34.0ch"><span class="kw">if</span> (h == INVALID_HANDLE_VALUE) {</span><span class="cm">// ⚠ 不是 NULL！</span></span><span class="cl">    ShowLastError(L"CreateFile");</span><span class="cl">}</span></code></pre>
-<table>
-<thead><tr><th>⑤ 处置方式</th><th>文件已存在</th><th>文件不存在</th></tr></thead>
-<tbody>
-<tr><td><code>CREATE_ALWAYS</code></td><td>清空覆盖</td><td>创建</td></tr>
-<tr><td><code>CREATE_NEW</code></td><td>失败</td><td>创建</td></tr>
-<tr><td><code>OPEN_EXISTING</code></td><td>打开</td><td>失败</td></tr>
-<tr><td><code>OPEN_ALWAYS</code></td><td>打开</td><td>创建</td></tr>
-<tr><td><code>TRUNCATE_EXISTING</code></td><td>清空打开</td><td>失败</td></tr>
-</tbody>
-</table>
-
-<h2 id="w16-rw">读写与收尾</h2>
-<pre><code><span class="cm">// 写</span>
-<span class="kw">const char</span> text[] = "hello win32\r\n";        <span class="cm">// 文件内容是字节，编码自己负责(见本章选型节)</span>
-DWORD written = 0;
-WriteFile(h, text, (DWORD)strlen(text), &amp;written, NULL);
-CloseHandle(h);
-
-<span class="cm">// 读</span>
-HANDLE hr = CreateFileW(L"D:\\demo\\log.txt", GENERIC_READ,
-                        FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-<span class="kw">if</span> (hr != INVALID_HANDLE_VALUE) {
-    <span class="kw">char</span> buf[4096];
-    DWORD read = 0;
-    ReadFile(hr, buf, <span class="kw">sizeof</span>(buf) - 1, &amp;read, NULL);
-    buf[read] = '\0';
-    CloseHandle(hr);
-}</code></pre>
-<p>相关常用：<code>GetFileSizeEx</code>(取大小)、<code>SetFilePointerEx</code>(移动读写位置)、<code>DeleteFileW</code>、<code>MoveFileW</code>、<code>CopyFileW</code>、<code>CreateDirectoryW</code>、<code>GetFileAttributesW</code>——顺带是最快的「文件是否存在」判断(<code>!= INVALID_FILE_ATTRIBUTES</code>)。</p>
-
-<h2 id="w16-find">遍历目录：FindFirstFile 三件套</h2>
-<pre><code><span class="cl">WIN32_FIND_DATAW fd;</span><span class="cl"><span class="cc" style="min-width:60.0ch">HANDLE hFind = FindFirstFileW(L"C:\\Windows\\*.exe", &amp;fd);</span><span class="cm">// 支持通配符</span></span><span class="cl"><span class="kw">if</span> (hFind != INVALID_HANDLE_VALUE) {</span><span class="cl">    <span class="kw">do</span> {</span><span class="cl">        <span class="kw">if</span> (fd.dwFileAttributes &amp; FILE_ATTRIBUTE_DIRECTORY) {</span><span class="cl">            <span class="cm">// 目录。递归遍历时务必跳过 "." 和 ".."</span></span><span class="cl">        } <span class="kw">else</span> {</span><span class="cl">            <span class="cm">// fd.cFileName 文件名，fd.nFileSizeLow 大小</span></span><span class="cl">        }</span><span class="cl">    } <span class="kw">while</span> (FindNextFileW(hFind, &amp;fd));</span><span class="cl"><span class="cc" style="min-width:60.0ch">    FindClose(hFind);</span><span class="cm">// ⚠ 是 FindClose，不是 CloseHandle</span></span><span class="cl">}</span></code></pre>
-<p>递归版(子目录也钻进去)是「文件搜索器」类工具的核心，可直接复用：</p>
-<pre><code><span class="cl"><span class="cm">// 递归搜索：dir 形如 L"D:\\code"(不带尾斜杠)，找出文件名含 key 的文件</span></span><span class="cl"><span class="kw">void</span> SearchDir(<span class="kw">const</span> wchar_t* dir, <span class="kw">const</span> wchar_t* key)</span><span class="cl">{</span><span class="cl">    wchar_t pattern[MAX_PATH];</span><span class="cl"><span class="cc" style="min-width:44.0ch">    swprintf_s(pattern, L"%s\\*", dir);</span><span class="cm">// 本层通配</span></span><span class="cl"> </span><span class="cl">    WIN32_FIND_DATAW fd;</span><span class="cl">    HANDLE h = FindFirstFileW(pattern, &amp;fd);</span><span class="cl"><span class="cc" style="min-width:44.0ch">    <span class="kw">if</span> (h == INVALID_HANDLE_VALUE) <span class="kw">return</span>;</span><span class="cm">// 没权限的目录：跳过就好</span></span><span class="cl"> </span><span class="cl">    <span class="kw">do</span> {</span><span class="cl">        <span class="kw">if</span> (wcscmp(fd.cFileName, L".") == 0 || wcscmp(fd.cFileName, L"..") == 0)</span><span class="cl">            <span class="kw">continue</span>;</span><span class="cl"> </span><span class="cl">        wchar_t full[MAX_PATH];</span><span class="cl">        swprintf_s(full, L"%s\\%s", dir, fd.cFileName);</span><span class="cl"> </span><span class="cl">        <span class="kw">if</span> (fd.dwFileAttributes &amp; FILE_ATTRIBUTE_DIRECTORY)</span><span class="cl"><span class="cc" style="min-width:44.0ch">            SearchDir(full, key);</span><span class="cm">// 目录：钻进去</span></span><span class="cl">        <span class="kw">else if</span> (wcsstr(fd.cFileName, key) != NULL)</span><span class="cl"><span class="cc" style="min-width:44.0ch">            wprintf(L"%s\n", full);</span><span class="cm">// 实战中换成 PostMessage 报给 UI(第 14 章黄金模式)</span></span><span class="cl">    } <span class="kw">while</span> (FindNextFileW(h, &amp;fd));</span><span class="cl">    FindClose(h);</span><span class="cl">}</span></code></pre>
-<p>两处实战提醒：① 深目录树会超出 MAX_PATH，健壮版把定长缓冲换成 <code>std::wstring</code> 拼接；② 放进工作线程跑时，循环里加一句 <code>if (g_stop) break;</code> 就是「停止」按钮的全部实现。</p>
-
-<h2 id="w16-filetime">文件时间怎么显示</h2>
-<p>目录项(<code>fd.ftLastWriteTime</code>)和 <code>GetFileTime</code> 给的都是 <code>FILETIME</code>(1601 年起的 100 纳秒计数，UTC 时区)，给用户看要转两步：</p>
-<pre><code><span class="cl">SYSTEMTIME utc, local;</span><span class="cl"><span class="cc" style="min-width:54.0ch">FileTimeToSystemTime(&amp;fd.ftLastWriteTime, &amp;utc);</span><span class="cm">// FILETIME → 年月日时分秒(UTC)</span></span><span class="cl"><span class="cc" style="min-width:54.0ch">SystemTimeToTzSpecificLocalTime(NULL, &amp;utc, &amp;local);</span><span class="cm">// UTC → 本地时区</span></span><span class="cl">wchar_t when[64];</span><span class="cl">swprintf_s(when, L"%04d-%02d-%02d %02d:%02d",</span><span class="cl">           local.wYear, local.wMonth, local.wDay, local.wHour, local.wMinute);</span></code></pre>
-<p>只是比较两个文件谁新不用转换，<code>CompareFileTime</code> 直接比。</p>
-
-<h2 id="w16-path">路径常用 API</h2>
-<pre><code><span class="cl">wchar_t exePath[MAX_PATH];</span><span class="cl"><span class="cc" style="min-width:46.0ch">GetModuleFileNameW(NULL, exePath, MAX_PATH);</span><span class="cm">// 自己 exe 的完整路径("配置放 exe 旁边"必备)</span></span><span class="cl"><span class="cc" style="min-width:46.0ch">GetCurrentDirectoryW(MAX_PATH, buf);</span><span class="cm">// 当前目录(⚠ 会随打开文件对话框等操作漂移，别依赖)</span></span></code></pre>
-<p>拼接/拆分路径别手写字符串：<code>PathCchCombine</code>、<code>PathCchRemoveFileSpec</code>(<code>#include &lt;pathcch.h&gt;</code> + <code>pathcch.lib</code>)。<code>MAX_PATH</code>=260 是经典限制，入门按它来即可。</p>
-
-<h2 id="w16-choose">选型与编码两个提醒</h2>
-<p><strong>CreateFile vs CRT(fopen)/C++(fstream)怎么选</strong>：只是读写普通文件，三者皆可，标准库更省事。需要以下能力时必须 CreateFile：共享模式控制、异步 I/O(OVERLAPPED)、锁定区域、访问设备/管道/串口、精确的错误码。另外 fopen/fstream 在 Windows 底层最终也是调 CreateFile——又是一层「楼上楼下」。</p>
-<p><strong>编码</strong>：文件里是字节，<code>wchar_t</code> 字符串(UTF-16)直接写进文本文件会成「乱码」。写 UTF-8 文本的正确姿势：</p>
-<pre><code><span class="cm">// wchar_t* → UTF-8 字节</span>
-<span class="kw">int</span> cb = WideCharToMultiByte(CP_UTF8, 0, wtext, -1, NULL, 0, NULL, NULL);
-<span class="kw">char</span>* utf8 = <span class="kw">new char</span>[cb];
-WideCharToMultiByte(CP_UTF8, 0, wtext, -1, utf8, cb, NULL, NULL);
-WriteFile(h, utf8, cb - 1, &amp;written, NULL);    <span class="cm">// -1 去掉结尾 \0</span>
-<span class="kw">delete</span>[] utf8;
-<span class="cm">// 反方向读取用 MultiByteToWideChar(CP_UTF8, ...)</span></code></pre>
-
-<h2 id="w16-registry">注册表：系统的配置数据库</h2>
-<p>树形结构：根键 → 子键(像目录) → 值(名字 + 类型 + 数据)。你的程序该用的位置：<strong><code>HKEY_CURRENT_USER\Software\你的程序名</code></strong>。</p>
-<table>
-<thead><tr><th>根键</th><th>内容</th><th>写入权限</th></tr></thead>
-<tbody>
-<tr><td>HKEY_CURRENT_USER (HKCU)</td><td>当前用户的配置</td><td>普通权限即可 ✔</td></tr>
-<tr><td>HKEY_LOCAL_MACHINE (HKLM)</td><td>全机器配置</td><td>需要管理员(UAC)</td></tr>
-<tr><td>HKEY_CLASSES_ROOT</td><td>文件关联/COM 注册</td><td>——</td></tr>
-</tbody>
-</table>
-<p>现代读写一对 API 就够(内部帮你打开/关闭键)：</p>
-<pre><code><span class="cl"><span class="cm">// 写一个字符串值(键不存在会自动创建)</span></span><span class="cl"><span class="kw">const</span> wchar_t* v = L"D:\\work";</span><span class="cl">RegSetKeyValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath",</span><span class="cl"><span class="cc" style="min-width:73.0ch">                REG_SZ, v, (DWORD)((wcslen(v) + 1) * <span class="kw">sizeof</span>(wchar_t)));</span><span class="cm">// cb：字节数！</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 读回来</span></span><span class="cl">wchar_t buf[260];</span><span class="cl">DWORD cb = <span class="kw">sizeof</span>(buf);</span><span class="cl">LSTATUS s = RegGetValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath",</span><span class="cl">                         RRF_RT_REG_SZ, NULL, buf, &amp;cb);</span><span class="cl"><span class="cc" style="min-width:73.0ch"><span class="kw">if</span> (s == ERROR_SUCCESS) { <span class="cm">/* buf 可用 */</span> }</span><span class="cm">// 注意：错误码直返风格</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 删除</span></span><span class="cl">RegDeleteKeyValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath");</span></code></pre>
-<p>维护老代码会见到经典五步族：<code>RegOpenKeyExW → RegQueryValueExW / RegSetValueExW → RegCloseKey</code>，逻辑相同、更啰嗦而已。</p>
-<div class="note new"><span class="t">🔵 要写 HKLM / 需要管理员权限怎么办</span><p>进程不能运行到一半「升权」——提权是<strong>启动那一刻</strong>决定的。两条路：① 整个程序要求管理员：项目属性 → 清单工具 → UAC 执行级别 = <code>requireAdministrator</code>；② 只在需要时提权：<code>ShellExecuteW(NULL, L"runas", 自己的exe路径, 参数, NULL, SW_SHOWNORMAL)</code> 以管理员身份再启动一个自己。另外，小工具存配置的另一条路是 INI 文件放 exe 旁边(<code>GetPrivateProfileStringW</code>/<code>WritePrivateProfileStringW</code>)，绿色免安装软件的常规做法。</p></div>
-
-<h2 id="w16-sysinfo">常用系统信息拼盘</h2>
-<pre><code><span class="cl"><span class="cc" style="min-width:59.0ch">GetTickCount64();</span><span class="cm">// 开机以来毫秒数(测耗时够用；高精度用 QueryPerformanceCounter)</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">Sleep(200);</span><span class="cm">// 当前线程睡 200ms(别在 UI 线程用！)</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">GetSystemMetrics(SM_CXSCREEN);</span><span class="cm">// 主屏宽度像素；SM_CYSCREEN 高度</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">GetComputerNameW(buf, &amp;size);</span><span class="cm">// 计算机名；GetUserNameW 在 advapi32</span></span><span class="cl">GetEnvironmentVariableW(L"PATH", buf, n);<span class="cm">// 环境变量</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 标准目录(别硬编码 C:\Users\...)：</span></span><span class="cl">#include &lt;shlobj.h&gt;</span><span class="cl">PWSTR docs = NULL;</span><span class="cl"><span class="cc" style="min-width:59.0ch">SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &amp;docs);</span><span class="cm">// 我的文档</span></span><span class="cl"><span class="cm">// 用完：CoTaskMemFree(docs);</span></span></code></pre>
-
-<h2 id="w16-clipboard">剪贴板：写入与读取</h2>
-<pre><code><span class="cl"><span class="cm">// 写入一段文本</span></span><span class="cl"><span class="kw">if</span> (OpenClipboard(hwnd)) {</span><span class="cl">    EmptyClipboard();</span><span class="cl">    <span class="kw">const</span> wchar_t* text = L"来自 Win32 的文本";</span><span class="cl">    SIZE_T bytes = (wcslen(text) + 1) * <span class="kw">sizeof</span>(wchar_t);</span><span class="cl">    HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, bytes);</span><span class="cl">    memcpy(GlobalLock(hMem), text, bytes);</span><span class="cl">    GlobalUnlock(hMem);</span><span class="cl"><span class="cc" style="min-width:45.0ch">    SetClipboardData(CF_UNICODETEXT, hMem);</span><span class="cm">// 所有权移交系统：不要再 GlobalFree！</span></span><span class="cl">    CloseClipboard();</span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="cm">// 读取(所有权方向反过来：内存是系统的，只能看不能动)</span></span><span class="cl"><span class="kw">if</span> (OpenClipboard(hwnd)) {</span><span class="cl">    HANDLE hData = GetClipboardData(CF_UNICODETEXT);</span><span class="cl">    <span class="kw">if</span> (hData) {</span><span class="cl">        <span class="kw">const</span> wchar_t* text = (<span class="kw">const</span> wchar_t*)GlobalLock(hData);</span><span class="cl">        <span class="kw">if</span> (text) {</span><span class="cl">            <span class="cm">// 使用 text(想留住内容就自己拷贝一份)</span></span><span class="cl"><span class="cc" style="min-width:45.0ch">            GlobalUnlock(hData);</span><span class="cm">// 只 Unlock，不要 GlobalFree</span></span><span class="cl">        }</span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:45.0ch">    CloseClipboard();</span><span class="cm">// 剪贴板是全系统共享资源，开关之间动作要快</span></span><span class="cl">}</span></code></pre>
-</section>
-
-<section class="chapter">
-<h1 id="w17"><span class="part">第 17 章</span>调试与排错工具箱</h1>
-<p>会写只是一半功夫，另一半是「出了问题能自己查」。这一章把 Win32 排错的五样趁手工具一次交给你。</p>
-
-<h2 id="w17-ods">OutputDebugString：GUI 程序的 printf</h2>
-<p>窗口程序没有控制台，调试输出用它——文字出现在 VS 的「输出」窗口(或独立工具 DebugView)：</p>
-<pre><code><span class="kw">void</span> DbgPrintf(LPCWSTR fmt, ...)
-{
-    wchar_t buf[512];
-    va_list ap; va_start(ap, fmt);
-    vswprintf_s(buf, fmt, ap);
-    va_end(ap);
-    OutputDebugStringW(buf);
-}
-<span class="cm">// 用法：DbgPrintf(L"[%s] hwnd=%p, code=%d\n", L"paint", hwnd, code);</span></code></pre>
-
-<h2 id="w17-debugger">VS 调试器四招</h2>
-<ol>
-<li><strong>条件断点</strong>：断点右键 → 条件，如 <code>msg == WM_COMMAND &amp;&amp; LOWORD(wParam) == 1002</code>——WndProc 每秒被调几百次，无条件断点没法用。</li>
-<li><strong>监视 <code>$err,hr</code></strong>：实时显示 GetLastError 的码与文字。</li>
-<li><strong>调用堆栈</strong>：崩溃/断住时看「谁调的谁」。看到栈里穿过 user32.dll 又回到你的函数——那正是「系统回调你的 WndProc」的现场，亲眼看一次胜读十遍书。</li>
-<li><strong>数据断点</strong>(调试 → 新建断点 → 数据断点)：变量被谁改的？填地址，改的瞬间自动断住。查「莫名其妙变了」的神器。</li>
-</ol>
-
-<h2 id="w17-spy">Spy++ 三板斧</h2>
-<ul>
-<li><strong>找窗口</strong>：搜索 → 查找窗口，把靶心图标拖到任意窗口上 → 立刻显示其句柄、类名、样式、父子关系。想知道「某程序的输入框是什么控件」？拖上去便知。</li>
-<li><strong>看消息流</strong>：右键某窗口 → 消息，勾选想看的组 → 实时滚动该窗口收到的每一条消息。<strong>学消息机制阶段强烈建议对着自己的窗口开一次</strong>，第 3 章的「关窗三部曲」能亲眼看见。</li>
-<li><strong>看窗口树</strong>：整个系统的窗口层级一目了然，验证「控件就是子窗口」。</li>
-</ul>
-
-<h2 id="w17-leak">泄漏监控：任务管理器三列</h2>
-<p>任务管理器 → 详细信息 → 右键列标题 → 选择列 → 勾上<strong>句柄、USER 对象、GDI 对象</strong>。让你的程序反复执行某操作(开关对话框一百次、反复重绘)，三个数字稳定 = 健康；单调上涨 = 泄漏，涨哪列查哪类：</p>
-<table>
-<thead><tr><th>上涨的列</th><th>查什么</th></tr></thead>
-<tbody>
-<tr><td>句柄</td><td><code>CloseHandle</code> 漏了(文件/线程/事件…)</td></tr>
-<tr><td>GDI 对象</td><td><code>DeleteObject</code> 漏了(画笔/画刷/字体/位图…)</td></tr>
-<tr><td>USER 对象</td><td>窗口/菜单没销毁</td></tr>
-</tbody>
-</table>
-<p>更强的观察用微软官方工具 <strong>Process Explorer</strong>。</p>
-
-<h2 id="w17-crash">崩溃速查表</h2>
-<table>
-<thead><tr><th>现象</th><th>高频原因</th></tr></thead>
-<tbody>
-<tr><td>一启动就崩在陌生地址</td><td>回调签名不对(少了 CALLBACK / 参数不符) → 栈损坏</td></tr>
-<tr><td>CreateWindow 返回 NULL</td><td>类没注册成功 / WM_CREATE 里返回了 -1 / 类名拼错</td></tr>
-<tr><td>界面未响应</td><td>WndProc 里干了耗时活(第 14 章黄金模式伺候)</td></tr>
-<tr><td>绘图 API 集体失败、界面花</td><td>GDI 对象泄漏到上限</td></tr>
-<tr><td>关了窗口进程还在</td><td>WM_DESTROY 没 PostQuitMessage</td></tr>
-</tbody>
-</table>
 </section>
 
 

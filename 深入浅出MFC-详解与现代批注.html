@@ -154,8 +154,12 @@ figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
 pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
 table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
 #sidebar,#toc{will-change:scroll-position;}
-table th, table td { white-space: normal; }
+
+/* 表格：短内容不折行，长文本正常折行 */
+table th { white-space: nowrap; }
 table td:first-child, table th:first-child { white-space: nowrap; }
+table td { overflow-wrap: break-word; }
+table td.nw { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -750,10 +754,10 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>方式</th><th>例子</th><th>何时死</th></tr></thead>
 <tbody>
-<tr><td>全局 / 静态</td><td><code>CMyApp theApp;</code></td><td>程序结束时</td></tr>
-<tr><td>局部（栈上）</td><td>函数内 <code>CRect r;</code></td><td>离开作用域时（自动）</td></tr>
-<tr><td>动态（堆上）</td><td><code>new CView</code></td><td>你 <code>delete</code> 时</td></tr>
-<tr><td>成员子对象</td><td>类里的成员对象</td><td>随宿主对象一起死</td></tr>
+<tr><td class="nw">全局 / 静态</td><td class="nw"><code>CMyApp theApp;</code></td><td class="nw">程序结束时</td></tr>
+<tr><td class="nw">局部（栈上）</td><td class="nw">函数内 <code>CRect r;</code></td><td>离开作用域时（自动）</td></tr>
+<tr><td class="nw">动态（堆上）</td><td class="nw"><code>new CView</code></td><td class="nw">你 <code>delete</code> 时</td></tr>
+<tr><td class="nw">成员子对象</td><td class="nw">类里的成员对象</td><td class="nw">随宿主对象一起死</td></tr>
 </tbody>
 </table>
 <p>其中「全局对象 <code>theApp</code> 在 <code>main</code> 之前就构造」正是下一章「MFC 程序生死因果」的起点。「Unwinding」指异常抛出时，栈上已构造的对象会被逆序自动解构——这是 C++ 异常安全的基础。</p>
@@ -1179,10 +1183,10 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>工具</th><th>可执行文件</th><th>输入 → 输出</th><th>它在解决什么</th></tr></thead>
 <tbody>
-<tr><td>编译器</td><td>cl.exe</td><td>.cpp/.c → .obj</td><td>把一个「翻译单元」翻成机器码目标文件，此时函数间的引用还是空的符号</td></tr>
-<tr><td>资源编译器</td><td>rc.exe</td><td>.rc → .res</td><td>把描述图标/菜单/对话框的文本脚本编成二进制资源块</td></tr>
-<tr><td>链接器</td><td>link.exe</td><td>.obj + .res + .lib → .exe/.dll</td><td>把散落各处的符号引用一一解析、拼成一个完整的 PE 映像</td></tr>
-<tr><td>构建调度器</td><td>nmake.exe</td><td>makefile → 触发上面三者</td><td>按依赖关系决定「谁该重新构建」，只重编改过的部分</td></tr>
+<tr><td class="nw">编译器</td><td class="nw">cl.exe</td><td class="nw">.cpp/.c → .obj</td><td>把一个「翻译单元」翻成机器码目标文件，此时函数间的引用还是空的符号</td></tr>
+<tr><td class="nw">资源编译器</td><td class="nw">rc.exe</td><td class="nw">.rc → .res</td><td>把描述图标/菜单/对话框的文本脚本编成二进制资源块</td></tr>
+<tr><td class="nw">链接器</td><td class="nw">link.exe</td><td>.obj + .res + .lib → .exe/.dll</td><td>把散落各处的符号引用一一解析、拼成一个完整的 PE 映像</td></tr>
+<tr><td class="nw">构建调度器</td><td class="nw">nmake.exe</td><td>makefile → 触发上面三者</td><td>按依赖关系决定「谁该重新构建」，只重编改过的部分</td></tr>
 </tbody>
 </table>
 <p>关键在于分工。<b>编译器</b>只看得见「一个 .cpp 文件加上它 <code>#include</code> 进来的头」这么大一块——这一块叫翻译单元。它编译时如果碰到你调用了一个别处定义的函数，它不会去找那个函数，只是留下一个「待填」的符号记号就继续走。所以编译能过，不代表程序能连起来。<b>链接器</b>才是负责把所有 .obj 里那些「待填」的符号对上号的角色：它翻遍所有目标文件和库，找到每个符号的真身，把地址填进去。你熟悉的那句 <code>unresolved external symbol</code>，就是链接器在喊「有个符号我全世界都找不到定义」。</p>
@@ -1309,12 +1313,12 @@ END
 <table>
 <thead><tr><th>家族</th><th>职责</th><th>代表成员</th><th>是否派生自 CObject</th></tr></thead>
 <tbody>
-<tr><td>根类</td><td>提供 RTTI／动态创建／序列化的地基</td><td><code>CObject</code></td><td>—（它就是根）</td></tr>
-<tr><td>通用类</td><td>和 Windows 无关的日常工具</td><td><code>CString</code>、<code>CArray</code>、<code>CList</code>、<code>CMap</code>、<code>CTime</code>、<code>CFile</code></td><td>部分是，值类型不是</td></tr>
-<tr><td>API 封装类</td><td>把 Windows 句柄包成 C++ 对象</td><td><code>CWnd</code>、<code>CDC</code>、<code>CGdiObject</code>（<code>CPen</code>/<code>CBrush</code>/<code>CFont</code>）、<code>CMenu</code></td><td>是</td></tr>
-<tr><td>应用框架类</td><td>撑起程序骨架和文档／视图结构</td><td><code>CWinApp</code>、<code>CWinThread</code>、<code>CFrameWnd</code>、<code>CDocument</code>、<code>CView</code>、<code>CDocTemplate</code></td><td>是</td></tr>
-<tr><td>高层抽象类</td><td>包装大块子系统</td><td>OLE／ActiveX、ODBC／DAO 数据库、Internet／WinInet 类</td><td>是</td></tr>
-<tr><td>非类成员</td><td>不是类，但是库的一部分</td><td><code>Afx</code> 全局函数、宏、MFC 数据类型</td><td>不适用</td></tr>
+<tr><td class="nw">根类</td><td>提供 RTTI／动态创建／序列化的地基</td><td class="nw"><code>CObject</code></td><td class="nw">—（它就是根）</td></tr>
+<tr><td class="nw">通用类</td><td>和 Windows 无关的日常工具</td><td><code>CString</code>、<code>CArray</code>、<code>CList</code>、<code>CMap</code>、<code>CTime</code>、<code>CFile</code></td><td>部分是，值类型不是</td></tr>
+<tr><td class="nw">API 封装类</td><td>把 Windows 句柄包成 C++ 对象</td><td><code>CWnd</code>、<code>CDC</code>、<code>CGdiObject</code>（<code>CPen</code>/<code>CBrush</code>/<code>CFont</code>）、<code>CMenu</code></td><td class="nw">是</td></tr>
+<tr><td class="nw">应用框架类</td><td>撑起程序骨架和文档／视图结构</td><td><code>CWinApp</code>、<code>CWinThread</code>、<code>CFrameWnd</code>、<code>CDocument</code>、<code>CView</code>、<code>CDocTemplate</code></td><td class="nw">是</td></tr>
+<tr><td class="nw">高层抽象类</td><td class="nw">包装大块子系统</td><td>OLE／ActiveX、ODBC／DAO 数据库、Internet／WinInet 类</td><td class="nw">是</td></tr>
+<tr><td class="nw">非类成员</td><td>不是类，但是库的一部分</td><td><code>Afx</code> 全局函数、宏、MFC 数据类型</td><td class="nw">不适用</td></tr>
 </tbody>
 </table>
 <p>这张表就是你脑子里该装的那张地图。往下的四节，我们按「离 Windows 由远及近」的顺序，逐个家族走一遍：先是压根不碰 Windows 的<strong>通用类</strong>，再是薄薄包住 API 的<strong>封装类</strong>，然后是撑起整个程序的<strong>应用框架类</strong>，最后是那些不算类却处处都在的<strong>黏合层</strong>。</p>
@@ -1365,8 +1369,8 @@ s += suffix;            <span class="cm">// 该扩容它自己扩，不会溢出
 <thead><tr><th>第 3 章你手搓的山寨件</th><th>真实 MFC 里的对应物</th><th>它多做了什么</th></tr></thead>
 <tbody>
 <tr><td>手写的 <code>WinMain</code> 入口</td><td>藏进框架的 <code>AfxWinMain</code> + 全局 <code>theApp</code></td><td>启动流程被拆成 Init／Run／Exit 三个可覆盖的钩子</td></tr>
-<tr><td>手写的 <code>while(GetMessage)</code> 消息循环</td><td><code>CWinApp::Run()</code></td><td>循环由框架跑，还顺带做了空闲处理、命令更新</td></tr>
-<tr><td>自己封装的窗口类</td><td><code>CWnd</code> / <code>CFrameWnd</code> 及其派生</td><td>句柄映射、虚函数扩展点、成千个成员函数</td></tr>
+<tr><td>手写的 <code>while(GetMessage)</code> 消息循环</td><td class="nw"><code>CWinApp::Run()</code></td><td>循环由框架跑，还顺带做了空闲处理、命令更新</td></tr>
+<tr><td class="nw">自己封装的窗口类</td><td><code>CWnd</code> / <code>CFrameWnd</code> 及其派生</td><td>句柄映射、虚函数扩展点、成千个成员函数</td></tr>
 <tr><td>窗口过程里那个巨大的 <code>switch</code></td><td>消息映射宏 + <code>OnXxx</code> 处理函数</td><td>用表驱动代替 switch，命令还能沿链路由</td></tr>
 <tr><td>「数据」和「画面」你揉在一起</td><td><code>CDocument</code> / <code>CView</code> 分离</td><td>一份数据多视图、自动刷新的架构范本</td></tr>
 </tbody>
@@ -1479,15 +1483,15 @@ Afx:00400000:8:00010003:00000000:00000000
 <table>
 <thead><tr><th>阶段</th><th>发生了什么</th><th>关键角色</th></tr></thead>
 <tbody>
-<tr><td>① 出生前</td><td>全局对象 <code>theApp</code> 的构造函数在 <code>WinMain</code> 之前被运行时调用，登记自己为本程序唯一 app</td><td>全局 application object（引爆器）</td></tr>
-<tr><td>② 入口</td><td>连接器把库里的 <code>WinMain</code>（<code>AfxWinMain</code>）设为程序入口并开始执行</td><td>藏在库里的 WinMain</td></tr>
-<tr><td>③ 初始化地基</td><td><code>AfxWinInit</code> 接住 <code>hInstance</code> 等四参数，初始化模块状态与句柄映射表</td><td>AfxWinInit</td></tr>
-<tr><td>④ 应用级初始化</td><td><code>InitApplication</code> 做「每应用一次」的事（现代基本空转）</td><td>CWinApp::InitApplication</td></tr>
-<tr><td>⑤ 实例级初始化</td><td><code>InitInstance</code>（你改写的）new 主窗口 → <code>Create</code> 注册窗口类并建窗口 → <code>ShowWindow</code> → <code>UpdateWindow</code></td><td>CWinApp::InitInstance ＋ CFrameWnd::Create</td></tr>
-<tr><td>⑥ 活着（主体）</td><td><code>Run</code> 消息泵不停 <code>PumpMessage</code>；消息经 <code>AfxWndProc</code>→句柄表→<code>WindowProc</code>→消息映射表→你的处理函数；空闲时跑 <code>OnIdle</code></td><td>CWinApp::Run ＋ Message Map</td></tr>
-<tr><td>⑦ 临终</td><td>用户关窗 → <code>PostQuitMessage</code> 投下 <code>WM_QUIT</code> → <code>GetMessage</code> 返回 0 → 消息泵退出</td><td>WM_QUIT</td></tr>
-<tr><td>⑧ 善后</td><td><code>ExitInstance</code> 收尾，返回退出码给系统</td><td>CWinApp::ExitInstance</td></tr>
-<tr><td>⑨ 死后</td><td><code>WinMain</code> 返回，运行时调用全局 <code>theApp</code> 的析构函数，进程终结</td><td>全局对象析构</td></tr>
+<tr><td class="nw">① 出生前</td><td>全局对象 <code>theApp</code> 的构造函数在 <code>WinMain</code> 之前被运行时调用，登记自己为本程序唯一 app</td><td>全局 application object（引爆器）</td></tr>
+<tr><td class="nw">② 入口</td><td>连接器把库里的 <code>WinMain</code>（<code>AfxWinMain</code>）设为程序入口并开始执行</td><td>藏在库里的 WinMain</td></tr>
+<tr><td class="nw">③ 初始化地基</td><td><code>AfxWinInit</code> 接住 <code>hInstance</code> 等四参数，初始化模块状态与句柄映射表</td><td class="nw">AfxWinInit</td></tr>
+<tr><td class="nw">④ 应用级初始化</td><td><code>InitApplication</code> 做「每应用一次」的事（现代基本空转）</td><td>CWinApp::InitApplication</td></tr>
+<tr><td class="nw">⑤ 实例级初始化</td><td><code>InitInstance</code>（你改写的）new 主窗口 → <code>Create</code> 注册窗口类并建窗口 → <code>ShowWindow</code> → <code>UpdateWindow</code></td><td>CWinApp::InitInstance ＋ CFrameWnd::Create</td></tr>
+<tr><td class="nw">⑥ 活着（主体）</td><td><code>Run</code> 消息泵不停 <code>PumpMessage</code>；消息经 <code>AfxWndProc</code>→句柄表→<code>WindowProc</code>→消息映射表→你的处理函数；空闲时跑 <code>OnIdle</code></td><td>CWinApp::Run ＋ Message Map</td></tr>
+<tr><td class="nw">⑦ 临终</td><td>用户关窗 → <code>PostQuitMessage</code> 投下 <code>WM_QUIT</code> → <code>GetMessage</code> 返回 0 → 消息泵退出</td><td class="nw">WM_QUIT</td></tr>
+<tr><td class="nw">⑧ 善后</td><td><code>ExitInstance</code> 收尾，返回退出码给系统</td><td>CWinApp::ExitInstance</td></tr>
+<tr><td class="nw">⑨ 死后</td><td><code>WinMain</code> 返回，运行时调用全局 <code>theApp</code> 的析构函数，进程终结</td><td class="nw">全局对象析构</td></tr>
 </tbody>
 </table>
 <p>一句话收束：<strong>一个全局对象的构造点亮了它，一条 <code>WM_QUIT</code> 消息熄灭了它，中间的一切都在 <code>Run</code> 的消息泵里循环流动。</strong>MFC 做的，无非是把 Win32 那套「注册类—建窗口—消息循环—窗口过程」的固定套路，用 <code>CWinApp</code> 和 <code>CFrameWnd</code> 两个类框起来，只把「建什么窗口、处理哪些消息」这两个真正需要你决定的缺口留给你。</p>
@@ -1505,10 +1509,10 @@ Afx:00400000:8:00010003:00000000:00000000
 <table>
 <thead><tr><th>MFC 类</th><th>作用</th><th>底层 Win32 API</th></tr></thead>
 <tbody>
-<tr><td><code>CFileDialog</code></td><td>打开／保存文件</td><td><code>GetOpenFileName</code> / <code>GetSaveFileName</code></td></tr>
-<tr><td><code>CColorDialog</code></td><td>选颜色</td><td><code>ChooseColor</code></td></tr>
-<tr><td><code>CFontDialog</code></td><td>选字体</td><td><code>ChooseFont</code></td></tr>
-<tr><td><code>CPrintDialog</code></td><td>打印／打印设置</td><td><code>PrintDlg</code></td></tr>
+<tr><td class="nw"><code>CFileDialog</code></td><td class="nw">打开／保存文件</td><td><code>GetOpenFileName</code> / <code>GetSaveFileName</code></td></tr>
+<tr><td class="nw"><code>CColorDialog</code></td><td class="nw">选颜色</td><td class="nw"><code>ChooseColor</code></td></tr>
+<tr><td class="nw"><code>CFontDialog</code></td><td class="nw">选字体</td><td class="nw"><code>ChooseFont</code></td></tr>
+<tr><td class="nw"><code>CPrintDialog</code></td><td class="nw">打印／打印设置</td><td class="nw"><code>PrintDlg</code></td></tr>
 <tr><td><code>CFindReplaceDialog</code></td><td>查找／替换（非模态）</td><td><code>FindText</code> / <code>ReplaceText</code></td></tr>
 </tbody>
 </table>
@@ -1680,12 +1684,12 @@ m_pMainWnd-&gt;DragAcceptFiles();
 <table>
 <thead><tr><th>命令 ID</th><th>菜单项</th><th>谁来实现</th></tr></thead>
 <tbody>
-<tr><td><code>ID_FILE_NEW</code> / <code>ID_FILE_OPEN</code></td><td>文件→新建 / 打开</td><td>框架：照文档模板造对象、调你的 <code>Serialize</code> 读盘</td></tr>
+<tr><td><code>ID_FILE_NEW</code> / <code>ID_FILE_OPEN</code></td><td class="nw">文件→新建 / 打开</td><td>框架：照文档模板造对象、调你的 <code>Serialize</code> 读盘</td></tr>
 <tr><td><code>ID_FILE_SAVE</code> / <code>ID_FILE_SAVE_AS</code></td><td>文件→保存 / 另存为</td><td>框架：弹「另存为」对话框、调你的 <code>Serialize</code> 写盘</td></tr>
 <tr><td><code>ID_FILE_MRU_FILE1…</code></td><td>最近打开的文件列表</td><td>框架：自动记录、显示、重开</td></tr>
-<tr><td><code>ID_FILE_PRINT</code> / <code>ID_FILE_PRINT_PREVIEW</code></td><td>打印 / 打印预览</td><td>框架：复用你的 <code>OnDraw</code> 往打印机上画</td></tr>
-<tr><td><code>ID_APP_ABOUT</code></td><td>帮助→关于</td><td>框架 + 向导生成的关于对话框</td></tr>
-<tr><td><code>ID_APP_EXIT</code></td><td>文件→退出</td><td>框架：退出前若文档「脏」了自动提示保存</td></tr>
+<tr><td><code>ID_FILE_PRINT</code> / <code>ID_FILE_PRINT_PREVIEW</code></td><td class="nw">打印 / 打印预览</td><td>框架：复用你的 <code>OnDraw</code> 往打印机上画</td></tr>
+<tr><td class="nw"><code>ID_APP_ABOUT</code></td><td class="nw">帮助→关于</td><td>框架 + 向导生成的关于对话框</td></tr>
+<tr><td class="nw"><code>ID_APP_EXIT</code></td><td class="nw">文件→退出</td><td>框架：退出前若文档「脏」了自动提示保存</td></tr>
 </tbody>
 </table>
 <p>特别提一句打印：因为你的绘制逻辑集中在 <code>OnDraw(CDC*)</code> 里，而 <code>CDC</code> 既能是屏幕设备也能是打印机设备，框架把一个「打印机 DC」递给同一个 <code>OnDraw</code>，你的画就上了纸——打印和打印预览几乎是<strong>白得的</strong>。这正是 Document/View 分离和「面向 CDC 编程」两件事叠加起来的回报。还有个配套机制 <code>ON_UPDATE_COMMAND_UI</code>：框架在菜单弹开前问你「这一项现在该灰掉还是打勾？」，让你集中控制菜单项的可用状态。</p>
@@ -1910,9 +1914,9 @@ m_pMainWnd-&gt;DragAcceptFiles();
 <table>
 <thead><tr><th>类别</th><th>来自哪</th><th>典型</th><th>怎么走</th></tr></thead>
 <tbody>
-<tr><td><strong>标准窗口消息</strong></td><td>系统对某窗口的通知</td><td><code>WM_PAINT</code>、<code>WM_SIZE</code>、<code>WM_LBUTTONDOWN</code></td><td>只发给那个窗口，不「流动」</td></tr>
-<tr><td><strong>命令消息</strong></td><td>菜单 / 工具栏 / 快捷键</td><td><code>WM_COMMAND</code> + 命令 ID</td><td>在一串对象间「绕行」找处理者（本章主角）</td></tr>
-<tr><td><strong>控件通知</strong></td><td>子控件反馈给父窗口</td><td>按钮被点、列表选中变了（<code>WM_COMMAND</code> / <code>WM_NOTIFY</code>）</td><td>发给控件的父窗口</td></tr>
+<tr><td class="nw"><strong>标准窗口消息</strong></td><td>系统对某窗口的通知</td><td><code>WM_PAINT</code>、<code>WM_SIZE</code>、<code>WM_LBUTTONDOWN</code></td><td>只发给那个窗口，不「流动」</td></tr>
+<tr><td class="nw"><strong>命令消息</strong></td><td>菜单 / 工具栏 / 快捷键</td><td><code>WM_COMMAND</code> + 命令 ID</td><td>在一串对象间「绕行」找处理者（本章主角）</td></tr>
+<tr><td class="nw"><strong>控件通知</strong></td><td>子控件反馈给父窗口</td><td>按钮被点、列表选中变了（<code>WM_COMMAND</code> / <code>WM_NOTIFY</code>）</td><td class="nw">发给控件的父窗口</td></tr>
 </tbody>
 </table>
 <p>记住这个分类，后面「直线上溯」和「拐弯上溯」才不会晕：<strong>标准窗口消息走直线（在自己这条继承链上查表）；命令消息要拐弯（跨对象绕行）。</strong>MFC 用同一套消息映射表承载它们，但流动方式不同。</p>
@@ -1945,8 +1949,8 @@ m_pMainWnd-&gt;DragAcceptFiles();
 <table>
 <thead><tr><th>类型</th><th>例子</th><th>怎么走</th></tr></thead>
 <tbody>
-<tr><td><strong>标准窗口消息</strong></td><td><code>WM_PAINT</code>、<code>WM_LBUTTONDOWN</code></td><td>只发给<strong>那个具体窗口</strong>，在它自己的消息表里查</td></tr>
-<tr><td><strong>命令消息</strong></td><td><code>WM_COMMAND</code>（菜单/工具栏/快捷键）</td><td><strong>绕行</strong>：沿一串对象依次问，谁能处理谁接住</td></tr>
+<tr><td class="nw"><strong>标准窗口消息</strong></td><td><code>WM_PAINT</code>、<code>WM_LBUTTONDOWN</code></td><td>只发给<strong>那个具体窗口</strong>，在它自己的消息表里查</td></tr>
+<tr><td class="nw"><strong>命令消息</strong></td><td><code>WM_COMMAND</code>（菜单/工具栏/快捷键）</td><td><strong>绕行</strong>：沿一串对象依次问，谁能处理谁接住</td></tr>
 </tbody>
 </table>
 <p>命令消息的绕行路线是 MFC 精心安排的，以「当前活动视图」为起点：</p>
@@ -2096,11 +2100,11 @@ VS2022 仍保留一个叫「Class Wizard」的对话框（菜单 Project → Cla
 <table>
 <thead><tr><th>MAP 名称</th><th>宏</th><th>把「什么」映射到「什么」</th><th>用在哪</th></tr></thead>
 <tbody>
-<tr><td>消息映射</td><td>BEGIN_MESSAGE_MAP</td><td>Windows 消息 → 成员处理函数</td><td>所有窗口/对话框（本章主角）</td></tr>
-<tr><td>派发映射</td><td>BEGIN_DISPATCH_MAP</td><td>自动化名称/DISPID → 方法或属性</td><td>OLE 自动化、脚本调用</td></tr>
-<tr><td>接口映射</td><td>BEGIN_INTERFACE_MAP</td><td>IID → COM 接口指针</td><td>让对象支持 QueryInterface</td></tr>
-<tr><td>事件映射</td><td>BEGIN_EVENT_MAP</td><td>控件事件 → 触发函数</td><td>ActiveX 控件对外发事件</td></tr>
-<tr><td>连接映射</td><td>BEGIN_CONNECTION_MAP</td><td>连接点 IID → 出接口</td><td>COM 事件回调（connection point）</td></tr>
+<tr><td class="nw">消息映射</td><td>BEGIN_MESSAGE_MAP</td><td>Windows 消息 → 成员处理函数</td><td>所有窗口/对话框（本章主角）</td></tr>
+<tr><td class="nw">派发映射</td><td>BEGIN_DISPATCH_MAP</td><td>自动化名称/DISPID → 方法或属性</td><td>OLE 自动化、脚本调用</td></tr>
+<tr><td class="nw">接口映射</td><td>BEGIN_INTERFACE_MAP</td><td>IID → COM 接口指针</td><td>让对象支持 QueryInterface</td></tr>
+<tr><td class="nw">事件映射</td><td class="nw">BEGIN_EVENT_MAP</td><td>控件事件 → 触发函数</td><td>ActiveX 控件对外发事件</td></tr>
+<tr><td class="nw">连接映射</td><td>BEGIN_CONNECTION_MAP</td><td>连接点 IID → 出接口</td><td>COM 事件回调（connection point）</td></tr>
 </tbody>
 </table>
 <p>再加上你在上一节看到的 DoDataExchange——它虽然不叫「MAP」，但骨子里也是「一张把控件 ID 映射到成员变量的清单」，是同一种设计品味的延续。看懂了这一点，你就抓到了 MFC 的精神内核：<strong>能用数据表描述的对应关系，就别写死成一堆分支代码。</strong></p>
@@ -2157,11 +2161,11 @@ m_pFind-&gt;ShowWindow(SW_SHOW);</code></pre>
 <table>
 <thead><tr><th>维度</th><th>模态 DoModal</th><th>非模态 Create</th></tr></thead>
 <tbody>
-<tr><td>父窗口</td><td>被禁用，独占焦点</td><td>可继续操作，两者共存</td></tr>
-<tr><td>调用返回</td><td>阻塞，关闭后才返回结果</td><td>立即返回</td></tr>
-<tr><td>C++ 对象放哪</td><td>栈上局部变量即可</td><td>必须 new（堆）或成员，栈对象会崩</td></tr>
-<tr><td>怎么关</td><td>EndDialog（OnOK/OnCancel 默认调）</td><td>DestroyWindow + PostNcDestroy 里 delete this</td></tr>
-<tr><td>典型场景</td><td>登录、另存为、消息框</td><td>查找替换、工具浮窗、属性面板</td></tr>
+<tr><td class="nw">父窗口</td><td>被禁用，独占焦点</td><td>可继续操作，两者共存</td></tr>
+<tr><td class="nw">调用返回</td><td>阻塞，关闭后才返回结果</td><td class="nw">立即返回</td></tr>
+<tr><td class="nw">C++ 对象放哪</td><td class="nw">栈上局部变量即可</td><td>必须 new（堆）或成员，栈对象会崩</td></tr>
+<tr><td class="nw">怎么关</td><td>EndDialog（OnOK/OnCancel 默认调）</td><td>DestroyWindow + PostNcDestroy 里 delete this</td></tr>
+<tr><td class="nw">典型场景</td><td>登录、另存为、消息框</td><td>查找替换、工具浮窗、属性面板</td></tr>
 </tbody>
 </table>
 <div class="note new"><span class="t">🔵 现代更新 · 现代 UI 的模态观</span><p>「模态 vs 非模态」这对概念本身<strong>没过时</strong> <span class="badge ok">仍适用</span>，过时的是「用一个禁用父窗口的独立顶层窗口去实现模态」。WinUI 3/WPF 用 <code>ContentDialog</code>/<code>Window.ShowDialog()</code>，且更多改用<strong>页内浮层</strong>（覆盖半透明遮罩的 flyout/overlay）而非弹独立窗口，交互更轻。生命周期也不再靠 <code>delete this</code> 这类手动内存管理——托管运行时（.NET）由 GC 回收，现代 C++ 则用 <code>std::unique_ptr</code>/<code>shared_ptr</code> 持有对话框对象，作用域一到自动释放，PostNcDestroy 自删这种技巧可以退休了。Web 侧更直接：模态就是一个 <code>&lt;dialog&gt;</code> 元素或一个受状态控制的组件，开关只是改一个布尔值。</p></div>
@@ -2198,9 +2202,9 @@ m_pFind-&gt;ShowWindow(SW_SHOW);</code></pre>
 <table>
 <thead><tr><th>调用</th><th>作用</th><th>什么时候真的画</th></tr></thead>
 <tbody>
-<tr><td><code>Invalidate()</code></td><td>把<strong>整个</strong>客户区标为无效</td><td>稍后的 WM_PAINT</td></tr>
-<tr><td><code>InvalidateRect(&amp;rc)</code></td><td>只把<strong>一个矩形</strong>标为无效</td><td>稍后的 WM_PAINT</td></tr>
-<tr><td><code>UpdateWindow()</code></td><td>别等了，<strong>立刻</strong>把当前无效区画掉</td><td>当场同步执行</td></tr>
+<tr><td class="nw"><code>Invalidate()</code></td><td>把<strong>整个</strong>客户区标为无效</td><td class="nw">稍后的 WM_PAINT</td></tr>
+<tr><td><code>InvalidateRect(&amp;rc)</code></td><td>只把<strong>一个矩形</strong>标为无效</td><td class="nw">稍后的 WM_PAINT</td></tr>
+<tr><td class="nw"><code>UpdateWindow()</code></td><td>别等了，<strong>立刻</strong>把当前无效区画掉</td><td class="nw">当场同步执行</td></tr>
 </tbody>
 </table>
 <div class="note old"><span class="t">🟡 别养成 Invalidate 一把梭的习惯</span><p>图省事，处处 <code>Invalidate()</code> 全画，在小程序里看不出毛病，一旦视图内容变重（大量图元、复杂排版）就会拖垮交互流畅度。全画是「一定正确但可能很慢」的保底方案，不该是你的默认姿势。</p></div>
@@ -2311,10 +2315,10 @@ m_pFind-&gt;ShowWindow(SW_SHOW);</code></pre>
 <table>
 <thead><tr><th>维度</th><th>动态分裂（dynamic）</th><th>静态分裂（static）</th></tr></thead>
 <tbody>
-<tr><td>窗格从哪来</td><td>用户拖「分裂盒」时现场长出来</td><td>程序启动时就定死行列</td></tr>
-<tr><td>视图类</td><td>各窗格<strong>同一个</strong>视图类</td><td>各窗格<strong>可以不同</strong>视图类</td></tr>
-<tr><td>用户能否增删格</td><td>能（拖出来、合回去）</td><td>不能，只能拖分隔条改大小</td></tr>
-<tr><td>典型用途</td><td>同一个视图，同时看它的不同区域</td><td>固定布局，每格各司其职（左树右表）</td></tr>
+<tr><td class="nw">窗格从哪来</td><td>用户拖「分裂盒」时现场长出来</td><td>程序启动时就定死行列</td></tr>
+<tr><td class="nw">视图类</td><td>各窗格<strong>同一个</strong>视图类</td><td>各窗格<strong>可以不同</strong>视图类</td></tr>
+<tr><td class="nw">用户能否增删格</td><td>能（拖出来、合回去）</td><td>不能，只能拖分隔条改大小</td></tr>
+<tr><td class="nw">典型用途</td><td>同一个视图，同时看它的不同区域</td><td>固定布局，每格各司其职（左树右表）</td></tr>
 </tbody>
 </table>
 <p>打个比方：动态分裂像照相时把同一张照片掰成两半，各自拿放大镜看，两半终究还是同一张；静态分裂则像预先隔好的展柜，每格摆不同的展品，格数固定不变。</p>
@@ -2382,11 +2386,11 @@ dc.EndDoc();</code></pre>
 <table>
 <thead><tr><th>时机</th><th>虚函数</th><th>你在这里做什么</th></tr></thead>
 <tbody>
-<tr><td>打印开始前</td><td><code>OnPreparePrinting</code></td><td>调 <code>DoPreparePrinting</code> 弹出打印对话框；若已知页数就 <code>SetMaxPage</code></td></tr>
-<tr><td>拿到打印机 DC 后</td><td><code>OnBeginPrinting</code></td><td>按设备算总页数、创建打印专用的 GDI 工具</td></tr>
-<tr><td>每页开始</td><td><code>OnPrepareDC</code></td><td>设映射模式、把视口原点移到本页对应的位置</td></tr>
-<tr><td>每页绘制</td><td><code>OnPrint</code></td><td>画表头表尾，再转调 <code>OnDraw</code> 画正文</td></tr>
-<tr><td>全部结束</td><td><code>OnEndPrinting</code></td><td>释放前面分配的 GDI 工具</td></tr>
+<tr><td class="nw">打印开始前</td><td><code>OnPreparePrinting</code></td><td>调 <code>DoPreparePrinting</code> 弹出打印对话框；若已知页数就 <code>SetMaxPage</code></td></tr>
+<tr><td class="nw">拿到打印机 DC 后</td><td class="nw"><code>OnBeginPrinting</code></td><td>按设备算总页数、创建打印专用的 GDI 工具</td></tr>
+<tr><td class="nw">每页开始</td><td class="nw"><code>OnPrepareDC</code></td><td>设映射模式、把视口原点移到本页对应的位置</td></tr>
+<tr><td class="nw">每页绘制</td><td class="nw"><code>OnPrint</code></td><td>画表头表尾，再转调 <code>OnDraw</code> 画正文</td></tr>
+<tr><td class="nw">全部结束</td><td class="nw"><code>OnEndPrinting</code></td><td>释放前面分配的 GDI 工具</td></tr>
 </tbody>
 </table>
 <pre><code><span class="cl"><span class="kw">class</span> CScribbleView : <span class="kw">public</span> CView {</span><span class="cl">    <span class="cm">// 打印这条流水线上的几个"工位"，你按需覆写</span></span><span class="cl"><span class="cc" style="min-width:57.0ch">    <span class="kw">bool</span> OnPreparePrinting(CPrintInfo* pInfo) <span class="kw">override</span>;</span><span class="cm">// 弹框、定页数范围</span></span><span class="cl">    <span class="kw">void</span> OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) <span class="kw">override</span>;</span><span class="cl">    <span class="kw">void</span> OnPrepareDC (CDC* pDC, CPrintInfo* pInfo) <span class="kw">override</span>;</span><span class="cl">    <span class="kw">void</span> OnPrint     (CDC* pDC, CPrintInfo* pInfo) <span class="kw">override</span>;</span><span class="cl">    <span class="kw">void</span> OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) <span class="kw">override</span>;</span><span class="cl"><span class="cc" style="min-width:57.0ch">    <span class="kw">void</span> OnDraw      (CDC* pDC) <span class="kw">override</span>;</span><span class="cm">// 屏幕/打印/预览共用</span></span><span class="cl">};</span><span class="cl"> </span><span class="cl"><span class="kw">bool</span> CScribbleView::OnPreparePrinting(CPrintInfo* pInfo) {</span><span class="cl"><span class="cc" style="min-width:57.0ch">    <span class="kw">return</span> DoPreparePrinting(pInfo);</span><span class="cm">// 弹出标准打印对话框</span></span><span class="cl">}</span></code></pre>
@@ -2412,13 +2416,13 @@ dc.EndDoc();</code></pre>
 <table>
 <thead><tr><th>映射模式</th><th>1 个逻辑单位 =</th><th>y 轴方向</th></tr></thead>
 <tbody>
-<tr><td><code>MM_TEXT</code></td><td>1 设备像素（随设备变）</td><td>向下</td></tr>
-<tr><td><code>MM_LOENGLISH</code></td><td>0.01 英寸</td><td>向上</td></tr>
-<tr><td><code>MM_HIENGLISH</code></td><td>0.001 英寸</td><td>向上</td></tr>
-<tr><td><code>MM_LOMETRIC</code></td><td>0.1 毫米</td><td>向上</td></tr>
-<tr><td><code>MM_HIMETRIC</code></td><td>0.01 毫米</td><td>向上</td></tr>
-<tr><td><code>MM_TWIPS</code></td><td>1/1440 英寸（排版常用）</td><td>向上</td></tr>
-<tr><td><code>MM_ISOTROPIC</code> / <code>MM_ANISOTROPIC</code></td><td>自定义（等比 / 任意比）</td><td>自定义</td></tr>
+<tr><td class="nw"><code>MM_TEXT</code></td><td>1 设备像素（随设备变）</td><td class="nw">向下</td></tr>
+<tr><td class="nw"><code>MM_LOENGLISH</code></td><td class="nw">0.01 英寸</td><td class="nw">向上</td></tr>
+<tr><td class="nw"><code>MM_HIENGLISH</code></td><td class="nw">0.001 英寸</td><td class="nw">向上</td></tr>
+<tr><td class="nw"><code>MM_LOMETRIC</code></td><td class="nw">0.1 毫米</td><td class="nw">向上</td></tr>
+<tr><td class="nw"><code>MM_HIMETRIC</code></td><td class="nw">0.01 毫米</td><td class="nw">向上</td></tr>
+<tr><td class="nw"><code>MM_TWIPS</code></td><td>1/1440 英寸（排版常用）</td><td class="nw">向上</td></tr>
+<tr><td><code>MM_ISOTROPIC</code> / <code>MM_ANISOTROPIC</code></td><td>自定义（等比 / 任意比）</td><td class="nw">自定义</td></tr>
 </tbody>
 </table>
 <p>在 <code>MM_LOENGLISH</code> 下，100 单位在任何设备上都是 1 英寸，屏幕打印一致。但要注意方向：<code>MM_TEXT</code> 的 y 轴朝下，而 <code>MM_LOENGLISH</code> 这类物理模式 y 轴朝上（数学坐标系）。切模式时若忘了 y 的符号，图会上下颠倒。换算所需的设备参数由 <code>GetDeviceCaps</code> 提供：</p>
@@ -2475,11 +2479,11 @@ dc.EndDoc();</code></pre>
 <table>
 <thead><tr><th>维度</th><th>SDI</th><th>MDI</th></tr></thead>
 <tbody>
-<tr><td>主框架类别</td><td>CFrameWnd</td><td>CMDIFrameWnd</td></tr>
-<tr><td>文档窗口</td><td>视图直接嵌在主框架里</td><td>每份文档一个 CMDIChildWnd 子框架</td></tr>
-<tr><td>中介层</td><td>无</td><td>MDICLIENT 客户区窗口</td></tr>
-<tr><td>文档模板</td><td>CSingleDocTemplate</td><td>CMultiDocTemplate</td></tr>
-<tr><td>同时打开份数</td><td>一份</td><td>多份</td></tr>
+<tr><td class="nw">主框架类别</td><td class="nw">CFrameWnd</td><td class="nw">CMDIFrameWnd</td></tr>
+<tr><td class="nw">文档窗口</td><td>视图直接嵌在主框架里</td><td>每份文档一个 CMDIChildWnd 子框架</td></tr>
+<tr><td class="nw">中介层</td><td class="nw">无</td><td>MDICLIENT 客户区窗口</td></tr>
+<tr><td class="nw">文档模板</td><td>CSingleDocTemplate</td><td>CMultiDocTemplate</td></tr>
+<tr><td class="nw">同时打开份数</td><td class="nw">一份</td><td class="nw">多份</td></tr>
 </tbody>
 </table>
 <p>打个比方：SDI 像一间只有一张办公桌的工作室，换项目就得清空桌面；MDI 像一间大办公室，里面摆了好几张桌子，每张桌子独立办公,但都还在同一堵墙之内。设计动机也很清楚——上世纪九十年代初屏幕又小、Windows 3.x 连任务栏都没有，桌面上一多开窗口就乱成一团；MDI 让一个应用把自己的文档窗口都圈在自家客户区里管好，不去污染整个桌面，这在当年是微软官方力推的正统写法。</p>
@@ -2520,11 +2524,11 @@ dc.EndDoc();</code></pre>
 <table>
 <thead><tr><th></th><th>动态分裂</th><th>静态分裂</th></tr></thead>
 <tbody>
-<tr><td>建立方式</td><td>Create</td><td>CreateStatic + 逐格 CreateView</td></tr>
-<tr><td>窗格数量</td><td>用户拖分裂盒动态增减(≤2×2)</td><td>建立时钉死</td></tr>
-<tr><td>窗格视图类别</td><td>各格必须同类(自动复制)</td><td>各格可不同类(你亲手指定)</td></tr>
-<tr><td>分裂盒</td><td>有</td><td>无</td></tr>
-<tr><td>典型场景</td><td>同一文档多处对照</td><td>树+清单式的分区界面</td></tr>
+<tr><td class="nw">建立方式</td><td class="nw">Create</td><td>CreateStatic + 逐格 CreateView</td></tr>
+<tr><td class="nw">窗格数量</td><td>用户拖分裂盒动态增减(≤2×2)</td><td class="nw">建立时钉死</td></tr>
+<tr><td class="nw">窗格视图类别</td><td>各格必须同类(自动复制)</td><td>各格可不同类(你亲手指定)</td></tr>
+<tr><td class="nw">分裂盒</td><td class="nw">有</td><td class="nw">无</td></tr>
+<tr><td class="nw">典型场景</td><td class="nw">同一文档多处对照</td><td>树+清单式的分区界面</td></tr>
 </tbody>
 </table>
 <p>一句话:静态分裂拿「灵活性」换来了「异质性」——布局由你定死,但每一区可以是完全不同的一种视图(通常意味着展示文档的不同切面,甚至通过共享指针展示另一份文档)。这是资源管理器、邮件客户端那类「主从/侧栏+内容」界面的骨架。</p>
@@ -2673,10 +2677,10 @@ dc.EndDoc();</code></pre>
 <table>
 <thead><tr><th>类</th><th>底层对象</th><th>作用范围</th><th>特点 / 场景</th></tr></thead>
 <tbody>
-<tr><td>CCriticalSection</td><td>CRITICAL_SECTION</td><td>仅本进程内</td><td>最轻量，无争用时不进内核态；保护进程内共享数据的首选</td></tr>
-<tr><td>CMutex</td><td>内核 Mutex</td><td>可跨进程</td><td>可具名、跨进程互斥；比临界区重，涉及内核态切换</td></tr>
-<tr><td>CSemaphore</td><td>内核 Semaphore</td><td>可跨进程</td><td>计数信号量，允许最多 N 条线程同时进入（如限制并发数）</td></tr>
-<tr><td>CEvent</td><td>内核 Event</td><td>可跨进程</td><td>不是互斥而是「通知」：一条线程等，另一条 SetEvent 唤醒它</td></tr>
+<tr><td class="nw">CCriticalSection</td><td class="nw">CRITICAL_SECTION</td><td class="nw">仅本进程内</td><td>最轻量，无争用时不进内核态；保护进程内共享数据的首选</td></tr>
+<tr><td class="nw">CMutex</td><td class="nw">内核 Mutex</td><td class="nw">可跨进程</td><td>可具名、跨进程互斥；比临界区重，涉及内核态切换</td></tr>
+<tr><td class="nw">CSemaphore</td><td class="nw">内核 Semaphore</td><td class="nw">可跨进程</td><td>计数信号量，允许最多 N 条线程同时进入（如限制并发数）</td></tr>
+<tr><td class="nw">CEvent</td><td class="nw">内核 Event</td><td class="nw">可跨进程</td><td>不是互斥而是「通知」：一条线程等，另一条 SetEvent 唤醒它</td></tr>
 </tbody>
 </table>
 <p>看清它们解决的其实是两类不同的问题：前三个是<strong>互斥（mutual exclusion）</strong>——别同时动同一份东西；<code>CEvent</code> 是<strong>协调 / 通知</strong>——我等你把东西准备好了再动。别把它们混为一谈。配套还有 <code>CSingleLock</code> / <code>CMultiLock</code>：你不直接对同步对象上锁，而是构造一个 <code>CSingleLock</code> 把它锁上，函数返回时靠析构自动解锁——这是很朴素的 RAII 思想。</p>
@@ -2764,10 +2768,10 @@ CCustomAppWiz* Custom = &amp;MyAppWiz;</code></pre>
 <table>
 <thead><tr><th>宏写法</th><th>展开成的值</th></tr></thead>
 <tbody>
-<tr><td><code>$$root$$</code></td><td>项目名，原样</td></tr>
-<tr><td><code>$$Root$$</code></td><td>项目名，首字母大写</td></tr>
-<tr><td><code>$$ROOT$$</code></td><td>项目名，全大写</td></tr>
-<tr><td><code>$$SAFE_ROOT$$</code></td><td>把项目名里不能当 C++ 标识符的字符（空格、连字符…）洗干净后的版本，专门用来拼类名</td></tr>
+<tr><td class="nw"><code>$$root$$</code></td><td>项目名，原样</td></tr>
+<tr><td class="nw"><code>$$Root$$</code></td><td>项目名，首字母大写</td></tr>
+<tr><td class="nw"><code>$$ROOT$$</code></td><td>项目名，全大写</td></tr>
+<tr><td class="nw"><code>$$SAFE_ROOT$$</code></td><td>把项目名里不能当 C++ 标识符的字符（空格、连字符…）洗干净后的版本，专门用来拼类名</td></tr>
 <tr><td><code>$$你自定义的符号$$</code></td><td>由步骤对话框的 <code>OnDismiss()</code> 写进字典的值</td></tr>
 </tbody>
 </table>
@@ -2782,9 +2786,9 @@ CCustomAppWiz* Custom = &amp;MyAppWiz;</code></pre>
 <tbody>
 <tr><td><code>$$IF</code> / <code>$$ELIF</code> / <code>$$ELSE</code> / <code>$$ENDIF</code></td><td>条件：某符号在字典里（且为真）才输出这一段</td></tr>
 <tr><td><code>$$BEGINLOOP</code> / <code>$$ENDLOOP</code></td><td>循环：按给定次数重复输出中间这一段</td></tr>
-<tr><td><code>$$INCLUDE</code></td><td>把另一个模板文件整段套进来</td></tr>
+<tr><td class="nw"><code>$$INCLUDE</code></td><td>把另一个模板文件整段套进来</td></tr>
 <tr><td><code>$$SET_DEFAULT_LANG</code></td><td>指定资源使用的语言</td></tr>
-<tr><td><code>$$//</code></td><td>注释：只存在于模板里，绝不进入生成的文件</td></tr>
+<tr><td class="nw"><code>$$//</code></td><td>注释：只存在于模板里，绝不进入生成的文件</td></tr>
 </tbody>
 </table>
 <p>把宏和指令放一起，一个模板文件长这样——注意 <code>$$IF(ENABLE_LOG)</code> 里的 <code>ENABLE_LOG</code>，正是上一节 <code>OnDismiss()</code> 往字典写的那个键，一条线就串起来了：</p>
@@ -2866,7 +2870,7 @@ $$ENDIF</code></pre>
 <tr><td>Splash Screen（启动画面）</td><td>程序初始化要几秒，屏幕空着显得像死机</td><td>主窗口还没就绪时，先弹一个无边框的位图窗口，定时器到点或初始化完成就自动关掉</td></tr>
 <tr><td>System Info（系统信息）</td><td>「关于」对话框里想显示内存、系统资源</td><td>调 Win32 API 查物理内存/可用资源，把数字填进关于框的静态文本</td></tr>
 <tr><td>Tips of the Day（每日提示）</td><td>启动时给用户一条使用小贴士</td><td>从一个文本文件按行读取提示，配一个「下次启动仍显示」的复选框和当前行号</td></tr>
-<tr><td>综合实例</td><td>把上面几样拼进同一个程序</td><td>本质就是各生成一份、各接一处调用点，验证它们互不打架</td></tr>
+<tr><td class="nw">综合实例</td><td>把上面几样拼进同一个程序</td><td>本质就是各生成一份、各接一处调用点，验证它们互不打架</td></tr>
 </tbody>
 </table>
 <p>你会发现这些「组件」并没有什么高深机制——启动画面就是一个提前显示、定时销毁的位图窗口；系统信息就是几个 API 查询；每日提示就是读文件加一个对话框。它们的价值不在技术，在于<strong>帮你省掉重复劳动、并统一了体验</strong>。这正是复用的日常形态：大部分复用救的不是难题，是无聊。</p>
@@ -2879,9 +2883,9 @@ $$ENDIF</code></pre>
 <table>
 <thead><tr><th>三件套</th><th>是什么</th><th>方向</th><th>家电类比</th></tr></thead>
 <tbody>
-<tr><td>Properties（属性）</td><td>控件的状态：行数、颜色、当前值</td><td>你读 / 你写</td><td>旋钮和刻度盘</td></tr>
-<tr><td>Methods（方法）</td><td>你能命令控件做的动作：清空、刷新、跳转</td><td>你 → 控件</td><td>你去按的按钮</td></tr>
-<tr><td>Events（事件）</td><td>控件回头通知你发生了事：被点了、值变了</td><td>控件 → 你</td><td>响给你听的报警灯</td></tr>
+<tr><td>Properties（属性）</td><td>控件的状态：行数、颜色、当前值</td><td class="nw">你读 / 你写</td><td class="nw">旋钮和刻度盘</td></tr>
+<tr><td class="nw">Methods（方法）</td><td>你能命令控件做的动作：清空、刷新、跳转</td><td class="nw">你 → 控件</td><td class="nw">你去按的按钮</td></tr>
+<tr><td class="nw">Events（事件）</td><td>控件回头通知你发生了事：被点了、值变了</td><td class="nw">控件 → 你</td><td class="nw">响给你听的报警灯</td></tr>
 </tbody>
 </table>
 <p>关键在最后一行：<strong>事件是反向的</strong>。属性和方法是你主动去戳控件，事件却是控件反过来主动喊你。这就要求容器（你的对话框）和控件之间不是单向调用，而是双向的——控件握着一个指向你的接口（叫 event sink，事件接收器），发生事情时就通过它回调你。这套「你调它、它也能回调你」的双向连接，正是 ActiveX 比一个普通函数库更「活」的地方，也是它当年能做出富交互界面的本钱。</p>
@@ -2918,10 +2922,10 @@ $$ENDIF</code></pre>
 <table>
 <thead><tr><th>当年的做法</th><th>状态</th><th>2026 年的替代</th></tr></thead>
 <tbody>
-<tr><td>Component Gallery 往工程里倒源码</td><td><span class="badge old">已过时</span></td><td>NuGet（.NET）/ vcpkg、Conan（C++）声明式依赖管理</td></tr>
-<tr><td>ActiveX 控件做界面零件</td><td><span class="badge dead">已废弃</span></td><td>WinUI 3 / WPF / Qt 的现代原生控件库</td></tr>
-<tr><td>用 COM 做跨语言/跨进程互通</td><td><span class="badge old">仍在但少手写</span></td><td>gRPC + Protobuf、JSON-RPC、命名管道；Windows 内仍可用 C++/WinRT 封装的 COM</td></tr>
-<tr><td>在窗口里嵌 IE/ActiveX 显示网页</td><td><span class="badge dead">已废弃</span></td><td><strong>WebView2</strong>（Chromium 内核，独立沙箱进程）</td></tr>
+<tr><td>Component Gallery 往工程里倒源码</td><td class="nw"><span class="badge old">已过时</span></td><td>NuGet（.NET）/ vcpkg、Conan（C++）声明式依赖管理</td></tr>
+<tr><td>ActiveX 控件做界面零件</td><td class="nw"><span class="badge dead">已废弃</span></td><td>WinUI 3 / WPF / Qt 的现代原生控件库</td></tr>
+<tr><td>用 COM 做跨语言/跨进程互通</td><td class="nw"><span class="badge old">仍在但少手写</span></td><td>gRPC + Protobuf、JSON-RPC、命名管道；Windows 内仍可用 C++/WinRT 封装的 COM</td></tr>
+<tr><td>在窗口里嵌 IE/ActiveX 显示网页</td><td class="nw"><span class="badge dead">已废弃</span></td><td><strong>WebView2</strong>（Chromium 内核，独立沙箱进程）</td></tr>
 </tbody>
 </table>
 <p>其中最值得单独点名的是 <strong>WebView2</strong>。当年想在桌面程序里塞一块网页或富内容，只能嵌 IE 控件（又是 ActiveX），把浏览器的一身漏洞一起请进你的进程。今天你嵌 WebView2：它跑在独立的 Chromium 进程里、自带沙箱、自动更新，你的 C++ 代码和网页之间用 <code>postMessage</code> 传 JSON 双向通信，边界清清楚楚。</p>
@@ -3051,12 +3055,12 @@ $$ENDIF</code></pre>
 <table>
 <thead><tr><th>方案</th><th>语言</th><th>定位 / 适用</th></tr></thead>
 <tbody>
-<tr><td><strong>WinUI 3 / Windows App SDK</strong></td><td>C++ 或 C#</td><td>微软主推的现代原生方向，Fluent 设计，面向新项目</td></tr>
-<tr><td><strong>WPF</strong></td><td>C#（.NET）</td><td>成熟稳定、生态好，桌面业务应用主力，XAML + MVVM</td></tr>
-<tr><td><strong>.NET MAUI</strong></td><td>C#</td><td>跨平台（桌面 + 移动），从 Xamarin 演进而来</td></tr>
-<tr><td><strong>Qt</strong></td><td>C++</td><td>跨平台 C++ GUI 之王，工业/嵌入式/桌面通吃，MFC 用户最自然的迁移目标</td></tr>
-<tr><td><strong>WinForms</strong></td><td>C#</td><td>比 MFC 简单得多的老牌方案，快速内部工具仍在用</td></tr>
-<tr><td><strong>Electron / Tauri</strong></td><td>Web 技术</td><td>用 HTML/JS/CSS 做桌面应用，跨平台，生态庞大</td></tr>
+<tr><td><strong>WinUI 3 / Windows App SDK</strong></td><td class="nw">C++ 或 C#</td><td>微软主推的现代原生方向，Fluent 设计，面向新项目</td></tr>
+<tr><td class="nw"><strong>WPF</strong></td><td class="nw">C#（.NET）</td><td>成熟稳定、生态好，桌面业务应用主力，XAML + MVVM</td></tr>
+<tr><td class="nw"><strong>.NET MAUI</strong></td><td class="nw">C#</td><td>跨平台（桌面 + 移动），从 Xamarin 演进而来</td></tr>
+<tr><td class="nw"><strong>Qt</strong></td><td class="nw">C++</td><td>跨平台 C++ GUI 之王，工业/嵌入式/桌面通吃，MFC 用户最自然的迁移目标</td></tr>
+<tr><td class="nw"><strong>WinForms</strong></td><td class="nw">C#</td><td>比 MFC 简单得多的老牌方案，快速内部工具仍在用</td></tr>
+<tr><td class="nw"><strong>Electron / Tauri</strong></td><td class="nw">Web 技术</td><td>用 HTML/JS/CSS 做桌面应用，跨平台，生态庞大</td></tr>
 </tbody>
 </table>
 <div class="note new">

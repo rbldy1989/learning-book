@@ -154,8 +154,12 @@ figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
 pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
 table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
 #sidebar,#toc{will-change:scroll-position;}
-table th, table td { white-space: normal; }
+
+/* 表格：短内容不折行，长文本正常折行 */
+table th { white-space: nowrap; }
 table td:first-child, table th:first-child { white-space: nowrap; }
+table td { overflow-wrap: break-word; }
+table td.nw { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -251,13 +255,13 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>时间</th><th>事件</th><th>今天还留下的痕迹</th></tr></thead>
 <tbody>
-<tr><td>1981</td><td>MS-DOS 的 COMMAND.COM，批处理与 <code>.BAT</code> 诞生</td><td><code>%1</code> 参数、<code>GOTO</code>、<code>IF ERRORLEVEL N</code> 的"大于等于"语义</td></tr>
-<tr><td>1987</td><td>OS/2 上出现 <code>CMD.EXE</code></td><td>名字与部分设计思路</td></tr>
-<tr><td>1993</td><td>Windows NT 3.1 内置 <code>cmd.exe</code>（32 位 Win32 程序）</td><td>今天你用的就是它的直系后代</td></tr>
-<tr><td>1995—2000</td><td>Windows 9x 仍以 COMMAND.COM 为主壳；NT 两者并存</td><td><code>.bat</code> 与 <code>.cmd</code> 分家的根源</td></tr>
-<tr><td>2000 前后</td><td>NT 加入命令扩展、延迟展开</td><td><code>setlocal</code>、<code>for /f</code>、<code>%~dp0</code>、<code>!VAR!</code></td></tr>
-<tr><td>2006</td><td>PowerShell 1.0 发布，微软的战略重心转移</td><td>CMD 从此基本只修 bug，不加新特性</td></tr>
-<tr><td>2016 起</td><td>WSL、Windows Terminal、PowerShell 7 陆续到位</td><td>CMD 退居"兼容层"</td></tr>
+<tr><td class="nw">1981</td><td>MS-DOS 的 COMMAND.COM，批处理与 <code>.BAT</code> 诞生</td><td><code>%1</code> 参数、<code>GOTO</code>、<code>IF ERRORLEVEL N</code> 的"大于等于"语义</td></tr>
+<tr><td class="nw">1987</td><td>OS/2 上出现 <code>CMD.EXE</code></td><td>名字与部分设计思路</td></tr>
+<tr><td class="nw">1993</td><td>Windows NT 3.1 内置 <code>cmd.exe</code>（32 位 Win32 程序）</td><td>今天你用的就是它的直系后代</td></tr>
+<tr><td class="nw">1995—2000</td><td>Windows 9x 仍以 COMMAND.COM 为主壳；NT 两者并存</td><td><code>.bat</code> 与 <code>.cmd</code> 分家的根源</td></tr>
+<tr><td class="nw">2000 前后</td><td>NT 加入命令扩展、延迟展开</td><td><code>setlocal</code>、<code>for /f</code>、<code>%~dp0</code>、<code>!VAR!</code></td></tr>
+<tr><td class="nw">2006</td><td>PowerShell 1.0 发布，微软的战略重心转移</td><td>CMD 从此基本只修 bug，不加新特性</td></tr>
+<tr><td class="nw">2016 起</td><td>WSL、Windows Terminal、PowerShell 7 陆续到位</td><td class="nw">CMD 退居"兼容层"</td></tr>
 </tbody>
 </table>
 
@@ -309,10 +313,10 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <thead><tr><th>你常听到的说法</th><th>实际指的是</th><th>准确叫法</th></tr></thead>
 <tbody>
 <tr><td>DOS 窗口 / DOS 命令</td><td>cmd.exe 及其内部命令</td><td>命令提示符、CMD</td></tr>
-<tr><td>黑窗口</td><td>终端程序</td><td>conhost.exe / Windows Terminal</td></tr>
-<tr><td>控制台</td><td>视语境，通常指终端</td><td>说清是"终端"还是"壳"</td></tr>
-<tr><td>批处理语言</td><td>cmd.exe 解析的脚本语法</td><td>批处理（batch）</td></tr>
-<tr><td>PowerShell 窗口</td><td>跑着 powershell.exe 的终端</td><td>PowerShell 会话</td></tr>
+<tr><td class="nw">黑窗口</td><td class="nw">终端程序</td><td>conhost.exe / Windows Terminal</td></tr>
+<tr><td class="nw">控制台</td><td>视语境，通常指终端</td><td>说清是"终端"还是"壳"</td></tr>
+<tr><td class="nw">批处理语言</td><td>cmd.exe 解析的脚本语法</td><td class="nw">批处理（batch）</td></tr>
+<tr><td class="nw">PowerShell 窗口</td><td>跑着 powershell.exe 的终端</td><td class="nw">PowerShell 会话</td></tr>
 </tbody>
 </table>
 
@@ -323,14 +327,14 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>维度</th><th>cmd.exe</th><th>PowerShell</th><th>WSL（bash 等）</th></tr></thead>
 <tbody>
-<tr><td>核心数据</td><td>纯文本行</td><td>.NET 对象</td><td>纯文本流</td></tr>
-<tr><td>可用性</td><td>每台 Windows 都有，永远在</td><td>5.1 内置；7.x 需另装（<code>pwsh.exe</code>）</td><td>需手动启用并安装发行版</td></tr>
-<tr><td>脚本扩展名</td><td><code>.bat</code> / <code>.cmd</code></td><td><code>.ps1</code></td><td><code>.sh</code></td></tr>
-<tr><td>双击运行</td><td>直接执行</td><td>默认用记事本打开，且受执行策略限制</td><td>不适用</td></tr>
-<tr><td>访问 .NET / COM / WMI</td><td>不能</td><td>原生</td><td>需经互操作</td></tr>
-<tr><td>错误处理</td><td>只有退出码</td><td>异常、<code>try/catch</code>、<code>$ErrorActionPreference</code></td><td>退出码 + <code>set -e</code></td></tr>
-<tr><td>引号与转义</td><td>混乱（<code>^</code>、<code>"</code>、<code>%%</code> 各有规则）</td><td>统一且有文档</td><td>POSIX 规则</td></tr>
-<tr><td>最擅长</td><td>调用 exe、维护存量、当启动器</td><td>系统管理、自动化、结构化数据</td><td>Linux 工具链、跨平台开发</td></tr>
+<tr><td class="nw">核心数据</td><td class="nw">纯文本行</td><td class="nw">.NET 对象</td><td class="nw">纯文本流</td></tr>
+<tr><td class="nw">可用性</td><td>每台 Windows 都有，永远在</td><td>5.1 内置；7.x 需另装（<code>pwsh.exe</code>）</td><td>需手动启用并安装发行版</td></tr>
+<tr><td class="nw">脚本扩展名</td><td class="nw"><code>.bat</code> / <code>.cmd</code></td><td class="nw"><code>.ps1</code></td><td class="nw"><code>.sh</code></td></tr>
+<tr><td class="nw">双击运行</td><td class="nw">直接执行</td><td>默认用记事本打开，且受执行策略限制</td><td class="nw">不适用</td></tr>
+<tr><td>访问 .NET / COM / WMI</td><td class="nw">不能</td><td class="nw">原生</td><td class="nw">需经互操作</td></tr>
+<tr><td class="nw">错误处理</td><td class="nw">只有退出码</td><td>异常、<code>try/catch</code>、<code>$ErrorActionPreference</code></td><td class="nw">退出码 + <code>set -e</code></td></tr>
+<tr><td class="nw">引号与转义</td><td>混乱（<code>^</code>、<code>"</code>、<code>%%</code> 各有规则）</td><td class="nw">统一且有文档</td><td class="nw">POSIX 规则</td></tr>
+<tr><td class="nw">最擅长</td><td>调用 exe、维护存量、当启动器</td><td>系统管理、自动化、结构化数据</td><td>Linux 工具链、跨平台开发</td></tr>
 </tbody>
 </table>
 
@@ -341,13 +345,13 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>你现在在</th><th>想执行</th><th>写法</th></tr></thead>
 <tbody>
-<tr><td>CMD</td><td>PowerShell 脚本</td><td><code>powershell -NoProfile -File "C:\ops\task.ps1" arg1</code></td></tr>
-<tr><td>CMD</td><td>一句 PowerShell 表达式</td><td><code>powershell -NoProfile -Command "Get-Date -Format s"</code></td></tr>
-<tr><td>CMD</td><td>Linux 命令</td><td><code>wsl -e grep root /etc/passwd</code></td></tr>
-<tr><td>PowerShell</td><td>批处理文件</td><td><code>cmd /c C:\ops\build.cmd</code></td></tr>
-<tr><td>PowerShell</td><td>读上一个 exe 的退出码</td><td><code>$LASTEXITCODE</code>（不是 <code>$?</code>）</td></tr>
-<tr><td>WSL</td><td>Windows 程序</td><td><code>ping.exe -n 1 8.8.8.8</code>（带 <code>.exe</code> 后缀）</td></tr>
-<tr><td>任意壳</td><td>确认自己在哪</td><td>CMD：<code>ver</code>；PowerShell：<code>$PSVersionTable</code></td></tr>
+<tr><td class="nw">CMD</td><td class="nw">PowerShell 脚本</td><td><code>powershell -NoProfile -File "C:\ops\task.ps1" arg1</code></td></tr>
+<tr><td class="nw">CMD</td><td>一句 PowerShell 表达式</td><td><code>powershell -NoProfile -Command "Get-Date -Format s"</code></td></tr>
+<tr><td class="nw">CMD</td><td class="nw">Linux 命令</td><td><code>wsl -e grep root /etc/passwd</code></td></tr>
+<tr><td class="nw">PowerShell</td><td class="nw">批处理文件</td><td><code>cmd /c C:\ops\build.cmd</code></td></tr>
+<tr><td class="nw">PowerShell</td><td>读上一个 exe 的退出码</td><td><code>$LASTEXITCODE</code>（不是 <code>$?</code>）</td></tr>
+<tr><td class="nw">WSL</td><td class="nw">Windows 程序</td><td><code>ping.exe -n 1 8.8.8.8</code>（带 <code>.exe</code> 后缀）</td></tr>
+<tr><td class="nw">任意壳</td><td class="nw">确认自己在哪</td><td>CMD：<code>ver</code>；PowerShell：<code>$PSVersionTable</code></td></tr>
 </tbody>
 </table>
 
@@ -360,11 +364,11 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>场景</th><th>为什么绕不开 CMD</th><th>你该怎么做</th></tr></thead>
 <tbody>
-<tr><td>存量构建脚本</td><td>工具链自己发的就是批处理：<code>vcvarsall.bat</code>、<code>gradlew.bat</code>、<code>npm.cmd</code>、<code>activate.bat</code></td><td>就地维护，别顺手重写；它们改一行就可能连累整条流水线</td></tr>
+<tr><td class="nw">存量构建脚本</td><td>工具链自己发的就是批处理：<code>vcvarsall.bat</code>、<code>gradlew.bat</code>、<code>npm.cmd</code>、<code>activate.bat</code></td><td>就地维护，别顺手重写；它们改一行就可能连累整条流水线</td></tr>
 <tr><td>注册表启动项、服务、安装程序自定义动作</td><td>这些位置只接受"一条命令行"，没有解释器可选</td><td>用一个 <code>.cmd</code> 当入口，内部再转发</td></tr>
-<tr><td>任务计划</td><td>"程序或脚本"字段直接支持 <code>.bat</code>，退出码会回写到"上次运行结果"</td><td>确保脚本用 <code>exit /b</code> 返回可判断的退出码</td></tr>
-<tr><td>双击即跑的小工具</td><td><code>.ps1</code> 双击默认打开记事本，还受执行策略约束；<code>.bat</code> 双击就执行</td><td>写成 <code>.cmd</code> 启动器，逻辑放别处</td></tr>
-<tr><td>最小化环境</td><td>WinPE、恢复环境、Nano Server 容器里可能根本没有 PowerShell</td><td>救急脚本只用 CMD 内部命令</td></tr>
+<tr><td class="nw">任务计划</td><td>"程序或脚本"字段直接支持 <code>.bat</code>，退出码会回写到"上次运行结果"</td><td>确保脚本用 <code>exit /b</code> 返回可判断的退出码</td></tr>
+<tr><td class="nw">双击即跑的小工具</td><td><code>.ps1</code> 双击默认打开记事本，还受执行策略约束；<code>.bat</code> 双击就执行</td><td>写成 <code>.cmd</code> 启动器，逻辑放别处</td></tr>
+<tr><td class="nw">最小化环境</td><td>WinPE、恢复环境、Nano Server 容器里可能根本没有 PowerShell</td><td>救急脚本只用 CMD 内部命令</td></tr>
 <tr><td>别的程序调用"系统 shell"</td><td>Windows 上 <code>system()</code>、Node 的 <code>shell: true</code>、不少 CI 的默认 shell 都指向 <code>cmd.exe</code></td><td>知道你的命令行会被 cmd 再解析一遍（转义规则因此要按 cmd 来）</td></tr>
 </tbody>
 </table>
@@ -389,8 +393,8 @@ cmd /c exit 7
 <table>
 <thead><tr><th>存成的文件名</th><th>输出</th><th>原因</th></tr></thead>
 <tbody>
-<tr><td><code>errlevel-test.bat</code></td><td><code>ERRORLEVEL = 7</code></td><td><code>set</code> 成功执行，但不碰 ERRORLEVEL</td></tr>
-<tr><td><code>errlevel-test.cmd</code></td><td><code>ERRORLEVEL = 0</code></td><td><code>set</code> 成功执行，顺手把 ERRORLEVEL 清零</td></tr>
+<tr><td><code>errlevel-test.bat</code></td><td class="nw"><code>ERRORLEVEL = 7</code></td><td><code>set</code> 成功执行，但不碰 ERRORLEVEL</td></tr>
+<tr><td><code>errlevel-test.cmd</code></td><td class="nw"><code>ERRORLEVEL = 0</code></td><td><code>set</code> 成功执行，顺手把 ERRORLEVEL 清零</td></tr>
 </tbody>
 </table>
 
@@ -399,11 +403,11 @@ cmd /c exit 7
 <table>
 <thead><tr><th>维度</th><th><code>.bat</code></th><th><code>.cmd</code></th></tr></thead>
 <tbody>
-<tr><td>语法</td><td colspan="2">完全相同（在 cmd.exe 下）</td></tr>
-<tr><td>出身</td><td>1981 年，DOS</td><td>1993 年，Windows NT</td></tr>
-<tr><td>谁能执行</td><td>DOS / Win9x 的 COMMAND.COM，以及 NT 的 cmd.exe</td><td>只有 NT 系的 cmd.exe</td></tr>
-<tr><td>上述命令成功后</td><td>ERRORLEVEL 保持不变</td><td>ERRORLEVEL 被清 0</td></tr>
-<tr><td>PATHEXT 默认优先级</td><td>更高（<code>.BAT</code> 排在 <code>.CMD</code> 前）</td><td>更低</td></tr>
+<tr><td class="nw">语法</td><td colspan="2">完全相同（在 cmd.exe 下）</td></tr>
+<tr><td class="nw">出身</td><td>1981 年，DOS</td><td>1993 年，Windows NT</td></tr>
+<tr><td class="nw">谁能执行</td><td>DOS / Win9x 的 COMMAND.COM，以及 NT 的 cmd.exe</td><td>只有 NT 系的 cmd.exe</td></tr>
+<tr><td class="nw">上述命令成功后</td><td>ERRORLEVEL 保持不变</td><td>ERRORLEVEL 被清 0</td></tr>
+<tr><td>PATHEXT 默认优先级</td><td>更高（<code>.BAT</code> 排在 <code>.CMD</code> 前）</td><td class="nw">更低</td></tr>
 <tr><td>文件关联、双击、任务计划</td><td colspan="2">待遇完全一样</td></tr>
 </tbody>
 </table>
@@ -436,13 +440,13 @@ cmd /c exit 7
 <table>
 <thead><tr><th>写法</th><th>作用</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>echo 文本</code></td><td>输出文本</td><td>行尾的空格也会被输出，别在行尾留空格</td></tr>
-<tr><td><code>echo</code>（单独一个词）</td><td>显示当前回显状态</td><td>输出 <code>ECHO 处于打开状态。</code>——不是空行</td></tr>
+<tr><td class="nw"><code>echo 文本</code></td><td class="nw">输出文本</td><td>行尾的空格也会被输出，别在行尾留空格</td></tr>
+<tr><td><code>echo</code>（单独一个词）</td><td class="nw">显示当前回显状态</td><td>输出 <code>ECHO 处于打开状态。</code>——不是空行</td></tr>
 <tr><td><code>echo off</code> / <code>echo on</code></td><td>关闭 / 打开命令回显</td><td>这是个开关，不是输出</td></tr>
-<tr><td><code>echo.</code></td><td>输出一个空行</td><td>点号必须紧贴，中间不能有空格</td></tr>
-<tr><td><code>echo(</code></td><td>输出一个空行</td><td>最稳妥的写法，对特殊字符最不挑剔</td></tr>
-<tr><td><code>echo(off</code></td><td>输出字面量 <code>off</code></td><td>直接 <code>echo off</code> 会被当成开关</td></tr>
-<tr><td><code>echo 文本 &gt;nul</code></td><td>丢弃输出</td><td>只想要副作用或退出码时用</td></tr>
+<tr><td class="nw"><code>echo.</code></td><td class="nw">输出一个空行</td><td>点号必须紧贴，中间不能有空格</td></tr>
+<tr><td class="nw"><code>echo(</code></td><td class="nw">输出一个空行</td><td>最稳妥的写法，对特殊字符最不挑剔</td></tr>
+<tr><td class="nw"><code>echo(off</code></td><td class="nw">输出字面量 <code>off</code></td><td>直接 <code>echo off</code> 会被当成开关</td></tr>
+<tr><td class="nw"><code>echo 文本 &gt;nul</code></td><td class="nw">丢弃输出</td><td>只想要副作用或退出码时用</td></tr>
 </tbody>
 </table>
 
@@ -477,9 +481,9 @@ D:\lab&gt;echo 结束
 <table>
 <thead><tr><th>写法</th><th>能用的位置</th><th>注意</th></tr></thead>
 <tbody>
-<tr><td><code>rem 说明文字</code></td><td>任何位置，包括 <code>( )</code> 块内</td><td>最安全 <span class="badge ok">仍适用</span></td></tr>
-<tr><td><code>:: 说明文字</code></td><td>只能独占一行，且行首</td><td>写在 <code>( )</code> 块里会报错 <span class="badge old">已过时</span></td></tr>
-<tr><td><code>命令 :: 注释</code></td><td>不存在这种写法</td><td><code>::</code> 会被当成命令参数的一部分</td></tr>
+<tr><td class="nw"><code>rem 说明文字</code></td><td>任何位置，包括 <code>( )</code> 块内</td><td class="nw">最安全 <span class="badge ok">仍适用</span></td></tr>
+<tr><td class="nw"><code>:: 说明文字</code></td><td>只能独占一行，且行首</td><td>写在 <code>( )</code> 块里会报错 <span class="badge old">已过时</span></td></tr>
+<tr><td class="nw"><code>命令 :: 注释</code></td><td class="nw">不存在这种写法</td><td><code>::</code> 会被当成命令参数的一部分</td></tr>
 </tbody>
 </table>
 
@@ -494,12 +498,12 @@ D:\lab&gt;echo 结束
 <table>
 <thead><tr><th>运行方式</th><th>写法</th><th>结束之后</th></tr></thead>
 <tbody>
-<tr><td>资源管理器双击</td><td>—</td><td>窗口立刻关闭（所以才需要 <code>pause</code>）</td></tr>
-<tr><td>在已有窗口里跑</td><td><code>hello.cmd</code></td><td>留在当前窗口；脚本改的环境变量会残留（除非用了 <code>setlocal</code>）</td></tr>
-<tr><td>新进程，跑完退出</td><td><code>cmd /c hello.cmd</code></td><td>窗口关闭，退出码传给调用者</td></tr>
-<tr><td>新进程，跑完保留</td><td><code>cmd /k hello.cmd</code></td><td>窗口留着，方便看报错</td></tr>
-<tr><td>在父脚本里调用并返回</td><td><code>call hello.cmd</code></td><td>子脚本结束后<strong>继续</strong>执行父脚本剩余的行</td></tr>
-<tr><td>在父脚本里直接写文件名</td><td><code>hello.cmd</code></td><td>控制权一去不回，父脚本剩下的行<strong>不会执行</strong></td></tr>
+<tr><td class="nw">资源管理器双击</td><td class="nw">—</td><td>窗口立刻关闭（所以才需要 <code>pause</code>）</td></tr>
+<tr><td class="nw">在已有窗口里跑</td><td class="nw"><code>hello.cmd</code></td><td>留在当前窗口；脚本改的环境变量会残留（除非用了 <code>setlocal</code>）</td></tr>
+<tr><td>新进程，跑完退出</td><td class="nw"><code>cmd /c hello.cmd</code></td><td>窗口关闭，退出码传给调用者</td></tr>
+<tr><td>新进程，跑完保留</td><td class="nw"><code>cmd /k hello.cmd</code></td><td>窗口留着，方便看报错</td></tr>
+<tr><td>在父脚本里调用并返回</td><td class="nw"><code>call hello.cmd</code></td><td>子脚本结束后<strong>继续</strong>执行父脚本剩余的行</td></tr>
+<tr><td>在父脚本里直接写文件名</td><td class="nw"><code>hello.cmd</code></td><td>控制权一去不回，父脚本剩下的行<strong>不会执行</strong></td></tr>
 </tbody>
 </table>
 
@@ -531,18 +535,18 @@ D:\lab&gt;echo 结束
 <table>
 <thead><tr><th>特性</th><th>命令行（提示符下）</th><th>批处理文件内</th></tr></thead>
 <tbody>
-<tr><td><code>for</code> 的循环变量</td><td><code>%i</code></td><td><code>%%i</code></td></tr>
-<tr><td>字面量百分号</td><td>通常直接写 <code>%</code></td><td>写 <code>%%</code> 才保险</td></tr>
-<tr><td>未定义的 <code>%NOPE%</code></td><td>原样保留，输出 <code>%NOPE%</code></td><td>展开为空串，那一段直接消失</td></tr>
-<tr><td>脚本参数</td><td>没有</td><td><code>%0</code>（脚本名）、<code>%1</code>…<code>%9</code>、<code>%*</code>（全部参数）</td></tr>
-<tr><td><code>:标签</code> 与 <code>goto</code></td><td>没有意义</td><td>流程控制的唯一手段</td></tr>
-<tr><td><code>call :子过程</code></td><td>不可用</td><td>可用，批处理版的"函数"</td></tr>
-<tr><td><code>setlocal</code> / <code>endlocal</code></td><td>无效果</td><td>生效，隔离环境变量改动</td></tr>
-<tr><td><code>shift</code></td><td>没有意义</td><td>移动参数窗口</td></tr>
-<tr><td>延迟展开 <code>!VAR!</code></td><td>需以 <code>cmd /v:on</code> 启动</td><td><code>setlocal EnableDelayedExpansion</code></td></tr>
-<tr><td>命令回显</td><td>你敲什么就是什么</td><td>默认逐行回显，所以要 <code>@echo off</code></td></tr>
-<tr><td>结束</td><td><code>exit</code> 关闭窗口</td><td><code>exit /b</code> 只结束脚本，<code>exit</code> 会连窗口一起关</td></tr>
-<tr><td>历史与补全</td><td>上下键、Tab、F7 列表</td><td>没有这回事</td></tr>
+<tr><td class="nw"><code>for</code> 的循环变量</td><td class="nw"><code>%i</code></td><td class="nw"><code>%%i</code></td></tr>
+<tr><td class="nw">字面量百分号</td><td class="nw">通常直接写 <code>%</code></td><td class="nw">写 <code>%%</code> 才保险</td></tr>
+<tr><td class="nw">未定义的 <code>%NOPE%</code></td><td>原样保留，输出 <code>%NOPE%</code></td><td>展开为空串，那一段直接消失</td></tr>
+<tr><td class="nw">脚本参数</td><td class="nw">没有</td><td><code>%0</code>（脚本名）、<code>%1</code>…<code>%9</code>、<code>%*</code>（全部参数）</td></tr>
+<tr><td class="nw"><code>:标签</code> 与 <code>goto</code></td><td class="nw">没有意义</td><td>流程控制的唯一手段</td></tr>
+<tr><td class="nw"><code>call :子过程</code></td><td class="nw">不可用</td><td>可用，批处理版的"函数"</td></tr>
+<tr><td><code>setlocal</code> / <code>endlocal</code></td><td class="nw">无效果</td><td>生效，隔离环境变量改动</td></tr>
+<tr><td class="nw"><code>shift</code></td><td class="nw">没有意义</td><td class="nw">移动参数窗口</td></tr>
+<tr><td class="nw">延迟展开 <code>!VAR!</code></td><td>需以 <code>cmd /v:on</code> 启动</td><td><code>setlocal EnableDelayedExpansion</code></td></tr>
+<tr><td class="nw">命令回显</td><td class="nw">你敲什么就是什么</td><td>默认逐行回显，所以要 <code>@echo off</code></td></tr>
+<tr><td class="nw">结束</td><td class="nw"><code>exit</code> 关闭窗口</td><td><code>exit /b</code> 只结束脚本，<code>exit</code> 会连窗口一起关</td></tr>
+<tr><td class="nw">历史与补全</td><td>上下键、Tab、F7 列表</td><td class="nw">没有这回事</td></tr>
 </tbody>
 </table>
 
@@ -589,13 +593,13 @@ D:\lab&gt;echo 结束
 <table>
 <thead><tr><th>写法</th><th>含义</th><th>评价</th></tr></thead>
 <tbody>
-<tr><td><code>if errorlevel N</code></td><td>上一个退出码<strong>大于等于</strong> N</td><td>DOS 遗产。判断"有没有出错"（<code>if errorlevel 1</code>）还行；判断具体值必须从大到小排 <span class="badge old">已过时</span></td></tr>
-<tr><td><code>if %ERRORLEVEL% NEQ 0 (...)</code></td><td>精确判断"非 0"</td><td>推荐 <span class="badge ok">仍适用</span></td></tr>
-<tr><td><code>if %ERRORLEVEL% EQU 2 (...)</code></td><td>精确等于 2</td><td>推荐 <span class="badge ok">仍适用</span></td></tr>
-<tr><td><code>命令1 &amp;&amp; 命令2</code></td><td>前者退出码为 0 才执行后者</td><td>推荐，写短逻辑很顺手 <span class="badge ok">仍适用</span></td></tr>
-<tr><td><code>命令1 || 命令2</code></td><td>前者退出码非 0 才执行后者</td><td>推荐 <span class="badge ok">仍适用</span></td></tr>
-<tr><td><code>set ERRORLEVEL=0</code></td><td>创建真实变量，永久遮蔽伪变量</td><td>绝对不要 <span class="badge dead">禁用</span></td></tr>
-<tr><td><code>if errorlevel 0</code></td><td>退出码 ≥ 0，几乎恒为真</td><td>写了等于没写 <span class="badge dead">禁用</span></td></tr>
+<tr><td class="nw"><code>if errorlevel N</code></td><td>上一个退出码<strong>大于等于</strong> N</td><td>DOS 遗产。判断"有没有出错"（<code>if errorlevel 1</code>）还行；判断具体值必须从大到小排 <span class="badge old">已过时</span></td></tr>
+<tr><td><code>if %ERRORLEVEL% NEQ 0 (...)</code></td><td class="nw">精确判断"非 0"</td><td class="nw">推荐 <span class="badge ok">仍适用</span></td></tr>
+<tr><td><code>if %ERRORLEVEL% EQU 2 (...)</code></td><td class="nw">精确等于 2</td><td class="nw">推荐 <span class="badge ok">仍适用</span></td></tr>
+<tr><td class="nw"><code>命令1 &amp;&amp; 命令2</code></td><td>前者退出码为 0 才执行后者</td><td>推荐，写短逻辑很顺手 <span class="badge ok">仍适用</span></td></tr>
+<tr><td class="nw"><code>命令1 || 命令2</code></td><td>前者退出码非 0 才执行后者</td><td class="nw">推荐 <span class="badge ok">仍适用</span></td></tr>
+<tr><td class="nw"><code>set ERRORLEVEL=0</code></td><td>创建真实变量，永久遮蔽伪变量</td><td class="nw">绝对不要 <span class="badge dead">禁用</span></td></tr>
+<tr><td class="nw"><code>if errorlevel 0</code></td><td>退出码 ≥ 0，几乎恒为真</td><td>写了等于没写 <span class="badge dead">禁用</span></td></tr>
 </tbody>
 </table>
 
@@ -604,9 +608,9 @@ D:\lab&gt;echo 结束
 <table>
 <thead><tr><th>运算符</th><th>含义</th><th>运算符</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td><code>EQU</code></td><td>等于</td><td><code>NEQ</code></td><td>不等于</td></tr>
-<tr><td><code>LSS</code></td><td>小于</td><td><code>LEQ</code></td><td>小于等于</td></tr>
-<tr><td><code>GTR</code></td><td>大于</td><td><code>GEQ</code></td><td>大于等于</td></tr>
+<tr><td class="nw"><code>EQU</code></td><td class="nw">等于</td><td class="nw"><code>NEQ</code></td><td class="nw">不等于</td></tr>
+<tr><td class="nw"><code>LSS</code></td><td class="nw">小于</td><td class="nw"><code>LEQ</code></td><td class="nw">小于等于</td></tr>
+<tr><td class="nw"><code>GTR</code></td><td class="nw">大于</td><td class="nw"><code>GEQ</code></td><td class="nw">大于等于</td></tr>
 </tbody>
 </table>
 
@@ -633,12 +637,12 @@ ping -n 1 -w 1000 127.0.0.1 &gt;nul 2&gt;&amp;1
 <table>
 <thead><tr><th>退出码</th><th>通行约定</th><th>备注</th></tr></thead>
 <tbody>
-<tr><td><code>0</code></td><td>成功</td><td>唯一被所有系统认可的"好"值</td></tr>
-<tr><td><code>1</code></td><td>一般性失败</td><td>不确定用什么就用它</td></tr>
-<tr><td><code>2</code></td><td>参数或用法错误</td><td>很多微软自带工具遵循</td></tr>
-<tr><td><code>3</code>–<code>125</code></td><td>程序自定义</td><td>自己的脚本在这个区间里分配</td></tr>
-<tr><td>robocopy <code>0</code>–<code>7</code></td><td><strong>都算成功</strong></td><td>1=有文件复制，2=有多余文件，4=有不匹配……只有 ≥8 才是真失败</td></tr>
-<tr><td>大负数如 <code>-1073741819</code></td><td>进程崩溃</td><td>对应 <code>0xC0000005</code> 访问冲突，不是你的脚本返回的</td></tr>
+<tr><td class="nw"><code>0</code></td><td class="nw">成功</td><td>唯一被所有系统认可的"好"值</td></tr>
+<tr><td class="nw"><code>1</code></td><td class="nw">一般性失败</td><td>不确定用什么就用它</td></tr>
+<tr><td class="nw"><code>2</code></td><td class="nw">参数或用法错误</td><td>很多微软自带工具遵循</td></tr>
+<tr><td class="nw"><code>3</code>–<code>125</code></td><td class="nw">程序自定义</td><td>自己的脚本在这个区间里分配</td></tr>
+<tr><td class="nw">robocopy <code>0</code>–<code>7</code></td><td class="nw"><strong>都算成功</strong></td><td>1=有文件复制，2=有多余文件，4=有不匹配……只有 ≥8 才是真失败</td></tr>
+<tr><td>大负数如 <code>-1073741819</code></td><td class="nw">进程崩溃</td><td>对应 <code>0xC0000005</code> 访问冲突，不是你的脚本返回的</td></tr>
 </tbody>
 </table>
 
@@ -658,10 +662,10 @@ ping -n 1 -w 1000 127.0.0.1 &gt;nul 2&gt;&amp;1
 <table>
 <thead><tr><th>情况</th><th>规则</th></tr></thead>
 <tbody>
-<tr><td>管道 <code>a | b</code></td><td>整体退出码来自最后一个命令 <code>b</code>，<code>a</code> 的失败会被吞掉</td></tr>
+<tr><td class="nw">管道 <code>a | b</code></td><td>整体退出码来自最后一个命令 <code>b</code>，<code>a</code> 的失败会被吞掉</td></tr>
 <tr><td>GUI 程序 / <code>start</code> 启动的程序</td><td>要拿到退出码必须写 <code>start /wait 程序名</code>，否则 <code>start</code> 立刻返回</td></tr>
-<tr><td><code>exit /b N</code></td><td>结束当前脚本并返回 N，窗口不关</td></tr>
-<tr><td><code>exit N</code></td><td>结束整个 cmd 进程，窗口会关掉——在交互窗口里慎用</td></tr>
+<tr><td class="nw"><code>exit /b N</code></td><td>结束当前脚本并返回 N，窗口不关</td></tr>
+<tr><td class="nw"><code>exit N</code></td><td>结束整个 cmd 进程，窗口会关掉——在交互窗口里慎用</td></tr>
 <tr><td>并非所有内部命令都设置 ERRORLEVEL</td><td>关键步骤后立刻判断，别隔着几行；不确定就实测</td></tr>
 <tr><td>在 <code>( )</code> 块或 <code>for</code> 循环里读 ERRORLEVEL</td><td>整块在进入时一次性展开，读到的是旧值——需要延迟展开 <code>!ERRORLEVEL!</code>，后续章节详解</td></tr>
 </tbody>
@@ -674,11 +678,11 @@ ping -n 1 -w 1000 127.0.0.1 &gt;nul 2&gt;&amp;1
 <table>
 <thead><tr><th>你的需求</th><th>选什么</th><th>理由</th></tr></thead>
 <tbody>
-<tr><td>新的运维逻辑：有分支、要处理数据、要错误处理</td><td>PowerShell</td><td>有对象、有异常、有参数校验，写完还看得懂</td></tr>
-<tr><td>要在任意 Windows 上双击就跑，不改任何系统设置</td><td><code>.cmd</code> 启动器</td><td>不受执行策略约束，零依赖</td></tr>
-<tr><td>WinPE、恢复环境、Nano Server 容器</td><td>CMD</td><td>那里可能压根没有 PowerShell</td></tr>
-<tr><td>维护已有的 <code>build.bat</code></td><td>就地改 CMD</td><td>重写的风险远大于收益，先让它稳定下来</td></tr>
-<tr><td>要调用 Linux 工具链（grep、awk、make）</td><td>WSL</td><td>别在 CMD 里模拟 Unix</td></tr>
+<tr><td>新的运维逻辑：有分支、要处理数据、要错误处理</td><td class="nw">PowerShell</td><td>有对象、有异常、有参数校验，写完还看得懂</td></tr>
+<tr><td>要在任意 Windows 上双击就跑，不改任何系统设置</td><td class="nw"><code>.cmd</code> 启动器</td><td>不受执行策略约束，零依赖</td></tr>
+<tr><td>WinPE、恢复环境、Nano Server 容器</td><td class="nw">CMD</td><td>那里可能压根没有 PowerShell</td></tr>
+<tr><td>维护已有的 <code>build.bat</code></td><td class="nw">就地改 CMD</td><td>重写的风险远大于收益，先让它稳定下来</td></tr>
+<tr><td>要调用 Linux 工具链（grep、awk、make）</td><td class="nw">WSL</td><td>别在 CMD 里模拟 Unix</td></tr>
 <tr><td>跨平台 CI 的 Windows 分支</td><td>pwsh 或直接调工具</td><td>与其他平台的脚本保持一致</td></tr>
 </tbody>
 </table>
@@ -700,19 +704,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>概念</th><th>一句话</th></tr></thead>
 <tbody>
-<tr><td><code>cmd.exe</code></td><td>1993 年起的 Win32 命令解释器，不是 DOS，不是那个黑窗口</td></tr>
-<tr><td>终端 vs 壳</td><td>终端画字符（conhost / Windows Terminal），壳解析命令（cmd / pwsh / bash）</td></tr>
-<tr><td><code>.bat</code> vs <code>.cmd</code></td><td>语法相同；<code>.cmd</code> 里 <code>set</code> 等命令成功后会清零 ERRORLEVEL</td></tr>
-<tr><td><code>@echo off</code></td><td>关闭逐行回显；<code>@</code> 只抑制当前行</td></tr>
-<tr><td><code>echo.</code> / <code>echo(</code></td><td>输出空行；单独的 <code>echo</code> 是查询回显状态</td></tr>
-<tr><td><code>pause</code></td><td>只给双击场景用，无人值守脚本里是禁忌</td></tr>
-<tr><td><code>rem</code> / <code>::</code></td><td>注释；<code>::</code> 不能出现在 <code>( )</code> 块内</td></tr>
-<tr><td><code>%%i</code></td><td>批处理里的 <code>for</code> 变量；命令行上写 <code>%i</code></td></tr>
-<tr><td><code>%~dp0</code></td><td>脚本自身所在目录（带结尾反斜杠）</td></tr>
-<tr><td><code>ERRORLEVEL</code></td><td>上一个命令的退出码；0 成功，非 0 失败；别 <code>set</code> 它</td></tr>
-<tr><td><code>if errorlevel N</code></td><td>含义是"≥ N"，不是"= N"</td></tr>
-<tr><td><code>exit /b N</code></td><td>结束脚本并返回 N；<code>exit N</code> 会关掉整个窗口</td></tr>
-<tr><td><code>call</code></td><td>调用另一个脚本或子过程并<strong>返回</strong>；忘写就是有去无回</td></tr>
+<tr><td class="nw"><code>cmd.exe</code></td><td>1993 年起的 Win32 命令解释器，不是 DOS，不是那个黑窗口</td></tr>
+<tr><td class="nw">终端 vs 壳</td><td>终端画字符（conhost / Windows Terminal），壳解析命令（cmd / pwsh / bash）</td></tr>
+<tr><td class="nw"><code>.bat</code> vs <code>.cmd</code></td><td>语法相同；<code>.cmd</code> 里 <code>set</code> 等命令成功后会清零 ERRORLEVEL</td></tr>
+<tr><td class="nw"><code>@echo off</code></td><td>关闭逐行回显；<code>@</code> 只抑制当前行</td></tr>
+<tr><td class="nw"><code>echo.</code> / <code>echo(</code></td><td>输出空行；单独的 <code>echo</code> 是查询回显状态</td></tr>
+<tr><td class="nw"><code>pause</code></td><td>只给双击场景用，无人值守脚本里是禁忌</td></tr>
+<tr><td class="nw"><code>rem</code> / <code>::</code></td><td>注释；<code>::</code> 不能出现在 <code>( )</code> 块内</td></tr>
+<tr><td class="nw"><code>%%i</code></td><td>批处理里的 <code>for</code> 变量；命令行上写 <code>%i</code></td></tr>
+<tr><td class="nw"><code>%~dp0</code></td><td>脚本自身所在目录（带结尾反斜杠）</td></tr>
+<tr><td class="nw"><code>ERRORLEVEL</code></td><td>上一个命令的退出码；0 成功，非 0 失败；别 <code>set</code> 它</td></tr>
+<tr><td class="nw"><code>if errorlevel N</code></td><td>含义是"≥ N"，不是"= N"</td></tr>
+<tr><td class="nw"><code>exit /b N</code></td><td>结束脚本并返回 N；<code>exit N</code> 会关掉整个窗口</td></tr>
+<tr><td class="nw"><code>call</code></td><td>调用另一个脚本或子过程并<strong>返回</strong>；忘写就是有去无回</td></tr>
 </tbody>
 </table>
 
@@ -753,14 +757,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>写法</th><th>作用</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>set VAR=值</code></td><td>赋值</td><td>等号两侧不能有空格</td></tr>
-<tr><td><code>set "VAR=值"</code></td><td>赋值（推荐）</td><td>引号只定界，能安全包住 <code>&amp; | &lt; &gt; ^</code></td></tr>
-<tr><td><code>set VAR=</code></td><td>删除变量</td><td>赋空值等于删除；<code>set "VAR="</code> 同效</td></tr>
-<tr><td><code>set VAR</code></td><td>列出以 VAR 开头的所有变量</td><td>一个都没找到时 <code>errorlevel</code> 为 1</td></tr>
-<tr><td><code>set</code></td><td>列出当前所有环境变量</td><td>调试时的第一手段</td></tr>
-<tr><td><code>set /a 表达式</code></td><td>整数算术求值</td><td>见 <a href="#m2-calc">2.3</a></td></tr>
-<tr><td><code>set /p VAR=提示</code></td><td>读入一行文本</td><td>见 <a href="#m2-input">2.4</a></td></tr>
-<tr><td><code>if defined VAR ...</code></td><td>判断变量是否存在</td><td>比 <code>if "%VAR%"==""</code> 更可靠</td></tr>
+<tr><td class="nw"><code>set VAR=值</code></td><td class="nw">赋值</td><td>等号两侧不能有空格</td></tr>
+<tr><td class="nw"><code>set "VAR=值"</code></td><td class="nw">赋值（推荐）</td><td>引号只定界，能安全包住 <code>&amp; | &lt; &gt; ^</code></td></tr>
+<tr><td class="nw"><code>set VAR=</code></td><td class="nw">删除变量</td><td>赋空值等于删除；<code>set "VAR="</code> 同效</td></tr>
+<tr><td class="nw"><code>set VAR</code></td><td>列出以 VAR 开头的所有变量</td><td>一个都没找到时 <code>errorlevel</code> 为 1</td></tr>
+<tr><td class="nw"><code>set</code></td><td>列出当前所有环境变量</td><td class="nw">调试时的第一手段</td></tr>
+<tr><td class="nw"><code>set /a 表达式</code></td><td class="nw">整数算术求值</td><td class="nw">见 <a href="#m2-calc">2.3</a></td></tr>
+<tr><td class="nw"><code>set /p VAR=提示</code></td><td class="nw">读入一行文本</td><td class="nw">见 <a href="#m2-input">2.4</a></td></tr>
+<tr><td><code>if defined VAR ...</code></td><td class="nw">判断变量是否存在</td><td>比 <code>if "%VAR%"==""</code> 更可靠</td></tr>
 </tbody>
 </table>
 
@@ -813,8 +817,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>场景</th><th>变量已定义</th><th>变量未定义</th></tr></thead>
 <tbody>
-<tr><td>命令行交互输入</td><td>替换为值</td><td>原样保留 <code>%VAR%</code> 五个字符</td></tr>
-<tr><td>批处理文件中</td><td>替换为值</td><td><strong>替换为空</strong>（整个 <code>%VAR%</code> 消失）</td></tr>
+<tr><td class="nw">命令行交互输入</td><td class="nw">替换为值</td><td>原样保留 <code>%VAR%</code> 五个字符</td></tr>
+<tr><td class="nw">批处理文件中</td><td class="nw">替换为值</td><td><strong>替换为空</strong>（整个 <code>%VAR%</code> 消失）</td></tr>
 </tbody>
 </table>
 
@@ -838,9 +842,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>位置</th><th>写法</th><th>结果</th></tr></thead>
 <tbody>
-<tr><td>批处理文件中</td><td><code>echo 完成 100%%</code></td><td><code>完成 100%</code></td></tr>
-<tr><td>命令行窗口中</td><td><code>echo 完成 100%</code></td><td><code>完成 100%</code></td></tr>
-<tr><td>批处理中的 for 变量</td><td><code>%%i</code></td><td>循环变量 i（命令行下写 <code>%i</code>）</td></tr>
+<tr><td class="nw">批处理文件中</td><td class="nw"><code>echo 完成 100%%</code></td><td class="nw"><code>完成 100%</code></td></tr>
+<tr><td class="nw">命令行窗口中</td><td class="nw"><code>echo 完成 100%</code></td><td class="nw"><code>完成 100%</code></td></tr>
+<tr><td>批处理中的 for 变量</td><td class="nw"><code>%%i</code></td><td>循环变量 i（命令行下写 <code>%i</code>）</td></tr>
 </tbody>
 </table>
 
@@ -867,16 +871,16 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>优先级</th><th>运算符</th><th>含义</th><th>示例（结果）</th></tr></thead>
 <tbody>
-<tr><td>1</td><td><code>( )</code></td><td>分组</td><td><code>(1+2)*3</code> → 9</td></tr>
-<tr><td>2</td><td><code>!</code> <code>~</code> <code>-</code></td><td>逻辑非、按位取反、取负</td><td><code>~0</code> → -1</td></tr>
-<tr><td>3</td><td><code>*</code> <code>/</code> <code>%</code></td><td>乘、整除、取模</td><td><code>-7/2</code> → -3</td></tr>
-<tr><td>4</td><td><code>+</code> <code>-</code></td><td>加、减</td><td><code>5-8</code> → -3</td></tr>
-<tr><td>5</td><td><code>&lt;&lt;</code> <code>&gt;&gt;</code></td><td>左移、右移</td><td><code>"8&gt;&gt;2"</code> → 2</td></tr>
-<tr><td>6</td><td><code>&amp;</code></td><td>按位与</td><td><code>"12&amp;10"</code> → 8</td></tr>
-<tr><td>7</td><td><code>^</code></td><td>按位异或</td><td><code>"12^10"</code> → 6</td></tr>
-<tr><td>8</td><td><code>|</code></td><td>按位或</td><td><code>"12|10"</code> → 14</td></tr>
-<tr><td>9</td><td><code>=</code> <code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>&amp;=</code> <code>^=</code> <code>|=</code> <code>&lt;&lt;=</code> <code>&gt;&gt;=</code></td><td>赋值与复合赋值</td><td><code>set /a n+=1</code></td></tr>
-<tr><td>10</td><td><code>,</code></td><td>表达式分隔</td><td><code>set /a "a=1,b=2"</code></td></tr>
+<tr><td class="nw">1</td><td class="nw"><code>( )</code></td><td class="nw">分组</td><td class="nw"><code>(1+2)*3</code> → 9</td></tr>
+<tr><td class="nw">2</td><td class="nw"><code>!</code> <code>~</code> <code>-</code></td><td>逻辑非、按位取反、取负</td><td class="nw"><code>~0</code> → -1</td></tr>
+<tr><td class="nw">3</td><td class="nw"><code>*</code> <code>/</code> <code>%</code></td><td>乘、整除、取模</td><td class="nw"><code>-7/2</code> → -3</td></tr>
+<tr><td class="nw">4</td><td class="nw"><code>+</code> <code>-</code></td><td>加、减</td><td class="nw"><code>5-8</code> → -3</td></tr>
+<tr><td class="nw">5</td><td class="nw"><code>&lt;&lt;</code> <code>&gt;&gt;</code></td><td>左移、右移</td><td class="nw"><code>"8&gt;&gt;2"</code> → 2</td></tr>
+<tr><td class="nw">6</td><td class="nw"><code>&amp;</code></td><td class="nw">按位与</td><td class="nw"><code>"12&amp;10"</code> → 8</td></tr>
+<tr><td class="nw">7</td><td class="nw"><code>^</code></td><td class="nw">按位异或</td><td class="nw"><code>"12^10"</code> → 6</td></tr>
+<tr><td class="nw">8</td><td class="nw"><code>|</code></td><td class="nw">按位或</td><td class="nw"><code>"12|10"</code> → 14</td></tr>
+<tr><td class="nw">9</td><td><code>=</code> <code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>&amp;=</code> <code>^=</code> <code>|=</code> <code>&lt;&lt;=</code> <code>&gt;&gt;=</code></td><td class="nw">赋值与复合赋值</td><td class="nw"><code>set /a n+=1</code></td></tr>
+<tr><td class="nw">10</td><td class="nw"><code>,</code></td><td class="nw">表达式分隔</td><td class="nw"><code>set /a "a=1,b=2"</code></td></tr>
 </tbody>
 </table>
 
@@ -933,13 +937,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>情形</th><th>结果</th><th>应对</th></tr></thead>
 <tbody>
-<tr><td>用户直接回车</td><td>变量保持原值</td><td>调用前先 <code>set "VAR="</code></td></tr>
-<tr><td>用户按 Ctrl+C</td><td>脚本被中断</td><td>无法拦截，接受它</td></tr>
-<tr><td>输入源为空文件 / <code>&lt;nul</code></td><td>不赋值，直接返回</td><td>用作不换行输出</td></tr>
-<tr><td>输入含前后空格</td><td>原样保留</td><td>用 <code>%VAR: =%</code> 或引号定界处理</td></tr>
-<tr><td>输入含 <code>&amp;</code> <code>|</code> <code>&gt;</code></td><td>原样存入变量，但后续拼命令时会爆炸</td><td>永远加引号使用 <code>"%VAR%"</code></td></tr>
-<tr><td>延迟展开已开启，输入含 <code>!</code></td><td>感叹号被吞掉</td><td>读取时临时关闭延迟展开</td></tr>
-<tr><td>输入超长</td><td>受环境变量长度上限约束</td><td>只读单行，别拿它当文件解析器</td></tr>
+<tr><td class="nw">用户直接回车</td><td class="nw">变量保持原值</td><td>调用前先 <code>set "VAR="</code></td></tr>
+<tr><td class="nw">用户按 Ctrl+C</td><td class="nw">脚本被中断</td><td>无法拦截，接受它</td></tr>
+<tr><td>输入源为空文件 / <code>&lt;nul</code></td><td>不赋值，直接返回</td><td class="nw">用作不换行输出</td></tr>
+<tr><td class="nw">输入含前后空格</td><td class="nw">原样保留</td><td>用 <code>%VAR: =%</code> 或引号定界处理</td></tr>
+<tr><td class="nw">输入含 <code>&amp;</code> <code>|</code> <code>&gt;</code></td><td>原样存入变量，但后续拼命令时会爆炸</td><td>永远加引号使用 <code>"%VAR%"</code></td></tr>
+<tr><td>延迟展开已开启，输入含 <code>!</code></td><td class="nw">感叹号被吞掉</td><td>读取时临时关闭延迟展开</td></tr>
+<tr><td class="nw">输入超长</td><td>受环境变量长度上限约束</td><td>只读单行，别拿它当文件解析器</td></tr>
 </tbody>
 </table>
 
@@ -964,11 +968,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>命令</th><th>作用</th></tr></thead>
 <tbody>
-<tr><td><code>setlocal</code></td><td>保存当前环境变量、当前驱动器与目录，进入局部作用域</td></tr>
+<tr><td class="nw"><code>setlocal</code></td><td>保存当前环境变量、当前驱动器与目录，进入局部作用域</td></tr>
 <tr><td><code>setlocal EnableDelayedExpansion</code></td><td>同时开启延迟展开（见 <a href="#m2-delayed">2.8</a>）</td></tr>
 <tr><td><code>setlocal DisableDelayedExpansion</code></td><td>同时关闭延迟展开，常用于临时处理含 <code>!</code> 的文本</td></tr>
 <tr><td><code>setlocal EnableExtensions</code></td><td>确保命令扩展开启（<code>for /f</code>、<code>%~dp0</code> 等都依赖它）</td></tr>
-<tr><td><code>endlocal</code></td><td>丢弃本层所有改动，还原快照</td></tr>
+<tr><td class="nw"><code>endlocal</code></td><td>丢弃本层所有改动，还原快照</td></tr>
 </tbody>
 </table>
 
@@ -1001,9 +1005,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>命令</th><th>范围</th><th>当前窗口可见？</th><th>提醒</th></tr></thead>
 <tbody>
-<tr><td><code>set "V=1"</code></td><td>当前 cmd 进程及子进程</td><td>是</td><td>窗口关闭即消失</td></tr>
-<tr><td><code>setx V 1</code></td><td>当前用户（写注册表）</td><td><strong>否</strong>，需新开窗口</td><td>值长度截断到 1024 字符</td></tr>
-<tr><td><code>setx V 1 /m</code></td><td>整台机器</td><td><strong>否</strong></td><td>需管理员权限</td></tr>
+<tr><td class="nw"><code>set "V=1"</code></td><td>当前 cmd 进程及子进程</td><td class="nw">是</td><td class="nw">窗口关闭即消失</td></tr>
+<tr><td class="nw"><code>setx V 1</code></td><td>当前用户（写注册表）</td><td><strong>否</strong>，需新开窗口</td><td>值长度截断到 1024 字符</td></tr>
+<tr><td class="nw"><code>setx V 1 /m</code></td><td class="nw">整台机器</td><td class="nw"><strong>否</strong></td><td class="nw">需管理员权限</td></tr>
 </tbody>
 </table>
 
@@ -1016,12 +1020,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>记号</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td><code>%0</code></td><td>脚本自身——注意是<strong>按调用时书写的形式</strong>，不一定是绝对路径</td></tr>
-<tr><td><code>%1</code> ~ <code>%9</code></td><td>第 1 至第 9 个参数，<strong>引号会被一并带进来</strong></td></tr>
-<tr><td><code>%*</code></td><td>全部参数的原始文本（不含 <code>%0</code>），<strong>不受 shift 影响</strong></td></tr>
-<tr><td><code>%~1</code></td><td>去掉首尾引号的第 1 个参数，见 <a href="#m2-modifiers">2.7</a></td></tr>
-<tr><td><code>shift</code></td><td>整体左移：<code>%0</code>←<code>%1</code>，<code>%1</code>←<code>%2</code>…</td></tr>
-<tr><td><code>shift /2</code></td><td>从第 2 位开始左移，<code>%0</code> 和 <code>%1</code> 保持不动</td></tr>
+<tr><td class="nw"><code>%0</code></td><td>脚本自身——注意是<strong>按调用时书写的形式</strong>，不一定是绝对路径</td></tr>
+<tr><td class="nw"><code>%1</code> ~ <code>%9</code></td><td>第 1 至第 9 个参数，<strong>引号会被一并带进来</strong></td></tr>
+<tr><td class="nw"><code>%*</code></td><td>全部参数的原始文本（不含 <code>%0</code>），<strong>不受 shift 影响</strong></td></tr>
+<tr><td class="nw"><code>%~1</code></td><td>去掉首尾引号的第 1 个参数，见 <a href="#m2-modifiers">2.7</a></td></tr>
+<tr><td class="nw"><code>shift</code></td><td>整体左移：<code>%0</code>←<code>%1</code>，<code>%1</code>←<code>%2</code>…</td></tr>
+<tr><td class="nw"><code>shift /2</code></td><td>从第 2 位开始左移，<code>%0</code> 和 <code>%1</code> 保持不动</td></tr>
 </tbody>
 </table>
 
@@ -1034,12 +1038,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>分隔符</th><th>示例调用</th><th>切分结果</th></tr></thead>
 <tbody>
-<tr><td>空格</td><td><code>run.bat a b</code></td><td><code>%1</code>=a　<code>%2</code>=b</td></tr>
-<tr><td>制表符</td><td><code>run.bat a	b</code></td><td><code>%1</code>=a　<code>%2</code>=b</td></tr>
-<tr><td>逗号</td><td><code>run.bat a,b</code></td><td><code>%1</code>=a　<code>%2</code>=b</td></tr>
-<tr><td>分号</td><td><code>run.bat a;b</code></td><td><code>%1</code>=a　<code>%2</code>=b</td></tr>
-<tr><td><strong>等号</strong></td><td><code>run.bat mode=fast</code></td><td><code>%1</code>=mode　<code>%2</code>=fast</td></tr>
-<tr><td>引号包裹</td><td><code>run.bat "a,b c"</code></td><td><code>%1</code>=<code>"a,b c"</code>（含引号）</td></tr>
+<tr><td class="nw">空格</td><td class="nw"><code>run.bat a b</code></td><td class="nw"><code>%1</code>=a　<code>%2</code>=b</td></tr>
+<tr><td class="nw">制表符</td><td class="nw"><code>run.bat a	b</code></td><td class="nw"><code>%1</code>=a　<code>%2</code>=b</td></tr>
+<tr><td class="nw">逗号</td><td class="nw"><code>run.bat a,b</code></td><td class="nw"><code>%1</code>=a　<code>%2</code>=b</td></tr>
+<tr><td class="nw">分号</td><td class="nw"><code>run.bat a;b</code></td><td class="nw"><code>%1</code>=a　<code>%2</code>=b</td></tr>
+<tr><td class="nw"><strong>等号</strong></td><td><code>run.bat mode=fast</code></td><td class="nw"><code>%1</code>=mode　<code>%2</code>=fast</td></tr>
+<tr><td class="nw">引号包裹</td><td class="nw"><code>run.bat "a,b c"</code></td><td><code>%1</code>=<code>"a,b c"</code>（含引号）</td></tr>
 </tbody>
 </table>
 
@@ -1102,18 +1106,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>写法</th><th>含义</th><th>示例结果</th></tr></thead>
 <tbody>
-<tr><td><code>%1</code></td><td>原样，<strong>包含引号</strong></td><td><code>"C:\Program Files\app\config.ini"</code></td></tr>
-<tr><td><code>%~1</code></td><td>去掉首尾引号</td><td><code>C:\Program Files\app\config.ini</code></td></tr>
-<tr><td><code>%~f1</code></td><td>展开为完整绝对路径</td><td><code>C:\Program Files\app\config.ini</code></td></tr>
-<tr><td><code>%~d1</code></td><td>只取驱动器号</td><td><code>C:</code></td></tr>
-<tr><td><code>%~p1</code></td><td>只取路径，不含盘符，<strong>带尾反斜杠</strong></td><td><code>\Program Files\app\</code></td></tr>
-<tr><td><code>%~n1</code></td><td>只取主文件名（无扩展名）</td><td><code>config</code></td></tr>
-<tr><td><code>%~x1</code></td><td>只取扩展名，<strong>含点</strong></td><td><code>.ini</code></td></tr>
-<tr><td><code>%~s1</code></td><td>转成 8.3 短路径（无空格，便于传给老程序）</td><td><code>C:\PROGRA~1\app\config.ini</code></td></tr>
-<tr><td><code>%~a1</code></td><td>文件属性，9 位字符串</td><td><code>--a------</code></td></tr>
-<tr><td><code>%~t1</code></td><td>最后修改时间</td><td><code>2026/03/14 09:21</code></td></tr>
-<tr><td><code>%~z1</code></td><td>文件大小（字节）</td><td><code>1024</code></td></tr>
-<tr><td><code>%~$PATH:1</code></td><td>在 PATH 各目录中查找该文件名，返回第一个命中的完整路径；找不到则为空</td><td><code>C:\Windows\System32\ping.exe</code></td></tr>
+<tr><td class="nw"><code>%1</code></td><td>原样，<strong>包含引号</strong></td><td><code>"C:\Program Files\app\config.ini"</code></td></tr>
+<tr><td class="nw"><code>%~1</code></td><td class="nw">去掉首尾引号</td><td><code>C:\Program Files\app\config.ini</code></td></tr>
+<tr><td class="nw"><code>%~f1</code></td><td>展开为完整绝对路径</td><td><code>C:\Program Files\app\config.ini</code></td></tr>
+<tr><td class="nw"><code>%~d1</code></td><td class="nw">只取驱动器号</td><td class="nw"><code>C:</code></td></tr>
+<tr><td class="nw"><code>%~p1</code></td><td>只取路径，不含盘符，<strong>带尾反斜杠</strong></td><td><code>\Program Files\app\</code></td></tr>
+<tr><td class="nw"><code>%~n1</code></td><td>只取主文件名（无扩展名）</td><td class="nw"><code>config</code></td></tr>
+<tr><td class="nw"><code>%~x1</code></td><td>只取扩展名，<strong>含点</strong></td><td class="nw"><code>.ini</code></td></tr>
+<tr><td class="nw"><code>%~s1</code></td><td>转成 8.3 短路径（无空格，便于传给老程序）</td><td><code>C:\PROGRA~1\app\config.ini</code></td></tr>
+<tr><td class="nw"><code>%~a1</code></td><td>文件属性，9 位字符串</td><td class="nw"><code>--a------</code></td></tr>
+<tr><td class="nw"><code>%~t1</code></td><td class="nw">最后修改时间</td><td class="nw"><code>2026/03/14 09:21</code></td></tr>
+<tr><td class="nw"><code>%~z1</code></td><td class="nw">文件大小（字节）</td><td class="nw"><code>1024</code></td></tr>
+<tr><td class="nw"><code>%~$PATH:1</code></td><td>在 PATH 各目录中查找该文件名，返回第一个命中的完整路径；找不到则为空</td><td><code>C:\Windows\System32\ping.exe</code></td></tr>
 </tbody>
 </table>
 
@@ -1124,12 +1128,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>写法</th><th>等价于</th><th>典型用途</th></tr></thead>
 <tbody>
-<tr><td><code>%~dp0</code></td><td>盘符 + 路径</td><td><strong>脚本所在目录</strong>，全批处理最常用的一个</td></tr>
-<tr><td><code>%~nx1</code></td><td>主名 + 扩展名</td><td>只要文件名，丢掉目录</td></tr>
-<tr><td><code>%~dpn1</code></td><td>目录 + 主名</td><td>换扩展名：<code>"%~dpn1.bak"</code></td></tr>
-<tr><td><code>%~dpnx1</code></td><td>≡ <code>%~f1</code></td><td>完整路径</td></tr>
-<tr><td><code>%~ftza1</code></td><td>时间 + 大小 + 属性 + 全路径</td><td>输出一行类似 <code>dir</code> 的信息</td></tr>
-<tr><td><code>%~sn1</code></td><td>短格式的主文件名</td><td>兼容不支持长文件名的老工具</td></tr>
+<tr><td class="nw"><code>%~dp0</code></td><td class="nw">盘符 + 路径</td><td><strong>脚本所在目录</strong>，全批处理最常用的一个</td></tr>
+<tr><td class="nw"><code>%~nx1</code></td><td class="nw">主名 + 扩展名</td><td>只要文件名，丢掉目录</td></tr>
+<tr><td class="nw"><code>%~dpn1</code></td><td class="nw">目录 + 主名</td><td>换扩展名：<code>"%~dpn1.bak"</code></td></tr>
+<tr><td class="nw"><code>%~dpnx1</code></td><td class="nw">≡ <code>%~f1</code></td><td class="nw">完整路径</td></tr>
+<tr><td class="nw"><code>%~ftza1</code></td><td>时间 + 大小 + 属性 + 全路径</td><td>输出一行类似 <code>dir</code> 的信息</td></tr>
+<tr><td class="nw"><code>%~sn1</code></td><td class="nw">短格式的主文件名</td><td>兼容不支持长文件名的老工具</td></tr>
 </tbody>
 </table>
 
@@ -1232,9 +1236,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>开启方式</th><th>作用范围</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>setlocal enabledelayedexpansion</code></td><td>到对应的 <code>endlocal</code> 或脚本结束</td><td>脚本内的标准做法</td></tr>
-<tr><td><code>setlocal disabledelayedexpansion</code></td><td>同上</td><td>临时关掉，用于处理含 <code>!</code> 的文本</td></tr>
-<tr><td><code>cmd /v:on /c "..."</code></td><td>该 cmd 实例</td><td>命令行窗口默认是关闭的</td></tr>
+<tr><td><code>setlocal enabledelayedexpansion</code></td><td>到对应的 <code>endlocal</code> 或脚本结束</td><td class="nw">脚本内的标准做法</td></tr>
+<tr><td><code>setlocal disabledelayedexpansion</code></td><td class="nw">同上</td><td>临时关掉，用于处理含 <code>!</code> 的文本</td></tr>
+<tr><td><code>cmd /v:on /c "..."</code></td><td class="nw">该 cmd 实例</td><td>命令行窗口默认是关闭的</td></tr>
 </tbody>
 </table>
 
@@ -1255,10 +1259,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>场景</th><th>症状</th><th>解法</th></tr></thead>
 <tbody>
-<tr><td>字符串里有字面 <code>!</code></td><td>感叹号消失</td><td>写成 <code>^^!</code></td></tr>
+<tr><td class="nw">字符串里有字面 <code>!</code></td><td class="nw">感叹号消失</td><td class="nw">写成 <code>^^!</code></td></tr>
 <tr><td><code>for /f</code> 读到含 <code>!</code> 的文件行</td><td>内容被破坏，无法转义</td><td>循环内 <code>setlocal enabledelayedexpansion</code> / <code>endlocal</code> 成对切换</td></tr>
-<tr><td><code>set /p</code> 用户输入含 <code>!</code></td><td>同上</td><td>读取时先关闭延迟展开</td></tr>
-<tr><td>路径含 <code>!</code>（少见但合法）</td><td>路径被截断</td><td>同上</td></tr>
+<tr><td><code>set /p</code> 用户输入含 <code>!</code></td><td class="nw">同上</td><td>读取时先关闭延迟展开</td></tr>
+<tr><td>路径含 <code>!</code>（少见但合法）</td><td class="nw">路径被截断</td><td class="nw">同上</td></tr>
 </tbody>
 </table>
 
@@ -1269,12 +1273,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>情形</th><th>用哪个</th><th>原因</th></tr></thead>
 <tbody>
-<tr><td>在 <code>for</code> / <code>if</code> 块内读取块内刚赋的值</td><td><code>!VAR!</code></td><td><code>%VAR%</code> 在进块前已被冻结</td></tr>
-<tr><td>用 <code>&amp;</code> 串在同一行的多条命令间传值</td><td><code>!VAR!</code></td><td>整行一次性展开</td></tr>
-<tr><td>变量值可能含 <code>&amp;</code> <code>|</code> <code>^</code> <code>&gt;</code></td><td><code>!VAR!</code></td><td>延迟展开发生在语法解析之后，内容不会被二次解析，更安全</td></tr>
-<tr><td>变量值含 <code>!</code></td><td><code>%VAR%</code> 并关闭延迟展开</td><td><code>!</code> 会被当成定界符吞掉</td></tr>
-<tr><td>子串 / 替换的下标来自另一个变量</td><td><code>!VAR:~%i%,1!</code></td><td>先展开 <code>%i%</code>，再由延迟展开整体求值</td></tr>
-<tr><td>独立成行、值在别处早已确定</td><td><code>%VAR%</code></td><td>没必要，也更兼容</td></tr>
+<tr><td>在 <code>for</code> / <code>if</code> 块内读取块内刚赋的值</td><td class="nw"><code>!VAR!</code></td><td><code>%VAR%</code> 在进块前已被冻结</td></tr>
+<tr><td>用 <code>&amp;</code> 串在同一行的多条命令间传值</td><td class="nw"><code>!VAR!</code></td><td class="nw">整行一次性展开</td></tr>
+<tr><td>变量值可能含 <code>&amp;</code> <code>|</code> <code>^</code> <code>&gt;</code></td><td class="nw"><code>!VAR!</code></td><td>延迟展开发生在语法解析之后，内容不会被二次解析，更安全</td></tr>
+<tr><td class="nw">变量值含 <code>!</code></td><td><code>%VAR%</code> 并关闭延迟展开</td><td><code>!</code> 会被当成定界符吞掉</td></tr>
+<tr><td>子串 / 替换的下标来自另一个变量</td><td class="nw"><code>!VAR:~%i%,1!</code></td><td>先展开 <code>%i%</code>，再由延迟展开整体求值</td></tr>
+<tr><td>独立成行、值在别处早已确定</td><td class="nw"><code>%VAR%</code></td><td>没必要，也更兼容</td></tr>
 </tbody>
 </table>
 
@@ -1301,11 +1305,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>写法</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td><code>%VAR:~n%</code></td><td>从第 n 个字符（0 起）取到末尾</td></tr>
-<tr><td><code>%VAR:~n,len%</code></td><td>从第 n 个字符起取 len 个</td></tr>
-<tr><td><code>%VAR:~-n%</code></td><td>末尾 n 个字符</td></tr>
-<tr><td><code>%VAR:~0,-n%</code></td><td>去掉末尾 n 个字符</td></tr>
-<tr><td><code>%VAR:~n,-m%</code></td><td>从第 n 个字符起，到倒数第 m 个字符之前</td></tr>
+<tr><td class="nw"><code>%VAR:~n%</code></td><td>从第 n 个字符（0 起）取到末尾</td></tr>
+<tr><td class="nw"><code>%VAR:~n,len%</code></td><td>从第 n 个字符起取 len 个</td></tr>
+<tr><td class="nw"><code>%VAR:~-n%</code></td><td class="nw">末尾 n 个字符</td></tr>
+<tr><td class="nw"><code>%VAR:~0,-n%</code></td><td>去掉末尾 n 个字符</td></tr>
+<tr><td class="nw"><code>%VAR:~n,-m%</code></td><td>从第 n 个字符起，到倒数第 m 个字符之前</td></tr>
 </tbody>
 </table>
 
@@ -1322,10 +1326,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>写法</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td><code>%VAR:旧=新%</code></td><td>把<strong>所有</strong>「旧」换成「新」，<strong>不区分大小写</strong></td></tr>
-<tr><td><code>%VAR:旧=%</code></td><td>删除所有「旧」</td></tr>
-<tr><td><code>%VAR:*旧=新%</code></td><td>把「从字符串开头到第一个『旧』为止」这整段，替换成「新」</td></tr>
-<tr><td><code>%VAR:*旧=%</code></td><td>删除开头到第一个「旧」为止的全部内容</td></tr>
+<tr><td class="nw"><code>%VAR:旧=新%</code></td><td>把<strong>所有</strong>「旧」换成「新」，<strong>不区分大小写</strong></td></tr>
+<tr><td class="nw"><code>%VAR:旧=%</code></td><td class="nw">删除所有「旧」</td></tr>
+<tr><td class="nw"><code>%VAR:*旧=新%</code></td><td>把「从字符串开头到第一个『旧』为止」这整段，替换成「新」</td></tr>
+<tr><td class="nw"><code>%VAR:*旧=%</code></td><td>删除开头到第一个「旧」为止的全部内容</td></tr>
 </tbody>
 </table>
 
@@ -1334,12 +1338,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>限制</th><th>后果</th><th>绕法</th></tr></thead>
 <tbody>
-<tr><td>只能用于<strong>环境变量</strong></td><td><code>%1:~0,3%</code> 是无效语法</td><td>先 <code>set "p=%~1"</code> 再操作</td></tr>
-<tr><td>搜索串不能含 <code>=</code></td><td>无法替换等号</td><td>拆成两步，或交给 <code>for /f</code> 分词</td></tr>
+<tr><td class="nw">只能用于<strong>环境变量</strong></td><td><code>%1:~0,3%</code> 是无效语法</td><td>先 <code>set "p=%~1"</code> 再操作</td></tr>
+<tr><td class="nw">搜索串不能含 <code>=</code></td><td class="nw">无法替换等号</td><td>拆成两步，或交给 <code>for /f</code> 分词</td></tr>
 <tr><td>下标不能直接写变量</td><td><code>%s:~%i%,1%</code> 解析错乱</td><td>开延迟展开写 <code>!s:~%i%,1!</code></td></tr>
 <tr><td>子串和替换不能一次连用</td><td><code>%s:~0,4:-=/%</code> 无效</td><td>分两次，用中间变量</td></tr>
-<tr><td>替换不区分大小写，也无法只替换第一处</td><td>可能误伤</td><td>用 <code>*</code> 形式，或改用 PowerShell 正则</td></tr>
-<tr><td>值为空时整个表达式塌缩</td><td>可能产生语法错误</td><td>操作前用 <code>if defined</code> 检查</td></tr>
+<tr><td>替换不区分大小写，也无法只替换第一处</td><td class="nw">可能误伤</td><td>用 <code>*</code> 形式，或改用 PowerShell 正则</td></tr>
+<tr><td>值为空时整个表达式塌缩</td><td class="nw">可能产生语法错误</td><td>操作前用 <code>if defined</code> 检查</td></tr>
 </tbody>
 </table>
 
@@ -1348,11 +1352,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>需求</th><th>写法</th></tr></thead>
 <tbody>
-<tr><td>数字补零到两位</td><td><code>set "n=00%n%" &amp; set "n=%n:~-2%"</code></td></tr>
-<tr><td>路径反斜杠换正斜杠</td><td><code>set "u=%p:\=/%"</code></td></tr>
-<tr><td>删除字符串里所有引号</td><td><code>set "s=%s:"=%"</code></td></tr>
-<tr><td>删除所有空格</td><td><code>set "s=%s: =%"</code></td></tr>
-<tr><td>判断是否包含子串</td><td><code>if not "%s:foo=%"=="%s%" echo 含 foo</code></td></tr>
+<tr><td class="nw">数字补零到两位</td><td><code>set "n=00%n%" &amp; set "n=%n:~-2%"</code></td></tr>
+<tr><td>路径反斜杠换正斜杠</td><td class="nw"><code>set "u=%p:\=/%"</code></td></tr>
+<tr><td>删除字符串里所有引号</td><td class="nw"><code>set "s=%s:"=%"</code></td></tr>
+<tr><td class="nw">删除所有空格</td><td class="nw"><code>set "s=%s: =%"</code></td></tr>
+<tr><td class="nw">判断是否包含子串</td><td><code>if not "%s:foo=%"=="%s%" echo 含 foo</code></td></tr>
 <tr><td>判断路径里是否有空格</td><td><code>if not "%p: =%"=="%p%" echo 路径含空格，务必加引号</code></td></tr>
 <tr><td>取扩展名（变量形式）</td><td><code>for %%a in ("%f%") do set "ext=%%~xa"</code></td></tr>
 </tbody>
@@ -1391,12 +1395,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>记号</th><th>展开时机</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td><code>%VAR%</code></td><td>解析时（整行 / 整块一次性）</td><td>环境变量</td></tr>
-<tr><td><code>!VAR!</code></td><td><strong>执行时</strong>（每次执行都取新值）</td><td>需 <code>setlocal enabledelayedexpansion</code></td></tr>
-<tr><td><code>%1</code>~<code>%9</code> <code>%*</code></td><td>解析时</td><td>命令行参数</td></tr>
-<tr><td><code>%~dp1</code> 等</td><td>解析时</td><td>参数修饰符，仅限参数与 for 变量</td></tr>
-<tr><td><code>%%i</code></td><td>循环执行时</td><td>for 循环变量（命令行下写 <code>%i</code>）</td></tr>
-<tr><td><code>%%</code></td><td>解析时</td><td>批处理文件中的字面百分号</td></tr>
+<tr><td class="nw"><code>%VAR%</code></td><td>解析时（整行 / 整块一次性）</td><td class="nw">环境变量</td></tr>
+<tr><td class="nw"><code>!VAR!</code></td><td><strong>执行时</strong>（每次执行都取新值）</td><td>需 <code>setlocal enabledelayedexpansion</code></td></tr>
+<tr><td class="nw"><code>%1</code>~<code>%9</code> <code>%*</code></td><td class="nw">解析时</td><td class="nw">命令行参数</td></tr>
+<tr><td class="nw"><code>%~dp1</code> 等</td><td class="nw">解析时</td><td>参数修饰符，仅限参数与 for 变量</td></tr>
+<tr><td class="nw"><code>%%i</code></td><td class="nw">循环执行时</td><td>for 循环变量（命令行下写 <code>%i</code>）</td></tr>
+<tr><td class="nw"><code>%%</code></td><td class="nw">解析时</td><td>批处理文件中的字面百分号</td></tr>
 </tbody>
 </table>
 
@@ -1405,14 +1409,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>变量</th><th>内容</th><th>备注</th></tr></thead>
 <tbody>
-<tr><td><code>%CD%</code></td><td>当前目录（根目录外不带尾反斜杠）</td><td><span class="badge ok">仍适用</span></td></tr>
-<tr><td><code>%ERRORLEVEL%</code></td><td>上一条命令的返回码</td><td>块内读取要用 <code>!ERRORLEVEL!</code></td></tr>
-<tr><td><code>%RANDOM%</code></td><td>0~32767 的随机数</td><td>非密码学安全</td></tr>
-<tr><td><code>%DATE%</code> <code>%TIME%</code></td><td>当前日期时间</td><td><span class="badge old">已过时</span> 格式随系统区域设置变化，切子串必翻车</td></tr>
-<tr><td><code>%CMDCMDLINE%</code></td><td>启动本 cmd 的完整命令行</td><td>可用于判断是否被双击运行</td></tr>
-<tr><td><code>%CMDEXTVERSION%</code></td><td>命令扩展版本号</td><td>命令扩展被关闭时不存在</td></tr>
-<tr><td><code>%TEMP%</code> <code>%USERPROFILE%</code> <code>%APPDATA%</code> <code>%WINDIR%</code></td><td>标准系统路径</td><td><span class="badge ok">仍适用</span> 永远优先用它们而非硬编码路径</td></tr>
-<tr><td><code>%PROGRAMFILES%</code> <code>%PROGRAMFILES(X86)%</code></td><td>程序目录</td><td>含空格与括号，<strong>必须加引号</strong></td></tr>
+<tr><td class="nw"><code>%CD%</code></td><td>当前目录（根目录外不带尾反斜杠）</td><td class="nw"><span class="badge ok">仍适用</span></td></tr>
+<tr><td class="nw"><code>%ERRORLEVEL%</code></td><td>上一条命令的返回码</td><td>块内读取要用 <code>!ERRORLEVEL!</code></td></tr>
+<tr><td class="nw"><code>%RANDOM%</code></td><td class="nw">0~32767 的随机数</td><td class="nw">非密码学安全</td></tr>
+<tr><td class="nw"><code>%DATE%</code> <code>%TIME%</code></td><td class="nw">当前日期时间</td><td><span class="badge old">已过时</span> 格式随系统区域设置变化，切子串必翻车</td></tr>
+<tr><td class="nw"><code>%CMDCMDLINE%</code></td><td>启动本 cmd 的完整命令行</td><td>可用于判断是否被双击运行</td></tr>
+<tr><td class="nw"><code>%CMDEXTVERSION%</code></td><td class="nw">命令扩展版本号</td><td>命令扩展被关闭时不存在</td></tr>
+<tr><td><code>%TEMP%</code> <code>%USERPROFILE%</code> <code>%APPDATA%</code> <code>%WINDIR%</code></td><td class="nw">标准系统路径</td><td><span class="badge ok">仍适用</span> 永远优先用它们而非硬编码路径</td></tr>
+<tr><td><code>%PROGRAMFILES%</code> <code>%PROGRAMFILES(X86)%</code></td><td class="nw">程序目录</td><td>含空格与括号，<strong>必须加引号</strong></td></tr>
 </tbody>
 </table>
 
@@ -1423,14 +1427,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>字符</th><th>特殊含义</th><th>转义写法</th></tr></thead>
 <tbody>
-<tr><td><code>^</code></td><td>转义符本身</td><td><code>^^</code></td></tr>
-<tr><td><code>&amp;</code></td><td>命令分隔</td><td><code>^&amp;</code>，或整体加引号</td></tr>
-<tr><td><code>|</code></td><td>管道</td><td><code>^|</code></td></tr>
-<tr><td><code>&lt;</code> <code>&gt;</code></td><td>重定向</td><td><code>^&lt;</code> <code>^&gt;</code></td></tr>
-<tr><td><code>(</code> <code>)</code></td><td>块分组</td><td>块内需 <code>^(</code> <code>^)</code>，块外通常无需</td></tr>
-<tr><td><code>%</code></td><td>变量定界</td><td>批处理内 <code>%%</code>；命令行下直接写 <code>%</code></td></tr>
-<tr><td><code>!</code></td><td>延迟展开定界（仅在开启时）</td><td><code>^^!</code></td></tr>
-<tr><td><code>"</code></td><td>参数定界</td><td>无转义，成对使用；引号内其他字符不再需要转义</td></tr>
+<tr><td class="nw"><code>^</code></td><td class="nw">转义符本身</td><td class="nw"><code>^^</code></td></tr>
+<tr><td class="nw"><code>&amp;</code></td><td class="nw">命令分隔</td><td><code>^&amp;</code>，或整体加引号</td></tr>
+<tr><td class="nw"><code>|</code></td><td class="nw">管道</td><td class="nw"><code>^|</code></td></tr>
+<tr><td class="nw"><code>&lt;</code> <code>&gt;</code></td><td class="nw">重定向</td><td class="nw"><code>^&lt;</code> <code>^&gt;</code></td></tr>
+<tr><td class="nw"><code>(</code> <code>)</code></td><td class="nw">块分组</td><td>块内需 <code>^(</code> <code>^)</code>，块外通常无需</td></tr>
+<tr><td class="nw"><code>%</code></td><td class="nw">变量定界</td><td>批处理内 <code>%%</code>；命令行下直接写 <code>%</code></td></tr>
+<tr><td class="nw"><code>!</code></td><td>延迟展开定界（仅在开启时）</td><td class="nw"><code>^^!</code></td></tr>
+<tr><td class="nw"><code>"</code></td><td class="nw">参数定界</td><td>无转义，成对使用；引号内其他字符不再需要转义</td></tr>
 </tbody>
 </table>
 
@@ -1439,18 +1443,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <table>
 <thead><tr><th>症状</th><th>真正原因</th><th>修法</th></tr></thead>
 <tbody>
-<tr><td>变量赋值后取不到值</td><td>等号两边有空格</td><td>写成 <code>set "V=值"</code></td></tr>
+<tr><td>变量赋值后取不到值</td><td class="nw">等号两边有空格</td><td class="nw">写成 <code>set "V=值"</code></td></tr>
 <tr><td>路径拼接多出一个空格</td><td><code>set V=值 &amp; cmd</code> 把空格带进了值</td><td>加引号：<code>set "V=值"</code></td></tr>
-<tr><td>「此时不应有 ==xxx」</td><td>变量为空导致 <code>if</code> 语法残缺</td><td><code>if "%~1"=="xxx"</code></td></tr>
+<tr><td>「此时不应有 ==xxx」</td><td>变量为空导致 <code>if</code> 语法残缺</td><td class="nw"><code>if "%~1"=="xxx"</code></td></tr>
 <tr><td>循环里变量永远是初始值</td><td>块被一次性解析，<code>%VAR%</code> 已冻结</td><td>开延迟展开，改用 <code>!VAR!</code></td></tr>
-<tr><td>字符串里的感叹号消失</td><td>延迟展开已开启</td><td>写 <code>^^!</code>，或临时关闭延迟展开</td></tr>
-<tr><td><code>shift</code> 在括号块里不起作用</td><td>参数在进块前已被替换</td><td>改用 <code>goto</code> 循环</td></tr>
+<tr><td>字符串里的感叹号消失</td><td class="nw">延迟展开已开启</td><td>写 <code>^^!</code>，或临时关闭延迟展开</td></tr>
+<tr><td><code>shift</code> 在括号块里不起作用</td><td>参数在进块前已被替换</td><td class="nw">改用 <code>goto</code> 循环</td></tr>
 <tr><td><code>set /a</code> 报「无效数字」</td><td>值以 0 开头被当成八进制</td><td>用 <code>1%n%-100</code> 去前导零</td></tr>
-<tr><td><code>set /a "a=b&lt;&lt;2"</code> 生成了怪文件</td><td><code>&lt;</code> 被当成重定向</td><td>表达式整体加引号</td></tr>
+<tr><td><code>set /a "a=b&lt;&lt;2"</code> 生成了怪文件</td><td class="nw"><code>&lt;</code> 被当成重定向</td><td class="nw">表达式整体加引号</td></tr>
 <tr><td>用户直接回车却没走默认分支</td><td><code>set /p</code> 保留了变量旧值</td><td>调用前先 <code>set "V="</code></td></tr>
 <tr><td>双击能跑，计划任务里报找不到文件</td><td>工作目录不是脚本目录</td><td>路径全部改用 <code>%~dp0</code> 打头</td></tr>
 <tr><td>脚本改了 PATH 之后整个窗口都不正常</td><td>没有用 <code>setlocal</code> 隔离</td><td>脚本开头加 <code>setlocal</code></td></tr>
-<tr><td>含空格的路径把命令拆成两半</td><td>没加引号</td><td>一律 <code>"%~1"</code> <code>"%~dp0file"</code></td></tr>
+<tr><td>含空格的路径把命令拆成两半</td><td class="nw">没加引号</td><td>一律 <code>"%~1"</code> <code>"%~dp0file"</code></td></tr>
 </tbody>
 </table>
 
@@ -1511,13 +1515,13 @@ set "NAME=Zhang San"
 <table>
 <thead><tr><th>写法</th><th>含义</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>if "%A%"=="%B%"</code></td><td>区分大小写的相等比较</td><td><span class="badge ok">仍适用</span> 默认就写这个</td></tr>
-<tr><td><code>if /i "%A%"=="%B%"</code></td><td>忽略大小写</td><td><code>/i</code> 必须紧跟在 <code>if</code> 后面</td></tr>
-<tr><td><code>if not "%A%"=="%B%"</code></td><td>不相等</td><td>—</td></tr>
-<tr><td><code>if /i not "%A%"=="%B%"</code></td><td>忽略大小写的不相等</td><td>唯一正确的顺序</td></tr>
-<tr><td><code>if not /i "%A%"=="%B%"</code></td><td>语法错误</td><td>实测报 <code>"A"=="a" was unexpected at this time.</code> 并中止脚本</td></tr>
+<tr><td class="nw"><code>if "%A%"=="%B%"</code></td><td>区分大小写的相等比较</td><td><span class="badge ok">仍适用</span> 默认就写这个</td></tr>
+<tr><td><code>if /i "%A%"=="%B%"</code></td><td class="nw">忽略大小写</td><td><code>/i</code> 必须紧跟在 <code>if</code> 后面</td></tr>
+<tr><td><code>if not "%A%"=="%B%"</code></td><td class="nw">不相等</td><td class="nw">—</td></tr>
+<tr><td><code>if /i not "%A%"=="%B%"</code></td><td>忽略大小写的不相等</td><td class="nw">唯一正确的顺序</td></tr>
+<tr><td><code>if not /i "%A%"=="%B%"</code></td><td class="nw">语法错误</td><td>实测报 <code>"A"=="a" was unexpected at this time.</code> 并中止脚本</td></tr>
 <tr><td><code>if "%A%" == "%B%"</code></td><td>合法，等号两侧可以有空格</td><td>能跑，但可读性差，不推荐</td></tr>
-<tr><td><code>if %A%==%B%</code></td><td>值不含空格时可用</td><td><span class="badge old">已过时</span> 只要值可能来自外部输入就不安全</td></tr>
+<tr><td class="nw"><code>if %A%==%B%</code></td><td class="nw">值不含空格时可用</td><td><span class="badge old">已过时</span> 只要值可能来自外部输入就不安全</td></tr>
 </tbody>
 </table>
 
@@ -1539,12 +1543,12 @@ set "NAME=Zhang San"
 <table>
 <thead><tr><th>运算符</th><th>含义</th><th>等价数学符号</th></tr></thead>
 <tbody>
-<tr><td><code>EQU</code></td><td>等于</td><td>=</td></tr>
-<tr><td><code>NEQ</code></td><td>不等于</td><td>≠</td></tr>
-<tr><td><code>LSS</code></td><td>小于</td><td>&lt;</td></tr>
-<tr><td><code>LEQ</code></td><td>小于等于</td><td>≤</td></tr>
-<tr><td><code>GTR</code></td><td>大于</td><td>&gt;</td></tr>
-<tr><td><code>GEQ</code></td><td>大于等于</td><td>≥</td></tr>
+<tr><td class="nw"><code>EQU</code></td><td class="nw">等于</td><td class="nw">=</td></tr>
+<tr><td class="nw"><code>NEQ</code></td><td class="nw">不等于</td><td class="nw">≠</td></tr>
+<tr><td class="nw"><code>LSS</code></td><td class="nw">小于</td><td class="nw">&lt;</td></tr>
+<tr><td class="nw"><code>LEQ</code></td><td class="nw">小于等于</td><td class="nw">≤</td></tr>
+<tr><td class="nw"><code>GTR</code></td><td class="nw">大于</td><td class="nw">&gt;</td></tr>
+<tr><td class="nw"><code>GEQ</code></td><td class="nw">大于等于</td><td class="nw">≥</td></tr>
 </tbody>
 </table>
 
@@ -1640,9 +1644,9 @@ echo %errorlevel%              <span class="cm">rem 实测输出：-1</span>
 <table>
 <thead><tr><th>探针</th><th>语法</th><th>判定内容</th><th>要点</th></tr></thead>
 <tbody>
-<tr><td>文件/目录</td><td><code>if exist "路径"</code></td><td>路径是否存在</td><td>目录也算存在；<code>路径\</code> 或 <code>路径\*</code> 可强制只认目录</td></tr>
-<tr><td>变量</td><td><code>if defined 名字</code></td><td>变量是否已定义</td><td>不带 <code>%</code>；能穿透括号块的变量冻结</td></tr>
-<tr><td>返回码</td><td><code>if errorlevel N</code></td><td>返回码 <strong>≥</strong> N</td><td>负数返回码判不出来，优先用 <code>%errorlevel% NEQ 0</code></td></tr>
+<tr><td class="nw">文件/目录</td><td class="nw"><code>if exist "路径"</code></td><td class="nw">路径是否存在</td><td>目录也算存在；<code>路径\</code> 或 <code>路径\*</code> 可强制只认目录</td></tr>
+<tr><td class="nw">变量</td><td class="nw"><code>if defined 名字</code></td><td class="nw">变量是否已定义</td><td>不带 <code>%</code>；能穿透括号块的变量冻结</td></tr>
+<tr><td class="nw">返回码</td><td class="nw"><code>if errorlevel N</code></td><td class="nw">返回码 <strong>≥</strong> N</td><td>负数返回码判不出来，优先用 <code>%errorlevel% NEQ 0</code></td></tr>
 </tbody>
 </table>
 
@@ -1769,19 +1773,19 @@ set M=0
 <table>
 <thead><tr><th>修饰符</th><th>取出的内容</th><th>示例（<code>%%F</code> = <code>C:\logs\app.log</code>）</th></tr></thead>
 <tbody>
-<tr><td><code>%%~F</code></td><td>去掉外层引号</td><td><code>C:\logs\app.log</code></td></tr>
-<tr><td><code>%%~fF</code></td><td>完整绝对路径</td><td><code>C:\logs\app.log</code></td></tr>
-<tr><td><code>%%~dF</code></td><td>驱动器号</td><td><code>C:</code></td></tr>
-<tr><td><code>%%~pF</code></td><td>路径部分（含末尾反斜杠）</td><td><code>\logs\</code></td></tr>
-<tr><td><code>%%~nF</code></td><td>主文件名</td><td><code>app</code></td></tr>
-<tr><td><code>%%~xF</code></td><td>扩展名（含点）</td><td><code>.log</code></td></tr>
-<tr><td><code>%%~sF</code></td><td>8.3 短路径形式</td><td>本例各段本来就符合 8.3，所以不变；<code>C:\Program Files</code> 会变成 <code>C:\PROGRA~1</code></td></tr>
-<tr><td><code>%%~aF</code></td><td>文件属性字符串</td><td><code>--a------</code></td></tr>
-<tr><td><code>%%~tF</code></td><td>最后修改时间</td><td><code>2026/08/16 09:31</code></td></tr>
-<tr><td><code>%%~zF</code></td><td>文件大小（字节）</td><td><code>4096</code></td></tr>
-<tr><td><code>%%~dpF</code></td><td>可以组合：盘符 + 路径</td><td><code>C:\logs\</code></td></tr>
-<tr><td><code>%%~nxF</code></td><td>组合：文件名 + 扩展名</td><td><code>app.log</code></td></tr>
-<tr><td><code>%%~$PATH:F</code></td><td>在 PATH 里搜索该文件名，返回首个完整路径</td><td>找不到时返回空串</td></tr>
+<tr><td class="nw"><code>%%~F</code></td><td class="nw">去掉外层引号</td><td class="nw"><code>C:\logs\app.log</code></td></tr>
+<tr><td class="nw"><code>%%~fF</code></td><td class="nw">完整绝对路径</td><td class="nw"><code>C:\logs\app.log</code></td></tr>
+<tr><td class="nw"><code>%%~dF</code></td><td class="nw">驱动器号</td><td class="nw"><code>C:</code></td></tr>
+<tr><td class="nw"><code>%%~pF</code></td><td>路径部分（含末尾反斜杠）</td><td class="nw"><code>\logs\</code></td></tr>
+<tr><td class="nw"><code>%%~nF</code></td><td class="nw">主文件名</td><td class="nw"><code>app</code></td></tr>
+<tr><td class="nw"><code>%%~xF</code></td><td class="nw">扩展名（含点）</td><td class="nw"><code>.log</code></td></tr>
+<tr><td class="nw"><code>%%~sF</code></td><td class="nw">8.3 短路径形式</td><td>本例各段本来就符合 8.3，所以不变；<code>C:\Program Files</code> 会变成 <code>C:\PROGRA~1</code></td></tr>
+<tr><td class="nw"><code>%%~aF</code></td><td class="nw">文件属性字符串</td><td class="nw"><code>--a------</code></td></tr>
+<tr><td class="nw"><code>%%~tF</code></td><td class="nw">最后修改时间</td><td class="nw"><code>2026/08/16 09:31</code></td></tr>
+<tr><td class="nw"><code>%%~zF</code></td><td class="nw">文件大小（字节）</td><td class="nw"><code>4096</code></td></tr>
+<tr><td class="nw"><code>%%~dpF</code></td><td>可以组合：盘符 + 路径</td><td class="nw"><code>C:\logs\</code></td></tr>
+<tr><td class="nw"><code>%%~nxF</code></td><td>组合：文件名 + 扩展名</td><td class="nw"><code>app.log</code></td></tr>
+<tr><td class="nw"><code>%%~$PATH:F</code></td><td>在 PATH 里搜索该文件名，返回首个完整路径</td><td class="nw">找不到时返回空串</td></tr>
 </tbody>
 </table>
 
@@ -1848,11 +1852,11 @@ echo 跳出来了
 <table>
 <thead><tr><th>形态</th><th>集合的含义</th><th>典型用途</th></tr></thead>
 <tbody>
-<tr><td><code>for</code></td><td>字符串列表 / 文件名通配符</td><td>遍历固定清单、当前目录的文件</td></tr>
-<tr><td><code>for /L</code></td><td><code>(起始,步长,结束)</code> 数值三元组</td><td>计数、重试、生成序号</td></tr>
-<tr><td><code>for /D</code></td><td>目录名通配符</td><td>只处理子目录</td></tr>
-<tr><td><code>for /R</code></td><td>递归遍历，集合是每个目录下的模式</td><td>全树扫描、批量改名</td></tr>
-<tr><td><code>for /F</code></td><td>文件内容 / 字符串 / 命令输出</td><td>解析文本，见下一节</td></tr>
+<tr><td class="nw"><code>for</code></td><td>字符串列表 / 文件名通配符</td><td>遍历固定清单、当前目录的文件</td></tr>
+<tr><td class="nw"><code>for /L</code></td><td><code>(起始,步长,结束)</code> 数值三元组</td><td>计数、重试、生成序号</td></tr>
+<tr><td class="nw"><code>for /D</code></td><td class="nw">目录名通配符</td><td class="nw">只处理子目录</td></tr>
+<tr><td class="nw"><code>for /R</code></td><td>递归遍历，集合是每个目录下的模式</td><td>全树扫描、批量改名</td></tr>
+<tr><td class="nw"><code>for /F</code></td><td>文件内容 / 字符串 / 命令输出</td><td>解析文本，见下一节</td></tr>
 </tbody>
 </table>
 
@@ -1871,9 +1875,9 @@ echo 跳出来了
 <table>
 <thead><tr><th>数据源</th><th>默认写法</th><th>加了 <code>usebackq</code> 之后</th></tr></thead>
 <tbody>
-<tr><td>读文件</td><td><code>in (文件名)</code></td><td><code>in ("文件名")</code></td></tr>
-<tr><td>解析字面字符串</td><td><code>in ("字符串")</code></td><td><code>in ('字符串')</code></td></tr>
-<tr><td>执行命令并解析输出</td><td><code>in ('命令')</code></td><td><code>in (`命令`)</code></td></tr>
+<tr><td class="nw">读文件</td><td class="nw"><code>in (文件名)</code></td><td class="nw"><code>in ("文件名")</code></td></tr>
+<tr><td class="nw">解析字面字符串</td><td class="nw"><code>in ("字符串")</code></td><td class="nw"><code>in ('字符串')</code></td></tr>
+<tr><td>执行命令并解析输出</td><td class="nw"><code>in ('命令')</code></td><td class="nw"><code>in (`命令`)</code></td></tr>
 </tbody>
 </table>
 
@@ -1892,12 +1896,12 @@ echo 跳出来了
 <table>
 <thead><tr><th>选项</th><th>作用</th><th>默认值</th><th>要点</th></tr></thead>
 <tbody>
-<tr><td><code>delims=xy</code></td><td>指定分隔符字符集合（逐字符，不是字符串）</td><td>空格 + Tab</td><td><strong>必须放在选项字符串的最后</strong>，否则后面的空格会被当成分隔符的一部分</td></tr>
-<tr><td><code>delims=</code>（空）</td><td>不做任何切分，整行给第一个变量</td><td>—</td><td>读整行的标准写法，等价于 <code>tokens=*</code> 但不去首部空白</td></tr>
-<tr><td><code>tokens=n,m</code></td><td>挑第 n、m 段</td><td><code>1</code></td><td>支持区间 <code>1-3</code>、通配 <code>*</code>、混写 <code>1,3*</code></td></tr>
-<tr><td><code>skip=n</code></td><td>跳过开头 n 行</td><td><code>0</code></td><td>跳表头用</td></tr>
-<tr><td><code>eol=c</code></td><td>把以字符 c 开头的行当注释跳过</td><td><code>;</code></td><td><strong>默认就是分号</strong>，会悄悄吞掉以分号开头的数据行</td></tr>
-<tr><td><code>usebackq</code></td><td>切换三种引号的角色</td><td>关</td><td>路径带空格时必开</td></tr>
+<tr><td class="nw"><code>delims=xy</code></td><td>指定分隔符字符集合（逐字符，不是字符串）</td><td class="nw">空格 + Tab</td><td><strong>必须放在选项字符串的最后</strong>，否则后面的空格会被当成分隔符的一部分</td></tr>
+<tr><td class="nw"><code>delims=</code>（空）</td><td>不做任何切分，整行给第一个变量</td><td class="nw">—</td><td>读整行的标准写法，等价于 <code>tokens=*</code> 但不去首部空白</td></tr>
+<tr><td class="nw"><code>tokens=n,m</code></td><td>挑第 n、m 段</td><td class="nw"><code>1</code></td><td>支持区间 <code>1-3</code>、通配 <code>*</code>、混写 <code>1,3*</code></td></tr>
+<tr><td class="nw"><code>skip=n</code></td><td class="nw">跳过开头 n 行</td><td class="nw"><code>0</code></td><td class="nw">跳表头用</td></tr>
+<tr><td class="nw"><code>eol=c</code></td><td>把以字符 c 开头的行当注释跳过</td><td class="nw"><code>;</code></td><td><strong>默认就是分号</strong>，会悄悄吞掉以分号开头的数据行</td></tr>
+<tr><td class="nw"><code>usebackq</code></td><td>切换三种引号的角色</td><td class="nw">关</td><td class="nw">路径带空格时必开</td></tr>
 </tbody>
 </table>
 
@@ -2060,7 +2064,7 @@ exit /b 1</code></pre>
 <tbody>
 <tr><td><code>goto</code> 跳出 <code>for</code> 循环</td><td>整个循环（包括外层嵌套）立即终止，不是"跳过这一轮"</td><td>要模拟 continue，把循环体做成子过程用 <code>exit /b</code> 返回</td></tr>
 <tr><td><code>goto</code> 跳进 <code>( )</code> 块内部的标签</td><td><span class="badge dead">禁用</span> 行为未定义，块的括号配对状态被破坏，通常直接报语法错误</td><td>标签一律写在所有块外面</td></tr>
-<tr><td>找不到标签</td><td>报 <code>The system cannot find the batch label specified</code> 并<strong>中止整个脚本</strong></td><td>标签名手滑是常见事故；关键跳转前后加日志</td></tr>
+<tr><td class="nw">找不到标签</td><td>报 <code>The system cannot find the batch label specified</code> 并<strong>中止整个脚本</strong></td><td>标签名手滑是常见事故；关键跳转前后加日志</td></tr>
 </tbody>
 </table>
 
@@ -2154,10 +2158,10 @@ exit /b 0</code></pre>
 <table>
 <thead><tr><th>写法</th><th>效果</th></tr></thead>
 <tbody>
-<tr><td><code>exit /b 0</code></td><td>结束当前批处理/子过程，把返回码设为 0</td></tr>
+<tr><td class="nw"><code>exit /b 0</code></td><td>结束当前批处理/子过程，把返回码设为 0</td></tr>
 <tr><td><code>exit /b %errorlevel%</code></td><td>把内部命令的失败原样传给调用者，最常用的收尾</td></tr>
 <tr><td><code>exit /b</code>（不带数字）</td><td>结束并<strong>保留当前的 errorlevel</strong>（实测：之前是 9，返回后还是 9），不是清零</td></tr>
-<tr><td><code>goto :eof</code></td><td>效果与不带数字的 <code>exit /b</code> 基本相同</td></tr>
+<tr><td class="nw"><code>goto :eof</code></td><td>效果与不带数字的 <code>exit /b</code> 基本相同</td></tr>
 <tr><td><code>exit 1</code>（不带 /b）</td><td><span class="badge dead">禁用</span> 直接终止整个 cmd.exe 进程。双击运行时窗口瞬间消失，在别的脚本里被 <code>call</code> 时会把调用者一起带走</td></tr>
 </tbody>
 </table>
@@ -2196,12 +2200,12 @@ echo 构建返回码 %errorlevel%</code></pre>
 <table>
 <thead><tr><th>方式</th><th>会回来吗</th><th>在哪个进程</th><th>典型用途</th></tr></thead>
 <tbody>
-<tr><td><code>goto :label</code></td><td>不会</td><td>当前</td><td>流程分支、手搓循环</td></tr>
-<tr><td><code>call :label</code></td><td>会</td><td>当前</td><td>子过程 / 函数</td></tr>
-<tr><td><code>call other.cmd</code></td><td>会</td><td>当前</td><td>调用另一个批处理并拿返回码</td></tr>
-<tr><td><code>other.cmd</code></td><td>不会</td><td>当前</td><td><span class="badge old">已过时</span> DOS 链式加载遗留</td></tr>
-<tr><td><code>cmd /c other.cmd</code></td><td>会</td><td>新进程</td><td>隔离环境变量污染</td></tr>
-<tr><td><code>start other.cmd</code></td><td>立刻返回，不等</td><td>新窗口</td><td>并行启动；拿不到返回码</td></tr>
+<tr><td class="nw"><code>goto :label</code></td><td class="nw">不会</td><td class="nw">当前</td><td>流程分支、手搓循环</td></tr>
+<tr><td class="nw"><code>call :label</code></td><td class="nw">会</td><td class="nw">当前</td><td class="nw">子过程 / 函数</td></tr>
+<tr><td class="nw"><code>call other.cmd</code></td><td class="nw">会</td><td class="nw">当前</td><td>调用另一个批处理并拿返回码</td></tr>
+<tr><td class="nw"><code>other.cmd</code></td><td class="nw">不会</td><td class="nw">当前</td><td><span class="badge old">已过时</span> DOS 链式加载遗留</td></tr>
+<tr><td class="nw"><code>cmd /c other.cmd</code></td><td class="nw">会</td><td class="nw">新进程</td><td class="nw">隔离环境变量污染</td></tr>
+<tr><td class="nw"><code>start other.cmd</code></td><td>立刻返回，不等</td><td class="nw">新窗口</td><td>并行启动；拿不到返回码</td></tr>
 </tbody>
 </table>
 
@@ -2277,14 +2281,14 @@ exit /b 0</code></pre>
 <tr><td>循环里计数器永远是 0</td><td>括号块在执行前已完成 <code>%</code> 展开（变量冻结）</td><td><code>setlocal EnableDelayedExpansion</code> + <code>!VAR!</code></td></tr>
 <tr><td>块中间莫名报 <code>)</code> 语法错误</td><td>块内有未转义的裸 <code>)</code></td><td>写成 <code>^)</code>；<code>&amp;</code> <code>|</code> <code>&gt;</code> 同理</td></tr>
 <tr><td>块里报 <code>The system cannot find the drive specified.</code></td><td>块内连用了两条 <code>::</code></td><td>块内注释一律用 <code>rem</code></td></tr>
-<tr><td>CSV 的空列错位</td><td><code>for /F</code> 把连续分隔符当成一个，空字段消失</td><td>换 <code>Import-Csv</code>，或先把 <code>,,</code> 替换成 <code>, ,</code></td></tr>
+<tr><td class="nw">CSV 的空列错位</td><td><code>for /F</code> 把连续分隔符当成一个，空字段消失</td><td>换 <code>Import-Csv</code>，或先把 <code>,,</code> 替换成 <code>, ,</code></td></tr>
 <tr><td>某些数据行被 <code>for /F</code> 无声吃掉</td><td>默认 <code>eol=;</code>，以分号开头的行被当注释</td><td>显式写 <code>eol=|</code> 之类不会出现的字符</td></tr>
 <tr><td><code>usebackq</code> 下字面字符串里的逗号不见了</td><td><code>'字符串'</code> 仍要过 cmd 分词器，<code>, ; =</code> 被规范成空格</td><td>解析字面串改用不带 usebackq 的 <code>"字符串"</code></td></tr>
 <tr><td><code>for /R</code> 报出一堆不存在的文件</td><td>集合项不含通配符时，<code>/R</code> 只负责拼路径不负责检查</td><td>集合里写 <code>*.ext</code>，或循环内加 <code>if exist</code></td></tr>
 <tr><td><code>call x || echo %errorlevel%</code> 打出来的返回码是旧的</td><td>同一行在执行前已完成 <code>%</code> 展开，那时 <code>call</code> 还没跑</td><td>用 <code>!errorlevel!</code>，或把判断拆到下一行</td></tr>
 <tr><td>脚本执行到一半就退出，后面的行全没跑</td><td>调用另一个批处理时忘了写 <code>call</code></td><td>调 <code>.bat</code>/<code>.cmd</code> 一律加 <code>call</code></td></tr>
 <tr><td>脚本的子过程被"多跑了一遍"</td><td>主流程末尾缺少 <code>exit /b</code> 哨兵</td><td>主流程最后一句写 <code>exit /b 0</code></td></tr>
-<tr><td>双击运行时窗口一闪就没</td><td>子过程里用了裸 <code>exit</code> 而不是 <code>exit /b</code></td><td>永远用 <code>exit /b</code></td></tr>
+<tr><td>双击运行时窗口一闪就没</td><td>子过程里用了裸 <code>exit</code> 而不是 <code>exit /b</code></td><td class="nw">永远用 <code>exit /b</code></td></tr>
 </tbody>
 </table>
 
@@ -2293,17 +2297,17 @@ exit /b 0</code></pre>
 <table>
 <thead><tr><th>要做的事</th><th>CMD 写法</th><th>PowerShell 对照 <span class="badge new">现代提示</span></th></tr></thead>
 <tbody>
-<tr><td>字符串相等（忽略大小写）</td><td><code>if /i "%A%"=="%B%"</code></td><td><code>if ($a -eq $b)</code></td></tr>
-<tr><td>数值比较</td><td><code>if %N% GEQ 5</code></td><td><code>if ($n -ge 5)</code></td></tr>
-<tr><td>文件存在</td><td><code>if exist "%P%"</code></td><td><code>if (Test-Path $p)</code></td></tr>
-<tr><td>多分支</td><td>连串 <code>if</code> + <code>goto</code></td><td><code>switch</code> / <code>elseif</code></td></tr>
-<tr><td>计数循环</td><td><code>for /L %%i in (1,1,10)</code></td><td><code>1..10 | ForEach-Object { }</code></td></tr>
-<tr><td>遍历文件</td><td><code>for /R %%F in (*.log)</code></td><td><code>Get-ChildItem -Recurse -Filter *.log</code></td></tr>
-<tr><td>逐行读文件</td><td><code>for /F "delims=" %%L in (f.txt)</code></td><td><code>Get-Content f.txt | ForEach-Object { }</code></td></tr>
-<tr><td>解析 CSV</td><td><code>for /F "tokens=... delims=,"</code></td><td><code>Import-Csv</code>（真正懂引号和空列）</td></tr>
-<tr><td>提前跳出循环</td><td><code>goto</code>（会终止整个循环）</td><td><code>break</code> / <code>continue</code></td></tr>
-<tr><td>定义函数</td><td><code>:label</code> + <code>call</code> + <code>exit /b</code></td><td><code>function Foo($a) { ... }</code></td></tr>
-<tr><td>返回值</td><td><code>endlocal &amp; set "R=%S%"</code></td><td><code>return $value</code>（可以是任意对象）</td></tr>
+<tr><td>字符串相等（忽略大小写）</td><td><code>if /i "%A%"=="%B%"</code></td><td class="nw"><code>if ($a -eq $b)</code></td></tr>
+<tr><td class="nw">数值比较</td><td class="nw"><code>if %N% GEQ 5</code></td><td class="nw"><code>if ($n -ge 5)</code></td></tr>
+<tr><td class="nw">文件存在</td><td class="nw"><code>if exist "%P%"</code></td><td><code>if (Test-Path $p)</code></td></tr>
+<tr><td class="nw">多分支</td><td class="nw">连串 <code>if</code> + <code>goto</code></td><td class="nw"><code>switch</code> / <code>elseif</code></td></tr>
+<tr><td class="nw">计数循环</td><td><code>for /L %%i in (1,1,10)</code></td><td><code>1..10 | ForEach-Object { }</code></td></tr>
+<tr><td class="nw">遍历文件</td><td><code>for /R %%F in (*.log)</code></td><td><code>Get-ChildItem -Recurse -Filter *.log</code></td></tr>
+<tr><td class="nw">逐行读文件</td><td><code>for /F "delims=" %%L in (f.txt)</code></td><td><code>Get-Content f.txt | ForEach-Object { }</code></td></tr>
+<tr><td class="nw">解析 CSV</td><td><code>for /F "tokens=... delims=,"</code></td><td><code>Import-Csv</code>（真正懂引号和空列）</td></tr>
+<tr><td class="nw">提前跳出循环</td><td><code>goto</code>（会终止整个循环）</td><td class="nw"><code>break</code> / <code>continue</code></td></tr>
+<tr><td class="nw">定义函数</td><td><code>:label</code> + <code>call</code> + <code>exit /b</code></td><td><code>function Foo($a) { ... }</code></td></tr>
+<tr><td class="nw">返回值</td><td><code>endlocal &amp; set "R=%S%"</code></td><td><code>return $value</code>（可以是任意对象）</td></tr>
 </tbody>
 </table>
 
@@ -2331,9 +2335,9 @@ exit /b 0</code></pre>
 <table>
 <thead><tr><th>句柄号</th><th>名称</th><th>中文</th><th>默认接到哪里</th><th>典型内容</th></tr></thead>
 <tbody>
-<tr><td>0</td><td>stdin</td><td>标准输入</td><td>键盘</td><td><code>set /p</code>、<code>more</code>、<code>sort</code> 要读的东西</td></tr>
-<tr><td>1</td><td>stdout</td><td>标准输出</td><td>屏幕</td><td><code>dir</code> 的清单、<code>echo</code> 的文字、正常结果</td></tr>
-<tr><td>2</td><td>stderr</td><td>标准错误</td><td>屏幕</td><td>「系统找不到指定的文件」「拒绝访问」</td></tr>
+<tr><td class="nw">0</td><td class="nw">stdin</td><td class="nw">标准输入</td><td class="nw">键盘</td><td><code>set /p</code>、<code>more</code>、<code>sort</code> 要读的东西</td></tr>
+<tr><td class="nw">1</td><td class="nw">stdout</td><td class="nw">标准输出</td><td class="nw">屏幕</td><td><code>dir</code> 的清单、<code>echo</code> 的文字、正常结果</td></tr>
+<tr><td class="nw">2</td><td class="nw">stderr</td><td class="nw">标准错误</td><td class="nw">屏幕</td><td>「系统找不到指定的文件」「拒绝访问」</td></tr>
 </tbody>
 </table>
 
@@ -2364,18 +2368,18 @@ exit /b 0</code></pre>
 <table>
 <thead><tr><th>写法</th><th>含义</th><th>要点</th></tr></thead>
 <tbody>
-<tr><td><code>命令 &gt; 文件</code></td><td>stdout 覆盖写入</td><td>等价于 <code>1&gt;</code>；文件已存在会被<strong>直接清空</strong>，没有任何提示</td></tr>
-<tr><td><code>命令 &gt;&gt; 文件</code></td><td>stdout 追加</td><td>文件不存在则创建；写日志的默认选择</td></tr>
-<tr><td><code>命令 2&gt; 文件</code></td><td>stderr 覆盖写入</td><td><code>2</code> 和 <code>&gt;</code> 之间不能有空格</td></tr>
-<tr><td><code>命令 2&gt;&gt; 文件</code></td><td>stderr 追加</td><td>同上</td></tr>
-<tr><td><code>2&gt;&amp;1</code></td><td>把 2 号接到 1 号<strong>此刻</strong>的去处</td><td>必须写在 <code>&gt;文件</code> <strong>后面</strong>，顺序不可颠倒</td></tr>
-<tr><td><code>1&gt;&amp;2</code></td><td>反过来，让正常输出走错误流</td><td>用来输出「不该被管道吃掉」的提示信息</td></tr>
-<tr><td><code>&gt; nul</code></td><td>丢弃 stdout</td><td>NUL 是设备名，不是文件名</td></tr>
-<tr><td><code>2&gt; nul</code></td><td>丢弃 stderr</td><td>最常用于「目标可能不存在」的删除/查询</td></tr>
-<tr><td><code>&gt; 文件 2&gt;&amp;1</code></td><td>两根流合并进同一个文件</td><td>抓完整日志的标准写法</td></tr>
-<tr><td><code>&lt; 文件</code></td><td>从文件读 stdin</td><td>配 <code>set /p</code>、<code>sort</code>、<code>more</code></td></tr>
-<tr><td><code>&gt; con</code></td><td>强制写到控制台</td><td>即使外层被重定向也照样上屏</td></tr>
-<tr><td><code>3&gt;&amp;1</code> 等</td><td>3～9 号自定义句柄</td><td>高级用法，用于临时保存/恢复某根流的去向</td></tr>
+<tr><td class="nw"><code>命令 &gt; 文件</code></td><td class="nw">stdout 覆盖写入</td><td>等价于 <code>1&gt;</code>；文件已存在会被<strong>直接清空</strong>，没有任何提示</td></tr>
+<tr><td class="nw"><code>命令 &gt;&gt; 文件</code></td><td class="nw">stdout 追加</td><td>文件不存在则创建；写日志的默认选择</td></tr>
+<tr><td class="nw"><code>命令 2&gt; 文件</code></td><td class="nw">stderr 覆盖写入</td><td><code>2</code> 和 <code>&gt;</code> 之间不能有空格</td></tr>
+<tr><td class="nw"><code>命令 2&gt;&gt; 文件</code></td><td class="nw">stderr 追加</td><td class="nw">同上</td></tr>
+<tr><td class="nw"><code>2&gt;&amp;1</code></td><td>把 2 号接到 1 号<strong>此刻</strong>的去处</td><td>必须写在 <code>&gt;文件</code> <strong>后面</strong>，顺序不可颠倒</td></tr>
+<tr><td class="nw"><code>1&gt;&amp;2</code></td><td>反过来，让正常输出走错误流</td><td>用来输出「不该被管道吃掉」的提示信息</td></tr>
+<tr><td class="nw"><code>&gt; nul</code></td><td class="nw">丢弃 stdout</td><td>NUL 是设备名，不是文件名</td></tr>
+<tr><td class="nw"><code>2&gt; nul</code></td><td class="nw">丢弃 stderr</td><td>最常用于「目标可能不存在」的删除/查询</td></tr>
+<tr><td class="nw"><code>&gt; 文件 2&gt;&amp;1</code></td><td>两根流合并进同一个文件</td><td>抓完整日志的标准写法</td></tr>
+<tr><td class="nw"><code>&lt; 文件</code></td><td class="nw">从文件读 stdin</td><td>配 <code>set /p</code>、<code>sort</code>、<code>more</code></td></tr>
+<tr><td class="nw"><code>&gt; con</code></td><td class="nw">强制写到控制台</td><td>即使外层被重定向也照样上屏</td></tr>
+<tr><td class="nw"><code>3&gt;&amp;1</code> 等</td><td>3～9 号自定义句柄</td><td>高级用法，用于临时保存/恢复某根流的去向</td></tr>
 </tbody>
 </table>
 
@@ -2479,8 +2483,8 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>目标</th><th>写法</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>创建 / 清空一个空文件</td><td><code>type nul &gt;empty.txt</code></td><td>最常见的写法</td></tr>
-<tr><td>同上，更短</td><td><code>break &gt;empty.txt</code></td><td><code>break</code> 不产生任何输出，效果一样</td></tr>
+<tr><td>创建 / 清空一个空文件</td><td><code>type nul &gt;empty.txt</code></td><td class="nw">最常见的写法</td></tr>
+<tr><td>同上，更短</td><td class="nw"><code>break &gt;empty.txt</code></td><td><code>break</code> 不产生任何输出，效果一样</td></tr>
 <tr><td>读文件第一行到变量</td><td><code>set /p ver=&lt;version.txt</code></td><td>只读第一行，不含换行</td></tr>
 <tr><td>把一段文本喂给需要输入的命令</td><td><code>命令 &lt;answers.txt</code></td><td>比 <code>echo y |</code> 稳，见下一节</td></tr>
 </tbody>
@@ -2580,11 +2584,11 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <thead><tr><th>目的</th><th>写法</th></tr></thead>
 <tbody>
 <tr><td>递归找出所有含关键字的日志</td><td><code>dir /b /s *.log | findstr /i "2026"</code></td></tr>
-<tr><td>看某进程在不在</td><td><code>tasklist /nh | findstr /i chrome.exe</code></td></tr>
+<tr><td class="nw">看某进程在不在</td><td><code>tasklist /nh | findstr /i chrome.exe</code></td></tr>
 <tr><td>统计文本行数（含空行）</td><td><code>type app.log | find /c /v ""</code></td></tr>
-<tr><td>排序后落盘</td><td><code>type hosts.txt | sort &gt; hosts.sorted.txt</code></td></tr>
-<tr><td>长输出分页看</td><td><code>dir /s C:\Windows | more</code></td></tr>
-<tr><td>把结果送进剪贴板</td><td><code>ipconfig /all | clip</code></td></tr>
+<tr><td class="nw">排序后落盘</td><td><code>type hosts.txt | sort &gt; hosts.sorted.txt</code></td></tr>
+<tr><td class="nw">长输出分页看</td><td><code>dir /s C:\Windows | more</code></td></tr>
+<tr><td class="nw">把结果送进剪贴板</td><td><code>ipconfig /all | clip</code></td></tr>
 </tbody>
 </table>
 
@@ -2607,18 +2611,18 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>命令</th><th>一句话</th><th>最常用开关</th><th>坑与要点</th></tr></thead>
 <tbody>
-<tr><td><code>dir</code></td><td>列目录</td><td><code>/b</code> 纯名 <code>/s</code> 递归 <code>/a:-d</code> 只要文件 <code>/o:-d</code> 按时间倒序 <code>/t:w</code> 用修改时间</td><td><code>/b</code> 单独用给的是相对名，配 <code>/s</code> 才给绝对路径；<code>/a:d</code> 只要目录</td></tr>
-<tr><td><code>copy</code></td><td>复制单个/若干文件，或拼接文件</td><td><code>/y</code> 覆盖不问 <code>/b</code> 二进制 <code>/v</code> 校验</td><td>不能复制目录树；<code>copy a.txt+b.txt c.txt</code> 是拼接；文本模式会在 Ctrl+Z 处截断</td></tr>
-<tr><td><code>xcopy</code> <span class="badge old">已过时</span></td><td>复制目录树</td><td><code>/e</code> 含空目录 <code>/i</code> 目标当目录 <code>/y</code> <code>/d</code> 只拷更新的 <code>/exclude:</code></td><td>不写 <code>/i</code> 会停下来问「目标是文件还是目录」，脚本直接卡死；长路径会失败。见下一节</td></tr>
-<tr><td><code>robocopy</code> <span class="badge ok">仍适用</span></td><td>健壮的目录复制/同步</td><td><code>/e /mir /r:n /w:n /mt:n /np /log+: /l</code></td><td>退出码 0～7 都算成功，<strong>1 表示「复制了文件」而不是失败</strong></td></tr>
-<tr><td><code>del</code> / <code>erase</code></td><td>删文件</td><td><code>/q</code> 通配不问 <code>/s</code> 递归 <code>/f</code> 强删只读 <code>/a:h</code> 按属性</td><td>删不了目录；<strong>不进回收站</strong>；<code>del 目录名</code> 会删掉该目录下的全部文件</td></tr>
-<tr><td><code>rd</code> / <code>rmdir</code></td><td>删目录</td><td><code>/s</code> 连内容 <code>/q</code> 不确认</td><td><code>rd /s /q</code> 是本章最危险的一条命令，见下方警告</td></tr>
-<tr><td><code>move</code></td><td>移动或改名</td><td><code>/y</code> 覆盖不问</td><td>同盘符是改目录项（瞬间完成），跨盘符是「复制+删除」，大文件中断会留下半截</td></tr>
-<tr><td><code>ren</code> / <code>rename</code></td><td>改名</td><td>无</td><td>目标名<strong>不能带路径</strong>，因此改不了位置；支持通配符批量改扩展名</td></tr>
-<tr><td><code>md</code> / <code>mkdir</code></td><td>建目录</td><td>无</td><td>命令扩展开启时自动创建多级：<code>md a\b\c</code> 一步到位；已存在会报错，用 <code>2&gt;nul</code> 吞掉</td></tr>
-<tr><td><code>type</code></td><td>输出文件内容</td><td>无</td><td>可以一次输出多个文件（自动拼接）；遇二进制会乱码并让终端响铃</td></tr>
-<tr><td><code>attrib</code></td><td>看/改文件属性</td><td><code>+r -r +h -h +s -s</code> <code>/s</code> 递归 <code>/d</code> 含目录</td><td>删不掉的只读文件先 <code>attrib -r</code>，或者直接用 <code>del /f</code></td></tr>
-<tr><td><code>more</code></td><td>分页显示</td><td><code>+n</code> 从第 n 行起 <code>/s</code> 压缩空行 <code>/tn</code> Tab 宽度</td><td>默认把 Tab 展开成 8 个空格，<strong>别拿它当数据处理工具</strong>，只用于人眼翻页</td></tr>
+<tr><td class="nw"><code>dir</code></td><td class="nw">列目录</td><td><code>/b</code> 纯名 <code>/s</code> 递归 <code>/a:-d</code> 只要文件 <code>/o:-d</code> 按时间倒序 <code>/t:w</code> 用修改时间</td><td><code>/b</code> 单独用给的是相对名，配 <code>/s</code> 才给绝对路径；<code>/a:d</code> 只要目录</td></tr>
+<tr><td class="nw"><code>copy</code></td><td>复制单个/若干文件，或拼接文件</td><td><code>/y</code> 覆盖不问 <code>/b</code> 二进制 <code>/v</code> 校验</td><td>不能复制目录树；<code>copy a.txt+b.txt c.txt</code> 是拼接；文本模式会在 Ctrl+Z 处截断</td></tr>
+<tr><td class="nw"><code>xcopy</code> <span class="badge old">已过时</span></td><td class="nw">复制目录树</td><td><code>/e</code> 含空目录 <code>/i</code> 目标当目录 <code>/y</code> <code>/d</code> 只拷更新的 <code>/exclude:</code></td><td>不写 <code>/i</code> 会停下来问「目标是文件还是目录」，脚本直接卡死；长路径会失败。见下一节</td></tr>
+<tr><td class="nw"><code>robocopy</code> <span class="badge ok">仍适用</span></td><td>健壮的目录复制/同步</td><td><code>/e /mir /r:n /w:n /mt:n /np /log+: /l</code></td><td>退出码 0～7 都算成功，<strong>1 表示「复制了文件」而不是失败</strong></td></tr>
+<tr><td class="nw"><code>del</code> / <code>erase</code></td><td class="nw">删文件</td><td><code>/q</code> 通配不问 <code>/s</code> 递归 <code>/f</code> 强删只读 <code>/a:h</code> 按属性</td><td>删不了目录；<strong>不进回收站</strong>；<code>del 目录名</code> 会删掉该目录下的全部文件</td></tr>
+<tr><td class="nw"><code>rd</code> / <code>rmdir</code></td><td class="nw">删目录</td><td><code>/s</code> 连内容 <code>/q</code> 不确认</td><td><code>rd /s /q</code> 是本章最危险的一条命令，见下方警告</td></tr>
+<tr><td class="nw"><code>move</code></td><td class="nw">移动或改名</td><td class="nw"><code>/y</code> 覆盖不问</td><td>同盘符是改目录项（瞬间完成），跨盘符是「复制+删除」，大文件中断会留下半截</td></tr>
+<tr><td class="nw"><code>ren</code> / <code>rename</code></td><td class="nw">改名</td><td class="nw">无</td><td>目标名<strong>不能带路径</strong>，因此改不了位置；支持通配符批量改扩展名</td></tr>
+<tr><td class="nw"><code>md</code> / <code>mkdir</code></td><td class="nw">建目录</td><td class="nw">无</td><td>命令扩展开启时自动创建多级：<code>md a\b\c</code> 一步到位；已存在会报错，用 <code>2&gt;nul</code> 吞掉</td></tr>
+<tr><td class="nw"><code>type</code></td><td class="nw">输出文件内容</td><td class="nw">无</td><td>可以一次输出多个文件（自动拼接）；遇二进制会乱码并让终端响铃</td></tr>
+<tr><td class="nw"><code>attrib</code></td><td class="nw">看/改文件属性</td><td><code>+r -r +h -h +s -s</code> <code>/s</code> 递归 <code>/d</code> 含目录</td><td>删不掉的只读文件先 <code>attrib -r</code>，或者直接用 <code>del /f</code></td></tr>
+<tr><td class="nw"><code>more</code></td><td class="nw">分页显示</td><td><code>+n</code> 从第 n 行起 <code>/s</code> 压缩空行 <code>/tn</code> Tab 宽度</td><td>默认把 Tab 展开成 8 个空格，<strong>别拿它当数据处理工具</strong>，只用于人眼翻页</td></tr>
 </tbody>
 </table>
 
@@ -2645,16 +2649,16 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>能力</th><th>xcopy</th><th>robocopy</th></tr></thead>
 <tbody>
-<tr><td>失败自动重试</td><td>没有，报错就退</td><td>内建，<code>/r:次数 /w:等待秒</code>（默认 100 万次×30 秒，必须改小）</td></tr>
-<tr><td>断点续传 / 增量</td><td><code>/d</code> 勉强按时间比对</td><td><strong>默认行为</strong>就是只拷新增和更新的文件，重跑等于续传</td></tr>
-<tr><td>多线程</td><td>无</td><td><code>/mt:8</code>（默认 8，最高 128），小文件多的场景快好几倍</td></tr>
-<tr><td>镜像（删除多余项）</td><td>无</td><td><code>/mir</code></td></tr>
-<tr><td>长路径（超过 260 字符）</td><td>会失败</td><td>原生支持</td></tr>
-<tr><td>预演（不真动手）</td><td>无</td><td><code>/l</code>，上线前的救命开关</td></tr>
-<tr><td>日志</td><td>只能自己重定向</td><td><code>/log+:文件 /tee /np /ndl /nfl</code>，格式规整可解析</td></tr>
-<tr><td>筛选</td><td><code>/d</code> <code>/exclude:清单文件</code></td><td><code>/xf /xd /xo /xn /xc /maxage /minage /ia /xa</code>，维度细得多</td></tr>
-<tr><td>属性与时间戳</td><td><code>/k /o /x</code></td><td><code>/copy:DATSOU</code>、<code>/dcopy:DAT</code>，精确到每一位</td></tr>
-<tr><td>断网续传单个大文件</td><td>无</td><td><code>/z</code> 可重启模式</td></tr>
+<tr><td class="nw">失败自动重试</td><td>没有，报错就退</td><td>内建，<code>/r:次数 /w:等待秒</code>（默认 100 万次×30 秒，必须改小）</td></tr>
+<tr><td class="nw">断点续传 / 增量</td><td><code>/d</code> 勉强按时间比对</td><td><strong>默认行为</strong>就是只拷新增和更新的文件，重跑等于续传</td></tr>
+<tr><td class="nw">多线程</td><td class="nw">无</td><td><code>/mt:8</code>（默认 8，最高 128），小文件多的场景快好几倍</td></tr>
+<tr><td>镜像（删除多余项）</td><td class="nw">无</td><td class="nw"><code>/mir</code></td></tr>
+<tr><td>长路径（超过 260 字符）</td><td class="nw">会失败</td><td class="nw">原生支持</td></tr>
+<tr><td class="nw">预演（不真动手）</td><td class="nw">无</td><td><code>/l</code>，上线前的救命开关</td></tr>
+<tr><td class="nw">日志</td><td class="nw">只能自己重定向</td><td><code>/log+:文件 /tee /np /ndl /nfl</code>，格式规整可解析</td></tr>
+<tr><td class="nw">筛选</td><td><code>/d</code> <code>/exclude:清单文件</code></td><td><code>/xf /xd /xo /xn /xc /maxage /minage /ia /xa</code>，维度细得多</td></tr>
+<tr><td class="nw">属性与时间戳</td><td class="nw"><code>/k /o /x</code></td><td><code>/copy:DATSOU</code>、<code>/dcopy:DAT</code>，精确到每一位</td></tr>
+<tr><td>断网续传单个大文件</td><td class="nw">无</td><td class="nw"><code>/z</code> 可重启模式</td></tr>
 </tbody>
 </table>
 
@@ -2663,12 +2667,12 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>你想做的事</th><th>xcopy 写法</th><th>robocopy 写法</th></tr></thead>
 <tbody>
-<tr><td>连子目录一起拷（含空目录）</td><td><code>/e</code></td><td><code>/e</code></td></tr>
-<tr><td>只拷有更新的</td><td><code>/d</code></td><td>默认就是</td></tr>
-<tr><td>覆盖不提示</td><td><code>/y</code></td><td>默认不提示</td></tr>
-<tr><td>目标不存在自动创建</td><td><code>/i</code></td><td>默认创建</td></tr>
-<tr><td>出错继续往下走</td><td><code>/c</code></td><td>重试完自动跳过并继续</td></tr>
-<tr><td>只拷某几种扩展名</td><td>写在源后面</td><td>写在目标后面：<code>robocopy src dst *.log *.txt</code></td></tr>
+<tr><td>连子目录一起拷（含空目录）</td><td class="nw"><code>/e</code></td><td class="nw"><code>/e</code></td></tr>
+<tr><td class="nw">只拷有更新的</td><td class="nw"><code>/d</code></td><td class="nw">默认就是</td></tr>
+<tr><td class="nw">覆盖不提示</td><td class="nw"><code>/y</code></td><td class="nw">默认不提示</td></tr>
+<tr><td>目标不存在自动创建</td><td class="nw"><code>/i</code></td><td class="nw">默认创建</td></tr>
+<tr><td class="nw">出错继续往下走</td><td class="nw"><code>/c</code></td><td>重试完自动跳过并继续</td></tr>
+<tr><td class="nw">只拷某几种扩展名</td><td class="nw">写在源后面</td><td>写在目标后面：<code>robocopy src dst *.log *.txt</code></td></tr>
 <tr><td>排除某些目录/文件</td><td><code>/exclude:list.txt</code></td><td><code>/xd node_modules .git</code>、<code>/xf *.tmp</code>（直接列，没有清单文件参数）</td></tr>
 </tbody>
 </table>
@@ -2680,13 +2684,13 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>退出码</th><th>含义</th><th>算不算失败</th></tr></thead>
 <tbody>
-<tr><td>0</td><td>源和目标已一致，什么都没拷</td><td>成功</td></tr>
-<tr><td>1</td><td>有文件被成功复制</td><td><strong>成功</strong>（最常见的正常返回值）</td></tr>
-<tr><td>2</td><td>目标里有源没有的多余文件/目录</td><td>成功，但值得留意</td></tr>
-<tr><td>4</td><td>存在不匹配的文件或目录（比如同名一个是文件一个是目录）</td><td>需要人工看一眼</td></tr>
-<tr><td>8</td><td>有文件或目录复制失败（重试后仍失败）</td><td><strong>失败</strong></td></tr>
-<tr><td>16</td><td>严重错误，一个文件都没能处理</td><td><strong>失败</strong></td></tr>
-<tr><td>3、5、7…</td><td>上面各项按位相加，例如 3 = 1+2</td><td>小于 8 即成功</td></tr>
+<tr><td class="nw">0</td><td>源和目标已一致，什么都没拷</td><td class="nw">成功</td></tr>
+<tr><td class="nw">1</td><td class="nw">有文件被成功复制</td><td><strong>成功</strong>（最常见的正常返回值）</td></tr>
+<tr><td class="nw">2</td><td>目标里有源没有的多余文件/目录</td><td>成功，但值得留意</td></tr>
+<tr><td class="nw">4</td><td>存在不匹配的文件或目录（比如同名一个是文件一个是目录）</td><td class="nw">需要人工看一眼</td></tr>
+<tr><td class="nw">8</td><td>有文件或目录复制失败（重试后仍失败）</td><td class="nw"><strong>失败</strong></td></tr>
+<tr><td class="nw">16</td><td>严重错误，一个文件都没能处理</td><td class="nw"><strong>失败</strong></td></tr>
+<tr><td>3、5、7…</td><td>上面各项按位相加，例如 3 = 1+2</td><td class="nw">小于 8 即成功</td></tr>
 </tbody>
 </table>
 
@@ -2722,17 +2726,17 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>能力</th><th>find</th><th>findstr</th></tr></thead>
 <tbody>
-<tr><td>正则</td><td>不支持</td><td>支持（<code>/r</code>），但只有子集</td></tr>
-<tr><td>多个模式</td><td>不支持</td><td>支持：空格分隔即「或」，或 <code>/g:文件</code></td></tr>
-<tr><td>递归子目录</td><td>不支持</td><td><code>/s</code></td></tr>
-<tr><td>只输出文件名</td><td>不支持</td><td><code>/m</code></td></tr>
-<tr><td>行首/行尾匹配</td><td>不支持</td><td><code>/b</code> / <code>/e</code></td></tr>
-<tr><td>整行精确匹配</td><td>不支持</td><td><code>/x</code></td></tr>
-<tr><td>反选（不含）</td><td><code>/v</code></td><td><code>/v</code></td></tr>
-<tr><td>行号</td><td><code>/n</code></td><td><code>/n</code></td></tr>
-<tr><td>只报计数</td><td><code>/c</code></td><td>没有，需要配 <code>| find /c /v ""</code></td></tr>
-<tr><td>忽略大小写</td><td><code>/i</code></td><td><code>/i</code></td></tr>
-<tr><td>UTF-16 文本</td><td>处理得较好</td><td>常出问题</td></tr>
+<tr><td class="nw">正则</td><td class="nw">不支持</td><td>支持（<code>/r</code>），但只有子集</td></tr>
+<tr><td class="nw">多个模式</td><td class="nw">不支持</td><td>支持：空格分隔即「或」，或 <code>/g:文件</code></td></tr>
+<tr><td class="nw">递归子目录</td><td class="nw">不支持</td><td class="nw"><code>/s</code></td></tr>
+<tr><td class="nw">只输出文件名</td><td class="nw">不支持</td><td class="nw"><code>/m</code></td></tr>
+<tr><td class="nw">行首/行尾匹配</td><td class="nw">不支持</td><td class="nw"><code>/b</code> / <code>/e</code></td></tr>
+<tr><td class="nw">整行精确匹配</td><td class="nw">不支持</td><td class="nw"><code>/x</code></td></tr>
+<tr><td class="nw">反选（不含）</td><td class="nw"><code>/v</code></td><td class="nw"><code>/v</code></td></tr>
+<tr><td class="nw">行号</td><td class="nw"><code>/n</code></td><td class="nw"><code>/n</code></td></tr>
+<tr><td class="nw">只报计数</td><td class="nw"><code>/c</code></td><td>没有，需要配 <code>| find /c /v ""</code></td></tr>
+<tr><td class="nw">忽略大小写</td><td class="nw"><code>/i</code></td><td class="nw"><code>/i</code></td></tr>
+<tr><td class="nw">UTF-16 文本</td><td class="nw">处理得较好</td><td class="nw">常出问题</td></tr>
 </tbody>
 </table>
 
@@ -2743,16 +2747,16 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>元字符</th><th>含义</th><th>例子</th></tr></thead>
 <tbody>
-<tr><td><code>.</code></td><td>任意单个字符</td><td><code>a.c</code> 匹配 abc、a1c</td></tr>
-<tr><td><code>*</code></td><td>前一个字符/字符类重复 0 次或多次</td><td><code>ab*c</code> 匹配 ac、abc、abbc</td></tr>
-<tr><td><code>^</code></td><td>行首</td><td><code>^ERROR</code></td></tr>
-<tr><td><code>$</code></td><td>行尾</td><td><code>done$</code></td></tr>
-<tr><td><code>[abc]</code></td><td>字符集合中的任意一个</td><td><code>[Ee]rror</code></td></tr>
-<tr><td><code>[^abc]</code></td><td>不在集合中的任意一个</td><td><code>[^0-9]</code></td></tr>
-<tr><td><code>[x-y]</code></td><td>范围</td><td><code>[0-9]</code>、<code>[a-z]</code></td></tr>
-<tr><td><code>\x</code></td><td>转义，把元字符当普通字符</td><td><code>\.</code>、<code>\[</code>、<code>\*</code></td></tr>
-<tr><td><code>\&lt;xyz</code></td><td>单词开头</td><td><code>\&lt;log</code> 不匹配 catalog</td></tr>
-<tr><td><code>xyz\&gt;</code></td><td>单词结尾</td><td><code>err\&gt;</code></td></tr>
+<tr><td class="nw"><code>.</code></td><td class="nw">任意单个字符</td><td><code>a.c</code> 匹配 abc、a1c</td></tr>
+<tr><td class="nw"><code>*</code></td><td>前一个字符/字符类重复 0 次或多次</td><td><code>ab*c</code> 匹配 ac、abc、abbc</td></tr>
+<tr><td class="nw"><code>^</code></td><td class="nw">行首</td><td class="nw"><code>^ERROR</code></td></tr>
+<tr><td class="nw"><code>$</code></td><td class="nw">行尾</td><td class="nw"><code>done$</code></td></tr>
+<tr><td class="nw"><code>[abc]</code></td><td>字符集合中的任意一个</td><td class="nw"><code>[Ee]rror</code></td></tr>
+<tr><td class="nw"><code>[^abc]</code></td><td>不在集合中的任意一个</td><td class="nw"><code>[^0-9]</code></td></tr>
+<tr><td class="nw"><code>[x-y]</code></td><td class="nw">范围</td><td><code>[0-9]</code>、<code>[a-z]</code></td></tr>
+<tr><td class="nw"><code>\x</code></td><td>转义，把元字符当普通字符</td><td><code>\.</code>、<code>\[</code>、<code>\*</code></td></tr>
+<tr><td class="nw"><code>\&lt;xyz</code></td><td class="nw">单词开头</td><td><code>\&lt;log</code> 不匹配 catalog</td></tr>
+<tr><td class="nw"><code>xyz\&gt;</code></td><td class="nw">单词结尾</td><td class="nw"><code>err\&gt;</code></td></tr>
 </tbody>
 </table>
 
@@ -2761,14 +2765,14 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>常见正则语法</th><th>findstr</th><th>替代写法</th></tr></thead>
 <tbody>
-<tr><td><code>+</code> 一次或多次</td><td>不支持</td><td><code>xx*</code>（写两遍，第二个带星号）</td></tr>
-<tr><td><code>?</code> 零次或一次</td><td>不支持</td><td>拆成两个模式分别搜</td></tr>
-<tr><td><code>|</code> 交替</td><td>不支持</td><td>用空格分隔多个模式：<code>findstr "aaa bbb"</code></td></tr>
-<tr><td><code>( )</code> 分组</td><td>不支持</td><td>没有替代，拆命令</td></tr>
-<tr><td><code>{n,m}</code> 重复次数</td><td>不支持</td><td>手写 n 遍：四位数字写成 <code>[0-9][0-9][0-9][0-9]</code></td></tr>
-<tr><td><code>\d \w \s</code></td><td>不支持</td><td><code>[0-9]</code>、<code>[a-zA-Z0-9_]</code>、<code>[ 　]</code>（空格与制表符要真的敲进去）</td></tr>
-<tr><td>反向引用、前后查找</td><td>不支持</td><td>换工具</td></tr>
-<tr><td>非贪婪匹配</td><td>不支持</td><td>换工具</td></tr>
+<tr><td class="nw"><code>+</code> 一次或多次</td><td class="nw">不支持</td><td><code>xx*</code>（写两遍，第二个带星号）</td></tr>
+<tr><td class="nw"><code>?</code> 零次或一次</td><td class="nw">不支持</td><td>拆成两个模式分别搜</td></tr>
+<tr><td class="nw"><code>|</code> 交替</td><td class="nw">不支持</td><td>用空格分隔多个模式：<code>findstr "aaa bbb"</code></td></tr>
+<tr><td class="nw"><code>( )</code> 分组</td><td class="nw">不支持</td><td>没有替代，拆命令</td></tr>
+<tr><td class="nw"><code>{n,m}</code> 重复次数</td><td class="nw">不支持</td><td>手写 n 遍：四位数字写成 <code>[0-9][0-9][0-9][0-9]</code></td></tr>
+<tr><td class="nw"><code>\d \w \s</code></td><td class="nw">不支持</td><td><code>[0-9]</code>、<code>[a-zA-Z0-9_]</code>、<code>[ 　]</code>（空格与制表符要真的敲进去）</td></tr>
+<tr><td>反向引用、前后查找</td><td class="nw">不支持</td><td class="nw">换工具</td></tr>
+<tr><td class="nw">非贪婪匹配</td><td class="nw">不支持</td><td class="nw">换工具</td></tr>
 </tbody>
 </table>
 
@@ -2806,8 +2810,8 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>命令</th><th>常用开关</th><th>要点</th></tr></thead>
 <tbody>
-<tr><td><code>sort</code></td><td><code>/r</code> 倒序、<code>/+n</code> 从第 n 个字符开始比较、<code>/o 文件</code> 输出、<code>/t 目录</code> 临时目录、<code>/rec n</code> 最大行长</td><td><strong>总是不区分大小写</strong>；<strong>没有去重开关</strong>（别照搬 Unix 的 <code>sort -u</code>）；行长上限默认 4096 字符、最大 65535；中文按当前代码页的字节序排，不是拼音序</td></tr>
-<tr><td><code>more</code></td><td><code>+n</code> 从第 n 行起、<code>/s</code> 压缩连续空行、<code>/tn</code> Tab 展开宽度、<code>/c</code> 先清屏</td><td>默认把 Tab 变成 8 空格，会改变内容；只适合人看，不适合进管道再处理</td></tr>
+<tr><td class="nw"><code>sort</code></td><td><code>/r</code> 倒序、<code>/+n</code> 从第 n 个字符开始比较、<code>/o 文件</code> 输出、<code>/t 目录</code> 临时目录、<code>/rec n</code> 最大行长</td><td><strong>总是不区分大小写</strong>；<strong>没有去重开关</strong>（别照搬 Unix 的 <code>sort -u</code>）；行长上限默认 4096 字符、最大 65535；中文按当前代码页的字节序排，不是拼音序</td></tr>
+<tr><td class="nw"><code>more</code></td><td><code>+n</code> 从第 n 行起、<code>/s</code> 压缩连续空行、<code>/tn</code> Tab 展开宽度、<code>/c</code> 先清屏</td><td>默认把 Tab 变成 8 空格，会改变内容；只适合人看，不适合进管道再处理</td></tr>
 </tbody>
 </table>
 
@@ -2840,14 +2844,14 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>开关</th><th>作用</th><th>备注</th></tr></thead>
 <tbody>
-<tr><td><code>"标题"</code></td><td>新窗口标题</td><td>位置固定在最前；几乎总是写成 <code>""</code></td></tr>
-<tr><td><code>/d 路径</code></td><td>指定启动时的工作目录</td><td>比先 <code>cd</code> 再 <code>start</code> 干净</td></tr>
-<tr><td><code>/b</code></td><td>不开新窗口，在当前控制台里跑</td><td>该进程会忽略 Ctrl+C，只能用 Ctrl+Break 打断</td></tr>
-<tr><td><code>/wait</code></td><td>等程序结束再继续</td><td><strong>拿退出码的前提</strong></td></tr>
-<tr><td><code>/min</code> <code>/max</code></td><td>最小化 / 最大化启动</td><td>无人值守任务常配 <code>/min</code></td></tr>
-<tr><td><code>/low /belownormal /normal /abovenormal /high /realtime</code></td><td>进程优先级</td><td><code>/realtime</code> 会抢占系统关键线程，别用</td></tr>
-<tr><td><code>/affinity 掩码</code></td><td>绑定 CPU 核心</td><td>十六进制掩码</td></tr>
-<tr><td><code>/i</code></td><td>用 cmd.exe 启动时的原始环境</td><td>不继承当前脚本里 <code>set</code> 的变量</td></tr>
+<tr><td class="nw"><code>"标题"</code></td><td class="nw">新窗口标题</td><td>位置固定在最前；几乎总是写成 <code>""</code></td></tr>
+<tr><td class="nw"><code>/d 路径</code></td><td>指定启动时的工作目录</td><td>比先 <code>cd</code> 再 <code>start</code> 干净</td></tr>
+<tr><td class="nw"><code>/b</code></td><td>不开新窗口，在当前控制台里跑</td><td>该进程会忽略 Ctrl+C，只能用 Ctrl+Break 打断</td></tr>
+<tr><td class="nw"><code>/wait</code></td><td class="nw">等程序结束再继续</td><td class="nw"><strong>拿退出码的前提</strong></td></tr>
+<tr><td class="nw"><code>/min</code> <code>/max</code></td><td>最小化 / 最大化启动</td><td>无人值守任务常配 <code>/min</code></td></tr>
+<tr><td><code>/low /belownormal /normal /abovenormal /high /realtime</code></td><td class="nw">进程优先级</td><td><code>/realtime</code> 会抢占系统关键线程，别用</td></tr>
+<tr><td class="nw"><code>/affinity 掩码</code></td><td class="nw">绑定 CPU 核心</td><td class="nw">十六进制掩码</td></tr>
+<tr><td class="nw"><code>/i</code></td><td>用 cmd.exe 启动时的原始环境</td><td>不继承当前脚本里 <code>set</code> 的变量</td></tr>
 </tbody>
 </table>
 
@@ -2868,12 +2872,12 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>写法</th><th>是否等待</th><th>新窗口</th><th>能拿退出码</th><th>用在什么场合</th></tr></thead>
 <tbody>
-<tr><td><code>app.exe</code></td><td>是</td><td>否</td><td>是</td><td>默认选择，绝大多数情况</td></tr>
-<tr><td><code>call other.cmd</code></td><td>是</td><td>否</td><td>是</td><td>调用另一个批处理并<strong>返回</strong>本脚本</td></tr>
-<tr><td><code>other.cmd</code>（漏了 call）</td><td>是，但一去不回</td><td>否</td><td>—</td><td>几乎总是 bug：控制权转移过去就再也不回来</td></tr>
-<tr><td><code>start "" app.exe</code></td><td>否</td><td>是</td><td>否</td><td>并行启动、启动 GUI 程序</td></tr>
-<tr><td><code>start /b "" app.exe</code></td><td>否</td><td>否</td><td>否</td><td>后台并行，共用当前控制台</td></tr>
-<tr><td><code>start /wait "" app.exe</code></td><td>是</td><td>是</td><td>是</td><td>要独立窗口又要退出码</td></tr>
+<tr><td class="nw"><code>app.exe</code></td><td class="nw">是</td><td class="nw">否</td><td class="nw">是</td><td>默认选择，绝大多数情况</td></tr>
+<tr><td class="nw"><code>call other.cmd</code></td><td class="nw">是</td><td class="nw">否</td><td class="nw">是</td><td>调用另一个批处理并<strong>返回</strong>本脚本</td></tr>
+<tr><td><code>other.cmd</code>（漏了 call）</td><td>是，但一去不回</td><td class="nw">否</td><td class="nw">—</td><td>几乎总是 bug：控制权转移过去就再也不回来</td></tr>
+<tr><td class="nw"><code>start "" app.exe</code></td><td class="nw">否</td><td class="nw">是</td><td class="nw">否</td><td>并行启动、启动 GUI 程序</td></tr>
+<tr><td><code>start /b "" app.exe</code></td><td class="nw">否</td><td class="nw">否</td><td class="nw">否</td><td>后台并行，共用当前控制台</td></tr>
+<tr><td><code>start /wait "" app.exe</code></td><td class="nw">是</td><td class="nw">是</td><td class="nw">是</td><td>要独立窗口又要退出码</td></tr>
 </tbody>
 </table>
 
@@ -2926,11 +2930,11 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>开关</th><th>作用</th></tr></thead>
 <tbody>
-<tr><td><code>/q</code></td><td>只给退出码，不输出——脚本里判断依赖就用这个</td></tr>
-<tr><td><code>/r 目录</code></td><td>从指定目录递归找文件（不限于 PATH）</td></tr>
-<tr><td><code>/f</code></td><td>结果加双引号，便于直接拼进带空格的路径</td></tr>
-<tr><td><code>/t</code></td><td>顺便显示文件大小和修改时间</td></tr>
-<tr><td>退出码</td><td>0 找到 / 1 没找到 / 2 出错</td></tr>
+<tr><td class="nw"><code>/q</code></td><td>只给退出码，不输出——脚本里判断依赖就用这个</td></tr>
+<tr><td class="nw"><code>/r 目录</code></td><td>从指定目录递归找文件（不限于 PATH）</td></tr>
+<tr><td class="nw"><code>/f</code></td><td>结果加双引号，便于直接拼进带空格的路径</td></tr>
+<tr><td class="nw"><code>/t</code></td><td>顺便显示文件大小和修改时间</td></tr>
+<tr><td class="nw">退出码</td><td>0 找到 / 1 没找到 / 2 出错</td></tr>
 </tbody>
 </table>
 
@@ -2941,13 +2945,13 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>开关</th><th>作用</th></tr></thead>
 <tbody>
-<tr><td><code>/fi "条件"</code></td><td>筛选：<code>imagename eq notepad.exe</code>、<code>pid eq 1234</code>、<code>status eq running</code>、<code>memusage gt 100000</code>、<code>windowtitle eq *报表*</code></td></tr>
+<tr><td class="nw"><code>/fi "条件"</code></td><td>筛选：<code>imagename eq notepad.exe</code>、<code>pid eq 1234</code>、<code>status eq running</code>、<code>memusage gt 100000</code>、<code>windowtitle eq *报表*</code></td></tr>
 <tr><td><code>/fo csv|table|list</code></td><td>输出格式，脚本里配 csv 最好解析</td></tr>
-<tr><td><code>/nh</code></td><td>不打表头</td></tr>
-<tr><td><code>/v</code></td><td>详细信息：窗口标题、运行用户、CPU 时间</td></tr>
-<tr><td><code>/svc</code></td><td>显示每个进程里承载的服务（查 svchost 时必备）</td></tr>
-<tr><td><code>/m 模块名</code></td><td>列出加载了指定 DLL 的进程</td></tr>
-<tr><td><code>/s 机器 /u 用户 /p 密码</code></td><td>查远程机器</td></tr>
+<tr><td class="nw"><code>/nh</code></td><td class="nw">不打表头</td></tr>
+<tr><td class="nw"><code>/v</code></td><td>详细信息：窗口标题、运行用户、CPU 时间</td></tr>
+<tr><td class="nw"><code>/svc</code></td><td>显示每个进程里承载的服务（查 svchost 时必备）</td></tr>
+<tr><td class="nw"><code>/m 模块名</code></td><td>列出加载了指定 DLL 的进程</td></tr>
+<tr><td><code>/s 机器 /u 用户 /p 密码</code></td><td class="nw">查远程机器</td></tr>
 </tbody>
 </table>
 
@@ -2966,11 +2970,11 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>开关</th><th>作用</th></tr></thead>
 <tbody>
-<tr><td><code>/im 映像名</code></td><td>按可执行文件名，如 <code>/im notepad.exe</code></td></tr>
-<tr><td><code>/pid 数字</code></td><td>按进程 ID</td></tr>
-<tr><td><code>/f</code></td><td>强制终止，不给程序保存和清理的机会</td></tr>
-<tr><td><code>/t</code></td><td>连同它启动的所有子进程一起终止</td></tr>
-<tr><td><code>/fi "条件"</code></td><td>筛选语法与 tasklist 相同</td></tr>
+<tr><td class="nw"><code>/im 映像名</code></td><td>按可执行文件名，如 <code>/im notepad.exe</code></td></tr>
+<tr><td class="nw"><code>/pid 数字</code></td><td class="nw">按进程 ID</td></tr>
+<tr><td class="nw"><code>/f</code></td><td>强制终止，不给程序保存和清理的机会</td></tr>
+<tr><td class="nw"><code>/t</code></td><td>连同它启动的所有子进程一起终止</td></tr>
+<tr><td class="nw"><code>/fi "条件"</code></td><td>筛选语法与 tasklist 相同</td></tr>
 </tbody>
 </table>
 
@@ -2987,9 +2991,9 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>用法</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>timeout /t 5</code></td><td>等 5 秒，期间按任意键提前结束；有效范围 -1 到 99999 秒</td></tr>
+<tr><td class="nw"><code>timeout /t 5</code></td><td>等 5 秒，期间按任意键提前结束；有效范围 -1 到 99999 秒</td></tr>
 <tr><td><code>timeout /t 5 /nobreak</code></td><td>忽略按键，老实等满（Ctrl+C 仍能中断）</td></tr>
-<tr><td><code>timeout /t -1</code></td><td>无限等待，直到按键——相当于一个更友好的 <code>pause</code></td></tr>
+<tr><td class="nw"><code>timeout /t -1</code></td><td>无限等待，直到按键——相当于一个更友好的 <code>pause</code></td></tr>
 <tr><td><code>timeout /t 5 /nobreak &gt;nul</code></td><td>连倒计时的刷屏也一并省掉，脚本里最常用的形式</td></tr>
 </tbody>
 </table>
@@ -3047,19 +3051,19 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>cmd 写法</th><th>PowerShell 等价</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>dir /b /s</code></td><td><code>Get-ChildItem -Recurse -File</code></td><td>返回对象，可以直接按大小/时间筛选</td></tr>
-<tr><td><code>type</code></td><td><code>Get-Content</code></td><td>支持 <code>-Tail</code>、<code>-Wait</code>（跟踪日志）、<code>-Encoding</code></td></tr>
-<tr><td><code>copy</code> / <code>move</code> / <code>ren</code></td><td><code>Copy-Item</code> / <code>Move-Item</code> / <code>Rename-Item</code></td><td>—</td></tr>
-<tr><td><code>xcopy</code> / <code>robocopy</code></td><td>仍然调用 <code>robocopy.exe</code></td><td>PowerShell 没有能替代它的原生命令</td></tr>
-<tr><td><code>del</code> / <code>rd /s /q</code></td><td><code>Remove-Item -Recurse -Force</code></td><td>配 <code>-WhatIf</code> 预演，比 cmd 安全得多</td></tr>
-<tr><td><code>find</code> / <code>findstr</code></td><td><code>Select-String</code></td><td>完整 .NET 正则、正确处理 UTF-8/16、有上下文行</td></tr>
-<tr><td><code>sort</code></td><td><code>Sort-Object [-Unique]</code></td><td>能按属性排序，能去重</td></tr>
-<tr><td><code>more</code></td><td><code>Out-Host -Paging</code></td><td>不会改动 Tab</td></tr>
-<tr><td><code>where</code></td><td><code>Get-Command</code></td><td>连别名、函数、cmdlet 一起找</td></tr>
+<tr><td class="nw"><code>dir /b /s</code></td><td><code>Get-ChildItem -Recurse -File</code></td><td>返回对象，可以直接按大小/时间筛选</td></tr>
+<tr><td class="nw"><code>type</code></td><td class="nw"><code>Get-Content</code></td><td>支持 <code>-Tail</code>、<code>-Wait</code>（跟踪日志）、<code>-Encoding</code></td></tr>
+<tr><td><code>copy</code> / <code>move</code> / <code>ren</code></td><td><code>Copy-Item</code> / <code>Move-Item</code> / <code>Rename-Item</code></td><td class="nw">—</td></tr>
+<tr><td class="nw"><code>xcopy</code> / <code>robocopy</code></td><td>仍然调用 <code>robocopy.exe</code></td><td>PowerShell 没有能替代它的原生命令</td></tr>
+<tr><td class="nw"><code>del</code> / <code>rd /s /q</code></td><td><code>Remove-Item -Recurse -Force</code></td><td>配 <code>-WhatIf</code> 预演，比 cmd 安全得多</td></tr>
+<tr><td class="nw"><code>find</code> / <code>findstr</code></td><td class="nw"><code>Select-String</code></td><td>完整 .NET 正则、正确处理 UTF-8/16、有上下文行</td></tr>
+<tr><td class="nw"><code>sort</code></td><td><code>Sort-Object [-Unique]</code></td><td>能按属性排序，能去重</td></tr>
+<tr><td class="nw"><code>more</code></td><td class="nw"><code>Out-Host -Paging</code></td><td class="nw">不会改动 Tab</td></tr>
+<tr><td class="nw"><code>where</code></td><td class="nw"><code>Get-Command</code></td><td>连别名、函数、cmdlet 一起找</td></tr>
 <tr><td><code>tasklist</code> / <code>taskkill</code></td><td><code>Get-Process</code> / <code>Stop-Process</code></td><td>可按 CPU、内存、启动时间筛选</td></tr>
-<tr><td><code>timeout</code></td><td><code>Start-Sleep -Seconds n</code></td><td>不受输入重定向影响</td></tr>
-<tr><td><code>start</code></td><td><code>Start-Process -Wait -NoNewWindow -PassThru</code></td><td>返回对象，直接有 <code>ExitCode</code></td></tr>
-<tr><td><code>&gt; file 2&gt;&amp;1</code></td><td><code>*&gt; file</code> 或 <code>Out-File -Append</code></td><td>六个流，可分别重定向</td></tr>
+<tr><td class="nw"><code>timeout</code></td><td><code>Start-Sleep -Seconds n</code></td><td>不受输入重定向影响</td></tr>
+<tr><td class="nw"><code>start</code></td><td><code>Start-Process -Wait -NoNewWindow -PassThru</code></td><td>返回对象，直接有 <code>ExitCode</code></td></tr>
+<tr><td class="nw"><code>&gt; file 2&gt;&amp;1</code></td><td><code>*&gt; file</code> 或 <code>Out-File -Append</code></td><td>六个流，可分别重定向</td></tr>
 </tbody>
 </table>
 
@@ -3068,16 +3072,16 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>#</th><th>检查项</th></tr></thead>
 <tbody>
-<tr><td>1</td><td>要抓完整日志的地方写成了 <code>&gt;file 2&gt;&amp;1</code>，顺序没颠倒</td></tr>
-<tr><td>2</td><td>所有路径变量都带引号，且 <code>set "VAR=值"</code> 的引号包住了整个赋值</td></tr>
-<tr><td>3</td><td>每个 <code>rd</code>／<code>del</code> 之前都判了变量非空、路径存在</td></tr>
-<tr><td>4</td><td>robocopy 用 <code>GEQ 8</code> 判失败，而且 <code>%ERRORLEVEL%</code> 是紧接着取的</td></tr>
-<tr><td>5</td><td>没有指望管道里 <code>set</code> 的变量能传回来</td></tr>
-<tr><td>6</td><td>依赖的外部程序在脚本开头用 <code>where /q</code> 探测过</td></tr>
-<tr><td>7</td><td><code>start</code> 后面记得写 <code>""</code> 占标题位；需要退出码的加了 <code>/wait</code></td></tr>
-<tr><td>8</td><td>无人值守场景里的 <code>timeout</code> 换成了 <code>ping -n</code></td></tr>
-<tr><td>9</td><td>没有用 <code>echo y |</code> 喂交互提示，改用了 <code>/q</code>、<code>/y</code> 开关</td></tr>
-<tr><td>10</td><td>findstr 的正则没有超出它那半套的能力范围（没写 <code>+</code>、<code>|</code>、<code>{n}</code>）</td></tr>
+<tr><td class="nw">1</td><td>要抓完整日志的地方写成了 <code>&gt;file 2&gt;&amp;1</code>，顺序没颠倒</td></tr>
+<tr><td class="nw">2</td><td>所有路径变量都带引号，且 <code>set "VAR=值"</code> 的引号包住了整个赋值</td></tr>
+<tr><td class="nw">3</td><td>每个 <code>rd</code>／<code>del</code> 之前都判了变量非空、路径存在</td></tr>
+<tr><td class="nw">4</td><td>robocopy 用 <code>GEQ 8</code> 判失败，而且 <code>%ERRORLEVEL%</code> 是紧接着取的</td></tr>
+<tr><td class="nw">5</td><td>没有指望管道里 <code>set</code> 的变量能传回来</td></tr>
+<tr><td class="nw">6</td><td>依赖的外部程序在脚本开头用 <code>where /q</code> 探测过</td></tr>
+<tr><td class="nw">7</td><td><code>start</code> 后面记得写 <code>""</code> 占标题位；需要退出码的加了 <code>/wait</code></td></tr>
+<tr><td class="nw">8</td><td>无人值守场景里的 <code>timeout</code> 换成了 <code>ping -n</code></td></tr>
+<tr><td class="nw">9</td><td>没有用 <code>echo y |</code> 喂交互提示，改用了 <code>/q</code>、<code>/y</code> 开关</td></tr>
+<tr><td class="nw">10</td><td>findstr 的正则没有超出它那半套的能力范围（没写 <code>+</code>、<code>|</code>、<code>{n}</code>）</td></tr>
 </tbody>
 </table>
 
@@ -3160,12 +3164,12 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>工序</th><th>做了什么</th><th>你能用什么手段影响它</th></tr></thead>
 <tbody>
-<tr><td>① 读行</td><td>取一行；行首 <code>@</code> 抑制本行回显</td><td><code>@</code></td></tr>
-<tr><td>② 百分号展开</td><td><code>%VAR%</code>→值；<code>%%</code>→<code>%</code>；<code>%1</code>→参数</td><td><code>%%</code>；改用 <code>!VAR!</code></td></tr>
-<tr><td>③ 转义与引号</td><td><code>^X</code>→<code>X</code>（<code>^</code> 消失）；记录引号内/外状态</td><td><code>^</code>、<code>"</code></td></tr>
-<tr><td>④ 切分</td><td>按 <code>&amp;</code> <code>&amp;&amp;</code> <code>||</code> <code>|</code> <code>(</code> <code>)</code> 拆成多条命令</td><td><code>^</code> 转义、引号、括号分组</td></tr>
-<tr><td>⑤ 延迟展开</td><td><code>!VAR!</code>→值（此时不再重新切分）</td><td><code>setlocal enabledelayedexpansion</code></td></tr>
-<tr><td>⑥ 执行</td><td>调内部命令或启动外部程序，设置 <code>ERRORLEVEL</code></td><td>—</td></tr>
+<tr><td class="nw">① 读行</td><td>取一行；行首 <code>@</code> 抑制本行回显</td><td class="nw"><code>@</code></td></tr>
+<tr><td class="nw">② 百分号展开</td><td><code>%VAR%</code>→值；<code>%%</code>→<code>%</code>；<code>%1</code>→参数</td><td><code>%%</code>；改用 <code>!VAR!</code></td></tr>
+<tr><td class="nw">③ 转义与引号</td><td><code>^X</code>→<code>X</code>（<code>^</code> 消失）；记录引号内/外状态</td><td><code>^</code>、<code>"</code></td></tr>
+<tr><td class="nw">④ 切分</td><td>按 <code>&amp;</code> <code>&amp;&amp;</code> <code>||</code> <code>|</code> <code>(</code> <code>)</code> 拆成多条命令</td><td><code>^</code> 转义、引号、括号分组</td></tr>
+<tr><td class="nw">⑤ 延迟展开</td><td><code>!VAR!</code>→值（此时不再重新切分）</td><td><code>setlocal enabledelayedexpansion</code></td></tr>
+<tr><td class="nw">⑥ 执行</td><td>调内部命令或启动外部程序，设置 <code>ERRORLEVEL</code></td><td class="nw">—</td></tr>
 </tbody>
 </table>
 
@@ -3194,15 +3198,15 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <table>
 <thead><tr><th>字符</th><th>不转义时的含义</th><th>转义写法</th></tr></thead>
 <tbody>
-<tr><td><code>&amp;</code></td><td>命令分隔符</td><td><code>^&amp;</code></td></tr>
-<tr><td><code>|</code></td><td>管道</td><td><code>^|</code></td></tr>
-<tr><td><code>&gt;</code> <code>&gt;&gt;</code></td><td>输出重定向</td><td><code>^&gt;</code> <code>^&gt;^&gt;</code></td></tr>
-<tr><td><code>&lt;</code></td><td>输入重定向</td><td><code>^&lt;</code></td></tr>
-<tr><td><code>(</code> <code>)</code></td><td>命令分组</td><td><code>^(</code> <code>^)</code></td></tr>
-<tr><td><code>^</code></td><td>转义符本身</td><td><code>^^</code></td></tr>
-<tr><td><code>!</code></td><td>延迟展开开启后为变量定界符</td><td><code>^!</code>（仅在延迟展开开启时需要）</td></tr>
-<tr><td><code>"</code></td><td>引号，切换「字面区」</td><td><code>^"</code>（用于打破引号配对）</td></tr>
-<tr><td><code>%</code></td><td>变量定界符</td><td><span class="badge dead">无法用 ^ 转义</span>，见下一节</td></tr>
+<tr><td class="nw"><code>&amp;</code></td><td class="nw">命令分隔符</td><td class="nw"><code>^&amp;</code></td></tr>
+<tr><td class="nw"><code>|</code></td><td class="nw">管道</td><td class="nw"><code>^|</code></td></tr>
+<tr><td class="nw"><code>&gt;</code> <code>&gt;&gt;</code></td><td class="nw">输出重定向</td><td class="nw"><code>^&gt;</code> <code>^&gt;^&gt;</code></td></tr>
+<tr><td class="nw"><code>&lt;</code></td><td class="nw">输入重定向</td><td class="nw"><code>^&lt;</code></td></tr>
+<tr><td class="nw"><code>(</code> <code>)</code></td><td class="nw">命令分组</td><td class="nw"><code>^(</code> <code>^)</code></td></tr>
+<tr><td class="nw"><code>^</code></td><td class="nw">转义符本身</td><td class="nw"><code>^^</code></td></tr>
+<tr><td class="nw"><code>!</code></td><td>延迟展开开启后为变量定界符</td><td><code>^!</code>（仅在延迟展开开启时需要）</td></tr>
+<tr><td class="nw"><code>"</code></td><td>引号，切换「字面区」</td><td><code>^"</code>（用于打破引号配对）</td></tr>
+<tr><td class="nw"><code>%</code></td><td class="nw">变量定界符</td><td><span class="badge dead">无法用 ^ 转义</span>，见下一节</td></tr>
 </tbody>
 </table>
 
@@ -3223,11 +3227,11 @@ robocopy "%SRC%" "%DST%" ^
 <table>
 <thead><tr><th>场景</th><th>解析次数</th><th>要输出一个字面 <code>&amp;</code> 该怎么写</th></tr></thead>
 <tbody>
-<tr><td>直接在脚本里执行</td><td>1</td><td><code>echo a ^&amp; b</code></td></tr>
-<tr><td><code>cmd /c "..."</code> 内部</td><td>2</td><td><code>cmd /c "echo a ^^&amp; b"</code></td></tr>
-<tr><td>管道右侧的命令</td><td>2</td><td><code>echo x | findstr "a^^&amp;b"</code></td></tr>
-<tr><td><code>for /f %%L in ('命令')</code> 内部</td><td>2</td><td>管道写 <code>^|</code>，重定向写 <code>^&gt;</code></td></tr>
-<tr><td><code>start "" cmd /c "..."</code></td><td>2~3</td><td>能加引号就加引号，别硬堆 <code>^</code></td></tr>
+<tr><td class="nw">直接在脚本里执行</td><td class="nw">1</td><td class="nw"><code>echo a ^&amp; b</code></td></tr>
+<tr><td><code>cmd /c "..."</code> 内部</td><td class="nw">2</td><td><code>cmd /c "echo a ^^&amp; b"</code></td></tr>
+<tr><td class="nw">管道右侧的命令</td><td class="nw">2</td><td><code>echo x | findstr "a^^&amp;b"</code></td></tr>
+<tr><td><code>for /f %%L in ('命令')</code> 内部</td><td class="nw">2</td><td>管道写 <code>^|</code>，重定向写 <code>^&gt;</code></td></tr>
+<tr><td><code>start "" cmd /c "..."</code></td><td class="nw">2~3</td><td>能加引号就加引号，别硬堆 <code>^</code></td></tr>
 </tbody>
 </table>
 
@@ -3248,11 +3252,11 @@ robocopy "%SRC%" "%DST%" ^
 <table>
 <thead><tr><th>你写的</th><th>在 .bat 文件里的结果</th><th>在命令行窗口里的结果</th></tr></thead>
 <tbody>
-<tr><td><code>echo 100%%</code></td><td><code>100%</code></td><td><code>100%%</code></td></tr>
-<tr><td><code>echo 100%</code></td><td><code>100</code>（末尾孤立的 <code>%</code> 被吞掉）</td><td><code>100%</code></td></tr>
-<tr><td><code>echo a%b</code></td><td><code>ab</code></td><td><code>a%b</code></td></tr>
-<tr><td><code>%未定义变量%</code></td><td>展开成空串</td><td>原样保留 <code>%未定义变量%</code></td></tr>
-<tr><td><code>for</code> 循环变量</td><td>必须写 <code>%%i</code></td><td>必须写 <code>%i</code></td></tr>
+<tr><td class="nw"><code>echo 100%%</code></td><td class="nw"><code>100%</code></td><td class="nw"><code>100%%</code></td></tr>
+<tr><td class="nw"><code>echo 100%</code></td><td><code>100</code>（末尾孤立的 <code>%</code> 被吞掉）</td><td class="nw"><code>100%</code></td></tr>
+<tr><td class="nw"><code>echo a%b</code></td><td class="nw"><code>ab</code></td><td class="nw"><code>a%b</code></td></tr>
+<tr><td class="nw"><code>%未定义变量%</code></td><td class="nw">展开成空串</td><td>原样保留 <code>%未定义变量%</code></td></tr>
+<tr><td class="nw"><code>for</code> 循环变量</td><td class="nw">必须写 <code>%%i</code></td><td class="nw">必须写 <code>%i</code></td></tr>
 </tbody>
 </table>
 
@@ -3305,9 +3309,9 @@ robocopy "%SRC%" "%DST%" ^
 <tbody>
 <tr><td>脚本内开启延迟展开</td><td><code>setlocal enabledelayedexpansion</code>（配 <code>endlocal</code>）</td></tr>
 <tr><td>整个 cmd 会话开启</td><td><code>cmd /v:on</code>（调试时很好用）</td></tr>
-<tr><td>单次调用开启</td><td><code>cmd /v:on /c "..."</code></td></tr>
+<tr><td class="nw">单次调用开启</td><td><code>cmd /v:on /c "..."</code></td></tr>
 <tr><td>延迟展开下输出字面 <code>!</code></td><td><code>^!</code>（引号内也要转义）</td></tr>
-<tr><td>循环里累加、拼接字符串</td><td>一律用 <code>!VAR!</code></td></tr>
+<tr><td>循环里累加、拼接字符串</td><td class="nw">一律用 <code>!VAR!</code></td></tr>
 <tr><td><code>for</code> 的循环变量 <code>%%i</code></td><td>不受影响，每轮迭代自动更新</td></tr>
 </tbody>
 </table>
@@ -3366,15 +3370,15 @@ copy C:\"Program Files"\app\a.txt D:\backup</code></pre>
 <table>
 <thead><tr><th>场合</th><th>推荐写法</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>赋值</td><td><code>set "K=V"</code></td><td>吃掉尾随空格，屏蔽 <code>&amp;</code> <code>|</code> <code>&gt;</code></td></tr>
-<tr><td>字符串比较</td><td><code>if "%A%"=="%B%"</code></td><td>两边都加，缺一边照样崩</td></tr>
-<tr><td>不区分大小写比较</td><td><code>if /i "%A%"=="%B%"</code></td><td>—</td></tr>
-<tr><td>判断变量是否已定义</td><td><code>if defined A</code></td><td>不加 <code>%</code>，最安全</td></tr>
-<tr><td>判断文件存在</td><td><code>if exist "%F%"</code></td><td>路径必须加引号</td></tr>
-<tr><td>调用外部程序</td><td><code>"%~dp0tools\x.exe" "%ARG%"</code></td><td>程序名和每个参数各自加引号</td></tr>
-<tr><td>新开窗口</td><td><code>start "" "C:\Program Files\a.exe"</code></td><td>第一个 <code>""</code> 是窗口标题占位，见下</td></tr>
+<tr><td class="nw">赋值</td><td class="nw"><code>set "K=V"</code></td><td>吃掉尾随空格，屏蔽 <code>&amp;</code> <code>|</code> <code>&gt;</code></td></tr>
+<tr><td class="nw">字符串比较</td><td class="nw"><code>if "%A%"=="%B%"</code></td><td>两边都加，缺一边照样崩</td></tr>
+<tr><td class="nw">不区分大小写比较</td><td><code>if /i "%A%"=="%B%"</code></td><td class="nw">—</td></tr>
+<tr><td>判断变量是否已定义</td><td class="nw"><code>if defined A</code></td><td>不加 <code>%</code>，最安全</td></tr>
+<tr><td class="nw">判断文件存在</td><td class="nw"><code>if exist "%F%"</code></td><td class="nw">路径必须加引号</td></tr>
+<tr><td class="nw">调用外部程序</td><td><code>"%~dp0tools\x.exe" "%ARG%"</code></td><td>程序名和每个参数各自加引号</td></tr>
+<tr><td class="nw">新开窗口</td><td><code>start "" "C:\Program Files\a.exe"</code></td><td>第一个 <code>""</code> 是窗口标题占位，见下</td></tr>
 <tr><td><code>for /f</code> 读带空格路径的文件</td><td><code>for /f "usebackq" %%L in ("%F%")</code></td><td>没有 <code>usebackq</code> 时，引号内容被当成字符串本身</td></tr>
-<tr><td>取消参数外层引号</td><td><code>%~1</code></td><td>见下表</td></tr>
+<tr><td class="nw">取消参数外层引号</td><td class="nw"><code>%~1</code></td><td class="nw">见下表</td></tr>
 </tbody>
 </table>
 
@@ -3387,17 +3391,17 @@ copy C:\"Program Files"\app\a.txt D:\backup</code></pre>
 <table>
 <thead><tr><th>写法</th><th>含义</th><th>示例（<code>%1</code> = <code>"D:\proj\a b\x.txt"</code>）</th></tr></thead>
 <tbody>
-<tr><td><code>%~1</code></td><td>去掉外层引号</td><td><code>D:\proj\a b\x.txt</code></td></tr>
-<tr><td><code>%~f1</code></td><td>完整绝对路径</td><td><code>D:\proj\a b\x.txt</code></td></tr>
-<tr><td><code>%~d1</code></td><td>盘符</td><td><code>D:</code></td></tr>
-<tr><td><code>%~p1</code></td><td>路径（带尾部反斜杠）</td><td><code>\proj\a b\</code></td></tr>
-<tr><td><code>%~n1</code></td><td>主文件名</td><td><code>x</code></td></tr>
-<tr><td><code>%~x1</code></td><td>扩展名（带点）</td><td><code>.txt</code></td></tr>
-<tr><td><code>%~dp1</code></td><td>盘符+路径，可组合</td><td><code>D:\proj\a b\</code></td></tr>
-<tr><td><code>%~nx1</code></td><td>文件名+扩展名</td><td><code>x.txt</code></td></tr>
-<tr><td><code>%~z1</code> <code>%~t1</code> <code>%~a1</code></td><td>大小 / 时间戳 / 属性</td><td><code>2048</code> / <code>2026-03-01 10:22</code> / <code>--a------</code></td></tr>
-<tr><td><code>%~s1</code></td><td>8.3 短路径 <span class="badge old">已过时</span></td><td>不可靠，别依赖</td></tr>
-<tr><td><code>%~dp0</code></td><td>脚本自身所在目录（末尾已含 <code>\</code>）</td><td>最常用，见下</td></tr>
+<tr><td class="nw"><code>%~1</code></td><td class="nw">去掉外层引号</td><td><code>D:\proj\a b\x.txt</code></td></tr>
+<tr><td class="nw"><code>%~f1</code></td><td class="nw">完整绝对路径</td><td><code>D:\proj\a b\x.txt</code></td></tr>
+<tr><td class="nw"><code>%~d1</code></td><td class="nw">盘符</td><td class="nw"><code>D:</code></td></tr>
+<tr><td class="nw"><code>%~p1</code></td><td>路径（带尾部反斜杠）</td><td class="nw"><code>\proj\a b\</code></td></tr>
+<tr><td class="nw"><code>%~n1</code></td><td class="nw">主文件名</td><td class="nw"><code>x</code></td></tr>
+<tr><td class="nw"><code>%~x1</code></td><td class="nw">扩展名（带点）</td><td class="nw"><code>.txt</code></td></tr>
+<tr><td class="nw"><code>%~dp1</code></td><td>盘符+路径，可组合</td><td class="nw"><code>D:\proj\a b\</code></td></tr>
+<tr><td class="nw"><code>%~nx1</code></td><td class="nw">文件名+扩展名</td><td class="nw"><code>x.txt</code></td></tr>
+<tr><td class="nw"><code>%~z1</code> <code>%~t1</code> <code>%~a1</code></td><td>大小 / 时间戳 / 属性</td><td><code>2048</code> / <code>2026-03-01 10:22</code> / <code>--a------</code></td></tr>
+<tr><td class="nw"><code>%~s1</code></td><td>8.3 短路径 <span class="badge old">已过时</span></td><td>不可靠，别依赖</td></tr>
+<tr><td class="nw"><code>%~dp0</code></td><td>脚本自身所在目录（末尾已含 <code>\</code>）</td><td>最常用，见下</td></tr>
 </tbody>
 </table>
 
@@ -3417,11 +3421,11 @@ copy C:\"Program Files"\app\a.txt D:\backup</code></pre>
 <table>
 <thead><tr><th>连接符</th><th>语义</th><th>典型用途</th></tr></thead>
 <tbody>
-<tr><td><code>A &amp; B</code></td><td>先 A 后 B，无论 A 成败</td><td>一行里塞多条无关命令</td></tr>
-<tr><td><code>A &amp;&amp; B</code></td><td>A 的 <code>ERRORLEVEL</code> 为 0 才执行 B</td><td>「成功则继续」链</td></tr>
-<tr><td><code>A || B</code></td><td>A 的 <code>ERRORLEVEL</code> 非 0 才执行 B</td><td>「失败则报错退出」</td></tr>
-<tr><td><code>A | B</code></td><td>A 的标准输出接到 B 的标准输入</td><td>过滤、统计</td></tr>
-<tr><td><code>( A &amp; B )</code></td><td>分组，整组共享重定向 / 作为一个条件分支</td><td><code>( cmd1 &amp; cmd2 ) &gt; log.txt</code></td></tr>
+<tr><td class="nw"><code>A &amp; B</code></td><td>先 A 后 B，无论 A 成败</td><td>一行里塞多条无关命令</td></tr>
+<tr><td class="nw"><code>A &amp;&amp; B</code></td><td>A 的 <code>ERRORLEVEL</code> 为 0 才执行 B</td><td class="nw">「成功则继续」链</td></tr>
+<tr><td class="nw"><code>A || B</code></td><td>A 的 <code>ERRORLEVEL</code> 非 0 才执行 B</td><td>「失败则报错退出」</td></tr>
+<tr><td class="nw"><code>A | B</code></td><td>A 的标准输出接到 B 的标准输入</td><td>过滤、统计</td></tr>
+<tr><td class="nw"><code>( A &amp; B )</code></td><td>分组，整组共享重定向 / 作为一个条件分支</td><td><code>( cmd1 &amp; cmd2 ) &gt; log.txt</code></td></tr>
 </tbody>
 </table>
 
@@ -3445,12 +3449,12 @@ cmd /c <span class="kw">exit</span> 3
 <table>
 <thead><tr><th>写法</th><th>含义</th><th>注意</th></tr></thead>
 <tbody>
-<tr><td><code>if errorlevel 1</code></td><td>退出码 ≥ 1</td><td>「是否失败」的经典判断</td></tr>
-<tr><td><code>if not errorlevel 1</code></td><td>退出码 &lt; 1，即 0</td><td>「是否成功」</td></tr>
-<tr><td><code>if %errorlevel%==3</code></td><td>精确等于 3</td><td>受工序②影响，块内会被提前展开</td></tr>
-<tr><td><code>if !errorlevel!==3</code></td><td>精确等于 3</td><td>块内正确写法，需延迟展开</td></tr>
-<tr><td><code>exit /b N</code></td><td>返回 N 给调用者，不关窗口</td><td>脚本对外的标准返回方式</td></tr>
-<tr><td><code>exit N</code></td><td>关闭整个 cmd 进程</td><td><span class="badge old">慎用</span> 双击运行时会直接关窗口</td></tr>
+<tr><td class="nw"><code>if errorlevel 1</code></td><td class="nw">退出码 ≥ 1</td><td>「是否失败」的经典判断</td></tr>
+<tr><td><code>if not errorlevel 1</code></td><td>退出码 &lt; 1，即 0</td><td class="nw">「是否成功」</td></tr>
+<tr><td><code>if %errorlevel%==3</code></td><td class="nw">精确等于 3</td><td>受工序②影响，块内会被提前展开</td></tr>
+<tr><td><code>if !errorlevel!==3</code></td><td class="nw">精确等于 3</td><td>块内正确写法，需延迟展开</td></tr>
+<tr><td class="nw"><code>exit /b N</code></td><td>返回 N 给调用者，不关窗口</td><td>脚本对外的标准返回方式</td></tr>
+<tr><td class="nw"><code>exit N</code></td><td>关闭整个 cmd 进程</td><td><span class="badge old">慎用</span> 双击运行时会直接关窗口</td></tr>
 </tbody>
 </table>
 
@@ -3568,11 +3572,11 @@ cmd /c <span class="kw">exit</span> 3
 <table>
 <thead><tr><th>块内症状</th><th>原因</th><th>修法</th></tr></thead>
 <tbody>
-<tr><td>变量值永远是进块前的旧值</td><td>整块一次性百分号展开</td><td>改用 <code>!VAR!</code></td></tr>
-<tr><td>「系统找不到指定的驱动器」</td><td>块内连续 <code>::</code> 注释</td><td>换成 <code>rem</code></td></tr>
+<tr><td>变量值永远是进块前的旧值</td><td>整块一次性百分号展开</td><td class="nw">改用 <code>!VAR!</code></td></tr>
+<tr><td>「系统找不到指定的驱动器」</td><td class="nw">块内连续 <code>::</code> 注释</td><td class="nw">换成 <code>rem</code></td></tr>
 <tr><td>「命令语法不正确」</td><td><code>)</code> 未转义 / <code>else</code> 换了行</td><td><code>^)</code>；写成 <code>) else (</code></td></tr>
 <tr><td><code>%errorlevel%</code> 恒为块外的值</td><td>同上，提前展开</td><td><code>!errorlevel!</code> 或 <code>if errorlevel N</code></td></tr>
-<tr><td>块内某行莫名消失</td><td>上一行以 <code>^</code> 结尾把它吃了</td><td>检查行尾脱字符</td></tr>
+<tr><td class="nw">块内某行莫名消失</td><td>上一行以 <code>^</code> 结尾把它吃了</td><td class="nw">检查行尾脱字符</td></tr>
 </tbody>
 </table>
 
@@ -3638,11 +3642,11 @@ cmd /c <span class="kw">exit</span> 3
 <table>
 <thead><tr><th>代码页</th><th>名称</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>437</td><td>OEM 美国</td><td>英文系统的老默认值</td></tr>
-<tr><td>936</td><td>GBK / GB2312</td><td>简体中文 Windows 的传统默认值 <span class="badge ok">仍适用</span></td></tr>
-<tr><td>950</td><td>Big5</td><td>繁体中文</td></tr>
-<tr><td>65001</td><td>UTF-8</td><td>现代首选 <span class="badge new">现代提示</span></td></tr>
-<tr><td>1200</td><td>UTF-16LE</td><td>cmd 控制台不支持，别设</td></tr>
+<tr><td class="nw">437</td><td class="nw">OEM 美国</td><td>英文系统的老默认值</td></tr>
+<tr><td class="nw">936</td><td class="nw">GBK / GB2312</td><td>简体中文 Windows 的传统默认值 <span class="badge ok">仍适用</span></td></tr>
+<tr><td class="nw">950</td><td class="nw">Big5</td><td class="nw">繁体中文</td></tr>
+<tr><td class="nw">65001</td><td class="nw">UTF-8</td><td>现代首选 <span class="badge new">现代提示</span></td></tr>
+<tr><td class="nw">1200</td><td class="nw">UTF-16LE</td><td>cmd 控制台不支持，别设</td></tr>
 </tbody>
 </table>
 
@@ -3670,7 +3674,7 @@ cmd /c <span class="kw">exit</span> 3
 <thead><tr><th>症状</th><th>最可能的原因</th><th>处理</th></tr></thead>
 <tbody>
 <tr><td>中文变 <code>涓枃</code> 这类怪字</td><td>UTF-8 文件被按 GBK 读</td><td>加 <code>chcp 65001</code>，或把文件存成 GBK</td></tr>
-<tr><td>中文变 <code>???</code> / <code>�</code></td><td>GBK 文件被按 UTF-8 读</td><td>把文件另存为 UTF-8 无 BOM</td></tr>
+<tr><td class="nw">中文变 <code>???</code> / <code>�</code></td><td>GBK 文件被按 UTF-8 读</td><td>把文件另存为 UTF-8 无 BOM</td></tr>
 <tr><td>屏幕正常但日志文件乱码</td><td>查看日志的工具用了另一种编码</td><td>统一成 UTF-8；用 VS Code 指定编码打开</td></tr>
 <tr><td>中文路径 <code>if exist</code> 判断失败</td><td>同一个乱码问题传导到了文件名</td><td>同上，先把编码链打通</td></tr>
 <tr><td>只有前几个中文字对，后面全错</td><td>字节流被截断在多字节字符中间</td><td>避免对含中文的字符串做 <code>%VAR:~n,m%</code> 截取</td></tr>
@@ -3728,9 +3732,9 @@ cmd /c <span class="kw">exit</span> 3
 <tbody>
 <tr><td>第一行报「不是内部或外部命令」</td><td>文件开头有 BOM（老版本 cmd）</td><td>看前三字节是否 <code>EF BB BF</code></td></tr>
 <tr><td>字符串比较明明相同却不等</td><td>token 上粘了 BOM 或 <code>CR</code></td><td><code>echo [%%a]</code> 看方括号间距</td></tr>
-<tr><td>最后一条命令不执行</td><td>文件末尾缺换行符</td><td>末尾补一个空行</td></tr>
-<tr><td><code>set</code> 的值末尾多东西</td><td>行尾多余空格 / <code>CR</code></td><td>改用 <code>set "K=V"</code></td></tr>
-<tr><td>Git 上每行都显示改动</td><td>行尾被批量转换</td><td>配 <code>.gitattributes</code></td></tr>
+<tr><td>最后一条命令不执行</td><td class="nw">文件末尾缺换行符</td><td class="nw">末尾补一个空行</td></tr>
+<tr><td><code>set</code> 的值末尾多东西</td><td>行尾多余空格 / <code>CR</code></td><td class="nw">改用 <code>set "K=V"</code></td></tr>
+<tr><td>Git 上每行都显示改动</td><td class="nw">行尾被批量转换</td><td>配 <code>.gitattributes</code></td></tr>
 </tbody>
 </table>
 
@@ -3761,13 +3765,13 @@ robocopy "%SRC%" "%DST%" /MIR
 <table>
 <thead><tr><th>手段</th><th>用途</th></tr></thead>
 <tbody>
-<tr><td><code>pause</code></td><td>停住等按键，最常用的「断点」</td></tr>
-<tr><td><code>timeout /t 5</code></td><td>停 5 秒后自动继续（可按键跳过）</td></tr>
+<tr><td class="nw"><code>pause</code></td><td>停住等按键，最常用的「断点」</td></tr>
+<tr><td class="nw"><code>timeout /t 5</code></td><td>停 5 秒后自动继续（可按键跳过）</td></tr>
 <tr><td><code>timeout /t 5 /nobreak</code></td><td>停 5 秒，不许跳过</td></tr>
 <tr><td><code>cmd /k "脚本路径"</code></td><td>脚本跑完窗口不关，可继续手敲命令查现场</td></tr>
 <tr><td><code>set /p X=按回车继续</code></td><td>等回车；顺便可以现场输入测试值</td></tr>
-<tr><td><code>set</code>（不带参数）</td><td>打印当前所有环境变量，看变量污染</td></tr>
-<tr><td><code>set PATH</code></td><td>打印所有以 PATH 开头的变量</td></tr>
+<tr><td class="nw"><code>set</code>（不带参数）</td><td>打印当前所有环境变量，看变量污染</td></tr>
+<tr><td class="nw"><code>set PATH</code></td><td>打印所有以 PATH 开头的变量</td></tr>
 </tbody>
 </table>
 
@@ -3778,13 +3782,13 @@ robocopy "%SRC%" "%DST%" /MIR
 <table>
 <thead><tr><th>写法</th><th>效果</th></tr></thead>
 <tbody>
-<tr><td><code>cmd &gt; log.txt</code></td><td>覆盖写入标准输出；错误仍打在屏幕上</td></tr>
-<tr><td><code>cmd &gt;&gt; log.txt</code></td><td>追加写入</td></tr>
-<tr><td><code>cmd 2&gt; err.txt</code></td><td>只收错误</td></tr>
+<tr><td class="nw"><code>cmd &gt; log.txt</code></td><td>覆盖写入标准输出；错误仍打在屏幕上</td></tr>
+<tr><td class="nw"><code>cmd &gt;&gt; log.txt</code></td><td class="nw">追加写入</td></tr>
+<tr><td class="nw"><code>cmd 2&gt; err.txt</code></td><td class="nw">只收错误</td></tr>
 <tr><td><code>cmd &gt; log.txt 2&gt;&amp;1</code></td><td><span class="badge ok">正确</span> 输出和错误都进 log.txt</td></tr>
 <tr><td><code>cmd 2&gt;&amp;1 &gt; log.txt</code></td><td><span class="badge dead">无效</span> 顺序错了：错误仍去屏幕</td></tr>
-<tr><td><code>cmd &gt;nul 2&gt;&amp;1</code></td><td>彻底静音</td></tr>
-<tr><td><code>echo msg &gt; con</code></td><td>强制输出到控制台，即使整体已被重定向</td></tr>
+<tr><td class="nw"><code>cmd &gt;nul 2&gt;&amp;1</code></td><td class="nw">彻底静音</td></tr>
+<tr><td class="nw"><code>echo msg &gt; con</code></td><td>强制输出到控制台，即使整体已被重定向</td></tr>
 <tr><td><code>( a &amp; b ) &gt; log.txt 2&gt;&amp;1</code></td><td>整组共享同一个日志句柄（比每行加 <code>&gt;&gt;</code> 快得多）</td></tr>
 </tbody>
 </table>
@@ -3825,16 +3829,16 @@ robocopy "%SRC%" "%DST%" /MIR
 <table>
 <thead><tr><th>#</th><th>症状</th><th>原因</th><th>正确写法</th></tr></thead>
 <tbody>
-<tr><td>1</td><td><code>%VAR%</code> 展开后报「xxx 不是内部或外部命令」</td><td>值里含 <code>&amp;</code> <code>|</code> <code>&gt;</code>，展开后被当成语法</td><td><code>echo "%VAR%"</code> 或开延迟展开用 <code>!VAR!</code></td></tr>
-<tr><td>2</td><td><code>if</code> 报「( 后面的语法不正确」并中止脚本</td><td>变量为空，<code>if %V%==x</code> 变成 <code>if ==x</code></td><td><code>if "%V%"=="x"</code>；判存在用 <code>if defined V</code></td></tr>
-<tr><td>3</td><td>循环里的计数器 / 拼接串永远不变</td><td>整个括号块一次性完成 <code>%…%</code> 展开</td><td><code>setlocal enabledelayedexpansion</code> + <code>!V!</code></td></tr>
-<tr><td>4</td><td><code>%%i was unexpected at this time</code></td><td>命令行用了脚本的写法（或反之）</td><td>脚本里 <code>%%i</code>，命令行里 <code>%i</code></td></tr>
-<tr><td>5</td><td>带空格路径被拆成多个参数</td><td>没加引号，或引号只包了中间一段</td><td><code>"C:\Program Files\a\b.exe"</code> 从头包到尾</td></tr>
-<tr><td>6</td><td>块内莫名报「系统找不到指定的驱动器」</td><td>括号块里写了连续两行 <code>::</code></td><td>块内注释一律用 <code>rem</code></td></tr>
-<tr><td>7</td><td>字符串比较明明相同却判为不等</td><td>token 上粘了 BOM 或行尾 <code>CR</code></td><td>数据文件存 UTF-8 无 BOM；脚本用 CRLF</td></tr>
-<tr><td>8</td><td><code>if errorlevel 3</code> 在退出码为 5 时也成立</td><td>该语法是「≥ 3」不是「= 3」</td><td>要精确判断用 <code>if "%errorlevel%"=="3"</code></td></tr>
-<tr><td>9</td><td>管道里 <code>set</code> 的变量，管道后拿不到</td><td>管道两端各跑在独立的子 cmd 进程里</td><td>改用 <code>for /f %%N in ('命令') do set "N=%%N"</code></td></tr>
-<tr><td>10</td><td>中文变 <code>???</code> 或 <code>涓枃</code></td><td>脚本保存编码与 <code>chcp</code> 代码页不一致</td><td>脚本存 UTF-8 无 BOM + 开头 <code>chcp 65001 &gt;nul</code></td></tr>
+<tr><td class="nw">1</td><td><code>%VAR%</code> 展开后报「xxx 不是内部或外部命令」</td><td>值里含 <code>&amp;</code> <code>|</code> <code>&gt;</code>，展开后被当成语法</td><td><code>echo "%VAR%"</code> 或开延迟展开用 <code>!VAR!</code></td></tr>
+<tr><td class="nw">2</td><td><code>if</code> 报「( 后面的语法不正确」并中止脚本</td><td>变量为空，<code>if %V%==x</code> 变成 <code>if ==x</code></td><td><code>if "%V%"=="x"</code>；判存在用 <code>if defined V</code></td></tr>
+<tr><td class="nw">3</td><td>循环里的计数器 / 拼接串永远不变</td><td>整个括号块一次性完成 <code>%…%</code> 展开</td><td><code>setlocal enabledelayedexpansion</code> + <code>!V!</code></td></tr>
+<tr><td class="nw">4</td><td><code>%%i was unexpected at this time</code></td><td>命令行用了脚本的写法（或反之）</td><td>脚本里 <code>%%i</code>，命令行里 <code>%i</code></td></tr>
+<tr><td class="nw">5</td><td>带空格路径被拆成多个参数</td><td>没加引号，或引号只包了中间一段</td><td><code>"C:\Program Files\a\b.exe"</code> 从头包到尾</td></tr>
+<tr><td class="nw">6</td><td>块内莫名报「系统找不到指定的驱动器」</td><td>括号块里写了连续两行 <code>::</code></td><td>块内注释一律用 <code>rem</code></td></tr>
+<tr><td class="nw">7</td><td>字符串比较明明相同却判为不等</td><td>token 上粘了 BOM 或行尾 <code>CR</code></td><td>数据文件存 UTF-8 无 BOM；脚本用 CRLF</td></tr>
+<tr><td class="nw">8</td><td><code>if errorlevel 3</code> 在退出码为 5 时也成立</td><td>该语法是「≥ 3」不是「= 3」</td><td>要精确判断用 <code>if "%errorlevel%"=="3"</code></td></tr>
+<tr><td class="nw">9</td><td>管道里 <code>set</code> 的变量，管道后拿不到</td><td>管道两端各跑在独立的子 cmd 进程里</td><td>改用 <code>for /f %%N in ('命令') do set "N=%%N"</code></td></tr>
+<tr><td class="nw">10</td><td>中文变 <code>???</code> 或 <code>涓枃</code></td><td>脚本保存编码与 <code>chcp</code> 代码页不一致</td><td>脚本存 UTF-8 无 BOM + 开头 <code>chcp 65001 &gt;nul</code></td></tr>
 </tbody>
 </table>
 
@@ -3844,8 +3848,8 @@ robocopy "%SRC%" "%DST%" /MIR
 <thead><tr><th>症状</th><th>原因</th><th>正确写法</th></tr></thead>
 <tbody>
 <tr><td><code>start "C:\...\a.exe"</code> 什么都没发生</td><td>第一个引号参数被当成窗口标题</td><td><code>start "" "C:\...\a.exe"</code></td></tr>
-<tr><td>错误信息没进日志</td><td><code>2&gt;&amp;1</code> 写在了 <code>&gt;file</code> 前面</td><td><code>cmd &gt; log.txt 2&gt;&amp;1</code></td></tr>
-<tr><td>变量值末尾莫名多个空格</td><td><code>set K=V</code> 行尾有看不见的空格</td><td><code>set "K=V"</code></td></tr>
+<tr><td class="nw">错误信息没进日志</td><td><code>2&gt;&amp;1</code> 写在了 <code>&gt;file</code> 前面</td><td><code>cmd &gt; log.txt 2&gt;&amp;1</code></td></tr>
+<tr><td>变量值末尾莫名多个空格</td><td><code>set K=V</code> 行尾有看不见的空格</td><td class="nw"><code>set "K=V"</code></td></tr>
 </tbody>
 </table>
 
@@ -3861,10 +3865,10 @@ robocopy "%SRC%" "%DST%" /MIR
 <tr><td>值被重新解析成语法</td><td>参数以对象传递，值永远不参与语法解析</td></tr>
 <tr><td>空格路径要靠引号硬扛</td><td><code>$path</code> 就是一个字符串对象，含不含空格无所谓</td></tr>
 <tr><td><code>%%</code> / <code>!!</code> 两套展开规则</td><td>只有 <code>$var</code> 一种，任何位置语义一致</td></tr>
-<tr><td>括号块提前展开</td><td><code>foreach</code> 是真正的语法结构，作用域清晰</td></tr>
-<tr><td>退出码语义靠猜</td><td><code>try/catch</code>、<code>$?</code>、<code>$LASTEXITCODE</code>、终止型 / 非终止型错误分级</td></tr>
+<tr><td class="nw">括号块提前展开</td><td><code>foreach</code> 是真正的语法结构，作用域清晰</td></tr>
+<tr><td class="nw">退出码语义靠猜</td><td><code>try/catch</code>、<code>$?</code>、<code>$LASTEXITCODE</code>、终止型 / 非终止型错误分级</td></tr>
 <tr><td>编码要手动对齐三处</td><td>PowerShell 7 全链路默认 UTF-8</td></tr>
-<tr><td>只能靠 <code>echo</code> 调试</td><td>真正的断点、单步、变量监视</td></tr>
+<tr><td class="nw">只能靠 <code>echo</code> 调试</td><td>真正的断点、单步、变量监视</td></tr>
 </tbody>
 </table>
 

@@ -146,7 +146,6 @@ figcaption { font-size: 0.85em; color: var(--muted); margin-top: 0.6em; }
 body.nav-hidden #sidebar, body.nav-hidden .sb-resizer{display:none;}
 #sidebar .booktitle, #sidebar .toc-title{padding-left:1.2em;}
 th{white-space:nowrap;}
-td:first-child,th:first-child{white-space:nowrap;}
 td code{white-space:nowrap;}
 pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
@@ -159,7 +158,11 @@ pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
 table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
 #sidebar,#toc{will-change:scroll-position;}
 
+/* 表格：短内容不折行，长文本正常折行 */
+table th { white-space: nowrap; }
 table td:first-child, table th:first-child { white-space: nowrap; }
+table td { overflow-wrap: break-word; }
+table td.nw { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -296,7 +299,7 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <h1 id="s1"><span class="part">分类 1</span>stdio.h 输入输出</h1>
 <p>stdio.h 是 C 程序与外界交流的总入口:格式化打印、键盘输入、文件读写全在这里。它的核心抽象是<strong>带缓冲的流</strong>(<code>FILE *</code>)——标准流 <code>stdin</code>/<code>stdout</code>/<code>stderr</code> 程序启动即可用,磁盘文件则由 <code>fopen</code> 打开、<code>fclose</code> 关闭。本章按"格式化 I/O → 文件打开关闭 → 块与行读写 → 定位与缓冲 → 错误处理"的顺序展开;历史遗留的不安全函数(<code>gets</code>、无宽度的 <code>%s</code>、<code>sprintf</code>)会逐一标注替代方案。</p>
 
-<h2 id="s1-overview">速览</h2><p><strong>本章速览</strong>——stdio.h 把"格式化"与"流"两件事捏在一起，先记住每个函数的返回值含义，一半的坑就绕过去了。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td><code>printf</code></td><td>按格式把数据写到标准输出</td><td>格式串与实参类型必须严格对应，否则是未定义行为；永远不要把变量直接当格式串传入</td></tr><tr><td><code>fprintf</code></td><td>按格式写入指定的文件流</td><td>目标流须以写或追加模式打开；诊断信息写 stderr，可绕开 stdout 的缓冲延迟</td></tr><tr><td><code>sprintf</code> / <code>snprintf</code></td><td>按格式写入字符串缓冲区</td><td><code>sprintf</code> 不限长度，溢出即踩内存 <span class="badge dead">禁用</span>；一律用 <code>snprintf</code> <span class="badge ok">推荐</span>，但它返回的是"本应写入的长度"，可能大于缓冲区</td></tr><tr><td><code>sscanf</code></td><td>从字符串中按格式解析数据</td><td>%s 不加宽度必然溢出，写成 %49s；判断成功与否要看返回的匹配项个数，而不是看变量</td></tr><tr><td><code>scanf</code></td><td>从标准输入按格式读取</td><td>会把换行留在输入缓冲里，和 <code>fgets</code> 混用即出错；交互式输入改用 <code>fgets</code> + <code>sscanf</code> <span class="badge ok">推荐</span></td></tr><tr><td><code>fopen</code> / <code>fopen_s</code></td><td>打开文件并返回流指针</td><td>返回值必须判空再用；处理非文本数据要加 "b"，否则 Windows 会改写换行符。<code>fopen_s</code> 属 C11 可选附录，跨平台不保证存在</td></tr><tr><td><code>fclose</code></td><td>关闭流并刷新其缓冲区</td><td>忘记关闭可能丢掉尾部数据；返回值能暴露最后一次写入失败，别一律忽略</td></tr><tr><td><code>fread</code></td><td>从流中读入若干个定长块</td><td>返回的是成功读取的"块数"而非字节数；数量不足时须用 <code>feof</code> / <code>ferror</code> 区分读完与出错</td></tr><tr><td><code>fwrite</code></td><td>把内存中的数据块写入流</td><td>直接整体写结构体不可移植，对齐填充和字节序都会变；返回块数同样要校验</td></tr><tr><td><code>fgets</code></td><td>读入一行，长度受缓冲区限制</td><td>安全但会把 '\n' 一并留下，通常需手动截断；它的前辈 <code>gets</code> 已从标准中删除 <span class="badge dead">禁用</span></td></tr><tr><td><code>fputs</code></td><td>把字符串原样写入流</td><td>不会自动补换行，这一点和 <code>puts</code> 相反，最常见的"输出粘一行"就源于此</td></tr><tr><td><code>fgetc</code> / <code>fputc</code></td><td>逐个字符地读入与写出</td><td><code>fgetc</code> 返回 int 不是 char；用 char 变量接收会把 0xFF 误判成 EOF</td></tr><tr><td><code>fseek</code> / <code>ftell</code> / <code>rewind</code></td><td>定位、查询与重置读写位置</td><td>文本模式下的偏移量只能原样回传，不能做加减；超 2GB 文件需 <code>fseeko</code> 或 <code>_fseeki64</code>。<code>rewind</code> 会顺手清掉错误标志</td></tr><tr><td><code>fflush</code></td><td>强制把缓冲中的数据写出</td><td>仅对输出流有定义，<code>fflush(stdin)</code> 是未定义行为 <span class="badge dead">禁用</span>，清输入请循环读到换行</td></tr><tr><td><code>feof</code> / <code>ferror</code></td><td>查询流的结束标志与错误标志</td><td><code>feof</code> 要读失败之后才为真，拿它当循环条件会多处理一次数据；正确写法是判断读取函数本身的返回值</td></tr><tr><td><code>remove</code> / <code>rename</code></td><td>删除文件、重命名或移动文件</td><td>目标已存在时的行为由实现决定，可能失败也可能覆盖；操作不可撤销，动手前先确认路径</td></tr><tr><td><code>perror</code></td><td>按 errno 打印带前缀的错误信息</td><td>必须紧接在失败调用之后使用，中间插入任何库调用都可能改写 errno</td></tr><tr><td><code>setvbuf</code></td><td>设置流的缓冲方式与缓冲区大小</td><td>只能在打开之后、任何 I/O 之前调用；若自备缓冲区，其生命周期必须长于该流</td></tr></tbody></table>
+<h2 id="s1-overview">速览</h2><p><strong>本章速览</strong>——stdio.h 把"格式化"与"流"两件事捏在一起，先记住每个函数的返回值含义，一半的坑就绕过去了。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><code>printf</code></td><td>按格式把数据写到标准输出</td><td>格式串与实参类型必须严格对应，否则是未定义行为；永远不要把变量直接当格式串传入</td></tr><tr><td class="nw"><code>fprintf</code></td><td>按格式写入指定的文件流</td><td>目标流须以写或追加模式打开；诊断信息写 stderr，可绕开 stdout 的缓冲延迟</td></tr><tr><td><code>sprintf</code> / <code>snprintf</code></td><td>按格式写入字符串缓冲区</td><td><code>sprintf</code> 不限长度，溢出即踩内存 <span class="badge dead">禁用</span>；一律用 <code>snprintf</code> <span class="badge ok">推荐</span>，但它返回的是"本应写入的长度"，可能大于缓冲区</td></tr><tr><td class="nw"><code>sscanf</code></td><td>从字符串中按格式解析数据</td><td>%s 不加宽度必然溢出，写成 %49s；判断成功与否要看返回的匹配项个数，而不是看变量</td></tr><tr><td class="nw"><code>scanf</code></td><td>从标准输入按格式读取</td><td>会把换行留在输入缓冲里，和 <code>fgets</code> 混用即出错；交互式输入改用 <code>fgets</code> + <code>sscanf</code> <span class="badge ok">推荐</span></td></tr><tr><td class="nw"><code>fopen</code> / <code>fopen_s</code></td><td>打开文件并返回流指针</td><td>返回值必须判空再用；处理非文本数据要加 "b"，否则 Windows 会改写换行符。<code>fopen_s</code> 属 C11 可选附录，跨平台不保证存在</td></tr><tr><td class="nw"><code>fclose</code></td><td>关闭流并刷新其缓冲区</td><td>忘记关闭可能丢掉尾部数据；返回值能暴露最后一次写入失败，别一律忽略</td></tr><tr><td class="nw"><code>fread</code></td><td>从流中读入若干个定长块</td><td>返回的是成功读取的"块数"而非字节数；数量不足时须用 <code>feof</code> / <code>ferror</code> 区分读完与出错</td></tr><tr><td class="nw"><code>fwrite</code></td><td>把内存中的数据块写入流</td><td>直接整体写结构体不可移植，对齐填充和字节序都会变；返回块数同样要校验</td></tr><tr><td class="nw"><code>fgets</code></td><td>读入一行，长度受缓冲区限制</td><td>安全但会把 '\n' 一并留下，通常需手动截断；它的前辈 <code>gets</code> 已从标准中删除 <span class="badge dead">禁用</span></td></tr><tr><td class="nw"><code>fputs</code></td><td>把字符串原样写入流</td><td>不会自动补换行，这一点和 <code>puts</code> 相反，最常见的"输出粘一行"就源于此</td></tr><tr><td class="nw"><code>fgetc</code> / <code>fputc</code></td><td>逐个字符地读入与写出</td><td><code>fgetc</code> 返回 int 不是 char；用 char 变量接收会把 0xFF 误判成 EOF</td></tr><tr><td><code>fseek</code> / <code>ftell</code> / <code>rewind</code></td><td>定位、查询与重置读写位置</td><td>文本模式下的偏移量只能原样回传，不能做加减；超 2GB 文件需 <code>fseeko</code> 或 <code>_fseeki64</code>。<code>rewind</code> 会顺手清掉错误标志</td></tr><tr><td class="nw"><code>fflush</code></td><td>强制把缓冲中的数据写出</td><td>仅对输出流有定义，<code>fflush(stdin)</code> 是未定义行为 <span class="badge dead">禁用</span>，清输入请循环读到换行</td></tr><tr><td class="nw"><code>feof</code> / <code>ferror</code></td><td>查询流的结束标志与错误标志</td><td><code>feof</code> 要读失败之后才为真，拿它当循环条件会多处理一次数据；正确写法是判断读取函数本身的返回值</td></tr><tr><td class="nw"><code>remove</code> / <code>rename</code></td><td>删除文件、重命名或移动文件</td><td>目标已存在时的行为由实现决定，可能失败也可能覆盖；操作不可撤销，动手前先确认路径</td></tr><tr><td class="nw"><code>perror</code></td><td>按 errno 打印带前缀的错误信息</td><td>必须紧接在失败调用之后使用，中间插入任何库调用都可能改写 errno</td></tr><tr><td class="nw"><code>setvbuf</code></td><td>设置流的缓冲方式与缓冲区大小</td><td>只能在打开之后、任何 I/O 之前调用；若自备缓冲区，其生命周期必须长于该流</td></tr></tbody></table>
 
 <h2 id="s1-printf">printf</h2>
 <p class="fsum">按格式串把变量拼接成文本写到标准输出，是最常用的屏幕打印函数。</p>
@@ -306,8 +309,8 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>format</code></td><td><code>const char *</code></td><td>格式串,决定后续可变参数如何被解释并写往 <code>stdout</code>。必须是程序自己写死的字面串;把外部输入当格式串传入即格式串漏洞。占位符与实参类型的对应关系见下方"其他说明"中的占位符表</td></tr>
-<tr><td><code>...</code></td><td>可变参数</td><td>与格式串中的占位符<strong>一一对应</strong>的实参。个数或类型不匹配都是未定义行为;<code>float</code> 会自动提升为 <code>double</code>,<code>char</code>/<code>short</code> 提升为 <code>int</code>,指针需显式转成 <code>(void *)</code> 才配 <code>%p</code></td></tr>
+<tr><td class="nw"><code>format</code></td><td class="nw"><code>const char *</code></td><td>格式串,决定后续可变参数如何被解释并写往 <code>stdout</code>。必须是程序自己写死的字面串;把外部输入当格式串传入即格式串漏洞。占位符与实参类型的对应关系见下方"其他说明"中的占位符表</td></tr>
+<tr><td class="nw"><code>...</code></td><td class="nw">可变参数</td><td>与格式串中的占位符<strong>一一对应</strong>的实参。个数或类型不匹配都是未定义行为;<code>float</code> 会自动提升为 <code>double</code>,<code>char</code>/<code>short</code> 提升为 <code>int</code>,指针需显式转成 <code>(void *)</code> 才配 <code>%p</code></td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -319,17 +322,17 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>占位符</th><th>对应实参类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>%d</code> / <code>%i</code></td><td><code>int</code></td><td>十进制有符号整数</td></tr>
-<tr><td><code>%u</code></td><td><code>unsigned int</code></td><td>十进制无符号整数</td></tr>
-<tr><td><code>%ld</code> / <code>%lld</code></td><td><code>long</code> / <code>long long</code></td><td>长整数;无符号对应 <code>%lu</code> / <code>%llu</code></td></tr>
-<tr><td><code>%zu</code></td><td><code>size_t</code></td><td><code>sizeof</code>、<code>strlen</code> 结果的专用占位符(C99)</td></tr>
-<tr><td><code>%f</code></td><td><code>double</code></td><td>定点小数;<code>%.2f</code> 控制精度(<code>float</code> 实参自动提升为 <code>double</code>)</td></tr>
-<tr><td><code>%e</code> / <code>%g</code></td><td><code>double</code></td><td>科学计数法 / 自动选较短形式</td></tr>
-<tr><td><code>%x</code> / <code>%X</code></td><td><code>unsigned int</code></td><td>十六进制小写 / 大写;<code>%o</code> 为八进制</td></tr>
-<tr><td><code>%c</code></td><td><code>int</code>(按字符输出)</td><td>单个字符</td></tr>
-<tr><td><code>%s</code></td><td><code>char *</code></td><td>以 <code>\0</code> 结尾的字符串;<code>%10s</code> 定宽、<code>%.5s</code> 截断</td></tr>
-<tr><td><code>%p</code></td><td><code>void *</code></td><td>指针地址;实参应显式转成 <code>(void *)</code></td></tr>
-<tr><td><code>%%</code></td><td>—</td><td>输出百分号本身</td></tr>
+<tr><td class="nw"><code>%d</code> / <code>%i</code></td><td class="nw"><code>int</code></td><td class="nw">十进制有符号整数</td></tr>
+<tr><td class="nw"><code>%u</code></td><td class="nw"><code>unsigned int</code></td><td class="nw">十进制无符号整数</td></tr>
+<tr><td class="nw"><code>%ld</code> / <code>%lld</code></td><td class="nw"><code>long</code> / <code>long long</code></td><td>长整数;无符号对应 <code>%lu</code> / <code>%llu</code></td></tr>
+<tr><td class="nw"><code>%zu</code></td><td class="nw"><code>size_t</code></td><td><code>sizeof</code>、<code>strlen</code> 结果的专用占位符(C99)</td></tr>
+<tr><td class="nw"><code>%f</code></td><td class="nw"><code>double</code></td><td>定点小数;<code>%.2f</code> 控制精度(<code>float</code> 实参自动提升为 <code>double</code>)</td></tr>
+<tr><td class="nw"><code>%e</code> / <code>%g</code></td><td class="nw"><code>double</code></td><td>科学计数法 / 自动选较短形式</td></tr>
+<tr><td class="nw"><code>%x</code> / <code>%X</code></td><td class="nw"><code>unsigned int</code></td><td>十六进制小写 / 大写;<code>%o</code> 为八进制</td></tr>
+<tr><td class="nw"><code>%c</code></td><td class="nw"><code>int</code>(按字符输出)</td><td class="nw">单个字符</td></tr>
+<tr><td class="nw"><code>%s</code></td><td class="nw"><code>char *</code></td><td>以 <code>\0</code> 结尾的字符串;<code>%10s</code> 定宽、<code>%.5s</code> 截断</td></tr>
+<tr><td class="nw"><code>%p</code></td><td class="nw"><code>void *</code></td><td>指针地址;实参应显式转成 <code>(void *)</code></td></tr>
+<tr><td class="nw"><code>%%</code></td><td class="nw">—</td><td class="nw">输出百分号本身</td></tr>
 </tbody>
 </table>
 <div class="note dead"><span class="t">禁用写法</span><p>格式串与实参类型不匹配是未定义行为(如用 <code>%d</code> 打印 <code>long long</code>)。更危险的是把外部输入直接当格式串:<code>printf(user_input)</code> 是经典的格式串漏洞,必须写成 <code>printf("%s", user_input)</code>。</p></div>
@@ -343,9 +346,9 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>目标流:<code>stderr</code>、<code>stdout</code> 或 <code>fopen</code> 打开的文件流。必须以写或追加模式打开;诊断信息应写 <code>stderr</code></td></tr>
-<tr><td><code>format</code></td><td><code>const char *</code></td><td>格式串,占位符规则与 <code>printf</code> 完全相同。同样不得使用外部输入作为格式串</td></tr>
-<tr><td><code>...</code></td><td>可变参数</td><td>与格式串占位符一一对应的实参,类型必须严格匹配</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>目标流:<code>stderr</code>、<code>stdout</code> 或 <code>fopen</code> 打开的文件流。必须以写或追加模式打开;诊断信息应写 <code>stderr</code></td></tr>
+<tr><td class="nw"><code>format</code></td><td class="nw"><code>const char *</code></td><td>格式串,占位符规则与 <code>printf</code> 完全相同。同样不得使用外部输入作为格式串</td></tr>
+<tr><td class="nw"><code>...</code></td><td class="nw">可变参数</td><td>与格式串占位符一一对应的实参,类型必须严格匹配</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -364,10 +367,10 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>buf</code></td><td><code>char *</code></td><td>接收结果的目标缓冲区。<code>sprintf</code> 无长度上限,写爆缓冲区没有任何防护,直接造成栈/堆溢出</td></tr>
-<tr><td><code>n</code></td><td><code>size_t</code></td><td>仅 <code>snprintf</code> 有:缓冲区总容量。最多写入 <code>n-1</code> 个字符并<strong>保证补 <code>\0</code></strong>(C99);传 <code>0</code> 时不写入任何内容,此时 <code>buf</code> 可为 <code>NULL</code>,常用来先探测所需长度</td></tr>
-<tr><td><code>format</code></td><td><code>const char *</code></td><td>格式串,占位符规则同 <code>printf</code></td></tr>
-<tr><td><code>...</code></td><td>可变参数</td><td>与占位符一一对应的实参</td></tr>
+<tr><td class="nw"><code>buf</code></td><td class="nw"><code>char *</code></td><td>接收结果的目标缓冲区。<code>sprintf</code> 无长度上限,写爆缓冲区没有任何防护,直接造成栈/堆溢出</td></tr>
+<tr><td class="nw"><code>n</code></td><td class="nw"><code>size_t</code></td><td>仅 <code>snprintf</code> 有:缓冲区总容量。最多写入 <code>n-1</code> 个字符并<strong>保证补 <code>\0</code></strong>(C99);传 <code>0</code> 时不写入任何内容,此时 <code>buf</code> 可为 <code>NULL</code>,常用来先探测所需长度</td></tr>
+<tr><td class="nw"><code>format</code></td><td class="nw"><code>const char *</code></td><td>格式串,占位符规则同 <code>printf</code></td></tr>
+<tr><td class="nw"><code>...</code></td><td class="nw">可变参数</td><td>与占位符一一对应的实参</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -389,9 +392,9 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>src</code></td><td><code>const char *</code></td><td>被解析的源字符串(而非流),须以 <code>\0</code> 结尾。常见用法是先用 <code>fgets</code> 读一整行再交给它解析</td></tr>
-<tr><td><code>format</code></td><td><code>const char *</code></td><td>格式串。<code>%s</code>、<code>%[</code> 等字符串类占位符<strong>必须带宽度</strong>,且宽度要比数组容量小 1(留给 <code>\0</code>),如 <code>%19s</code> 配 <code>char word[20]</code>;格式串中的空白可匹配任意个空白字符</td></tr>
-<tr><td><code>...</code></td><td>可变参数</td><td>接收结果的变量<strong>地址</strong>(<code>&amp;y</code>、数组名等),忘记取地址是最常见的崩溃原因;类型必须与占位符严格对应</td></tr>
+<tr><td class="nw"><code>src</code></td><td class="nw"><code>const char *</code></td><td>被解析的源字符串(而非流),须以 <code>\0</code> 结尾。常见用法是先用 <code>fgets</code> 读一整行再交给它解析</td></tr>
+<tr><td class="nw"><code>format</code></td><td class="nw"><code>const char *</code></td><td>格式串。<code>%s</code>、<code>%[</code> 等字符串类占位符<strong>必须带宽度</strong>,且宽度要比数组容量小 1(留给 <code>\0</code>),如 <code>%19s</code> 配 <code>char word[20]</code>;格式串中的空白可匹配任意个空白字符</td></tr>
+<tr><td class="nw"><code>...</code></td><td class="nw">可变参数</td><td>接收结果的变量<strong>地址</strong>(<code>&amp;y</code>、数组名等),忘记取地址是最常见的崩溃原因;类型必须与占位符严格对应</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -414,8 +417,8 @@ sscanf(line, <span>"%19s"</span>, word);   <span class="cm">// %s 必须带宽�
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>format</code></td><td><code>const char *</code></td><td>格式串,从 <code>stdin</code> 按此解析。<code>%s</code> 不带宽度必然溢出,必须写成 <code>%15s</code> 之类;<code>%d</code>、<code>%s</code> 不消耗行尾换行,残留的 <code>\n</code> 会被后续 <code>fgets</code>/<code>%c</code> 读到</td></tr>
-<tr><td><code>...</code></td><td>可变参数</td><td>接收变量的<strong>地址</strong>(数组名本身即地址,故 <code>%s</code> 传 <code>name</code> 而非 <code>&amp;name</code>)</td></tr>
+<tr><td class="nw"><code>format</code></td><td class="nw"><code>const char *</code></td><td>格式串,从 <code>stdin</code> 按此解析。<code>%s</code> 不带宽度必然溢出,必须写成 <code>%15s</code> 之类;<code>%d</code>、<code>%s</code> 不消耗行尾换行,残留的 <code>\n</code> 会被后续 <code>fgets</code>/<code>%c</code> 读到</td></tr>
+<tr><td class="nw"><code>...</code></td><td class="nw">可变参数</td><td>接收变量的<strong>地址</strong>(数组名本身即地址,故 <code>%s</code> 传 <code>name</code> 而非 <code>&amp;name</code>)</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -439,9 +442,9 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>fp</code></td><td><code>FILE **</code></td><td>仅 <code>fopen_s</code>(C11 附录 K / MSVC)有:用于传出流指针的二级指针,函数成功时把打开的流写入 <code>*fp</code></td></tr>
-<tr><td><code>filename</code></td><td><code>const char *</code></td><td>文件路径,可为相对路径或绝对路径。Windows 上反斜杠在字符串字面量中要写成 <code>\\</code></td></tr>
-<tr><td><code>mode</code></td><td><code>const char *</code></td><td>打开模式串,取值见下方"其他说明"的模式表。处理非文本数据必须加 <code>b</code>(如 <code>"rb"</code>),否则 Windows 会自动转换 <code>\n</code> 与 <code>\r\n</code> 而破坏数据</td></tr>
+<tr><td class="nw"><code>fp</code></td><td class="nw"><code>FILE **</code></td><td>仅 <code>fopen_s</code>(C11 附录 K / MSVC)有:用于传出流指针的二级指针,函数成功时把打开的流写入 <code>*fp</code></td></tr>
+<tr><td class="nw"><code>filename</code></td><td class="nw"><code>const char *</code></td><td>文件路径,可为相对路径或绝对路径。Windows 上反斜杠在字符串字面量中要写成 <code>\\</code></td></tr>
+<tr><td class="nw"><code>mode</code></td><td class="nw"><code>const char *</code></td><td>打开模式串,取值见下方"其他说明"的模式表。处理非文本数据必须加 <code>b</code>(如 <code>"rb"</code>),否则 Windows 会自动转换 <code>\n</code> 与 <code>\r\n</code> 而破坏数据</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -453,11 +456,11 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>模式</th><th>含义</th><th>文件不存在时</th></tr></thead>
 <tbody>
-<tr><td><code>"r"</code></td><td>只读</td><td>失败,返回 <code>NULL</code></td></tr>
-<tr><td><code>"w"</code></td><td>只写,<strong>清空原内容</strong></td><td>新建</td></tr>
-<tr><td><code>"a"</code></td><td>追加,写入总发生在文件末尾</td><td>新建</td></tr>
-<tr><td><code>"r+"</code> / <code>"w+"</code> / <code>"a+"</code></td><td>加 <code>+</code> 表示可读可写(基础语义不变)</td><td>同各自基础模式</td></tr>
-<tr><td><code>b</code> 后缀</td><td>二进制模式,如 <code>"rb"</code>、<code>"wb+"</code>;Windows 上关闭 <code>\n</code> 与 <code>\r\n</code> 的自动转换</td><td>—</td></tr>
+<tr><td class="nw"><code>"r"</code></td><td class="nw">只读</td><td class="nw">失败,返回 <code>NULL</code></td></tr>
+<tr><td class="nw"><code>"w"</code></td><td class="nw">只写,<strong>清空原内容</strong></td><td class="nw">新建</td></tr>
+<tr><td class="nw"><code>"a"</code></td><td>追加,写入总发生在文件末尾</td><td class="nw">新建</td></tr>
+<tr><td><code>"r+"</code> / <code>"w+"</code> / <code>"a+"</code></td><td>加 <code>+</code> 表示可读可写(基础语义不变)</td><td class="nw">同各自基础模式</td></tr>
+<tr><td class="nw"><code>b</code> 后缀</td><td>二进制模式,如 <code>"rb"</code>、<code>"wb+"</code>;Windows 上关闭 <code>\n</code> 与 <code>\r\n</code> 的自动转换</td><td class="nw">—</td></tr>
 </tbody>
 </table>
 <p>MSVC 下 <code>fopen</code> 触发 C4996,可换 <code>fopen_s</code> 或定义 <code>_CRT_SECURE_NO_WARNINGS</code>;<code>fopen_s</code> 属 C11 可选附录,跨平台不保证存在。C++ 等价物为 <code>std::ifstream</code>/<code>std::ofstream</code>(RAII 自动关闭)。</p>
@@ -470,7 +473,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>要关闭的流。函数会先刷新其缓冲区、再关闭文件并释放 <code>FILE</code> 资源。对同一指针重复调用是未定义行为;传入 <code>NULL</code> 同样是未定义行为</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>要关闭的流。函数会先刷新其缓冲区、再关闭文件并释放 <code>FILE</code> 资源。对同一指针重复调用是未定义行为;传入 <code>NULL</code> 同样是未定义行为</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -488,10 +491,10 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>ptr</code></td><td><code>void *</code></td><td>目标缓冲区,容量必须至少为 <code>size * count</code> 字节</td></tr>
-<tr><td><code>size</code></td><td><code>size_t</code></td><td>单个元素的字节数,通常写 <code>sizeof(T)</code></td></tr>
-<tr><td><code>count</code></td><td><code>size_t</code></td><td>想读入的元素个数;实际读到的个数由返回值给出,不能假定一定读满</td></tr>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>已打开的输入流,读二进制数据时通常以 <code>"rb"</code> 打开</td></tr>
+<tr><td class="nw"><code>ptr</code></td><td class="nw"><code>void *</code></td><td>目标缓冲区,容量必须至少为 <code>size * count</code> 字节</td></tr>
+<tr><td class="nw"><code>size</code></td><td class="nw"><code>size_t</code></td><td>单个元素的字节数,通常写 <code>sizeof(T)</code></td></tr>
+<tr><td class="nw"><code>count</code></td><td class="nw"><code>size_t</code></td><td>想读入的元素个数;实际读到的个数由返回值给出,不能假定一定读满</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>已打开的输入流,读二进制数据时通常以 <code>"rb"</code> 打开</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -511,10 +514,10 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>ptr</code></td><td><code>const void *</code></td><td>数据来源,需保证从该地址起有 <code>size * count</code> 字节可读</td></tr>
-<tr><td><code>size</code></td><td><code>size_t</code></td><td>单个元素的字节数</td></tr>
-<tr><td><code>count</code></td><td><code>size_t</code></td><td>要写出的元素个数</td></tr>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>已打开的输出流,写二进制数据时通常以 <code>"wb"</code> 打开</td></tr>
+<tr><td class="nw"><code>ptr</code></td><td class="nw"><code>const void *</code></td><td>数据来源,需保证从该地址起有 <code>size * count</code> 字节可读</td></tr>
+<tr><td class="nw"><code>size</code></td><td class="nw"><code>size_t</code></td><td class="nw">单个元素的字节数</td></tr>
+<tr><td class="nw"><code>count</code></td><td class="nw"><code>size_t</code></td><td class="nw">要写出的元素个数</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>已打开的输出流,写二进制数据时通常以 <code>"wb"</code> 打开</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -535,9 +538,9 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>buf</code></td><td><code>char *</code></td><td>目标缓冲区。结果一定以 <code>\0</code> 结尾,行尾的 <code>\n</code> <strong>会被保留</strong>,通常需用 <code>buf[strcspn(buf, "\n")] = '\0'</code> 截掉</td></tr>
-<tr><td><code>n</code></td><td><code>int</code></td><td>缓冲区<strong>总大小</strong>(含 <code>\0</code>),最多读入 <code>n-1</code> 个字符。直接写 <code>sizeof buf</code> 最稳妥;若整行超过 <code>n-1</code>,余下部分会留在流中由下次调用继续读</td></tr>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>输入流,交互场景传 <code>stdin</code></td></tr>
+<tr><td class="nw"><code>buf</code></td><td class="nw"><code>char *</code></td><td>目标缓冲区。结果一定以 <code>\0</code> 结尾,行尾的 <code>\n</code> <strong>会被保留</strong>,通常需用 <code>buf[strcspn(buf, "\n")] = '\0'</code> 截掉</td></tr>
+<tr><td class="nw"><code>n</code></td><td class="nw"><code>int</code></td><td>缓冲区<strong>总大小</strong>(含 <code>\0</code>),最多读入 <code>n-1</code> 个字符。直接写 <code>sizeof buf</code> 最稳妥;若整行超过 <code>n-1</code>,余下部分会留在流中由下次调用继续读</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>输入流,交互场景传 <code>stdin</code></td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -560,8 +563,8 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>s</code></td><td><code>const char *</code></td><td>要写出的字符串,须以 <code>\0</code> 结尾。原样写出,<strong>不会自动追加换行</strong>,需要换行得自己写在字符串里</td></tr>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>目标输出流,可以是 <code>stdout</code>、<code>stderr</code> 或文件流</td></tr>
+<tr><td class="nw"><code>s</code></td><td class="nw"><code>const char *</code></td><td>要写出的字符串,须以 <code>\0</code> 结尾。原样写出,<strong>不会自动追加换行</strong>,需要换行得自己写在字符串里</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>目标输出流,可以是 <code>stdout</code>、<code>stderr</code> 或文件流</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -580,8 +583,8 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>操作的流:<code>fgetc</code> 从中读一个字符,<code>fputc</code> 向其写一个字符</td></tr>
-<tr><td><code>c</code></td><td><code>int</code></td><td>仅 <code>fputc</code> 有:要写出的字符。会被转换成 <code>unsigned char</code> 后写出,因此传入值的高位会被丢弃</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>操作的流:<code>fgetc</code> 从中读一个字符,<code>fputc</code> 向其写一个字符</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td>仅 <code>fputc</code> 有:要写出的字符。会被转换成 <code>unsigned char</code> 后写出,因此传入值的高位会被丢弃</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -601,9 +604,9 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>要定位、查询或重置读写位置的流</td></tr>
-<tr><td><code>offset</code></td><td><code>long</code></td><td>仅 <code>fseek</code> 有:相对 <code>origin</code> 的字节偏移,<strong>可为负</strong>。文本模式下只能填 <code>0</code> 或此前由 <code>ftell</code> 返回的值,不能自行做加减运算</td></tr>
-<tr><td><code>origin</code></td><td><code>int</code></td><td>仅 <code>fseek</code> 有:偏移基准。可取 <code>SEEK_SET</code>(文件开头)、<code>SEEK_CUR</code>(当前位置)、<code>SEEK_END</code>(文件末尾)</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>要定位、查询或重置读写位置的流</td></tr>
+<tr><td class="nw"><code>offset</code></td><td class="nw"><code>long</code></td><td>仅 <code>fseek</code> 有:相对 <code>origin</code> 的字节偏移,<strong>可为负</strong>。文本模式下只能填 <code>0</code> 或此前由 <code>ftell</code> 返回的值,不能自行做加减运算</td></tr>
+<tr><td class="nw"><code>origin</code></td><td class="nw"><code>int</code></td><td>仅 <code>fseek</code> 有:偏移基准。可取 <code>SEEK_SET</code>(文件开头)、<code>SEEK_CUR</code>(当前位置)、<code>SEEK_END</code>(文件末尾)</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -621,7 +624,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>要立即把缓冲区内容写往系统的<strong>输出流</strong>。传 <code>NULL</code> 表示刷新所有输出流。对输入流(如 <code>fflush(stdin)</code>)调用是未定义行为</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>要立即把缓冲区内容写往系统的<strong>输出流</strong>。传 <code>NULL</code> 表示刷新所有输出流。对输入流(如 <code>fflush(stdin)</code>)调用是未定义行为</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -640,7 +643,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>被查询的流。<code>feof</code> 查它的文件尾标志——即"上一次读取是否因到达文件尾而失败";<code>ferror</code> 查它的错误标志——即流上是否发生过 I/O 错误。两个标志都用 <code>clearerr(stream)</code> 一并清除,<code>rewind</code> 也会顺手清掉</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>被查询的流。<code>feof</code> 查它的文件尾标志——即"上一次读取是否因到达文件尾而失败";<code>ferror</code> 查它的错误标志——即流上是否发生过 I/O 错误。两个标志都用 <code>clearerr(stream)</code> 一并清除,<code>rewind</code> 也会顺手清掉</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -659,9 +662,9 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>filename</code></td><td><code>const char *</code></td><td>仅 <code>remove</code> 有:要删除的文件路径。删除不可撤销,动手前务必确认路径;删除仍被打开的文件在 Windows 上通常会失败</td></tr>
-<tr><td><code>oldname</code></td><td><code>const char *</code></td><td>仅 <code>rename</code> 有:现有文件的路径</td></tr>
-<tr><td><code>newname</code></td><td><code>const char *</code></td><td>仅 <code>rename</code> 有:新路径,可用于重命名或在同一文件系统内移动。目标已存在时的行为由实现决定(POSIX 原子覆盖,Windows 直接失败);跨盘符/跨文件系统移动通常也会失败</td></tr>
+<tr><td class="nw"><code>filename</code></td><td class="nw"><code>const char *</code></td><td>仅 <code>remove</code> 有:要删除的文件路径。删除不可撤销,动手前务必确认路径;删除仍被打开的文件在 Windows 上通常会失败</td></tr>
+<tr><td class="nw"><code>oldname</code></td><td class="nw"><code>const char *</code></td><td>仅 <code>rename</code> 有:现有文件的路径</td></tr>
+<tr><td class="nw"><code>newname</code></td><td class="nw"><code>const char *</code></td><td>仅 <code>rename</code> 有:新路径,可用于重命名或在同一文件系统内移动。目标已存在时的行为由实现决定(POSIX 原子覆盖,Windows 直接失败);跨盘符/跨文件系统移动通常也会失败</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -682,7 +685,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>prefix</code></td><td><code>const char *</code></td><td>前缀文字,函数向 <code>stderr</code> 输出 "<code>prefix: &lt;当前 errno 的文字描述&gt;</code>" 并换行。传 <code>NULL</code> 或空串时只打印错误描述本身;通常填出错的函数名或文件名以便定位</td></tr>
+<tr><td class="nw"><code>prefix</code></td><td class="nw"><code>const char *</code></td><td>前缀文字,函数向 <code>stderr</code> 输出 "<code>prefix: &lt;当前 errno 的文字描述&gt;</code>" 并换行。传 <code>NULL</code> 或空串时只打印错误描述本身;通常填出错的函数名或文件名以便定位</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -704,10 +707,10 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <table>
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>stream</code></td><td><code>FILE *</code></td><td>要设置缓冲方式的流。必须在 <code>fopen</code> 之后、对该流做<strong>任何其他 I/O 之前</strong>调用</td></tr>
-<tr><td><code>buf</code></td><td><code>char *</code></td><td>自备缓冲区;传 <code>NULL</code> 让库自行分配。自备时其<strong>生存期必须覆盖流的整个使用期</strong>,用函数内局部数组会造成悬空引用</td></tr>
-<tr><td><code>mode</code></td><td><code>int</code></td><td>缓冲方式:<code>_IOFBF</code> 全缓冲(缓冲区满才写出)、<code>_IOLBF</code> 行缓冲(遇 <code>\n</code> 写出)、<code>_IONBF</code> 无缓冲(立即写出,此时 <code>buf</code>/<code>size</code> 被忽略,通常传 <code>NULL</code> 和 <code>0</code>)</td></tr>
-<tr><td><code>size</code></td><td><code>size_t</code></td><td>缓冲区字节数。自备 <code>buf</code> 时必须与其实际大小一致;传 <code>NULL</code> 时它只是给库的容量建议</td></tr>
+<tr><td class="nw"><code>stream</code></td><td class="nw"><code>FILE *</code></td><td>要设置缓冲方式的流。必须在 <code>fopen</code> 之后、对该流做<strong>任何其他 I/O 之前</strong>调用</td></tr>
+<tr><td class="nw"><code>buf</code></td><td class="nw"><code>char *</code></td><td>自备缓冲区;传 <code>NULL</code> 让库自行分配。自备时其<strong>生存期必须覆盖流的整个使用期</strong>,用函数内局部数组会造成悬空引用</td></tr>
+<tr><td class="nw"><code>mode</code></td><td class="nw"><code>int</code></td><td>缓冲方式:<code>_IOFBF</code> 全缓冲(缓冲区满才写出)、<code>_IOLBF</code> 行缓冲(遇 <code>\n</code> 写出)、<code>_IONBF</code> 无缓冲(立即写出,此时 <code>buf</code>/<code>size</code> 被忽略,通常传 <code>NULL</code> 和 <code>0</code>)</td></tr>
+<tr><td class="nw"><code>size</code></td><td class="nw"><code>size_t</code></td><td>缓冲区字节数。自备 <code>buf</code> 时必须与其实际大小一致;传 <code>NULL</code> 时它只是给库的容量建议</td></tr>
 </tbody>
 </table>
 <p><strong>返回值</strong></p>
@@ -729,21 +732,21 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <tr><th>函数</th><th>一句话说明</th><th>备注</th></tr>
 </thead>
 <tbody>
-<tr><td><code>malloc</code></td><td>在堆上分配一块未初始化内存</td><td>返回值必须判空;内容是垃圾值,读前先写</td></tr>
-<tr><td><code>calloc</code></td><td>分配并清零 n 个等长元素</td><td><span class="badge ok">推荐</span> 分配数组时优先用,内部会检查 n×size 溢出</td></tr>
-<tr><td><code>realloc</code></td><td>调整已分配内存块的大小</td><td>失败返回 NULL,直接 <code>p = realloc(p, n)</code> 会丢失原指针造成泄漏</td></tr>
-<tr><td><code>free</code></td><td>归还 malloc 系列申请的内存</td><td>重复释放和释放后使用都是未定义行为;释放后随手置 NULL</td></tr>
+<tr><td class="nw"><code>malloc</code></td><td>在堆上分配一块未初始化内存</td><td>返回值必须判空;内容是垃圾值,读前先写</td></tr>
+<tr><td class="nw"><code>calloc</code></td><td>分配并清零 n 个等长元素</td><td><span class="badge ok">推荐</span> 分配数组时优先用,内部会检查 n×size 溢出</td></tr>
+<tr><td class="nw"><code>realloc</code></td><td>调整已分配内存块的大小</td><td>失败返回 NULL,直接 <code>p = realloc(p, n)</code> 会丢失原指针造成泄漏</td></tr>
+<tr><td class="nw"><code>free</code></td><td>归还 malloc 系列申请的内存</td><td>重复释放和释放后使用都是未定义行为;释放后随手置 NULL</td></tr>
 <tr><td><code>atoi</code> / <code>atol</code> / <code>atof</code></td><td>字符串转整数或浮点数</td><td><span class="badge old">已过时</span> 无法区分"转换失败"和"结果为 0",溢出即 UB;改用 strtol 系列</td></tr>
 <tr><td><code>strtol</code> / <code>strtoul</code> / <code>strtod</code></td><td>带错误检测的字符串转数值</td><td><span class="badge ok">推荐</span> 调用前把 errno 清零,再检查 endptr 是否真的前进过</td></tr>
-<tr><td><code>rand</code> / <code>srand</code></td><td>生成可复现的伪随机数序列</td><td>质量低且不可用于密码学;<code>rand() % n</code> 分布有偏,应改用取模纠偏</td></tr>
-<tr><td><code>abs</code> / <code>labs</code> / <code>llabs</code></td><td>求整数的绝对值</td><td><code>abs(INT_MIN)</code> 无法表示,是未定义行为</td></tr>
-<tr><td><code>div</code></td><td>一次运算同时得到商和余数</td><td>返回结构体而非指针;负数取整方向由标准规定为截断</td></tr>
-<tr><td><code>qsort</code></td><td>对任意类型数组做通用排序</td><td>非稳定排序;比较函数写 <code>a - b</code> 会溢出,应改用大小比较</td></tr>
-<tr><td><code>bsearch</code></td><td>在有序数组中二分查找元素</td><td>数组必须已按同一个比较函数排好序,否则结果无意义</td></tr>
-<tr><td><code>exit</code> / <code>atexit</code></td><td>正常终止程序并执行注册的清理</td><td>exit 永不返回;atexit 回调至少可注册 32 个,超出会失败</td></tr>
-<tr><td><code>abort</code></td><td>立即异常终止,产生 SIGABRT</td><td>不执行 atexit 回调,缓冲区数据可能全部丢失</td></tr>
-<tr><td><code>system</code></td><td>交给命令处理器执行一条命令</td><td><span class="badge dead">禁用</span> 拼接外部输入即命令注入;传 NULL 仅用于探测有无 shell</td></tr>
-<tr><td><code>getenv</code></td><td>按名字读取环境变量的值</td><td>返回的是指向静态存储区的指针,不可修改,需要保留就先拷贝</td></tr>
+<tr><td class="nw"><code>rand</code> / <code>srand</code></td><td>生成可复现的伪随机数序列</td><td>质量低且不可用于密码学;<code>rand() % n</code> 分布有偏,应改用取模纠偏</td></tr>
+<tr><td><code>abs</code> / <code>labs</code> / <code>llabs</code></td><td class="nw">求整数的绝对值</td><td><code>abs(INT_MIN)</code> 无法表示,是未定义行为</td></tr>
+<tr><td class="nw"><code>div</code></td><td>一次运算同时得到商和余数</td><td>返回结构体而非指针;负数取整方向由标准规定为截断</td></tr>
+<tr><td class="nw"><code>qsort</code></td><td>对任意类型数组做通用排序</td><td>非稳定排序;比较函数写 <code>a - b</code> 会溢出,应改用大小比较</td></tr>
+<tr><td class="nw"><code>bsearch</code></td><td>在有序数组中二分查找元素</td><td>数组必须已按同一个比较函数排好序,否则结果无意义</td></tr>
+<tr><td class="nw"><code>exit</code> / <code>atexit</code></td><td>正常终止程序并执行注册的清理</td><td>exit 永不返回;atexit 回调至少可注册 32 个,超出会失败</td></tr>
+<tr><td class="nw"><code>abort</code></td><td>立即异常终止,产生 SIGABRT</td><td>不执行 atexit 回调,缓冲区数据可能全部丢失</td></tr>
+<tr><td class="nw"><code>system</code></td><td>交给命令处理器执行一条命令</td><td><span class="badge dead">禁用</span> 拼接外部输入即命令注入;传 NULL 仅用于探测有无 shell</td></tr>
+<tr><td class="nw"><code>getenv</code></td><td>按名字读取环境变量的值</td><td>返回的是指向静态存储区的指针,不可修改,需要保留就先拷贝</td></tr>
 </tbody>
 </table>
 
@@ -754,7 +757,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>size</td><td>size_t</td><td>要分配的字节数。惯用写法是 <code>n * sizeof *p</code>,这样改变元素类型时这行代码不用跟着改。分配得到的内存<strong>未初始化</strong>,内容是垃圾值,必须先写后读。<code>size</code> 传 0 时行为由实现定义</td></tr>
+<tr><td class="nw">size</td><td class="nw">size_t</td><td>要分配的字节数。惯用写法是 <code>n * sizeof *p</code>,这样改变元素类型时这行代码不用跟着改。分配得到的内存<strong>未初始化</strong>,内容是垃圾值,必须先写后读。<code>size</code> 传 0 时行为由实现定义</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回指向已分配内存的指针(对齐满足任何基本类型的要求);失败返回 <code>NULL</code>,因此返回值<strong>必须判空</strong>后才能使用。<code>malloc(0)</code> 的返回值由实现定义,可能是 <code>NULL</code>,也可能是一个可以传给 <code>free</code> 的非空指针,但两种情况下都不得解引用。C 标准没有规定失败时设置 <code>errno</code>;POSIX 平台通常会置为 <code>ENOMEM</code>,可在失败分支用 <code>perror</code>/<code>strerror(errno)</code> 取错误详情,但不要把它当作可移植的判断依据——判空才是唯一可靠的失败检测手段。</p>
@@ -770,8 +773,8 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>nmemb</td><td>size_t</td><td>元素个数。当它来自外部输入时,交给 calloc 比自己写 <code>malloc(n * size)</code> 更安全——标准要求实现检查 <code>nmemb * size</code> 的乘法溢出</td></tr>
-<tr><td>size</td><td>size_t</td><td>每个元素的大小(字节),惯用 <code>sizeof *arr</code></td></tr>
+<tr><td class="nw">nmemb</td><td class="nw">size_t</td><td>元素个数。当它来自外部输入时,交给 calloc 比自己写 <code>malloc(n * size)</code> 更安全——标准要求实现检查 <code>nmemb * size</code> 的乘法溢出</td></tr>
+<tr><td class="nw">size</td><td class="nw">size_t</td><td>每个元素的大小(字节),惯用 <code>sizeof *arr</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回指向 <code>nmemb * size</code> 字节且<em>全部清零</em>的内存;失败,或 <code>nmemb * size</code> 的乘法会溢出时,返回 <code>NULL</code>。与 malloc 一样,判空是唯一可靠的失败检测手段;POSIX 平台上失败时通常置 <code>errno = ENOMEM</code>,可据此打印错误详情。</p>
@@ -793,8 +796,8 @@ free(arr);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>ptr</td><td>void *</td><td>旧内存块的指针,必须是 malloc/calloc/realloc 返回的原始地址(不能是块内部的偏移)。可为 <code>NULL</code>,此时等价于 <code>malloc(size)</code></td></tr>
-<tr><td>size</td><td>size_t</td><td>调整后的<strong>新的总大小</strong>(字节),不是增量——这是最常见的误用。可以比原来大也可以比原来小;不要用 <code>size == 0</code> 来释放内存(该行为由实现定义,C23 起已改为未定义),释放请用 <code>free</code></td></tr>
+<tr><td class="nw">ptr</td><td class="nw">void *</td><td>旧内存块的指针,必须是 malloc/calloc/realloc 返回的原始地址(不能是块内部的偏移)。可为 <code>NULL</code>,此时等价于 <code>malloc(size)</code></td></tr>
+<tr><td class="nw">size</td><td class="nw">size_t</td><td>调整后的<strong>新的总大小</strong>(字节),不是增量——这是最常见的误用。可以比原来大也可以比原来小;不要用 <code>size == 0</code> 来释放内存(该行为由实现定义,C23 起已改为未定义),释放请用 <code>free</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回新块的指针(原有内容保留到新旧大小中较小者,扩大出来的部分未初始化);失败返回 <code>NULL</code>,<em>此时旧块原封不动、仍然有效</em>,因此必须先把返回值接到临时变量里再判断,否则会把唯一指向旧块的指针冲掉。失败时 POSIX 平台通常置 <code>errno = ENOMEM</code>,可用它打印详情;判空仍是可移植的失败判据。</p>
@@ -810,7 +813,7 @@ free(arr);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>ptr</td><td>void *</td><td>要归还的内存块指针,必须是 malloc/calloc/realloc 返回的<strong>原始地址</strong>。传 <code>NULL</code> 是合法的空操作;传栈变量地址、数组中间地址、字符串字面量,或对同一地址释放两次,都是未定义行为</td></tr>
+<tr><td class="nw">ptr</td><td class="nw">void *</td><td>要归还的内存块指针,必须是 malloc/calloc/realloc 返回的<strong>原始地址</strong>。传 <code>NULL</code> 是合法的空操作;传栈变量地址、数组中间地址、字符串字面量,或对同一地址释放两次,都是未定义行为</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>无返回值。<code>free(NULL)</code> 是标准明确定义的空操作,因此不需要在调用前判空。free 不报告错误,也不会修改传入的指针变量本身——调用后 <code>ptr</code> 立刻变成悬空指针,再读写它属于未定义行为,错误只能靠 AddressSanitizer 一类工具在运行期发现。</p>
@@ -829,7 +832,7 @@ free(arr);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>nptr</td><td>const char *</td><td>待转换的字符串。跳过前导空白,解析可选的正负号与数字,遇到第一个不能构成数值的字符即停止,后面的内容被静默丢弃。三个函数参数完全相同,区别只在目标类型:atoi 转 <code>int</code>、atol 转 <code>long</code>、atof 转 <code>double</code>(<strong>不是 float</strong>)</td></tr>
+<tr><td class="nw">nptr</td><td class="nw">const char *</td><td>待转换的字符串。跳过前导空白,解析可选的正负号与数字,遇到第一个不能构成数值的字符即停止,后面的内容被静默丢弃。三个函数参数完全相同,区别只在目标类型:atoi 转 <code>int</code>、atol 转 <code>long</code>、atof 转 <code>double</code>(<strong>不是 float</strong>)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回解析出的数值;无法解析时返回 0——而这正是问题所在:合法输入 <code>"0"</code> 与非法输入 <code>"abc"</code> 的返回值完全相同,调用方无从分辨。结果超出目标类型范围时是<strong>未定义行为</strong>,并且不设置 <code>errno</code>。换句话说,这一族函数<strong>没有任何取错误详情的手段</strong>;需要错误检测请改用下一条的 strtol 家族。</p>
@@ -848,9 +851,9 @@ free(arr);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>nptr</td><td>const char *</td><td>待解析字符串(自动跳过前导空白,再解析可选正负号与数字)</td></tr>
-<tr><td>endptr</td><td>char **</td><td>输出参数:函数把“第一个未被消费的字符”的地址写进 <code>*endptr</code>。传 <code>NULL</code> 表示不关心;想做错误检查就必须传,靠比较 <code>*endptr == nptr</code> 判断“一个字符都没解析到”,靠 <code>**endptr != '\0'</code> 判断“数字后还有尾巴”</td></tr>
-<tr><td>base</td><td>int</td><td>进制,取值 2~36;0 表示自动识别——<code>0x</code>/<code>0X</code> 前缀按十六进制,<code>0</code> 前缀按八进制,其余按十进制。<code>strtod</code> 没有这个参数(固定按十进制浮点解析,也识别 <code>0x</code> 十六进制浮点、<code>inf</code>、<code>nan</code>)</td></tr>
+<tr><td class="nw">nptr</td><td class="nw">const char *</td><td>待解析字符串(自动跳过前导空白,再解析可选正负号与数字)</td></tr>
+<tr><td class="nw">endptr</td><td class="nw">char **</td><td>输出参数:函数把“第一个未被消费的字符”的地址写进 <code>*endptr</code>。传 <code>NULL</code> 表示不关心;想做错误检查就必须传,靠比较 <code>*endptr == nptr</code> 判断“一个字符都没解析到”,靠 <code>**endptr != '\0'</code> 判断“数字后还有尾巴”</td></tr>
+<tr><td class="nw">base</td><td class="nw">int</td><td>进制,取值 2~36;0 表示自动识别——<code>0x</code>/<code>0X</code> 前缀按十六进制,<code>0</code> 前缀按八进制,其余按十进制。<code>strtod</code> 没有这个参数(固定按十进制浮点解析,也识别 <code>0x</code> 十六进制浮点、<code>inf</code>、<code>nan</code>)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回解析出的数值。溢出时返回 <code>LONG_MAX</code>/<code>LONG_MIN</code>(strtoul 返回 <code>ULONG_MAX</code>,strtod 返回 ±<code>HUGE_VAL</code>)并置 <code>errno = ERANGE</code>;完全无法解析时返回 0 且 <code>*endptr == nptr</code>。取错误详情的方式:调用前先 <code>errno = 0</code>,调用后依次检查 endptr 是否前进、<code>errno == ERANGE</code>、尾部是否有残留字符——这三步缺一不可。</p>
@@ -879,7 +882,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p><code>rand</code> 无参数;<code>srand</code> 的参数如下。</p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>seed</td><td>unsigned int</td><td>伪随机序列的种子。<strong>同一种子必然产生同一序列</strong>,这既是复现调试用例的手段,也意味着种子可预测时随机数就可预测。常用 <code>(unsigned)time(NULL)</code>,但整个程序<strong>只应播种一次</strong>——在循环里反复 srand 会让同一秒内取到的值全部相同。不调用 srand 时,行为等同于 <code>srand(1)</code></td></tr>
+<tr><td class="nw">seed</td><td class="nw">unsigned int</td><td>伪随机序列的种子。<strong>同一种子必然产生同一序列</strong>,这既是复现调试用例的手段,也意味着种子可预测时随机数就可预测。常用 <code>(unsigned)time(NULL)</code>,但整个程序<strong>只应播种一次</strong>——在循环里反复 srand 会让同一秒内取到的值全部相同。不调用 srand 时,行为等同于 <code>srand(1)</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p><code>rand</code> 返回 0 到 <code>RAND_MAX</code> 之间的整数(标准只保证 <code>RAND_MAX</code> ≥ 32767,MSVC 恰好就是 32767);<code>srand</code> 无返回值。两者都不报告错误,也没有错误详情可取——真正需要担心的不是失败,而是随机数质量:序列周期短、低位随机性弱,且绝不可用于密码学用途。</p>
@@ -897,7 +900,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>j</td><td>int(labs 为 long,llabs 为 long long,C99 起提供)</td><td>要取绝对值的整数。<strong>易错点</strong>:传入该类型的最小值(<code>INT_MIN</code> / <code>LONG_MIN</code> / <code>LLONG_MIN</code>)时,其绝对值在补码表示下超出该类型范围,结果是未定义行为,必须由调用方提前排除</td></tr>
+<tr><td class="nw">j</td><td>int(labs 为 long,llabs 为 long long,C99 起提供)</td><td>要取绝对值的整数。<strong>易错点</strong>:传入该类型的最小值(<code>INT_MIN</code> / <code>LONG_MIN</code> / <code>LLONG_MIN</code>)时,其绝对值在补码表示下超出该类型范围,结果是未定义行为,必须由调用方提前排除</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回参数的绝对值,类型与参数相同。这一族函数不报告错误、也不设置 <code>errno</code>——唯一的越界情形(参数为类型最小值)直接是未定义行为,没有任何运行期错误详情可取,只能靠调用前的范围检查规避。</p>
@@ -913,8 +916,8 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>numer</td><td>int</td><td>被除数</td></tr>
-<tr><td>denom</td><td>int</td><td>除数。<strong>不能为 0</strong>,除零是未定义行为(通常直接触发硬件异常);另外 <code>div(INT_MIN, -1)</code> 的商无法表示,同样是未定义行为</td></tr>
+<tr><td class="nw">numer</td><td class="nw">int</td><td class="nw">被除数</td></tr>
+<tr><td class="nw">denom</td><td class="nw">int</td><td>除数。<strong>不能为 0</strong>,除零是未定义行为(通常直接触发硬件异常);另外 <code>div(INT_MIN, -1)</code> 的商无法表示,同样是未定义行为</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>返回 <code>div_t</code> <strong>结构体本身(不是指针)</strong>,成员 <code>quot</code> 是商、<code>rem</code> 是余数,二者满足 <code>quot * denom + rem == numer</code>;标准规定商向零截断,因此负数相除时余数与被除数同号。另有 <code>ldiv</code>/<code>lldiv</code>(返回 <code>ldiv_t</code>/<code>lldiv_t</code>)对应 long/long long。函数不报告错误、不设 <code>errno</code>,非法输入直接是未定义行为,须在调用前自行校验除数。</p>
@@ -935,10 +938,10 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>base</td><td>void *</td><td>待排序数组的首地址</td></tr>
-<tr><td>nmemb</td><td>size_t</td><td>元素个数(不是字节数)</td></tr>
-<tr><td>size</td><td>size_t</td><td>单个元素的字节数,通常写 <code>sizeof arr[0]</code></td></tr>
-<tr><td>compar</td><td>int (*)(const void *, const void *)</td><td>比较函数指针:a&lt;b 返回负数,a==b 返回 0,a&gt;b 返回正数。两个参数指向的是<em>数组元素本身</em>,函数内要先转回真实类型再解引用;返回值必须构成严格弱序(自洽、可传递),否则行为未定义。<strong>易错点</strong>:整型比较不要写 <code>a - b</code>,会溢出</td></tr>
+<tr><td class="nw">base</td><td class="nw">void *</td><td>待排序数组的首地址</td></tr>
+<tr><td class="nw">nmemb</td><td class="nw">size_t</td><td>元素个数(不是字节数)</td></tr>
+<tr><td class="nw">size</td><td class="nw">size_t</td><td>单个元素的字节数,通常写 <code>sizeof arr[0]</code></td></tr>
+<tr><td class="nw">compar</td><td>int (*)(const void *, const void *)</td><td>比较函数指针:a&lt;b 返回负数,a==b 返回 0,a&gt;b 返回正数。两个参数指向的是<em>数组元素本身</em>,函数内要先转回真实类型再解引用;返回值必须构成严格弱序(自洽、可传递),否则行为未定义。<strong>易错点</strong>:整型比较不要写 <code>a - b</code>,会溢出</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>无返回值,原地排序。qsort 不报告错误、也没有错误码可查:排序结果不保证稳定(相等元素的相对顺序可能改变),而比较函数不自洽时属于未定义行为,某些实现会越界崩溃——这类问题只能靠自己保证比较函数正确。</p>
@@ -960,11 +963,11 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>key</td><td>const void *</td><td>指向要查找的键。键的类型不必与数组元素相同,但比较函数必须按“第一个参数是 key”的约定来写</td></tr>
-<tr><td>base</td><td>const void *</td><td><strong>已排序</strong>数组的首地址。数组必须事先按同一个比较函数升序排好,否则结果无意义且不会报错</td></tr>
-<tr><td>nmemb</td><td>size_t</td><td>元素个数</td></tr>
-<tr><td>size</td><td>size_t</td><td>单个元素的字节数,通常写 <code>sizeof arr[0]</code></td></tr>
-<tr><td>compar</td><td>int (*)(const void *, const void *)</td><td>比较函数,语义与排序时<strong>必须完全一致</strong>:第一个参数固定是 key,第二个是数组元素;key&lt;元素返回负数,相等返回 0,key&gt;元素返回正数</td></tr>
+<tr><td class="nw">key</td><td class="nw">const void *</td><td>指向要查找的键。键的类型不必与数组元素相同,但比较函数必须按“第一个参数是 key”的约定来写</td></tr>
+<tr><td class="nw">base</td><td class="nw">const void *</td><td><strong>已排序</strong>数组的首地址。数组必须事先按同一个比较函数升序排好,否则结果无意义且不会报错</td></tr>
+<tr><td class="nw">nmemb</td><td class="nw">size_t</td><td class="nw">元素个数</td></tr>
+<tr><td class="nw">size</td><td class="nw">size_t</td><td>单个元素的字节数,通常写 <code>sizeof arr[0]</code></td></tr>
+<tr><td class="nw">compar</td><td>int (*)(const void *, const void *)</td><td>比较函数,语义与排序时<strong>必须完全一致</strong>:第一个参数固定是 key,第二个是数组元素;key&lt;元素返回负数,相等返回 0,key&gt;元素返回正数</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>找到时返回指向匹配元素的指针(有多个相等元素时返回其中<em>任意</em>一个,不保证是第一个);找不到返回 <code>NULL</code>,所以使用前必须判空。bsearch 不设置 <code>errno</code>,也无法区分“确实不存在”和“数组没排好序导致漏查”——数组无序时结果是未定义的,不会报错,只会静默找错。</p>
@@ -981,8 +984,8 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>status</td><td>int</td><td>交还给宿主环境的退出状态。可移植的取值只有 <code>EXIT_SUCCESS</code>(等于 0)和 <code>EXIT_FAILURE</code>,其他值的含义由实现定义。调用后<strong>函数不返回</strong>,程序就此正常终止</td></tr>
-<tr><td>func</td><td>void (*)(void)</td><td>要注册的退出回调,必须无参数、无返回值。可注册多个(标准保证至少支持 32 个),程序退出时按<strong>注册的逆序</strong>依次调用;回调里不要再调用 <code>exit</code>,否则行为未定义</td></tr>
+<tr><td class="nw">status</td><td class="nw">int</td><td>交还给宿主环境的退出状态。可移植的取值只有 <code>EXIT_SUCCESS</code>(等于 0)和 <code>EXIT_FAILURE</code>,其他值的含义由实现定义。调用后<strong>函数不返回</strong>,程序就此正常终止</td></tr>
+<tr><td class="nw">func</td><td class="nw">void (*)(void)</td><td>要注册的退出回调,必须无参数、无返回值。可注册多个(标准保证至少支持 32 个),程序退出时按<strong>注册的逆序</strong>依次调用;回调里不要再调用 <code>exit</code>,否则行为未定义</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p><code>exit</code> <strong>永不返回</strong>,没有返回值可判;程序的成败通过 <code>status</code> 传给宿主环境(<code>EXIT_SUCCESS</code> 表示成功,<code>EXIT_FAILURE</code> 表示失败)。<code>atexit</code> 注册成功返回 0,失败返回非零——失败的典型原因是注册数量超过实现上限(至少 32 个),标准未规定它设置 <code>errno</code>,因此只能靠返回值判断,建议对关键清理逻辑检查其返回值。</p>
@@ -1021,7 +1024,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>command</td><td>const char *</td><td>要交给命令解释器(POSIX 上是 <code>/bin/sh</code>,Windows 上是 <code>cmd.exe</code>)执行的整串命令。传 <code>NULL</code> 时<strong>不执行任何命令</strong>,仅用于探测系统上是否有可用的命令解释器。<strong>严重易错点</strong>:整串文本会被 shell 解释,任何拼入其中的外部输入都可能携带 <code>;</code>、<code>|</code>、<code>&amp;&amp;</code>、反引号等元字符造成命令注入</td></tr>
+<tr><td class="nw">command</td><td class="nw">const char *</td><td>要交给命令解释器(POSIX 上是 <code>/bin/sh</code>,Windows 上是 <code>cmd.exe</code>)执行的整串命令。传 <code>NULL</code> 时<strong>不执行任何命令</strong>,仅用于探测系统上是否有可用的命令解释器。<strong>严重易错点</strong>:整串文本会被 shell 解释,任何拼入其中的外部输入都可能携带 <code>;</code>、<code>|</code>、<code>&amp;&amp;</code>、反引号等元字符造成命令注入</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p><code>system(NULL)</code> 返回非零表示命令解释器可用,返回 0 表示不可用。执行命令时的返回值由实现定义:POSIX 上是 shell 的等待状态,需用 <code>WEXITSTATUS</code> 等宏解读;Windows 上是命令的返回码。返回 <code>-1</code> 表示无法创建子进程或获取其状态,此时可查 <code>errno</code> 取错误详情。注意区分“命令本身执行失败”与“system 调用失败”,二者都可能落在非零返回值上。</p>
@@ -1043,7 +1046,7 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>name</td><td>const char *</td><td>要查询的环境变量名(不含 <code>=</code> 和值)。名字大小写在 POSIX 上敏感、在 Windows 上不敏感;常用值如 <code>"PATH"</code>、<code>"HOME"</code>(Windows 上对应 <code>"USERPROFILE"</code>)、<code>"TEMP"</code>。查到的值来自进程外部,属于<strong>不可信输入</strong>,用于拼路径或命令前必须校验</td></tr>
+<tr><td class="nw">name</td><td class="nw">const char *</td><td>要查询的环境变量名(不含 <code>=</code> 和值)。名字大小写在 POSIX 上敏感、在 Windows 上不敏感;常用值如 <code>"PATH"</code>、<code>"HOME"</code>(Windows 上对应 <code>"USERPROFILE"</code>)、<code>"TEMP"</code>。查到的值来自进程外部,属于<strong>不可信输入</strong>,用于拼路径或命令前必须校验</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>找到返回指向变量值字符串的指针,找不到返回 <code>NULL</code>(变量不存在是常态,不是异常,必须处理)。函数不设置 <code>errno</code>,<code>NULL</code> 就是唯一的“查不到”信号。返回的字符串归运行库所有:<strong>不得修改</strong>,且后续对 <code>getenv</code>/<code>putenv</code>/<code>setenv</code> 的调用可能使其失效,需要长期留存就自己拷贝一份。</p>
@@ -1058,7 +1061,7 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 <h1 id="s3"><span class="part">分类 3</span>string.h 字符串与内存</h1>
 <p>C 语言没有内建字符串类型,一切都建立在"以 <code>'\0'</code> 结尾的字符数组"这一约定之上。<code>&lt;string.h&gt;</code> 提供两族函数:<code>str*</code> 系列依赖结尾符工作,<code>mem*</code> 系列按字节数操作任意内存。本章逐一说明常用函数,并特别标注缓冲区溢出、未写结尾符、不可重入等经典陷阱。MSVC 下多数传统函数会触发 C4996 弃用警告,建议改用带边界检查的 <code>_s</code> 安全版本;在 C++ 项目里,能用 <code>std::string</code> / <code>std::string_view</code> 就不要手工摆弄裸字符数组。</p>
 
-<h2 id="s3-overview">速览</h2><p><strong>本章速览</strong>——字符串与内存操作是 C 里最常用、也最容易写出越界漏洞的一族函数，先用下表建立整体印象，再看各条目的详解。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td><code>strlen</code></td><td>数出字符串长度，不含结尾空字符</td><td>没有终止符就会一直读下去，先确保串是合法的</td></tr><tr><td><code>strcpy</code> / <code>strcpy_s</code></td><td>把源字符串整个复制到目标缓冲区</td><td><span class="badge old">已过时</span> strcpy 不知道目标多大，写多少都不拦；<span class="badge ok">推荐</span> strcpy_s 需显式传入目标容量</td></tr><tr><td><code>strncpy</code></td><td>最多复制 n 个字符到目标</td><td>源串够长时不会补结尾空字符，必须自己手动补上</td></tr><tr><td><code>strcat</code> / <code>strcat_s</code></td><td>把源字符串接到目标串尾部</td><td><span class="badge old">已过时</span> strcat 同样不查容量，反复拼接极易溢出；<span class="badge ok">推荐</span> strcat_s</td></tr><tr><td><code>strcmp</code> / <code>strncmp</code></td><td>按字典序比较整串或前 n 个字符</td><td>返回值只保证正负号和零，别当作字符差值来用</td></tr><tr><td><code>strchr</code> / <code>strrchr</code></td><td>找某字符第一次、最后一次出现处</td><td>找不到返回空指针，用之前务必判空</td></tr><tr><td><code>strstr</code></td><td>在主串里定位子串首次出现位置</td><td>朴素匹配，长文本高频查找时另选算法</td></tr><tr><td><code>strtok</code> / <code>strtok_s</code></td><td>按分隔符把字符串逐段切开</td><td><span class="badge old">已过时</span> strtok 靠内部静态状态，会改写原串且不可重入；<span class="badge ok">推荐</span> strtok_s 自带上下文指针</td></tr><tr><td><code>memcpy</code></td><td>复制 n 个字节到另一块内存</td><td>两块内存重叠属未定义行为，此时改用 memmove</td></tr><tr><td><code>memmove</code></td><td>复制 n 字节，允许区域重叠</td><td><span class="badge ok">推荐</span> 不确定是否重叠时的稳妥选择</td></tr><tr><td><code>memset</code></td><td>把一段内存按字节填成同一个值</td><td>填充值按字节生效，别指望它把数组填成非零整数</td></tr><tr><td><code>memcmp</code></td><td>逐字节比较两块内存内容</td><td>结构体含填充字节，不能靠它判断是否相等</td></tr><tr><td><code>memchr</code></td><td>在指定长度内存中找某个字节</td><td>不看结尾空字符，适合处理二进制数据</td></tr><tr><td><code>strerror</code> / <code>strerror_s</code></td><td>把错误码翻译成可读的描述文字</td><td><span class="badge old">已过时</span> strerror 返回共享静态缓冲区，多线程下会串；<span class="badge ok">推荐</span> strerror_s 写入自备缓冲区</td></tr></tbody></table>
+<h2 id="s3-overview">速览</h2><p><strong>本章速览</strong>——字符串与内存操作是 C 里最常用、也最容易写出越界漏洞的一族函数，先用下表建立整体印象，再看各条目的详解。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><code>strlen</code></td><td>数出字符串长度，不含结尾空字符</td><td>没有终止符就会一直读下去，先确保串是合法的</td></tr><tr><td><code>strcpy</code> / <code>strcpy_s</code></td><td>把源字符串整个复制到目标缓冲区</td><td><span class="badge old">已过时</span> strcpy 不知道目标多大，写多少都不拦；<span class="badge ok">推荐</span> strcpy_s 需显式传入目标容量</td></tr><tr><td class="nw"><code>strncpy</code></td><td>最多复制 n 个字符到目标</td><td>源串够长时不会补结尾空字符，必须自己手动补上</td></tr><tr><td><code>strcat</code> / <code>strcat_s</code></td><td>把源字符串接到目标串尾部</td><td><span class="badge old">已过时</span> strcat 同样不查容量，反复拼接极易溢出；<span class="badge ok">推荐</span> strcat_s</td></tr><tr><td class="nw"><code>strcmp</code> / <code>strncmp</code></td><td>按字典序比较整串或前 n 个字符</td><td>返回值只保证正负号和零，别当作字符差值来用</td></tr><tr><td class="nw"><code>strchr</code> / <code>strrchr</code></td><td>找某字符第一次、最后一次出现处</td><td>找不到返回空指针，用之前务必判空</td></tr><tr><td class="nw"><code>strstr</code></td><td>在主串里定位子串首次出现位置</td><td>朴素匹配，长文本高频查找时另选算法</td></tr><tr><td><code>strtok</code> / <code>strtok_s</code></td><td>按分隔符把字符串逐段切开</td><td><span class="badge old">已过时</span> strtok 靠内部静态状态，会改写原串且不可重入；<span class="badge ok">推荐</span> strtok_s 自带上下文指针</td></tr><tr><td class="nw"><code>memcpy</code></td><td>复制 n 个字节到另一块内存</td><td>两块内存重叠属未定义行为，此时改用 memmove</td></tr><tr><td class="nw"><code>memmove</code></td><td>复制 n 字节，允许区域重叠</td><td><span class="badge ok">推荐</span> 不确定是否重叠时的稳妥选择</td></tr><tr><td class="nw"><code>memset</code></td><td>把一段内存按字节填成同一个值</td><td>填充值按字节生效，别指望它把数组填成非零整数</td></tr><tr><td class="nw"><code>memcmp</code></td><td>逐字节比较两块内存内容</td><td>结构体含填充字节，不能靠它判断是否相等</td></tr><tr><td class="nw"><code>memchr</code></td><td>在指定长度内存中找某个字节</td><td>不看结尾空字符，适合处理二进制数据</td></tr><tr><td><code>strerror</code> / <code>strerror_s</code></td><td>把错误码翻译成可读的描述文字</td><td><span class="badge old">已过时</span> strerror 返回共享静态缓冲区，多线程下会串；<span class="badge ok">推荐</span> strerror_s 写入自备缓冲区</td></tr></tbody></table>
 
 <h2 id="s3-strlen">strlen <span class="badge ok">推荐</span></h2>
 <p class="fsum">数一数字符串里到结尾符之前有多少个字符，最常用来判断内容长度和计算该分配多大的缓冲区。</p>
@@ -1067,7 +1070,7 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>s</td><td>const char *</td><td>待测长度的字符串,必须以 <code>'\0'</code> 结尾;函数只数字符,不含结尾符本身</td></tr>
+<tr><td class="nw">s</td><td class="nw">const char *</td><td>待测长度的字符串,必须以 <code>'\0'</code> 结尾;函数只数字符,不含结尾符本身</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:返回从 <code>s</code> 起到第一个 <code>'\0'</code> 之前的字符个数(不含结尾符)。失败:该函数没有失败返回值,也不设置 <code>errno</code>——传入空指针或未以 <code>'\0'</code> 结尾的缓冲区都是未定义行为,不会以返回值形式报告,只能靠调用方自行保证前置条件。注意:存放该字符串至少需要 <code>strlen(s) + 1</code> 字节。</p>
@@ -1084,9 +1087,9 @@ errno_t strcpy_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>dest</td><td>char *</td><td>目标缓冲区,必须能装下 <code>src</code> 的全部内容再加一个结尾 <code>'\0'</code>;与 <code>src</code> 不得重叠</td></tr>
-<tr><td>destsz</td><td>rsize_t</td><td>仅 <code>_s</code> 版:<code>dest</code> 的总大小(字节),含结尾符位置;通常传 <code>sizeof dest</code>(数组)或显式记录的容量</td></tr>
-<tr><td>src</td><td>const char *</td><td>要复制的源字符串,须以 <code>'\0'</code> 结尾</td></tr>
+<tr><td class="nw">dest</td><td class="nw">char *</td><td>目标缓冲区,必须能装下 <code>src</code> 的全部内容再加一个结尾 <code>'\0'</code>;与 <code>src</code> 不得重叠</td></tr>
+<tr><td class="nw">destsz</td><td class="nw">rsize_t</td><td>仅 <code>_s</code> 版:<code>dest</code> 的总大小(字节),含结尾符位置;通常传 <code>sizeof dest</code>(数组)或显式记录的容量</td></tr>
+<tr><td class="nw">src</td><td class="nw">const char *</td><td>要复制的源字符串,须以 <code>'\0'</code> 结尾</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:<code>strcpy</code> 返回 <code>dest</code>;<code>strcpy_s</code> 返回 0。失败:<code>strcpy</code> 无失败通道——容量不足时直接越界写,不会报错;<code>strcpy_s</code> 在容量不足或参数非法(空指针、区域重叠)时返回非零错误码,并把 <code>dest[0]</code> 置为 <code>'\0'</code>。错误详情:<code>strcpy_s</code> 的返回值本身就是 <code>errno_t</code> 错误码,可直接交给 <code>strerror_s</code> 转成文字。</p>
@@ -1102,9 +1105,9 @@ errno_t strcpy_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>dest</td><td>char *</td><td>目标缓冲区,容量至少为 <code>count</code> 字节;与 <code>src</code> 不得重叠</td></tr>
-<tr><td>src</td><td>const char *</td><td>源字符串,以 <code>'\0'</code> 结尾</td></tr>
-<tr><td>count</td><td>size_t</td><td>最多写入的字符数。<code>src</code> 长度 ≥ <code>count</code> 时<strong>不会</strong>写结尾 <code>'\0'</code>,需调用方手动补;<code>src</code> 较短时剩余空间会被 <code>'\0'</code> 填满</td></tr>
+<tr><td class="nw">dest</td><td class="nw">char *</td><td>目标缓冲区,容量至少为 <code>count</code> 字节;与 <code>src</code> 不得重叠</td></tr>
+<tr><td class="nw">src</td><td class="nw">const char *</td><td>源字符串,以 <code>'\0'</code> 结尾</td></tr>
+<tr><td class="nw">count</td><td class="nw">size_t</td><td>最多写入的字符数。<code>src</code> 长度 ≥ <code>count</code> 时<strong>不会</strong>写结尾 <code>'\0'</code>,需调用方手动补;<code>src</code> 较短时剩余空间会被 <code>'\0'</code> 填满</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:返回 <code>dest</code>。失败:无失败返回值,也不设置 <code>errno</code>;容量不足或参数非法都表现为未定义行为,函数本身不做任何检查,错误只能由调用方在调用前避免。</p>
@@ -1121,9 +1124,9 @@ errno_t strcat_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>dest</td><td>char *</td><td>目标缓冲区,调用前必须已含一个合法的以 <code>'\0'</code> 结尾的字符串;追加发生在其末尾,剩余空间须能容纳 <code>src</code> 与新的结尾符</td></tr>
-<tr><td>destsz</td><td>rsize_t</td><td>仅 <code>_s</code> 版:<code>dest</code> 的总容量(字节),而非剩余可用空间</td></tr>
-<tr><td>src</td><td>const char *</td><td>要追加的字符串,以 <code>'\0'</code> 结尾,不得与 <code>dest</code> 重叠</td></tr>
+<tr><td class="nw">dest</td><td class="nw">char *</td><td>目标缓冲区,调用前必须已含一个合法的以 <code>'\0'</code> 结尾的字符串;追加发生在其末尾,剩余空间须能容纳 <code>src</code> 与新的结尾符</td></tr>
+<tr><td class="nw">destsz</td><td class="nw">rsize_t</td><td>仅 <code>_s</code> 版:<code>dest</code> 的总容量(字节),而非剩余可用空间</td></tr>
+<tr><td class="nw">src</td><td class="nw">const char *</td><td>要追加的字符串,以 <code>'\0'</code> 结尾,不得与 <code>dest</code> 重叠</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:<code>strcat</code> 返回 <code>dest</code>;<code>strcat_s</code> 返回 0。失败:<code>strcat</code> 无失败通道,剩余空间不足即越界写;<code>strcat_s</code> 在剩余空间不足或参数非法时返回非零错误码。错误详情:<code>strcat_s</code> 的返回值即 <code>errno_t</code> 错误码,可交给 <code>strerror_s</code> 转成可读描述。</p>
@@ -1141,9 +1144,9 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>lhs</td><td>const char *</td><td>参与比较的字符串 1,须以 <code>'\0'</code> 结尾</td></tr>
-<tr><td>rhs</td><td>const char *</td><td>参与比较的字符串 2,须以 <code>'\0'</code> 结尾</td></tr>
-<tr><td>count</td><td>size_t</td><td>仅 <code>strncmp</code>:最多比较前 <code>count</code> 个字符;遇到 <code>'\0'</code> 会提前停止。做前缀匹配时传前缀长度</td></tr>
+<tr><td class="nw">lhs</td><td class="nw">const char *</td><td>参与比较的字符串 1,须以 <code>'\0'</code> 结尾</td></tr>
+<tr><td class="nw">rhs</td><td class="nw">const char *</td><td>参与比较的字符串 2,须以 <code>'\0'</code> 结尾</td></tr>
+<tr><td class="nw">count</td><td class="nw">size_t</td><td>仅 <code>strncmp</code>:最多比较前 <code>count</code> 个字符;遇到 <code>'\0'</code> 会提前停止。做前缀匹配时传前缀长度</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:按无符号字符逐个比较,<code>lhs</code> 小于 / 等于 / 大于 <code>rhs</code> 时,分别返回负数 / 0 / 正数。失败:没有失败返回值(比较本身不会失败),也不设置 <code>errno</code>;传入空指针或未终止的串是未定义行为。特别注意:标准只保证符号,不保证具体是 -1 或 1,不要写 <code>== 1</code> 这样的判断。</p>
@@ -1160,8 +1163,8 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>s</td><td>const char *</td><td>被搜索的字符串,须以 <code>'\0'</code> 结尾</td></tr>
-<tr><td>ch</td><td>int</td><td>目标字符,虽声明为 <code>int</code>,实际按 <code>char</code> 处理。<code>strchr</code> 从头找第一次出现,<code>strrchr</code> 找最后一次出现;传 <code>'\0'</code> 时可定位到结尾符本身</td></tr>
+<tr><td class="nw">s</td><td class="nw">const char *</td><td>被搜索的字符串,须以 <code>'\0'</code> 结尾</td></tr>
+<tr><td class="nw">ch</td><td class="nw">int</td><td>目标字符,虽声明为 <code>int</code>,实际按 <code>char</code> 处理。<code>strchr</code> 从头找第一次出现,<code>strrchr</code> 找最后一次出现;传 <code>'\0'</code> 时可定位到结尾符本身</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:<code>strchr</code> 返回第一次出现处的指针,<code>strrchr</code> 返回最后一次出现处的指针。失败(未找到):返回 <code>NULL</code>,不设置 <code>errno</code>,所以"没找到"与"出错"无法区分,也无需区分——使用返回值前判 <code>NULL</code> 即可。</p>
@@ -1177,8 +1180,8 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>haystack</td><td>const char *</td><td>被搜索的主串,须以 <code>'\0'</code> 结尾</td></tr>
-<tr><td>needle</td><td>const char *</td><td>要查找的子串。传空串 <code>""</code> 时函数直接返回 <code>haystack</code> 本身</td></tr>
+<tr><td class="nw">haystack</td><td class="nw">const char *</td><td>被搜索的主串,须以 <code>'\0'</code> 结尾</td></tr>
+<tr><td class="nw">needle</td><td class="nw">const char *</td><td>要查找的子串。传空串 <code>""</code> 时函数直接返回 <code>haystack</code> 本身</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:返回 <code>needle</code> 在 <code>haystack</code> 中首次出现位置的指针。失败(未找到):返回 <code>NULL</code>,不设置 <code>errno</code>;判断"是否包含"直接用返回值真假即可。</p>
@@ -1198,9 +1201,9 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>str</td><td>char *</td><td>首次调用传入待切分的串(必须可写,函数会就地把分隔符改写为 <code>'\0'</code>,字符串字面量传进去直接崩溃);后续调用传 <code>NULL</code>,表示继续切分上一次的串</td></tr>
-<tr><td>delims</td><td>const char *</td><td>分隔符集合,其中<strong>每一个字符</strong>都单独算作分隔符(不是把它当成一个整体子串);每次调用都可以传不同的集合</td></tr>
-<tr><td>context</td><td>char **</td><td>仅 <code>strtok_s</code>(MSVC 版):由调用方提供的状态指针,取代 <code>strtok</code> 内部的静态变量,因而可重入、可在多线程/嵌套场景中使用;首次调用前初始化为 <code>NULL</code> 即可</td></tr>
+<tr><td class="nw">str</td><td class="nw">char *</td><td>首次调用传入待切分的串(必须可写,函数会就地把分隔符改写为 <code>'\0'</code>,字符串字面量传进去直接崩溃);后续调用传 <code>NULL</code>,表示继续切分上一次的串</td></tr>
+<tr><td class="nw">delims</td><td class="nw">const char *</td><td>分隔符集合,其中<strong>每一个字符</strong>都单独算作分隔符(不是把它当成一个整体子串);每次调用都可以传不同的集合</td></tr>
+<tr><td class="nw">context</td><td class="nw">char **</td><td>仅 <code>strtok_s</code>(MSVC 版):由调用方提供的状态指针,取代 <code>strtok</code> 内部的静态变量,因而可重入、可在多线程/嵌套场景中使用;首次调用前初始化为 <code>NULL</code> 即可</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:返回指向下一个记号(token)的指针,该记号已被就地截断为独立字符串。失败/结束:没有更多记号时返回 <code>NULL</code>,不设置 <code>errno</code>。注意连续的分隔符被当作一个处理,不会产生空记号。</p>
@@ -1217,9 +1220,9 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>dest</td><td>void *</td><td>目标内存起点,容量至少 <code>count</code> 字节;与 <code>src</code> <strong>不得重叠</strong>,重叠即未定义行为</td></tr>
-<tr><td>src</td><td>const void *</td><td>源内存起点,可读区域至少 <code>count</code> 字节</td></tr>
-<tr><td>count</td><td>size_t</td><td>要复制的字节数,通常用 <code>sizeof</code> 计算;它按字节数工作,与元素类型无关</td></tr>
+<tr><td class="nw">dest</td><td class="nw">void *</td><td>目标内存起点,容量至少 <code>count</code> 字节;与 <code>src</code> <strong>不得重叠</strong>,重叠即未定义行为</td></tr>
+<tr><td class="nw">src</td><td class="nw">const void *</td><td>源内存起点,可读区域至少 <code>count</code> 字节</td></tr>
+<tr><td class="nw">count</td><td class="nw">size_t</td><td>要复制的字节数,通常用 <code>sizeof</code> 计算;它按字节数工作,与元素类型无关</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:返回 <code>dest</code>。失败:无失败返回值,也不设置 <code>errno</code>;越界、空指针、区域重叠都是未定义行为,函数不做检查,只能靠调用方在调用前保证参数合法。</p>
@@ -1237,9 +1240,9 @@ memcpy(dst, src, <span class="kw">sizeof</span> dst);   <span class="cm">// 按�
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>dest</td><td>void *</td><td>目标内存起点,容量至少 <code>count</code> 字节;<strong>允许</strong>与 <code>src</code> 重叠</td></tr>
-<tr><td>src</td><td>const void *</td><td>源内存起点,可读区域至少 <code>count</code> 字节</td></tr>
-<tr><td>count</td><td>size_t</td><td>要移动的字节数</td></tr>
+<tr><td class="nw">dest</td><td class="nw">void *</td><td>目标内存起点,容量至少 <code>count</code> 字节;<strong>允许</strong>与 <code>src</code> 重叠</td></tr>
+<tr><td class="nw">src</td><td class="nw">const void *</td><td>源内存起点,可读区域至少 <code>count</code> 字节</td></tr>
+<tr><td class="nw">count</td><td class="nw">size_t</td><td class="nw">要移动的字节数</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:返回 <code>dest</code>。失败:无失败返回值,也不设置 <code>errno</code>;越界或空指针仍是未定义行为,函数只额外保证"重叠也正确",不保证边界安全。</p>
@@ -1256,9 +1259,9 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>dest</td><td>void *</td><td>要填充的内存起点,可写区域至少 <code>count</code> 字节</td></tr>
-<tr><td>ch</td><td>int</td><td>填充值,先按 <code>unsigned char</code> 截断再逐字节写入。最常用的是 <code>0</code>;填非零值时要记得它是<strong>按字节</strong>生效的(填 1 得到的 <code>int</code> 是 <code>0x01010101</code>,而不是 1)</td></tr>
-<tr><td>count</td><td>size_t</td><td>填充的字节数。写数组时应传 <code>sizeof buf</code>,不要误写成 <code>sizeof(char*)</code></td></tr>
+<tr><td class="nw">dest</td><td class="nw">void *</td><td>要填充的内存起点,可写区域至少 <code>count</code> 字节</td></tr>
+<tr><td class="nw">ch</td><td class="nw">int</td><td>填充值,先按 <code>unsigned char</code> 截断再逐字节写入。最常用的是 <code>0</code>;填非零值时要记得它是<strong>按字节</strong>生效的(填 1 得到的 <code>int</code> 是 <code>0x01010101</code>,而不是 1)</td></tr>
+<tr><td class="nw">count</td><td class="nw">size_t</td><td>填充的字节数。写数组时应传 <code>sizeof buf</code>,不要误写成 <code>sizeof(char*)</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:返回 <code>dest</code>。失败:无失败返回值,也不设置 <code>errno</code>;参数顺序写反(如 <code>memset(&amp;cfg, sizeof cfg, 0)</code>)编译不报错、运行也不报错,只是什么都没清干净,须靠代码评审发现。</p>
@@ -1274,9 +1277,9 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>lhs</td><td>const void *</td><td>参与比较的内存块 1,可读区域至少 <code>count</code> 字节</td></tr>
-<tr><td>rhs</td><td>const void *</td><td>参与比较的内存块 2,可读区域至少 <code>count</code> 字节</td></tr>
-<tr><td>count</td><td>size_t</td><td>固定比较的字节数;与 <code>strcmp</code> 不同,它<strong>不</strong>在 <code>'\0'</code> 处停下,始终比满 <code>count</code> 字节</td></tr>
+<tr><td class="nw">lhs</td><td class="nw">const void *</td><td>参与比较的内存块 1,可读区域至少 <code>count</code> 字节</td></tr>
+<tr><td class="nw">rhs</td><td class="nw">const void *</td><td>参与比较的内存块 2,可读区域至少 <code>count</code> 字节</td></tr>
+<tr><td class="nw">count</td><td class="nw">size_t</td><td>固定比较的字节数;与 <code>strcmp</code> 不同,它<strong>不</strong>在 <code>'\0'</code> 处停下,始终比满 <code>count</code> 字节</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:按无符号字节逐个比较,<code>lhs</code> 小于 / 等于 / 大于 <code>rhs</code> 时分别返回负数 / 0 / 正数。失败:没有失败返回值,也不设置 <code>errno</code>;可读范围不足 <code>count</code> 字节即为未定义行为。同样只保证符号,不要依赖具体数值。</p>
@@ -1295,9 +1298,9 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>s</td><td>const void *</td><td>被搜索的内存块起点,可读区域至少 <code>count</code> 字节</td></tr>
-<tr><td>ch</td><td>int</td><td>要查找的目标字节,先转成 <code>unsigned char</code> 再比较</td></tr>
-<tr><td>count</td><td>size_t</td><td>搜索范围的字节数(长度上限);搜索不依赖结尾 <code>'\0'</code>,数据中间含 <code>'\0'</code> 也不受影响</td></tr>
+<tr><td class="nw">s</td><td class="nw">const void *</td><td>被搜索的内存块起点,可读区域至少 <code>count</code> 字节</td></tr>
+<tr><td class="nw">ch</td><td class="nw">int</td><td>要查找的目标字节,先转成 <code>unsigned char</code> 再比较</td></tr>
+<tr><td class="nw">count</td><td class="nw">size_t</td><td>搜索范围的字节数(长度上限);搜索不依赖结尾 <code>'\0'</code>,数据中间含 <code>'\0'</code> 也不受影响</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:返回前 <code>count</code> 字节内第一个等于 <code>ch</code> 的字节的指针。失败(未找到):返回 <code>NULL</code>,不设置 <code>errno</code>;使用返回值前必须判 <code>NULL</code>。</p>
@@ -1316,9 +1319,9 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>errnum</td><td>int</td><td>要翻译的错误码,通常直接取自 <code>errno</code>,也可以是 <code>_s</code> 系列函数返回的 <code>errno_t</code>;取值和文字描述由实现定义</td></tr>
-<tr><td>buf</td><td>char *</td><td>仅 <code>_s</code> 版:接收错误描述文字的调用方缓冲区</td></tr>
-<tr><td>bufsz</td><td>rsize_t</td><td>仅 <code>_s</code> 版:<code>buf</code> 的容量(字节),含结尾符;描述过长时会被截断,128 字节一般够用</td></tr>
+<tr><td class="nw">errnum</td><td class="nw">int</td><td>要翻译的错误码,通常直接取自 <code>errno</code>,也可以是 <code>_s</code> 系列函数返回的 <code>errno_t</code>;取值和文字描述由实现定义</td></tr>
+<tr><td class="nw">buf</td><td class="nw">char *</td><td>仅 <code>_s</code> 版:接收错误描述文字的调用方缓冲区</td></tr>
+<tr><td class="nw">bufsz</td><td class="nw">rsize_t</td><td>仅 <code>_s</code> 版:<code>buf</code> 的容量(字节),含结尾符;描述过长时会被截断,128 字节一般够用</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:<code>strerror</code> 返回指向错误描述字符串的指针;<code>strerror_s</code> 返回 0,描述被写入调用方的 <code>buf</code>(过长时截断)。失败:<code>strerror</code> 对未知错误码仍返回一段(实现定义的)文字,不会返回 <code>NULL</code>;<code>strerror_s</code> 参数非法时返回非零错误码。错误详情:这一对函数本身就是"取错误详情"的手段——先保存 <code>errno</code>,再交给它们转成可读文字。</p>
@@ -1343,18 +1346,18 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <tr><th>函数</th><th>一句话说明</th><th>备注</th></tr>
 </thead>
 <tbody>
-<tr><td><code>wcslen</code></td><td>返回宽字符串的宽字符个数</td><td>算的是字符数不是字节数,分配内存要再乘 <code>sizeof(wchar_t)</code></td></tr>
-<tr><td><code>wcscpy_s</code></td><td>带边界检查地复制宽字符串</td><td><span class="badge ok">推荐</span> 第二参数是宽字符个数,写成字节数会溢出</td></tr>
-<tr><td><code>wcscat_s</code></td><td>带边界检查地追加宽字符串</td><td><span class="badge ok">推荐</span> 目标缓冲须容得下两段内容加结尾 <code>L'\0'</code></td></tr>
-<tr><td><code>wcscmp</code> / <code>wcsncmp</code></td><td>逐码元比较宽字符串大小</td><td>比的是编码值不是语言顺序,做本地化排序请用 <code>wcscoll</code></td></tr>
-<tr><td><code>wcschr</code> / <code>wcsstr</code></td><td>查找宽字符或宽子串位置</td><td>返回指针不是下标;Windows 上按 UTF-16 码元匹配,代理对需谨慎</td></tr>
-<tr><td><code>swprintf_s</code></td><td>把格式化结果写入宽字符缓冲</td><td><span class="badge ok">推荐</span> 宽格式串里 <code>%s</code> 含义随平台变,明确写 <code>%ls</code> / <code>%hs</code></td></tr>
-<tr><td><code>swscanf_s</code></td><td>从宽字符串中按格式解析数据</td><td><code>%s</code> 与 <code>%c</code> 必须紧跟一个缓冲大小实参,漏传直接崩溃</td></tr>
-<tr><td><code>wcstok_s</code></td><td>可重入地切分宽字符串记号</td><td><span class="badge ok">推荐</span> 旧的 <code>wcstok</code> 带全局状态 <span class="badge old">已过时</span>;本函数会改写原串</td></tr>
-<tr><td><code>wcstol</code> / <code>wcstod</code></td><td>宽字符串转长整数或浮点数</td><td>靠 <code>endptr</code> 判断是否解析成功,溢出看 <code>errno == ERANGE</code></td></tr>
-<tr><td><code>fgetws</code> / <code>fputws</code></td><td>按行读写宽字符文本流</td><td>流一经宽定向,再调 <code>fgets</code> 等窄函数即为未定义行为</td></tr>
+<tr><td class="nw"><code>wcslen</code></td><td>返回宽字符串的宽字符个数</td><td>算的是字符数不是字节数,分配内存要再乘 <code>sizeof(wchar_t)</code></td></tr>
+<tr><td class="nw"><code>wcscpy_s</code></td><td>带边界检查地复制宽字符串</td><td><span class="badge ok">推荐</span> 第二参数是宽字符个数,写成字节数会溢出</td></tr>
+<tr><td class="nw"><code>wcscat_s</code></td><td>带边界检查地追加宽字符串</td><td><span class="badge ok">推荐</span> 目标缓冲须容得下两段内容加结尾 <code>L'\0'</code></td></tr>
+<tr><td class="nw"><code>wcscmp</code> / <code>wcsncmp</code></td><td>逐码元比较宽字符串大小</td><td>比的是编码值不是语言顺序,做本地化排序请用 <code>wcscoll</code></td></tr>
+<tr><td class="nw"><code>wcschr</code> / <code>wcsstr</code></td><td>查找宽字符或宽子串位置</td><td>返回指针不是下标;Windows 上按 UTF-16 码元匹配,代理对需谨慎</td></tr>
+<tr><td class="nw"><code>swprintf_s</code></td><td>把格式化结果写入宽字符缓冲</td><td><span class="badge ok">推荐</span> 宽格式串里 <code>%s</code> 含义随平台变,明确写 <code>%ls</code> / <code>%hs</code></td></tr>
+<tr><td class="nw"><code>swscanf_s</code></td><td>从宽字符串中按格式解析数据</td><td><code>%s</code> 与 <code>%c</code> 必须紧跟一个缓冲大小实参,漏传直接崩溃</td></tr>
+<tr><td class="nw"><code>wcstok_s</code></td><td>可重入地切分宽字符串记号</td><td><span class="badge ok">推荐</span> 旧的 <code>wcstok</code> 带全局状态 <span class="badge old">已过时</span>;本函数会改写原串</td></tr>
+<tr><td class="nw"><code>wcstol</code> / <code>wcstod</code></td><td>宽字符串转长整数或浮点数</td><td>靠 <code>endptr</code> 判断是否解析成功,溢出看 <code>errno == ERANGE</code></td></tr>
+<tr><td class="nw"><code>fgetws</code> / <code>fputws</code></td><td>按行读写宽字符文本流</td><td>流一经宽定向,再调 <code>fgets</code> 等窄函数即为未定义行为</td></tr>
 <tr><td><code>mbstowcs_s</code> / <code>wcstombs_s</code></td><td>多字节与宽字符编码互相转换</td><td><span class="badge ok">推荐</span> 结果取决于当前 locale,未设 locale 时非 ASCII 会转失败</td></tr>
-<tr><td><code>_wfopen_s</code></td><td>用宽字符路径打开文件</td><td>MSVC 专有,非可移植;Windows 上处理中文/非 ASCII 路径的首选</td></tr>
+<tr><td class="nw"><code>_wfopen_s</code></td><td>用宽字符路径打开文件</td><td>MSVC 专有,非可移植;Windows 上处理中文/非 ASCII 路径的首选</td></tr>
 </tbody>
 </table>
 
@@ -1366,7 +1369,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>str</td><td>const wchar_t *</td><td>以 <code>L'\0'</code> 结尾的宽字符串;不可为 <code>NULL</code>,也不可指向没有终止符的数组,否则函数会一直越界读取(未定义行为)</td></tr>
+<tr><td class="nw">str</td><td class="nw">const wchar_t *</td><td>以 <code>L'\0'</code> 结尾的宽字符串;不可为 <code>NULL</code>,也不可指向没有终止符的数组,否则函数会一直越界读取(未定义行为)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>返回字符串中 <code>wchar_t</code> 单元的个数,<strong>不包含终止符</strong>。该函数没有失败返回值,也不设置 <code>errno</code>——传入非法指针不是"失败"而是未定义行为,只能由调用方保证前置条件。注意返回的是"宽字符数"而非字节数;需要字节数(例如 <code>malloc</code> 时)必须写成 <code>wcslen(s) * sizeof(wchar_t)</code>,再为终止符多留一个元素。</p>
@@ -1383,9 +1386,9 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>dest</td><td>wchar_t *</td><td>目标缓冲区,接收复制结果;不可为 <code>NULL</code>,也不可与 <code>src</code> 内存重叠</td></tr>
-<tr><td>destsz</td><td>rsize_t</td><td>目标缓冲区的<strong>元素容量</strong>(宽字符个数,<u>不是字节数</u>),含终止符所占的那个位置;推荐一律写 <code>_countof(buf)</code>,误写成 <code>sizeof(buf)</code> 会让容量虚高一倍从而溢出</td></tr>
-<tr><td>src</td><td>const wchar_t *</td><td>以 <code>L'\0'</code> 结尾的源串;其长度加 1 必须不大于 <code>destsz</code></td></tr>
+<tr><td class="nw">dest</td><td class="nw">wchar_t *</td><td>目标缓冲区,接收复制结果;不可为 <code>NULL</code>,也不可与 <code>src</code> 内存重叠</td></tr>
+<tr><td class="nw">destsz</td><td class="nw">rsize_t</td><td>目标缓冲区的<strong>元素容量</strong>(宽字符个数,<u>不是字节数</u>),含终止符所占的那个位置;推荐一律写 <code>_countof(buf)</code>,误写成 <code>sizeof(buf)</code> 会让容量虚高一倍从而溢出</td></tr>
+<tr><td class="nw">src</td><td class="nw">const wchar_t *</td><td>以 <code>L'\0'</code> 结尾的源串;其长度加 1 必须不大于 <code>destsz</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 <code>0</code>;容量不足、指针为空或缓冲区重叠时返回非零 <code>errno</code> 风格错误码(如 <code>ERANGE</code>、<code>EINVAL</code>),同时触发无效参数处理程序——默认行为下 <code>dest</code> 被置为空串(<code>dest[0] = L'\0'</code>),因此失败后目标缓冲区内容不可信。错误详情直接看返回值即可,无需再读 <code>errno</code>。</p>
@@ -1406,9 +1409,9 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>dest</td><td>wchar_t *</td><td>已经含有合法(带 <code>L'\0'</code> 的)字符串的目标缓冲区;函数会先 <code>wcslen(dest)</code> 找到追加点,所以对未初始化的缓冲区调用是未定义行为——新缓冲区请先写入 <code>dest[0] = L'\0'</code></td></tr>
-<tr><td>destsz</td><td>rsize_t</td><td>dest <strong>整个缓冲区</strong>的元素容量(宽字符数),<u>不是剩余空间</u>;须容得下原有内容 + src + 一个结尾 <code>L'\0'</code>,同样用 <code>_countof(buf)</code> 而非 <code>sizeof(buf)</code></td></tr>
-<tr><td>src</td><td>const wchar_t *</td><td>追加到 dest 末尾的源串,以 <code>L'\0'</code> 结尾;不可与 dest 重叠</td></tr>
+<tr><td class="nw">dest</td><td class="nw">wchar_t *</td><td>已经含有合法(带 <code>L'\0'</code> 的)字符串的目标缓冲区;函数会先 <code>wcslen(dest)</code> 找到追加点,所以对未初始化的缓冲区调用是未定义行为——新缓冲区请先写入 <code>dest[0] = L'\0'</code></td></tr>
+<tr><td class="nw">destsz</td><td class="nw">rsize_t</td><td>dest <strong>整个缓冲区</strong>的元素容量(宽字符数),<u>不是剩余空间</u>;须容得下原有内容 + src + 一个结尾 <code>L'\0'</code>,同样用 <code>_countof(buf)</code> 而非 <code>sizeof(buf)</code></td></tr>
+<tr><td class="nw">src</td><td class="nw">const wchar_t *</td><td>追加到 dest 末尾的源串,以 <code>L'\0'</code> 结尾;不可与 dest 重叠</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 <code>0</code>;若 dest 前 destsz 个元素中找不到终止符、剩余空间放不下 src、或指针为空,返回非零 <code>errno</code> 风格错误码(<code>ERANGE</code> / <code>EINVAL</code>)并触发无效参数处理程序,默认把 dest 置为空串。错误码即返回值本身。</p>
@@ -1426,9 +1429,9 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>lhs</td><td>const wchar_t *</td><td>参与比较的第一个宽字符串,以 <code>L'\0'</code> 结尾</td></tr>
-<tr><td>rhs</td><td>const wchar_t *</td><td>参与比较的第二个宽字符串,以 <code>L'\0'</code> 结尾</td></tr>
-<tr><td>n</td><td>size_t</td><td>仅 <code>wcsncmp</code>:最多比较的<strong>宽字符个数</strong>;遇到 <code>L'\0'</code> 会提前停止,常用于前缀判断(如判断 <code>L"https://"</code> 传 8)</td></tr>
+<tr><td class="nw">lhs</td><td class="nw">const wchar_t *</td><td>参与比较的第一个宽字符串,以 <code>L'\0'</code> 结尾</td></tr>
+<tr><td class="nw">rhs</td><td class="nw">const wchar_t *</td><td>参与比较的第二个宽字符串,以 <code>L'\0'</code> 结尾</td></tr>
+<tr><td class="nw">n</td><td class="nw">size_t</td><td>仅 <code>wcsncmp</code>:最多比较的<strong>宽字符个数</strong>;遇到 <code>L'\0'</code> 会提前停止,常用于前缀判断(如判断 <code>L"https://"</code> 传 8)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>逐个比较 <code>wchar_t</code> 的数值:两串相等返回 <code>0</code>,lhs 排在前(首个不同码元更小)返回负值,排在后返回正值。具体数值大小无意义,只应判断符号。这两个函数没有"失败"状态;比较的是<strong>码元值而非本地化排序</strong>,所以结果与用户语言习惯无关。</p>
@@ -1448,9 +1451,9 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>str</td><td>const wchar_t *</td><td>被搜索的宽字符串,以 <code>L'\0'</code> 结尾</td></tr>
-<tr><td>ch</td><td>wchar_t</td><td>仅 <code>wcschr</code>:要查找的单个宽字符,写成 <code>L'.'</code> 这样的宽字符字面量;传 <code>L'\0'</code> 则返回指向终止符的指针</td></tr>
-<tr><td>substr</td><td>const wchar_t *</td><td>仅 <code>wcsstr</code>:要查找的宽子串;若为空串 <code>L""</code>,直接返回 str 本身</td></tr>
+<tr><td class="nw">str</td><td class="nw">const wchar_t *</td><td>被搜索的宽字符串,以 <code>L'\0'</code> 结尾</td></tr>
+<tr><td class="nw">ch</td><td class="nw">wchar_t</td><td>仅 <code>wcschr</code>:要查找的单个宽字符,写成 <code>L'.'</code> 这样的宽字符字面量;传 <code>L'\0'</code> 则返回指向终止符的指针</td></tr>
+<tr><td class="nw">substr</td><td class="nw">const wchar_t *</td><td>仅 <code>wcsstr</code>:要查找的宽子串;若为空串 <code>L""</code>,直接返回 str 本身</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>找到时返回指向<strong>首次出现位置</strong>的指针(注意是指针不是下标,要下标需自行做 <code>p - str</code>);未找到返回 <code>NULL</code>——这就是唯一的"失败"信号,不设置 <code>errno</code>。返回类型虽是非 const 的 <code>wchar_t *</code>,但若源串本身是常量,通过该指针写入仍是未定义行为。</p>
@@ -1471,10 +1474,10 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>buffer</td><td>wchar_t *</td><td>接收格式化结果的输出缓冲区;失败时会被置为空串</td></tr>
-<tr><td>sizeOfBuffer</td><td>size_t</td><td>缓冲区容量,按<strong>宽字符数</strong>计(不是字节数),含终止符位置;用 <code>_countof(buf)</code></td></tr>
-<tr><td>format</td><td>const wchar_t *</td><td>宽字符格式串,如 <code>L"第 %d 行: %ls"</code>。MSVC 陷阱:宽格式串里 <code>%s</code> 默认按 <code>wchar_t*</code> 解释(与 C 标准相反),跨平台代码应显式写 <code>%ls</code>(宽串)/ <code>%hs</code>(窄串)</td></tr>
-<tr><td>...</td><td>可变参数</td><td>与格式串一一对应的实参;类型不匹配不会有编译期保护,是崩溃的常见来源</td></tr>
+<tr><td class="nw">buffer</td><td class="nw">wchar_t *</td><td>接收格式化结果的输出缓冲区;失败时会被置为空串</td></tr>
+<tr><td class="nw">sizeOfBuffer</td><td class="nw">size_t</td><td>缓冲区容量,按<strong>宽字符数</strong>计(不是字节数),含终止符位置;用 <code>_countof(buf)</code></td></tr>
+<tr><td class="nw">format</td><td class="nw">const wchar_t *</td><td>宽字符格式串,如 <code>L"第 %d 行: %ls"</code>。MSVC 陷阱:宽格式串里 <code>%s</code> 默认按 <code>wchar_t*</code> 解释(与 C 标准相反),跨平台代码应显式写 <code>%ls</code>(宽串)/ <code>%hs</code>(窄串)</td></tr>
+<tr><td class="nw">...</td><td class="nw">可变参数</td><td>与格式串一一对应的实参;类型不匹配不会有编译期保护,是崩溃的常见来源</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回写入的<strong>宽字符数</strong>(不含终止符);失败或容量不足返回负值,并触发无效参数处理程序,同时把 buffer 置为空串。错误详情只能由返回值的符号判断,函数不提供更细的错误码。</p>
@@ -1495,9 +1498,9 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>buffer</td><td>const wchar_t *</td><td>待解析的宽字符串,以 <code>L'\0'</code> 结尾;函数不会修改它</td></tr>
-<tr><td>format</td><td>const wchar_t *</td><td>格式串,如 <code>L"%d %ls"</code>;转换说明与 <code>wscanf</code> 一致</td></tr>
-<tr><td>...</td><td>可变参数</td><td>接收解析结果的变量地址。<strong>_s 版本的硬性规定:</strong>每个 <code>%s</code> / <code>%c</code> / <code>%[]</code> 之后必须<u>额外紧跟一个缓冲区容量实参</u>(宽字符数,类型为 <code>unsigned</code>/<code>rsize_t</code>),漏传不会报编译错误,却会在运行期崩溃或读到垃圾</td></tr>
+<tr><td class="nw">buffer</td><td class="nw">const wchar_t *</td><td>待解析的宽字符串,以 <code>L'\0'</code> 结尾;函数不会修改它</td></tr>
+<tr><td class="nw">format</td><td class="nw">const wchar_t *</td><td>格式串,如 <code>L"%d %ls"</code>;转换说明与 <code>wscanf</code> 一致</td></tr>
+<tr><td class="nw">...</td><td class="nw">可变参数</td><td>接收解析结果的变量地址。<strong>_s 版本的硬性规定:</strong>每个 <code>%s</code> / <code>%c</code> / <code>%[]</code> 之后必须<u>额外紧跟一个缓冲区容量实参</u>(宽字符数,类型为 <code>unsigned</code>/<code>rsize_t</code>),漏传不会报编译错误,却会在运行期崩溃或读到垃圾</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>返回成功匹配<strong>并赋值</strong>的字段个数;若在第一个字段匹配成功前就发生匹配失败或输入耗尽,返回 <code>EOF</code>。判断解析是否完整,应把返回值与期望的字段数相比较,而不是只判断非零。</p>
@@ -1521,9 +1524,9 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>str</td><td>wchar_t *</td><td><strong>首次调用</strong>传待切分的字符串,<strong>后续调用一律传 <code>NULL</code></strong> 以继续上次的位置。该串会被<u>就地改写</u>(分隔符处写入 <code>L'\0'</code>),因此不能传字符串字面量或 const 串,必要时先复制一份</td></tr>
-<tr><td>delim</td><td>const wchar_t *</td><td>分隔符<strong>集合</strong>:其中每一个宽字符都单独作为分隔符,而不是把整串当作一个分隔序列;每次调用可以传不同的集合</td></tr>
-<tr><td>context</td><td>wchar_t **</td><td>由调用方提供的状态指针地址,函数用它保存切分进度,取代旧 <code>wcstok</code> 的内部静态变量;首次调用前可初始化为 <code>NULL</code>,整轮切分中必须传同一个变量</td></tr>
+<tr><td class="nw">str</td><td class="nw">wchar_t *</td><td><strong>首次调用</strong>传待切分的字符串,<strong>后续调用一律传 <code>NULL</code></strong> 以继续上次的位置。该串会被<u>就地改写</u>(分隔符处写入 <code>L'\0'</code>),因此不能传字符串字面量或 const 串,必要时先复制一份</td></tr>
+<tr><td class="nw">delim</td><td class="nw">const wchar_t *</td><td>分隔符<strong>集合</strong>:其中每一个宽字符都单独作为分隔符,而不是把整串当作一个分隔序列;每次调用可以传不同的集合</td></tr>
+<tr><td class="nw">context</td><td class="nw">wchar_t **</td><td>由调用方提供的状态指针地址,函数用它保存切分进度,取代旧 <code>wcstok</code> 的内部静态变量;首次调用前可初始化为 <code>NULL</code>,整轮切分中必须传同一个变量</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>返回指向下一个记号(token)首字符的指针,该记号已被就地补上 <code>L'\0'</code>;没有更多记号时返回 <code>NULL</code>,这是循环的终止条件。参数非法时同样返回 <code>NULL</code> 并触发无效参数处理程序;函数不设置 <code>errno</code>。</p>
@@ -1546,9 +1549,9 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>str</td><td>const wchar_t *</td><td>待转换的宽字符串,允许带前导空白与正负号;转换从第一个非空白字符开始,遇到不合法字符即停止</td></tr>
-<tr><td>endptr</td><td>wchar_t **</td><td>输出参数:函数写入指向<strong>第一个未被转换的字符</strong>的指针。可传 <code>NULL</code> 表示不关心,但那样就无法区分"解析失败"与"值确实是 0"</td></tr>
-<tr><td>base</td><td>int</td><td>仅 <code>wcstol</code>:进制,取值 <code>0</code> 或 <code>2</code>~<code>36</code>;<code>0</code> 表示按前缀自动识别(<code>0x</code>/<code>0X</code> 为十六进制、<code>0</code> 开头为八进制、其余为十进制)</td></tr>
+<tr><td class="nw">str</td><td class="nw">const wchar_t *</td><td>待转换的宽字符串,允许带前导空白与正负号;转换从第一个非空白字符开始,遇到不合法字符即停止</td></tr>
+<tr><td class="nw">endptr</td><td class="nw">wchar_t **</td><td>输出参数:函数写入指向<strong>第一个未被转换的字符</strong>的指针。可传 <code>NULL</code> 表示不关心,但那样就无法区分"解析失败"与"值确实是 0"</td></tr>
+<tr><td class="nw">base</td><td class="nw">int</td><td>仅 <code>wcstol</code>:进制,取值 <code>0</code> 或 <code>2</code>~<code>36</code>;<code>0</code> 表示按前缀自动识别(<code>0x</code>/<code>0X</code> 为十六进制、<code>0</code> 开头为八进制、其余为十进制)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回转换结果。溢出时返回 <code>LONG_MAX</code>/<code>LONG_MIN</code>(<code>wcstod</code> 则为 <code>±HUGE_VAL</code>)并置 <code>errno = ERANGE</code>;<code>wcstod</code> 下溢返回 0 并同样置 <code>ERANGE</code>。完全无法转换时返回 <code>0</code>,此时 <code>*endptr == str</code>——务必用这一点区分"值就是 0"与"解析失败",这是唯一可靠的判定方式。检查 <code>errno</code> 前应先将其清零。</p>
@@ -1571,9 +1574,9 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>str</td><td>wchar_t * / const wchar_t *</td><td><code>fgetws</code>:接收读入内容的缓冲区,行尾换行符 <code>L'\n'</code> 会被<strong>保留</strong>在其中。<code>fputws</code>:要写出的宽字符串,函数<strong>不会</strong>自动补换行,需要换行须自己写在串里</td></tr>
-<tr><td>count</td><td>int</td><td>仅 <code>fgetws</code>:缓冲区能容纳的宽字符数,最多读入 <code>count - 1</code> 个宽字符后补 <code>L'\0'</code>;用 <code>_countof(buf)</code> 传入</td></tr>
-<tr><td>stream</td><td>FILE *</td><td>目标流。流有"宽/窄取向",首次 I/O 即锁定,之后同一 <code>FILE*</code> 不可再混用窄字符函数</td></tr>
+<tr><td class="nw">str</td><td>wchar_t * / const wchar_t *</td><td><code>fgetws</code>:接收读入内容的缓冲区,行尾换行符 <code>L'\n'</code> 会被<strong>保留</strong>在其中。<code>fputws</code>:要写出的宽字符串,函数<strong>不会</strong>自动补换行,需要换行须自己写在串里</td></tr>
+<tr><td class="nw">count</td><td class="nw">int</td><td>仅 <code>fgetws</code>:缓冲区能容纳的宽字符数,最多读入 <code>count - 1</code> 个宽字符后补 <code>L'\0'</code>;用 <code>_countof(buf)</code> 传入</td></tr>
+<tr><td class="nw">stream</td><td class="nw">FILE *</td><td>目标流。流有"宽/窄取向",首次 I/O 即锁定,之后同一 <code>FILE*</code> 不可再混用窄字符函数</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p><code>fgetws</code> 成功返回 <code>str</code> 本身;到达文件尾且未读入任何字符、或发生读错误时返回 <code>NULL</code>——两者需靠 <code>feof</code> / <code>ferror</code> 进一步区分。<code>fputws</code> 成功返回非负值,失败返回 <code>EOF</code>(标准中的 <code>WEOF</code> 语义,MSVC 上即 <code>EOF</code>),具体错误可查 <code>errno</code> 或 <code>ferror(stream)</code>。</p>
@@ -1610,12 +1613,12 @@ errno_t wcstombs_s(
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>pReturnValue</td><td>size_t *</td><td>输出参数:带出实际转换的单元数,<strong>含终止符</strong>(<code>mbstowcs_s</code> 为宽字符数,<code>wcstombs_s</code> 为字节数);可传 <code>NULL</code> 表示不关心。若目标缓冲区传 <code>NULL</code>,可借此先"试算"所需大小</td></tr>
-<tr><td>wcstr</td><td>wchar_t *</td><td><code>mbstowcs_s</code> 的目标宽字符缓冲区 / <code>wcstombs_s</code> 的源宽字符串</td></tr>
-<tr><td>sizeInWords</td><td>size_t</td><td>仅 <code>mbstowcs_s</code>:目标缓冲区容量,按<strong>宽字符数</strong>计,含终止符位置</td></tr>
-<tr><td>mbstr</td><td>const char * / char *</td><td><code>mbstowcs_s</code> 的源多字节串 / <code>wcstombs_s</code> 的目标窄缓冲区;其编码<strong>由当前 C locale 决定</strong>,而非固定为 UTF-8</td></tr>
-<tr><td>sizeInBytes</td><td>size_t</td><td>仅 <code>wcstombs_s</code>:目标窄缓冲区容量,按<strong>字节数</strong>计(注意与上面的宽字符数单位不同)</td></tr>
-<tr><td>count</td><td>size_t</td><td>最多转换的字符数;常传宏 <code>_TRUNCATE</code>,表示"能装多少装多少并正确补终止符"而不是报错</td></tr>
+<tr><td class="nw">pReturnValue</td><td class="nw">size_t *</td><td>输出参数:带出实际转换的单元数,<strong>含终止符</strong>(<code>mbstowcs_s</code> 为宽字符数,<code>wcstombs_s</code> 为字节数);可传 <code>NULL</code> 表示不关心。若目标缓冲区传 <code>NULL</code>,可借此先"试算"所需大小</td></tr>
+<tr><td class="nw">wcstr</td><td class="nw">wchar_t *</td><td><code>mbstowcs_s</code> 的目标宽字符缓冲区 / <code>wcstombs_s</code> 的源宽字符串</td></tr>
+<tr><td class="nw">sizeInWords</td><td class="nw">size_t</td><td>仅 <code>mbstowcs_s</code>:目标缓冲区容量,按<strong>宽字符数</strong>计,含终止符位置</td></tr>
+<tr><td class="nw">mbstr</td><td>const char * / char *</td><td><code>mbstowcs_s</code> 的源多字节串 / <code>wcstombs_s</code> 的目标窄缓冲区;其编码<strong>由当前 C locale 决定</strong>,而非固定为 UTF-8</td></tr>
+<tr><td class="nw">sizeInBytes</td><td class="nw">size_t</td><td>仅 <code>wcstombs_s</code>:目标窄缓冲区容量,按<strong>字节数</strong>计(注意与上面的宽字符数单位不同)</td></tr>
+<tr><td class="nw">count</td><td class="nw">size_t</td><td>最多转换的字符数;常传宏 <code>_TRUNCATE</code>,表示"能装多少装多少并正确补终止符"而不是报错</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 <code>0</code>;失败返回非零 <code>errno</code> 风格错误码——遇到非法多字节序列返回 <code>EILSEQ</code>,目标容量不足(且未传 <code>_TRUNCATE</code>)返回 <code>ERANGE</code>,指针非法返回 <code>EINVAL</code>。实际转换量经 <code>pReturnValue</code> 带出,错误详情看返回值本身即可,无需再读 <code>errno</code>。</p>
@@ -1632,9 +1635,9 @@ errno_t wcstombs_s(
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>pFile</td><td>FILE **</td><td>输出参数:成功时接收打开的流指针,失败时被置为 <code>NULL</code>;调用前无需初始化</td></tr>
-<tr><td>filename</td><td>const wchar_t *</td><td>宽字符(UTF-16)路径,天然支持中文与任意 Unicode 文件名,不受 ANSI 代码页限制</td></tr>
-<tr><td>mode</td><td>const wchar_t *</td><td>与 <code>fopen</code> 相同的模式串(<code>L"r"</code>、<code>L"wb"</code> 等),另可附加 MSVC 扩展:<code>t</code>/<code>b</code> 指定文本或二进制,<code>ccs=UTF-8</code> / <code>ccs=UTF-16LE</code> 让运行库自动转码</td></tr>
+<tr><td class="nw">pFile</td><td class="nw">FILE **</td><td>输出参数:成功时接收打开的流指针,失败时被置为 <code>NULL</code>;调用前无需初始化</td></tr>
+<tr><td class="nw">filename</td><td class="nw">const wchar_t *</td><td>宽字符(UTF-16)路径,天然支持中文与任意 Unicode 文件名,不受 ANSI 代码页限制</td></tr>
+<tr><td class="nw">mode</td><td class="nw">const wchar_t *</td><td>与 <code>fopen</code> 相同的模式串(<code>L"r"</code>、<code>L"wb"</code> 等),另可附加 MSVC 扩展:<code>t</code>/<code>b</code> 指定文本或二进制,<code>ccs=UTF-8</code> / <code>ccs=UTF-16LE</code> 让运行库自动转码</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 <code>0</code> 并通过 <code>*pFile</code> 带出流指针;失败返回 <code>errno</code> 风格错误码(如文件不存在 <code>ENOENT</code>、权限不足 <code>EACCES</code>、参数非法 <code>EINVAL</code>),同时把 <code>*pFile</code> 置为 <code>NULL</code>。错误码即返回值,不必再去读全局 <code>errno</code>。</p>
@@ -1654,7 +1657,7 @@ fclose(fp);</code></pre>
 <h1 id="s5"><span class="part">分类 5</span>ctype.h 与 wctype.h 字符分类</h1>
 <p>&lt;ctype.h&gt; 提供一组字符分类与大小写转换函数,是解析器、词法分析、输入校验代码的基石。所有 is*/to* 函数的参数类型都是 <code>int</code>,但合法取值只有两类:<strong>能表示为 unsigned char 的值(0~255)或宏 EOF</strong>——传入其他值(典型是负值的 char)是未定义行为,本章用单独一条讲透这个坑。&lt;wctype.h&gt; 则是对应的宽字符版本。这些函数的结果部分受当前 locale 影响(默认 "C" locale 下只按 ASCII 规则判定)。</p>
 
-<h2 id="s5-overview">速览</h2><p><strong>本章速览</strong>——这组函数看着简单,真正的坑几乎全在参数类型和当前 locale 上,先扫一遍再逐条细读。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td><code>isalpha</code></td><td>判断字符是否为字母</td><td>结果随 locale 变化,C locale 下只认 A-Z、a-z</td></tr><tr><td><code>isdigit</code></td><td>判断字符是否为十进制数字</td><td>只认 '0'-'9',任何 locale 都不扩展;别用它做数值转换</td></tr><tr><td><code>isalnum</code></td><td>判断是否为字母或数字</td><td>等价于 <code>isalpha</code> 或 <code>isdigit</code> 成立,下划线不算</td></tr><tr><td><code>isspace</code></td><td>判断是否为空白字符</td><td>含空格与 \t \n \v \f \r 六种,不止空格</td></tr><tr><td><code>isupper</code> / <code>islower</code></td><td>判断字母是大写还是小写</td><td>非字母一律返回 0,两者同时为假很正常</td></tr><tr><td><code>toupper</code> / <code>tolower</code></td><td>字母大小写互转</td><td>非字母原样返回;返回 <code>int</code>,存回 <code>char</code> 前先确认无截断</td></tr><tr><td><code>isxdigit</code></td><td>判断是否为十六进制数字</td><td>只管 0-9A-Fa-f,不认 "0x" 前缀</td></tr><tr><td><code>ispunct</code></td><td>判断是否为标点或符号</td><td>定义为"可打印且非空格非字母数字",范围比直觉大</td></tr><tr><td><code>iscntrl</code> / <code>isprint</code> / <code>isgraph</code></td><td>控制字符 / 可打印 / 可见字符</td><td><code>isprint</code> 含空格,<code>isgraph</code> 不含,这一格之差最常错</td></tr><tr><td><code>isXXX((unsigned char)c)</code></td><td>传参前必须先转无符号</td><td><span class="badge dead">禁用</span> 直接传可能为负的 <code>char</code>,是未定义行为;<span class="badge ok">推荐</span> 一律套 <code>(unsigned char)</code>,仅 <code>EOF</code> 可为负</td></tr><tr><td><code>iswalpha</code> / <code>iswdigit</code> / <code>towupper</code></td><td>宽字符版的分类与转换</td><td>参数为 <code>wint_t</code>,处理多字节文本时用它替代窄字符版</td></tr></tbody></table>
+<h2 id="s5-overview">速览</h2><p><strong>本章速览</strong>——这组函数看着简单,真正的坑几乎全在参数类型和当前 locale 上,先扫一遍再逐条细读。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><code>isalpha</code></td><td>判断字符是否为字母</td><td>结果随 locale 变化,C locale 下只认 A-Z、a-z</td></tr><tr><td class="nw"><code>isdigit</code></td><td>判断字符是否为十进制数字</td><td>只认 '0'-'9',任何 locale 都不扩展;别用它做数值转换</td></tr><tr><td class="nw"><code>isalnum</code></td><td>判断是否为字母或数字</td><td>等价于 <code>isalpha</code> 或 <code>isdigit</code> 成立,下划线不算</td></tr><tr><td class="nw"><code>isspace</code></td><td>判断是否为空白字符</td><td>含空格与 \t \n \v \f \r 六种,不止空格</td></tr><tr><td><code>isupper</code> / <code>islower</code></td><td>判断字母是大写还是小写</td><td>非字母一律返回 0,两者同时为假很正常</td></tr><tr><td><code>toupper</code> / <code>tolower</code></td><td class="nw">字母大小写互转</td><td>非字母原样返回;返回 <code>int</code>,存回 <code>char</code> 前先确认无截断</td></tr><tr><td class="nw"><code>isxdigit</code></td><td>判断是否为十六进制数字</td><td>只管 0-9A-Fa-f,不认 "0x" 前缀</td></tr><tr><td class="nw"><code>ispunct</code></td><td>判断是否为标点或符号</td><td>定义为"可打印且非空格非字母数字",范围比直觉大</td></tr><tr><td><code>iscntrl</code> / <code>isprint</code> / <code>isgraph</code></td><td>控制字符 / 可打印 / 可见字符</td><td><code>isprint</code> 含空格,<code>isgraph</code> 不含,这一格之差最常错</td></tr><tr><td><code>isXXX((unsigned char)c)</code></td><td>传参前必须先转无符号</td><td><span class="badge dead">禁用</span> 直接传可能为负的 <code>char</code>,是未定义行为;<span class="badge ok">推荐</span> 一律套 <code>(unsigned char)</code>,仅 <code>EOF</code> 可为负</td></tr><tr><td><code>iswalpha</code> / <code>iswdigit</code> / <code>towupper</code></td><td>宽字符版的分类与转换</td><td>参数为 <code>wint_t</code>,处理多字节文本时用它替代窄字符版</td></tr></tbody></table>
 
 <h2 id="s5-isalpha">isalpha</h2>
 <p class="fsum">判断一个字符是不是字母,是词法分析切分单词、校验标识符首字符时的第一道过滤。</p>
@@ -1663,7 +1666,7 @@ fclose(fp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>c</code></td><td><code>int</code></td><td>待判定的字符。合法取值只有两类:<strong>能表示为 <code>unsigned char</code> 的值(0~UCHAR_MAX)或宏 <code>EOF</code></strong>;传入可能为负的 <code>char</code> 是未定义行为,一律写成 <code>(unsigned char)c</code>。判定"是否为字母"的具体范围受当前 locale 影响,默认 "C" locale 下即 a-z、A-Z。</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td>待判定的字符。合法取值只有两类:<strong>能表示为 <code>unsigned char</code> 的值(0~UCHAR_MAX)或宏 <code>EOF</code></strong>;传入可能为负的 <code>char</code> 是未定义行为,一律写成 <code>(unsigned char)c</code>。判定"是否为字母"的具体范围受当前 locale 影响,默认 "C" locale 下即 a-z、A-Z。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功判定为字母时返回非零值(具体数值不保证是 1,<strong>不要写 <code>== 1</code></strong>);不是字母则返回 0。本函数没有"失败"状态,也不设置 <code>errno</code>——传入非法值不会返回错误码,而是直接进入未定义行为,因此无从事后取错误详情,只能靠调用前正确强转来预防。</p>
@@ -1684,7 +1687,7 @@ fclose(fp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>c</code></td><td><code>int</code></td><td>待判定的字符,判定它是否为十进制数字 <code>'0'</code>~<code>'9'</code>。合法取值同样只有"可表示为 <code>unsigned char</code> 的值"或 <code>EOF</code>,传 <code>char</code> 前先强转 <code>(unsigned char)</code>。</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td>待判定的字符,判定它是否为十进制数字 <code>'0'</code>~<code>'9'</code>。合法取值同样只有"可表示为 <code>unsigned char</code> 的值"或 <code>EOF</code>,传 <code>char</code> 前先强转 <code>(unsigned char)</code>。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:c 为 <code>'0'</code>~<code>'9'</code> 之一时返回非零;否则返回 0。没有失败态与 <code>errno</code>,非法输入属未定义行为而非可查询的错误。<code>isdigit</code> 与 <code>isxdigit</code> 是标准中<strong>唯二不受 locale 影响</strong>的分类函数,任何环境下都只认这十个字符。</p>
@@ -1705,7 +1708,7 @@ fclose(fp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>c</code></td><td><code>int</code></td><td>待判定的字符,判定它是否为字母或数字,语义上等价于 <code>isalpha(c) || isdigit(c)</code>。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>;注意<strong>下划线 <code>_</code> 不算</strong>,它属于标点(见 <code>ispunct</code>)。</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td>待判定的字符,判定它是否为字母或数字,语义上等价于 <code>isalpha(c) || isdigit(c)</code>。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>;注意<strong>下划线 <code>_</code> 不算</strong>,它属于标点(见 <code>ispunct</code>)。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:c 是字母或十进制数字时返回非零;否则返回 0。无失败态、不设置 <code>errno</code>,非法参数为未定义行为,无错误详情可取。字母部分随 locale 变化,数字部分恒为 <code>'0'</code>~<code>'9'</code>。</p>
@@ -1725,7 +1728,7 @@ fclose(fp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>c</code></td><td><code>int</code></td><td>待判定的字符,判定它是否为空白字符。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前先强转。默认 locale 下的空白字符恰好是六个(空格、<code>\t</code>、<code>\n</code>、<code>\v</code>、<code>\f</code>、<code>\r</code>),明细见下方"其他说明"。</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td>待判定的字符,判定它是否为空白字符。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前先强转。默认 locale 下的空白字符恰好是六个(空格、<code>\t</code>、<code>\n</code>、<code>\v</code>、<code>\f</code>、<code>\r</code>),明细见下方"其他说明"。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:c 是空白字符时返回非零;否则返回 0。无失败态、不设置 <code>errno</code>;传入非法值是未定义行为,没有错误码可查。</p>
@@ -1737,12 +1740,12 @@ fclose(fp);</code></pre>
 <p>默认 "C" locale 下被判为空白的字符共六个:</p>
 <table><thead><tr><th>字符</th><th>编码</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>' '</code></td><td>0x20</td><td>空格</td></tr>
-<tr><td><code>'\t'</code></td><td>0x09</td><td>水平制表符</td></tr>
-<tr><td><code>'\n'</code></td><td>0x0A</td><td>换行</td></tr>
-<tr><td><code>'\v'</code></td><td>0x0B</td><td>垂直制表符</td></tr>
-<tr><td><code>'\f'</code></td><td>0x0C</td><td>换页</td></tr>
-<tr><td><code>'\r'</code></td><td>0x0D</td><td>回车</td></tr>
+<tr><td class="nw"><code>' '</code></td><td class="nw">0x20</td><td class="nw">空格</td></tr>
+<tr><td class="nw"><code>'\t'</code></td><td class="nw">0x09</td><td class="nw">水平制表符</td></tr>
+<tr><td class="nw"><code>'\n'</code></td><td class="nw">0x0A</td><td class="nw">换行</td></tr>
+<tr><td class="nw"><code>'\v'</code></td><td class="nw">0x0B</td><td class="nw">垂直制表符</td></tr>
+<tr><td class="nw"><code>'\f'</code></td><td class="nw">0x0C</td><td class="nw">换页</td></tr>
+<tr><td class="nw"><code>'\r'</code></td><td class="nw">0x0D</td><td class="nw">回车</td></tr>
 </tbody></table>
 <div class="note new"><span class="t">现代提示</span><p>常见误区:以为空白只有空格和 \t。解析跨平台文本时,行尾残留的 \r 正是靠 isspace 顺手清掉的;反之,若只想匹配"空格或制表符"(不含换行),C11 起没有专门函数,POSIX 有 isblank(C99 标准化,只认 ' ' 和 '\t')。</p></div>
 
@@ -1754,7 +1757,7 @@ fclose(fp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>c</code></td><td><code>int</code></td><td><code>isupper</code> 判定 c 是否为大写字母(默认 locale 下即 A-Z),<code>islower</code> 判定是否为小写字母(即 a-z)。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前必须强转 <code>(unsigned char)</code>。</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td><code>isupper</code> 判定 c 是否为大写字母(默认 locale 下即 A-Z),<code>islower</code> 判定是否为小写字母(即 a-z)。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前必须强转 <code>(unsigned char)</code>。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:命中各自类别时返回非零;否则返回 0。无失败态、不设置 <code>errno</code>,非法输入为未定义行为、无错误详情可取。<strong>易错点:</strong>对数字、标点等非字母字符两者都返回 0——即"不是大写"并不等于"是小写"。</p>
@@ -1776,7 +1779,7 @@ fclose(fp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>c</code></td><td><code>int</code></td><td>待转换的字符:<code>toupper</code> 把小写字母转成大写,<code>tolower</code> 把大写字母转成小写,<strong>其余字符一律原样返回</strong>。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前必须强转 <code>(unsigned char)</code>。</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td>待转换的字符:<code>toupper</code> 把小写字母转成大写,<code>tolower</code> 把大写字母转成小写,<strong>其余字符一律原样返回</strong>。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前必须强转 <code>(unsigned char)</code>。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:若 c 有对应的大写/小写形式则返回转换结果,否则<strong>原样返回 c</strong>——因此对数字、标点直接调用是安全的,无需先用 <code>isupper</code>/<code>islower</code> 判断。没有失败态、不设置 <code>errno</code>;传入非法值属未定义行为,无错误码可查。返回类型是 <code>int</code>,写回 <code>char</code> 数组前应显式强转以消除收窄警告。</p>
@@ -1794,7 +1797,7 @@ fclose(fp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>c</code></td><td><code>int</code></td><td>待判定的字符,判定它是否为十六进制数字,即 <code>0-9</code>、<code>a-f</code>、<code>A-F</code> 共 22 个字符之一。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>。注意它<strong>不认 "0x" 前缀</strong>,前缀需要调用方自行跳过。</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td>待判定的字符,判定它是否为十六进制数字,即 <code>0-9</code>、<code>a-f</code>、<code>A-F</code> 共 22 个字符之一。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>。注意它<strong>不认 "0x" 前缀</strong>,前缀需要调用方自行跳过。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:c 属于上述 22 个字符之一时返回非零;否则返回 0。无失败态、不设置 <code>errno</code>,非法参数为未定义行为、无错误详情可取。与 <code>isdigit</code> 一样<strong>不受 locale 影响</strong>。</p>
@@ -1816,7 +1819,7 @@ fclose(fp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>c</code></td><td><code>int</code></td><td>待判定的字符,判定它是否为标点。标准采用排除法定义:<strong>可打印字符中,去掉字母、数字和空格,剩下的都算标点</strong>——范围比直觉大。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前先强转。</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td>待判定的字符,判定它是否为标点。标准采用排除法定义:<strong>可打印字符中,去掉字母、数字和空格,剩下的都算标点</strong>——范围比直觉大。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前先强转。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:c 是标点符号时返回非零;否则返回 0。无失败态、不设置 <code>errno</code>;非法输入是未定义行为,无错误码可查。ASCII 下命中的是 <code>! " # $ % &amp; ' ( ) * + , - . / : ; &lt; = &gt; ? @ [ \ ] ^ _ ` { | } ~</code> 这 32 个字符。</p>
@@ -1839,7 +1842,7 @@ fclose(fp);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>c</code></td><td><code>int</code></td><td>待判定的字符。<code>iscntrl</code> 判定是否为控制字符(ASCII 下为 0x00~0x1F 及 0x7F DEL);<code>isprint</code> 判定是否为可打印字符(<strong>含空格</strong>),在 ASCII 范围内与 <code>iscntrl</code> 互补;<code>isgraph</code> 判定是否为有字形的可打印字符,即 <code>isprint</code> <strong>去掉空格</strong>。三者最常错的正是这一格空格之差。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前先强转。</td></tr>
+<tr><td class="nw"><code>c</code></td><td class="nw"><code>int</code></td><td>待判定的字符。<code>iscntrl</code> 判定是否为控制字符(ASCII 下为 0x00~0x1F 及 0x7F DEL);<code>isprint</code> 判定是否为可打印字符(<strong>含空格</strong>),在 ASCII 范围内与 <code>iscntrl</code> 互补;<code>isgraph</code> 判定是否为有字形的可打印字符,即 <code>isprint</code> <strong>去掉空格</strong>。三者最常错的正是这一格空格之差。合法取值为可表示为 <code>unsigned char</code> 的值或 <code>EOF</code>,传 <code>char</code> 前先强转。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:命中各自类别时返回非零;否则返回 0。三者都无失败态、不设置 <code>errno</code>,非法参数为未定义行为、无错误详情可取。关系一句话记住:<code>isprint = isgraph + 空格</code>,<code>iscntrl</code> 与 <code>isprint</code> 在 ASCII 范围内互补。</p>
@@ -1851,9 +1854,9 @@ fclose(fp);</code></pre>
 <p>三者对典型字符的判定对照:</p>
 <table><thead><tr><th>字符</th><th>类别</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>'a'</code></td><td>字母</td><td>isprint 真,isgraph 真,iscntrl 假</td></tr>
-<tr><td><code>' '</code></td><td>空格</td><td>isprint 真,isgraph <strong>假</strong>,iscntrl 假</td></tr>
-<tr><td><code>'\n'</code></td><td>换行</td><td>isprint 假,isgraph 假,iscntrl <strong>真</strong></td></tr>
+<tr><td class="nw"><code>'a'</code></td><td class="nw">字母</td><td>isprint 真,isgraph 真,iscntrl 假</td></tr>
+<tr><td class="nw"><code>' '</code></td><td class="nw">空格</td><td>isprint 真,isgraph <strong>假</strong>,iscntrl 假</td></tr>
+<tr><td class="nw"><code>'\n'</code></td><td class="nw">换行</td><td>isprint 假,isgraph 假,iscntrl <strong>真</strong></td></tr>
 </tbody></table>
 <p>hexdump、日志脱敏、终端安全输出都靠 isprint 过滤,防止控制字符(如 ANSI 转义序列)注入终端。</p>
 
@@ -1876,7 +1879,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td><code>wc</code></td><td><code>wint_t</code></td><td>宽字符值,合法输入为可表示为 <code>wchar_t</code> 的值或宏 <code>WEOF</code>。<code>iswalpha</code> 判定它是否为字母(可识别汉字以外的多数 Unicode 字母);<code>iswdigit</code> 判定它是否为十进制数字 <code>'0'</code>~<code>'9'</code>;<code>towupper</code> 把它转为大写,<strong>无对应形式则原样返回</strong>。判定结果依赖当前 locale,调用前必须先 <code>setlocale(LC_ALL, "")</code>。</td></tr>
+<tr><td class="nw"><code>wc</code></td><td class="nw"><code>wint_t</code></td><td>宽字符值,合法输入为可表示为 <code>wchar_t</code> 的值或宏 <code>WEOF</code>。<code>iswalpha</code> 判定它是否为字母(可识别汉字以外的多数 Unicode 字母);<code>iswdigit</code> 判定它是否为十进制数字 <code>'0'</code>~<code>'9'</code>;<code>towupper</code> 把它转为大写,<strong>无对应形式则原样返回</strong>。判定结果依赖当前 locale,调用前必须先 <code>setlocale(LC_ALL, "")</code>。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功:<code>iswalpha</code>/<code>iswdigit</code> 命中返回非零、否则返回 0;<code>towupper</code> 返回转换后的宽字符,无对应大写形式时返回原值。三者均无失败态、不设置 <code>errno</code>,传入 <code>wchar_t</code> 与 <code>WEOF</code> 之外的值属未定义行为,无错误详情可查。<strong>易错点:</strong>必须先 <code>setlocale(LC_ALL, "")</code>(或指定 UTF-8 locale),否则默认 "C" locale 下和窄字符版没区别。</p>
@@ -1890,7 +1893,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <h1 id="s6"><span class="part">分类 6</span>math.h 数学</h1>
 <p>math.h 提供以 <code>double</code> 为中心的数学函数族:幂与开方、指数对数、三角反三角、取整与浮点余数,以及 C99 引入的 <code>hypot</code>、<code>cbrt</code>、<code>log2</code> 和 NaN/无穷判定宏。约定:三角函数一律使用<strong>弧度</strong>;定义域错误(如对负数开平方)通常返回 NaN 并可能设置 <code>errno = EDOM</code>。在 Linux/gcc 下需要链接 <code>-lm</code>;MSVC 则默认可用,但 <code>M_PI</code> 等常量宏需先定义 <code>_USE_MATH_DEFINES</code> 再包含头文件。C++ 中请改用 <code>&lt;cmath&gt;</code>,它按参数类型提供重载,无需记后缀。</p>
 
-<h2 id="s6-overview">速览</h2><p><strong>本章速览</strong>——math.h 里的函数都在和浮点数打交道，先扫一眼分工与坑点，再翻后面的逐条详解。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td><code>fabs</code></td><td>取浮点数的绝对值</td><td>整数取绝对值请用 abs/labs，别混着用</td></tr><tr><td><code>sqrt</code></td><td>求非负数的平方根</td><td>传负数返回 NaN 并置 errno，调用前先判号</td></tr><tr><td><code>pow</code></td><td>计算 x 的 y 次幂</td><td>开销大且有精度损失，平方直接写 x*x 更划算</td></tr><tr><td><code>exp</code> / <code>log</code> / <code>log10</code> / <code>log2</code></td><td>自然指数与三种底的对数</td><td>log 是自然对数不是常用对数，常用对数要写 log10</td></tr><tr><td><code>sin</code> / <code>cos</code> / <code>tan</code></td><td>弧度制下的三角函数</td><td>参数是弧度不是角度，角度需先乘 π/180</td></tr><tr><td><code>asin</code> / <code>acos</code> / <code>atan</code></td><td>反三角函数，结果为弧度</td><td>asin/acos 定义域限 [-1,1]，越界即 NaN</td></tr><tr><td><code>atan2</code></td><td>由 y、x 求全象限方位角</td><td><span class="badge ok">推荐</span> 优于 atan(y/x)：能定象限，x 为 0 也安全</td></tr><tr><td><code>ceil</code> / <code>floor</code> / <code>trunc</code> / <code>round</code></td><td>向上、向下、向零、就近取整</td><td>返回值仍是浮点数；round 对 .5 一律远离零</td></tr><tr><td><code>fmod</code></td><td>求浮点除法的余数</td><td>余数符号随被除数；要就近余数改用 remainder</td></tr><tr><td><code>hypot</code></td><td>由两直角边求斜边长度</td><td><span class="badge ok">推荐</span> 比 sqrt(x*x+y*y) 更抗中间溢出</td></tr><tr><td><code>cbrt</code></td><td>求实数的立方根</td><td><span class="badge ok">推荐</span> 负数可直接算，pow(x,1.0/3) 会给 NaN</td></tr><tr><td><code>isnan</code> / <code>isinf</code> / <code>isfinite</code></td><td>判断非数、无穷与有限值</td><td><span class="badge ok">推荐</span> NaN 与自身也不相等，切勿用 == 判断</td></tr></tbody></table>
+<h2 id="s6-overview">速览</h2><p><strong>本章速览</strong>——math.h 里的函数都在和浮点数打交道，先扫一眼分工与坑点，再翻后面的逐条详解。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><code>fabs</code></td><td class="nw">取浮点数的绝对值</td><td>整数取绝对值请用 abs/labs，别混着用</td></tr><tr><td class="nw"><code>sqrt</code></td><td class="nw">求非负数的平方根</td><td>传负数返回 NaN 并置 errno，调用前先判号</td></tr><tr><td class="nw"><code>pow</code></td><td class="nw">计算 x 的 y 次幂</td><td>开销大且有精度损失，平方直接写 x*x 更划算</td></tr><tr><td><code>exp</code> / <code>log</code> / <code>log10</code> / <code>log2</code></td><td>自然指数与三种底的对数</td><td>log 是自然对数不是常用对数，常用对数要写 log10</td></tr><tr><td class="nw"><code>sin</code> / <code>cos</code> / <code>tan</code></td><td>弧度制下的三角函数</td><td>参数是弧度不是角度，角度需先乘 π/180</td></tr><tr><td><code>asin</code> / <code>acos</code> / <code>atan</code></td><td>反三角函数，结果为弧度</td><td>asin/acos 定义域限 [-1,1]，越界即 NaN</td></tr><tr><td class="nw"><code>atan2</code></td><td>由 y、x 求全象限方位角</td><td><span class="badge ok">推荐</span> 优于 atan(y/x)：能定象限，x 为 0 也安全</td></tr><tr><td><code>ceil</code> / <code>floor</code> / <code>trunc</code> / <code>round</code></td><td>向上、向下、向零、就近取整</td><td>返回值仍是浮点数；round 对 .5 一律远离零</td></tr><tr><td class="nw"><code>fmod</code></td><td class="nw">求浮点除法的余数</td><td>余数符号随被除数；要就近余数改用 remainder</td></tr><tr><td class="nw"><code>hypot</code></td><td>由两直角边求斜边长度</td><td><span class="badge ok">推荐</span> 比 sqrt(x*x+y*y) 更抗中间溢出</td></tr><tr><td class="nw"><code>cbrt</code></td><td class="nw">求实数的立方根</td><td><span class="badge ok">推荐</span> 负数可直接算，pow(x,1.0/3) 会给 NaN</td></tr><tr><td><code>isnan</code> / <code>isinf</code> / <code>isfinite</code></td><td>判断非数、无穷与有限值</td><td><span class="badge ok">推荐</span> NaN 与自身也不相等，切勿用 == 判断</td></tr></tbody></table>
 
 <h2 id="s6-fabs">fabs</h2>
 <p><span class="badge ok">推荐</span> 浮点绝对值。</p>
@@ -1900,7 +1903,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x</td><td>double</td><td>任意浮点数,含 ±0.0、±INFINITY 与 NaN,全部合法。整数请勿传入,取整数绝对值应用 stdlib.h 的 <code>abs</code>/<code>labs</code></td></tr>
+<tr><td class="nw">x</td><td class="nw">double</td><td>任意浮点数,含 ±0.0、±INFINITY 与 NaN,全部合法。整数请勿传入,取整数绝对值应用 stdlib.h 的 <code>abs</code>/<code>labs</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 x 的绝对值 |x|:<code>fabs(-0.0)</code> 得 <code>+0.0</code>,<code>fabs(NAN)</code> 仍是 NaN,<code>fabs(-INFINITY)</code> 得 <code>+INFINITY</code>;该函数没有失败路径,不设置 <code>errno</code>,因此无需取错误详情。</p>
@@ -1917,7 +1920,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x</td><td>double</td><td>被开方数,须为非负数;传入负数属定义域错误,结果为 NaN。<code>-0.0</code> 是特例,合法且标准规定返回 <code>-0.0</code></td></tr>
+<tr><td class="nw">x</td><td class="nw">double</td><td>被开方数,须为非负数;传入负数属定义域错误,结果为 NaN。<code>-0.0</code> 是特例,合法且标准规定返回 <code>-0.0</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回非负的算术平方根;失败(<code>x &lt; 0</code>)返回 NaN 并置 <code>errno = EDOM</code>。取错误详情:调用前把 <code>errno</code> 清零,调用后判断 <code>errno == EDOM</code>,或直接用 <code>isnan()</code> 检查结果。</p>
@@ -1932,8 +1935,8 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x</td><td>double</td><td>底数;为负时 y 必须是整数值,否则结果无定义,返回 NaN(求负数立方根请改用 <code>cbrt</code>)</td></tr>
-<tr><td>y</td><td>double</td><td>指数,可为小数、负数或 0;负指数即取倒数,<code>pow(0, 0)</code> 各实现普遍返回 1</td></tr>
+<tr><td class="nw">x</td><td class="nw">double</td><td>底数;为负时 y 必须是整数值,否则结果无定义,返回 NaN(求负数立方根请改用 <code>cbrt</code>)</td></tr>
+<tr><td class="nw">y</td><td class="nw">double</td><td>指数,可为小数、负数或 0;负指数即取倒数,<code>pow(0, 0)</code> 各实现普遍返回 1</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 x 的 y 次方;上溢失败返回 ±INFINITY 并置 <code>errno = ERANGE</code>,负底数配非整数指数返回 NaN 并置 <code>errno = EDOM</code>。取错误详情:调用前 <code>errno = 0</code>,调用后读 <code>errno</code> 以区分 EDOM(定义域错误)与 ERANGE(值域溢出)。</p>
@@ -1953,10 +1956,10 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x(exp)</td><td>double</td><td>指数,任意实数;返回 e 的 x 次方,x 过大时结果上溢</td></tr>
-<tr><td>x(log)</td><td>double</td><td>真数,须 &gt; 0;求的是<strong>自然对数 ln x,不是 lg</strong>,常用对数须改调 log10</td></tr>
-<tr><td>x(log10)</td><td>double</td><td>真数,须 &gt; 0;以 10 为底的常用对数</td></tr>
-<tr><td>x(log2)</td><td>double</td><td>真数,须 &gt; 0;以 2 为底,C99 新增,老标准下用换底公式代替</td></tr>
+<tr><td class="nw">x(exp)</td><td class="nw">double</td><td>指数,任意实数;返回 e 的 x 次方,x 过大时结果上溢</td></tr>
+<tr><td class="nw">x(log)</td><td class="nw">double</td><td>真数,须 &gt; 0;求的是<strong>自然对数 ln x,不是 lg</strong>,常用对数须改调 log10</td></tr>
+<tr><td class="nw">x(log10)</td><td class="nw">double</td><td>真数,须 &gt; 0;以 10 为底的常用对数</td></tr>
+<tr><td class="nw">x(log2)</td><td class="nw">double</td><td>真数,须 &gt; 0;以 2 为底,C99 新增,老标准下用换底公式代替</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p><code>exp</code> 成功返回 e 的 x 次方,上溢时返回 INFINITY 并置 <code>errno = ERANGE</code>;三个 <code>log</code> 成功返回对应底的对数,参数为 0 时返回 <code>-INFINITY</code>(极点错误,置 <code>errno = ERANGE</code>),参数为负时返回 NaN 并置 <code>errno = EDOM</code>。取错误详情:调用前清零 <code>errno</code>,调用后读取其值。</p>
@@ -1975,9 +1978,9 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x(sin)</td><td>double</td><td>角,单位为<strong>弧度</strong>;角度值必须先乘 π/180 转换,忘了转是头号 bug</td></tr>
-<tr><td>x(cos)</td><td>double</td><td>角,单位为弧度,同 sin</td></tr>
-<tr><td>x(tan)</td><td>double</td><td>角,单位为弧度;接近 π/2 的奇数倍时结果极大(数学上是无穷)</td></tr>
+<tr><td class="nw">x(sin)</td><td class="nw">double</td><td>角,单位为<strong>弧度</strong>;角度值必须先乘 π/180 转换,忘了转是头号 bug</td></tr>
+<tr><td class="nw">x(cos)</td><td class="nw">double</td><td>角,单位为弧度,同 sin</td></tr>
+<tr><td class="nw">x(tan)</td><td class="nw">double</td><td>角,单位为弧度;接近 π/2 的奇数倍时结果极大(数学上是无穷)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功时 sin/cos 返回落在 [-1, 1] 的值,tan 无界;参数为 ±INFINITY 或 NaN 时失败,返回 NaN 并可置 <code>errno = EDOM</code>。取错误详情:用 <code>isnan()</code> 检查结果,或调用前清零 <code>errno</code> 后读取。</p>
@@ -1996,9 +1999,9 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x(asin)</td><td>double</td><td>正弦值,定义域限 <code>[-1, 1]</code>,越界即 NaN;由点积等式子算出的值可能因浮点误差微超 1,须先夹紧</td></tr>
-<tr><td>x(acos)</td><td>double</td><td>余弦值,定义域同样限 <code>[-1, 1]</code>,越界即 NaN</td></tr>
-<tr><td>x(atan)</td><td>double</td><td>正切值,定义域为全体实数,无需检查</td></tr>
+<tr><td class="nw">x(asin)</td><td class="nw">double</td><td>正弦值,定义域限 <code>[-1, 1]</code>,越界即 NaN;由点积等式子算出的值可能因浮点误差微超 1,须先夹紧</td></tr>
+<tr><td class="nw">x(acos)</td><td class="nw">double</td><td>余弦值,定义域同样限 <code>[-1, 1]</code>,越界即 NaN</td></tr>
+<tr><td class="nw">x(atan)</td><td class="nw">double</td><td>正切值,定义域为全体实数,无需检查</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回主值区间内的弧度:asin 为 <code>[-π/2, π/2]</code>,acos 为 <code>[0, π]</code>,atan 为 <code>(-π/2, π/2)</code>;asin/acos 参数超出 <code>[-1, 1]</code> 时失败,返回 NaN 并置 <code>errno = EDOM</code>,可用 <code>isnan()</code> 或 <code>errno</code> 判定。</p>
@@ -2013,8 +2016,8 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>y</td><td>double</td><td>纵坐标(对边)。<strong>注意参数顺序:y 在前</strong>,写反会得到互补的角</td></tr>
-<tr><td>x</td><td>double</td><td>横坐标(邻边),允许为 0,不会像 <code>atan(y/x)</code> 那样除零</td></tr>
+<tr><td class="nw">y</td><td class="nw">double</td><td>纵坐标(对边)。<strong>注意参数顺序:y 在前</strong>,写反会得到互补的角</td></tr>
+<tr><td class="nw">x</td><td class="nw">double</td><td>横坐标(邻边),允许为 0,不会像 <code>atan(y/x)</code> 那样除零</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回点 (x, y) 相对原点的极角,范围 <code>(-π, π]</code>,单位弧度;x、y 同时为 0 时结果由实现定义(通常为 0),除此之外没有失败路径,不设 <code>errno</code>。</p>
@@ -2034,10 +2037,10 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x(ceil)</td><td>double</td><td>待取整的浮点数,向正无穷取整(天花板)</td></tr>
-<tr><td>x(floor)</td><td>double</td><td>待取整的浮点数,向负无穷取整(地板)</td></tr>
-<tr><td>x(trunc)</td><td>double</td><td>待取整的浮点数,向零截断,方向等价于 <code>(int)</code> 强转</td></tr>
-<tr><td>x(round)</td><td>double</td><td>待取整的浮点数,四舍五入,<code>.5</code> 一律远离零(不是银行家舍入)</td></tr>
+<tr><td class="nw">x(ceil)</td><td class="nw">double</td><td>待取整的浮点数,向正无穷取整(天花板)</td></tr>
+<tr><td class="nw">x(floor)</td><td class="nw">double</td><td>待取整的浮点数,向负无穷取整(地板)</td></tr>
+<tr><td class="nw">x(trunc)</td><td class="nw">double</td><td>待取整的浮点数,向零截断,方向等价于 <code>(int)</code> 强转</td></tr>
+<tr><td class="nw">x(round)</td><td class="nw">double</td><td>待取整的浮点数,四舍五入,<code>.5</code> 一律远离零(不是银行家舍入)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回取整后的浮点数,类型仍是 <code>double</code>(如 <code>ceil(2.1)</code> 得 <code>3.0</code> 而非 <code>3</code>);参数为 ±INFINITY 或 NaN 时原样返回。四者均无失败路径,不设置 <code>errno</code>,也无需取错误详情。</p>
@@ -2046,10 +2049,10 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>其他说明</strong></p>
 <table><thead><tr><th>函数</th><th>方向</th><th>2.3 / 2.5 / -2.3 / -2.5 的结果</th></tr></thead>
 <tbody>
-<tr><td>ceil</td><td>向 +∞</td><td>3、3、-2、-2</td></tr>
-<tr><td>floor</td><td>向 −∞</td><td>2、2、-3、-3</td></tr>
-<tr><td>trunc</td><td>向 0</td><td>2、2、-2、-2</td></tr>
-<tr><td>round</td><td>就近,.5 远离零</td><td>2、3、-2、-3</td></tr>
+<tr><td class="nw">ceil</td><td class="nw">向 +∞</td><td>3、3、-2、-2</td></tr>
+<tr><td class="nw">floor</td><td class="nw">向 −∞</td><td>2、2、-3、-3</td></tr>
+<tr><td class="nw">trunc</td><td class="nw">向 0</td><td>2、2、-2、-2</td></tr>
+<tr><td class="nw">round</td><td class="nw">就近,.5 远离零</td><td>2、3、-2、-3</td></tr>
 </tbody></table>
 <div class="note new"><span class="t">现代提示</span><p>正数时 <code>trunc</code> 与 <code>floor</code> 一样,负数时才分道扬镳。若需要"银行家舍入"(.5 取偶),用 <code>rint</code>/<code>nearbyint</code>,它们遵循当前浮点舍入模式。</p></div>
 
@@ -2061,8 +2064,8 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x</td><td>double</td><td>被除数,<strong>结果符号跟它走</strong>;负的 x 会得到负的余数,归一化场景需要补一次周期</td></tr>
-<tr><td>y</td><td>double</td><td>除数,其符号被忽略;为 0 属定义域错误,返回 NaN</td></tr>
+<tr><td class="nw">x</td><td class="nw">double</td><td>被除数,<strong>结果符号跟它走</strong>;负的 x 会得到负的余数,归一化场景需要补一次周期</td></tr>
+<tr><td class="nw">y</td><td class="nw">double</td><td>除数,其符号被忽略;为 0 属定义域错误,返回 NaN</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 <code>x - trunc(x/y)*y</code>,绝对值小于 <code>|y|</code>,<strong>符号与 x 相同</strong>——这一点与整数 <code>%</code> 的截断语义一致;失败(<code>y</code> 为 0)返回 NaN 并置 <code>errno = EDOM</code>,可用 <code>isnan()</code> 或 <code>errno</code> 判定。</p>
@@ -2079,8 +2082,8 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x</td><td>double</td><td>第一条直角边(或两点的横坐标差);允许极大或极小,内部先缩放再开方,不会中途上溢/下溢</td></tr>
-<tr><td>y</td><td>double</td><td>第二条直角边(或两点的纵坐标差),规则同 x</td></tr>
+<tr><td class="nw">x</td><td class="nw">double</td><td>第一条直角边(或两点的横坐标差);允许极大或极小,内部先缩放再开方,不会中途上溢/下溢</td></tr>
+<tr><td class="nw">y</td><td class="nw">double</td><td>第二条直角边(或两点的纵坐标差),规则同 x</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 √(x²+y²);即使 x、y 大到其平方会溢出,只要结果本身可表示就正确。只有结果本身超出 <code>double</code> 范围才失败,返回 INFINITY 并置 <code>errno = ERANGE</code>。</p>
@@ -2097,7 +2100,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x</td><td>double</td><td>被开立方数,定义域为<strong>全体实数</strong>;负数合法,这正是它优于 <code>pow(x, 1.0/3)</code> 之处</td></tr>
+<tr><td class="nw">x</td><td class="nw">double</td><td>被开立方数,定义域为<strong>全体实数</strong>;负数合法,这正是它优于 <code>pow(x, 1.0/3)</code> 之处</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回与 x 同号的立方根,如 <code>cbrt(-8.0)</code> 得 <code>-2.0</code>;该函数没有定义域错误,无失败路径,不设置 <code>errno</code>。</p>
@@ -2116,9 +2119,9 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x(isnan)</td><td>double</td><td>待判定的浮点值;判断它是否为 NaN(非法运算的产物,如 <code>sqrt(-1.0)</code>)</td></tr>
-<tr><td>x(isinf)</td><td>double</td><td>待判定的浮点值;判断它是否为 ±∞(溢出或除以零的产物)</td></tr>
-<tr><td>x(isfinite)</td><td>double</td><td>待判定的浮点值;判断它是否为有限数,即既非 NaN 也非 ±∞</td></tr>
+<tr><td class="nw">x(isnan)</td><td class="nw">double</td><td>待判定的浮点值;判断它是否为 NaN(非法运算的产物,如 <code>sqrt(-1.0)</code>)</td></tr>
+<tr><td class="nw">x(isinf)</td><td class="nw">double</td><td>待判定的浮点值;判断它是否为 ±∞(溢出或除以零的产物)</td></tr>
+<tr><td class="nw">x(isfinite)</td><td class="nw">double</td><td>待判定的浮点值;判断它是否为有限数,即既非 NaN 也非 ±∞</td></tr>
 </tbody></table>
 <p>三者实际是<strong>类型泛化宏</strong>而非函数,原型中的 <code>double</code> 只表意:传 float、double、long double 都能正确工作,因此不可对其取地址。</p>
 <p><strong>返回值</strong></p>
@@ -2139,9 +2142,9 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>x(f 版)</td><td>float</td><td>单精度输入,float 进、float 出,全程走单精度通路,不隐式提升为 double;配套的浮点字面量也要带 <code>f</code> 后缀,否则按 double 计算</td></tr>
-<tr><td>y(powf)</td><td>float</td><td><code>powf</code> 的指数,同为单精度,含义与 <code>pow</code> 的 y 一致</td></tr>
-<tr><td>x(l 版)</td><td>long double</td><td>扩展精度输入,如 <code>sqrtl</code>;各平台的实际位宽不同(MSVC 上 long double 等同 double)</td></tr>
+<tr><td class="nw">x(f 版)</td><td class="nw">float</td><td>单精度输入,float 进、float 出,全程走单精度通路,不隐式提升为 double;配套的浮点字面量也要带 <code>f</code> 后缀,否则按 double 计算</td></tr>
+<tr><td class="nw">y(powf)</td><td class="nw">float</td><td><code>powf</code> 的指数,同为单精度,含义与 <code>pow</code> 的 y 一致</td></tr>
+<tr><td class="nw">x(l 版)</td><td class="nw">long double</td><td>扩展精度输入,如 <code>sqrtl</code>;各平台的实际位宽不同(MSVC 上 long double 等同 double)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>语义与对应的 double 版完全一致,仅精度与类型不同:成功返回同类型的计算结果,失败时同样返回 NaN/±INFINITY 并按各自规则设置 <code>errno</code>(EDOM 或 ERANGE),取错误详情的方式也相同。</p>
@@ -2156,7 +2159,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p>&lt;time.h&gt; 提供两套时间表示:一是 <code>time_t</code> 表示的“日历时间”(通常是自 1970-01-01 00:00:00 UTC 起的秒数),二是 <code>struct tm</code> 表示的“拆分时间”(年月日时分秒各一个字段)。两者之间用 <code>mktime</code>/<code>localtime_s</code>/<code>gmtime_s</code> 互相转换,格式化输出交给 <code>strftime</code>。此外还有测 CPU 耗时的 <code>clock</code> 和 C11 引入的高精度 <code>timespec_get</code>。本章的两大经典陷阱——<code>tm_year</code> 要加 1900、<code>tm_mon</code> 从 0 起——请务必先看 <a href="#s7-struct-tm">struct tm</a> 一节。</p>
 <div class="note new"><span class="t">现代提示</span><p>C++ 项目请优先使用 <code>std::chrono</code>(C++11 起):类型安全的时长与时间点运算,C++20 还内建了日历与时区库,能从编译期杜绝“秒当毫秒用”这类单位错误。&lt;time.h&gt; 主要用于 C 代码和与旧接口交互。</p></div>
 
-<h2 id="s7-overview">速览</h2><p><strong>本章速览</strong>——时间只有三种形态:秒级的 time_t、拆开的 struct tm、给人看的字符串;本章函数做的全是它们之间的来回搬运。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td><code>time</code></td><td>取当前日历时间,秒级时间戳</td><td>time_t 的内部编码由实现定义,别拿它直接做加减,失败时返回 (time_t)-1。</td></tr><tr><td><code>clock</code></td><td>返回程序耗用的处理器时钟数</td><td>不是墙钟时间;须除以 CLOCKS_PER_SEC 才得到秒,多线程程序里含义会失真。</td></tr><tr><td><code>difftime</code></td><td>求两个时间点相差多少秒</td><td>唯一可移植的时间差算法,结果是 double <span class="badge ok">推荐</span>。</td></tr><tr><td><code>struct tm</code></td><td>分解时间:年月日时分秒的结构</td><td>tm_year 以 1900 为起点、tm_mon 从 0 计,差一错误的重灾区。</td></tr><tr><td><code>mktime</code></td><td>分解时间归一化并转回 time_t</td><td>按本地时区解释,并就地修正越界字段;tm_isdst 置 -1 才让它自行判断夏令时。</td></tr><tr><td><code>localtime_s</code> / <code>gmtime_s</code></td><td>时间戳转本地时区或 UTC 分解时间</td><td>取代返回静态缓冲、非线程安全的 <code>localtime</code>/<code>gmtime</code> <span class="badge old">已过时</span>;注意 C11 附录 K 与 MSVC 版参数顺序相反 <span class="badge ok">推荐</span>。</td></tr><tr><td><code>strftime</code></td><td>按格式把分解时间输出为字符串</td><td>返回 0 只代表缓冲区不足,必须检查;用它替代定长输出的 <code>asctime</code>/<code>ctime</code> <span class="badge old">已过时</span>。</td></tr><tr><td><code>timespec_get</code></td><td>取带纳秒字段的当前时间</td><td>C11 起提供,基准传 TIME_UTC;实际精度取决于系统,别默认真有纳秒级分辨率 <span class="badge ok">推荐</span>。</td></tr></tbody></table>
+<h2 id="s7-overview">速览</h2><p><strong>本章速览</strong>——时间只有三种形态:秒级的 time_t、拆开的 struct tm、给人看的字符串;本章函数做的全是它们之间的来回搬运。</p><table><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><code>time</code></td><td>取当前日历时间,秒级时间戳</td><td>time_t 的内部编码由实现定义,别拿它直接做加减,失败时返回 (time_t)-1。</td></tr><tr><td class="nw"><code>clock</code></td><td>返回程序耗用的处理器时钟数</td><td>不是墙钟时间;须除以 CLOCKS_PER_SEC 才得到秒,多线程程序里含义会失真。</td></tr><tr><td class="nw"><code>difftime</code></td><td>求两个时间点相差多少秒</td><td>唯一可移植的时间差算法,结果是 double <span class="badge ok">推荐</span>。</td></tr><tr><td class="nw"><code>struct tm</code></td><td>分解时间:年月日时分秒的结构</td><td>tm_year 以 1900 为起点、tm_mon 从 0 计,差一错误的重灾区。</td></tr><tr><td class="nw"><code>mktime</code></td><td>分解时间归一化并转回 time_t</td><td>按本地时区解释,并就地修正越界字段;tm_isdst 置 -1 才让它自行判断夏令时。</td></tr><tr><td><code>localtime_s</code> / <code>gmtime_s</code></td><td>时间戳转本地时区或 UTC 分解时间</td><td>取代返回静态缓冲、非线程安全的 <code>localtime</code>/<code>gmtime</code> <span class="badge old">已过时</span>;注意 C11 附录 K 与 MSVC 版参数顺序相反 <span class="badge ok">推荐</span>。</td></tr><tr><td class="nw"><code>strftime</code></td><td>按格式把分解时间输出为字符串</td><td>返回 0 只代表缓冲区不足,必须检查;用它替代定长输出的 <code>asctime</code>/<code>ctime</code> <span class="badge old">已过时</span>。</td></tr><tr><td class="nw"><code>timespec_get</code></td><td>取带纳秒字段的当前时间</td><td>C11 起提供,基准传 TIME_UTC;实际精度取决于系统,别默认真有纳秒级分辨率 <span class="badge ok">推荐</span>。</td></tr></tbody></table>
 
 <h2 id="s7-time">time</h2>
 <p class="fsum">读取系统当前的日历时间,通常就是 1970 年至今的秒数,程序里问“现在几点”都从它开始。</p>
@@ -2165,7 +2168,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>arg</td><td>time_t *</td><td>可为 <code>NULL</code>,惯用写法就是传 NULL、只取返回值;非空时当前日历时间会同时写入 <code>*arg</code>,此时返回值与 <code>*arg</code> 内容相同</td></tr>
+<tr><td class="nw">arg</td><td class="nw">time_t *</td><td>可为 <code>NULL</code>,惯用写法就是传 NULL、只取返回值;非空时当前日历时间会同时写入 <code>*arg</code>,此时返回值与 <code>*arg</code> 内容相同</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回当前日历时间(<code>time_t</code>);失败(极罕见,如系统时钟不可用)返回 <code>(time_t)(-1)</code>;标准未规定它设置 <code>errno</code>,因此拿不到更细的错误原因,只能按“时钟不可用”处理。</p>
@@ -2197,8 +2200,8 @@ printf("CPU: %.3f s\n", (<span class="kw">double</span>)(t1 - t0) / CLOCKS_PER_S
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>end</td><td>time_t</td><td>较晚的时间(结束时刻)。<strong>易错点</strong>:它排在第一个,与“开始在前”的直觉相反,写反会得到负数</td></tr>
-<tr><td>beg</td><td>time_t</td><td>较早的时间(起始时刻)</td></tr>
+<tr><td class="nw">end</td><td class="nw">time_t</td><td>较晚的时间(结束时刻)。<strong>易错点</strong>:它排在第一个,与“开始在前”的直觉相反,写反会得到负数</td></tr>
+<tr><td class="nw">beg</td><td class="nw">time_t</td><td>较早的时间(起始时刻)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 <code>end - beg</code> 的差值,以秒计的 <code>double</code>(可为负,代表参数写反或时钟回拨);该函数没有失败返回值,也不设置 <code>errno</code>——只要两个实参是有效的 <code>time_t</code>,结果就有意义,无需取错误详情。</p>
@@ -2227,15 +2230,15 @@ printf("elapsed: %.0f s\n", secs);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>tm_sec</td><td>int</td><td>秒,取值 [0,60];上限 60 是留给闰秒的,别按 [0,59] 做断言</td></tr>
-<tr><td>tm_min</td><td>int</td><td>分,取值 [0,59]</td></tr>
-<tr><td>tm_hour</td><td>int</td><td>时,取值 [0,23],24 小时制</td></tr>
-<tr><td>tm_mday</td><td>int</td><td>日,取值 [1,31];本结构中<strong>唯一从 1 起</strong>的字段,显示时别顺手也给它 +1</td></tr>
-<tr><td>tm_mon</td><td>int</td><td>月,取值 [0,11],<strong>0 起</strong>:0 = 一月;显示要 +1,把用户输入的月份填进来要 -1</td></tr>
-<tr><td>tm_year</td><td>int</td><td>距 1900 的年数,<strong>加 1900 才是公历年份</strong>(2026 年存的是 126);反向填写时要减 1900</td></tr>
-<tr><td>tm_wday</td><td>int</td><td>星期,取值 [0,6],0 = 周日;由转换函数填出,<code>mktime</code> 会忽略输入值并重算</td></tr>
-<tr><td>tm_yday</td><td>int</td><td>一年中的第几天,取值 [0,365];同样由转换函数填出,<code>mktime</code> 会重算</td></tr>
-<tr><td>tm_isdst</td><td>int</td><td>夏令时标志:<code>&gt;0</code> 表示实行、<code>0</code> 表示不实行、<code>&lt;0</code> 表示未知。手工构造 tm 时设为 <code>-1</code>,让 <code>mktime</code> 自己判断</td></tr>
+<tr><td class="nw">tm_sec</td><td class="nw">int</td><td>秒,取值 [0,60];上限 60 是留给闰秒的,别按 [0,59] 做断言</td></tr>
+<tr><td class="nw">tm_min</td><td class="nw">int</td><td class="nw">分,取值 [0,59]</td></tr>
+<tr><td class="nw">tm_hour</td><td class="nw">int</td><td>时,取值 [0,23],24 小时制</td></tr>
+<tr><td class="nw">tm_mday</td><td class="nw">int</td><td>日,取值 [1,31];本结构中<strong>唯一从 1 起</strong>的字段,显示时别顺手也给它 +1</td></tr>
+<tr><td class="nw">tm_mon</td><td class="nw">int</td><td>月,取值 [0,11],<strong>0 起</strong>:0 = 一月;显示要 +1,把用户输入的月份填进来要 -1</td></tr>
+<tr><td class="nw">tm_year</td><td class="nw">int</td><td>距 1900 的年数,<strong>加 1900 才是公历年份</strong>(2026 年存的是 126);反向填写时要减 1900</td></tr>
+<tr><td class="nw">tm_wday</td><td class="nw">int</td><td>星期,取值 [0,6],0 = 周日;由转换函数填出,<code>mktime</code> 会忽略输入值并重算</td></tr>
+<tr><td class="nw">tm_yday</td><td class="nw">int</td><td>一年中的第几天,取值 [0,365];同样由转换函数填出,<code>mktime</code> 会重算</td></tr>
+<tr><td class="nw">tm_isdst</td><td class="nw">int</td><td>夏令时标志:<code>&gt;0</code> 表示实行、<code>0</code> 表示不实行、<code>&lt;0</code> 表示未知。手工构造 tm 时设为 <code>-1</code>,让 <code>mktime</code> 自己判断</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>本条目是类型定义而非函数,没有返回值;它作为 <code>mktime</code> 的输入、<code>localtime_s</code>/<code>gmtime_s</code> 的输出使用,字段是否有效由对应函数的返回值决定,出错详情要看那些函数而不是本结构。</p>
@@ -2251,7 +2254,7 @@ printf("elapsed: %.0f s\n", secs);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>tp</td><td>struct tm *</td><td>要转换的分解时间,按<strong>本地时区</strong>解释;<strong>会被原地修改</strong>——越界字段归一化(如“1 月 45 日”变成 2 月 14 日),并回填 <code>tm_wday</code>/<code>tm_yday</code>。调用前把 <code>tm_isdst</code> 置 <code>-1</code>,夏令时交由实现判断</td></tr>
+<tr><td class="nw">tp</td><td class="nw">struct tm *</td><td>要转换的分解时间,按<strong>本地时区</strong>解释;<strong>会被原地修改</strong>——越界字段归一化(如“1 月 45 日”变成 2 月 14 日),并回填 <code>tm_wday</code>/<code>tm_yday</code>。调用前把 <code>tm_isdst</code> 置 <code>-1</code>,夏令时交由实现判断</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 <code>*tp</code> 对应的日历时间 <code>time_t</code>,同时 <code>*tp</code> 已被归一化;失败(时间无法用 <code>time_t</code> 表示,例如年份超出范围)返回 <code>(time_t)(-1)</code>,此时 <code>*tp</code> 的内容不可信;标准不规定 <code>errno</code>,只能靠这个哨兵值判断。</p>
@@ -2268,8 +2271,8 @@ errno_t gmtime_s(<span class="kw">struct</span> tm *result, <span class="kw">con
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>result</td><td>struct tm *</td><td>调用者提供的输出缓冲,转换结果写入这里;<code>localtime_s</code> 填本地时间,<code>gmtime_s</code> 填 UTC 时间</td></tr>
-<tr><td>timer</td><td>const time_t *</td><td>要转换的日历时间(指针,不是值);通常传 <code>&amp;now</code></td></tr>
+<tr><td class="nw">result</td><td class="nw">struct tm *</td><td>调用者提供的输出缓冲,转换结果写入这里;<code>localtime_s</code> 填本地时间,<code>gmtime_s</code> 填 UTC 时间</td></tr>
+<tr><td class="nw">timer</td><td class="nw">const time_t *</td><td>要转换的日历时间(指针,不是值);通常传 <code>&amp;now</code></td></tr>
 <tr><td colspan="3"><strong>参数顺序易错点</strong>:上面是 MSVC 版本(目标在前:<code>localtime_s(&amp;result, &amp;timer)</code>);C11 附录 K 版本的顺序<strong>正好相反</strong>:<code>localtime_s(&amp;timer, &amp;result)</code>。POSIX 的 <code>localtime_r(&amp;timer, &amp;result)</code> 又与 MSVC 的 <code>_s</code> 相反。跨平台代码务必按目标平台核对</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
@@ -2290,10 +2293,10 @@ errno_t gmtime_s(<span class="kw">struct</span> tm *result, <span class="kw">con
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>buf</td><td>char *</td><td>输出缓冲区,格式化结果连同结尾 <code>'\0'</code> 写在这里</td></tr>
-<tr><td>maxsize</td><td>size_t</td><td>缓冲区容量(含结尾 <code>'\0'</code> 的字节数),惯用 <code><span class="kw">sizeof</span> buf</code>;容量不足时函数返回 0 且 buf 内容不可用</td></tr>
-<tr><td>fmt</td><td>const char *</td><td>含 <code>%</code> 转换符的模板,常用组合如 <code>"%Y-%m-%d %H:%M:%S"</code>;非 <code>%</code> 字符原样复制。完整格式符见下方“其他说明”</td></tr>
-<tr><td>tp</td><td>const struct tm *</td><td>已拆分的时间,通常来自 <code>localtime_s</code>/<code>gmtime_s</code>;函数只读不改</td></tr>
+<tr><td class="nw">buf</td><td class="nw">char *</td><td>输出缓冲区,格式化结果连同结尾 <code>'\0'</code> 写在这里</td></tr>
+<tr><td class="nw">maxsize</td><td class="nw">size_t</td><td>缓冲区容量(含结尾 <code>'\0'</code> 的字节数),惯用 <code><span class="kw">sizeof</span> buf</code>;容量不足时函数返回 0 且 buf 内容不可用</td></tr>
+<tr><td class="nw">fmt</td><td class="nw">const char *</td><td>含 <code>%</code> 转换符的模板,常用组合如 <code>"%Y-%m-%d %H:%M:%S"</code>;非 <code>%</code> 字符原样复制。完整格式符见下方“其他说明”</td></tr>
+<tr><td class="nw">tp</td><td>const struct tm *</td><td>已拆分的时间,通常来自 <code>localtime_s</code>/<code>gmtime_s</code>;函数只读不改</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回写入 <code>buf</code> 的字符数(不含结尾 <code>'\0'</code>);缓冲区放不下时返回 <code>0</code>,此时 <code>buf</code> 的内容不可用。<strong>易错点</strong>:0 也可能是“格式串本身就产生空串”这一合法结果,所以判断失败时要结合 <code>fmt</code> 是否为空一起看;标准不设置 <code>errno</code>,没有更细的错误详情。</p>
@@ -2308,19 +2311,19 @@ puts(buf);</code></pre>
 <p>常用格式符一览(可组合进 <code>fmt</code>):</p>
 <table><thead><tr><th>格式符</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>%Y</td><td>格式符</td><td>四位年份(已替你处理 +1900),如 2026</td></tr>
-<tr><td>%m</td><td>格式符</td><td>月份 01–12(已替你处理 +1)</td></tr>
-<tr><td>%d</td><td>格式符</td><td>日 01–31</td></tr>
-<tr><td>%H</td><td>格式符</td><td>小时 00–23(12 小时制用 %I 配 %p)</td></tr>
-<tr><td>%M</td><td>格式符</td><td>分钟 00–59</td></tr>
-<tr><td>%S</td><td>格式符</td><td>秒 00–60</td></tr>
-<tr><td>%A / %a</td><td>格式符</td><td>星期全称 / 缩写(受 locale 影响)</td></tr>
-<tr><td>%B / %b</td><td>格式符</td><td>月份全称 / 缩写(受 locale 影响)</td></tr>
-<tr><td>%j</td><td>格式符</td><td>年内第几天 001–366</td></tr>
-<tr><td>%p</td><td>格式符</td><td>AM / PM</td></tr>
-<tr><td>%z / %Z</td><td>格式符</td><td>时区偏移(+0800)/ 时区名</td></tr>
-<tr><td>%F / %T</td><td>格式符</td><td>%Y-%m-%d / %H:%M:%S 的简写(C99)</td></tr>
-<tr><td>%%</td><td>格式符</td><td>输出一个字面 %</td></tr>
+<tr><td class="nw">%Y</td><td class="nw">格式符</td><td>四位年份(已替你处理 +1900),如 2026</td></tr>
+<tr><td class="nw">%m</td><td class="nw">格式符</td><td>月份 01–12(已替你处理 +1)</td></tr>
+<tr><td class="nw">%d</td><td class="nw">格式符</td><td class="nw">日 01–31</td></tr>
+<tr><td class="nw">%H</td><td class="nw">格式符</td><td>小时 00–23(12 小时制用 %I 配 %p)</td></tr>
+<tr><td class="nw">%M</td><td class="nw">格式符</td><td class="nw">分钟 00–59</td></tr>
+<tr><td class="nw">%S</td><td class="nw">格式符</td><td class="nw">秒 00–60</td></tr>
+<tr><td class="nw">%A / %a</td><td class="nw">格式符</td><td>星期全称 / 缩写(受 locale 影响)</td></tr>
+<tr><td class="nw">%B / %b</td><td class="nw">格式符</td><td>月份全称 / 缩写(受 locale 影响)</td></tr>
+<tr><td class="nw">%j</td><td class="nw">格式符</td><td>年内第几天 001–366</td></tr>
+<tr><td class="nw">%p</td><td class="nw">格式符</td><td class="nw">AM / PM</td></tr>
+<tr><td class="nw">%z / %Z</td><td class="nw">格式符</td><td>时区偏移(+0800)/ 时区名</td></tr>
+<tr><td class="nw">%F / %T</td><td class="nw">格式符</td><td>%Y-%m-%d / %H:%M:%S 的简写(C99)</td></tr>
+<tr><td class="nw">%%</td><td class="nw">格式符</td><td class="nw">输出一个字面 %</td></tr>
 </tbody></table>
 <p>格式化日期的首选:用它就不必手动处理 +1900/+1,也比拼接 <code>sprintf</code> 安全。反向解析(字符串转 tm)标准 C 没有,POSIX 提供 <code>strptime</code>,Windows 上需自己 <code>sscanf</code> 或用 C++ 的 <code>std::get_time</code>。</p>
 
@@ -2336,8 +2339,8 @@ puts(buf);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>ts</td><td>struct timespec *</td><td>接收结果的缓冲:<code>tv_sec</code> 为秒(<code>time_t</code>)、<code>tv_nsec</code> 为纳秒(<code>long</code>,取值 [0, 999999999])</td></tr>
-<tr><td>base</td><td>int</td><td>时间基准。标准只定义了 <code>TIME_UTC</code>(自纪元起的 UTC 时间),实现可扩展其他值;C11 起可用</td></tr>
+<tr><td class="nw">ts</td><td>struct timespec *</td><td>接收结果的缓冲:<code>tv_sec</code> 为秒(<code>time_t</code>)、<code>tv_nsec</code> 为纳秒(<code>long</code>,取值 [0, 999999999])</td></tr>
+<tr><td class="nw">base</td><td class="nw">int</td><td>时间基准。标准只定义了 <code>TIME_UTC</code>(自纪元起的 UTC 时间),实现可扩展其他值;C11 起可用</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>成功返回 <code>base</code> 的值(即传入 <code>TIME_UTC</code> 时返回 <code>TIME_UTC</code>,是个非零值);失败返回 <code>0</code>,此时 <code>*ts</code> 未被设置;标准不提供 <code>errno</code> 之类的错误详情,失败通常意味着该基准不被支持。</p>
@@ -2364,12 +2367,12 @@ printf("%.2f ms\n", ms);</code></pre>
 </thead>
 <tbody>
 <tr>
-<td><code>assert</code></td>
+<td class="nw"><code>assert</code></td>
 <td>运行期断言不变量,失败即终止</td>
 <td>定义 <code>NDEBUG</code> 后整条语句蒸发,断言里绝不能放有副作用的表达式(如 <code>assert(p = f())</code>)</td>
 </tr>
 <tr>
-<td><code>errno</code></td>
+<td class="nw"><code>errno</code></td>
 <td>库函数失败后的错误码全局变量</td>
 <td>成功调用不会清零,必须先判定"函数确实失败"再读;跨调用前自行置 0</td>
 </tr>
@@ -2379,7 +2382,7 @@ printf("%.2f ms\n", ms);</code></pre>
 <td>零类型检查,<code>char</code>/<code>short</code>/<code>float</code> 已提升为 <code>int</code>/<code>double</code>,取错类型即 UB;每条路径都要 <code>va_end</code></td>
 </tr>
 <tr>
-<td><code>offsetof</code></td>
+<td class="nw"><code>offsetof</code></td>
 <td>求成员相对结构体首地址的字节偏移</td>
 <td>只对标准布局结构体有意义;别手写 <code>(size_t)&amp;((T*)0)-&gt;m</code> 那套老技巧,<span class="badge ok">推荐</span>直接用宏</td>
 </tr>
@@ -2394,7 +2397,7 @@ printf("%.2f ms\n", ms);</code></pre>
 <td>跨平台打印 64 位别写 <code>%lld</code>,<span class="badge ok">推荐</span><code>printf("%" PRId64 "\n", v)</code> 字符串拼接写法</td>
 </tr>
 <tr>
-<td><code>stdbool.h</code></td>
+<td class="nw"><code>stdbool.h</code></td>
 <td>为 C99 补上 <code>bool</code>/<code>true</code>/<code>false</code></td>
 <td>C23 起 <code>bool</code> 已是关键字,该头文件<span class="badge old">已过时</span>;老代码里的 <code>typedef int BOOL</code> 应替换掉</td>
 </tr>
@@ -2404,7 +2407,7 @@ printf("%.2f ms\n", ms);</code></pre>
 <td>溢出判断要用 <code>INT_MAX</code> 反推而非事后检测;浮点比较别用 <code>==</code>,改用 <code>DBL_EPSILON</code> 容差</td>
 </tr>
 <tr>
-<td><code>static_assert</code></td>
+<td class="nw"><code>static_assert</code></td>
 <td>编译期校验常量条件,不满足即报错</td>
 <td>能在编译期查的就别留到运行期,<span class="badge ok">推荐</span>用它锁死结构体大小与 ABI 假设;C11 拼写 <code>_Static_assert</code> <span class="badge old">已过时</span></td>
 </tr>
@@ -2421,7 +2424,7 @@ printf("%.2f ms\n", ms);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>expression</td><td>标量表达式(整数、浮点、指针均可)</td><td>期望恒为真的条件。<code>assert</code> 是宏而非真正的函数:表达式为假(等于 0)时,向 <code>stderr</code> 打印表达式文本、文件名、行号(以及实现可能附带的函数名),随后调用 <code>abort()</code> 终止程序。易错点:表达式<strong>绝不能带副作用</strong>——发布版里整条语句会被替换为 <code>((void)0)</code>,副作用随之消失,例如 <code>assert(p = f())</code>、<code>assert(fclose(fp) == 0)</code> 在 Release 下根本不会执行。常用技巧是与字符串字面量用 <code>&amp;&amp;</code> 连写,如 <code>assert(b != 0.0 &amp;&amp; "除数不能为零")</code>,让诊断信息自带人话说明</td></tr>
+<tr><td class="nw">expression</td><td>标量表达式(整数、浮点、指针均可)</td><td>期望恒为真的条件。<code>assert</code> 是宏而非真正的函数:表达式为假(等于 0)时,向 <code>stderr</code> 打印表达式文本、文件名、行号(以及实现可能附带的函数名),随后调用 <code>abort()</code> 终止程序。易错点:表达式<strong>绝不能带副作用</strong>——发布版里整条语句会被替换为 <code>((void)0)</code>,副作用随之消失,例如 <code>assert(p = f())</code>、<code>assert(fclose(fp) == 0)</code> 在 Release 下根本不会执行。常用技巧是与字符串字面量用 <code>&amp;&amp;</code> 连写,如 <code>assert(b != 0.0 &amp;&amp; "除数不能为零")</code>,让诊断信息自带人话说明</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>无返回值(宏展开为 <code>void</code> 表达式)。条件为真时什么也不做;条件为假时不会返回调用点,而是先向 <code>stderr</code> 输出诊断信息,再调用 <code>abort()</code> 使进程异常终止(通常伴随 core dump / 崩溃对话框)。错误详情不通过 <code>errno</code> 传递,而是直接体现在 <code>stderr</code> 的诊断文本与退出状态里。</p>
@@ -2440,11 +2443,11 @@ errno</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>errno</td><td>宏,展开为 <code>int</code> 左值</td><td>它不是函数也不是普通全局变量,而是展开为一个<strong>可读可写的 <code>int</code> 左值</strong>的宏(实现上常为 <code>(*__errno_location())</code> 之类)。可以直接赋值,惯用法是调用前写 <code>errno = 0;</code></td></tr>
-<tr><td>ERANGE</td><td>宏常量</td><td>结果超出可表示范围(<code>strtol</code> 溢出、<code>exp</code> 上溢等)</td></tr>
-<tr><td>EINVAL</td><td>宏常量</td><td>参数无效(POSIX 广泛使用;部分标准库函数也会设置)</td></tr>
-<tr><td>ENOENT</td><td>宏常量</td><td>文件或目录不存在(<code>fopen</code> 失败后常见)</td></tr>
-<tr><td>EDOM</td><td>宏常量</td><td>数学函数定义域错误,如 <code>sqrt(-1.0)</code></td></tr>
+<tr><td class="nw">errno</td><td>宏,展开为 <code>int</code> 左值</td><td>它不是函数也不是普通全局变量,而是展开为一个<strong>可读可写的 <code>int</code> 左值</strong>的宏(实现上常为 <code>(*__errno_location())</code> 之类)。可以直接赋值,惯用法是调用前写 <code>errno = 0;</code></td></tr>
+<tr><td class="nw">ERANGE</td><td class="nw">宏常量</td><td>结果超出可表示范围(<code>strtol</code> 溢出、<code>exp</code> 上溢等)</td></tr>
+<tr><td class="nw">EINVAL</td><td class="nw">宏常量</td><td>参数无效(POSIX 广泛使用;部分标准库函数也会设置)</td></tr>
+<tr><td class="nw">ENOENT</td><td class="nw">宏常量</td><td>文件或目录不存在(<code>fopen</code> 失败后常见)</td></tr>
+<tr><td class="nw">EDOM</td><td class="nw">宏常量</td><td>数学函数定义域错误,如 <code>sqrt(-1.0)</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>不是函数,而是一个可修改的 <code>int</code> 左值。自 C11 起标准保证它是<strong>线程局部</strong>的,各线程互不干扰;主流实现(glibc、MSVC)早已如此。库函数只承诺"出错时设置 <code>errno</code>",从不承诺"成功时清零",所以读它之前必须先用函数自身的返回值判定"确实失败";对 <code>strtol</code>、数学函数这类靠 <code>errno</code> 区分结果的接口,必须<strong>调用前先清零、调用后再检查</strong>。取错误详情:用 <code>strerror(errno)</code> 转成文字,或用 <code>perror("上下文")</code> 直接打印到 <code>stderr</code>。</p>
@@ -2467,11 +2470,11 @@ type va_arg(va_list ap, type);
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>ap</td><td><code>va_list</code></td><td>参数遍历游标。<code>va_list</code> 是保存可变参数遍历状态的<strong>不透明类型</strong>,只能通过这几个宏操作,不要假设它是指针或数组</td></tr>
-<tr><td>parmN</td><td>—</td><td><code>va_start</code> 专用:<code>...</code> 之前的<strong>最后一个具名参数名</strong>(不是它的类型,也不能是寄存器变量、数组或函数类型)。遍历从它之后的第一个实参开始</td></tr>
-<tr><td>type</td><td>类型名</td><td><code>va_arg</code> 专用:期望的参数类型,必须与实参经<strong>默认实参提升</strong>后的类型一致。写 <code>char</code>/<code>short</code>/<code>float</code> 是未定义行为,应写 <code>int</code>/<code>double</code></td></tr>
-<tr><td>dst</td><td><code>va_list</code></td><td><code>va_copy</code>(C99)专用:目标游标,复制 <code>src</code> 的当前遍历状态;<code>dst</code> 用完后同样需要自己的 <code>va_end</code></td></tr>
-<tr><td>src</td><td><code>va_list</code></td><td><code>va_copy</code> 专用:源游标,复制后 <code>src</code> 自身状态不变。需要二次遍历同一组参数时用它,而不是重复 <code>va_start</code> 或重用已消费的游标</td></tr>
+<tr><td class="nw">ap</td><td class="nw"><code>va_list</code></td><td>参数遍历游标。<code>va_list</code> 是保存可变参数遍历状态的<strong>不透明类型</strong>,只能通过这几个宏操作,不要假设它是指针或数组</td></tr>
+<tr><td class="nw">parmN</td><td class="nw">—</td><td><code>va_start</code> 专用:<code>...</code> 之前的<strong>最后一个具名参数名</strong>(不是它的类型,也不能是寄存器变量、数组或函数类型)。遍历从它之后的第一个实参开始</td></tr>
+<tr><td class="nw">type</td><td class="nw">类型名</td><td><code>va_arg</code> 专用:期望的参数类型,必须与实参经<strong>默认实参提升</strong>后的类型一致。写 <code>char</code>/<code>short</code>/<code>float</code> 是未定义行为,应写 <code>int</code>/<code>double</code></td></tr>
+<tr><td class="nw">dst</td><td class="nw"><code>va_list</code></td><td><code>va_copy</code>(C99)专用:目标游标,复制 <code>src</code> 的当前遍历状态;<code>dst</code> 用完后同样需要自己的 <code>va_end</code></td></tr>
+<tr><td class="nw">src</td><td class="nw"><code>va_list</code></td><td><code>va_copy</code> 专用:源游标,复制后 <code>src</code> 自身状态不变。需要二次遍历同一组参数时用它,而不是重复 <code>va_start</code> 或重用已消费的游标</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p><code>va_arg</code> 返回按 <code>type</code> 解释的下一个实参(每次调用使游标前进一个参数);<code>va_start</code>、<code>va_end</code>、<code>va_copy</code> 均无返回值。这套宏<strong>没有任何错误报告机制</strong>:参数个数与类型必须由调用者另行约定(计数参数或格式串),取多了、取错类型都是未定义行为,不会设置 <code>errno</code>、也不会返回失败值——错误只能靠约定与编译器的 <code>format</code> 属性检查来避免。<code>va_start</code> 与 <code>va_end</code> 必须在每条返回路径上配对。</p>
@@ -2490,8 +2493,8 @@ size_t offsetof(type, member);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>type</td><td>结构体类型名</td><td>如 <code>struct Point</code>。<code>offsetof</code> 是宏而非函数,接收的是<strong>类型名</strong>而不是值;只对标准布局的结构体有意义</td></tr>
-<tr><td>member</td><td>成员名</td><td>该结构体中的成员标识符,求它相对结构体首地址的字节偏移。<strong>不能是位域成员</strong>(标准明确规定为未定义)</td></tr>
+<tr><td class="nw">type</td><td class="nw">结构体类型名</td><td>如 <code>struct Point</code>。<code>offsetof</code> 是宏而非函数,接收的是<strong>类型名</strong>而不是值;只对标准布局的结构体有意义</td></tr>
+<tr><td class="nw">member</td><td class="nw">成员名</td><td>该结构体中的成员标识符,求它相对结构体首地址的字节偏移。<strong>不能是位域成员</strong>(标准明确规定为未定义)</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>返回 <code>size_t</code> 型<strong>整数常量表达式</strong>,表示从结构体起始地址到该成员的偏移字节数(因此可用于 <code>static_assert</code>、数组维度等编译期场景)。没有失败取值:参数不合法(成员不存在、写成位域)属于编译错误或未定义行为,而不是运行期返回错误码,所以不涉及 <code>errno</code>。</p>
@@ -2515,9 +2518,9 @@ printf("len 位于偏移 %zu\n", off);   <span class="cm">// 通常输出 4:tag 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>size_t</td><td>无符号整数类型</td><td><code>sizeof</code> 的结果类型,能表示实现所允许的任何对象大小。64 位平台通常 8 字节、32 位平台 4 字节。打印用 <code>%zu</code>。易错点:<strong>无符号</strong>,<code>for (size_t i = n - 1; i &gt;= 0; i--)</code> 条件恒真,是死循环</td></tr>
-<tr><td>ptrdiff_t</td><td>有符号整数类型</td><td>两个指针相减的结果类型,<strong>可以为负</strong>。宽度与 <code>size_t</code> 相同(64 位平台 8 字节、32 位 4 字节)。打印用 <code>%td</code></td></tr>
-<tr><td>NULL</td><td>宏</td><td>空指针常量,依实现展开为 <code>0</code>、<code>0L</code> 或 <code>((void*)0)</code>。正因为它可能只是整数 0,在 C++ 的重载决议中会产生歧义</td></tr>
+<tr><td class="nw">size_t</td><td class="nw">无符号整数类型</td><td><code>sizeof</code> 的结果类型,能表示实现所允许的任何对象大小。64 位平台通常 8 字节、32 位平台 4 字节。打印用 <code>%zu</code>。易错点:<strong>无符号</strong>,<code>for (size_t i = n - 1; i &gt;= 0; i--)</code> 条件恒真,是死循环</td></tr>
+<tr><td class="nw">ptrdiff_t</td><td class="nw">有符号整数类型</td><td>两个指针相减的结果类型,<strong>可以为负</strong>。宽度与 <code>size_t</code> 相同(64 位平台 8 字节、32 位 4 字节)。打印用 <code>%td</code></td></tr>
+<tr><td class="nw">NULL</td><td class="nw">宏</td><td>空指针常量,依实现展开为 <code>0</code>、<code>0L</code> 或 <code>((void*)0)</code>。正因为它可能只是整数 0,在 C++ 的重载决议中会产生歧义</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>均为类型/宏定义,无运行期行为,也就无所谓成功与失败、不涉及 <code>errno</code>。它们的价值在于可移植性:64 位平台上 <code>size_t</code>/<code>ptrdiff_t</code> 通常为 8 字节,32 位平台为 4 字节——所以它们比 <code>int</code>/<code>unsigned</code> 更适合表达"大小"与"下标"。</p>
@@ -2539,14 +2542,14 @@ printf("len 位于偏移 %zu\n", off);   <span class="cm">// 通常输出 4:tag 
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>&lt;stdint.h&gt;</td><td>头文件</td><td>提供固定宽度整数类型及其极限宏(<code>INTn_MIN/MAX</code>、<code>UINTn_MAX</code>、<code>SIZE_MAX</code>)与字面量宏(<code>INTn_C</code>)</td></tr>
-<tr><td>&lt;inttypes.h&gt;</td><td>头文件</td><td>提供配套的 <code>printf</code>/<code>scanf</code> 格式宏(<code>PRIdN</code>/<code>PRIuN</code>/<code>PRIxN</code>、<code>SCNdN</code> 等),并自动包含 <code>&lt;stdint.h&gt;</code></td></tr>
-<tr><td>int8_t / uint8_t</td><td>精确 8 位</td><td>二进制补码、有符号 / 无符号。范围 -128~127 / 0~255;极限宏 <code>INT8_MIN/MAX</code>、<code>UINT8_MAX</code>;打印宏 <code>PRId8</code> / <code>PRIu8</code></td></tr>
-<tr><td>int16_t / uint16_t</td><td>精确 16 位</td><td>-32768~32767 / 0~65535;<code>PRId16</code> / <code>PRIu16</code></td></tr>
-<tr><td>int32_t / uint32_t</td><td>精确 32 位</td><td>二进制补码、有符号 / 无符号。约 ±21.4 亿 / 0~42.9 亿;<code>PRId32</code> / <code>PRIu32</code>、十六进制 <code>PRIx32</code></td></tr>
-<tr><td>int64_t / uint64_t</td><td>精确 64 位</td><td>二进制补码、有符号 / 无符号。约 ±9.2×10¹⁸ / 0~1.8×10¹⁹;<code>PRId64</code> / <code>PRIu64</code>;字面量后缀由 <code>INT64_C(x)</code> 生成</td></tr>
-<tr><td>intptr_t / uintptr_t</td><td>指针宽度</td><td>能无损保存对象指针的整数类型(可选但普遍提供)</td></tr>
-<tr><td>intmax_t / uintmax_t</td><td>最宽</td><td>实现支持的最宽整数;格式宏 <code>PRIdMAX</code></td></tr>
+<tr><td class="nw">&lt;stdint.h&gt;</td><td class="nw">头文件</td><td>提供固定宽度整数类型及其极限宏(<code>INTn_MIN/MAX</code>、<code>UINTn_MAX</code>、<code>SIZE_MAX</code>)与字面量宏(<code>INTn_C</code>)</td></tr>
+<tr><td class="nw">&lt;inttypes.h&gt;</td><td class="nw">头文件</td><td>提供配套的 <code>printf</code>/<code>scanf</code> 格式宏(<code>PRIdN</code>/<code>PRIuN</code>/<code>PRIxN</code>、<code>SCNdN</code> 等),并自动包含 <code>&lt;stdint.h&gt;</code></td></tr>
+<tr><td class="nw">int8_t / uint8_t</td><td class="nw">精确 8 位</td><td>二进制补码、有符号 / 无符号。范围 -128~127 / 0~255;极限宏 <code>INT8_MIN/MAX</code>、<code>UINT8_MAX</code>;打印宏 <code>PRId8</code> / <code>PRIu8</code></td></tr>
+<tr><td>int16_t / uint16_t</td><td class="nw">精确 16 位</td><td>-32768~32767 / 0~65535;<code>PRId16</code> / <code>PRIu16</code></td></tr>
+<tr><td>int32_t / uint32_t</td><td class="nw">精确 32 位</td><td>二进制补码、有符号 / 无符号。约 ±21.4 亿 / 0~42.9 亿;<code>PRId32</code> / <code>PRIu32</code>、十六进制 <code>PRIx32</code></td></tr>
+<tr><td>int64_t / uint64_t</td><td class="nw">精确 64 位</td><td>二进制补码、有符号 / 无符号。约 ±9.2×10¹⁸ / 0~1.8×10¹⁹;<code>PRId64</code> / <code>PRIu64</code>;字面量后缀由 <code>INT64_C(x)</code> 生成</td></tr>
+<tr><td>intptr_t / uintptr_t</td><td class="nw">指针宽度</td><td>能无损保存对象指针的整数类型(可选但普遍提供)</td></tr>
+<tr><td>intmax_t / uintmax_t</td><td class="nw">最宽</td><td>实现支持的最宽整数;格式宏 <code>PRIdMAX</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>均为类型与宏定义,无运行期行为,不产生成功/失败结果,也不设置 <code>errno</code>;"失败"只会以编译错误的形式出现(例如平台不提供某个精确宽度类型时该类型未定义)。<code>int64_t</code> 在 Linux 上是 <code>long</code>、在 Windows 上是 <code>long long</code>,直接写 <code>%ld</code> 或 <code>%lld</code> 必有一方不可移植——这正是 <code>PRId64</code> 这组格式宏存在的理由。</p>
@@ -2569,9 +2572,9 @@ printf("big=%" PRId64 " mask=%08" PRIx32 "\n", big, mask);
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>bool</td><td>宏 → <code>_Bool</code></td><td>C99 内建布尔类型 <code>_Bool</code> 的友好拼写。易错点:它只保存 0 或 1,任何非零标量赋给它都规约为 1,因此 <code>bool ok = 0.5;</code> 得 <code>true</code>,而 <code>int ok = 0.5;</code> 得 0</td></tr>
-<tr><td>true</td><td>宏 → 整数常量 1</td><td>C23 之前展开为整数常量 <code>1</code>;C23 起 <code>true</code> 是关键字,类型为 <code>bool</code></td></tr>
-<tr><td>false</td><td>宏 → 整数常量 0</td><td>C23 之前展开为整数常量 <code>0</code>;C23 起 <code>false</code> 是关键字,类型为 <code>bool</code></td></tr>
+<tr><td class="nw">bool</td><td class="nw">宏 → <code>_Bool</code></td><td>C99 内建布尔类型 <code>_Bool</code> 的友好拼写。易错点:它只保存 0 或 1,任何非零标量赋给它都规约为 1,因此 <code>bool ok = 0.5;</code> 得 <code>true</code>,而 <code>int ok = 0.5;</code> 得 0</td></tr>
+<tr><td class="nw">true</td><td class="nw">宏 → 整数常量 1</td><td>C23 之前展开为整数常量 <code>1</code>;C23 起 <code>true</code> 是关键字,类型为 <code>bool</code></td></tr>
+<tr><td class="nw">false</td><td class="nw">宏 → 整数常量 0</td><td>C23 之前展开为整数常量 <code>0</code>;C23 起 <code>false</code> 是关键字,类型为 <code>bool</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>宏定义,无运行期行为,不会失败、不设置 <code>errno</code>。语义要点:<code>_Bool</code>(即 <code>bool</code>)只保存 0 或 1——任何非零标量赋给它都规约为 1,所以 <code>bool ok = 0.5;</code> 得到 <code>true</code>,这与 <code>int ok = 0.5;</code>(得 0)截然不同。</p>
@@ -2595,16 +2598,16 @@ printf("big=%" PRId64 " mask=%08" PRIx32 "\n", big, mask);
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>&lt;limits.h&gt;</td><td>头文件</td><td>整数类型的取值范围常量</td></tr>
-<tr><td>&lt;float.h&gt;</td><td>头文件</td><td>浮点类型的精度与范围特性常量</td></tr>
-<tr><td>CHAR_BIT</td><td>limits.h</td><td>一个字节的位数,几乎总是 8</td></tr>
-<tr><td>INT_MIN / INT_MAX</td><td>limits.h</td><td><code>int</code> 范围,典型为 -2147483648 ~ 2147483647</td></tr>
-<tr><td>UINT_MAX</td><td>limits.h</td><td><code>unsigned int</code> 上限,典型为 4294967295</td></tr>
-<tr><td>LONG_MAX / LLONG_MAX</td><td>limits.h</td><td><code>long</code> / <code>long long</code> 上限;注意 Windows 上 <code>long</code> 仅 32 位</td></tr>
-<tr><td>SIZE_MAX</td><td>stdint.h</td><td><code>size_t</code> 上限(注意它定义在 stdint.h)</td></tr>
-<tr><td>FLT_EPSILON / DBL_EPSILON</td><td>float.h</td><td>1.0 与大于 1.0 的最小可表示数之差,double 约 2.22e-16</td></tr>
-<tr><td>DBL_MAX / DBL_MIN</td><td>float.h</td><td>最大有限值约 1.8e308;最小正<em>规格化</em>值约 2.2e-308(不是最负的数)</td></tr>
-<tr><td>FLT_DIG / DBL_DIG</td><td>float.h</td><td>可安全往返转换的十进制有效位数:6 / 15</td></tr>
+<tr><td class="nw">&lt;limits.h&gt;</td><td class="nw">头文件</td><td>整数类型的取值范围常量</td></tr>
+<tr><td class="nw">&lt;float.h&gt;</td><td class="nw">头文件</td><td>浮点类型的精度与范围特性常量</td></tr>
+<tr><td class="nw">CHAR_BIT</td><td class="nw">limits.h</td><td>一个字节的位数,几乎总是 8</td></tr>
+<tr><td>INT_MIN / INT_MAX</td><td class="nw">limits.h</td><td><code>int</code> 范围,典型为 -2147483648 ~ 2147483647</td></tr>
+<tr><td class="nw">UINT_MAX</td><td class="nw">limits.h</td><td><code>unsigned int</code> 上限,典型为 4294967295</td></tr>
+<tr><td>LONG_MAX / LLONG_MAX</td><td class="nw">limits.h</td><td><code>long</code> / <code>long long</code> 上限;注意 Windows 上 <code>long</code> 仅 32 位</td></tr>
+<tr><td class="nw">SIZE_MAX</td><td class="nw">stdint.h</td><td><code>size_t</code> 上限(注意它定义在 stdint.h)</td></tr>
+<tr><td>FLT_EPSILON / DBL_EPSILON</td><td class="nw">float.h</td><td>1.0 与大于 1.0 的最小可表示数之差,double 约 2.22e-16</td></tr>
+<tr><td>DBL_MAX / DBL_MIN</td><td class="nw">float.h</td><td>最大有限值约 1.8e308;最小正<em>规格化</em>值约 2.2e-308(不是最负的数)</td></tr>
+<tr><td>FLT_DIG / DBL_DIG</td><td class="nw">float.h</td><td>可安全往返转换的十进制有效位数:6 / 15</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>均为编译期常量宏,没有运行期成功/失败之分,也不设置 <code>errno</code>。用途一:检测溢出——加法前判 <code>a &gt; INT_MAX - b</code>,而不是加完再看符号(有符号溢出是未定义行为,事后检测不可靠)。用途二:浮点比较不应写 <code>==</code>,而用与量级成比例的容差。</p>
@@ -2628,9 +2631,9 @@ static_assert(constant-expression);</code></pre>
 <p><strong>参数</strong></p>
 <table><thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>constant-expression</td><td>整型常量表达式</td><td>必须在编译期可求值(如 <code>sizeof</code>、<code>offsetof</code>、枚举值的算术);为 0 时直接编译失败</td></tr>
-<tr><td>message</td><td>字符串字面量</td><td>出现在编译错误信息中,用来说明违反了什么假设;C23(以及 C++17)起可省略,即只写一个参数的形式</td></tr>
-<tr><td>&lt;assert.h&gt;</td><td>头文件</td><td>C11 在此提供 <code>static_assert</code> 宏(映射到关键字 <code>_Static_assert</code>);C23 与 C++11 起 <code>static_assert</code> 本身就是关键字,不需要包含任何头文件</td></tr>
+<tr><td>constant-expression</td><td class="nw">整型常量表达式</td><td>必须在编译期可求值(如 <code>sizeof</code>、<code>offsetof</code>、枚举值的算术);为 0 时直接编译失败</td></tr>
+<tr><td class="nw">message</td><td class="nw">字符串字面量</td><td>出现在编译错误信息中,用来说明违反了什么假设;C23(以及 C++17)起可省略,即只写一个参数的形式</td></tr>
+<tr><td class="nw">&lt;assert.h&gt;</td><td class="nw">头文件</td><td>C11 在此提供 <code>static_assert</code> 宏(映射到关键字 <code>_Static_assert</code>);C23 与 C++11 起 <code>static_assert</code> 本身就是关键字,不需要包含任何头文件</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
 <p>无返回值,它是一条<strong>声明</strong>而不是表达式。断言失败发生在<strong>编译期</strong>,以编译错误(并打印 <code>message</code>)的形式报告,程序根本不会生成;成功时不产生任何运行期代码,也不受 <code>NDEBUG</code> 影响——这是它与 <code>assert</code> 的本质区别,也意味着它与 <code>errno</code> 毫无关系。</p>

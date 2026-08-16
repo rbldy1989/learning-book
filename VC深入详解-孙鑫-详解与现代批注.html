@@ -154,8 +154,12 @@ figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
 pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
 table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
 #sidebar,#toc{will-change:scroll-position;}
-table th, table td { white-space: normal; }
+
+/* 表格：短内容不折行，长文本正常折行 */
+table th { white-space: nowrap; }
 table td:first-child, table th:first-child { white-space: nowrap; }
+table td { overflow-wrap: break-word; }
+table td.nw { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -479,11 +483,11 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>字段</th><th>含义</th><th>举例</th></tr></thead>
 <tbody>
-<tr><td><code>hwnd</code></td><td>这条消息发给哪个窗口</td><td>你点的那个按钮的 HWND</td></tr>
-<tr><td><code>message</code></td><td>消息类型编号（一个 UINT）</td><td><code>WM_LBUTTONDOWN</code>（左键按下）</td></tr>
-<tr><td><code>wParam</code></td><td>附加信息（随消息类型而变）</td><td>按键时是虚拟键码</td></tr>
-<tr><td><code>lParam</code></td><td>附加信息（常放坐标等）</td><td>鼠标消息里打包着 x、y 坐标</td></tr>
-<tr><td><code>time</code> / <code>pt</code></td><td>发生时刻 / 光标位置</td><td>时间戳、屏幕坐标点</td></tr>
+<tr><td class="nw"><code>hwnd</code></td><td>这条消息发给哪个窗口</td><td>你点的那个按钮的 HWND</td></tr>
+<tr><td class="nw"><code>message</code></td><td>消息类型编号（一个 UINT）</td><td><code>WM_LBUTTONDOWN</code>（左键按下）</td></tr>
+<tr><td class="nw"><code>wParam</code></td><td>附加信息（随消息类型而变）</td><td class="nw">按键时是虚拟键码</td></tr>
+<tr><td class="nw"><code>lParam</code></td><td>附加信息（常放坐标等）</td><td>鼠标消息里打包着 x、y 坐标</td></tr>
+<tr><td class="nw"><code>time</code> / <code>pt</code></td><td>发生时刻 / 光标位置</td><td>时间戳、屏幕坐标点</td></tr>
 </tbody>
 </table>
 <p>你会注意到，所有以 <code>WM_</code> 开头的常量（WM = Window Message）就是消息类型的名字。<code>WM_LBUTTONDOWN</code>、<code>WM_KEYDOWN</code>、<code>WM_PAINT</code>、<code>WM_DESTROY</code>……它们背后其实都是一个整数编号，用宏起了个人能读的名字而已。</p>
@@ -595,14 +599,14 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>字段</th><th>作用</th><th>要点</th></tr></thead>
 <tbody>
-<tr><td><code>lpfnWndProc</code></td><td>指向该类窗口的<strong>窗口过程</strong>函数</td><td>最关键。决定这类窗口如何处理消息</td></tr>
-<tr><td><code>hInstance</code></td><td>这个类归属于哪个程序实例</td><td>把 WinMain 收到的 <code>hInstance</code> 填进去</td></tr>
-<tr><td><code>lpszClassName</code></td><td>类名字符串</td><td>造窗口时靠它引用这个类</td></tr>
-<tr><td><code>style</code></td><td>类样式（如尺寸变化时重画等）</td><td>常用 <code>CS_HREDRAW | CS_VREDRAW</code></td></tr>
-<tr><td><code>hCursor</code></td><td>鼠标移到窗口上时的光标</td><td><code>LoadCursor(NULL, IDC_ARROW)</code></td></tr>
-<tr><td><code>hIcon</code></td><td>窗口图标</td><td>不设则用系统默认</td></tr>
-<tr><td><code>hbrBackground</code></td><td>背景刷（决定窗口底色）</td><td>不设则背景不会被自动擦除</td></tr>
-<tr><td><code>lpszMenuName</code></td><td>菜单资源名</td><td>没菜单就填 NULL</td></tr>
+<tr><td class="nw"><code>lpfnWndProc</code></td><td>指向该类窗口的<strong>窗口过程</strong>函数</td><td>最关键。决定这类窗口如何处理消息</td></tr>
+<tr><td class="nw"><code>hInstance</code></td><td>这个类归属于哪个程序实例</td><td>把 WinMain 收到的 <code>hInstance</code> 填进去</td></tr>
+<tr><td class="nw"><code>lpszClassName</code></td><td class="nw">类名字符串</td><td>造窗口时靠它引用这个类</td></tr>
+<tr><td class="nw"><code>style</code></td><td>类样式（如尺寸变化时重画等）</td><td>常用 <code>CS_HREDRAW | CS_VREDRAW</code></td></tr>
+<tr><td class="nw"><code>hCursor</code></td><td>鼠标移到窗口上时的光标</td><td><code>LoadCursor(NULL, IDC_ARROW)</code></td></tr>
+<tr><td class="nw"><code>hIcon</code></td><td class="nw">窗口图标</td><td class="nw">不设则用系统默认</td></tr>
+<tr><td class="nw"><code>hbrBackground</code></td><td>背景刷（决定窗口底色）</td><td>不设则背景不会被自动擦除</td></tr>
+<tr><td class="nw"><code>lpszMenuName</code></td><td class="nw">菜单资源名</td><td class="nw">没菜单就填 NULL</td></tr>
 </tbody>
 </table>
 <p>填好结构体，把它交给 <code>RegisterClass</code> 登记到系统，这个"模具"就备好了：</p>
@@ -628,9 +632,9 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>函数</th><th>它做什么</th><th>为什么需要它</th></tr></thead>
 <tbody>
-<tr><td><code>GetMessage</code></td><td>从本线程消息队列里取出一条消息，放进 <code>msg</code></td><td>队列空时它<strong>阻塞等待</strong>，不空转、不吃 CPU</td></tr>
-<tr><td><code>TranslateMessage</code></td><td>把 <code>WM_KEYDOWN</code> 这类原始按键翻译成 <code>WM_CHAR</code> 字符消息</td><td>让你能直接拿到"用户输入了字符 A"，而不用自己拼</td></tr>
-<tr><td><code>DispatchMessage</code></td><td>把消息交回系统，由系统调用对应窗口的窗口过程</td><td>它才是真正触发你的处理逻辑的那一下</td></tr>
+<tr><td class="nw"><code>GetMessage</code></td><td>从本线程消息队列里取出一条消息，放进 <code>msg</code></td><td>队列空时它<strong>阻塞等待</strong>，不空转、不吃 CPU</td></tr>
+<tr><td class="nw"><code>TranslateMessage</code></td><td>把 <code>WM_KEYDOWN</code> 这类原始按键翻译成 <code>WM_CHAR</code> 字符消息</td><td>让你能直接拿到"用户输入了字符 A"，而不用自己拼</td></tr>
+<tr><td class="nw"><code>DispatchMessage</code></td><td>把消息交回系统，由系统调用对应窗口的窗口过程</td><td>它才是真正触发你的处理逻辑的那一下</td></tr>
 </tbody>
 </table>
 <p>有个细节值得你品：为什么 <code>GetMessage</code> 用 <code>&gt; 0</code> 做循环条件？因为它有三种返回值。取到普通消息返回非零（正数），循环继续；取到特殊的 <code>WM_QUIT</code> 时返回 <strong>0</strong>，循环干净地结束——这正是程序退出的机关（下一节的 <code>PostQuitMessage</code> 就是往队列投这条 <code>WM_QUIT</code>）；出错时返回 <strong>-1</strong>。用 <code>&gt; 0</code> 恰好把"正常消息"和"该退出/出错"利落地分开。</p>
@@ -667,9 +671,9 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>消息</th><th>何时发生</th><th>你通常怎么做</th></tr></thead>
 <tbody>
-<tr><td><code>WM_CLOSE</code></td><td>用户点了关闭按钮（想关，但还没关）</td><td>可拦截，弹"确定要退出吗？"；默认会去销毁窗口</td></tr>
-<tr><td><code>WM_DESTROY</code></td><td>窗口正在被销毁（已经在关了）</td><td>清理资源，调 <code>PostQuitMessage(0)</code></td></tr>
-<tr><td><code>WM_QUIT</code></td><td>由 <code>PostQuitMessage</code> 投递</td><td>不在 WndProc 里处理；它让消息循环结束</td></tr>
+<tr><td class="nw"><code>WM_CLOSE</code></td><td>用户点了关闭按钮（想关，但还没关）</td><td>可拦截，弹"确定要退出吗？"；默认会去销毁窗口</td></tr>
+<tr><td class="nw"><code>WM_DESTROY</code></td><td>窗口正在被销毁（已经在关了）</td><td>清理资源，调 <code>PostQuitMessage(0)</code></td></tr>
+<tr><td class="nw"><code>WM_QUIT</code></td><td>由 <code>PostQuitMessage</code> 投递</td><td>不在 WndProc 里处理；它让消息循环结束</td></tr>
 </tbody>
 </table>
 <div class="note ok"><span class="t">🟢 抓住这条主线</span><p>点关闭 → <code>WM_CLOSE</code>（默认销毁窗口）→ <code>WM_DESTROY</code>（你在此 <code>PostQuitMessage</code>）→ 队列多了 <code>WM_QUIT</code> → <code>GetMessage</code> 返回 0 → 消息循环退出 → 程序结束。把这条链在脑子里跑通，你就真正理解了一个 Windows 程序"生"与"死"的完整闭环。</p></div>
@@ -680,8 +684,8 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>后缀</th><th>含义</th><th>字符类型</th><th>字符串字面量</th></tr></thead>
 <tbody>
-<tr><td><code>...A</code></td><td>ANSI（多字节）</td><td><code>char</code></td><td><code>"文字"</code></td></tr>
-<tr><td><code>...W</code></td><td>Wide（宽字符，UTF-16）</td><td><code>wchar_t</code></td><td><code>L"文字"</code></td></tr>
+<tr><td class="nw"><code>...A</code></td><td class="nw">ANSI（多字节）</td><td class="nw"><code>char</code></td><td class="nw"><code>"文字"</code></td></tr>
+<tr><td class="nw"><code>...W</code></td><td>Wide（宽字符，UTF-16）</td><td class="nw"><code>wchar_t</code></td><td class="nw"><code>L"文字"</code></td></tr>
 </tbody>
 </table>
 <p>那你平时写的 <code>MessageBox</code>（不带后缀）是哪个？它其实是个<strong>宏</strong>：编译时若定义了 <code>UNICODE</code>，它展开成 <code>MessageBoxW</code>；否则展开成 <code>MessageBoxA</code>。而 <code>TCHAR</code> 同理——定义了 <code>UNICODE</code> 就是 <code>wchar_t</code>，否则是 <code>char</code>；<code>_T("x")</code> / <code>TEXT("x")</code> 这个宏则据此决定给不给字面量加 <code>L</code> 前缀。这一整套 <code>TCHAR</code> 机制，就是为了"写一份源码、切个编译开关就能同时产出 ANSI 版和 Unicode 版"而生的。</p>
@@ -715,9 +719,9 @@ table td:first-child, table th:first-child { white-space: nowrap; }
 <table>
 <thead><tr><th>修饰符</th><th>谁能访问</th><th>常放什么</th></tr></thead>
 <tbody>
-<tr><td><code>public</code></td><td>任何人（类外代码也行）</td><td>对外的「按钮」，即接口函数</td></tr>
-<tr><td><code>private</code></td><td>只有本类的成员函数</td><td>内部数据、内部辅助函数</td></tr>
-<tr><td><code>protected</code></td><td>本类 + 派生类的成员函数</td><td>想让子类用、但不想对外暴露的东西</td></tr>
+<tr><td class="nw"><code>public</code></td><td>任何人（类外代码也行）</td><td>对外的「按钮」，即接口函数</td></tr>
+<tr><td class="nw"><code>private</code></td><td>只有本类的成员函数</td><td>内部数据、内部辅助函数</td></tr>
+<tr><td class="nw"><code>protected</code></td><td>本类 + 派生类的成员函数</td><td>想让子类用、但不想对外暴露的东西</td></tr>
 </tbody>
 </table>
 <p>为什么要把数据设成 <code>private</code>，然后再费劲写一对 <code>getAge()/setAge()</code>？直接 <code>public</code> 不省事吗？关键在于<strong>「留一道关卡」</strong>。数据一旦 <code>public</code>，全世界都能 <code>a.age = -100</code>，你无从拦截一个非法的年龄。而如果走 <code>setAge()</code>，你可以在函数里加一句 <code>if (v &lt; 0) return;</code>。今天你不需要校验，但接口摆在那里，哪天需要了改一个地方就行，调用方毫无感知。这就是封装真正的收益：<strong>把「可能变化的实现」藏在稳定的接口后面。</strong></p>
@@ -783,10 +787,10 @@ p-&gt;vptr[<span class="cm">/* speak 在表里的槽位号 */</span>]( p );
 <table>
 <thead><tr><th>写法</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td><code>const int n = 5;</code></td><td>n 是常量，不能再被赋值</td></tr>
+<tr><td class="nw"><code>const int n = 5;</code></td><td>n 是常量，不能再被赋值</td></tr>
 <tr><td><code>void f(const CString&amp; s)</code></td><td>承诺函数内不会改动传进来的 s（配合引用省拷贝）</td></tr>
 <tr><td><code>int getAge() const;</code></td><td>成员函数末尾的 const：承诺这个函数不改动对象自身的成员</td></tr>
-<tr><td><code>const char* p;</code></td><td>p 指向的内容不可改（但 p 本身可改指向）</td></tr>
+<tr><td class="nw"><code>const char* p;</code></td><td>p 指向的内容不可改（但 p 本身可改指向）</td></tr>
 </tbody>
 </table>
 <p>其中「成员函数末尾的 const」最容易被初学者忽略，却极其重要：只有标了 <code>const</code> 的成员函数，才允许通过一个 <code>const</code> 对象（或 <code>const</code> 引用）来调用。所以但凡一个成员函数「只读、不改对象」，你就该给它加上末尾 <code>const</code>——这叫 <strong>const 正确性</strong>，是专业代码和玩具代码的分水岭之一。</p>
@@ -808,9 +812,9 @@ p-&gt;vptr[<span class="cm">/* speak 在表里的槽位号 */</span>]( p );
 <tr><td><code>int* p = new int[n]; ... delete[] p;</code></td><td><code>std::vector&lt;int&gt; v(n);</code></td><td>自动释放、自动扩容、拷贝正确，杜绝泄漏与越界</td></tr>
 <tr><td>手写链表 / 手写动态数组</td><td>STL 容器：<code>vector / map / string</code></td><td>久经考验、高效、正确，别重复造轮子</td></tr>
 <tr><td>裸指针 <code>Foo* f = new Foo;</code> 手动 delete</td><td><code>std::unique_ptr&lt;Foo&gt;</code> / <code>std::shared_ptr&lt;Foo&gt;</code></td><td>所有权清晰，离开作用域自动 delete（RAII）</td></tr>
-<tr><td><code>NULL</code> 或 <code>0</code> 表示空指针</td><td><code>nullptr</code></td><td>是真正的指针类型，不会和整数 0 混淆导致选错重载</td></tr>
+<tr><td><code>NULL</code> 或 <code>0</code> 表示空指针</td><td class="nw"><code>nullptr</code></td><td>是真正的指针类型，不会和整数 0 混淆导致选错重载</td></tr>
 <tr><td><code>for (int i = 0; i &lt; n; i++) a[i]...</code></td><td>范围 for：<code>for (auto&amp; x : v) ...</code></td><td>不会写错边界、不会越界，意图更清楚</td></tr>
-<tr><td><code>std::vector&lt;int&gt;::iterator it = ...</code></td><td><code>auto it = ...</code></td><td>类型让编译器推导，少写冗长类型、少出错</td></tr>
+<tr><td><code>std::vector&lt;int&gt;::iterator it = ...</code></td><td class="nw"><code>auto it = ...</code></td><td>类型让编译器推导，少写冗长类型、少出错</td></tr>
 <tr><td>手写深拷贝、返回大对象怕慢</td><td>移动语义 <code>std::move</code>、右值引用</td><td>转移资源而非复制，返回大对象几乎零成本</td></tr>
 </tbody>
 </table>
@@ -851,12 +855,12 @@ w-&gt;doWork();
 <table>
 <thead><tr><th>类</th><th>它代表什么</th><th>你通常怎么用</th></tr></thead>
 <tbody>
-<tr><td>CWinApp</td><td>整个应用程序实例</td><td>派生自己的 App 类，重写 InitInstance</td></tr>
-<tr><td>CWnd</td><td>一切"有窗口句柄"之物的基类</td><td>很少直接用，是下面几个的父类</td></tr>
-<tr><td>CFrameWnd</td><td>带边框 / 菜单的主框架窗口</td><td>单文档程序的外壳窗口</td></tr>
-<tr><td>CView</td><td>框架里显示数据的那块客户区</td><td>重写 OnDraw 画内容</td></tr>
-<tr><td>CDialog</td><td>对话框</td><td>做设置窗口、输入界面</td></tr>
-<tr><td>CDocument</td><td>程序的数据（没有窗口！）</td><td>存放和读写你的文档数据</td></tr>
+<tr><td class="nw">CWinApp</td><td class="nw">整个应用程序实例</td><td>派生自己的 App 类，重写 InitInstance</td></tr>
+<tr><td class="nw">CWnd</td><td>一切"有窗口句柄"之物的基类</td><td>很少直接用，是下面几个的父类</td></tr>
+<tr><td class="nw">CFrameWnd</td><td>带边框 / 菜单的主框架窗口</td><td>单文档程序的外壳窗口</td></tr>
+<tr><td class="nw">CView</td><td>框架里显示数据的那块客户区</td><td>重写 OnDraw 画内容</td></tr>
+<tr><td class="nw">CDialog</td><td class="nw">对话框</td><td>做设置窗口、输入界面</td></tr>
+<tr><td class="nw">CDocument</td><td>程序的数据（没有窗口！）</td><td>存放和读写你的文档数据</td></tr>
 </tbody>
 </table>
 <p>这里有个容易被忽略的分叉：<strong>CWnd 这一支都是"看得见的窗口"，而 CDocument 虽然也从 CCmdTarget 来，却没有窗口</strong>。为什么把数据（CDocument）和显示（CView）拆成两个类？因为微软想强推"数据与界面分离"的设计——同一份数据可以配多个视图（比如一份表格同时用柱状图和折线图显示）。这就是本章后面文档 / 视图架构的伏笔。</p>
@@ -992,9 +996,9 @@ END_MESSAGE_MAP()</code></pre>
 <table>
 <thead><tr><th>角色</th><th>类</th><th>职责</th><th>不该管什么</th></tr></thead>
 <tbody>
-<tr><td>数据</td><td>CDocument</td><td>存放你的数据、负责存盘和读盘</td><td>不管怎么画、不碰界面</td></tr>
-<tr><td>显示</td><td>CView</td><td>把数据画到屏幕、接收鼠标键盘</td><td>不"拥有"数据，只是显示它</td></tr>
-<tr><td>外壳</td><td>CFrameWnd</td><td>提供边框、菜单、工具栏、状态栏</td><td>不管客户区里画什么</td></tr>
+<tr><td class="nw">数据</td><td class="nw">CDocument</td><td>存放你的数据、负责存盘和读盘</td><td>不管怎么画、不碰界面</td></tr>
+<tr><td class="nw">显示</td><td class="nw">CView</td><td>把数据画到屏幕、接收鼠标键盘</td><td>不"拥有"数据，只是显示它</td></tr>
+<tr><td class="nw">外壳</td><td class="nw">CFrameWnd</td><td>提供边框、菜单、工具栏、状态栏</td><td>不管客户区里画什么</td></tr>
 </tbody>
 </table>
 <p>为什么要这么拆？核心动机是<strong>一份数据、多种看法</strong>。想象一个文档同时开着两个窗口：一个显示文字大纲，一个显示排版预览——数据只有一份（一个 CDocument），视图有两个（两个 CView）。数据一改，框架通知所有视图刷新。把"数据"和"呈现"解耦，数据就不必知道自己会被怎么显示，视图也不必操心数据怎么存储。</p>
@@ -1178,8 +1182,8 @@ END_MESSAGE_MAP()</code></pre>
 <table>
 <thead><tr><th>GDI 的短板</th><th>具体表现</th><th>后果</th></tr></thead>
 <tbody>
-<tr><td>无硬件加速</td><td>基本靠 CPU 软件渲染，几乎不动用 GPU（Vista 引入 DWM 合成后，GDI 的硬件加速大多被移除）</td><td>画复杂/大量图形时慢，动画吃力</td></tr>
-<tr><td>无抗锯齿</td><td>斜线、圆弧边缘是硬邦邦的锯齿（文字有 ClearType，图形没有）</td><td>视觉粗糙，达不到现代审美</td></tr>
+<tr><td class="nw">无硬件加速</td><td>基本靠 CPU 软件渲染，几乎不动用 GPU（Vista 引入 DWM 合成后，GDI 的硬件加速大多被移除）</td><td>画复杂/大量图形时慢，动画吃力</td></tr>
+<tr><td class="nw">无抗锯齿</td><td>斜线、圆弧边缘是硬邦邦的锯齿（文字有 ClearType，图形没有）</td><td>视觉粗糙，达不到现代审美</td></tr>
 <tr><td>无 alpha、整数坐标</td><td>没有原生透明合成，坐标只能是整数</td><td>做不了半透明、平滑缩放、亚像素定位</td></tr>
 </tbody>
 </table>
@@ -1187,9 +1191,9 @@ END_MESSAGE_MAP()</code></pre>
 <table>
 <thead><tr><th>技术</th><th>定位</th><th>关键能力</th><th>状态（2026）</th></tr></thead>
 <tbody>
-<tr><td><strong>GDI+</strong></td><td>GDI 的直接改良版（约 2001 年，<code>gdiplus.dll</code>；.NET 的 <code>System.Drawing</code> 即其封装）</td><td>抗锯齿、浮点坐标、alpha 透明、渐变、贝塞尔、直接读写 JPEG/PNG</td><td><span class="badge old">已过时</span>：仍是 CPU 软件渲染、无 GPU 加速，微软已建议新项目别用</td></tr>
-<tr><td><strong>Direct2D</strong></td><td>微软主推的原生 2D（Windows 7 起，<code>d2d1</code>）</td><td>基于 Direct3D 的 <strong>GPU 硬件加速</strong>、高质量抗锯齿、配 DirectWrite 排版、可与 Direct3D 混用</td><td><span class="badge ok">推荐</span>：Windows 上原生高性能 2D 的正主</td></tr>
-<tr><td><strong>Skia</strong></td><td>Google 的<strong>跨平台</strong> 2D 库</td><td>CPU / GPU 双后端、抗锯齿、跨 Windows/Mac/Linux/移动端；Chrome、Android、Flutter 的底层</td><td><span class="badge ok">推荐</span>：要跨平台就选它（.NET 有 SkiaSharp）</td></tr>
+<tr><td class="nw"><strong>GDI+</strong></td><td>GDI 的直接改良版（约 2001 年，<code>gdiplus.dll</code>；.NET 的 <code>System.Drawing</code> 即其封装）</td><td>抗锯齿、浮点坐标、alpha 透明、渐变、贝塞尔、直接读写 JPEG/PNG</td><td><span class="badge old">已过时</span>：仍是 CPU 软件渲染、无 GPU 加速，微软已建议新项目别用</td></tr>
+<tr><td class="nw"><strong>Direct2D</strong></td><td>微软主推的原生 2D（Windows 7 起，<code>d2d1</code>）</td><td>基于 Direct3D 的 <strong>GPU 硬件加速</strong>、高质量抗锯齿、配 DirectWrite 排版、可与 Direct3D 混用</td><td><span class="badge ok">推荐</span>：Windows 上原生高性能 2D 的正主</td></tr>
+<tr><td class="nw"><strong>Skia</strong></td><td>Google 的<strong>跨平台</strong> 2D 库</td><td>CPU / GPU 双后端、抗锯齿、跨 Windows/Mac/Linux/移动端；Chrome、Android、Flutter 的底层</td><td><span class="badge ok">推荐</span>：要跨平台就选它（.NET 有 SkiaSharp）</td></tr>
 </tbody>
 </table>
 <p>再往上，如果你根本不想碰这些底层绘图 API，而是要做一个完整界面：2026 年桌面新项目的默认选择是<strong>声明式 UI 框架</strong>——<strong>WinUI 3</strong>、<strong>WPF</strong>（两者底层都走 DirectX、GPU 合成）、跨平台的 <strong>Qt</strong>，或 Web 技术栈的 <strong>Canvas / WebGL / WebGPU</strong>。它们把「重绘、抗锯齿、DPI 自适应、GPU 加速」全部封装好了，你写声明式布局，剩下的交给框架。</p>
@@ -1239,9 +1243,9 @@ END_MESSAGE_MAP()</code></pre>
 <table>
 <thead><tr><th>函数</th><th>控制什么</th><th>取值</th></tr></thead>
 <tbody>
-<tr><td><code>SetTextColor</code></td><td>字符笔画本身的颜色</td><td><code>COLORREF</code>，用 <code>RGB(r,g,b)</code> 宏构造</td></tr>
-<tr><td><code>SetBkColor</code></td><td>字符「格子」背后的填充色</td><td>同上，仅在不透明模式下生效</td></tr>
-<tr><td><code>SetBkMode</code></td><td>背景是否填充</td><td><code>TRANSPARENT</code> 或 <code>OPAQUE</code></td></tr>
+<tr><td class="nw"><code>SetTextColor</code></td><td>字符笔画本身的颜色</td><td><code>COLORREF</code>，用 <code>RGB(r,g,b)</code> 宏构造</td></tr>
+<tr><td class="nw"><code>SetBkColor</code></td><td>字符「格子」背后的填充色</td><td>同上，仅在不透明模式下生效</td></tr>
+<tr><td class="nw"><code>SetBkMode</code></td><td class="nw">背景是否填充</td><td><code>TRANSPARENT</code> 或 <code>OPAQUE</code></td></tr>
 </tbody>
 </table>
 <p>关键在 <code>SetBkMode</code>：设成 <code>OPAQUE</code>（默认）时，每个字符的背景矩形会先用 <code>SetBkColor</code> 的颜色刷一遍，字才压上去——如果你在一张已有图案上输出文字，就会看到字后面拖着一块方底色，很丑。设成 <code>TRANSPARENT</code> 时，只画笔画、不碰背景，字就干净地「浮」在已有画面上。</p>
@@ -1256,11 +1260,11 @@ END_MESSAGE_MAP()</code></pre>
 <table>
 <thead><tr><th>字段</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td><code>lfHeight</code></td><td>高度。<strong>负值</strong>表示字符本身的高度（对应「点数/字号」的概念）；<strong>正值</strong>表示包含行距的单元格高度。想要「几号字」的直观效果，通常填负值。</td></tr>
-<tr><td><code>lfWeight</code></td><td>字重，<code>FW_NORMAL</code>(400) / <code>FW_BOLD</code>(700) 等。</td></tr>
+<tr><td class="nw"><code>lfHeight</code></td><td>高度。<strong>负值</strong>表示字符本身的高度（对应「点数/字号」的概念）；<strong>正值</strong>表示包含行距的单元格高度。想要「几号字」的直观效果，通常填负值。</td></tr>
+<tr><td class="nw"><code>lfWeight</code></td><td>字重，<code>FW_NORMAL</code>(400) / <code>FW_BOLD</code>(700) 等。</td></tr>
 <tr><td><code>lfItalic</code> / <code>lfUnderline</code></td><td>斜体 / 下划线开关。</td></tr>
-<tr><td><code>lfCharSet</code></td><td>字符集，中文相关常用 <code>GB2312_CHARSET</code> 或 <code>DEFAULT_CHARSET</code>。</td></tr>
-<tr><td><code>lfFaceName</code></td><td>想要的字体名，如「微软雅黑」「Consolas」。</td></tr>
+<tr><td class="nw"><code>lfCharSet</code></td><td>字符集，中文相关常用 <code>GB2312_CHARSET</code> 或 <code>DEFAULT_CHARSET</code>。</td></tr>
+<tr><td class="nw"><code>lfFaceName</code></td><td>想要的字体名，如「微软雅黑」「Consolas」。</td></tr>
 </tbody>
 </table>
 <p>填好 <code>LOGFONT</code> 后，交给 <code>CFont::CreateFontIndirect(&amp;lf)</code>（或参数版 <code>CreateFont(...)</code>）。这里有个必须理解的关键点：<code>LOGFONT</code> 是「逻辑字体」，是你的<strong>需求</strong>；系统里有一个<strong>字体映射器（font mapper）</strong>，它拿着你的需求，去已安装的<strong>物理字体</strong>里挑一个「最接近」的。所以你要的不一定精确到手——如果系统没装「微软雅黑」，映射器会给你一个它认为最像的替代品。</p>
@@ -1312,7 +1316,7 @@ END_MESSAGE_MAP()</code></pre>
 <thead><tr><th>消息</th><th>wParam 是什么</th><th>回答的问题</th><th>典型用途</th></tr></thead>
 <tbody>
 <tr><td><code>WM_KEYDOWN</code> / <code>WM_KEYUP</code></td><td>虚拟键码 VK（如 <code>VK_LEFT</code>、<code>VK_RETURN</code>、<code>'A'</code>）</td><td>「<strong>哪个物理键</strong>被按下了」——不分大小写、不管输入法</td><td>方向键、功能键、快捷键、组合键</td></tr>
-<tr><td><code>WM_CHAR</code></td><td>翻译后的字符码（<code>'a'</code> vs <code>'A'</code>）</td><td>「按这一下<strong>应该输入哪个字符</strong>」——已考虑 Shift/CapsLock/输入法</td><td>真正的文字录入</td></tr>
+<tr><td class="nw"><code>WM_CHAR</code></td><td>翻译后的字符码（<code>'a'</code> vs <code>'A'</code>）</td><td>「按这一下<strong>应该输入哪个字符</strong>」——已考虑 Shift/CapsLock/输入法</td><td class="nw">真正的文字录入</td></tr>
 </tbody>
 </table>
 <p>那 <code>WM_CHAR</code> 是从哪冒出来的？这里藏着消息循环里一个你可能一直没在意的函数——<code>TranslateMessage</code>。它盯着队列里的 <code>WM_KEYDOWN</code>，把「按键 + 当前 Shift/CapsLock 状态 + 输入法」翻译成对应字符，再把一条 <code>WM_CHAR</code> <strong>投回消息队列</strong>。<strong>没有 <code>TranslateMessage</code>，就永远收不到 <code>WM_CHAR</code>。</strong>（MFC 的消息泵替你调了它，所以平时你感觉不到它的存在。）</p>
@@ -1354,12 +1358,12 @@ END_MESSAGE_MAP()</code></pre>
 <table>
 <thead><tr><th>能力</th><th>GDI</th><th>DirectWrite + Direct2D</th></tr></thead>
 <tbody>
-<tr><td>抗锯齿</td><td>基础，ClearType 也不够灵活</td><td>高质量灰度 / 亚像素抗锯齿</td></tr>
-<tr><td>亚像素定位</td><td>基本没有，字对齐到整像素</td><td>支持，缩放动画下依然平滑</td></tr>
-<tr><td>复杂脚本 / 双向文字</td><td>弱</td><td>完整支持（阿拉伯、印度系等）</td></tr>
-<tr><td>OpenType 特性（连字、字距调整）</td><td>几乎没有</td><td>原生支持</td></tr>
-<tr><td>字体回退 / 可变字体 / 彩色字体</td><td>无或很有限</td><td>原生支持</td></tr>
-<tr><td>硬件加速</td><td>基本是 CPU 软件渲染</td><td>走 Direct2D，GPU 加速</td></tr>
+<tr><td class="nw">抗锯齿</td><td>基础，ClearType 也不够灵活</td><td>高质量灰度 / 亚像素抗锯齿</td></tr>
+<tr><td class="nw">亚像素定位</td><td>基本没有，字对齐到整像素</td><td>支持，缩放动画下依然平滑</td></tr>
+<tr><td>复杂脚本 / 双向文字</td><td class="nw">弱</td><td>完整支持（阿拉伯、印度系等）</td></tr>
+<tr><td>OpenType 特性（连字、字距调整）</td><td class="nw">几乎没有</td><td class="nw">原生支持</td></tr>
+<tr><td>字体回退 / 可变字体 / 彩色字体</td><td class="nw">无或很有限</td><td class="nw">原生支持</td></tr>
+<tr><td class="nw">硬件加速</td><td>基本是 CPU 软件渲染</td><td>走 Direct2D，GPU 加速</td></tr>
 </tbody>
 </table>
 <p><strong>原理（DirectWrite 长什么样）：</strong>DirectWrite 从 Windows 7（2009）起提供，是一个<strong>设备无关的高质量文本布局与渲染引擎</strong>。它把职责拆得很清楚：<code>IDWriteFactory</code> 是总入口，<code>IDWriteTextFormat</code> 描述「用什么字体、多大、什么字重」，<code>IDWriteTextLayout</code> 描述「一段文字在给定宽度里怎么排、每个字落在哪」，最后交给 Direct2D 的渲染目标画出来（或用自定义渲染器）。</p>
@@ -1455,9 +1459,9 @@ pRT-&gt;DrawText(text, len, pFmt, layoutRect, pBrush);</code></pre>
 <table>
 <thead><tr><th>来源</th><th>wParam 高 16 位</th><th>wParam 低 16 位</th><th>lParam</th></tr></thead>
 <tbody>
-<tr><td>菜单项</td><td>0</td><td>命令 ID</td><td>0</td></tr>
-<tr><td>加速键</td><td>1</td><td>命令 ID</td><td>0</td></tr>
-<tr><td>子控件(如按钮)</td><td>通知码(如 BN_CLICKED)</td><td>控件 ID</td><td>控件 HWND</td></tr>
+<tr><td class="nw">菜单项</td><td class="nw">0</td><td class="nw">命令 ID</td><td class="nw">0</td></tr>
+<tr><td class="nw">加速键</td><td class="nw">1</td><td class="nw">命令 ID</td><td class="nw">0</td></tr>
+<tr><td class="nw">子控件(如按钮)</td><td>通知码(如 BN_CLICKED)</td><td class="nw">控件 ID</td><td class="nw">控件 HWND</td></tr>
 </tbody>
 </table>
 <p>真正的主角是那个<strong>命令 ID</strong>:一个小整数,在 resource.h 里用 <code>#define ID_FILE_OPEN 0x9001</code> 这样定义。它是一个命令跨越菜单、工具栏、加速键三种入口的<strong>唯一身份证</strong>。在最原始的 Win32 里,你就是在窗口过程里对它做 switch:</p>
@@ -1475,11 +1479,11 @@ pRT-&gt;DrawText(text, len, pFmt, layoutRect, pBrush);</code></pre>
 <table>
 <thead><tr><th>顺序</th><th>命令目标</th><th>为什么排在这</th></tr></thead>
 <tbody>
-<tr><td>1</td><td>当前活动视图 CView</td><td>大多数「看得见」的操作属于视图(如选中、缩放)</td></tr>
-<tr><td>2</td><td>视图关联的文档 CDocument</td><td>「保存 / 改数据」类命令的天然归宿</td></tr>
-<tr><td>3</td><td>文档模板 CDocTemplate</td><td>很少用,兜底</td></tr>
-<tr><td>4</td><td>主框架窗口 CFrameWnd</td><td>窗口级操作(切换工具栏等)</td></tr>
-<tr><td>5</td><td>应用程序对象 CWinApp</td><td>全局命令(如「关于」「最近文件」)</td></tr>
+<tr><td class="nw">1</td><td>当前活动视图 CView</td><td>大多数「看得见」的操作属于视图(如选中、缩放)</td></tr>
+<tr><td class="nw">2</td><td>视图关联的文档 CDocument</td><td>「保存 / 改数据」类命令的天然归宿</td></tr>
+<tr><td class="nw">3</td><td>文档模板 CDocTemplate</td><td class="nw">很少用,兜底</td></tr>
+<tr><td class="nw">4</td><td>主框架窗口 CFrameWnd</td><td>窗口级操作(切换工具栏等)</td></tr>
+<tr><td class="nw">5</td><td>应用程序对象 CWinApp</td><td>全局命令(如「关于」「最近文件」)</td></tr>
 </tbody>
 </table>
 <p>(多文档 MDI 只是在最前面多套一层 MDI 子框架而已,规律相同。)实现它的是每个 <code>CCmdTarget</code> 派生类里的虚函数 <code>OnCmdMsg</code>:它先查自己的消息映射表,查不到就把球传给链上的下一个目标。而你要做的,只是把处理器写在「逻辑上该在的那个类」里,靠消息映射宏登记:</p>
@@ -1509,10 +1513,10 @@ END_MESSAGE_MAP()
 <table>
 <thead><tr><th>目的</th><th>函数</th></tr></thead>
 <tbody>
-<tr><td>造一个空菜单</td><td>CreateMenu / CreatePopupMenu</td></tr>
+<tr><td class="nw">造一个空菜单</td><td>CreateMenu / CreatePopupMenu</td></tr>
 <tr><td>加 / 插 / 改 / 删项</td><td>AppendMenu、InsertMenu(Item)、ModifyMenu、DeleteMenu</td></tr>
 <tr><td>挂到窗口 / 刷新菜单条</td><td>SetMenu、DrawMenuBar</td></tr>
-<tr><td>状态与导航</td><td>CheckMenuItem、EnableMenuItem、GetSubMenu、GetMenuItemCount</td></tr>
+<tr><td class="nw">状态与导航</td><td>CheckMenuItem、EnableMenuItem、GetSubMenu、GetMenuItemCount</td></tr>
 </tbody>
 </table>
 <pre><code><span class="cl">HMENU hSub = CreatePopupMenu();</span><span class="cl"><span class="kw">for</span> (<span class="kw">int</span> i = 0; i &lt; files.Count(); ++i)</span><span class="cl"><span class="cc" style="min-width:62.0ch">    AppendMenu(hSub, MF_STRING, ID_MRU_FIRST + i, files[i]);</span><span class="cm">// 运行期临时分配 ID</span></span><span class="cl"><span class="cc" style="min-width:62.0ch">DrawMenuBar(hMainWnd);</span><span class="cm">// 改了顶层菜单条后必须刷新,否则界面不更新</span></span></code></pre>
@@ -1532,10 +1536,10 @@ END_MESSAGE_MAP()
 <table>
 <thead><tr><th></th><th>助记符 Mnemonic(&amp;)</th><th>加速键 Accelerator</th></tr></thead>
 <tbody>
-<tr><td>怎么定义</td><td>标题里加 &amp;,如「文件(&amp;F)」</td><td>独立的加速键表资源</td></tr>
-<tr><td>触发条件</td><td>菜单已打开 / 按 Alt 导航时</td><td>窗口有焦点即可,全局生效</td></tr>
-<tr><td>要先打开菜单吗</td><td>要</td><td>不要,直达命令</td></tr>
-<tr><td>典型样子</td><td>Alt → F → O</td><td>Ctrl+S</td></tr>
+<tr><td class="nw">怎么定义</td><td>标题里加 &amp;,如「文件(&amp;F)」</td><td>独立的加速键表资源</td></tr>
+<tr><td class="nw">触发条件</td><td>菜单已打开 / 按 Alt 导航时</td><td>窗口有焦点即可,全局生效</td></tr>
+<tr><td class="nw">要先打开菜单吗</td><td class="nw">要</td><td class="nw">不要,直达命令</td></tr>
+<tr><td class="nw">典型样子</td><td class="nw">Alt → F → O</td><td class="nw">Ctrl+S</td></tr>
 </tbody>
 </table>
 <div class="note old"><span class="t">🟡 一个经典 bug <span class="badge old">已过时</span></span><p>菜单项标题里那句「保存\tCtrl+S」——<code>\t</code> 后面的 Ctrl+S <strong>只是显示文字</strong>,它和加速键表里的真实绑定是两套东西,互不关联。改了表却忘了改标题(或反过来),界面就会「说一套做一套」。这类需要人肉保持两处同步的脆弱设计,在现代框架里被消掉了:快捷键声明和它的显示往往出自同一处定义。</p></div>
@@ -1705,13 +1709,13 @@ END</code></pre>
 </ul>
 
 <table><thead><tr><th>对比项</th><th>模态 DoModal</th><th>非模态 Create</th></tr></thead><tbody>
-<tr><td>创建调用</td><td><code>dlg.DoModal()</code></td><td><code>pDlg-&gt;Create(IDD, pParent)</code> + <code>ShowWindow</code></td></tr>
-<tr><td>调用处何时返回</td><td>对话框关闭后才返回</td><td>立即返回，两个窗口并行</td></tr>
-<tr><td>对象放哪</td><td>栈上局部变量即可</td><td>必须 <code>new</code> 在堆上</td></tr>
-<tr><td>父窗口</td><td>被禁用</td><td>照常可用</td></tr>
-<tr><td>正确的关闭方式</td><td><code>EndDialog(nResult)</code>(基类 OnOK/OnCancel 已做)</td><td><code>DestroyWindow()</code>(需改写 OnOK/OnCancel)</td></tr>
-<tr><td>谁负责 delete</td><td>无需(栈对象自动析构)</td><td>自己，在 <code>PostNcDestroy</code> 里 <code>delete this</code></td></tr>
-<tr><td>取回数据</td><td>DoModal 返回后读成员变量</td><td>随时读，或用消息/回调通知父窗口</td></tr>
+<tr><td class="nw">创建调用</td><td class="nw"><code>dlg.DoModal()</code></td><td><code>pDlg-&gt;Create(IDD, pParent)</code> + <code>ShowWindow</code></td></tr>
+<tr><td class="nw">调用处何时返回</td><td>对话框关闭后才返回</td><td>立即返回，两个窗口并行</td></tr>
+<tr><td class="nw">对象放哪</td><td class="nw">栈上局部变量即可</td><td class="nw">必须 <code>new</code> 在堆上</td></tr>
+<tr><td class="nw">父窗口</td><td class="nw">被禁用</td><td class="nw">照常可用</td></tr>
+<tr><td class="nw">正确的关闭方式</td><td><code>EndDialog(nResult)</code>(基类 OnOK/OnCancel 已做)</td><td><code>DestroyWindow()</code>(需改写 OnOK/OnCancel)</td></tr>
+<tr><td class="nw">谁负责 delete</td><td>无需(栈对象自动析构)</td><td>自己，在 <code>PostNcDestroy</code> 里 <code>delete this</code></td></tr>
+<tr><td class="nw">取回数据</td><td>DoModal 返回后读成员变量</td><td>随时读，或用消息/回调通知父窗口</td></tr>
 </tbody></table>
 
 <div class="note dead"><span class="t">🔴 非模态四大车祸现场</span><p>①把对象定义成局部变量——函数一退出就崩；②在 <code>OnCancel</code> 里调 <code>EndDialog</code> 或基类——窗口不销毁、行为错乱；③忘了 <code>delete this</code>——每开一次泄漏一个对象；④主窗口不清指针——第二次打开时对着已销毁的窗口 <code>ShowWindow</code>，ASSERT 伺候。四条全踩过，才算真正学会非模态对话框(开个玩笑，看完这节就别踩了)。</p></div>
@@ -1744,32 +1748,32 @@ END</code></pre>
 <h3>7.5.3 常用 DDX_ 函数速查表</h3>
 
 <table><thead><tr><th>DDX 函数</th><th>搭配控件</th><th>变量类型</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>DDX_Text</code></td><td>编辑框</td><td><code>CString</code>/<code>int</code>/<code>UINT</code>/<code>long</code>/<code>DWORD</code>/<code>float</code>/<code>double</code> 等多个重载</td><td>文本 ⇆ 数值自动互转；转不动(如输入非数字)视同校验失败</td></tr>
-<tr><td><code>DDX_Check</code></td><td>复选框</td><td><code>BOOL</code>/<code>int</code></td><td>0=未选，1=选中，2=不确定态(三态复选框)</td></tr>
-<tr><td><code>DDX_Radio</code></td><td>单选按钮组</td><td><code>int</code></td><td>绑定到组内<strong>带 WS_GROUP 的第一个</strong>按钮；值为组内序号，-1 表示都没选</td></tr>
-<tr><td><code>DDX_Control</code></td><td>任意控件</td><td>控件类对象(<code>CEdit</code>、<code>CButton</code>…)</td><td>不传数据，把成员对象子类化到控件上(见 7.10)</td></tr>
-<tr><td><code>DDX_CBString</code></td><td>组合框</td><td><code>CString</code></td><td>编辑区/选中项文本；写入方向会选中<em>前缀匹配</em>的项</td></tr>
-<tr><td><code>DDX_CBStringExact</code></td><td>组合框</td><td><code>CString</code></td><td>同上，但要求<em>精确匹配</em>列表项</td></tr>
-<tr><td><code>DDX_CBIndex</code></td><td>组合框</td><td><code>int</code></td><td>当前选中项的索引</td></tr>
-<tr><td><code>DDX_LBString</code></td><td>列表框</td><td><code>CString</code></td><td>当前选中项文本</td></tr>
-<tr><td><code>DDX_LBIndex</code></td><td>列表框</td><td><code>int</code></td><td>当前选中项索引</td></tr>
-<tr><td><code>DDX_Scroll</code></td><td>滚动条</td><td><code>int</code></td><td>滑块位置</td></tr>
-<tr><td><code>DDX_Slider</code></td><td>滑动条(CSliderCtrl)</td><td><code>int</code></td><td>滑块位置</td></tr>
-<tr><td><code>DDX_DateTimeCtrl</code></td><td>日期时间控件</td><td><code>CTime</code>/<code>COleDateTime</code></td><td>日期时间值</td></tr>
-<tr><td><code>DDX_MonthCalCtrl</code></td><td>月历控件</td><td><code>CTime</code>/<code>COleDateTime</code></td><td>选中日期</td></tr>
-<tr><td><code>DDX_IPAddress</code></td><td>IP 地址控件</td><td><code>DWORD</code></td><td>四段 IP 打包成一个 DWORD</td></tr>
+<tr><td class="nw"><code>DDX_Text</code></td><td class="nw">编辑框</td><td><code>CString</code>/<code>int</code>/<code>UINT</code>/<code>long</code>/<code>DWORD</code>/<code>float</code>/<code>double</code> 等多个重载</td><td>文本 ⇆ 数值自动互转；转不动(如输入非数字)视同校验失败</td></tr>
+<tr><td class="nw"><code>DDX_Check</code></td><td class="nw">复选框</td><td class="nw"><code>BOOL</code>/<code>int</code></td><td>0=未选，1=选中，2=不确定态(三态复选框)</td></tr>
+<tr><td class="nw"><code>DDX_Radio</code></td><td class="nw">单选按钮组</td><td class="nw"><code>int</code></td><td>绑定到组内<strong>带 WS_GROUP 的第一个</strong>按钮；值为组内序号，-1 表示都没选</td></tr>
+<tr><td class="nw"><code>DDX_Control</code></td><td class="nw">任意控件</td><td>控件类对象(<code>CEdit</code>、<code>CButton</code>…)</td><td>不传数据，把成员对象子类化到控件上(见 7.10)</td></tr>
+<tr><td class="nw"><code>DDX_CBString</code></td><td class="nw">组合框</td><td class="nw"><code>CString</code></td><td>编辑区/选中项文本；写入方向会选中<em>前缀匹配</em>的项</td></tr>
+<tr><td><code>DDX_CBStringExact</code></td><td class="nw">组合框</td><td class="nw"><code>CString</code></td><td>同上，但要求<em>精确匹配</em>列表项</td></tr>
+<tr><td class="nw"><code>DDX_CBIndex</code></td><td class="nw">组合框</td><td class="nw"><code>int</code></td><td class="nw">当前选中项的索引</td></tr>
+<tr><td class="nw"><code>DDX_LBString</code></td><td class="nw">列表框</td><td class="nw"><code>CString</code></td><td class="nw">当前选中项文本</td></tr>
+<tr><td class="nw"><code>DDX_LBIndex</code></td><td class="nw">列表框</td><td class="nw"><code>int</code></td><td class="nw">当前选中项索引</td></tr>
+<tr><td class="nw"><code>DDX_Scroll</code></td><td class="nw">滚动条</td><td class="nw"><code>int</code></td><td class="nw">滑块位置</td></tr>
+<tr><td class="nw"><code>DDX_Slider</code></td><td>滑动条(CSliderCtrl)</td><td class="nw"><code>int</code></td><td class="nw">滑块位置</td></tr>
+<tr><td class="nw"><code>DDX_DateTimeCtrl</code></td><td class="nw">日期时间控件</td><td><code>CTime</code>/<code>COleDateTime</code></td><td class="nw">日期时间值</td></tr>
+<tr><td class="nw"><code>DDX_MonthCalCtrl</code></td><td class="nw">月历控件</td><td><code>CTime</code>/<code>COleDateTime</code></td><td class="nw">选中日期</td></tr>
+<tr><td class="nw"><code>DDX_IPAddress</code></td><td class="nw">IP 地址控件</td><td class="nw"><code>DWORD</code></td><td>四段 IP 打包成一个 DWORD</td></tr>
 </tbody></table>
 
 <h3>7.5.4 DDV_ 校验函数速查表</h3>
 
 <table><thead><tr><th>DDV 函数</th><th>搭配的 DDX/变量</th><th>校验内容</th></tr></thead><tbody>
-<tr><td><code>DDV_MaxChars</code></td><td><code>DDX_Text</code> + <code>CString</code></td><td>最大字符数(顺手给编辑框设了输入上限)</td></tr>
-<tr><td><code>DDV_MinMaxInt</code> / <code>DDV_MinMaxUInt</code></td><td><code>DDX_Text</code> + <code>int</code>/<code>UINT</code></td><td>整数取值范围</td></tr>
+<tr><td class="nw"><code>DDV_MaxChars</code></td><td><code>DDX_Text</code> + <code>CString</code></td><td>最大字符数(顺手给编辑框设了输入上限)</td></tr>
+<tr><td><code>DDV_MinMaxInt</code> / <code>DDV_MinMaxUInt</code></td><td><code>DDX_Text</code> + <code>int</code>/<code>UINT</code></td><td class="nw">整数取值范围</td></tr>
 <tr><td><code>DDV_MinMaxLong</code> / <code>DDV_MinMaxDWord</code></td><td><code>DDX_Text</code> + <code>long</code>/<code>DWORD</code></td><td>长整数/无符号范围</td></tr>
-<tr><td><code>DDV_MinMaxByte</code> / <code>DDV_MinMaxShort</code></td><td><code>DDX_Text</code> + <code>BYTE</code>/<code>short</code></td><td>小整数范围</td></tr>
-<tr><td><code>DDV_MinMaxFloat</code> / <code>DDV_MinMaxDouble</code></td><td><code>DDX_Text</code> + <code>float</code>/<code>double</code></td><td>浮点数范围</td></tr>
-<tr><td><code>DDV_MinMaxDateTime</code></td><td><code>DDX_DateTimeCtrl</code></td><td>日期时间范围</td></tr>
-<tr><td><code>DDV_MinMaxSlider</code></td><td><code>DDX_Slider</code></td><td>滑块位置范围</td></tr>
+<tr><td><code>DDV_MinMaxByte</code> / <code>DDV_MinMaxShort</code></td><td><code>DDX_Text</code> + <code>BYTE</code>/<code>short</code></td><td class="nw">小整数范围</td></tr>
+<tr><td><code>DDV_MinMaxFloat</code> / <code>DDV_MinMaxDouble</code></td><td><code>DDX_Text</code> + <code>float</code>/<code>double</code></td><td class="nw">浮点数范围</td></tr>
+<tr><td><code>DDV_MinMaxDateTime</code></td><td class="nw"><code>DDX_DateTimeCtrl</code></td><td class="nw">日期时间范围</td></tr>
+<tr><td class="nw"><code>DDV_MinMaxSlider</code></td><td class="nw"><code>DDX_Slider</code></td><td class="nw">滑块位置范围</td></tr>
 </tbody></table>
 
 <p>DDV 只能做"格式级"校验(长度、范围)。像"密码至少 6 位且含数字"这类<strong>业务规则</strong>，惯例是放在改写的 <code>OnOK()</code> 里，见 7.6 节示例。</p>
@@ -1777,14 +1781,14 @@ END</code></pre>
 <div class="note new"><span class="t">🔵 现代批注：DDX 就是没有绑定引擎的 Binding</span><p>把 <code>DoDataExchange</code> 里的每一行 <code>DDX_Text(pDX, IDC_XXX, m_var)</code> 读成 WPF 的 <code>Text="{Binding Var}"</code>，整个机制瞬间眼熟。差别只有一个：MFC 里"何时同步"要你亲手喊 <code>UpdateData</code>，而 WPF 的绑定引擎监听 <code>INotifyPropertyChanged</code> 与控件事件，自动、逐属性地双向同步。下表是两代技术的逐项对照。</p></div>
 
 <table><thead><tr><th>MFC(DDX/DDV 时代)</th><th>WPF / WinUI(数据绑定时代)</th></tr></thead><tbody>
-<tr><td>对话框模板(.rc)</td><td>XAML</td></tr>
-<tr><td>值变量(对话框类成员)</td><td>ViewModel 的属性</td></tr>
+<tr><td class="nw">对话框模板(.rc)</td><td class="nw">XAML</td></tr>
+<tr><td>值变量(对话框类成员)</td><td class="nw">ViewModel 的属性</td></tr>
 <tr><td><code>DDX_Text</code> / <code>DDX_Check</code> / <code>DDX_CBIndex</code>…</td><td><code>Text="{Binding …}"</code> / <code>IsChecked="{Binding …}"</code> / <code>SelectedIndex="{Binding …}"</code></td></tr>
 <tr><td><code>UpdateData(FALSE)</code>(变量→控件)</td><td>绑定初次求值 / <code>OneWay</code> 更新</td></tr>
 <tr><td><code>UpdateData(TRUE)</code>(控件→变量+校验)</td><td><code>TwoWay</code> + <code>UpdateSourceTrigger</code>(默认 LostFocus，可改 PropertyChanged)</td></tr>
 <tr><td><code>DDV_*</code> + <code>pDX-&gt;Fail()</code></td><td><code>ValidationRule</code> / <code>IDataErrorInfo</code> / <code>INotifyDataErrorInfo</code></td></tr>
 <tr><td><code>DDX_Control</code> 控件变量</td><td><code>x:Name</code> 后直接引用控件(WinUI <code>x:Bind</code> 亦可绑事件)</td></tr>
-<tr><td>手动快照式同步</td><td>绑定引擎自动逐属性同步(<code>INotifyPropertyChanged</code>)</td></tr>
+<tr><td class="nw">手动快照式同步</td><td>绑定引擎自动逐属性同步(<code>INotifyPropertyChanged</code>)</td></tr>
 </tbody></table>
 
 <pre><code><span class="cm">&lt;!-- WPF:同一个登录框。模板(XAML)与数据交换(Binding)合并在了一处 --&gt;</span>
@@ -1841,8 +1845,8 @@ END</code></pre>
 <tr><td><code>SetWindowText</code> / <code>GetWindowText</code></td><td>改/取显示文本(继承自 <code>CWnd</code>，所有控件通用)</td></tr>
 <tr><td><code>SetIcon</code> / <code>GetIcon</code></td><td>显示图标(需 <code>SS_ICON</code> 风格)</td></tr>
 <tr><td><code>SetBitmap</code> / <code>GetBitmap</code></td><td>显示位图(需 <code>SS_BITMAP</code> 风格)</td></tr>
-<tr><td><code>SetCursor</code> / <code>GetCursor</code></td><td>显示光标图像</td></tr>
-<tr><td><code>SetEnhMetaFile</code></td><td>显示增强型图元文件</td></tr>
+<tr><td><code>SetCursor</code> / <code>GetCursor</code></td><td class="nw">显示光标图像</td></tr>
+<tr><td class="nw"><code>SetEnhMetaFile</code></td><td>显示增强型图元文件</td></tr>
 </tbody></table>
 
 <h3>7.7.2 CButton：一个类，三副面孔</h3>
@@ -1858,7 +1862,7 @@ END</code></pre>
 <table><thead><tr><th>常用成员函数</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>GetCheck</code> / <code>SetCheck</code></td><td>取/设勾选状态(0/1/2)</td></tr>
 <tr><td><code>GetState</code> / <code>SetState</code></td><td>取/设完整状态(勾选、按下、焦点位打包)</td></tr>
-<tr><td><code>GetButtonStyle</code> / <code>SetButtonStyle</code></td><td>取/设 BS_ 风格</td></tr>
+<tr><td><code>GetButtonStyle</code> / <code>SetButtonStyle</code></td><td class="nw">取/设 BS_ 风格</td></tr>
 <tr><td><code>SetIcon</code> / <code>SetBitmap</code></td><td>图标/位图按钮(需相应风格)</td></tr>
 <tr><td><code>EnableWindow</code>(CWnd)</td><td>启用/禁用——做"条件可用的确定按钮"全靠它</td></tr>
 </tbody></table>
@@ -1872,16 +1876,16 @@ END</code></pre>
 <p>编辑框单行/多行(<code>ES_MULTILINE</code>)通吃，密码框只是加了 <code>ES_PASSWORD</code> 风格。它是成员函数最"富"的基础控件：</p>
 
 <table><thead><tr><th>常用成员函数</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>GetSel</code> / <code>SetSel</code></td><td>取/设选区；<code>SetSel(0,-1)</code> 全选，<code>SetSel(-1,0)</code> 取消选择并把光标放末尾</td></tr>
-<tr><td><code>ReplaceSel</code></td><td>用文本替换当前选区——"在光标处插入"的标准写法</td></tr>
+<tr><td class="nw"><code>GetSel</code> / <code>SetSel</code></td><td>取/设选区；<code>SetSel(0,-1)</code> 全选，<code>SetSel(-1,0)</code> 取消选择并把光标放末尾</td></tr>
+<tr><td class="nw"><code>ReplaceSel</code></td><td>用文本替换当前选区——"在光标处插入"的标准写法</td></tr>
 <tr><td><code>SetLimitText</code> / <code>GetLimitText</code></td><td>限制可输入的最大字符数(超限时发 <code>EN_MAXTEXT</code>)</td></tr>
-<tr><td><code>SetPasswordChar</code></td><td>设置密码回显字符；传 0 取消密码模式</td></tr>
-<tr><td><code>SetReadOnly</code></td><td>只读开关(比禁用友好：还能选中复制)</td></tr>
+<tr><td class="nw"><code>SetPasswordChar</code></td><td>设置密码回显字符；传 0 取消密码模式</td></tr>
+<tr><td class="nw"><code>SetReadOnly</code></td><td>只读开关(比禁用友好：还能选中复制)</td></tr>
 <tr><td><code>GetModify</code> / <code>SetModify</code></td><td>"改没改过"脏标志——做"退出前提示保存"用</td></tr>
 <tr><td><code>GetLineCount</code> / <code>GetLine</code> / <code>LineIndex</code> / <code>LineLength</code></td><td>多行模式按行存取；注意 <code>GetLine</code> 不自动补字符串结尾，需按返回长度截断</td></tr>
-<tr><td><code>LineScroll</code></td><td>滚动到指定行</td></tr>
-<tr><td><code>Undo</code> / <code>CanUndo</code></td><td>撤销上一次编辑</td></tr>
-<tr><td><code>SetCueBanner</code></td><td>灰色占位提示文字("请输入用户名")，Vista+ 才有，VC6 时代要自绘</td></tr>
+<tr><td class="nw"><code>LineScroll</code></td><td class="nw">滚动到指定行</td></tr>
+<tr><td class="nw"><code>Undo</code> / <code>CanUndo</code></td><td class="nw">撤销上一次编辑</td></tr>
+<tr><td class="nw"><code>SetCueBanner</code></td><td>灰色占位提示文字("请输入用户名")，Vista+ 才有，VC6 时代要自绘</td></tr>
 </tbody></table>
 
 <p>把三件套的初始化集中放进 <code>OnInitDialog</code>，是标准套路：</p>
@@ -1896,14 +1900,14 @@ END</code></pre>
 
 <table><thead><tr><th>常用成员函数</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>AddString</code> / <code>InsertString</code></td><td>追加/插入项，返回新项索引。注意：带 <code>LBS_SORT</code> 风格时 AddString 按序插入，<strong>返回的索引未必在末尾</strong></td></tr>
-<tr><td><code>DeleteString</code> / <code>ResetContent</code></td><td>删一项/清空全部</td></tr>
-<tr><td><code>GetCount</code></td><td>项数</td></tr>
+<tr><td><code>DeleteString</code> / <code>ResetContent</code></td><td class="nw">删一项/清空全部</td></tr>
+<tr><td class="nw"><code>GetCount</code></td><td class="nw">项数</td></tr>
 <tr><td><code>GetCurSel</code> / <code>SetCurSel</code></td><td>取/设当前选中项(单选风格)；无选中返回 <code>LB_ERR</code></td></tr>
 <tr><td><code>GetText</code> / <code>GetTextLen</code></td><td>取指定项文本/长度</td></tr>
 <tr><td><code>FindString</code> / <code>FindStringExact</code> / <code>SelectString</code></td><td>前缀查找/精确查找/查找并选中</td></tr>
 <tr><td><code>GetItemData</code> / <code>SetItemData</code>(及 <code>…Ptr</code> 版)</td><td>给每一项挂一个 <code>DWORD_PTR</code>/指针附加数据</td></tr>
 <tr><td><code>GetSelCount</code> / <code>GetSelItems</code></td><td>多选风格(<code>LBS_MULTIPLESEL</code>/<code>LBS_EXTENDEDSEL</code>)下取全部选中项</td></tr>
-<tr><td><code>SetTopIndex</code></td><td>把指定项滚到可见区顶部</td></tr>
+<tr><td class="nw"><code>SetTopIndex</code></td><td>把指定项滚到可见区顶部</td></tr>
 </tbody></table>
 
 <h3>7.8.2 CComboBox 常用成员函数</h3>
@@ -1914,12 +1918,12 @@ END</code></pre>
 <tr><td><code>AddString</code> / <code>InsertString</code> / <code>DeleteString</code> / <code>ResetContent</code></td><td>与 CListBox 同义(<code>CBS_SORT</code> 同样影响 AddString 返回索引)</td></tr>
 <tr><td><code>GetCount</code> / <code>GetCurSel</code> / <code>SetCurSel</code></td><td>项数与当前选中项；<code>SetCurSel(-1)</code> 清空选择</td></tr>
 <tr><td><code>GetLBText</code> / <code>GetLBTextLen</code></td><td>取<strong>列表项</strong>文本(区别于取编辑区的 <code>GetWindowText</code>)</td></tr>
-<tr><td><code>FindString</code> / <code>FindStringExact</code> / <code>SelectString</code></td><td>查找/查找并选中</td></tr>
+<tr><td><code>FindString</code> / <code>FindStringExact</code> / <code>SelectString</code></td><td class="nw">查找/查找并选中</td></tr>
 <tr><td><code>GetItemData</code> / <code>SetItemData</code></td><td>每项挂附加数据——"显示名"配"内部值"的标准方案</td></tr>
 <tr><td><code>ShowDropDown</code> / <code>GetDroppedState</code></td><td>展开收起下拉列表/查询是否展开</td></tr>
-<tr><td><code>SetDroppedWidth</code></td><td>下拉列表宽度(默认与控件同宽，长文本会被截)</td></tr>
+<tr><td class="nw"><code>SetDroppedWidth</code></td><td>下拉列表宽度(默认与控件同宽，长文本会被截)</td></tr>
 <tr><td><code>LimitText</code> / <code>GetEditSel</code> / <code>SetEditSel</code></td><td>编辑区限长/选区(仅可编辑风格)</td></tr>
-<tr><td><code>SetCueBanner</code></td><td>占位提示文字，Vista+</td></tr>
+<tr><td class="nw"><code>SetCueBanner</code></td><td>占位提示文字，Vista+</td></tr>
 </tbody></table>
 
 <pre><code><span class="cl"><span class="kw">void</span> CTaskDlg::OnBnClickedAdd()</span><span class="cl">{</span><span class="cl">    CString s;</span><span class="cl">    m_editItem.GetWindowText(s);</span><span class="cl">    <span class="kw">if</span> (s.IsEmpty()) <span class="kw">return</span>;</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:39.0ch">    <span class="kw">int</span> idx = m_lstTask.AddString(s);</span><span class="cm">// 返回新项索引;LBS_SORT 时未必在末尾!</span></span><span class="cl">    m_lstTask.SetItemData(idx, ::GetTickCount());</span><span class="cl">    m_lstTask.SetCurSel(idx);</span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="kw">void</span> CTaskDlg::OnLbnSelchangeTask()</span><span class="cl">{</span><span class="cl">    <span class="kw">int</span> idx = m_lstTask.GetCurSel();</span><span class="cl"><span class="cc" style="min-width:39.0ch">    <span class="kw">if</span> (idx == LB_ERR) <span class="kw">return</span>;</span><span class="cm">// 没有选中项:LB_ERR(-1)</span></span><span class="cl"> </span><span class="cl">    CString s;</span><span class="cl">    m_lstTask.GetText(idx, s);</span><span class="cl">    SetDlgItemText(IDC_STA_INFO, s);</span><span class="cl">}</span></code></pre>
@@ -1947,20 +1951,20 @@ END_MESSAGE_MAP()
 <p>常用通知宏一览(在控件属性面板的"控件事件"页双击即可自动生成)：</p>
 
 <table><thead><tr><th>消息映射宏</th><th>控件</th><th>触发时机</th></tr></thead><tbody>
-<tr><td><code>ON_BN_CLICKED</code></td><td>按钮/复选/单选</td><td>被点击(用得最多的一个)</td></tr>
-<tr><td><code>ON_BN_DOUBLECLICKED</code></td><td>按钮</td><td>被双击(需 <code>BS_NOTIFY</code> 风格)</td></tr>
-<tr><td><code>ON_STN_CLICKED</code></td><td>静态控件</td><td>被点击(需 <code>SS_NOTIFY</code> 风格)</td></tr>
-<tr><td><code>ON_EN_CHANGE</code></td><td>编辑框</td><td>内容<strong>已</strong>改变且屏幕已更新</td></tr>
-<tr><td><code>ON_EN_UPDATE</code></td><td>编辑框</td><td>内容将要显示、屏幕更新<strong>前</strong></td></tr>
-<tr><td><code>ON_EN_SETFOCUS</code> / <code>ON_EN_KILLFOCUS</code></td><td>编辑框</td><td>得到/失去输入焦点(失焦校验的挂点)</td></tr>
-<tr><td><code>ON_EN_MAXTEXT</code></td><td>编辑框</td><td>输入触到 <code>SetLimitText</code> 上限</td></tr>
-<tr><td><code>ON_LBN_SELCHANGE</code></td><td>列表框</td><td>选中项改变(键盘鼠标都算)</td></tr>
-<tr><td><code>ON_LBN_DBLCLK</code></td><td>列表框</td><td>双击某项("双击=确定"惯例的实现点)</td></tr>
-<tr><td><code>ON_LBN_SELCANCEL</code></td><td>列表框</td><td>取消选择</td></tr>
-<tr><td><code>ON_CBN_SELCHANGE</code></td><td>组合框</td><td>列表选中项改变。注意此刻<strong>编辑区文本还没更新</strong>，取值用 <code>GetLBText(GetCurSel())</code> 而非 GetWindowText</td></tr>
-<tr><td><code>ON_CBN_EDITCHANGE</code></td><td>组合框</td><td>编辑区文本改变(仅可编辑风格)</td></tr>
-<tr><td><code>ON_CBN_DROPDOWN</code> / <code>ON_CBN_CLOSEUP</code></td><td>组合框</td><td>下拉列表弹出/收起(懒加载列表的好挂点)</td></tr>
-<tr><td><code>ON_CBN_SELENDOK</code> / <code>ON_CBN_SELENDCANCEL</code></td><td>组合框</td><td>用户确定/放弃了一次选择</td></tr>
+<tr><td class="nw"><code>ON_BN_CLICKED</code></td><td class="nw">按钮/复选/单选</td><td>被点击(用得最多的一个)</td></tr>
+<tr><td><code>ON_BN_DOUBLECLICKED</code></td><td class="nw">按钮</td><td>被双击(需 <code>BS_NOTIFY</code> 风格)</td></tr>
+<tr><td class="nw"><code>ON_STN_CLICKED</code></td><td class="nw">静态控件</td><td>被点击(需 <code>SS_NOTIFY</code> 风格)</td></tr>
+<tr><td class="nw"><code>ON_EN_CHANGE</code></td><td class="nw">编辑框</td><td>内容<strong>已</strong>改变且屏幕已更新</td></tr>
+<tr><td class="nw"><code>ON_EN_UPDATE</code></td><td class="nw">编辑框</td><td>内容将要显示、屏幕更新<strong>前</strong></td></tr>
+<tr><td><code>ON_EN_SETFOCUS</code> / <code>ON_EN_KILLFOCUS</code></td><td class="nw">编辑框</td><td>得到/失去输入焦点(失焦校验的挂点)</td></tr>
+<tr><td class="nw"><code>ON_EN_MAXTEXT</code></td><td class="nw">编辑框</td><td>输入触到 <code>SetLimitText</code> 上限</td></tr>
+<tr><td class="nw"><code>ON_LBN_SELCHANGE</code></td><td class="nw">列表框</td><td>选中项改变(键盘鼠标都算)</td></tr>
+<tr><td class="nw"><code>ON_LBN_DBLCLK</code></td><td class="nw">列表框</td><td>双击某项("双击=确定"惯例的实现点)</td></tr>
+<tr><td class="nw"><code>ON_LBN_SELCANCEL</code></td><td class="nw">列表框</td><td class="nw">取消选择</td></tr>
+<tr><td class="nw"><code>ON_CBN_SELCHANGE</code></td><td class="nw">组合框</td><td>列表选中项改变。注意此刻<strong>编辑区文本还没更新</strong>，取值用 <code>GetLBText(GetCurSel())</code> 而非 GetWindowText</td></tr>
+<tr><td><code>ON_CBN_EDITCHANGE</code></td><td class="nw">组合框</td><td>编辑区文本改变(仅可编辑风格)</td></tr>
+<tr><td><code>ON_CBN_DROPDOWN</code> / <code>ON_CBN_CLOSEUP</code></td><td class="nw">组合框</td><td>下拉列表弹出/收起(懒加载列表的好挂点)</td></tr>
+<tr><td><code>ON_CBN_SELENDOK</code> / <code>ON_CBN_SELENDCANCEL</code></td><td class="nw">组合框</td><td>用户确定/放弃了一次选择</td></tr>
 </tbody></table>
 
 <div class="note new"><span class="t">🔵 现代批注：从通知码到事件与命令</span><p>WM_COMMAND 通知演化成了现代框架的两样东西：<strong>事件</strong>(<code>Click</code>、<code>TextChanged</code>、<code>SelectionChanged</code>——与上表几乎逐条对应)和 <strong>命令/绑定</strong>。MVVM 风格下连事件处理都常省掉：按钮绑 <code>Command="{Binding LoginCommand}"</code>，"用户名非空才能点确定"这种逻辑交给命令的 <code>CanExecute</code>，绑定引擎自动置灰按钮——正是上面 <code>OnEnChangeUser</code> 手写的那套逻辑的声明式版本。WPF 的路由事件还能沿控件树冒泡，父容器可统一截获，比"一律发给父窗口"的 WM_COMMAND 灵活得多。</p></div>
@@ -1981,19 +1985,19 @@ m_editUser.ReplaceSel(_T("admin"));</code></pre>
 <p><code>GetDlgItem</code> 返回的 <code>CWnd*</code> 大概率是 MFC 从<strong>临时句柄映射</strong>里现造的包装对象：框架在空闲处理(OnIdle)时会统一销毁这些临时对象。所以它只在<em>当前消息处理过程内</em>有效——缓存到成员变量里，下条消息再用就是悬空指针。而 <code>DDX_Control</code> 生成的控件变量是<strong>永久映射</strong>：对象是你类的成员，在 <code>OnInitDialog</code> 的首次数据交换时与控件 HWND 绑定(子类化)，直到对话框销毁，还能借助 C++ 类型系统避免强制转换写错类的低级事故。</p>
 
 <table><thead><tr><th>对比项</th><th><code>GetDlgItem</code></th><th>控件变量(<code>DDX_Control</code>)</th></tr></thead><tbody>
-<tr><td>得到什么</td><td>临时 <code>CWnd*</code>，需自己强转</td><td>正牌控件类成员对象</td></tr>
-<tr><td>有效期</td><td>当前消息处理过程内</td><td>与对话框同生共死</td></tr>
-<tr><td>类型安全</td><td>无——转错类编译器不拦</td><td>有——类型写在声明里</td></tr>
-<tr><td>能否子类化/自绘</td><td>不能</td><td>能(自绘按钮、派生控件类全靠它)</td></tr>
-<tr><td>适用场景</td><td>偶尔碰一下的控件(如 <code>GetDlgItem(IDOK)-&gt;EnableWindow</code>)</td><td>反复操作、需要高级功能的控件</td></tr>
+<tr><td class="nw">得到什么</td><td>临时 <code>CWnd*</code>，需自己强转</td><td>正牌控件类成员对象</td></tr>
+<tr><td class="nw">有效期</td><td>当前消息处理过程内</td><td class="nw">与对话框同生共死</td></tr>
+<tr><td class="nw">类型安全</td><td>无——转错类编译器不拦</td><td>有——类型写在声明里</td></tr>
+<tr><td class="nw">能否子类化/自绘</td><td class="nw">不能</td><td>能(自绘按钮、派生控件类全靠它)</td></tr>
+<tr><td class="nw">适用场景</td><td>偶尔碰一下的控件(如 <code>GetDlgItem(IDOK)-&gt;EnableWindow</code>)</td><td>反复操作、需要高级功能的控件</td></tr>
 </tbody></table>
 
 <p>另有一组 <code>CWnd</code> 便捷函数，连指针都不用取，适合"一锤子买卖"：</p>
 
 <table><thead><tr><th>CWnd 便捷函数</th><th>等价操作</th></tr></thead><tbody>
-<tr><td><code>GetDlgItemText</code> / <code>SetDlgItemText</code></td><td>取/设某控件文本</td></tr>
+<tr><td><code>GetDlgItemText</code> / <code>SetDlgItemText</code></td><td class="nw">取/设某控件文本</td></tr>
 <tr><td><code>GetDlgItemInt</code> / <code>SetDlgItemInt</code></td><td>按整数取/设文本(自带十进制转换)</td></tr>
-<tr><td><code>CheckDlgButton</code> / <code>IsDlgButtonChecked</code></td><td>设/查复选框状态</td></tr>
+<tr><td><code>CheckDlgButton</code> / <code>IsDlgButtonChecked</code></td><td class="nw">设/查复选框状态</td></tr>
 <tr><td><code>CheckRadioButton</code> / <code>GetCheckedRadioButton</code></td><td>按 ID 区间设/查单选组</td></tr>
 <tr><td><code>SendDlgItemMessage</code></td><td>直接向子控件发送任意窗口消息(万能后门)</td></tr>
 </tbody></table>
@@ -2069,18 +2073,18 @@ m_editUser.ReplaceSel(_T("admin"));</code></pre>
 <p>Windows 95 引入了一批比标准控件(BUTTON、EDIT、LISTBOX 等)复杂得多的界面元素,它们统一实现在 <b>ComCtl32.dll</b>(Common Controls,通用控件库)中。资源管理器左侧的文件夹树、右侧的详细信息列表、安装程序里的进度条与向导,全部出自这套控件。MFC 为每个通用控件提供了一个薄封装类,声明在 <code>afxcmn.h</code> 中,成员函数几乎与控件消息一一对应。</p>
 
 <table><thead><tr><th>控件</th><th>窗口类名</th><th>MFC 封装类</th><th>典型用途</th></tr></thead><tbody>
-<tr><td>列表视图</td><td>SysListView32</td><td>CListCtrl</td><td>资源管理器"详细信息"式的多列报表</td></tr>
-<tr><td>树视图</td><td>SysTreeView32</td><td>CTreeCtrl</td><td>层次结构:目录树、组织架构</td></tr>
-<tr><td>选项卡</td><td>SysTabControl32</td><td>CTabCtrl</td><td>一块区域切换多页内容</td></tr>
-<tr><td>进度条</td><td>msctls_progress32</td><td>CProgressCtrl</td><td>显示耗时操作进度</td></tr>
-<tr><td>滑块</td><td>msctls_trackbar32</td><td>CSliderCtrl</td><td>音量、亮度等连续量调节</td></tr>
-<tr><td>旋转按钮</td><td>msctls_updown32</td><td>CSpinButtonCtrl</td><td>配合编辑框微调数值</td></tr>
-<tr><td>日期时间选择</td><td>SysDateTimePick32</td><td>CDateTimeCtrl</td><td>录入日期/时间</td></tr>
-<tr><td>月历</td><td>SysMonthCal32</td><td>CMonthCalCtrl</td><td>整月日历视图</td></tr>
-<tr><td>工具栏</td><td>ToolbarWindow32</td><td>CToolBarCtrl</td><td>按钮条(框架类 CToolBar 的底层)</td></tr>
-<tr><td>状态栏</td><td>msctls_statusbar32</td><td>CStatusBarCtrl</td><td>窗口底部信息条(框架类 CStatusBar 的底层)</td></tr>
-<tr><td>图像列表</td><td>(无窗口)</td><td>CImageList</td><td>为控件统一管理同尺寸图标</td></tr>
-<tr><td>IP 地址</td><td>SysIPAddress32</td><td>CIPAddressCtrl</td><td>录入 IPv4 地址</td></tr>
+<tr><td class="nw">列表视图</td><td class="nw">SysListView32</td><td class="nw">CListCtrl</td><td>资源管理器"详细信息"式的多列报表</td></tr>
+<tr><td class="nw">树视图</td><td class="nw">SysTreeView32</td><td class="nw">CTreeCtrl</td><td>层次结构:目录树、组织架构</td></tr>
+<tr><td class="nw">选项卡</td><td class="nw">SysTabControl32</td><td class="nw">CTabCtrl</td><td>一块区域切换多页内容</td></tr>
+<tr><td class="nw">进度条</td><td>msctls_progress32</td><td class="nw">CProgressCtrl</td><td class="nw">显示耗时操作进度</td></tr>
+<tr><td class="nw">滑块</td><td>msctls_trackbar32</td><td class="nw">CSliderCtrl</td><td>音量、亮度等连续量调节</td></tr>
+<tr><td class="nw">旋转按钮</td><td class="nw">msctls_updown32</td><td class="nw">CSpinButtonCtrl</td><td>配合编辑框微调数值</td></tr>
+<tr><td class="nw">日期时间选择</td><td>SysDateTimePick32</td><td class="nw">CDateTimeCtrl</td><td class="nw">录入日期/时间</td></tr>
+<tr><td class="nw">月历</td><td class="nw">SysMonthCal32</td><td class="nw">CMonthCalCtrl</td><td class="nw">整月日历视图</td></tr>
+<tr><td class="nw">工具栏</td><td class="nw">ToolbarWindow32</td><td class="nw">CToolBarCtrl</td><td>按钮条(框架类 CToolBar 的底层)</td></tr>
+<tr><td class="nw">状态栏</td><td>msctls_statusbar32</td><td class="nw">CStatusBarCtrl</td><td>窗口底部信息条(框架类 CStatusBar 的底层)</td></tr>
+<tr><td class="nw">图像列表</td><td class="nw">(无窗口)</td><td class="nw">CImageList</td><td>为控件统一管理同尺寸图标</td></tr>
+<tr><td class="nw">IP 地址</td><td class="nw">SysIPAddress32</td><td class="nw">CIPAddressCtrl</td><td class="nw">录入 IPv4 地址</td></tr>
 </tbody></table>
 
 <figure><svg viewBox="0 0 720 138" font-family="system-ui,'Segoe UI','Microsoft YaHei',sans-serif" role="img" aria-label="通用控件外观示意（一）">
@@ -2165,13 +2169,13 @@ END_MESSAGE_MAP()</code></pre>
 
 <table><thead><tr><th>通知码</th><th>触发时机</th></tr></thead><tbody>
 <tr><td>NM_CLICK / NM_RCLICK</td><td>左键 / 右键单击(右击常用来弹上下文菜单)</td></tr>
-<tr><td>NM_DBLCLK / NM_RDBLCLK</td><td>左键 / 右键双击</td></tr>
-<tr><td>NM_RETURN</td><td>控件有焦点时按下回车</td></tr>
+<tr><td>NM_DBLCLK / NM_RDBLCLK</td><td class="nw">左键 / 右键双击</td></tr>
+<tr><td class="nw">NM_RETURN</td><td>控件有焦点时按下回车</td></tr>
 <tr><td>NM_SETFOCUS / NM_KILLFOCUS</td><td>获得 / 失去键盘焦点</td></tr>
-<tr><td>NM_HOVER</td><td>鼠标在控件上悬停</td></tr>
+<tr><td class="nw">NM_HOVER</td><td class="nw">鼠标在控件上悬停</td></tr>
 <tr><td>NM_RELEASEDCAPTURE</td><td>控件释放鼠标捕获(滑块拖动结束常用)</td></tr>
-<tr><td>NM_CUSTOMDRAW</td><td>自定义绘制各阶段回调(见 8.11 节)</td></tr>
-<tr><td>NM_OUTOFMEMORY</td><td>控件内部内存不足</td></tr>
+<tr><td class="nw">NM_CUSTOMDRAW</td><td>自定义绘制各阶段回调(见 8.11 节)</td></tr>
+<tr><td class="nw">NM_OUTOFMEMORY</td><td class="nw">控件内部内存不足</td></tr>
 </tbody></table>
 
 <h2 id="c8-listctrl">8.3 CListCtrl 列表视图与 CImageList 图像列表</h2>
@@ -2187,29 +2191,29 @@ END_MESSAGE_MAP()</code></pre>
 <tr><td>InsertColumn / DeleteColumn / SetColumnWidth</td><td>报表模式列的增删与宽度(LVSCW_AUTOSIZE 自适应)</td></tr>
 <tr><td>InsertItem / DeleteItem / DeleteAllItems</td><td>行的插入与删除;InsertItem 返回实际行号</td></tr>
 <tr><td>SetItemText / GetItemText</td><td>读写指定行、列的文本</td></tr>
-<tr><td>GetItemCount</td><td>行数</td></tr>
+<tr><td class="nw">GetItemCount</td><td class="nw">行数</td></tr>
 <tr><td>SetItemData / GetItemData</td><td>为行挂接 DWORD_PTR 用户数据(排序、删除后定位业务对象的关键)</td></tr>
-<tr><td>SetImageList</td><td>关联图像列表(LVSIL_NORMAL / LVSIL_SMALL / LVSIL_STATE)</td></tr>
+<tr><td class="nw">SetImageList</td><td>关联图像列表(LVSIL_NORMAL / LVSIL_SMALL / LVSIL_STATE)</td></tr>
 <tr><td>SetExtendedStyle / GetExtendedStyle</td><td>LVS_EX_FULLROWSELECT、LVS_EX_GRIDLINES、LVS_EX_CHECKBOXES、LVS_EX_DOUBLEBUFFER 等</td></tr>
 <tr><td>GetNextItem(-1, LVNI_SELECTED)</td><td>枚举选中行的标准写法;GetSelectedCount 取选中数</td></tr>
 <tr><td>SetItemState / GetItemState</td><td>读写 LVIS_SELECTED、LVIS_FOCUSED 等状态位</td></tr>
 <tr><td>HitTest / SubItemHitTest</td><td>坐标 → 行号 / (行,列),右键菜单必备</td></tr>
-<tr><td>SortItems</td><td>按比较回调排序,回调收到的是两行的 ItemData</td></tr>
+<tr><td class="nw">SortItems</td><td>按比较回调排序,回调收到的是两行的 ItemData</td></tr>
 <tr><td>FindItem / EnsureVisible</td><td>查找项;滚动到某行可见</td></tr>
-<tr><td>EditLabel</td><td>进入就地编辑(需 LVS_EDITLABELS)</td></tr>
-<tr><td>SetItemCountEx</td><td>虚拟列表(LVS_OWNERDATA)设定总行数</td></tr>
+<tr><td class="nw">EditLabel</td><td>进入就地编辑(需 LVS_EDITLABELS)</td></tr>
+<tr><td class="nw">SetItemCountEx</td><td>虚拟列表(LVS_OWNERDATA)设定总行数</td></tr>
 </tbody></table>
 
 <p><b>【CListCtrl 常用通知表(LVN_ 系列)】</b></p>
 <table><thead><tr><th>通知码</th><th>触发时机 / 用法</th></tr></thead><tbody>
 <tr><td>LVN_ITEMCHANGED / LVN_ITEMCHANGING</td><td>项状态已变 / 将变(选中变化就在这里捕获;后者可否决)</td></tr>
-<tr><td>LVN_COLUMNCLICK</td><td>点击列头——实现点列排序的入口</td></tr>
+<tr><td class="nw">LVN_COLUMNCLICK</td><td>点击列头——实现点列排序的入口</td></tr>
 <tr><td>LVN_INSERTITEM / LVN_DELETEITEM / LVN_DELETEALLITEMS</td><td>项插入 / 删除 / 全删(DELETEITEM 中释放挂在 ItemData 上的资源)</td></tr>
 <tr><td>LVN_BEGINLABELEDIT / LVN_ENDLABELEDIT</td><td>就地编辑开始 / 结束(结束时校验并决定是否接受新文本)</td></tr>
-<tr><td>LVN_KEYDOWN</td><td>键盘按键(Delete 删除选中行等)</td></tr>
-<tr><td>LVN_ITEMACTIVATE</td><td>项被激活(双击或回车)</td></tr>
+<tr><td class="nw">LVN_KEYDOWN</td><td>键盘按键(Delete 删除选中行等)</td></tr>
+<tr><td class="nw">LVN_ITEMACTIVATE</td><td>项被激活(双击或回车)</td></tr>
 <tr><td>LVN_BEGINDRAG / LVN_BEGINRDRAG</td><td>左 / 右键拖动开始</td></tr>
-<tr><td>LVN_GETDISPINFO</td><td>控件回调索要文本/图像——LPSTR_TEXTCALLBACK 与虚拟列表的核心</td></tr>
+<tr><td class="nw">LVN_GETDISPINFO</td><td>控件回调索要文本/图像——LPSTR_TEXTCALLBACK 与虚拟列表的核心</td></tr>
 <tr><td>LVN_ODCACHEHINT / LVN_ODFINDITEM</td><td>虚拟列表:预取缓存提示 / 键入查找</td></tr>
 <tr><td>LVN_HOTTRACK / LVN_MARQUEEBEGIN</td><td>热点跟踪 / 框选开始</td></tr>
 <tr><td>NM_CLICK / NM_DBLCLK / NM_RCLICK / NM_CUSTOMDRAW</td><td>通用通知同样适用,lParam 可转 NMITEMACTIVATE 取行列号</td></tr>
@@ -2237,9 +2241,9 @@ END_MESSAGE_MAP()
 <table><thead><tr><th>成员函数</th><th>作用</th></tr></thead><tbody>
 <tr><td>Create(cx, cy, nFlags, nInitial, nGrow)</td><td>创建;推荐 ILC_COLOR32 | ILC_MASK</td></tr>
 <tr><td>Add(HICON) / Add(CBitmap*, crMask)</td><td>追加图标 / 位图,返回图像索引</td></tr>
-<tr><td>Remove / Replace</td><td>删除 / 替换指定索引的图像(注意 Remove 会使后续索引前移)</td></tr>
-<tr><td>ExtractIcon</td><td>把某索引图像取出为 HICON</td></tr>
-<tr><td>Draw</td><td>手工把图像画到 DC 上(自绘时用)</td></tr>
+<tr><td class="nw">Remove / Replace</td><td>删除 / 替换指定索引的图像(注意 Remove 会使后续索引前移)</td></tr>
+<tr><td class="nw">ExtractIcon</td><td>把某索引图像取出为 HICON</td></tr>
+<tr><td class="nw">Draw</td><td>手工把图像画到 DC 上(自绘时用)</td></tr>
 <tr><td>GetImageCount / SetBkColor</td><td>图像数量 / 背景色(CLR_NONE 透明)</td></tr>
 </tbody></table>
 
@@ -2269,17 +2273,17 @@ END_MESSAGE_MAP()
 
 <p><b>【CTreeCtrl 常用成员函数表】</b></p>
 <table><thead><tr><th>成员函数</th><th>作用</th></tr></thead><tbody>
-<tr><td>InsertItem</td><td>插入节点,返回 HTREEITEM;多种重载可带图像、父节点、插入位置</td></tr>
+<tr><td class="nw">InsertItem</td><td>插入节点,返回 HTREEITEM;多种重载可带图像、父节点、插入位置</td></tr>
 <tr><td>DeleteItem / DeleteAllItems</td><td>删除节点(连同整棵子树) / 清空</td></tr>
-<tr><td>GetRootItem / GetChildItem / GetNextSiblingItem / GetPrevSiblingItem / GetParentItem</td><td>结构导航五件套</td></tr>
+<tr><td>GetRootItem / GetChildItem / GetNextSiblingItem / GetPrevSiblingItem / GetParentItem</td><td class="nw">结构导航五件套</td></tr>
 <tr><td>GetNextItem(hItem, nCode)</td><td>通用导航:TVGN_NEXTVISIBLE、TVGN_CARET(当前选中)等</td></tr>
 <tr><td>GetSelectedItem / SelectItem</td><td>取 / 设当前选中节点</td></tr>
-<tr><td>Expand</td><td>TVE_EXPAND / TVE_COLLAPSE / TVE_TOGGLE 展开折叠</td></tr>
-<tr><td>ItemHasChildren</td><td>是否有子节点(遍历与懒加载都用)</td></tr>
+<tr><td class="nw">Expand</td><td>TVE_EXPAND / TVE_COLLAPSE / TVE_TOGGLE 展开折叠</td></tr>
+<tr><td class="nw">ItemHasChildren</td><td>是否有子节点(遍历与懒加载都用)</td></tr>
 <tr><td>GetItemText / SetItemText、GetItemData / SetItemData</td><td>节点文本与用户数据</td></tr>
 <tr><td>SetImageList / SetItemImage</td><td>关联图像列表 / 改某节点的两个图像索引</td></tr>
 <tr><td>EditLabel / GetEditControl</td><td>就地改名(需 TVS_EDITLABELS)</td></tr>
-<tr><td>HitTest</td><td>坐标 → 节点(TVHT_ONITEM 等命中标志)</td></tr>
+<tr><td class="nw">HitTest</td><td>坐标 → 节点(TVHT_ONITEM 等命中标志)</td></tr>
 <tr><td>SortChildren / SortChildrenCB</td><td>对某节点的子层排序 / 带回调排序</td></tr>
 <tr><td>EnsureVisible / GetCount</td><td>滚动到可见 / 节点总数</td></tr>
 </tbody></table>
@@ -2289,11 +2293,11 @@ END_MESSAGE_MAP()
 <tr><td>TVN_SELCHANGED / TVN_SELCHANGING</td><td>选中节点已变 / 将变(后者返回 TRUE 可阻止切换)</td></tr>
 <tr><td>TVN_ITEMEXPANDING / TVN_ITEMEXPANDED</td><td>节点将展开(懒加载在此填充子节点) / 已展开</td></tr>
 <tr><td>TVN_BEGINLABELEDIT / TVN_ENDLABELEDIT</td><td>就地改名开始 / 结束(校验重名)</td></tr>
-<tr><td>TVN_DELETEITEM</td><td>节点被删除,释放 ItemData 指向的资源</td></tr>
-<tr><td>TVN_KEYDOWN</td><td>键盘按键</td></tr>
+<tr><td class="nw">TVN_DELETEITEM</td><td>节点被删除,释放 ItemData 指向的资源</td></tr>
+<tr><td class="nw">TVN_KEYDOWN</td><td class="nw">键盘按键</td></tr>
 <tr><td>TVN_BEGINDRAG / TVN_BEGINRDRAG</td><td>拖动开始(树节点拖拽整理)</td></tr>
 <tr><td>TVN_GETDISPINFO / TVN_SETDISPINFO</td><td>文本/图像回调(TVIF_TEXT + LPSTR_TEXTCALLBACK)</td></tr>
-<tr><td>TVN_SINGLEEXPAND</td><td>TVS_SINGLEEXPAND 风格下的单展开事件</td></tr>
+<tr><td class="nw">TVN_SINGLEEXPAND</td><td>TVS_SINGLEEXPAND 风格下的单展开事件</td></tr>
 <tr><td>NM_DBLCLK / NM_RCLICK / NM_CUSTOMDRAW</td><td>双击、右键菜单、自定义配色</td></tr>
 </tbody></table>
 
@@ -2309,20 +2313,20 @@ END_MESSAGE_MAP()
 <table><thead><tr><th>成员函数</th><th>作用</th></tr></thead><tbody>
 <tr><td>InsertItem / DeleteItem / DeleteAllItems</td><td>页签的增删;InsertItem 可带文本与图像索引</td></tr>
 <tr><td>GetCurSel / SetCurSel</td><td>取 / 设当前选中页(SetCurSel <b>不会</b>触发 TCN_SELCHANGE)</td></tr>
-<tr><td>SetCurFocus</td><td>设置焦点页(会触发通知)</td></tr>
+<tr><td class="nw">SetCurFocus</td><td>设置焦点页(会触发通知)</td></tr>
 <tr><td>GetItemCount / GetItem / SetItem</td><td>页签数量;读写 TCITEM(文本、图像、lParam)</td></tr>
-<tr><td>SetImageList</td><td>页签左侧小图标</td></tr>
-<tr><td>AdjustRect</td><td>控件区域 ⇄ 内容显示区互算(布局核心)</td></tr>
-<tr><td>GetItemRect / SetItemSize / SetPadding / SetMinTabWidth</td><td>页签几何尺寸控制</td></tr>
-<tr><td>HighlightItem</td><td>高亮某页签(提示该页有未保存改动等)</td></tr>
+<tr><td class="nw">SetImageList</td><td class="nw">页签左侧小图标</td></tr>
+<tr><td class="nw">AdjustRect</td><td>控件区域 ⇄ 内容显示区互算(布局核心)</td></tr>
+<tr><td>GetItemRect / SetItemSize / SetPadding / SetMinTabWidth</td><td class="nw">页签几何尺寸控制</td></tr>
+<tr><td class="nw">HighlightItem</td><td>高亮某页签(提示该页有未保存改动等)</td></tr>
 </tbody></table>
 
 <p><b>【CTabCtrl 常用通知表(TCN_ 系列)】</b></p>
 <table><thead><tr><th>通知码</th><th>触发时机 / 用法</th></tr></thead><tbody>
-<tr><td>TCN_SELCHANGE</td><td>选中页<b>已经</b>改变——切换子页显示的位置</td></tr>
-<tr><td>TCN_SELCHANGING</td><td>选中页<b>即将</b>改变——*pResult 置 TRUE 可禁止离开当前页(校验未通过时)</td></tr>
-<tr><td>TCN_FOCUSCHANGE</td><td>按钮风格(TCS_BUTTONS)下焦点变化</td></tr>
-<tr><td>TCN_GETOBJECT</td><td>拖放对象查询(TCS_EX_REGISTERDROP)</td></tr>
+<tr><td class="nw">TCN_SELCHANGE</td><td>选中页<b>已经</b>改变——切换子页显示的位置</td></tr>
+<tr><td class="nw">TCN_SELCHANGING</td><td>选中页<b>即将</b>改变——*pResult 置 TRUE 可禁止离开当前页(校验未通过时)</td></tr>
+<tr><td class="nw">TCN_FOCUSCHANGE</td><td>按钮风格(TCS_BUTTONS)下焦点变化</td></tr>
+<tr><td class="nw">TCN_GETOBJECT</td><td>拖放对象查询(TCS_EX_REGISTERDROP)</td></tr>
 <tr><td>NM_CLICK / NM_RCLICK / NM_RELEASEDCAPTURE</td><td>点击页签、右键菜单等</td></tr>
 </tbody></table>
 
@@ -2336,9 +2340,9 @@ END_MESSAGE_MAP()
 <table><thead><tr><th>成员函数</th><th>作用</th></tr></thead><tbody>
 <tr><td>SetRange / SetRange32 / GetRange</td><td>设定范围(SetRange 限 16 位,建议一律用 SetRange32)</td></tr>
 <tr><td>SetPos / GetPos / OffsetPos</td><td>绝对 / 相对推进位置</td></tr>
-<tr><td>SetStep / StepIt</td><td>设定步长后逐步推进(循环里最方便)</td></tr>
+<tr><td class="nw">SetStep / StepIt</td><td>设定步长后逐步推进(循环里最方便)</td></tr>
 <tr><td>SetMarquee(TRUE, 30)</td><td>跑马灯模式:总量未知时的"忙碌"动画(需 PBS_MARQUEE + v6)</td></tr>
-<tr><td>SetState</td><td>PBST_NORMAL / PBST_ERROR(红) / PBST_PAUSED(黄),Vista+</td></tr>
+<tr><td class="nw">SetState</td><td>PBST_NORMAL / PBST_ERROR(红) / PBST_PAUSED(黄),Vista+</td></tr>
 <tr><td>SetBarColor / SetBkColor</td><td>条色 / 底色——启用视觉样式后被系统忽略</td></tr>
 </tbody></table>
 
@@ -2359,23 +2363,23 @@ END_MESSAGE_MAP()
 
 <p><b>【CSliderCtrl 常用成员函数表】</b></p>
 <table><thead><tr><th>成员函数</th><th>作用</th></tr></thead><tbody>
-<tr><td>SetRange / SetRangeMin / SetRangeMax</td><td>取值范围</td></tr>
-<tr><td>SetPos / GetPos</td><td>滑块位置</td></tr>
+<tr><td>SetRange / SetRangeMin / SetRangeMax</td><td class="nw">取值范围</td></tr>
+<tr><td class="nw">SetPos / GetPos</td><td class="nw">滑块位置</td></tr>
 <tr><td>SetTicFreq / SetTic / ClearTics</td><td>刻度线(需 TBS_AUTOTICKS)</td></tr>
 <tr><td>SetLineSize / SetPageSize</td><td>方向键 / PgUp·PgDn 的步进量</td></tr>
 <tr><td>SetSelection / GetSelection / ClearSel</td><td>选择区段(需 TBS_ENABLESELRANGE)</td></tr>
-<tr><td>SetBuddy</td><td>在滑块两端各挂一个伙伴窗口显示端值</td></tr>
+<tr><td class="nw">SetBuddy</td><td>在滑块两端各挂一个伙伴窗口显示端值</td></tr>
 <tr><td>GetChannelRect / GetThumbRect</td><td>槽 / 滑钮矩形(自绘用)</td></tr>
 </tbody></table>
 
 <p><b>【滑块常用通知表(经 WM_HSCROLL/WM_VSCROLL 的 nSBCode)】</b></p>
 <table><thead><tr><th>代码</th><th>含义</th></tr></thead><tbody>
-<tr><td>TB_THUMBTRACK</td><td>正在拖动滑钮(连续触发,实时预览就看它)</td></tr>
-<tr><td>TB_THUMBPOSITION</td><td>拖动结束松手</td></tr>
-<tr><td>TB_LINEUP / TB_LINEDOWN</td><td>方向键步进</td></tr>
+<tr><td class="nw">TB_THUMBTRACK</td><td>正在拖动滑钮(连续触发,实时预览就看它)</td></tr>
+<tr><td class="nw">TB_THUMBPOSITION</td><td class="nw">拖动结束松手</td></tr>
+<tr><td>TB_LINEUP / TB_LINEDOWN</td><td class="nw">方向键步进</td></tr>
 <tr><td>TB_PAGEUP / TB_PAGEDOWN</td><td>点击槽 / PgUp·PgDn 翻页</td></tr>
 <tr><td>TB_TOP / TB_BOTTOM</td><td>Home / End 到端点</td></tr>
-<tr><td>TB_ENDTRACK</td><td>一次操作结束(收尾处理放这里)</td></tr>
+<tr><td class="nw">TB_ENDTRACK</td><td>一次操作结束(收尾处理放这里)</td></tr>
 <tr><td>NM_CUSTOMDRAW / NM_RELEASEDCAPTURE</td><td>WM_NOTIFY 通道也有:自绘 / 释放捕获;Vista+ 另有 TRBN_THUMBPOSCHANGING</td></tr>
 </tbody></table>
 
@@ -2386,14 +2390,14 @@ END_MESSAGE_MAP()
 <tr><td>SetRange / SetRange32 / GetRange32</td><td>取值范围(注意上下限顺序可倒置以反转方向)</td></tr>
 <tr><td>SetPos / GetPos / SetPos32 / GetPos32</td><td>当前值(GetPos 高位字含错误标志,推荐 32 位版)</td></tr>
 <tr><td>SetBuddy / GetBuddy</td><td>指定 / 获取伙伴窗口</td></tr>
-<tr><td>SetBase</td><td>10 或 16 进制显示</td></tr>
-<tr><td>SetAccel</td><td>按住不放时的加速表(UDACCEL 数组)</td></tr>
+<tr><td class="nw">SetBase</td><td>10 或 16 进制显示</td></tr>
+<tr><td class="nw">SetAccel</td><td>按住不放时的加速表(UDACCEL 数组)</td></tr>
 </tbody></table>
 
 <p><b>【CSpinButtonCtrl 常用通知表】</b></p>
 <table><thead><tr><th>通知码</th><th>触发时机 / 用法</th></tr></thead><tbody>
-<tr><td>UDN_DELTAPOS</td><td>位置<b>即将</b>改变:NMUPDOWN 给出 iPos 与 iDelta,可改 iDelta 或置 *pResult 非零否决</td></tr>
-<tr><td>NM_RELEASEDCAPTURE</td><td>操作结束</td></tr>
+<tr><td class="nw">UDN_DELTAPOS</td><td>位置<b>即将</b>改变:NMUPDOWN 给出 iPos 与 iDelta,可改 iDelta 或置 *pResult 非零否决</td></tr>
+<tr><td>NM_RELEASEDCAPTURE</td><td class="nw">操作结束</td></tr>
 </tbody></table>
 
 <pre><code><span class="cl"><span class="kw">void</span> CTestDlg::OnDeltaposSpin1(NMHDR* pNMHDR, LRESULT* pResult)</span><span class="cl">{</span><span class="cl">    NMUPDOWN* p = (NMUPDOWN*)pNMHDR;</span><span class="cl">    <span class="kw">if</span> (p-&gt;iPos + p-&gt;iDelta &gt; 100 || p-&gt;iPos + p-&gt;iDelta &lt; 0)</span><span class="cl">    {</span><span class="cl"><span class="cc" style="min-width:23.0ch">        *pResult = 1;</span><span class="cm">// 非零:否决本次改变</span></span><span class="cl">        <span class="kw">return</span>;</span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:23.0ch">    *pResult = 0;</span><span class="cm">// 0:允许改变</span></span><span class="cl">}</span></code></pre>
@@ -2409,9 +2413,9 @@ END_MESSAGE_MAP()
 <p><b>【CDateTimeCtrl 常用成员函数表】</b></p>
 <table><thead><tr><th>成员函数</th><th>作用</th></tr></thead><tbody>
 <tr><td>GetTime / SetTime</td><td>读写时间,三种重载:CTime、COleDateTime、SYSTEMTIME</td></tr>
-<tr><td>SetFormat</td><td>自定义格式串</td></tr>
-<tr><td>SetRange / GetRange</td><td>可选日期范围</td></tr>
-<tr><td>GetMonthCalCtrl</td><td>下拉展开期间取内嵌 CMonthCalCtrl(仅下拉存在时非空)</td></tr>
+<tr><td class="nw">SetFormat</td><td class="nw">自定义格式串</td></tr>
+<tr><td>SetRange / GetRange</td><td class="nw">可选日期范围</td></tr>
+<tr><td class="nw">GetMonthCalCtrl</td><td>下拉展开期间取内嵌 CMonthCalCtrl(仅下拉存在时非空)</td></tr>
 <tr><td>SetMonthCalColor / SetMonthCalFont</td><td>下拉月历配色与字体(经典主题下有效)</td></tr>
 </tbody></table>
 
@@ -2419,8 +2423,8 @@ END_MESSAGE_MAP()
 <table><thead><tr><th>通知码</th><th>触发时机 / 用法</th></tr></thead><tbody>
 <tr><td>DTN_DATETIMECHANGE</td><td>日期或时间值改变(含勾选/取消"无日期"框)——最常用</td></tr>
 <tr><td>DTN_DROPDOWN / DTN_CLOSEUP</td><td>月历下拉 / 收起(下拉时可定制内嵌月历)</td></tr>
-<tr><td>DTN_USERSTRING</td><td>DTS_APPCANPARSE 下用户直接键入文本,由你解析("明天""+3d")</td></tr>
-<tr><td>DTN_WMKEYDOWN</td><td>回调字段 X 收到按键</td></tr>
+<tr><td class="nw">DTN_USERSTRING</td><td>DTS_APPCANPARSE 下用户直接键入文本,由你解析("明天""+3d")</td></tr>
+<tr><td class="nw">DTN_WMKEYDOWN</td><td>回调字段 X 收到按键</td></tr>
 <tr><td>DTN_FORMAT / DTN_FORMATQUERY</td><td>回调字段 X 索要显示文本 / 尺寸</td></tr>
 <tr><td>MCN_SELCHANGE / MCN_SELECT / MCN_GETDAYSTATE</td><td>(CMonthCalCtrl)选中日变化 / 确认选择 / 索要"加粗日"位图</td></tr>
 </tbody></table>
@@ -2432,8 +2436,8 @@ END_MESSAGE_MAP()
 <p>工具栏和状态栏在 MFC 中是<b>双层封装</b>,初学者最容易在这里混淆:</p>
 
 <table><thead><tr><th>层次</th><th>工具栏</th><th>状态栏</th><th>说明</th></tr></thead><tbody>
-<tr><td>原生控件封装</td><td>CToolBarCtrl</td><td>CStatusBarCtrl</td><td>与 ComCtl32 控件消息一一对应,可独立用在对话框里</td></tr>
-<tr><td>MFC 框架层</td><td>CToolBar</td><td>CStatusBar</td><td>派生自 CControlBar,提供停靠、布局、与框架窗口协作;经 GetToolBarCtrl()/GetStatusBarCtrl() 可下钻到原生层</td></tr>
+<tr><td class="nw">原生控件封装</td><td class="nw">CToolBarCtrl</td><td class="nw">CStatusBarCtrl</td><td>与 ComCtl32 控件消息一一对应,可独立用在对话框里</td></tr>
+<tr><td class="nw">MFC 框架层</td><td class="nw">CToolBar</td><td class="nw">CStatusBar</td><td>派生自 CControlBar,提供停靠、布局、与框架窗口协作;经 GetToolBarCtrl()/GetStatusBarCtrl() 可下钻到原生层</td></tr>
 </tbody></table>
 
 <p>在 SDI/MDI 框架程序中你几乎总是使用框架层:向导生成的 <code>m_wndToolBar.LoadToolBar(IDR_MAINFRAME)</code> 加载工具栏资源,按钮点击即 WM_COMMAND(与菜单项共用命令 ID,这正是命令消息路由的好处);<code>m_wndStatusBar.SetIndicators(indicators, 4)</code> 按 ID 数组建立窗格。按钮的禁用/勾选状态则交给 <b>ON_UPDATE_COMMAND_UI</b> 空闲更新机制,而不是手工调用 EnableButton——这是 MFC 命令体系的精髓之一。</p>
@@ -2443,18 +2447,18 @@ END_MESSAGE_MAP()
 <tr><td>AddBitmap / AddButtons / InsertButton / DeleteButton</td><td>构建按钮(TBBUTTON 数组)</td></tr>
 <tr><td>EnableButton / CheckButton / PressButton / HideButton</td><td>按命令 ID 控制按钮状态</td></tr>
 <tr><td>SetImageList / SetHotImageList / SetDisabledImageList</td><td>常态 / 热点 / 禁用三套图像列表</td></tr>
-<tr><td>AddString / SetButtonText</td><td>按钮文字</td></tr>
-<tr><td>SetButtonSize / SetBitmapSize / AutoSize</td><td>几何尺寸</td></tr>
-<tr><td>SetExtendedStyle</td><td>TBSTYLE_EX_DRAWDDARROWS 等(下拉箭头按钮)</td></tr>
+<tr><td>AddString / SetButtonText</td><td class="nw">按钮文字</td></tr>
+<tr><td>SetButtonSize / SetBitmapSize / AutoSize</td><td class="nw">几何尺寸</td></tr>
+<tr><td class="nw">SetExtendedStyle</td><td>TBSTYLE_EX_DRAWDDARROWS 等(下拉箭头按钮)</td></tr>
 <tr><td>(CStatusBarCtrl) SetParts / SetText / SetSimple / SetIcon / SetTipText</td><td>分格、写文本、简单模式、窗格图标与提示</td></tr>
-<tr><td>(CStatusBar) SetIndicators / SetPaneText / SetPaneInfo / SetPaneStyle</td><td>框架层窗格管理</td></tr>
+<tr><td>(CStatusBar) SetIndicators / SetPaneText / SetPaneInfo / SetPaneStyle</td><td class="nw">框架层窗格管理</td></tr>
 </tbody></table>
 
 <p><b>【工具栏/状态栏常用通知表】</b></p>
 <table><thead><tr><th>通知码</th><th>触发时机 / 用法</th></tr></thead><tbody>
-<tr><td>TBN_DROPDOWN</td><td>带下拉箭头的按钮被按下——弹出菜单的时机</td></tr>
+<tr><td class="nw">TBN_DROPDOWN</td><td>带下拉箭头的按钮被按下——弹出菜单的时机</td></tr>
 <tr><td>TBN_GETINFOTIP / TTN_GETDISPINFO</td><td>索要按钮信息提示 / 工具提示文本</td></tr>
-<tr><td>TBN_HOTITEMCHANGE</td><td>热点按钮变化</td></tr>
+<tr><td>TBN_HOTITEMCHANGE</td><td class="nw">热点按钮变化</td></tr>
 <tr><td>TBN_QUERYINSERT / TBN_QUERYDELETE / TBN_GETBUTTONINFO / TBN_TOOLBARCHANGE / TBN_RESET</td><td>内建"自定义工具栏"对话框(双击工具栏空白处)的协商序列</td></tr>
 <tr><td>TBN_BEGINADJUST / TBN_ENDADJUST</td><td>自定义开始 / 结束</td></tr>
 <tr><td>SBN_SIMPLEMODECHANGE</td><td>状态栏简单/多格模式切换</td></tr>
@@ -2478,22 +2482,22 @@ END_MESSAGE_MAP()
 <p><b>【CPropertySheet 常用成员函数表】</b></p>
 <table><thead><tr><th>成员函数</th><th>作用</th></tr></thead><tbody>
 <tr><td>AddPage / RemovePage</td><td>增删页(指针加入,页对象生存期由你保证)</td></tr>
-<tr><td>DoModal</td><td>模态运行;普通模式返回 IDOK/IDCANCEL,向导模式返回 ID_WIZFINISH/IDCANCEL</td></tr>
-<tr><td>GetPage / GetPageCount / GetActivePage / GetActiveIndex / SetActivePage</td><td>页的访问与切换</td></tr>
-<tr><td>SetWizardMode</td><td>切换为向导模式(<b>必须在 DoModal 之前</b>)</td></tr>
-<tr><td>SetWizardButtons</td><td>PSWIZB_BACK / PSWIZB_NEXT / PSWIZB_FINISH / PSWIZB_DISABLEDFINISH 组合</td></tr>
+<tr><td class="nw">DoModal</td><td>模态运行;普通模式返回 IDOK/IDCANCEL,向导模式返回 ID_WIZFINISH/IDCANCEL</td></tr>
+<tr><td>GetPage / GetPageCount / GetActivePage / GetActiveIndex / SetActivePage</td><td class="nw">页的访问与切换</td></tr>
+<tr><td class="nw">SetWizardMode</td><td>切换为向导模式(<b>必须在 DoModal 之前</b>)</td></tr>
+<tr><td class="nw">SetWizardButtons</td><td>PSWIZB_BACK / PSWIZB_NEXT / PSWIZB_FINISH / PSWIZB_DISABLEDFINISH 组合</td></tr>
 <tr><td>SetFinishText / SetTitle</td><td>"完成"按钮文字 / 窗口标题</td></tr>
 <tr><td>GetTabControl / PressButton / EndDialog</td><td>取内部 CTabCtrl;程序化按键;强制结束</td></tr>
 </tbody></table>
 
 <p><b>【CPropertyPage 常用可重写函数表】</b></p>
 <table><thead><tr><th>虚函数</th><th>调用时机 / 用法</th></tr></thead><tbody>
-<tr><td>OnSetActive</td><td>页面成为当前页——向导模式在此调用 SetWizardButtons 设定本页按钮</td></tr>
-<tr><td>OnKillActive</td><td>即将离开本页——校验数据,返回 FALSE 留在本页</td></tr>
-<tr><td>OnApply / OnOK</td><td>"应用"/"确定"提交数据</td></tr>
-<tr><td>OnQueryCancel</td><td>用户按"取消"——返回 FALSE 可阻止</td></tr>
+<tr><td class="nw">OnSetActive</td><td>页面成为当前页——向导模式在此调用 SetWizardButtons 设定本页按钮</td></tr>
+<tr><td class="nw">OnKillActive</td><td>即将离开本页——校验数据,返回 FALSE 留在本页</td></tr>
+<tr><td class="nw">OnApply / OnOK</td><td>"应用"/"确定"提交数据</td></tr>
+<tr><td class="nw">OnQueryCancel</td><td>用户按"取消"——返回 FALSE 可阻止</td></tr>
 <tr><td>OnWizardBack / OnWizardNext</td><td>"上一步"/"下一步"——返回 -1 留在本页,返回 0 顺序前进,或返回目标页资源 ID 跳页</td></tr>
-<tr><td>OnWizardFinish</td><td>"完成"——返回 FALSE 阻止关闭</td></tr>
+<tr><td class="nw">OnWizardFinish</td><td>"完成"——返回 FALSE 阻止关闭</td></tr>
 </tbody></table>
 
 <p>把属性表变成安装程序式的<b>向导</b>只需一行 <code>SetWizardMode()</code>,页签消失,换成"上一步/下一步/完成"按钮:</p>
@@ -2593,12 +2597,12 @@ END_MESSAGE_MAP()
 <table><thead><tr><th>成员 / 标志</th><th>作用</th></tr></thead><tbody>
 <tr><td>GetPathName / GetFileName / GetFileTitle / GetFileExt / GetFolderPath</td><td>完整路径 / 带扩展名文件名 / 不带扩展名 / 扩展名 / 所在目录</td></tr>
 <tr><td>GetStartPosition + GetNextPathName</td><td>多选文件枚举(POSITION 迭代)</td></tr>
-<tr><td>m_ofn</td><td>底层 OPENFILENAME,可设 lpstrTitle(标题)、lpstrInitialDir(初始目录)、nFilterIndex 等</td></tr>
-<tr><td>OFN_HIDEREADONLY</td><td>隐藏"只读"复选框(几乎总是加)</td></tr>
+<tr><td class="nw">m_ofn</td><td>底层 OPENFILENAME,可设 lpstrTitle(标题)、lpstrInitialDir(初始目录)、nFilterIndex 等</td></tr>
+<tr><td class="nw">OFN_HIDEREADONLY</td><td>隐藏"只读"复选框(几乎总是加)</td></tr>
 <tr><td>OFN_FILEMUSTEXIST / OFN_PATHMUSTEXIST</td><td>打开时强制文件 / 路径存在</td></tr>
 <tr><td>OFN_OVERWRITEPROMPT</td><td>另存为时覆盖确认(默认已含)</td></tr>
 <tr><td>OFN_ALLOWMULTISELECT</td><td>多选(记得放大 lpstrFile 缓冲;不带 OFN_EXPLORER 的旧式多选界面 已绝迹)</td></tr>
-<tr><td>OFN_NOCHANGEDIR</td><td>不改变进程当前目录(强烈建议加,避免相对路径莫名失效)</td></tr>
+<tr><td class="nw">OFN_NOCHANGEDIR</td><td>不改变进程当前目录(强烈建议加,避免相对路径莫名失效)</td></tr>
 </tbody></table>
 
 <p><b>CColorDialog 与 CFontDialog</b>:</p>
@@ -2607,12 +2611,12 @@ END_MESSAGE_MAP()
 
 <p><b>【CColorDialog / CFontDialog 常用用法表】</b></p>
 <table><thead><tr><th>成员 / 标志</th><th>作用</th></tr></thead><tbody>
-<tr><td>CColorDialog::GetColor</td><td>选中的 COLORREF</td></tr>
+<tr><td>CColorDialog::GetColor</td><td class="nw">选中的 COLORREF</td></tr>
 <tr><td>CC_FULLOPEN / CC_RGBINIT</td><td>展开自定义颜色面板 / 以构造传入色为初值</td></tr>
 <tr><td>m_cc.lpCustColors</td><td>16 格自定义颜色数组(指向静态数组可跨次记忆)</td></tr>
 <tr><td>CFontDialog::GetCurrentFont(LOGFONT*)</td><td>取完整字体描述,交给 CFont::CreateFontIndirect</td></tr>
 <tr><td>GetFaceName / GetSize / GetColor / GetWeight / IsItalic / IsBold / IsUnderline</td><td>零散读取;注意 GetSize 单位是 1/10 磅</td></tr>
-<tr><td>m_cf.Flags</td><td>CF_EFFECTS(颜色/删除线/下划线区)、CF_SCREENFONTS、CF_INITTOLOGFONTSTRUCT 等</td></tr>
+<tr><td class="nw">m_cf.Flags</td><td>CF_EFFECTS(颜色/删除线/下划线区)、CF_SCREENFONTS、CF_INITTOLOGFONTSTRUCT 等</td></tr>
 </tbody></table>
 
 <div class="note new"><span class="t">🔵 现代批注:Vista 风格文件对话框与目录选择</span><p>VS2010 起 CFileDialog 构造函数新增 <code>bVistaStyle</code> 参数(默认 TRUE),Unicode 工程下自动改用 COM 接口 <b>IFileDialog</b> 呈现 Vista+ 新界面,并支持 <code>AddPlace</code> 自定义左侧位置、<code>GetResults</code> 枚举多选。选<b>目录</b>再也不必用难看的 SHBrowseForFolder——直接用其派生类 <code>CFolderPickerDialog</code>。若清单未启用 v6 或以 ANSI 编译,则会退回 XP 老界面。</p></div>
@@ -2626,10 +2630,10 @@ END_MESSAGE_MAP()
 <p><b>【DRAWITEMSTRUCT 关键字段表】</b></p>
 <table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody>
 <tr><td>CtlType / CtlID / itemID</td><td>控件类型(ODT_BUTTON 等) / 控件 ID / 项索引</td></tr>
-<tr><td>itemAction</td><td>本次绘制起因:ODA_DRAWENTIRE 全绘、ODA_SELECT 选中态变化、ODA_FOCUS 焦点变化</td></tr>
-<tr><td>itemState</td><td>ODS_SELECTED(按下/选中)、ODS_FOCUS、ODS_DISABLED 等状态位</td></tr>
-<tr><td>hDC / rcItem</td><td>目标 DC 与目标矩形——只能画在这个矩形里</td></tr>
-<tr><td>itemData</td><td>该项挂接的用户数据</td></tr>
+<tr><td class="nw">itemAction</td><td>本次绘制起因:ODA_DRAWENTIRE 全绘、ODA_SELECT 选中态变化、ODA_FOCUS 焦点变化</td></tr>
+<tr><td class="nw">itemState</td><td>ODS_SELECTED(按下/选中)、ODS_FOCUS、ODS_DISABLED 等状态位</td></tr>
+<tr><td class="nw">hDC / rcItem</td><td>目标 DC 与目标矩形——只能画在这个矩形里</td></tr>
+<tr><td class="nw">itemData</td><td>该项挂接的用户数据</td></tr>
 </tbody></table>
 
 <pre><code><span class="cl"><span class="cc" style="min-width:37.0ch"><span class="kw">class</span> CColorButton : <span class="kw">public</span> CButton</span><span class="cm">// 资源里勾选 Owner Draw(即 BS_OWNERDRAW)</span></span><span class="cl">{</span><span class="cl"><span class="kw">public</span>:</span><span class="cl">    <span class="kw">virtual</span> <span class="kw">void</span> DrawItem(LPDRAWITEMSTRUCT lpDIS);</span><span class="cl">};</span><span class="cl"> </span><span class="cl"><span class="kw">void</span> CColorButton::DrawItem(LPDRAWITEMSTRUCT lpDIS)</span><span class="cl">{</span><span class="cl">    CDC* pDC = CDC::FromHandle(lpDIS-&gt;hDC);</span><span class="cl">    CRect rc(lpDIS-&gt;rcItem);</span><span class="cl">    BOOL bDown = (lpDIS-&gt;itemState &amp; ODS_SELECTED) != 0;</span><span class="cl"> </span><span class="cl">    pDC-&gt;FillSolidRect(&amp;rc, bDown ? RGB(0, 90, 158) : RGB(0, 120, 215));</span><span class="cl">    <span class="kw">if</span> (lpDIS-&gt;itemState &amp; ODS_FOCUS)</span><span class="cl"><span class="cc" style="min-width:37.0ch">        pDC-&gt;DrawFocusRect(&amp;rc);</span><span class="cm">// 焦点虚线框</span></span><span class="cl"> </span><span class="cl">    CString strText;</span><span class="cl">    GetWindowText(strText);</span><span class="cl">    pDC-&gt;SetBkMode(TRANSPARENT);</span><span class="cl">    pDC-&gt;SetTextColor(RGB(255, 255, 255));</span><span class="cl">    pDC-&gt;DrawText(strText, &amp;rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);</span><span class="cl">}</span></code></pre>
@@ -2640,11 +2644,11 @@ END_MESSAGE_MAP()
 
 <p><b>【owner-draw 与 custom draw 对比】</b></p>
 <table><thead><tr><th>维度</th><th>Owner-draw</th><th>Custom draw</th></tr></thead><tbody>
-<tr><td>适用控件</td><td>按钮、列表框、组合框、菜单、Tab、ListView 等</td><td>仅通用控件(ListView、TreeView、Toolbar、Slider…)</td></tr>
-<tr><td>绘制责任</td><td>完全接管,一切自己画</td><td>控件照常画,你在阶段回调里微调</td></tr>
-<tr><td>工作量 / 风险</td><td>大;焦点框、禁用态、主题一致性全要自己处理</td><td>小;默认外观保留</td></tr>
-<tr><td>消息通道</td><td>WM_MEASUREITEM / WM_DRAWITEM(MFC 反射为虚函数)</td><td>WM_NOTIFY 的 NM_CUSTOMDRAW</td></tr>
-<tr><td>选择建议</td><td>外观彻底重造时</td><td>改改颜色字体时(优先选它)</td></tr>
+<tr><td class="nw">适用控件</td><td>按钮、列表框、组合框、菜单、Tab、ListView 等</td><td>仅通用控件(ListView、TreeView、Toolbar、Slider…)</td></tr>
+<tr><td class="nw">绘制责任</td><td>完全接管,一切自己画</td><td>控件照常画,你在阶段回调里微调</td></tr>
+<tr><td class="nw">工作量 / 风险</td><td>大;焦点框、禁用态、主题一致性全要自己处理</td><td class="nw">小;默认外观保留</td></tr>
+<tr><td class="nw">消息通道</td><td>WM_MEASUREITEM / WM_DRAWITEM(MFC 反射为虚函数)</td><td>WM_NOTIFY 的 NM_CUSTOMDRAW</td></tr>
+<tr><td class="nw">选择建议</td><td class="nw">外观彻底重造时</td><td>改改颜色字体时(优先选它)</td></tr>
 </tbody></table>
 
 <div class="note new"><span class="t">🔵 现代批注:能不自绘就不自绘</span><p>视觉样式时代,手绘控件很难与系统主题、高 DPI、深色模式保持一致——自绘按钮在别人机器上"格格不入"是常见反馈。需求若只是"重点行标红",custom draw 足够;若要成套的现代外观,MFC Feature Pack 的 <code>CMFCButton</code>、<code>CMFCListCtrl</code> 已内置大量绘制逻辑;更进一步就该考虑把界面层迁到现代框架。另外注意:对话框整体背景/静态文本变色走的是另一条路——<b>WM_CTLCOLOR</b>(MFC 中 OnCtlColor),别与本节两种机制混淆。</p></div>
@@ -2682,9 +2686,9 @@ END_MESSAGE_MAP()
 <p>③ <strong>创建之后（运行期）。</strong><code>SetWindowLongPtr</code> 改实例属性、<code>SetClassLongPtr</code> 改类属性、<code>SetWindowText</code> 改标题、<code>MoveWindow</code> 挪位置——随时可改。但要注意：有些风格位改完之后，还得调用 <code>SetWindowPos</code> 并带上 <code>SWP_FRAMECHANGED</code>，系统才会重新计算非客户区。</p>
 
 <table><thead><tr><th>时机</th><th>改的档案</th><th>影响范围</th><th>MFC 典型写法</th></tr></thead><tbody>
-<tr><td>注册窗口类前</td><td>WNDCLASS（类级）</td><td>该类的所有窗口</td><td><code>AfxRegisterWndClass()</code> 造新类，在 <code>PreCreateWindow</code> 里换 <code>cs.lpszClass</code></td></tr>
-<tr><td>创建那一刻</td><td>CREATESTRUCT（实例级）</td><td>这一个窗口</td><td>重写 <code>PreCreateWindow(cs)</code>，改 <code>cs.style</code>、<code>cs.cx</code> 等字段</td></tr>
-<tr><td>创建之后</td><td>两份都能碰</td><td>这一个窗口（或整个类）</td><td><code>SetWindowLongPtr</code> / <code>SetClassLongPtr</code> / <code>SetWindowText</code></td></tr>
+<tr><td class="nw">注册窗口类前</td><td class="nw">WNDCLASS（类级）</td><td class="nw">该类的所有窗口</td><td><code>AfxRegisterWndClass()</code> 造新类，在 <code>PreCreateWindow</code> 里换 <code>cs.lpszClass</code></td></tr>
+<tr><td class="nw">创建那一刻</td><td>CREATESTRUCT（实例级）</td><td class="nw">这一个窗口</td><td>重写 <code>PreCreateWindow(cs)</code>，改 <code>cs.style</code>、<code>cs.cx</code> 等字段</td></tr>
+<tr><td class="nw">创建之后</td><td class="nw">两份都能碰</td><td>这一个窗口（或整个类）</td><td><code>SetWindowLongPtr</code> / <code>SetClassLongPtr</code> / <code>SetWindowText</code></td></tr>
 </tbody></table>
 
 <pre><code><span class="cl"><span class="cm">// 时机②：在 CMainFrame 里重写 PreCreateWindow——改的是"这一个"窗口</span></span><span class="cl"><span class="kw">BOOL</span> CMainFrame::PreCreateWindow(CREATESTRUCT&amp; cs)</span><span class="cl">{</span><span class="cl">    <span class="kw">if</span> (!CFrameWnd::PreCreateWindow(cs))</span><span class="cl"><span class="cc" style="min-width:34.0ch">        <span class="kw">return</span> FALSE;</span><span class="cm">// 先让基类填好默认值，再动手</span></span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:34.0ch">    cs.cx = 900;</span><span class="cm">// 初始宽高</span></span><span class="cl">    cs.cy = 620;</span><span class="cl"><span class="cc" style="min-width:34.0ch">    cs.style &amp;= ~WS_MAXIMIZEBOX;</span><span class="cm">// 去掉最大化按钮</span></span><span class="cl">    <span class="kw">return</span> TRUE;</span><span class="cl">}</span></code></pre>
@@ -2887,10 +2891,10 @@ m_wndStatusBar.SetPaneText(idx, _T("holmesliam"));</code></pre>
 &lt;/Style&gt;</code></pre>
 
 <table><thead><tr><th>任务</th><th>本章的做法（Win32/MFC）</th><th>现代做法（WPF/WinUI）</th></tr></thead><tbody>
-<tr><td>改全部按钮外观</td><td>逐个自绘（Owner Draw）或换控件</td><td>ResourceDictionary 里一条 Style</td></tr>
-<tr><td>换主题/深色模式</td><td>逐窗口改背景刷、重绘，工程浩大</td><td>切换主题字典，框架自动全局生效</td></tr>
-<tr><td>彻底重塑一个控件</td><td>接管 WM_PAINT 从零画</td><td>换 ControlTemplate，行为不动外观全换</td></tr>
-<tr><td>图标/标题栏定制</td><td>类档案 + DWM 属性逐项设置</td><td>清单/窗口属性声明 + 自绘标题栏区域</td></tr>
+<tr><td class="nw">改全部按钮外观</td><td>逐个自绘（Owner Draw）或换控件</td><td>ResourceDictionary 里一条 Style</td></tr>
+<tr><td class="nw">换主题/深色模式</td><td>逐窗口改背景刷、重绘，工程浩大</td><td>切换主题字典，框架自动全局生效</td></tr>
+<tr><td class="nw">彻底重塑一个控件</td><td>接管 WM_PAINT 从零画</td><td>换 ControlTemplate，行为不动外观全换</td></tr>
+<tr><td class="nw">图标/标题栏定制</td><td>类档案 + DWM 属性逐项设置</td><td>清单/窗口属性声明 + 自绘标题栏区域</td></tr>
 </tbody></table>
 
 <p><strong>打个比方。</strong>本章的改法像给酒店每间客房单独换床单——一间一间来，还得记住哪间的床单归哪个仓库管；样式模板像洗衣房直接换掉整批布草标准，全酒店一夜之间统一。</p>
@@ -2900,14 +2904,14 @@ m_wndStatusBar.SetPaneText(idx, _T("holmesliam"));</code></pre>
 <div class="note new"><span class="t">🔵 顺手的现代甜点：MFC 也能一键换肤</span><p>如果你维护的正是 MFC 老项目，不必羡慕 XAML：VS2008 起的 MFC Feature Pack 提供视觉管理器，一行 <code>CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007))</code> 就能让整个应用换上 Office 风格的工具栏、菜单与停靠窗格——算是 MFC 世界里离"样式模板"最近的一次致敬。另外别忘了给程序加 comctl32 v6 的清单（manifest），否则所有公共控件都还穿着 Windows 2000 的旧衣服。</p></div>
 
 <table><thead><tr><th>本章速查：想做什么</th><th>用什么</th><th>写在哪</th></tr></thead><tbody>
-<tr><td>改初始大小/风格位</td><td><code>cs.cx / cs.style</code></td><td><code>PreCreateWindow</code></td></tr>
-<tr><td>改图标</td><td><code>AfxRegisterWndClass</code> 第 4 参 / <code>SetClassLongPtr(GCLP_HICON)</code></td><td>框架类</td></tr>
-<tr><td>改光标/背景刷</td><td><code>AfxRegisterWndClass</code> 第 2、3 参</td><td><strong>视图类</strong>的 <code>PreCreateWindow</code></td></tr>
-<tr><td>改标题</td><td>清 <code>FWS_ADDTOTITLE</code> + <code>lpszName</code>，或 <code>SetWindowText</code></td><td><code>PreCreateWindow</code> / 任意运行期</td></tr>
-<tr><td>工具栏显隐</td><td><code>ShowControlBar</code> + <code>IsWindowVisible</code></td><td>命令响应 + UPDATE_COMMAND_UI</td></tr>
-<tr><td>加状态栏窗格</td><td>字符串表新条目 + indicators 数组</td><td><code>MainFrm.cpp</code></td></tr>
-<tr><td>状态栏时钟</td><td><code>SetTimer</code> + <code>SetPaneText</code></td><td><code>OnCreate</code> / <code>OnTimer</code></td></tr>
-<tr><td>状态栏进度条</td><td><code>PostMessage</code> 延迟 + <code>GetItemRect</code> + <code>CProgressCtrl::Create</code></td><td>自定义消息处理</td></tr>
+<tr><td>改初始大小/风格位</td><td class="nw"><code>cs.cx / cs.style</code></td><td class="nw"><code>PreCreateWindow</code></td></tr>
+<tr><td class="nw">改图标</td><td><code>AfxRegisterWndClass</code> 第 4 参 / <code>SetClassLongPtr(GCLP_HICON)</code></td><td class="nw">框架类</td></tr>
+<tr><td class="nw">改光标/背景刷</td><td><code>AfxRegisterWndClass</code> 第 2、3 参</td><td><strong>视图类</strong>的 <code>PreCreateWindow</code></td></tr>
+<tr><td class="nw">改标题</td><td>清 <code>FWS_ADDTOTITLE</code> + <code>lpszName</code>，或 <code>SetWindowText</code></td><td><code>PreCreateWindow</code> / 任意运行期</td></tr>
+<tr><td class="nw">工具栏显隐</td><td><code>ShowControlBar</code> + <code>IsWindowVisible</code></td><td>命令响应 + UPDATE_COMMAND_UI</td></tr>
+<tr><td class="nw">加状态栏窗格</td><td>字符串表新条目 + indicators 数组</td><td class="nw"><code>MainFrm.cpp</code></td></tr>
+<tr><td class="nw">状态栏时钟</td><td><code>SetTimer</code> + <code>SetPaneText</code></td><td><code>OnCreate</code> / <code>OnTimer</code></td></tr>
+<tr><td class="nw">状态栏进度条</td><td><code>PostMessage</code> 延迟 + <code>GetItemRect</code> + <code>CProgressCtrl::Create</code></td><td class="nw">自定义消息处理</td></tr>
 </tbody></table>
 
 </section>
@@ -2928,13 +2932,13 @@ m_wndStatusBar.SetPaneText(idx, _T("holmesliam"));</code></pre>
 <p>线型由一组 <code>PS_</code> 常量表示：</p>
 
 <table><thead><tr><th>常量</th><th>值</th><th>效果</th><th>备注</th></tr></thead><tbody>
-<tr><td><code>PS_SOLID</code></td><td>0</td><td>实线</td><td>任意线宽都有效</td></tr>
-<tr><td><code>PS_DASH</code></td><td>1</td><td>虚线 - - -</td><td>普通画笔仅在线宽 ≤ 1 时有效</td></tr>
-<tr><td><code>PS_DOT</code></td><td>2</td><td>点线 · · ·</td><td>同上</td></tr>
-<tr><td><code>PS_DASHDOT</code></td><td>3</td><td>点划线 - · -</td><td>同上</td></tr>
-<tr><td><code>PS_DASHDOTDOT</code></td><td>4</td><td>双点划线 - · · -</td><td>同上</td></tr>
-<tr><td><code>PS_NULL</code></td><td>5</td><td>不画</td><td>常用于"只要填充不要边框"的图形</td></tr>
-<tr><td><code>PS_INSIDEFRAME</code></td><td>6</td><td>实线且收在边框内</td><td>画矩形/椭圆时宽线不外扩</td></tr>
+<tr><td class="nw"><code>PS_SOLID</code></td><td class="nw">0</td><td class="nw">实线</td><td class="nw">任意线宽都有效</td></tr>
+<tr><td class="nw"><code>PS_DASH</code></td><td class="nw">1</td><td class="nw">虚线 - - -</td><td>普通画笔仅在线宽 ≤ 1 时有效</td></tr>
+<tr><td class="nw"><code>PS_DOT</code></td><td class="nw">2</td><td class="nw">点线 · · ·</td><td class="nw">同上</td></tr>
+<tr><td class="nw"><code>PS_DASHDOT</code></td><td class="nw">3</td><td class="nw">点划线 - · -</td><td class="nw">同上</td></tr>
+<tr><td class="nw"><code>PS_DASHDOTDOT</code></td><td class="nw">4</td><td class="nw">双点划线 - · · -</td><td class="nw">同上</td></tr>
+<tr><td class="nw"><code>PS_NULL</code></td><td class="nw">5</td><td class="nw">不画</td><td>常用于"只要填充不要边框"的图形</td></tr>
+<tr><td class="nw"><code>PS_INSIDEFRAME</code></td><td class="nw">6</td><td class="nw">实线且收在边框内</td><td>画矩形/椭圆时宽线不外扩</td></tr>
 </tbody></table>
 
 <p>颜色则是一个 <code>COLORREF</code>——本质是 32 位整数，内存布局为 <code>0x00BBGGRR</code>（注意是蓝在高位），平时用 <code>RGB(r, g, b)</code> 宏拼出来即可，不必关心字节顺序。</p>
@@ -3063,8 +3067,8 @@ HPEN hPen = ExtCreatePen(PS_GEOMETRIC | PS_DASH | PS_ENDCAP_FLAT,
 <p><strong>【原理】</strong>主流两条路线，取舍在"平铺"还是"整幅"：</p>
 
 <table><thead><tr><th>路线</th><th>做法</th><th>适用</th><th>特点</th></tr></thead><tbody>
-<tr><td>A：位图画刷</td><td><code>CreatePatternBrush</code> 造刷，<code>OnCtlColor</code> 对 <code>CTLCOLOR_DLG</code> 返回它</td><td>小纹理、对话框</td><td>系统自动<strong>平铺</strong>，代码最少，无法缩放</td></tr>
-<tr><td>B：拦截背景擦除</td><td>处理 <code>WM_ERASEBKGND</code>，自己 <code>StretchBlt</code> 整幅铺满，返回 TRUE</td><td>整幅壁画、视图窗口</td><td>可缩放可定位，控制权全在自己</td></tr>
+<tr><td class="nw">A：位图画刷</td><td><code>CreatePatternBrush</code> 造刷，<code>OnCtlColor</code> 对 <code>CTLCOLOR_DLG</code> 返回它</td><td>小纹理、对话框</td><td>系统自动<strong>平铺</strong>，代码最少，无法缩放</td></tr>
+<tr><td class="nw">B：拦截背景擦除</td><td>处理 <code>WM_ERASEBKGND</code>，自己 <code>StretchBlt</code> 整幅铺满，返回 TRUE</td><td>整幅壁画、视图窗口</td><td>可缩放可定位，控制权全在自己</td></tr>
 </tbody></table>
 
 <pre><code><span class="cl"><span class="cm">// 路线 A：位图画刷平铺（成员变量：m_bmpTile、m_brTile）</span></span><span class="cl">m_bmpTile.LoadBitmap(IDB_TILE);</span><span class="cl">m_brTile.CreatePatternBrush(&amp;m_bmpTile);</span><span class="cl"><span class="cm">// 然后在 OnCtlColor 的 CTLCOLOR_DLG 分支 return m_brTile;</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 路线 B：拦截背景擦除，把位图拉伸铺满客户区</span></span><span class="cl">BOOL CSketchView::OnEraseBkgnd(CDC* pDC)</span><span class="cl">{</span><span class="cl">    CBitmap bmp;</span><span class="cl">    bmp.LoadBitmap(IDB_WALLPAPER);</span><span class="cl">    BITMAP info;</span><span class="cl"><span class="cc" style="min-width:36.0ch">    bmp.GetBitmap(&amp;info);</span><span class="cm">// 取位图原始尺寸</span></span><span class="cl"> </span><span class="cl">    CDC memDC;</span><span class="cl"><span class="cc" style="min-width:36.0ch">    memDC.CreateCompatibleDC(pDC);</span><span class="cm">// 内存中的"替身"DC</span></span><span class="cl">    CBitmap* pOld = memDC.SelectObject(&amp;bmp);</span><span class="cl"> </span><span class="cl">    CRect rc;</span><span class="cl">    GetClientRect(&amp;rc);</span><span class="cl">    pDC-&gt;StretchBlt(0, 0, rc.Width(), rc.Height(),</span><span class="cl">                    &amp;memDC, 0, 0, info.bmWidth, info.bmHeight, SRCCOPY);</span><span class="cl">    memDC.SelectObject(pOld);</span><span class="cl"><span class="cc" style="min-width:36.0ch">    <span class="kw">return</span> TRUE;</span><span class="cm">// 关键：报告"背景我已擦过"，阻止默认白底再刷一遍</span></span><span class="cl">}</span></code></pre>
@@ -3084,13 +3088,13 @@ HPEN hPen = ExtCreatePen(PS_GEOMETRIC | PS_DASH | PS_ENDCAP_FLAT,
 <p><strong>【原理式盘点】</strong>可迁移的是四条思想：<strong>参数与动作分离</strong>（设置只是数据，绘制只是消费数据）；<strong>数据活得比界面长</strong>（对话框收集、长寿对象保存）；<strong>描述与实体分离</strong>（LOGFONT 的愿望清单模式）;<strong>集中式外观控制</strong>（父窗口统一发画刷 → 今天的主题系统）。会过期的是具体载体：</p>
 
 <table><thead><tr><th>本章技术</th><th>状态</th><th>现代对应</th></tr></thead><tbody>
-<tr><td>CPen / GDI 画线</td><td></td><td>Direct2D <code>SolidColorBrush</code> + <code>ID2D1StrokeStyle</code>，GPU 加速、抗锯齿、宽虚线无限制</td></tr>
-<tr><td>DDX/DDV 数据交换</td><td></td><td>XAML <code>x:Bind</code> 双向绑定 + MVVM，随改随生效</td></tr>
-<tr><td>CColorDialog / CHOOSECOLOR</td><td></td><td>WinUI 3 <code>ColorPicker</code> 控件，可内嵌、随主题</td></tr>
-<tr><td>CFontDialog / LOGFONT / TextOut</td><td></td><td>DirectWrite 文字栈（TextFormat/TextLayout），彩色字体、可变字体、复杂文种</td></tr>
-<tr><td>OnCtlColor 逐控件配色</td><td></td><td>XAML 样式 / <code>ThemeResource</code>，深浅色模式自动切换</td></tr>
-<tr><td>WM_CTLCOLORBTN 改按钮颜色</td><td></td><td>视觉样式下即已失效；自绘按钮或直接用现代控件</td></tr>
-<tr><td>OnEraseBkgnd 位图背景</td><td></td><td>XAML <code>ImageBrush</code> / Mica 材质，合成器天然无闪烁</td></tr>
+<tr><td class="nw">CPen / GDI 画线</td><td class="nw"></td><td>Direct2D <code>SolidColorBrush</code> + <code>ID2D1StrokeStyle</code>，GPU 加速、抗锯齿、宽虚线无限制</td></tr>
+<tr><td class="nw">DDX/DDV 数据交换</td><td class="nw"></td><td>XAML <code>x:Bind</code> 双向绑定 + MVVM，随改随生效</td></tr>
+<tr><td>CColorDialog / CHOOSECOLOR</td><td class="nw"></td><td>WinUI 3 <code>ColorPicker</code> 控件，可内嵌、随主题</td></tr>
+<tr><td>CFontDialog / LOGFONT / TextOut</td><td class="nw"></td><td>DirectWrite 文字栈（TextFormat/TextLayout），彩色字体、可变字体、复杂文种</td></tr>
+<tr><td>OnCtlColor 逐控件配色</td><td class="nw"></td><td>XAML 样式 / <code>ThemeResource</code>，深浅色模式自动切换</td></tr>
+<tr><td>WM_CTLCOLORBTN 改按钮颜色</td><td class="nw"></td><td>视觉样式下即已失效；自绘按钮或直接用现代控件</td></tr>
+<tr><td>OnEraseBkgnd 位图背景</td><td class="nw"></td><td>XAML <code>ImageBrush</code> / Mica 材质，合成器天然无闪烁</td></tr>
 </tbody></table>
 
 <p><strong>【通俗比方】</strong>这一章像在学木工手刨：今天做家具早已电动化，但"顺纹刨、逆纹戗"的木性知识不会过期。GDI 的选入选出、消息钩子、句柄纪律，正是 Windows 这块"木头"的纹理——维护存量 Win32 代码时它们是每天要摸的实物，写新代码时它们是理解现代框架为何如此设计的参照系。</p>
@@ -3260,13 +3264,13 @@ std::vector&lt;Figure&gt; m_figures;                  <span class="cm">// 🔵 �
 <tr><th>维度</th><th>解法一：保存图形数据（矢量）</th><th>解法二：内存位图（快照）</th></tr>
 </thead>
 <tbody>
-<tr><td>存储内容</td><td>每笔的类型、坐标、颜色等参数</td><td>整个客户区的像素阵列</td></tr>
-<tr><td>重画开销</td><td>随图形数量线性增长</td><td>一次 <code>BitBlt</code>，恒定</td></tr>
-<tr><td>内存占用</td><td>每笔约几十字节</td><td>宽 × 高 × 4 字节，与内容多少无关</td></tr>
-<tr><td>可编辑性</td><td>可删除、修改、撤销任意一笔</td><td>颜料已干，覆盖即定形，无法"反悔"</td></tr>
-<tr><td>存盘/打印</td><td>天然适合序列化为文档、按打印机分辨率重画</td><td>只能存成图片，打印放大即见马赛克</td></tr>
-<tr><td>窗口缩放</td><td>按新尺寸重算坐标，清晰依旧</td><td>需重建位图，拉伸则模糊</td></tr>
-<tr><td>典型阵地</td><td>绘图板、CAD、图表、白板软件</td><td>帧缓冲、渲染缓存、防闪烁中间层</td></tr>
+<tr><td class="nw">存储内容</td><td>每笔的类型、坐标、颜色等参数</td><td>整个客户区的像素阵列</td></tr>
+<tr><td class="nw">重画开销</td><td>随图形数量线性增长</td><td>一次 <code>BitBlt</code>，恒定</td></tr>
+<tr><td class="nw">内存占用</td><td class="nw">每笔约几十字节</td><td>宽 × 高 × 4 字节，与内容多少无关</td></tr>
+<tr><td class="nw">可编辑性</td><td>可删除、修改、撤销任意一笔</td><td>颜料已干，覆盖即定形，无法"反悔"</td></tr>
+<tr><td class="nw">存盘/打印</td><td>天然适合序列化为文档、按打印机分辨率重画</td><td>只能存成图片，打印放大即见马赛克</td></tr>
+<tr><td class="nw">窗口缩放</td><td>按新尺寸重算坐标，清晰依旧</td><td>需重建位图，拉伸则模糊</td></tr>
+<tr><td class="nw">典型阵地</td><td>绘图板、CAD、图表、白板软件</td><td>帧缓冲、渲染缓存、防闪烁中间层</td></tr>
 </tbody>
 </table>
 
@@ -3353,10 +3357,10 @@ std::vector&lt;Figure&gt; m_figures;                  <span class="cm">// 🔵 �
 <tbody>
 <tr><td>GDI 绘图（<code>LineTo</code> 等）</td><td> 维护存量代码仍常见</td><td>Direct2D / Skia / GPU 渲染管线</td></tr>
 <tr><td>手工双缓冲（兼容 DC + <code>BitBlt</code>）</td><td> 仅 GDI 遗留代码需要</td><td>DWM 合成、交换链（swap chain）</td></tr>
-<tr><td><code>CTypedPtrArray</code> 存图形指针</td><td> 新代码不应再用</td><td><code>std::vector</code> / 值语义 + 智能指针</td></tr>
-<tr><td><code>WM_PAINT</code> / 无效区 / <code>Invalidate</code></td><td> Win32 层原样健在</td><td>各框架的 invalidate/repaint 机制之根</td></tr>
-<tr><td>图形参数类 + 遍历重画</td><td> 思想全面胜出</td><td>保留模式场景树：DOM、可视化树、Widget 树</td></tr>
-<tr><td>数据与显示分离</td><td> 已成行业公理</td><td>Doc/View → MVC → MVVM → 声明式 UI（UI = f(state)）</td></tr>
+<tr><td><code>CTypedPtrArray</code> 存图形指针</td><td class="nw"> 新代码不应再用</td><td><code>std::vector</code> / 值语义 + 智能指针</td></tr>
+<tr><td><code>WM_PAINT</code> / 无效区 / <code>Invalidate</code></td><td class="nw"> Win32 层原样健在</td><td>各框架的 invalidate/repaint 机制之根</td></tr>
+<tr><td>图形参数类 + 遍历重画</td><td class="nw"> 思想全面胜出</td><td>保留模式场景树：DOM、可视化树、Widget 树</td></tr>
+<tr><td class="nw">数据与显示分离</td><td class="nw"> 已成行业公理</td><td>Doc/View → MVC → MVVM → 声明式 UI（UI = f(state)）</td></tr>
 </tbody>
 </table>
 
@@ -3419,10 +3423,10 @@ std::vector&lt;Figure&gt; m_figures;                  <span class="cm">// 🔵 �
 <tr><th>层次</th><th>代表调用</th><th>失败报告</th><th>资源释放</th><th>可移植性</th><th>独有本事</th><th>今天用在</th></tr>
 </thead>
 <tbody>
-<tr><td>C 运行库</td><td><code>fopen / fwrite / fread / fclose</code></td><td>返回 <code>NULL</code> / 元素数，查 <code>errno</code></td><td>手动 <code>fclose</code></td><td>所有平台</td><td>与海量现存 C 代码兼容</td><td>C 项目、跨平台底层库</td></tr>
-<tr><td>C++ 流</td><td><code>ofstream / ifstream</code></td><td>流状态位，可当布尔判断</td><td>析构自动关（RAII）</td><td>所有平台</td><td>类型安全、可重载 <code>&lt;&lt;</code></td><td>新写的可移植 C++ 代码首选</td></tr>
-<tr><td>Win32 API</td><td><code>CreateFileW / WriteFile / ReadFile / CloseHandle</code></td><td><code>INVALID_HANDLE_VALUE</code> + <code>GetLastError</code></td><td>手动 <code>CloseHandle</code></td><td>仅 Windows</td><td>共享模式、异步 I/O、串口/管道/卷、精细错误码</td><td>需要 Windows 独有能力时</td></tr>
-<tr><td>MFC</td><td><code>CFile::Open / Write / Read / Close</code></td><td><code>Open</code> 返回 <code>BOOL</code>，或抛 <code>CFileException</code></td><td>析构兜底</td><td>仅 Windows + MFC</td><td>与 <code>CArchive</code>、文档/视图联动</td><td>维护存量 MFC 项目</td></tr>
+<tr><td class="nw">C 运行库</td><td><code>fopen / fwrite / fread / fclose</code></td><td>返回 <code>NULL</code> / 元素数，查 <code>errno</code></td><td class="nw">手动 <code>fclose</code></td><td class="nw">所有平台</td><td>与海量现存 C 代码兼容</td><td>C 项目、跨平台底层库</td></tr>
+<tr><td class="nw">C++ 流</td><td><code>ofstream / ifstream</code></td><td>流状态位，可当布尔判断</td><td>析构自动关（RAII）</td><td class="nw">所有平台</td><td>类型安全、可重载 <code>&lt;&lt;</code></td><td>新写的可移植 C++ 代码首选</td></tr>
+<tr><td class="nw">Win32 API</td><td><code>CreateFileW / WriteFile / ReadFile / CloseHandle</code></td><td><code>INVALID_HANDLE_VALUE</code> + <code>GetLastError</code></td><td class="nw">手动 <code>CloseHandle</code></td><td class="nw">仅 Windows</td><td>共享模式、异步 I/O、串口/管道/卷、精细错误码</td><td>需要 Windows 独有能力时</td></tr>
+<tr><td class="nw">MFC</td><td><code>CFile::Open / Write / Read / Close</code></td><td><code>Open</code> 返回 <code>BOOL</code>，或抛 <code>CFileException</code></td><td class="nw">析构兜底</td><td class="nw">仅 Windows + MFC</td><td>与 <code>CArchive</code>、文档/视图联动</td><td>维护存量 MFC 项目</td></tr>
 </tbody>
 </table>
 <p><strong>选型口诀：</strong>能可移植就可移植（C++ 流），要 Windows 特技才下楼（Win32），进了 MFC 的门随 MFC 的俗（CFile），接手老 C 代码不折腾（fopen）。</p>
@@ -3535,11 +3539,11 @@ RegGetValueW(HKEY_CURRENT_USER, L"Software\\MyApp\\Settings",
 <table>
 <thead><tr><th>类别</th><th>可直接 &lt;&lt; / &gt;&gt; 的类型</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>定长整数</td><td>BYTE、WORD、DWORD、LONG、LONGLONG、int、short、char、bool 等</td><td>按内存原样写入（小端）。 VC6 时代的 CArchive 没有 int/bool 等重载，老代码里常见 <code>ar &lt;&lt; (<span class="kw">long</span>)n</code> 式强转；现代 MFC 已补齐</td></tr>
-<tr><td>浮点</td><td>float、double</td><td>IEEE 754 原样字节</td></tr>
-<tr><td>字符串</td><td>CString</td><td>长度前缀 + 字符数据，前缀内含 ANSI/Unicode 标记</td></tr>
-<tr><td>常用小结构</td><td>CPoint、CSize、CRect、CTime、CTimeSpan</td><td>MFC 提供的全局重载</td></tr>
-<tr><td>对象指针</td><td>CObject* 及其可串行化派生类</td><td>走 WriteObject/ReadObject，连类名一起写（见 13.4、13.5 节）</td></tr>
+<tr><td class="nw">定长整数</td><td>BYTE、WORD、DWORD、LONG、LONGLONG、int、short、char、bool 等</td><td>按内存原样写入（小端）。 VC6 时代的 CArchive 没有 int/bool 等重载，老代码里常见 <code>ar &lt;&lt; (<span class="kw">long</span>)n</code> 式强转；现代 MFC 已补齐</td></tr>
+<tr><td class="nw">浮点</td><td>float、double</td><td>IEEE 754 原样字节</td></tr>
+<tr><td class="nw">字符串</td><td class="nw">CString</td><td>长度前缀 + 字符数据，前缀内含 ANSI/Unicode 标记</td></tr>
+<tr><td class="nw">常用小结构</td><td>CPoint、CSize、CRect、CTime、CTimeSpan</td><td>MFC 提供的全局重载</td></tr>
+<tr><td class="nw">对象指针</td><td>CObject* 及其可串行化派生类</td><td>走 WriteObject/ReadObject，连类名一起写（见 13.4、13.5 节）</td></tr>
 </tbody>
 </table>
 
@@ -3557,10 +3561,10 @@ RegGetValueW(HKEY_CURRENT_USER, L"Software\\MyApp\\Settings",
 <table>
 <thead><tr><th>条件</th><th>做法</th><th>它到底提供了什么</th></tr></thead>
 <tbody>
-<tr><td>① 血统</td><td>从 <code>CObject</code> 派生（直接或间接）</td><td>拿到 <code>Serialize</code> 虚函数入口和运行时类型信息（CRuntimeClass）的挂靠点</td></tr>
-<tr><td>② 注册</td><td>类声明里写 <code>DECLARE_SERIAL(类名)</code>，实现文件里写 <code>IMPLEMENT_SERIAL(类名, 基类, 版本号)</code></td><td>宏展开后生成：类名字符串、对象大小、schema 版本、一个"工厂函数"<code>CreateObject</code>，并注册进 MFC 的运行时类型表；顺带生成针对本类指针的全局 <code>operator&gt;&gt;</code></td></tr>
-<tr><td>③ 清单</td><td>重写 <code>Serialize(CArchive&amp;)</code></td><td>由类自己决定哪些成员上箱、按什么顺序</td></tr>
-<tr><td>④ 隐藏条件</td><td>提供一个无参构造函数</td><td>读档时框架要先"凭空"造出一个空对象，再让它执行 Serialize 往自己身上填数据——没有默认构造，工厂函数无从下手</td></tr>
+<tr><td class="nw">① 血统</td><td>从 <code>CObject</code> 派生（直接或间接）</td><td>拿到 <code>Serialize</code> 虚函数入口和运行时类型信息（CRuntimeClass）的挂靠点</td></tr>
+<tr><td class="nw">② 注册</td><td>类声明里写 <code>DECLARE_SERIAL(类名)</code>，实现文件里写 <code>IMPLEMENT_SERIAL(类名, 基类, 版本号)</code></td><td>宏展开后生成：类名字符串、对象大小、schema 版本、一个"工厂函数"<code>CreateObject</code>，并注册进 MFC 的运行时类型表；顺带生成针对本类指针的全局 <code>operator&gt;&gt;</code></td></tr>
+<tr><td class="nw">③ 清单</td><td>重写 <code>Serialize(CArchive&amp;)</code></td><td>由类自己决定哪些成员上箱、按什么顺序</td></tr>
+<tr><td class="nw">④ 隐藏条件</td><td>提供一个无参构造函数</td><td>读档时框架要先"凭空"造出一个空对象，再让它执行 Serialize 往自己身上填数据——没有默认构造，工厂函数无从下手</td></tr>
 </tbody>
 </table>
 
@@ -3608,11 +3612,11 @@ RegGetValueW(HKEY_CURRENT_USER, L"Software\\MyApp\\Settings",
 <thead><tr><th>用户动作</th><th>框架调用链（简化）</th><th>调用 Serialize？</th></tr></thead>
 <tbody>
 <tr><td>新建（ID_FILE_NEW）</td><td>CWinApp::OnFileNew → OnNewDocument → DeleteContents 清场</td><td>否——新文档无内容可读</td></tr>
-<tr><td>打开（ID_FILE_OPEN）</td><td>OnFileOpen → 文件对话框 → OnOpenDocument → DeleteContents → 开文件、构造 CArchive(load) → <strong>Serialize（载入分支）</strong> → 视图重新初始化并重绘</td><td>是</td></tr>
-<tr><td>保存（ID_FILE_SAVE）</td><td>OnFileSave → OnSaveDocument → 构造 CArchive(store) → <strong>Serialize（存储分支）</strong> → SetModifiedFlag(FALSE)</td><td>是</td></tr>
-<tr><td>另存为（ID_FILE_SAVE_AS）</td><td>OnFileSaveAs → 询问路径 → 后半程同"保存"</td><td>是</td></tr>
-<tr><td>关闭窗口且有未保存改动</td><td>SaveModified → 弹出询问 → 选"是"则走保存链</td><td>视用户选择</td></tr>
-<tr><td>双击关联文件 / 最近文件列表(MRU)</td><td>命令行解析 / MRU 菜单 → 汇入 OnOpenDocument</td><td>是（载入分支）</td></tr>
+<tr><td>打开（ID_FILE_OPEN）</td><td>OnFileOpen → 文件对话框 → OnOpenDocument → DeleteContents → 开文件、构造 CArchive(load) → <strong>Serialize（载入分支）</strong> → 视图重新初始化并重绘</td><td class="nw">是</td></tr>
+<tr><td>保存（ID_FILE_SAVE）</td><td>OnFileSave → OnSaveDocument → 构造 CArchive(store) → <strong>Serialize（存储分支）</strong> → SetModifiedFlag(FALSE)</td><td class="nw">是</td></tr>
+<tr><td>另存为（ID_FILE_SAVE_AS）</td><td>OnFileSaveAs → 询问路径 → 后半程同"保存"</td><td class="nw">是</td></tr>
+<tr><td>关闭窗口且有未保存改动</td><td>SaveModified → 弹出询问 → 选"是"则走保存链</td><td class="nw">视用户选择</td></tr>
+<tr><td>双击关联文件 / 最近文件列表(MRU)</td><td>命令行解析 / MRU 菜单 → 汇入 OnOpenDocument</td><td class="nw">是（载入分支）</td></tr>
 </tbody>
 </table>
 
@@ -3681,10 +3685,10 @@ RegGetValueW(HKEY_CURRENT_USER, L"Software\\MyApp\\Settings",
 <thead><tr><th>局限</th><th>具体表现</th></tr></thead>
 <tbody>
 <tr><td>不可读、难抢救</td><td>文件坏一个字节，其后全部错位；没法用文本编辑器查看，更没法手工修复</td></tr>
-<tr><td>锁死技术栈</td><td>只有链接了同一套 MFC 类的 C++ 程序读得了；想用 Python 写个批量处理脚本都无从下手</td></tr>
-<tr><td>平台耦合</td><td>字节序、类型宽度、字符编码全跟着编译器和平台走（见 13.3 节的三个暗坑）</td></tr>
-<tr><td>演进脆弱</td><td>字段顺序即格式，插入或调整字段就是毁档案，全靠 schema 手工兜底</td></tr>
-<tr><td>安全隐患</td><td>"按数据里的类名动态创建对象"的机制在 Java、.NET 生态酿成大批反序列化漏洞； .NET 的 BinaryFormatter 已被微软宣布废弃并从新版运行时中移除。CArchive 攻击面小些，但读不受信任的文件同样要防异常与资源耗尽</td></tr>
+<tr><td class="nw">锁死技术栈</td><td>只有链接了同一套 MFC 类的 C++ 程序读得了；想用 Python 写个批量处理脚本都无从下手</td></tr>
+<tr><td class="nw">平台耦合</td><td>字节序、类型宽度、字符编码全跟着编译器和平台走（见 13.3 节的三个暗坑）</td></tr>
+<tr><td class="nw">演进脆弱</td><td>字段顺序即格式，插入或调整字段就是毁档案，全靠 schema 手工兜底</td></tr>
+<tr><td class="nw">安全隐患</td><td>"按数据里的类名动态创建对象"的机制在 Java、.NET 生态酿成大批反序列化漏洞； .NET 的 BinaryFormatter 已被微软宣布废弃并从新版运行时中移除。CArchive 攻击面小些，但读不受信任的文件同样要防异常与资源耗尽</td></tr>
 </tbody>
 </table>
 
@@ -3705,11 +3709,11 @@ std::ofstream(path) &lt;&lt; j.dump(2);   <span class="cm">// 缩进 2 格的可
 <table>
 <thead><tr><th></th><th>CArchive 私有二进制</th><th>JSON</th><th>Protobuf</th><th>SQLite</th></tr></thead>
 <tbody>
-<tr><td>人眼可读</td><td>否</td><td>是</td><td>否（有 .proto 码本）</td><td>否（有通用查看工具）</td></tr>
-<tr><td>跨语言 / 跨平台</td><td>几乎不可能</td><td>任何语言</td><td>官方多语言代码生成</td><td>任何语言</td></tr>
-<tr><td>体积与速度</td><td>小、快</td><td>大、较慢</td><td>小、很快</td><td>中等</td></tr>
-<tr><td>版本演进</td><td>手工 schema，脆弱</td><td>加字段容易</td><td>字段编号，天然向后兼容</td><td>迁移脚本</td></tr>
-<tr><td>典型场景</td><td>维护存量 MFC 程序</td><td>配置、小型文档、接口数据</td><td>高频结构化数据、RPC</td><td>需要查询与并发的本地数据</td></tr>
+<tr><td class="nw">人眼可读</td><td class="nw">否</td><td class="nw">是</td><td>否（有 .proto 码本）</td><td>否（有通用查看工具）</td></tr>
+<tr><td class="nw">跨语言 / 跨平台</td><td class="nw">几乎不可能</td><td class="nw">任何语言</td><td>官方多语言代码生成</td><td class="nw">任何语言</td></tr>
+<tr><td class="nw">体积与速度</td><td>小、快</td><td>大、较慢</td><td>小、很快</td><td class="nw">中等</td></tr>
+<tr><td class="nw">版本演进</td><td>手工 schema，脆弱</td><td class="nw">加字段容易</td><td>字段编号，天然向后兼容</td><td class="nw">迁移脚本</td></tr>
+<tr><td class="nw">典型场景</td><td>维护存量 MFC 程序</td><td>配置、小型文档、接口数据</td><td>高频结构化数据、RPC</td><td>需要查询与并发的本地数据</td></tr>
 </tbody>
 </table>
 
@@ -3733,12 +3737,12 @@ std::ofstream(path) &lt;&lt; j.dump(2);   <span class="cm">// 缩进 2 格的可
 <table>
 <thead><tr><th>维度</th><th>TCP</th><th>UDP</th></tr></thead>
 <tbody>
-<tr><td>连接</td><td>面向连接，先握手</td><td>无连接，直接发</td></tr>
-<tr><td>可靠性</td><td>保证送达，丢了自动重传</td><td>不保证，丢了就丢了</td></tr>
-<tr><td>顺序</td><td>保证按发送顺序到达</td><td>不保证顺序</td></tr>
-<tr><td>数据形态</td><td>字节流，没有天然消息边界</td><td>数据报，一发一收边界分明</td></tr>
-<tr><td>开销 / 延迟</td><td>较高（握手、确认、拥塞控制）</td><td>低，几乎没额外负担</td></tr>
-<tr><td>典型用途</td><td>网页、文件下载、邮件</td><td>实时语音视频、游戏、DNS 查询</td></tr>
+<tr><td class="nw">连接</td><td>面向连接，先握手</td><td>无连接，直接发</td></tr>
+<tr><td class="nw">可靠性</td><td>保证送达，丢了自动重传</td><td>不保证，丢了就丢了</td></tr>
+<tr><td class="nw">顺序</td><td>保证按发送顺序到达</td><td class="nw">不保证顺序</td></tr>
+<tr><td class="nw">数据形态</td><td>字节流，没有天然消息边界</td><td>数据报，一发一收边界分明</td></tr>
+<tr><td class="nw">开销 / 延迟</td><td>较高（握手、确认、拥塞控制）</td><td>低，几乎没额外负担</td></tr>
+<tr><td class="nw">典型用途</td><td>网页、文件下载、邮件</td><td>实时语音视频、游戏、DNS 查询</td></tr>
 </tbody>
 </table>
 <p>为什么要保留两套？因为「可靠」是要花钱买的。TCP 为了不丢不乱，得握手建连、给每段数据编号、收到要回确认、超时要重传、还要根据网络拥堵情况控制发送速度——这些都增加延迟。对下载一个文件来说，慢一点没关系，错一个字节就完蛋，TCP 划算。可对一通网络语音来说，晚到 200 毫秒的那一小段声音，与其卡住等它重传，不如直接丢掉、播下一段，UDP 才对味。协议的选择，本质是<b>「宁可慢也不能错」还是「宁可丢也不能卡」</b>的取舍。</p>
@@ -3766,10 +3770,10 @@ WSACleanup();   <span class="cm">// 收摊，归还库资源</span></code></pre>
 <table>
 <thead><tr><th>函数</th><th>含义</th><th>作用</th></tr></thead>
 <tbody>
-<tr><td><code>htons</code></td><td>host to network short</td><td>主机序 16 位 → 网络序（用于端口）</td></tr>
-<tr><td><code>htonl</code></td><td>host to network long</td><td>主机序 32 位 → 网络序（用于 IPv4 地址）</td></tr>
-<tr><td><code>ntohs</code></td><td>network to host short</td><td>网络序 16 位 → 主机序</td></tr>
-<tr><td><code>ntohl</code></td><td>network to host long</td><td>网络序 32 位 → 主机序</td></tr>
+<tr><td class="nw"><code>htons</code></td><td>host to network short</td><td>主机序 16 位 → 网络序（用于端口）</td></tr>
+<tr><td class="nw"><code>htonl</code></td><td>host to network long</td><td>主机序 32 位 → 网络序（用于 IPv4 地址）</td></tr>
+<tr><td class="nw"><code>ntohs</code></td><td>network to host short</td><td>网络序 16 位 → 主机序</td></tr>
+<tr><td class="nw"><code>ntohl</code></td><td>network to host long</td><td>网络序 32 位 → 主机序</td></tr>
 </tbody>
 </table>
 <p>妙处在于：<b>这些函数是「按需干活」的</b>。在大端机器上，网络序就等于主机序，它们直接原样返回；在小端机器（也就是你的电脑）上，它们才真正翻转字节。所以你不用判断自己是什么机器，无脑套上就对——这正是好抽象的样子。</p>
@@ -3782,12 +3786,12 @@ WSACleanup();   <span class="cm">// 收摊，归还库资源</span></code></pre>
 <table>
 <thead><tr><th>服务器一侧</th><th>比喻</th><th>客户端一侧</th></tr></thead>
 <tbody>
-<tr><td><code>socket()</code></td><td>领一张营业执照（创建套接字）</td><td><code>socket()</code></td></tr>
-<tr><td><code>bind()</code></td><td>选定店址（绑定本机 IP + 端口）</td><td>—（通常不用手动绑）</td></tr>
-<tr><td><code>listen()</code></td><td>挂「营业中」牌子，摆一排等候椅</td><td>—</td></tr>
-<tr><td><code>accept()</code></td><td>迎进一位顾客，给他单独开个包间</td><td><code>connect()</code>（拨号上门）</td></tr>
-<tr><td><code>send()/recv()</code></td><td>在包间里聊</td><td><code>send()/recv()</code></td></tr>
-<tr><td><code>closesocket()</code></td><td>送客</td><td><code>closesocket()</code></td></tr>
+<tr><td class="nw"><code>socket()</code></td><td>领一张营业执照（创建套接字）</td><td class="nw"><code>socket()</code></td></tr>
+<tr><td class="nw"><code>bind()</code></td><td>选定店址（绑定本机 IP + 端口）</td><td>—（通常不用手动绑）</td></tr>
+<tr><td class="nw"><code>listen()</code></td><td>挂「营业中」牌子，摆一排等候椅</td><td class="nw">—</td></tr>
+<tr><td class="nw"><code>accept()</code></td><td>迎进一位顾客，给他单独开个包间</td><td><code>connect()</code>（拨号上门）</td></tr>
+<tr><td class="nw"><code>send()/recv()</code></td><td class="nw">在包间里聊</td><td class="nw"><code>send()/recv()</code></td></tr>
+<tr><td class="nw"><code>closesocket()</code></td><td class="nw">送客</td><td class="nw"><code>closesocket()</code></td></tr>
 </tbody>
 </table>
 <p>这里有一个新手几乎都会卡住、但一旦点破就永远记得的关键点：<b><code>accept</code> 返回的是一个全新的套接字</b>。你原来那个 <code>listen</code> 着的套接字（监听套接字）不参与聊天，它只负责在门口迎客；每来一位顾客，<code>accept</code> 就现开一个「包间套接字」专门服务这位顾客，而监听套接字扭头继续等下一个人。所以一台服务器能同时招呼很多客户端：一个门口，N 个包间。收发数据永远在包间套接字上做，别拿监听套接字去 <code>recv</code>。</p>
@@ -3817,10 +3821,10 @@ send(s, "hello", 5, 0);</code></pre>
 <table>
 <thead><tr><th>路子</th><th>思路</th><th>代价 / 局限</th></tr></thead>
 <tbody>
-<tr><td>阻塞 + 多线程</td><td>每个连接开一个线程，让它去阻塞，不碍着别人</td><td>连接一多，线程爆炸，切换和内存都吃不消</td></tr>
-<tr><td>非阻塞轮询</td><td>把套接字设成非阻塞，没数据立刻返回，你循环去问</td><td>空转烧 CPU，实现啰嗦</td></tr>
-<tr><td><code>select</code> 多路复用</td><td>一个线程同时盯一批套接字，谁就绪叫醒谁</td><td>Windows 下 <code>FD_SETSIZE</code> 默认才 64，规模有限</td></tr>
-<tr><td>Windows 异步事件</td><td><code>WSAAsyncSelect</code> / <code>WSAEventSelect</code>，就绪了给你发消息/信号</td><td>Windows 专有，跨平台没法用</td></tr>
+<tr><td class="nw">阻塞 + 多线程</td><td>每个连接开一个线程，让它去阻塞，不碍着别人</td><td>连接一多，线程爆炸，切换和内存都吃不消</td></tr>
+<tr><td class="nw">非阻塞轮询</td><td>把套接字设成非阻塞，没数据立刻返回，你循环去问</td><td>空转烧 CPU，实现啰嗦</td></tr>
+<tr><td class="nw"><code>select</code> 多路复用</td><td>一个线程同时盯一批套接字，谁就绪叫醒谁</td><td>Windows 下 <code>FD_SETSIZE</code> 默认才 64，规模有限</td></tr>
+<tr><td class="nw">Windows 异步事件</td><td><code>WSAAsyncSelect</code> / <code>WSAEventSelect</code>，就绪了给你发消息/信号</td><td>Windows 专有，跨平台没法用</td></tr>
 <tr><td>重叠 I/O + 完成端口（IOCP）</td><td>提交操作，完成时通知，内核帮你调度</td><td>最能扛，但 API 复杂，学习陡</td></tr>
 </tbody>
 </table>
@@ -3866,11 +3870,11 @@ awaitable&lt;<span class="kw">void</span>&gt; session(tcp::socket sock) {
 <table>
 <thead><tr><th>你的需求</th><th>现代选择</th><th>一句话理由</th></tr></thead>
 <tbody>
-<tr><td>贴近底层、要极致控制</td><td><b>Asio</b> / 独立 asio</td><td>异步网络的通用地基，跨平台</td></tr>
-<tr><td>服务间高性能调用（微服务）</td><td><b>gRPC</b></td><td>基于 HTTP/2，强类型接口，自动生成代码</td></tr>
+<tr><td>贴近底层、要极致控制</td><td class="nw"><b>Asio</b> / 独立 asio</td><td>异步网络的通用地基，跨平台</td></tr>
+<tr><td>服务间高性能调用（微服务）</td><td class="nw"><b>gRPC</b></td><td>基于 HTTP/2，强类型接口，自动生成代码</td></tr>
 <tr><td>通用请求 / 对接 Web API</td><td><b>REST over HTTP</b>（libcurl、cpp-httplib、cpr）</td><td>生态最广，人人都懂，调试方便</td></tr>
 <tr><td>浏览器 / 客户端要实时双向推送</td><td><b>WebSocket</b>（Boost.Beast、websocketpp）</td><td>在 HTTP 之上开一条持久的双向通道</td></tr>
-<tr><td>超低延迟、可容忍丢包</td><td><b>UDP / QUIC</b></td><td>游戏、音视频；QUIC 还自带可靠与加密</td></tr>
+<tr><td>超低延迟、可容忍丢包</td><td class="nw"><b>UDP / QUIC</b></td><td>游戏、音视频；QUIC 还自带可靠与加密</td></tr>
 </tbody>
 </table>
 <div class="note new"><span class="t">🔵 现代更新：一句话择路</span><p>写一个 C++ 网络服务，默认从 <b>REST/HTTP</b> 起步（够用、好调、生态全）；服务之间要高效强类型调用上 <b>gRPC</b>；要服务器主动实时推给客户端用 <b>WebSocket</b>；要压榨延迟、能忍丢包才下探到 <b>UDP/QUIC</b>；只有当你确实要自己造协议、贴着字节流干活时，才请出 <b>Asio</b>。至于裸 Winsock 的 <code>WSAStartup</code>、<code>htons</code>、<code>select</code>——它们仍在所有这些库的地板之下运转，你懂它们，是为了在出问题时能掀开地板看明白，而不是天天趴在地板上写代码。</p></div>
@@ -3976,10 +3980,10 @@ awaitable&lt;<span class="kw">void</span>&gt; session(tcp::socket sock) {
 <table>
 <thead><tr><th>对象</th><th>用户态还是内核态</th><th>能否跨进程</th><th>核心语义</th><th>典型用途</th></tr></thead>
 <tbody>
-<tr><td>临界区 CRITICAL_SECTION</td><td>用户态(争用时才入内核)</td><td>否,仅进程内</td><td>互斥,可递归</td><td>保护进程内共享数据(首选)</td></tr>
-<tr><td>互斥量 Mutex</td><td>内核对象</td><td>是(可命名)</td><td>互斥,有所有权</td><td>跨进程互斥、防多开</td></tr>
-<tr><td>事件 Event</td><td>内核对象</td><td>是</td><td>通知/等待某事发生</td><td>线程间"活干完了"的信号</td></tr>
-<tr><td>信号量 Semaphore</td><td>内核对象</td><td>是</td><td>计数,限量放行</td><td>限制并发数、资源池、生产者消费者</td></tr>
+<tr><td>临界区 CRITICAL_SECTION</td><td>用户态(争用时才入内核)</td><td class="nw">否,仅进程内</td><td class="nw">互斥,可递归</td><td>保护进程内共享数据(首选)</td></tr>
+<tr><td class="nw">互斥量 Mutex</td><td class="nw">内核对象</td><td class="nw">是(可命名)</td><td class="nw">互斥,有所有权</td><td>跨进程互斥、防多开</td></tr>
+<tr><td class="nw">事件 Event</td><td class="nw">内核对象</td><td class="nw">是</td><td>通知/等待某事发生</td><td>线程间"活干完了"的信号</td></tr>
+<tr><td class="nw">信号量 Semaphore</td><td class="nw">内核对象</td><td class="nw">是</td><td class="nw">计数,限量放行</td><td>限制并发数、资源池、生产者消费者</td></tr>
 </tbody>
 </table>
 <div class="note new"><span class="t">🔵 现代更新:标准库都有对应物</span><p>C++ 标准库把这些能力现代化了:互斥用 <code>std::mutex</code>/<code>std::timed_mutex</code>;"等某个条件成立"的通知用 <code>std::condition_variable</code>(比裸 Event 更安全,天然配合锁、还能防"虚假唤醒");计数限量用 C++20 的 <code>std::counting_semaphore</code>。</p><pre><code><span class="cl"><span class="cc" style="min-width:37.0ch"><span class="kw">std::counting_semaphore</span>&lt;5&gt; pool{5};</span><span class="cm">// 最多 5 个同时进</span></span><span class="cl"><span class="cc" style="min-width:37.0ch">pool.acquire();</span><span class="cm">// 拿一张票，没票就等</span></span><span class="cl">    <span class="cm">// …… 使用有限资源 ……</span></span><span class="cl"><span class="cc" style="min-width:37.0ch">pool.release();</span><span class="cm">// 还票</span></span></code></pre><p>唯一注意:标准库的这些主要作用于<strong>进程内</strong>。真需要跨进程同步(具名 Mutex/Event 那种),仍要落回 Win32 API 或用共享内存自己搭。</p></div>
@@ -4066,7 +4070,7 @@ awaitable&lt;<span class="kw">void</span>&gt; session(tcp::socket sock) {
 <tr><td>CRITICAL_SECTION + Enter/Leave</td><td><code>std::mutex</code> + <code>std::lock_guard</code>/<code>unique_lock</code></td></tr>
 <tr><td>一次拿多把锁靠人工约定顺序</td><td><code>std::scoped_lock</code>(免死锁地一起锁)</td></tr>
 <tr><td>Event + Set/ResetEvent 做通知</td><td><code>std::condition_variable</code>(配锁,防虚假唤醒)</td></tr>
-<tr><td>Semaphore 限量</td><td><code>std::counting_semaphore</code>(C++20)</td></tr>
+<tr><td class="nw">Semaphore 限量</td><td><code>std::counting_semaphore</code>(C++20)</td></tr>
 <tr><td>PostMessage 通知 UI 线程</td><td>框架的 dispatcher / invoke 回主线程(思想不变)</td></tr>
 </tbody>
 </table>
@@ -4091,10 +4095,10 @@ awaitable&lt;<span class="kw">void</span>&gt; session(tcp::socket sock) {
 <tr><th>原语</th><th>Win32 API / MFC 类</th><th>跨进程</th><th>开销</th><th>核心语义</th><th>最适合的场景</th><th>状态</th></tr>
 </thead>
 <tbody>
-<tr><td>临界区</td><td><code>CRITICAL_SECTION</code> 系列函数（MFC：<code>CCriticalSection</code>）</td><td>否</td><td>最小（用户态优先，抢不到才进内核）</td><td>互斥；同一线程可重复进入（递归）</td><td>进程内保护短小的共享数据段，<strong>默认首选</strong></td><td></td></tr>
-<tr><td>互斥量</td><td><code>CreateMutex</code> / <code>ReleaseMutex</code>（MFC：<code>CMutex</code>）</td><td>是（可命名）</td><td>内核对象，慢一档</td><td>互斥；有"所有权"概念，持有线程崩溃会产生"被遗弃"状态可被检测</td><td>跨进程互斥、程序单实例检测</td><td></td></tr>
-<tr><td>事件</td><td><code>CreateEvent</code> / <code>SetEvent</code>（MFC：<code>CEvent</code>）</td><td>是</td><td>内核对象</td><td>通知："某件事发生了没有"，无所有权；分手动/自动重置两种</td><td>线程间打信号：数据备好了、该退出了</td><td></td></tr>
-<tr><td>信号量</td><td><code>CreateSemaphore</code> / <code>ReleaseSemaphore</code>（MFC：<code>CSemaphore</code>）</td><td>是</td><td>内核对象</td><td>带计数的门禁：最多允许 N 个线程同时通过</td><td>限流：连接池、下载并发数上限</td><td></td></tr>
+<tr><td class="nw">临界区</td><td><code>CRITICAL_SECTION</code> 系列函数（MFC：<code>CCriticalSection</code>）</td><td class="nw">否</td><td>最小（用户态优先，抢不到才进内核）</td><td>互斥；同一线程可重复进入（递归）</td><td>进程内保护短小的共享数据段，<strong>默认首选</strong></td><td class="nw"></td></tr>
+<tr><td class="nw">互斥量</td><td><code>CreateMutex</code> / <code>ReleaseMutex</code>（MFC：<code>CMutex</code>）</td><td class="nw">是（可命名）</td><td>内核对象，慢一档</td><td>互斥；有"所有权"概念，持有线程崩溃会产生"被遗弃"状态可被检测</td><td>跨进程互斥、程序单实例检测</td><td class="nw"></td></tr>
+<tr><td class="nw">事件</td><td><code>CreateEvent</code> / <code>SetEvent</code>（MFC：<code>CEvent</code>）</td><td class="nw">是</td><td class="nw">内核对象</td><td>通知："某件事发生了没有"，无所有权；分手动/自动重置两种</td><td>线程间打信号：数据备好了、该退出了</td><td class="nw"></td></tr>
+<tr><td class="nw">信号量</td><td><code>CreateSemaphore</code> / <code>ReleaseSemaphore</code>（MFC：<code>CSemaphore</code>）</td><td class="nw">是</td><td class="nw">内核对象</td><td>带计数的门禁：最多允许 N 个线程同时通过</td><td>限流：连接池、下载并发数上限</td><td class="nw"></td></tr>
 </tbody>
 </table>
 
@@ -4121,8 +4125,8 @@ awaitable&lt;<span class="kw">void</span>&gt; session(tcp::socket sock) {
 <table>
 <thead><tr><th>条件</th><th>含义</th><th>破坏它的办法</th></tr></thead>
 <tbody>
-<tr><td>① 持有并等待</td><td>每个线程都已经攥着一把对方需要的锁不放，同时又伸手去要下一把</td><td>要么一次性把所需的锁全拿到，要么拿不到第二把时把第一把也放掉重试</td></tr>
-<tr><td>② 循环等待</td><td>"你等我、我等你"，等待关系连成了一个环</td><td><strong>全项目统一加锁顺序</strong>——顺序一致，环就画不成</td></tr>
+<tr><td class="nw">① 持有并等待</td><td>每个线程都已经攥着一把对方需要的锁不放，同时又伸手去要下一把</td><td>要么一次性把所需的锁全拿到，要么拿不到第二把时把第一把也放掉重试</td></tr>
+<tr><td class="nw">② 循环等待</td><td>"你等我、我等你"，等待关系连成了一个环</td><td><strong>全项目统一加锁顺序</strong>——顺序一致，环就画不成</td></tr>
 </tbody>
 </table>
 
@@ -4177,9 +4181,9 @@ WSAAsyncSelect(m_hListen, m_hWnd, 0, 0);</code></pre>
 <table>
 <thead><tr><th>规则</th><th>内容</th></tr></thead>
 <tbody>
-<tr><td>整体覆盖</td><td>同一套接字上后一次调用<strong>整体替换</strong>前一次的事件集合，想加订阅必须把旧事件一起写上</td></tr>
-<tr><td>自动非阻塞</td><td>调用后套接字变为非阻塞——此后 <code>recv</code>/<code>send</code> 可能返回 <code>WSAEWOULDBLOCK</code>，这不是错误，是"现在不行，等通知"</td></tr>
-<tr><td>通知重新武装</td><td>以 <code>FD_READ</code> 为例：收到通知后调用一次 <code>recv</code>，若缓冲里还有剩余数据，系统会<strong>再补发一条</strong> <code>FD_READ</code>。所以每条通知只需处理一次，不必循环收干</td></tr>
+<tr><td class="nw">整体覆盖</td><td>同一套接字上后一次调用<strong>整体替换</strong>前一次的事件集合，想加订阅必须把旧事件一起写上</td></tr>
+<tr><td class="nw">自动非阻塞</td><td>调用后套接字变为非阻塞——此后 <code>recv</code>/<code>send</code> 可能返回 <code>WSAEWOULDBLOCK</code>，这不是错误，是"现在不行，等通知"</td></tr>
+<tr><td class="nw">通知重新武装</td><td>以 <code>FD_READ</code> 为例：收到通知后调用一次 <code>recv</code>，若缓冲里还有剩余数据，系统会<strong>再补发一条</strong> <code>FD_READ</code>。所以每条通知只需处理一次，不必循环收干</td></tr>
 </tbody>
 </table>
 
@@ -4234,10 +4238,10 @@ WSAAsyncSelect(m_hListen, m_hWnd, 0, 0);</code></pre>
 <table>
 <thead><tr><th>方案</th><th>线程模型</th><th>要不要锁</th><th>撑得住的连接数</th><th>GUI 集成难度</th><th>一句话点评</th></tr></thead>
 <tbody>
-<tr><td><code>WSAAsyncSelect</code> 消息式异步</td><td>单线程（UI）</td><td>不需要</td><td>几十</td><td>零成本，天生就是消息</td><td>小工具与教学经典；事件过队列，吞吐平庸</td></tr>
-<tr><td>阻塞 + 每连接一线程</td><td>N 个工作线程</td><td>需要</td><td>数百</td><td>需 <code>PostMessage</code> 桥接回 UI</td><td>逻辑直观；线程与锁的成本随连接数线性上涨</td></tr>
-<tr><td><code>WSAEventSelect</code> + 等待函数</td><td>少量工作线程</td><td>需要</td><td>每线程 ≤ 64 个事件对象</td><td>需桥接</td><td>没有窗口的服务程序里替代 <code>WSAAsyncSelect</code> 的折中</td></tr>
-<tr><td>IOCP 完成端口</td><td>小线程池</td><td>需要</td><td>数万以上</td><td>需桥接</td><td>Windows 高并发的正解（16.8 节）</td></tr>
+<tr><td><code>WSAAsyncSelect</code> 消息式异步</td><td class="nw">单线程（UI）</td><td class="nw">不需要</td><td class="nw">几十</td><td>零成本，天生就是消息</td><td>小工具与教学经典；事件过队列，吞吐平庸</td></tr>
+<tr><td>阻塞 + 每连接一线程</td><td class="nw">N 个工作线程</td><td class="nw">需要</td><td class="nw">数百</td><td>需 <code>PostMessage</code> 桥接回 UI</td><td>逻辑直观；线程与锁的成本随连接数线性上涨</td></tr>
+<tr><td><code>WSAEventSelect</code> + 等待函数</td><td class="nw">少量工作线程</td><td class="nw">需要</td><td>每线程 ≤ 64 个事件对象</td><td class="nw">需桥接</td><td>没有窗口的服务程序里替代 <code>WSAAsyncSelect</code> 的折中</td></tr>
+<tr><td class="nw">IOCP 完成端口</td><td class="nw">小线程池</td><td class="nw">需要</td><td class="nw">数万以上</td><td class="nw">需桥接</td><td>Windows 高并发的正解（16.8 节）</td></tr>
 </tbody>
 </table>
 
@@ -4297,13 +4301,13 @@ LRESULT CChatDlg::OnNetData(WPARAM, LPARAM lParam)
 <table>
 <thead><tr><th>知识点</th><th>一句话版本</th></tr></thead>
 <tbody>
-<tr><td>四原语分工</td><td>临界区管进程内互斥（最快），互斥量管跨进程互斥，事件管"通知"，信号量管"限流"</td></tr>
-<tr><td>死锁两条件</td><td>持有并等待 + 循环等待；工程解药是全项目统一加锁顺序（或 <code>std::scoped_lock</code>）</td></tr>
-<tr><td>阻塞之祸</td><td>UI 线程 = 消息泵；泵停转 = 界面死；阻塞 I/O 绝不进 UI 线程</td></tr>
-<tr><td><code>WSAAsyncSelect</code></td><td>把 FD_ACCEPT/FD_READ/FD_WRITE/FD_CLOSE 变成自定义窗口消息；调用后套接字自动非阻塞；后一次登记整体覆盖前一次</td></tr>
-<tr><td>解包两只宏</td><td><code>wParam</code> 是套接字；<code>lParam</code> 用 <code>WSAGETSELECTEVENT</code>/<code>WSAGETSELECTERROR</code> 拆事件与错误，<strong>先验错再办事</strong></td></tr>
+<tr><td class="nw">四原语分工</td><td>临界区管进程内互斥（最快），互斥量管跨进程互斥，事件管"通知"，信号量管"限流"</td></tr>
+<tr><td class="nw">死锁两条件</td><td>持有并等待 + 循环等待；工程解药是全项目统一加锁顺序（或 <code>std::scoped_lock</code>）</td></tr>
+<tr><td class="nw">阻塞之祸</td><td>UI 线程 = 消息泵；泵停转 = 界面死；阻塞 I/O 绝不进 UI 线程</td></tr>
+<tr><td class="nw"><code>WSAAsyncSelect</code></td><td>把 FD_ACCEPT/FD_READ/FD_WRITE/FD_CLOSE 变成自定义窗口消息；调用后套接字自动非阻塞；后一次登记整体覆盖前一次</td></tr>
+<tr><td class="nw">解包两只宏</td><td><code>wParam</code> 是套接字；<code>lParam</code> 用 <code>WSAGETSELECTEVENT</code>/<code>WSAGETSELECTERROR</code> 拆事件与错误，<strong>先验错再办事</strong></td></tr>
 <tr><td>单线程事件循环红利</td><td>网络事件与界面事件同队列串行，共享数据不需要锁</td></tr>
-<tr><td>现代路线</td><td>高并发 IOCP、跨平台 asio、GUI 集成用"线程 + PostMessage"黄金模式</td></tr>
+<tr><td class="nw">现代路线</td><td>高并发 IOCP、跨平台 asio、GUI 集成用"线程 + PostMessage"黄金模式</td></tr>
 </tbody>
 </table>
 
@@ -4349,10 +4353,10 @@ LRESULT CChatDlg::OnNetData(WPARAM, LPARAM lParam)
 <table>
 <thead><tr><th>维度</th><th>可选项</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td>方向</td><td>单向入 / 单向出 / 双工</td><td>可配成真正的双向通道，一根搞定收发</td></tr>
-<tr><td>传输模式</td><td>字节流 / 消息式</td><td>消息式下，一次写就是一条完整消息，读方不会把两条消息粘在一起（天然免去「粘包」处理）</td></tr>
-<tr><td>范围</td><td>本机 / 跨网络</td><td>换个机器名就能跨机器，底层走 SMB 协议，代码几乎不用改</td></tr>
-<tr><td>并发</td><td>多实例</td><td>同名管道可开多个实例，服务端同时应付多个客户端</td></tr>
+<tr><td class="nw">方向</td><td>单向入 / 单向出 / 双工</td><td>可配成真正的双向通道，一根搞定收发</td></tr>
+<tr><td class="nw">传输模式</td><td class="nw">字节流 / 消息式</td><td>消息式下，一次写就是一条完整消息，读方不会把两条消息粘在一起（天然免去「粘包」处理）</td></tr>
+<tr><td class="nw">范围</td><td class="nw">本机 / 跨网络</td><td>换个机器名就能跨机器，底层走 SMB 协议，代码几乎不用改</td></tr>
+<tr><td class="nw">并发</td><td class="nw">多实例</td><td>同名管道可开多个实例，服务端同时应付多个客户端</td></tr>
 </tbody>
 </table>
 <pre><code><span class="cl"><span class="cm">// 服务端：造管道、等连接、收发</span></span><span class="cl">HANDLE hPipe = CreateNamedPipe(</span><span class="cl">    <span class="kw">TEXT</span>("\\\\.\\pipe\\MyService"),</span><span class="cl"><span class="cc" style="min-width:46.0ch">    PIPE_ACCESS_DUPLEX,</span><span class="cm">// 双工</span></span><span class="cl">    PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,</span><span class="cl">    PIPE_UNLIMITED_INSTANCES, 512, 512, 0, NULL);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:46.0ch">ConnectNamedPipe(hPipe, NULL);</span><span class="cm">// 阻塞等一个客户端接入</span></span><span class="cl"><span class="kw">char</span> buf[512]; DWORD n;</span><span class="cl"><span class="cc" style="min-width:46.0ch">ReadFile(hPipe, buf, <span class="kw">sizeof</span>(buf), &amp;n, NULL);</span><span class="cm">// 收一条消息</span></span><span class="cl"><span class="cc" style="min-width:46.0ch">WriteFile(hPipe, "ack", 3, &amp;n, NULL);</span><span class="cm">// 回一句</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 客户端：像打开文件一样连上去</span></span><span class="cl">HANDLE h = CreateFile(<span class="kw">TEXT</span>("\\\\.\\pipe\\MyService"),</span><span class="cl">    GENERIC_READ | GENERIC_WRITE, 0, NULL,</span><span class="cl">    OPEN_EXISTING, 0, NULL);</span><span class="cl">WriteFile(h, "hello", 5, &amp;n, NULL);</span></code></pre>
@@ -4382,10 +4386,10 @@ LRESULT CChatDlg::OnNetData(WPARAM, LPARAM lParam)
 <table>
 <thead><tr><th>同步对象</th><th>能跨进程吗</th><th>典型用途</th></tr></thead>
 <tbody>
-<tr><td>命名互斥体 Mutex</td><td>能</td><td>保证同一时刻只有一个进程在改共享内存</td></tr>
-<tr><td>命名信号量 Semaphore</td><td>能</td><td>控制同时访问的进程数、实现生产者-消费者</td></tr>
-<tr><td>命名事件 Event</td><td>能</td><td>A 写完后「敲一下」通知 B「可以读了」</td></tr>
-<tr><td>临界区 CriticalSection</td><td>不能（仅进程内）</td><td>只在单进程多线程内用，跨进程无效</td></tr>
+<tr><td class="nw">命名互斥体 Mutex</td><td class="nw">能</td><td>保证同一时刻只有一个进程在改共享内存</td></tr>
+<tr><td>命名信号量 Semaphore</td><td class="nw">能</td><td>控制同时访问的进程数、实现生产者-消费者</td></tr>
+<tr><td class="nw">命名事件 Event</td><td class="nw">能</td><td>A 写完后「敲一下」通知 B「可以读了」</td></tr>
+<tr><td>临界区 CriticalSection</td><td class="nw">不能（仅进程内）</td><td>只在单进程多线程内用，跨进程无效</td></tr>
 </tbody>
 </table>
 <pre><code><span class="cl"><span class="cm">// 用命名互斥体保护共享内存的写入</span></span><span class="cl">HANDLE hMutex = CreateMutex(NULL, FALSE, <span class="kw">TEXT</span>("Global\\MyLock"));</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:40.0ch">WaitForSingleObject(hMutex, INFINITE);</span><span class="cm">// 拿锁（拿不到就等）</span></span><span class="cl"><span class="cm">// --- 临界区：安全地读写共享内存 ---</span></span><span class="cl">strcpy((<span class="kw">char</span>*)pShared, "safe update");</span><span class="cl"><span class="cm">// --- 临界区结束 ---</span></span><span class="cl"><span class="cc" style="min-width:40.0ch">ReleaseMutex(hMutex);</span><span class="cm">// 放锁，让别人进</span></span></code></pre>
@@ -4397,12 +4401,12 @@ LRESULT CChatDlg::OnNetData(WPARAM, LPARAM lParam)
 <table>
 <thead><tr><th>机制</th><th>方向</th><th>范围</th><th>连接性</th><th>大数据性能</th><th>可靠性</th><th>典型场景</th></tr></thead>
 <tbody>
-<tr><td>剪贴板</td><td>一次性快照</td><td>本机全局单例</td><td>无连接</td><td>一般</td><td>可靠</td><td>用户复制粘贴</td></tr>
-<tr><td>匿名管道</td><td>单向</td><td>本机</td><td>需亲缘（父子）</td><td>一般</td><td>可靠、有序</td><td>捕获子进程输出</td></tr>
-<tr><td>命名管道</td><td>可双工</td><td>本机 / 跨机</td><td>面向连接</td><td>较好</td><td>可靠、有序</td><td>本机服务/客户端</td></tr>
-<tr><td>邮槽</td><td>单向</td><td>本机 / 广播</td><td>无连接</td><td>差（有大小限）</td><td>不可靠（可能丢）</td><td>局域网广播通知</td></tr>
-<tr><td>共享内存</td><td>双向（共读写）</td><td>本机</td><td>无连接</td><td>极快（零拷贝）</td><td>取决于你的同步</td><td>大数据高频共享</td></tr>
-<tr><td>Socket</td><td>双工</td><td>本机 / 跨机 / 跨平台</td><td>面向连接/无连接</td><td>较好</td><td>TCP 可靠 / UDP 不可靠</td><td>网络通信、微服务</td></tr>
+<tr><td class="nw">剪贴板</td><td class="nw">一次性快照</td><td class="nw">本机全局单例</td><td class="nw">无连接</td><td class="nw">一般</td><td class="nw">可靠</td><td class="nw">用户复制粘贴</td></tr>
+<tr><td class="nw">匿名管道</td><td class="nw">单向</td><td class="nw">本机</td><td class="nw">需亲缘（父子）</td><td class="nw">一般</td><td>可靠、有序</td><td class="nw">捕获子进程输出</td></tr>
+<tr><td class="nw">命名管道</td><td class="nw">可双工</td><td class="nw">本机 / 跨机</td><td class="nw">面向连接</td><td class="nw">较好</td><td>可靠、有序</td><td class="nw">本机服务/客户端</td></tr>
+<tr><td class="nw">邮槽</td><td class="nw">单向</td><td class="nw">本机 / 广播</td><td class="nw">无连接</td><td class="nw">差（有大小限）</td><td class="nw">不可靠（可能丢）</td><td class="nw">局域网广播通知</td></tr>
+<tr><td class="nw">共享内存</td><td class="nw">双向（共读写）</td><td class="nw">本机</td><td class="nw">无连接</td><td class="nw">极快（零拷贝）</td><td class="nw">取决于你的同步</td><td class="nw">大数据高频共享</td></tr>
+<tr><td class="nw">Socket</td><td class="nw">双工</td><td>本机 / 跨机 / 跨平台</td><td class="nw">面向连接/无连接</td><td class="nw">较好</td><td>TCP 可靠 / UDP 不可靠</td><td>网络通信、微服务</td></tr>
 </tbody>
 </table>
 <p>把选型压缩成几条决策直觉，你带走这几句就够：</p>
@@ -4422,9 +4426,9 @@ LRESULT CChatDlg::OnNetData(WPARAM, LPARAM lParam)
 <tbody>
 <tr><td>匿名管道捕获子进程输出</td><td>各语言的 subprocess/child_process 库（Python <code>subprocess</code>、Node <code>child_process</code>、Rust <code>std::process</code>），底层仍是管道</td></tr>
 <tr><td>命名管道做本机 IPC</td><td>被 <code>NamedPipeStream</code> 之类封装；跨机器则普遍改用 <strong>gRPC</strong> 或 HTTP，享受接口定义、序列化、双向流一条龙</td></tr>
-<tr><td>共享内存传大数据</td><td>Python <code>multiprocessing.shared_memory</code>、Apache Arrow、CUDA IPC 等，把零拷贝共享封装成高层对象</td></tr>
-<tr><td>邮槽做广播/发现</td><td>UDP 组播、mDNS/DNS-SD 做服务发现；解耦通知用<strong>消息队列</strong>（Kafka、RabbitMQ、Redis Stream）</td></tr>
-<tr><td>剪贴板</td><td>依旧是剪贴板，但只服务用户交互；程序间数据交换早已不走它</td></tr>
+<tr><td class="nw">共享内存传大数据</td><td>Python <code>multiprocessing.shared_memory</code>、Apache Arrow、CUDA IPC 等，把零拷贝共享封装成高层对象</td></tr>
+<tr><td class="nw">邮槽做广播/发现</td><td>UDP 组播、mDNS/DNS-SD 做服务发现；解耦通知用<strong>消息队列</strong>（Kafka、RabbitMQ、Redis Stream）</td></tr>
+<tr><td class="nw">剪贴板</td><td>依旧是剪贴板，但只服务用户交互；程序间数据交换早已不走它</td></tr>
 <tr><td>（本章没有的）通用做法</td><td><strong>localhost 上的 TCP/HTTP socket</strong>——很多现代桌面应用干脆让前后台各起一个本地端口用 HTTP 通信，简单、跨平台、天然可调试</td></tr>
 </tbody>
 </table>
@@ -4510,9 +4514,9 @@ LRESULT CChatDlg::OnNetData(WPARAM, LPARAM lParam)
 <table>
 <thead><tr><th>形态</th><th>组件住在哪</th><th>怎么跨过边界</th></tr></thead>
 <tbody>
-<tr><td>进程内(In-Proc)</td><td>你进程里的一个 DLL</td><td>直接函数调用,最快</td></tr>
+<tr><td class="nw">进程内(In-Proc)</td><td>你进程里的一个 DLL</td><td>直接函数调用,最快</td></tr>
 <tr><td>进程外(Local Server)</td><td>本机另一个 EXE 进程</td><td>系统做「打包-传送-拆包」(封送/marshaling)</td></tr>
-<tr><td>跨机器(DCOM)</td><td><span class="badge old">已过时</span> 网络上另一台电脑</td><td>通过网络 RPC 远程调用</td></tr>
+<tr><td class="nw">跨机器(DCOM)</td><td><span class="badge old">已过时</span> 网络上另一台电脑</td><td>通过网络 RPC 远程调用</td></tr>
 </tbody>
 </table>
 
@@ -4537,9 +4541,9 @@ LRESULT CChatDlg::OnNetData(WPARAM, LPARAM lParam)
 <table>
 <thead><tr><th>机制</th><th>方向</th><th>作用</th><th>生活类比</th></tr></thead>
 <tbody>
-<tr><td>属性 Property</td><td>容器 → 控件(读/写)</td><td>控件的状态,如颜色、当前值、是否可用</td><td>电视的音量、频道设定</td></tr>
-<tr><td>方法 Method</td><td>容器 → 控件(命令)</td><td>让控件干一件事,如「刷新」「播放」</td><td>按遥控器上的「播放」键</td></tr>
-<tr><td>事件 Event</td><td>控件 → 容器(通知)</td><td>控件反过来告诉容器「出事了」,如被点击</td><td>门铃响了,通知屋里的人</td></tr>
+<tr><td class="nw">属性 Property</td><td>容器 → 控件(读/写)</td><td>控件的状态,如颜色、当前值、是否可用</td><td>电视的音量、频道设定</td></tr>
+<tr><td class="nw">方法 Method</td><td>容器 → 控件(命令)</td><td>让控件干一件事,如「刷新」「播放」</td><td>按遥控器上的「播放」键</td></tr>
+<tr><td class="nw">事件 Event</td><td>控件 → 容器(通知)</td><td>控件反过来告诉容器「出事了」,如被点击</td><td>门铃响了,通知屋里的人</td></tr>
 </tbody>
 </table>
 
@@ -4603,11 +4607,11 @@ UnhookWindowsHookEx(g_hook);</code></pre>
 <table>
 <thead><tr><th></th><th>局部钩子</th><th>传统全局钩子</th></tr></thead>
 <tbody>
-<tr><td>监视范围</td><td>指定的一个线程</td><td>系统所有线程</td></tr>
-<tr><td>回调放在哪</td><td>EXE 里即可</td><td>必须放进 DLL</td></tr>
-<tr><td>代码运行在</td><td>自己进程</td><td>被注入到目标进程</td></tr>
-<tr><td>典型用途</td><td>过滤自家窗口输入</td><td>全局热键、取词、监控</td></tr>
-<tr><td>风险</td><td>较低</td><td>高(动了别人进程)</td></tr>
+<tr><td class="nw">监视范围</td><td class="nw">指定的一个线程</td><td class="nw">系统所有线程</td></tr>
+<tr><td class="nw">回调放在哪</td><td class="nw">EXE 里即可</td><td class="nw">必须放进 DLL</td></tr>
+<tr><td class="nw">代码运行在</td><td class="nw">自己进程</td><td class="nw">被注入到目标进程</td></tr>
+<tr><td class="nw">典型用途</td><td class="nw">过滤自家窗口输入</td><td>全局热键、取词、监控</td></tr>
+<tr><td class="nw">风险</td><td class="nw">较低</td><td class="nw">高(动了别人进程)</td></tr>
 </tbody>
 </table>
 
@@ -4658,12 +4662,12 @@ UnhookWindowsHookEx(g_hook);</code></pre>
 <table>
 <thead><tr><th>维度</th><th>静态库 .lib</th><th>动态库 .dll</th></tr></thead>
 <tbody>
-<tr><td>代码何时并入</td><td>链接期，拷进 .exe</td><td>运行期，加载进内存</td></tr>
-<tr><td>可执行文件体积</td><td>大（含库代码）</td><td>小（只含欠条）</td></tr>
-<tr><td>多进程共享</td><td>各自一份，不共享</td><td>物理内存可共享一份</td></tr>
-<tr><td>升级库</td><td>必须重新编译发布 .exe</td><td>换掉 .dll 即可</td></tr>
-<tr><td>发布依赖</td><td>无额外文件</td><td>必须随附 .dll</td></tr>
-<tr><td>缺库后果</td><td>不可能缺（已内嵌）</td><td>找不到 DLL 直接启动失败</td></tr>
+<tr><td class="nw">代码何时并入</td><td>链接期，拷进 .exe</td><td>运行期，加载进内存</td></tr>
+<tr><td class="nw">可执行文件体积</td><td class="nw">大（含库代码）</td><td class="nw">小（只含欠条）</td></tr>
+<tr><td class="nw">多进程共享</td><td>各自一份，不共享</td><td>物理内存可共享一份</td></tr>
+<tr><td class="nw">升级库</td><td>必须重新编译发布 .exe</td><td class="nw">换掉 .dll 即可</td></tr>
+<tr><td class="nw">发布依赖</td><td class="nw">无额外文件</td><td class="nw">必须随附 .dll</td></tr>
+<tr><td class="nw">缺库后果</td><td>不可能缺（已内嵌）</td><td>找不到 DLL 直接启动失败</td></tr>
 </tbody>
 </table>
 <p><strong>设计动机：</strong>没有绝对的好坏，只有取舍。要"发布一个文件、拷到哪都能跑"，静态库省心；要"多个程序共用、库能单独升级、可以做插件式扩展"，动态库才办得到。这一章讲的一切机制，本质都是在为动态库这条路铺路。</p>
@@ -4736,12 +4740,12 @@ EXPORTS
 <table>
 <thead><tr><th></th><th>隐式链接</th><th>显式链接</th></tr></thead>
 <tbody>
-<tr><td>加载时机</td><td>进程启动时，自动</td><td>代码执行到 LoadLibrary 时，手动</td></tr>
-<tr><td>需要导入库 .lib</td><td>需要</td><td>不需要</td></tr>
-<tr><td>编译期是否要知道 DLL</td><td>要</td><td>不要（可运行期决定）</td></tr>
-<tr><td>调用写法</td><td>像本地函数</td><td>经函数指针</td></tr>
-<tr><td>缺 DLL 的后果</td><td>进程起不来</td><td>LoadLibrary 返回空，可优雅降级</td></tr>
-<tr><td>典型场景</td><td>固定依赖的系统/自家库</td><td>插件、可选功能、按需加载</td></tr>
+<tr><td class="nw">加载时机</td><td>进程启动时，自动</td><td>代码执行到 LoadLibrary 时，手动</td></tr>
+<tr><td class="nw">需要导入库 .lib</td><td class="nw">需要</td><td class="nw">不需要</td></tr>
+<tr><td>编译期是否要知道 DLL</td><td class="nw">要</td><td>不要（可运行期决定）</td></tr>
+<tr><td class="nw">调用写法</td><td class="nw">像本地函数</td><td class="nw">经函数指针</td></tr>
+<tr><td class="nw">缺 DLL 的后果</td><td class="nw">进程起不来</td><td>LoadLibrary 返回空，可优雅降级</td></tr>
+<tr><td class="nw">典型场景</td><td>固定依赖的系统/自家库</td><td>插件、可选功能、按需加载</td></tr>
 </tbody>
 </table>
 <p><strong>通俗比方：</strong>隐式链接是<strong>包月固定合作商</strong>，签了约（编译期）就一直供货。显式链接是<strong>临时叫外卖</strong>——想吃的时候现搜商家（LoadLibrary）、现问有没有这道菜（GetProcAddress），没有就换一家，程序不至于饿死。插件化的自由，全靠这份"运行期现找"的能力。</p>
@@ -4792,11 +4796,11 @@ EXPORTS
 <table>
 <thead><tr><th>概念</th><th>Windows</th><th>Linux</th><th>macOS</th></tr></thead>
 <tbody>
-<tr><td>动态库文件</td><td>.dll</td><td>.so（shared object）</td><td>.dylib</td></tr>
-<tr><td>显式加载</td><td>LoadLibrary</td><td>dlopen</td><td>dlopen</td></tr>
-<tr><td>按名取函数</td><td>GetProcAddress</td><td>dlsym</td><td>dlsym</td></tr>
-<tr><td>释放</td><td>FreeLibrary</td><td>dlclose</td><td>dlclose</td></tr>
-<tr><td>控制导出</td><td>dllexport / .DEF</td><td>visibility 属性</td><td>visibility 属性</td></tr>
+<tr><td class="nw">动态库文件</td><td class="nw">.dll</td><td>.so（shared object）</td><td class="nw">.dylib</td></tr>
+<tr><td class="nw">显式加载</td><td class="nw">LoadLibrary</td><td class="nw">dlopen</td><td class="nw">dlopen</td></tr>
+<tr><td class="nw">按名取函数</td><td class="nw">GetProcAddress</td><td class="nw">dlsym</td><td class="nw">dlsym</td></tr>
+<tr><td class="nw">释放</td><td class="nw">FreeLibrary</td><td class="nw">dlclose</td><td class="nw">dlclose</td></tr>
+<tr><td class="nw">控制导出</td><td class="nw">dllexport / .DEF</td><td class="nw">visibility 属性</td><td class="nw">visibility 属性</td></tr>
 </tbody>
 </table>
 <pre><code><span class="cl"><span class="cm">// Linux/macOS 上的显式链接，和 Windows 三步走一一对应</span></span><span class="cl"><span class="cc" style="min-width:57.0ch"><span class="kw">void</span>* h = dlopen("libmath.so", RTLD_NOW);</span><span class="cm">// 对应 LoadLibrary</span></span><span class="cl"><span class="cc" style="min-width:57.0ch"><span class="kw">int</span> (*add)(<span class="kw">int</span>,<span class="kw">int</span>) = (<span class="kw">int</span>(*)(<span class="kw">int</span>,<span class="kw">int</span>))dlsym(h, "add");</span><span class="cm">// 对应 GetProcAddress</span></span><span class="cl"><span class="kw">int</span> r = add(3, 4);</span><span class="cl"><span class="cc" style="min-width:57.0ch">dlclose(h);</span><span class="cm">// 对应 FreeLibrary</span></span></code></pre>
@@ -4820,9 +4824,9 @@ EXPORTS
 <table>
 <thead><tr><th>id（主键）</th><th>name</th><th>city</th><th>points</th></tr></thead>
 <tbody>
-<tr><td>1</td><td>张三</td><td>杭州</td><td>620</td></tr>
-<tr><td>2</td><td>李四</td><td>上海</td><td>140</td></tr>
-<tr><td>3</td><td>王五</td><td>杭州</td><td>880</td></tr>
+<tr><td class="nw">1</td><td class="nw">张三</td><td class="nw">杭州</td><td class="nw">620</td></tr>
+<tr><td class="nw">2</td><td class="nw">李四</td><td class="nw">上海</td><td class="nw">140</td></tr>
+<tr><td class="nw">3</td><td class="nw">王五</td><td class="nw">杭州</td><td class="nw">880</td></tr>
 </tbody>
 </table>
 <p>这里有两个关键概念。<b>主键（primary key）</b>是每行的唯一身份证，比如 <code>id</code>，不能重复也不能为空——它保证你永远能精确定位「就是那一行」。<b>外键（foreign key）</b>是一张表里指向另一张表主键的列，比如「订单」表里有个 <code>member_id</code> 指向会员表的 <code>id</code>，这样订单和会员就「关联」起来了，「关系型」这个名字就来自这种表与表之间的关系。</p>
@@ -4834,10 +4838,10 @@ EXPORTS
 <table>
 <thead><tr><th>动作</th><th>SQL 关键字</th><th>干什么</th></tr></thead>
 <tbody>
-<tr><td>查（Read）</td><td><code>SELECT</code></td><td>按条件取出符合的行</td></tr>
-<tr><td>增（Create）</td><td><code>INSERT</code></td><td>往表里加一行新记录</td></tr>
-<tr><td>改（Update）</td><td><code>UPDATE</code></td><td>修改已有行的某些字段</td></tr>
-<tr><td>删（Delete）</td><td><code>DELETE</code></td><td>删掉符合条件的行</td></tr>
+<tr><td class="nw">查（Read）</td><td class="nw"><code>SELECT</code></td><td>按条件取出符合的行</td></tr>
+<tr><td class="nw">增（Create）</td><td class="nw"><code>INSERT</code></td><td>往表里加一行新记录</td></tr>
+<tr><td class="nw">改（Update）</td><td class="nw"><code>UPDATE</code></td><td>修改已有行的某些字段</td></tr>
+<tr><td class="nw">删（Delete）</td><td class="nw"><code>DELETE</code></td><td class="nw">删掉符合条件的行</td></tr>
 </tbody>
 </table>
 <p>另外还有一类<b>数据定义语言（DDL）</b>：<code>CREATE TABLE</code> 建表、<code>ALTER TABLE</code> 改结构、<code>DROP TABLE</code> 删表。设计动机很清楚：把「数据怎么存、怎么查」这件事标准化成一门小语言，这样同一套 SQL 思路能套在 SQL Server、Oracle、MySQL 上，不用为每家数据库重学一遍逻辑。</p>
@@ -4888,10 +4892,10 @@ SQL Server 驱动 / Oracle 驱动 / Access 驱动 ...
 <table>
 <thead><tr><th>字母</th><th>含义</th><th>白话</th></tr></thead>
 <tbody>
-<tr><td>A</td><td>原子性 Atomicity</td><td>打包的操作是一个整体，不可能只做一半</td></tr>
-<tr><td>C</td><td>一致性 Consistency</td><td>事务前后数据都满足规则（总金额不变）</td></tr>
-<tr><td>I</td><td>隔离性 Isolation</td><td>并发的事务之间互不干扰，像排队一个个来</td></tr>
-<tr><td>D</td><td>持久性 Durability</td><td>一旦提交，就算立刻断电也不会丢</td></tr>
+<tr><td class="nw">A</td><td class="nw">原子性 Atomicity</td><td>打包的操作是一个整体，不可能只做一半</td></tr>
+<tr><td class="nw">C</td><td>一致性 Consistency</td><td>事务前后数据都满足规则（总金额不变）</td></tr>
+<tr><td class="nw">I</td><td class="nw">隔离性 Isolation</td><td>并发的事务之间互不干扰，像排队一个个来</td></tr>
+<tr><td class="nw">D</td><td>持久性 Durability</td><td>一旦提交，就算立刻断电也不会丢</td></tr>
 </tbody>
 </table>
 <p>在 MFC 里，CDatabase 把事务包成三个方法：<code>BeginTrans</code> 开始、<code>CommitTrans</code> 提交（让改动一起生效）、<code>Rollback</code> 回滚（把已做的改动全撤销）。标准写法是配合异常处理：正常走到底就提交，中途出错就回滚。</p>
@@ -4905,9 +4909,9 @@ SQL Server 驱动 / Oracle 驱动 / Access 驱动 ...
 <table>
 <thead><tr><th>对象</th><th>角色</th><th>类比</th></tr></thead>
 <tbody>
-<tr><td><code>Connection</code></td><td>一条到数据库的连接</td><td>电话线路</td></tr>
-<tr><td><code>Command</code></td><td>一条要执行的命令（SQL 或存储过程）</td><td>你要说的话</td></tr>
-<tr><td><code>Recordset</code></td><td>查询返回的结果集 + 游标</td><td>对方的回话</td></tr>
+<tr><td class="nw"><code>Connection</code></td><td>一条到数据库的连接</td><td class="nw">电话线路</td></tr>
+<tr><td class="nw"><code>Command</code></td><td>一条要执行的命令（SQL 或存储过程）</td><td class="nw">你要说的话</td></tr>
+<tr><td class="nw"><code>Recordset</code></td><td>查询返回的结果集 + 游标</td><td class="nw">对方的回话</td></tr>
 </tbody>
 </table>
 <p>因为 ADO 是 COM 组件，在 VC 里用它有两个「仪式」你绕不开。第一，用 <code>#import</code> 指令把 ADO 的类型库（一个 DLL）导进来，编译器会自动生成一堆智能指针包装类（名字带 <code>Ptr</code> 后缀，如 <code>_ConnectionPtr</code>）帮你管 COM 对象的引用计数。第二，用之前必须调 <code>CoInitialize</code> 初始化 COM 库，用完 <code>CoUninitialize</code>。</p>
@@ -4923,8 +4927,8 @@ SQL Server 驱动 / Oracle 驱动 / Access 驱动 ...
 <table>
 <thead><tr><th>写法风格</th><th>典型键</th><th>用在哪</th></tr></thead>
 <tbody>
-<tr><td>OLE DB（ADO）</td><td><code>Provider=...;Data Source=...</code></td><td>ADO / OLE DB</td></tr>
-<tr><td>ODBC</td><td><code>DSN=...</code> 或 <code>Driver={...};Server=...</code></td><td>ODBC / CDatabase</td></tr>
+<tr><td class="nw">OLE DB（ADO）</td><td><code>Provider=...;Data Source=...</code></td><td class="nw">ADO / OLE DB</td></tr>
+<tr><td class="nw">ODBC</td><td><code>DSN=...</code> 或 <code>Driver={...};Server=...</code></td><td class="nw">ODBC / CDatabase</td></tr>
 </tbody>
 </table>
 <p>身份验证那部分也值得多看一眼。要么用 <code>Integrated Security=SSPI</code>（借 Windows 登录身份，安全、不用存密码），要么显式写 <code>User ID=sa;Password=xxx</code>。而正是这后一种把明文密码写进连接串的做法，引出了下一节现代批注里非常重要的安全议题。</p>
@@ -4959,13 +4963,13 @@ session.commit()          <span class="cm">// 框架自动翻译成 UPDATE，并
 <table>
 <thead><tr><th>本章的老做法</th><th>现代替代（2026）</th></tr></thead>
 <tbody>
-<tr><td>ODBC + 手动 DSN</td><td>各语言原生驱动 / 连接串放进密钥管理</td></tr>
+<tr><td class="nw">ODBC + 手动 DSN</td><td>各语言原生驱动 / 连接串放进密钥管理</td></tr>
 <tr><td>MFC CDatabase / CRecordset</td><td>ORM（SQLAlchemy、EF Core、Prisma、GORM…）</td></tr>
 <tr><td>ADO（COM）/ OLE DB</td><td>语言原生数据层 + 连接池</td></tr>
 <tr><td>独立数据库服务器起步</td><td>单机场景直接用 SQLite（零部署）</td></tr>
-<tr><td>字符串拼接 SQL</td><td>参数化查询 / prepared statement（防注入）</td></tr>
-<tr><td>每次 Open/Close 连接</td><td>连接池复用连接</td></tr>
-<tr><td>只有关系型一条路</td><td>按需选型：关系型 + NoSQL（Redis、MongoDB）+ 列存等</td></tr>
+<tr><td class="nw">字符串拼接 SQL</td><td>参数化查询 / prepared statement（防注入）</td></tr>
+<tr><td>每次 Open/Close 连接</td><td class="nw">连接池复用连接</td></tr>
+<tr><td class="nw">只有关系型一条路</td><td>按需选型：关系型 + NoSQL（Redis、MongoDB）+ 列存等</td></tr>
 </tbody>
 </table></div>
 <div class="note ok"><span class="t">🟢 这一章真正带得走的三样东西</span><p>忘掉 CRecordset 的 API 细节没关系，但请把这三样刻进脑子：<b>(1) 关系模型 + SQL</b> 的思维方式；<b>(2) 事务 / ACID</b> 保证多步操作的原子性；<b>(3) 参数化查询</b> 是数据安全的底线。这三样从 VC6 时代一直有效到 2026，也会继续有效下去——它们是数据库这门学问真正的地基，而 ODBC 和 ADO 只是那个年代通往地基的一段脚手架。</p></div>
