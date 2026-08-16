@@ -4584,126 +4584,101 @@ IDC_HAND    CURSOR  "hand.cur"</code></pre>
 <p>把这段脚本和它跑起来的样子并排放在一起看，每一行写的是什么就一目了然了：</p>
 
 <figure data-mark="fig-menu-rc-vs-ui">
-<svg viewBox="0 0 720 336" xmlns="http://www.w3.org/2000/svg" font-size="11">
-<defs>
-<marker id="w10menu-a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#1971c2"/></marker>
-<marker id="w10menu-a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#0ca678"/></marker>
-<marker id="w10menu-a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#e8590c"/></marker>
-<marker id="w10menu-a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#7048e8"/></marker>
-<marker id="w10menu-a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#e03131"/></marker>
-</defs>
+<svg viewBox="0 0 960 550" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="菜单资源脚本与实际菜单的逐项精确对照">
+<text class="svgmuted" x="40" y="26" font-size="12.5" font-weight="600">app.rc 里的菜单资源：声明「有什么、叫什么」</text>
+<text class="svgmuted" x="610" y="26" font-size="12.5" font-weight="600">运行后窗口顶部的实际菜单</text>
 
-<text class="svgtext" x="14" y="18" font-size="11.5" font-weight="600">app.rc 里的菜单资源：声明「有什么、叫什么」</text>
-<text class="svgtext" x="406" y="18" font-size="11.5" font-weight="600">运行后窗口顶部的实际菜单</text>
-
-<rect x="14" y="26" width="294" height="210" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
-<rect x="18" y="59" width="286" height="15" fill="#1971c2" opacity=".12"/>
-<rect x="18" y="87" width="286" height="15" fill="#0ca678" opacity=".14"/>
-<rect x="18" y="115" width="286" height="15" fill="#e8590c" opacity=".14"/>
-
-<g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10" class="svgtext">
-<text x="22" y="42">IDR_MAINMENU MENU</text>
-<text x="22" y="56">BEGIN</text>
-<text x="46" y="70">POPUP "文件(&amp;F)"</text>
-<text x="46" y="84">BEGIN</text>
-<text x="70" y="98">MENUITEM "打开(&amp;O)\tCtrl+O", IDM_OPEN</text>
-<text x="70" y="112">MENUITEM "保存(&amp;S)\tCtrl+S", IDM_SAVE</text>
-<text x="70" y="126">MENUITEM SEPARATOR</text>
-<text x="70" y="140">MENUITEM "退出(&amp;X)", IDM_EXIT</text>
-<text x="46" y="154">END</text>
-<text x="46" y="168">POPUP "帮助(&amp;H)"</text>
-<text x="46" y="182">BEGIN</text>
-<text x="70" y="196">MENUITEM "关于...", IDM_ABOUT</text>
-<text x="46" y="210">END</text>
-<text x="22" y="224">END</text>
+<!-- 左：脚本清单 -->
+<rect x="40" y="44" width="400" height="354" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="48" y="104" width="384" height="20" rx="3" fill="#1971c2" opacity=".14"/>
+<rect x="48" y="152" width="384" height="20" rx="3" fill="#0ca678" opacity=".14"/>
+<rect x="48" y="176" width="384" height="20" rx="3" fill="#1098ad" opacity=".14"/>
+<rect x="48" y="200" width="384" height="20" rx="3" fill="#e8590c" opacity=".16"/>
+<rect x="48" y="224" width="384" height="20" rx="3" fill="#e03131" opacity=".13"/>
+<rect x="48" y="272" width="384" height="20" rx="3" fill="#7048e8" opacity=".13"/>
+<g font-family="Consolas,monospace" font-size="13">
+<text class="svgtext" x="56" y="70">IDR_MAINMENU MENU</text>
+<text class="svgtext" x="56" y="94">BEGIN</text>
+<text class="svgtext" x="72" y="118">POPUP "文件(&amp;F)"</text>
+<text class="svgtext" x="72" y="142">BEGIN</text>
+<text class="svgtext" x="88" y="166">MENUITEM "打开(&amp;O)\tCtrl+O", IDM_OPEN</text>
+<text class="svgtext" x="88" y="190">MENUITEM "保存(&amp;S)\tCtrl+S", IDM_SAVE</text>
+<text class="svgtext" x="88" y="214">MENUITEM SEPARATOR</text>
+<text class="svgtext" x="88" y="238">MENUITEM "退出(&amp;X)", IDM_EXIT</text>
+<text class="svgtext" x="72" y="262">END</text>
+<text class="svgtext" x="72" y="286">POPUP "帮助(&amp;H)"</text>
+<text class="svgtext" x="72" y="310">BEGIN</text>
+<text class="svgtext" x="88" y="334">MENUITEM "关于(&amp;A)...", IDM_ABOUT</text>
+<text class="svgtext" x="72" y="358">END</text>
+<text class="svgtext" x="56" y="382">END</text>
 </g>
 
-<path d="M308,70 H384 V59 H404" fill="none" stroke="#1971c2" stroke-width="1.3" marker-end="url(#w10menu-a1)"/>
-<path d="M308,98 H372 V83 H404" fill="none" stroke="#0ca678" stroke-width="1.3" marker-end="url(#w10menu-a2)"/>
-<path d="M308,126 H404" fill="none" stroke="#e8590c" stroke-width="1.3" marker-end="url(#w10menu-a3)"/>
-<text x="316" y="66" font-size="10" fill="#1971c2">顶层菜单项</text>
-<text x="316" y="94" font-size="10" fill="#0ca678">一条命令项</text>
-<text x="316" y="122" font-size="10" fill="#e8590c">分隔横线</text>
+<!-- 右：窗口实景 -->
+<rect x="610" y="60" width="330" height="300" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="610" y="60" width="330" height="24" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="620" y="77" font-size="12">我的程序</text>
+<text class="svgmuted" x="893" y="77" font-size="11">─ □ ×</text>
+<rect x="610" y="84" width="330" height="22" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="614" y="86" width="50" height="18" rx="3" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="1.4"/>
+<text class="svgtext" x="639" y="99" text-anchor="middle" font-size="12">文件(F)</text>
+<rect x="668" y="86" width="50" height="18" rx="3" fill="none" stroke="#7048e8" stroke-width="1.4"/>
+<text class="svgtext" x="693" y="99" text-anchor="middle" font-size="12">帮助(H)</text>
 
-<rect x="406" y="26" width="300" height="168" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
-<path d="M412,26 H700 A6,6 0 0 1 706,32 V48 H406 V32 A6,6 0 0 1 412,26 Z" fill="var(--svg-soft2)"/>
-<line x1="406" y1="48" x2="706" y2="48" stroke="var(--rule)"/>
-<text class="svgmuted" x="414" y="42" font-size="10.5">我的程序</text>
-<line x1="668" y1="42" x2="676" y2="42" stroke="var(--muted)"/>
-<rect x="682" y="37" width="8" height="8" fill="none" stroke="var(--muted)"/>
-<path d="M696,37 L704,45 M704,37 L696,45" stroke="var(--muted)" fill="none"/>
+<!-- 下拉菜单（挂在「文件」下） -->
+<rect x="616" y="110" width="170" height="86" fill="var(--rule)" opacity=".3"/>
+<rect x="612" y="106" width="170" height="86" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="613" y="107" width="3" height="22" fill="#0ca678"/>
+<text class="svgtext" x="624" y="122" font-size="12">打开(O)</text>
+<text class="svgmuted" x="774" y="122" text-anchor="end" font-size="11.5">Ctrl+O</text>
+<rect x="613" y="130" width="3" height="22" fill="#1098ad"/>
+<text class="svgtext" x="624" y="146" font-size="12">保存(S)</text>
+<text class="svgmuted" x="774" y="146" text-anchor="end" font-size="11.5">Ctrl+S</text>
+<line x1="618" y1="159" x2="776" y2="159" stroke="#e8590c" stroke-width="1.6"/>
+<rect x="613" y="164" width="3" height="22" fill="#e03131"/>
+<text class="svgtext" x="624" y="180" font-size="12">退出(X)</text>
+<text class="svgmuted" x="930" y="348" text-anchor="end" font-size="11">客户区</text>
+<text class="svgmuted" x="610" y="378" font-size="10.5">标题「我的程序」来自 CreateWindowExW 的窗口名参数</text>
 
-<rect x="406" y="48" width="300" height="22" fill="var(--svg-soft)"/>
-<line x1="406" y1="70" x2="706" y2="70" stroke="var(--rule)"/>
-<rect x="410" y="48" width="48" height="22" fill="#1971c2" opacity=".12"/>
-<rect x="410" y="48" width="48" height="22" fill="none" stroke="#1971c2"/>
-<text class="svgtext" x="415" y="63">文件(</text>
-<text class="svgtext" x="440" y="63">F</text>
-<text class="svgtext" x="447" y="63">)</text>
-<line x1="440" y1="66.5" x2="447" y2="66.5" stroke="#7048e8" stroke-width="1.4"/>
-<text class="svgtext" x="467" y="63">帮助(</text>
-<text class="svgtext" x="492" y="63">H</text>
-<text class="svgtext" x="500" y="63">)</text>
-<line x1="492" y1="66.5" x2="500" y2="66.5" stroke="#7048e8" stroke-width="1.4"/>
+<!-- 六条精确对应线 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="440,114 525,114 525,95 606,95" stroke="#1971c2"/>
+<polyline points="440,162 545,162 545,118 606,118" stroke="#0ca678"/>
+<polyline points="440,186 560,186 560,142 606,142" stroke="#1098ad"/>
+<polyline points="440,210 575,210 575,159 606,159" stroke="#e8590c"/>
+<polyline points="440,234 590,234 590,176 606,176" stroke="#e03131"/>
+<polyline points="46,282 26,282 26,32 693,32 693,80" stroke="#7048e8"/>
+</g>
+<g>
+<circle cx="441" cy="114" r="3" fill="#1971c2"/><path d="M606,95 l7,-3.5 v7 z" fill="#1971c2" transform="rotate(180 609.5 95)"/>
+<circle cx="441" cy="162" r="3" fill="#0ca678"/><path d="M613,118 l-7,-3.5 v7 z" fill="#0ca678"/>
+<circle cx="441" cy="186" r="3" fill="#1098ad"/><path d="M613,142 l-7,-3.5 v7 z" fill="#1098ad"/>
+<circle cx="441" cy="210" r="3" fill="#e8590c"/><path d="M613,159 l-7,-3.5 v7 z" fill="#e8590c"/>
+<circle cx="441" cy="234" r="3" fill="#e03131"/><path d="M613,176 l-7,-3.5 v7 z" fill="#e03131"/>
+<circle cx="46" cy="282" r="3" fill="#7048e8"/><path d="M693,86 l-3.5,-7 h7 z" fill="#7048e8"/>
+</g>
 
-<text class="svgmuted" x="650" y="182" font-size="10" text-anchor="middle">客户区</text>
+<!-- 底部三个语法说明框 -->
+<rect x="40" y="412" width="280" height="88" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="54" y="436" font-family="Consolas,monospace" font-size="12">&amp;F</text>
+<text class="svgmuted" x="76" y="436" font-size="12">→</text>
+<text class="svgtext" x="96" y="436" font-size="12">文件(F)</text>
+<text class="svgmuted" x="54" y="462" font-size="10.5">&amp; 后面那个字母 = 助记键</text>
+<text class="svgmuted" x="54" y="480" font-size="10.5">界面上显示为下划线（按 Alt 才可见）</text>
+<rect x="335" y="412" width="280" height="88" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="349" y="436" font-family="Consolas,monospace" font-size="12">\tCtrl+O</text>
+<text class="svgmuted" x="416" y="436" font-size="12">→</text>
+<text class="svgtext" x="436" y="436" font-size="12">打开(O)　Ctrl+O</text>
+<text class="svgmuted" x="349" y="462" font-size="10.5">\t 之后的文字靠右对齐显示</text>
+<text class="svgmuted" x="349" y="480" font-size="10.5">只是「显示」，生效仍靠 accelerator 表</text>
+<rect x="630" y="412" width="290" height="88" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="644" y="436" font-family="Consolas,monospace" font-size="12">IDM_OPEN</text>
+<text class="svgmuted" x="716" y="436" font-size="12">→</text>
+<text class="svgtext" x="736" y="436" font-family="Consolas,monospace" font-size="12">WM_COMMAND</text>
+<text class="svgmuted" x="828" y="436" font-size="12">→ 窗口过程</text>
+<text class="svgmuted" x="644" y="462" font-size="10.5">点击该项时，这个 ID 随消息回到代码</text>
+<text class="svgmuted" x="644" y="480" font-size="10.5">在 wParam 低 16 位，用 LOWORD 取出</text>
 
-<rect x="413" y="73" width="184" height="88" rx="3" fill="var(--rule)" opacity=".3"/>
-<rect x="410" y="70" width="184" height="88" rx="3" fill="var(--svg-fill)" stroke="var(--rule)"/>
-<rect x="413" y="72" width="178" height="22" fill="#0ca678" opacity=".10"/>
-<rect x="413" y="72" width="178" height="22" fill="none" stroke="#0ca678"/>
-<text class="svgtext" x="420" y="87">打开(</text>
-<text class="svgtext" x="445" y="87">O</text>
-<text class="svgtext" x="453" y="87">)</text>
-<line x1="445" y1="90.5" x2="453" y2="90.5" stroke="#7048e8" stroke-width="1.4"/>
-<text x="586" y="87" font-size="10" text-anchor="end" fill="#e03131">Ctrl+O</text>
-<text class="svgtext" x="420" y="111">保存(</text>
-<text class="svgtext" x="445" y="111">S</text>
-<text class="svgtext" x="452" y="111">)</text>
-<line x1="445" y1="114.5" x2="452" y2="114.5" stroke="#7048e8" stroke-width="1.4"/>
-<text x="586" y="111" font-size="10" text-anchor="end" fill="#e03131">Ctrl+S</text>
-<line x1="418" y1="126" x2="586" y2="126" stroke="#e8590c" stroke-width="1.6"/>
-<text class="svgtext" x="420" y="147">退出(</text>
-<text class="svgtext" x="445" y="147">X</text>
-<text class="svgtext" x="452" y="147">)</text>
-<line x1="445" y1="150.5" x2="452" y2="150.5" stroke="#7048e8" stroke-width="1.4"/>
-
-<text class="svgmuted" x="406" y="212" font-size="10">这棵菜单树由 LoadMenuW 从 .rc 读出，再挂到窗口上</text>
-<text class="svgmuted" x="406" y="226" font-size="10">「帮助(&amp;H)」是第二个 POPUP，此刻收起未展开</text>
-
-<line x1="14" y1="244" x2="706" y2="244" stroke="var(--rule)"/>
-
-<rect x="14" y="252" width="222" height="56" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
-<rect x="22" y="258" width="28" height="18" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)"/>
-<text x="27" y="271" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10" fill="#7048e8">&amp;F</text>
-<line x1="56" y1="267" x2="72" y2="267" stroke="#7048e8" stroke-width="1.3" marker-end="url(#w10menu-a4)"/>
-<text class="svgtext" x="80" y="271">文件(</text>
-<text class="svgtext" x="105" y="271">F</text>
-<text class="svgtext" x="112" y="271">)</text>
-<line x1="105" y1="274.5" x2="112" y2="274.5" stroke="#7048e8" stroke-width="1.4"/>
-<text class="svgmuted" x="22" y="291" font-size="10">&amp; 后面那个字母 = 助记键</text>
-<text class="svgmuted" x="22" y="303" font-size="10">界面上显示为下划线（按 Alt 才可见）</text>
-
-<rect x="249" y="252" width="222" height="56" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
-<rect x="257" y="258" width="54" height="18" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)"/>
-<text x="262" y="271" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10" fill="#e03131">\tCtrl+O</text>
-<line x1="315" y1="267" x2="331" y2="267" stroke="#e03131" stroke-width="1.3" marker-end="url(#w10menu-a5)"/>
-<rect x="337" y="258" width="126" height="18" rx="2" fill="var(--svg-fill)" stroke="var(--rule)"/>
-<text class="svgtext" x="343" y="271" font-size="10">打开(O)</text>
-<text x="457" y="271" font-size="10" text-anchor="end" fill="#e03131">Ctrl+O</text>
-<text class="svgmuted" x="257" y="291" font-size="10">\t 之后的文字靠右对齐显示</text>
-<text class="svgmuted" x="257" y="303" font-size="10">只是「显示」，生效仍靠 accelerator 表</text>
-
-<rect x="484" y="252" width="222" height="56" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
-<rect x="492" y="258" width="54" height="18" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)"/>
-<text x="497" y="271" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10" fill="#1971c2">IDM_OPEN</text>
-<line x1="550" y1="267" x2="566" y2="267" stroke="#1971c2" stroke-width="1.3" marker-end="url(#w10menu-a1)"/>
-<text x="572" y="271" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10" fill="#1971c2">WM_COMMAND</text>
-<text class="svgtext" x="634" y="271" font-size="10">→ 窗口过程</text>
-<text class="svgmuted" x="492" y="291" font-size="10">点击该项时，这个 ID 随消息回到代码</text>
-<text class="svgmuted" x="492" y="303" font-size="10">在 wParam 低 16 位，用 LOWORD 取出</text>
-
-<text class="svgmuted" x="360" y="326" font-size="10.5" text-anchor="middle">菜单的文字与结构写在资源里，处理逻辑写在代码里 —— 两边只靠命令 ID 对上号。</text>
+<text class="svgmuted" x="480" y="532" text-anchor="middle" font-size="12">菜单的文字与结构写在资源里，处理逻辑写在代码里 —— 两边只靠命令 ID 对上号。</text>
 </svg>
 <figcaption>图 10-3　菜单资源脚本与实际菜单外观的逐项对照（原创绘制）</figcaption>
 </figure>
