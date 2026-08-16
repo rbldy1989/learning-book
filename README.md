@@ -85,9 +85,12 @@ cd learning-book
 ```
 .
 ├── index.html                              # 书架首页
-├── Win32程序设计-现代详解.html               # 教材
+├── Win32程序设计-现代详解.html               # Windows 编程教材
 ├── 深入浅出MFC-详解与现代批注.html
 ├── VC深入详解-孙鑫-详解与现代批注.html
+├── CMD批处理-现代详解.html                   # 脚本与命令行
+├── PowerShell-现代详解.html
+├── Bash与命令行工具-现代详解.html
 ├── Windows-API手册.html                     # 速查手册
 └── C标准库API手册.html
 ```
