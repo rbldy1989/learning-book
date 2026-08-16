@@ -154,6 +154,8 @@ figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
 pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
 table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
 #sidebar,#toc{will-change:scroll-position;}
+table th, table td { white-space: normal; }
+table td:first-child, table th:first-child { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -2504,6 +2506,132 @@ SetThreadpoolTimer(timer, &amp;due, 1000, 0);</code></pre>
 
 <p>前面几章里，窗口上的每一个像素都是我们自己在 <code>WM_PAINT</code> 里画的，每一次鼠标点击都是我们自己解析坐标判断的。如果按钮、输入框、列表这些东西也要这样从零造，Windows 编程就没法干了。好消息是：<strong>系统早就替你把这些"零件"写好了</strong>。它们叫<strong>控件（Control）</strong>——本质上就是一批系统预先注册好窗口类、预先写好窗口过程的<strong>子窗口</strong>。你用 <code>CreateWindowExW</code> 把它们"生"在自己窗口里，它们就会自己绘制、自己响应键盘鼠标，只在"有事发生"时通知你。</p>
 <p>本章分三部分：先讲控件的统一工作模型（创建、通信、控制），再逐一过 user32 内置的六类基础控件，最后进入 ComCtl32 通用控件库——ListView、TreeView、工具栏、状态栏这些"像样的程序"离不开的东西，并以子类化与所有者绘制收尾。</p>
+
+
+<h3>三种定时器：谁在等、谁在跑</h3>
+<p>Win32 里能定时的东西不止 <code>SetTimer</code> 一个。选型时最容易纠结的是另外两个——<strong>等待定时器</strong>（Waitable Timer）和<strong>线程池定时器</strong>（Threadpool Timer）。它们常被混为一谈，但其实处在完全不同的层次：<strong>一个是内核对象，一个是调度服务。</strong></p>
+<figure data-mark="fig-timer-three">
+<svg viewBox="0 0 720 290" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<defs><marker id="tmr3-ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs>
+
+<text class="svgmuted" x="24" y="18" font-size="12.5" font-weight="600">① SetTimer —— 到点往你的消息队列里塞一条 WM_TIMER</text>
+<rect x="24" y="28" width="120" height="42" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text class="svgtext" x="84" y="54" text-anchor="middle" font-size="11.5">系统计时</text>
+<line x1="150" y1="49" x2="188" y2="49" stroke="var(--accent)" marker-end="url(#tmr3-ar)"/>
+<rect x="194" y="28" width="130" height="42" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="259" y="54" text-anchor="middle" font-size="11.5">消息队列</text>
+<line x1="330" y1="49" x2="368" y2="49" stroke="var(--accent)" marker-end="url(#tmr3-ar)"/>
+<rect x="374" y="28" width="150" height="42" rx="6" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
+<text class="svgtext" x="449" y="48" text-anchor="middle" font-size="11.5">你的 UI 线程</text>
+<text class="svgmuted" x="449" y="64" text-anchor="middle" font-size="10">在消息循环里取出并执行</text>
+<text class="svgmuted" x="540" y="45" font-size="11">可直接改界面</text>
+<text class="svgmuted" x="540" y="62" font-size="11">精度低（约 15ms）</text>
+
+<line x1="24" y1="86" x2="696" y2="86" stroke="var(--rule)"/>
+
+<text class="svgmuted" x="24" y="110" font-size="12.5" font-weight="600">② 等待定时器 —— 只发信号，你得自己派线程守着</text>
+<rect x="24" y="120" width="150" height="52" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text class="svgtext" x="99" y="142" text-anchor="middle" font-size="11.5">内核定时器对象</text>
+<text class="svgmuted" x="99" y="160" text-anchor="middle" font-size="10">到点变为「有信号」</text>
+<line x1="180" y1="146" x2="218" y2="146" stroke="var(--accent)" marker-end="url(#tmr3-ar)"/>
+<rect x="224" y="120" width="170" height="52" rx="6" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
+<text class="svgtext" x="309" y="142" text-anchor="middle" font-size="11.5">你自己的线程</text>
+<text class="svgmuted" x="309" y="160" text-anchor="middle" font-size="10">阻塞在 WaitForSingleObject</text>
+<text class="svgmuted" x="410" y="140" font-size="11">线程被唤醒 → 干活</text>
+<text x="410" y="158" font-size="11" fill="#e8590c">每个定时器都要有人守</text>
+
+<line x1="24" y1="188" x2="696" y2="188" stroke="var(--rule)"/>
+
+<text class="svgmuted" x="24" y="212" font-size="12.5" font-weight="600">③ 线程池定时器 —— 到点系统派人替你干，你连守的人都不用出</text>
+<rect x="24" y="222" width="150" height="52" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text class="svgtext" x="99" y="244" text-anchor="middle" font-size="11.5">线程池计时</text>
+<text class="svgmuted" x="99" y="262" text-anchor="middle" font-size="10">系统统一调度</text>
+<line x1="180" y1="248" x2="218" y2="248" stroke="var(--accent)" marker-end="url(#tmr3-ar)"/>
+<rect x="224" y="222" width="170" height="52" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="309" y="244" text-anchor="middle" font-size="11.5">池中某个线程</text>
+<text class="svgmuted" x="309" y="262" text-anchor="middle" font-size="10">系统临时挑一个来跑回调</text>
+<text class="svgmuted" x="410" y="242" font-size="11">你只提供回调函数</text>
+<text x="410" y="260" font-size="11" fill="#0ca678">上百个定时器也不多占线程</text>
+</svg>
+<figcaption>图 8-2　三种定时器：谁负责等、谁负责跑（原创绘制）</figcaption>
+</figure>
+
+<p>两段代码摆在一起，差别很直观：</p>
+<pre><code><span class="cm">// ② 等待定时器：内核对象只负责「到点亮灯」，等和干都是你的事</span>
+HANDLE hTimer = CreateWaitableTimerW(NULL, FALSE, NULL);
+LARGE_INTEGER due;
+due.QuadPart = -30000000LL;                  <span class="cm">// 负数=相对时间，单位 100ns → 3 秒后</span>
+SetWaitableTimer(hTimer, &amp;due, 1000, NULL, NULL, FALSE);  <span class="cm">// 之后每 1000ms 重复</span>
+
+<span class="kw">while</span> (running) {
+    WaitForSingleObject(hTimer, INFINITE);   <span class="cm">// ← 你的线程阻塞在这里</span>
+    DoWork();                                 <span class="cm">// ← 你的线程执行</span>
+}
+CloseHandle(hTimer);</code></pre>
+<pre><code><span class="cm">// ③ 线程池定时器：你只交回调，系统负责派人</span>
+<span class="kw">void</span> CALLBACK OnTimer(PTP_CALLBACK_INSTANCE, PVOID ctx, PTP_TIMER) {
+    DoWork();                                 <span class="cm">// ← 池里某个线程在跑</span>
+}
+
+PTP_TIMER t = CreateThreadpoolTimer(OnTimer, NULL, NULL);
+ULARGE_INTEGER u; u.QuadPart = (ULONGLONG)(-30000000LL);
+FILETIME due = { u.LowPart, u.HighPart };
+SetThreadpoolTimer(t, &amp;due, 1000, 0);        <span class="cm">// 3 秒后首发，之后每 1000ms</span>
+<span class="cm">// 没有等待循环，也不占用你的任何线程</span>
+CloseThreadpoolTimer(t);</code></pre>
+
+<table>
+<thead><tr><th></th><th><code>SetTimer</code></th><th>等待定时器</th><th>线程池定时器</th></tr></thead>
+<tbody>
+<tr><td><strong>本质</strong></td><td>消息队列里的一条消息</td><td>内核对象（信号源）</td><td>线程池的调度服务</td></tr>
+<tr><td><strong>谁执行代码</strong></td><td><strong>你的 UI 线程</strong></td><td><strong>你自己的线程</strong></td><td><strong>池里的线程</strong></td></tr>
+<tr><td><strong>要写等待循环吗</strong></td><td>不要（消息循环兼任）</td><td><strong>要</strong></td><td>不要</td></tr>
+<tr><td><strong>能直接改界面吗</strong></td><td><strong>能</strong></td><td>不能，需 PostMessage</td><td>不能，需 PostMessage</td></tr>
+<tr><td><strong>N 个定时器的代价</strong></td><td>很小</td><td>可能要 N 个线程<sup>※</sup></td><td><strong>不额外占线程</strong></td></tr>
+<tr><td><strong>能与其他事件一起等吗</strong></td><td>不能</td><td><strong>能</strong>（可塞进 WaitForMultipleObjects）</td><td>不能（它不是可等待对象）</td></tr>
+<tr><td><strong>能唤醒待机的电脑吗</strong></td><td>不能</td><td><strong>能</strong>（fResume 参数）</td><td>不能</td></tr>
+<tr><td><strong>可跨进程共享吗</strong></td><td>不能</td><td><strong>能</strong>（可命名）</td><td>不能</td></tr>
+<tr><td><strong>典型精度</strong></td><td>约 15ms，受队列拥堵影响</td><td>较高</td><td>较高</td></tr>
+</tbody>
+</table>
+<p><sup>※</sup> 可以用 <code>WaitForMultipleObjects</code> 让一个线程同时等多个，但上限是 64 个对象。</p>
+
+<div class="note ok">
+<span class="t">一句话区分</span>
+<p><strong>等待定时器给你一个「闹钟信号」，你得自己派人守着；线程池定时器是「到点我派人替你干活」，你连守的人都不用出。</strong>而 <code>SetTimer</code> 走的是第三条路——它把闹钟接到了你的消息队列上，所以回调天然在 UI 线程，改界面最省事，代价是精度受消息处理速度牵制。</p>
+</div>
+
+<h3>真要高精度怎么办</h3>
+<p>先说清一件事：<strong>Windows 不是实时操作系统</strong>。任何定时器都只保证「不早于」你要求的时刻触发，不保证「准时」——线程调度、系统负载、电源策略都会造成抖动。所谓「高精度」是相对而言的。</p>
+<table>
+<thead><tr><th>方案</th><th>典型精度</th><th>代价与说明</th></tr></thead>
+<tbody>
+<tr><td><code>SetTimer</code> / <code>WM_TIMER</code></td><td>约 15.6ms</td><td>受系统时钟节拍与队列拥堵双重限制，且 <code>WM_TIMER</code> 是低优先级消息</td></tr>
+<tr><td>等待定时器 / 线程池定时器</td><td>约 1~15ms</td><td>不走消息队列，明显好于 <code>SetTimer</code>，仍受调度节拍影响</td></tr>
+<tr><td><strong>高分辨率等待定时器</strong><br><code>CREATE_WAITABLE_TIMER_HIGH_RESOLUTION</code></td><td><strong>亚毫秒</strong></td><td><span class="badge new">现代提示</span> Win10 1803 起可用，<strong>今天高精度定时的首选</strong>：创建时加这个标志即可，无全局副作用</td></tr>
+<tr><td><code>timeBeginPeriod(1)</code> + 普通定时器</td><td>约 1ms</td><td><span class="badge old">已过时</span> 老办法：把<strong>全系统</strong>时钟节拍调快。副作用是增加整机功耗、影响其他进程，现代 Windows 也已限制其效果，不建议再用</td></tr>
+<tr><td>忙等 + <code>QueryPerformanceCounter</code></td><td>微秒级</td><td>精度最高但<strong>吃满一个 CPU 核</strong>，只适合极短的自旋等待，绝不能用于长间隔</td></tr>
+<tr><td>多媒体定时器 <code>timeSetEvent</code></td><td>约 1ms</td><td><span class="badge dead">禁用</span> 官方已标记为弃用，新代码不要再用，用高分辨率等待定时器替代</td></tr>
+</tbody>
+</table>
+<pre><code><span class="cm">// 现代高精度定时的正确姿势：创建时加 HIGH_RESOLUTION 标志</span>
+HANDLE hTimer = CreateWaitableTimerExW(
+    NULL, NULL,
+    CREATE_WAITABLE_TIMER_HIGH_RESOLUTION,   <span class="cm">// ← 关键：亚毫秒精度</span>
+    TIMER_ALL_ACCESS);
+
+LARGE_INTEGER due;
+due.QuadPart = -10000LL;                      <span class="cm">// 1ms 后（100ns 单位）</span>
+SetWaitableTimer(hTimer, &amp;due, 1, NULL, NULL, FALSE);</code></pre>
+
+<div class="note new">
+<span class="t">选型速记</span>
+<p><strong>做界面动画、刷新状态栏</strong> → <code>SetTimer</code>，回调就在 UI 线程，改界面零成本。<br>
+<strong>后台周期任务、几十上百个定时器</strong> → 线程池定时器，不为每个定时器烧线程。<br>
+<strong>要和 socket / 事件对象一起等，或要唤醒待机的电脑</strong> → 等待定时器。<br>
+<strong>音频、采样、需要亚毫秒</strong> → 高分辨率等待定时器（<code>CREATE_WAITABLE_TIMER_HIGH_RESOLUTION</code>）。<br>
+<strong>测量耗时而非定时</strong> → 那不是定时器的活，用 <code>QueryPerformanceCounter</code>。</p>
+</div>
 
 <h2 id="w9-model">9.1 控件就是预定义的子窗口</h2>
 
