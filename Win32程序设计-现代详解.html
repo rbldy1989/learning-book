@@ -1165,6 +1165,23 @@ SelectObject(hdc, hOldPen);
 SelectObject(hdc, hOldBrush);
 DeleteObject(hPen);
 DeleteObject(hBrush);</code></pre>
+<figure data-mark="fig-pen">
+<svg viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="18" font-size="12.5">画笔管「边」，画刷管「里」——同一个 Ellipse 调用，两者各画一半：</text>
+<ellipse cx="110" cy="105" rx="70" ry="46" fill="none" stroke="#e03131" stroke-width="3"/>
+<text class="svgmuted" x="110" y="172" text-anchor="middle" font-size="11.5">只有画笔（画刷为 NULL_BRUSH）</text>
+<ellipse cx="290" cy="105" rx="70" ry="46" fill="#ffd8a8" stroke="none"/>
+<text class="svgmuted" x="290" y="172" text-anchor="middle" font-size="11.5">只有画刷（画笔为 NULL_PEN）</text>
+<ellipse cx="470" cy="105" rx="70" ry="46" fill="#ffd8a8" stroke="#e03131" stroke-width="3"/>
+<text class="svgmuted" x="470" y="172" text-anchor="middle" font-size="11.5">两者都有（默认情形）</text>
+<text class="svgmuted" x="580" y="86" font-size="11.5">边线颜色、粗细、虚实</text>
+<text class="svgmuted" x="580" y="104" font-size="11.5">→ 由 <tspan font-weight="600">HPEN</tspan> 决定</text>
+<text class="svgmuted" x="580" y="130" font-size="11.5">内部填充色、图案</text>
+<text class="svgmuted" x="580" y="148" font-size="11.5">→ 由 <tspan font-weight="600">HBRUSH</tspan> 决定</text>
+</svg>
+<figcaption>图 4-1　画笔与画刷的分工（原创绘制）</figcaption>
+</figure>
+
 <p>不是每支笔每把刷都要你亲手造。系统备了一批<strong>库存对象（stock objects）</strong>，用 <code>GetStockObject</code> 直接取：<code>WHITE_BRUSH</code>、<code>BLACK_PEN</code>、<code>NULL_BRUSH</code>、<code>DKGRAY_BRUSH</code> 等等。库存对象由系统持有，<strong>你不必、也不该删它</strong>——这点省事又安全，能用库存就别自己造。</p>
 <div class="note new"><span class="t">🔵 现代便捷写法</span><p>只想临时换个纯色、不想为每种颜色造一把刷子？选入库存的 <code>DC_PEN</code> / <code>DC_BRUSH</code>，然后用 <code>SetDCPenColor</code> / <code>SetDCBrushColor</code> 直接改当前颜色。免去了“创建→选入→删除”的三步舞，画大量不同颜色的小图元时干净很多。</p></div>
 
@@ -1237,6 +1254,135 @@ DeleteObject(hBrush);</code></pre>
 <div class="note new"><span class="t">🔵 现代提示</span><p>C++ 里别再手写这套“选入-选回-删除”的样板。用 RAII 封装：构造时创建并选入、析构时选回并删除，让作用域替你保证释放。无论是提前 return 还是抛异常，资源都不会漏。这是把 GDI 生命周期 bug 一次性根治的最省心办法。</p></div>
 
 <h2 id="w4-modern">GDI 老了：什么时候该换 GDI+ 或 Direct2D</h2>
+<p>在讨论「什么时候该换」之前，先把差距摆出来看一眼。下面这张图左边是 GDI 能做到的，右边是 GDI+ / Direct2D 带来的三样东西——<strong>抗锯齿、渐变、半透明</strong>。它们不是锦上添花的小特性，而是现代界面几乎所有视觉效果的地基。</p>
+<figure>
+<svg id="gdi-vs-modern" viewBox="0 0 720 470" xmlns="http://www.w3.org/2000/svg" font-size="12.5">
+<defs>
+  <linearGradient id="gf-lg" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#e03131"/><stop offset="100%" stop-color="#1971c2"/>
+  </linearGradient>
+  <pattern id="gf-ck" width="14" height="14" patternUnits="userSpaceOnUse">
+    <rect width="14" height="14" fill="#ffffff"/>
+    <rect width="7" height="7" fill="#dcdcdc"/><rect x="7" y="7" width="7" height="7" fill="#dcdcdc"/>
+  </pattern>
+</defs>
+
+<text class="svgtext" x="180" y="22" text-anchor="middle" font-weight="700" font-size="14">GDI（1985）</text>
+<text class="svgtext" x="540" y="22" text-anchor="middle" font-weight="700" font-size="14">GDI+ / Direct2D</text>
+<line x1="360" y1="34" x2="360" y2="446" stroke="var(--rule)" stroke-dasharray="4 4"/>
+
+<!-- ① 抗锯齿 -->
+<text class="svgmuted" x="24" y="58" font-size="13" font-weight="600">① 抗锯齿（Anti-aliasing）</text>
+<g>
+  <rect x="24" y="70" width="14" height="14" fill="#1971c2"/><rect x="38" y="84" width="14" height="14" fill="#1971c2"/>
+  <rect x="52" y="98" width="14" height="14" fill="#1971c2"/><rect x="66" y="112" width="14" height="14" fill="#1971c2"/>
+  <rect x="80" y="126" width="14" height="14" fill="#1971c2"/><rect x="94" y="140" width="14" height="14" fill="#1971c2"/>
+</g>
+<circle cx="230" cy="112" r="42" fill="none" stroke="#1971c2" stroke-width="3" stroke-dasharray="3 2.4" opacity=".85"/>
+<text class="svgmuted" x="180" y="172" text-anchor="middle" font-size="11.5">斜线与圆弧呈阶梯状「毛边」</text>
+
+<line x1="400" y1="70" x2="500" y2="154" stroke="#1971c2" stroke-width="5" stroke-linecap="round"/>
+<circle cx="600" cy="112" r="42" fill="none" stroke="#1971c2" stroke-width="3"/>
+<text class="svgmuted" x="540" y="172" text-anchor="middle" font-size="11.5">边缘平滑，与真实曲线一致</text>
+
+<line x1="24" y1="192" x2="696" y2="192" stroke="var(--rule)"/>
+
+<!-- ② 渐变 -->
+<text class="svgmuted" x="24" y="216" font-size="13" font-weight="600">② 渐变（Gradient）</text>
+<rect x="24" y="228" width="150" height="56" rx="4" fill="#1971c2"/>
+<rect x="186" y="228" width="150" height="56" rx="4" fill="#e03131"/>
+<text class="svgmuted" x="180" y="302" text-anchor="middle" font-size="11.5">只能一块一块地填纯色</text>
+
+<rect x="400" y="228" width="272" height="56" rx="4" fill="url(#gf-lg)"/>
+<text class="svgmuted" x="536" y="302" text-anchor="middle" font-size="11.5">一次调用完成平滑过渡，无色带</text>
+
+<line x1="24" y1="322" x2="696" y2="322" stroke="var(--rule)"/>
+
+<!-- ③ 半透明 -->
+<text class="svgmuted" x="24" y="346" font-size="13" font-weight="600">③ 半透明（Alpha 通道）</text>
+<rect x="24" y="358" width="200" height="86" fill="url(#gf-ck)" stroke="var(--rule)"/>
+<circle cx="96" cy="401" r="32" fill="#e03131"/>
+<circle cx="152" cy="401" r="32" fill="#1971c2"/>
+<text class="svgmuted" x="180" y="462" text-anchor="middle" font-size="11.5">后画的把先画的完全盖死</text>
+
+<rect x="400" y="358" width="200" height="86" fill="url(#gf-ck)" stroke="var(--rule)"/>
+<circle cx="472" cy="401" r="32" fill="#e03131" fill-opacity="0.62"/>
+<circle cx="528" cy="401" r="32" fill="#1971c2" fill-opacity="0.62"/>
+<text class="svgmuted" x="540" y="462" text-anchor="middle" font-size="11.5">透出下层，重叠处混出新色</text>
+</svg>
+<figcaption>图 4-2　GDI 与现代绘图 API 的三处关键差距（原创绘制）</figcaption>
+</figure>
+<p>三者在代码上的差别同样悬殊。GDI 的颜色只有 <code>RGB(r,g,b)</code> 三个分量，<strong>压根没有表达「半透明」的位置</strong>；想要渐变，得自己逐像素做颜色插值；抗锯齿则根本无从谈起——它画的每个像素非黑即白，没有中间状态。</p>
+<pre><code><span class="cm">// GDI —— 只能纯色、只能盖死、只有锯齿</span>
+HBRUSH b = CreateSolidBrush(RGB(25, 113, 194));
+
+<span class="cm">// GDI+ —— 渐变画刷</span>
+LinearGradientBrush lg(Point(0,0), Point(200,0),
+                       Color(255, 224, 49, 49),     <span class="cm">// 起点：不透明的红</span>
+                       Color(255,  25,113,194));    <span class="cm">// 终点：不透明的蓝</span>
+
+<span class="cm">// GDI+ —— 半透明画刷（第一个分量就是 alpha）</span>
+SolidBrush semi(Color(165, 25, 113, 194));          <span class="cm">// 约 65% 不透明</span>
+
+<span class="cm">// GDI+ —— 抗锯齿只需一行开关</span>
+Graphics g(hdc);
+g.SetSmoothingMode(SmoothingModeAntiAlias);</code></pre>
+<p>话说回来，把 GDI 说得一无是处也不公平。它诞生于 1985 年，用极小的开销覆盖了当年——以及今天仍然大量存在的——绝大多数「把信息画到屏幕上」的需求。下面这些正是它的主场：</p>
+<figure>
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="20" font-size="13" font-weight="600">GDI 干得又快又好的事</text>
+
+<!-- 表格/网格 -->
+<rect x="24" y="34" width="150" height="104" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<line x1="24" y1="58" x2="174" y2="58" stroke="var(--rule)"/>
+<line x1="24" y1="82" x2="174" y2="82" stroke="var(--rule)"/>
+<line x1="24" y1="106" x2="174" y2="106" stroke="var(--rule)"/>
+<line x1="74" y1="34" x2="74" y2="138" stroke="var(--rule)"/>
+<line x1="124" y1="34" x2="124" y2="138" stroke="var(--rule)"/>
+<rect x="24" y="34" width="150" height="24" fill="var(--svg-soft)"/>
+<text class="svgtext" x="99" y="51" text-anchor="middle" font-size="11">数据表格</text>
+<text class="svgmuted" x="99" y="156" text-anchor="middle" font-size="11.5">表格、网格、报表</text>
+
+<!-- 折线图 -->
+<rect x="200" y="34" width="150" height="104" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<polyline points="212,124 240,96 266,108 292,66 318,80 340,48" fill="none" stroke="#1971c2" stroke-width="2"/>
+<line x1="212" y1="130" x2="340" y2="130" stroke="var(--muted)"/>
+<line x1="212" y1="44" x2="212" y2="130" stroke="var(--muted)"/>
+<text class="svgmuted" x="275" y="156" text-anchor="middle" font-size="11.5">曲线、示波器、波形</text>
+
+<!-- 工程绘图 -->
+<rect x="376" y="34" width="150" height="104" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="398" y="56" width="46" height="34" fill="none" stroke="#1971c2" stroke-width="1.6"/>
+<rect x="458" y="96" width="46" height="30" fill="none" stroke="#1971c2" stroke-width="1.6"/>
+<line x1="444" y1="73" x2="481" y2="73" stroke="#1971c2" stroke-width="1.6"/>
+<line x1="481" y1="73" x2="481" y2="96" stroke="#1971c2" stroke-width="1.6"/>
+<circle cx="481" cy="73" r="2.6" fill="#1971c2"/>
+<text class="svgmuted" x="451" y="156" text-anchor="middle" font-size="11.5">流程图、原理图、CAD</text>
+
+<!-- 文本渲染 -->
+<rect x="552" y="34" width="144" height="104" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<line x1="566" y1="52" x2="682" y2="52" stroke="var(--muted)" stroke-width="2.4" opacity=".55"/>
+<line x1="566" y1="68" x2="660" y2="68" stroke="var(--muted)" stroke-width="2.4" opacity=".4"/>
+<line x1="566" y1="84" x2="682" y2="84" stroke="var(--muted)" stroke-width="2.4" opacity=".4"/>
+<line x1="566" y1="100" x2="640" y2="100" stroke="var(--muted)" stroke-width="2.4" opacity=".4"/>
+<line x1="566" y1="116" x2="670" y2="116" stroke="var(--muted)" stroke-width="2.4" opacity=".4"/>
+<text class="svgmuted" x="624" y="156" text-anchor="middle" font-size="11.5">大段文本排版</text>
+
+<text class="svgmuted" x="24" y="196" font-size="12.5">共同点：以<tspan font-weight="600">直线、矩形、文字</tspan>为主，颜色分明、不需要柔和过渡——正好落在 GDI 的能力圈内，</text>
+<text class="svgmuted" x="24" y="216" font-size="12.5">而且由于是<tspan font-weight="600">纯 CPU 整数运算</tspan>，在这类场景下它往往比 GDI+ 更快、比硬件加速方案更省资源。</text>
+
+<rect x="24" y="238" width="672" height="46" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="40" y="258" font-size="12.5" font-weight="600">一句话定位：</text>
+<text class="svgmuted" x="40" y="276" font-size="12">GDI 擅长「把信息说清楚」，不擅长「把界面做好看」。工业软件、仪器面板、报表工具至今仍在用它，正是因为前者才是刚需。</text>
+</svg>
+<figcaption>图 4-3　GDI 至今仍然称职的典型场景（原创绘制）</figcaption>
+</figure>
+
+<div class="note new">
+<span class="t">为什么这三样是「地基」</span>
+<p>今天你在任何现代界面上看到的效果——按钮的<strong>圆角与投影</strong>、鼠标悬停时的<strong>渐亮</strong>、弹窗背后的<strong>遮罩</strong>、亚克力/云母材质的<strong>毛玻璃</strong>、乃至清晰的<strong>文字边缘</strong>——无一不是建立在抗锯齿、渐变、alpha 混合之上。GDI 三样都不具备，这正是纯 GDI 绘制的界面「一眼就是上世纪」的根本原因，与配色、字体的选择关系不大。</p>
+</div>
+
 <p>把上面这些学扎实，你已经能用 GDI 画出正确、清晰、跨设备一致的二维图形，它今天仍然被海量经典 Win32 程序和控件使用，学它绝不白费。<span class="badge ok">仍适用</span> 但也要清楚它的天花板在哪，别拿它硬扛现代视觉需求。<span class="badge old">已过时</span></p>
 <p>GDI 的三条硬伤：</p>
 <ul>
@@ -1274,6 +1420,36 @@ DeleteObject(hBrush);</code></pre>
     <span class="kw">const</span> wchar_t *text = L"你好，Win32！Hello, world.";
     TextOutW(hdc, 20, 20, text, lstrlenW(text));
 }</code></pre>
+<figure data-mark="fig-lines">
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="18" font-size="12.5">上面这段代码画出来是这样——每行落在哪个 y，全由字体度量算出：</text>
+<rect x="24" y="34" width="330" height="180" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgmuted" x="34" y="30" font-size="10.5">rc.top</text>
+<line x1="24" y1="34" x2="354" y2="34" stroke="#e03131" stroke-dasharray="3 3"/>
+<text class="svgtext" x="44" y="60" font-size="13">第一行文字</text>
+<line x1="24" y1="72" x2="354" y2="72" stroke="var(--rule)" stroke-dasharray="2 3"/>
+<text class="svgtext" x="44" y="98" font-size="13">第二行文字</text>
+<line x1="24" y1="110" x2="354" y2="110" stroke="var(--rule)" stroke-dasharray="2 3"/>
+<text class="svgtext" x="44" y="136" font-size="13">第三行文字</text>
+<line x1="24" y1="148" x2="354" y2="148" stroke="var(--rule)" stroke-dasharray="2 3"/>
+<text class="svgmuted" x="44" y="174" font-size="13" opacity=".45">第四行（超出即 break）</text>
+<line x1="24" y1="214" x2="354" y2="214" stroke="#e03131" stroke-dasharray="3 3"/>
+<text class="svgmuted" x="34" y="230" font-size="10.5">rc.bottom</text>
+<line x1="374" y1="34" x2="374" y2="72" stroke="#1971c2" stroke-width="1.6"/>
+<line x1="368" y1="34" x2="380" y2="34" stroke="#1971c2" stroke-width="1.6"/>
+<line x1="368" y1="72" x2="380" y2="72" stroke="#1971c2" stroke-width="1.6"/>
+<text class="svgtext" x="390" y="48" font-size="12" fill="#1971c2">lineH</text>
+<text class="svgmuted" x="390" y="66" font-size="11">= tmHeight + tmExternalLeading</text>
+<text class="svgmuted" x="390" y="100" font-size="11.5">tmHeight：字形本身的高度</text>
+<text class="svgmuted" x="390" y="120" font-size="11.5">tmExternalLeading：行与行之间</text>
+<text class="svgmuted" x="390" y="138" font-size="11.5">　　　　　　　　　建议留的空隙</text>
+<text class="svgmuted" x="390" y="172" font-size="11.5">两者相加才是「下一行该往下移多少」，</text>
+<text class="svgmuted" x="390" y="190" font-size="11.5">写死 20、24 这类魔法数字，换个字体</text>
+<text class="svgmuted" x="390" y="208" font-size="11.5">或换台高 DPI 机器就会挤在一起或散开。</text>
+</svg>
+<figcaption>图 5-1　行高不是拍脑袋定的：它来自 TEXTMETRIC（原创绘制）</figcaption>
+</figure>
+
 <p>注意几件事。第一，函数名带 <code>W</code>，参数是宽字符 <code>L"..."</code>——这是现代 Win32 的默认选择，直接走 Unicode（UTF-16），中英文混排、emoji 都不用操心代码页。带 <code>A</code> 的 ANSI 版本 <span class="badge old">已过时</span> 仍能编译，但会引入代码页依赖，新代码一律用 <code>W</code>。第二，最后一个参数是<strong>字符个数</strong>，不是字节数，这里用 <code>lstrlenW</code> 取长度。第三，坐标 (20, 20) 默认是这行文字外框的<strong>左上角</strong>——但这个"参考点"是可以改的，后面讲 <code>SetTextAlign</code> 时你会看到它能变成基线或右对齐点。</p>
 <p><code>TextOutW</code> 够用，但有个上位替代 <code>ExtTextOutW</code>（Ext = extended），它多了两样常用能力：<strong>一个裁剪/背景矩形</strong>，和<strong>一个逐字符间距数组</strong>。</p>
 <pre><code>RECT box = { 20, 60, 220, 84 };
@@ -3422,6 +3598,41 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
     EndPaint(hwnd, &amp;ps);
     <span class="kw">return</span> 0;
 }</code></pre>
+<figure data-mark="fig-buf">
+<svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="18" font-size="12.5">为什么直接画屏幕会闪：用户会看见「画到一半」的中间状态。</text>
+<text class="svgmuted" x="24" y="42" font-size="12.5" font-weight="600">直接画屏幕（会闪烁）</text>
+<rect x="24" y="52" width="120" height="76" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgmuted" x="84" y="96" text-anchor="middle" font-size="11">① 擦成白底</text>
+<text class="svgmuted" x="84" y="144" text-anchor="middle" font-size="10.5">用户看到：一片空白</text>
+<rect x="164" y="52" width="120" height="76" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="204" cy="90" r="14" fill="#1971c2" opacity=".8"/>
+<text class="svgmuted" x="224" y="144" text-anchor="middle" font-size="10.5">画了一半</text>
+<rect x="304" y="52" width="120" height="76" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="344" cy="90" r="14" fill="#1971c2" opacity=".8"/>
+<circle cx="384" cy="90" r="14" fill="#e03131" opacity=".8"/>
+<text class="svgmuted" x="364" y="144" text-anchor="middle" font-size="10.5">画完</text>
+<text class="svgmuted" x="450" y="96" font-size="11.5" fill="#e03131">这三帧用户都会看到 →</text>
+<text class="svgmuted" x="450" y="114" font-size="11.5" fill="#e03131">白 / 半成品 / 成品 快速交替 = 闪烁</text>
+<line x1="24" y1="164" x2="696" y2="164" stroke="var(--rule)"/>
+<text class="svgmuted" x="24" y="188" font-size="12.5" font-weight="600">双缓冲（不闪）</text>
+<rect x="24" y="198" width="180" height="50" fill="var(--svg-soft)" stroke="var(--accent)" stroke-dasharray="4 3"/>
+<circle cx="74" cy="223" r="13" fill="#1971c2" opacity=".8"/>
+<circle cx="112" cy="223" r="13" fill="#e03131" opacity=".8"/>
+<text class="svgmuted" x="114" y="240" text-anchor="middle" font-size="10">内存 DC 里慢慢画（用户看不见）</text>
+<path d="M214,223 L286,223" stroke="var(--accent)" stroke-width="2" marker-end="url(#eff-ar)"/>
+<defs><marker id="eff-ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs>
+<text class="svgtext" x="250" y="216" text-anchor="middle" font-size="11">BitBlt</text>
+<rect x="296" y="198" width="180" height="50" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="346" cy="223" r="13" fill="#1971c2" opacity=".8"/>
+<circle cx="384" cy="223" r="13" fill="#e03131" opacity=".8"/>
+<text class="svgmuted" x="386" y="240" text-anchor="middle" font-size="10">屏幕：一次性整块换上</text>
+<text class="svgmuted" x="496" y="222" font-size="11.5">用户只看到最终结果，</text>
+<text class="svgmuted" x="496" y="240" font-size="11.5">中间过程完全不可见。</text>
+</svg>
+<figcaption>图 12-1　闪烁的来源与双缓冲的原理（原创绘制）</figcaption>
+</figure>
+
 <div class="note dead"><span class="t">🔴 最经典的双缓冲 bug</span><p>看清楚那行 <code>CreateCompatibleBitmap(hdc, w, h)</code>——参照的必须是<strong>屏幕的 hdc</strong>。很多人误写成 <code>CreateCompatibleBitmap(hBack, w, h)</code>，即参照那个刚造出来、还挂着 1×1 单色占位图的内存 DC。结果你得到的是一张<strong>单色（1 位）位图</strong>，画上去的一切彩色内容都会退化成非黑即白。屏幕上一片黑或诡异的二值图，八成就是这个原因。记住：兼容位图要兼容"最终要显示的那个设备"。</p></div>
 <div class="note new"><span class="t">🔵 两个现代提示</span><p>其一，为了不让系统在 WM_PAINT 前先刷一遍背景（那本身就是一次闪烁源），处理 <code>WM_ERASEBKGND</code> 直接 <code>return 1</code>（表示"背景我自己管了"），把清屏交给后台缓冲里的 FillRect。其二，每帧都重建后台位图有开销，性能敏感时应把后台 DC 和位图<strong>缓存起来</strong>，仅在客户区尺寸变化（WM_SIZE）时重建。再往上，现代 UI 框架和 Direct2D 默认就是双缓冲乃至三缓冲的，你不必手动搭这套——但理解它，你才明白那些框架在替你做什么。</p></div>
 
