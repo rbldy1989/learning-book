@@ -1168,6 +1168,113 @@ InvalidateRect(hWnd, <span class="kw">nullptr</span>, TRUE);</code></pre>
 <p>Vista 引入桌面窗口管理器（DWM）后，每个窗口都<strong>画在自己独立的缓冲区</strong>里，再由 DWM 合成到屏幕——别人的窗口压根碰不到你的像素，遮挡不再造成真正的丢失。但 <code>WM_PAINT</code> 这套机制作为兼容层<strong>完整保留</strong>了下来，你的代码写法一行都不用改。理解这段历史的意义在于：你会明白为什么这个模型看起来「多此一举」，以及为什么它至今仍是所有 Win32 程序必须遵守的契约。</p>
 </div>
 
+
+<h3>那我怎么知道该重画「什么」</h3>
+<p>看到这里你多半会冒出一个很自然的疑问：系统只告诉我「这块脏了」，可它没告诉我<strong>那块地方原来画的是什么</strong>啊？我怎么知道要补回什么内容？</p>
+<p>这个问题问到了要害，而答案可能出乎你的意料——<strong>你不需要知道「丢了什么」，你只需要知道「现在该显示什么」。</strong></p>
+<p>这是初学者最容易卡住的一道观念坎。很多人把 <code>WM_PAINT</code> 理解成系统在问：</p>
+<blockquote style="margin:0 0 1.05em;padding:.2em 0 .2em 1em;border-left:3px solid var(--rule);color:var(--muted)">「刚才被擦掉了什么？你补回来。」</blockquote>
+<p>不是。它问的其实是：</p>
+<blockquote style="margin:0 0 1.05em;padding:.2em 0 .2em 1em;border-left:3px solid var(--accent)"><strong>「这块区域现在应该长什么样？画给我。」</strong></blockquote>
+<p><strong>过去发生过什么，与你无关。</strong>你要做的，是根据程序<strong>当前的数据</strong>，把该显示的内容重新画一遍。</p>
+
+<figure data-mark="fig-data-is-truth">
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<defs><marker id="dit-ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs>
+
+<text class="svgmuted" x="24" y="18" font-size="12.5" font-weight="600">✗ 错误模型：画完就忘，指望屏幕替你记住</text>
+<rect x="24" y="30" width="150" height="52" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="99" y="52" text-anchor="middle" font-size="11.5">用户点击</text>
+<text class="svgmuted" x="99" y="70" text-anchor="middle" font-size="10.5">WM_LBUTTONDOWN</text>
+<line x1="180" y1="56" x2="222" y2="56" stroke="#e03131" marker-end="url(#dit-ar)"/>
+<rect x="228" y="30" width="150" height="52" rx="6" fill="var(--svg-fill)" stroke="#e03131"/>
+<text class="svgtext" x="303" y="52" text-anchor="middle" font-size="11.5">直接画到屏幕</text>
+<text class="svgmuted" x="303" y="70" text-anchor="middle" font-size="10.5">GetDC + Ellipse</text>
+<text x="400" y="52" font-size="11.5" fill="#e03131">程序里没有任何记录</text>
+<text x="400" y="70" font-size="11.5" fill="#e03131">→ 一被遮挡就永远消失</text>
+
+<line x1="24" y1="100" x2="696" y2="100" stroke="var(--rule)"/>
+
+<text class="svgmuted" x="24" y="124" font-size="12.5" font-weight="600">✓ 正确模型：数据是唯一的真相，画面只是它的投影</text>
+<rect x="24" y="136" width="132" height="52" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="90" y="158" text-anchor="middle" font-size="11.5">用户点击</text>
+<text class="svgmuted" x="90" y="176" text-anchor="middle" font-size="10.5">只改数据</text>
+<line x1="162" y1="162" x2="196" y2="162" stroke="var(--accent)" marker-end="url(#dit-ar)"/>
+<rect x="202" y="130" width="150" height="64" rx="6" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="2"/>
+<text class="svgtext" x="277" y="154" text-anchor="middle" font-size="12" font-weight="700">数据（真相）</text>
+<text class="svgmuted" x="277" y="174" text-anchor="middle" font-size="10.5">vector&lt;POINT&gt; 圆心列表</text>
+<line x1="358" y1="162" x2="392" y2="162" stroke="var(--accent)" marker-end="url(#dit-ar)"/>
+<rect x="398" y="136" width="150" height="52" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="473" y="158" text-anchor="middle" font-size="11.5">WM_PAINT</text>
+<text class="svgmuted" x="473" y="176" text-anchor="middle" font-size="10.5">照数据画一遍</text>
+<line x1="554" y1="162" x2="588" y2="162" stroke="var(--accent)" marker-end="url(#dit-ar)"/>
+<rect x="594" y="136" width="102" height="52" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="645" y="166" text-anchor="middle" font-size="11.5">屏幕（投影）</text>
+
+<path d="M645,136 C645,110 277,110 277,128" fill="none" stroke="var(--muted)" stroke-dasharray="4 3" marker-end="url(#dit-ar)"/>
+<text class="svgmuted" x="461" y="118" text-anchor="middle" font-size="10.5">画面随时可从数据重新生成，丢了也不怕</text>
+
+<text class="svgmuted" x="24" y="222" font-size="12">屏幕上的像素是<tspan font-weight="600">易失的</tspan>；只有你自己保存的那份数据是<tspan font-weight="600">持久的</tspan>。</text>
+<text class="svgmuted" x="24" y="242" font-size="12">所以「该画什么」这个问题，答案永远在你的数据结构里，而不在屏幕上。</text>
+</svg>
+<figcaption>图 3-4　数据是真相，画面只是投影（原创绘制）</figcaption>
+</figure>
+
+<p>把这两种写法摆在一起，差别一目了然：</p>
+<pre><code><span class="cm">// ✗ 错误：画完就忘，没人记得这个圆存在过</span>
+<span class="kw">case</span> WM_LBUTTONDOWN: {
+    HDC hdc = GetDC(hwnd);
+    Ellipse(hdc, x-10, y-10, x+10, y+10);   <span class="cm">// 直接画上去</span>
+    ReleaseDC(hwnd, hdc);
+    <span class="kw">return</span> 0;
+}
+<span class="cm">// 窗口一被遮挡，这个圆就永远消失 —— WM_PAINT 里你也画不出它，因为没有记录</span></code></pre>
+<pre><code><span class="cm">// ✓ 正确：数据是真相，WM_PAINT 只是照着它投影一次</span>
+std::vector&lt;POINT&gt; g_circles;                 <span class="cm">// ← 状态存在这里</span>
+
+<span class="kw">case</span> WM_LBUTTONDOWN:
+    g_circles.push_back({x, y});              <span class="cm">// ① 只改数据</span>
+    InvalidateRect(hwnd, NULL, TRUE);         <span class="cm">// ② 请求重画</span>
+    <span class="kw">return</span> 0;
+
+<span class="kw">case</span> WM_PAINT: {
+    PAINTSTRUCT ps;
+    HDC hdc = BeginPaint(hwnd, &amp;ps);
+    <span class="kw">for</span> (<span class="kw">const</span> <span class="kw">auto</span>&amp; p : g_circles)          <span class="cm">// ③ 照数据重画一遍</span>
+        Ellipse(hdc, p.x-10, p.y-10, p.x+10, p.y+10);
+    EndPaint(hwnd, &amp;ps);
+    <span class="kw">return</span> 0;
+}</code></pre>
+<p>请注意第二段代码里的一个细节：<strong><code>WM_PAINT</code> 从头到尾没有关心「哪块脏了」</strong>——它就是老老实实把所有圆都画一遍。这是完全正确的做法，而且是推荐做法。</p>
+
+<div class="note ok">
+<span class="t">那 ps.rcPaint 到底该不该用</span>
+<p>它是<strong>优化提示，不是必须遵守的指令</strong>。你完全可以无视它、每次都画满整个窗口——落在无效区域之外的笔迹会被系统的裁剪区自动丢弃，画了白画，但<strong>结果永远是对的</strong>。</p>
+<p>只有当重画代价确实很高（几万个图元、每个都要复杂计算）时，才值得拿它来跳过不必要的绘制：</p>
+</div>
+<pre><code>RECT dummy;
+<span class="kw">for</span> (<span class="kw">const</span> <span class="kw">auto</span>&amp; shape : g_shapes) {
+    RECT r = BoundsOf(shape);
+    <span class="kw">if</span> (!IntersectRect(&amp;dummy, &amp;r, &amp;ps.rcPaint))
+        <span class="kw">continue</span>;          <span class="cm">// 不在脏区内，跳过，省下这次绘制开销</span>
+    DrawShape(hdc, shape);
+}</code></pre>
+
+<table>
+<thead><tr><th></th><th>你以为要回答的问题</th><th>实际要回答的问题</th></tr></thead>
+<tbody>
+<tr><td>系统在问什么</td><td>「刚才丢了什么？」</td><td><strong>「现在该显示什么？」</strong></td></tr>
+<tr><td>你需要保存什么</td><td>历史操作记录</td><td><strong>当前数据状态</strong></td></tr>
+<tr><td>rcPaint 的地位</td><td>必须严格遵守</td><td>可选的性能优化</td></tr>
+</tbody>
+</table>
+
+<div class="note new">
+<span class="t">这条原则通向何处</span>
+<p>「数据是真相，画面是投影」不只是 <code>WM_PAINT</code> 的规矩，它是<strong>所有图形界面程序的通用架构原则</strong>。MFC 的 Document/View 把它固化成了框架——Document 存数据，View 负责投影；现代的 MVVM、React 的「状态驱动 UI」同样是它的后代：<strong>你永远只改状态，画面自动跟随。</strong></p>
+<p>换句话说，你现在理解的这条 <code>WM_PAINT</code> 契约，正是四十年后前端框架仍在遵循的那条原则。</p>
+</div>
+
 <h2 id="w3-lifecycle">生与死：WM_CLOSE、WM_DESTROY 与 PostQuitMessage</h2>
 
 <p>最后把窗口的一生串起来。你点右上角那个 × 的时候，背后到底发生了一连串什么事？很多人以为「点 × = 程序退出」，其实中间隔着好几道关，而这几道关正是你能插手的地方。</p>
