@@ -3289,6 +3289,105 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 <p>想改标签的文字颜色？静态控件重绘前会给父窗口发 <code>WM_CTLCOLORSTATIC</code>，wParam 是它即将使用的 HDC，返回值是背景画刷——这是给基础控件"换肤"的正规轻量手段（编辑框对应 <code>WM_CTLCOLOREDIT</code>，列表框对应 <code>WM_CTLCOLORLISTBOX</code>，禁用的按钮文字则不吃这一套）：</p>
 
 <pre><code><span class="cl"><span class="kw">case</span> WM_CTLCOLORSTATIC:</span><span class="cl"><span class="cc" style="min-width:58.0ch">    <span class="kw">if</span> ((HWND)lParam == hLabelWarn)</span><span class="cm">// 只染这一个标签</span></span><span class="cl">    {</span><span class="cl">        SetTextColor((HDC)wParam, RGB(200, 0, 0));</span><span class="cl">        SetBkMode((HDC)wParam, TRANSPARENT);</span><span class="cl"><span class="cc" style="min-width:58.0ch">        <span class="kw">return</span> (LRESULT)GetSysColorBrush(COLOR_BTNFACE);</span><span class="cm">// 背景画刷</span></span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:58.0ch">    <span class="kw">break</span>;</span><span class="cm">// 其余交给 DefWindowProc</span></span></code></pre>
+<figure data-mark="fig-static-forms">
+<svg viewBox="0 0 880 480" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="同一窗口里静态控件的四种形态与各自的风格位">
+<text class="svgmuted" x="40" y="24" font-size="12.5" font-weight="600">同一个 "STATIC" 类，四种长相：低 4 位选互斥类型，SS_SUNKEN / SS_NOTIFY 这类修饰位再往上叠</text>
+
+<!-- 窗口 -->
+<rect x="50" y="40" width="790" height="210" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="50" y="40" width="790" height="24" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="60" y="57" font-size="12">静态控件展览</text>
+<text class="svgmuted" x="830" y="57" text-anchor="end" font-size="11">─ □ ×</text>
+
+<text class="svgmuted" x="85" y="92" font-size="10.5">虚线 = 控件真实边界：文本 / 图标控件本身无边框，运行时看不见这圈线</text>
+
+<!-- 1 文本标签 -->
+<rect x="85" y="106" width="130" height="43" fill="none" stroke="var(--rule)" stroke-dasharray="4 3"/>
+<text class="svgtext" x="91" y="124" font-size="13">用户名：</text>
+<!-- 鼠标点击 -->
+<g transform="translate(168,120)">
+<path class="svgtext" d="M0,0 L0,14 L3.8,11 L6.6,17 L9,16 L6.2,10 L10.6,10 Z"/>
+<path d="M-4,2 A8,8 0 0,1 4,-5" fill="none" stroke="#e03131" stroke-width="1.5"/>
+<path d="M-7,5 A12,12 0 0,1 7,-8" fill="none" stroke="#e03131" stroke-width="1.5"/>
+</g>
+<text x="176" y="170" font-size="10.5" fill="#e03131">单击 → STN_CLICKED</text>
+
+<!-- 2 图标 SS_ICON -->
+<rect x="310" y="106" width="40" height="40" fill="none" stroke="var(--rule)" stroke-dasharray="4 3"/>
+<circle cx="330" cy="126" r="14" fill="#1971c2" opacity=".16"/>
+<circle cx="330" cy="126" r="14" fill="none" stroke="#1971c2" stroke-width="1.6"/>
+<text x="330" y="131" text-anchor="middle" font-size="14" font-weight="700" fill="#1971c2">i</text>
+
+<!-- 3 位图 SS_BITMAP -->
+<rect x="490" y="101" width="80" height="52" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<rect x="491" y="102" width="78" height="50" fill="#1098ad" opacity=".10"/>
+<circle cx="546" cy="114" r="7" fill="#e8590c" opacity=".8"/>
+<polygon points="491,152 512,118 526,133 542,114 569,152" fill="#0ca678" opacity=".5"/>
+
+<!-- 4 凹陷框 SS_SUNKEN -->
+<rect x="650" y="106" width="140" height="44" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<path d="M652,148 v-40 h136" fill="none" stroke="var(--rule)" stroke-width="3"/>
+<text class="svgtext" x="720" y="132" text-anchor="middle" font-size="12">状态：就绪</text>
+
+<text class="svgmuted" x="830" y="238" text-anchor="end" font-size="10.5">客户区</text>
+
+<!-- 四条对应线 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="140,285 140,210 150,210 150,159" stroke="#1971c2"/>
+<polyline points="340,285 340,210 330,210 330,153" stroke="#0ca678"/>
+<polyline points="540,285 540,210 530,210 530,160" stroke="#e8590c"/>
+<polyline points="742,285 742,210 720,210 720,157" stroke="#7048e8"/>
+</g>
+<g>
+<circle cx="140" cy="285" r="3" fill="#1971c2"/><path d="M150,152 l-3.5,7 h7 z" fill="#1971c2"/>
+<circle cx="340" cy="285" r="3" fill="#0ca678"/><path d="M330,146 l-3.5,7 h7 z" fill="#0ca678"/>
+<circle cx="540" cy="285" r="3" fill="#e8590c"/><path d="M530,153 l-3.5,7 h7 z" fill="#e8590c"/>
+<circle cx="742" cy="285" r="3" fill="#7048e8"/><path d="M720,150 l-3.5,7 h7 z" fill="#7048e8"/>
+</g>
+
+<!-- 四个风格位说明框 -->
+<rect x="45" y="285" width="190" height="80" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+<g font-family="Consolas,monospace" font-size="11">
+<text class="svgtext" x="55" y="305">WS_CHILD|WS_VISIBLE</text>
+<text x="55" y="322" font-weight="700" fill="#1971c2">&#160;| SS_LEFT</text>
+</g>
+<text class="svgmuted" x="55" y="341" font-size="10.5">文本标签：超宽自动换行；</text>
+<text class="svgmuted" x="55" y="357" font-size="10.5">显示路径记得加 SS_NOPREFIX</text>
+
+<rect x="245" y="285" width="190" height="80" rx="6" fill="var(--svg-soft)" stroke="#0ca678"/>
+<g font-family="Consolas,monospace" font-size="11">
+<text class="svgtext" x="255" y="305">WS_CHILD|WS_VISIBLE</text>
+<text x="255" y="322" font-weight="700" fill="#0ca678">&#160;| SS_ICON</text>
+</g>
+<text class="svgmuted" x="255" y="341" font-size="10.5">图标：STM_SETICON 送入</text>
+<text class="svgmuted" x="255" y="357" font-size="10.5">HICON，控件自缩放到图像大小</text>
+
+<rect x="445" y="285" width="190" height="80" rx="6" fill="var(--svg-soft)" stroke="#e8590c"/>
+<g font-family="Consolas,monospace" font-size="11">
+<text class="svgtext" x="455" y="305">WS_CHILD|WS_VISIBLE</text>
+<text x="455" y="322" font-weight="700" fill="#e8590c">&#160;| SS_BITMAP</text>
+</g>
+<text class="svgmuted" x="455" y="341" font-size="10.5">位图：STM_SETIMAGE 送入</text>
+<text class="svgmuted" x="455" y="357" font-size="10.5">HBITMAP，同样自动调整大小</text>
+
+<rect x="645" y="285" width="195" height="80" rx="6" fill="var(--svg-soft)" stroke="#7048e8"/>
+<g font-family="Consolas,monospace" font-size="11">
+<text class="svgtext" x="655" y="305">WS_CHILD|WS_VISIBLE</text>
+<text x="655" y="322" font-weight="700" fill="#7048e8">&#160;| SS_LEFT|SS_SUNKEN</text>
+</g>
+<text class="svgmuted" x="655" y="341" font-size="10.5">SS_SUNKEN 是修饰位：不占</text>
+<text class="svgmuted" x="655" y="357" font-size="10.5">低 4 位类型，叠上就有下凹框</text>
+
+<!-- SS_NOTIFY 提示条 -->
+<rect x="45" y="390" width="795" height="76" rx="6" fill="var(--svg-soft)" stroke="#e03131" stroke-dasharray="6 3"/>
+<text x="60" y="412" font-family="Consolas,monospace" font-size="12" font-weight="700" fill="#e03131">SS_NOTIFY</text>
+<text class="svgtext" x="140" y="412" font-size="12">：让哑巴开口的开关</text>
+<text class="svgmuted" x="60" y="434" font-size="10.5">静态控件默认对鼠标点击装聋作哑；创建时加上 SS_NOTIFY，单击 / 双击才会以 WM_COMMAND 携带</text>
+<text class="svgmuted" x="60" y="452" font-size="10.5">STN_CLICKED / STN_DBLCLK 通知码送到父窗口——「可点击的标签」就是这么来的。</text>
+</svg>
+<figcaption>图 9-X　STATIC 一个类的四种形态与各自的风格位（原创绘制）</figcaption>
+</figure>
+
 
 <h2 id="w9-edit">9.4 编辑框 EDIT：从输入框到记事本</h2>
 
@@ -3388,6 +3487,107 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
         SendMessageW(hList, LB_GETTEXT, sel, (LPARAM)buf);
     }
 }</code></pre>
+<figure data-mark="fig-listbox-sel">
+<svg viewBox="0 0 960 400" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="单选列表框与 LBS_EXTENDEDSEL 扩展多选列表框的对照：条目来源、通知时机、选中项获取">
+<text class="svgmuted" x="380" y="34" text-anchor="middle" font-size="12.5" font-weight="600">单选（默认）：<tspan font-family="Consolas,monospace">LBS_STANDARD</tspan></text>
+<text class="svgmuted" x="640" y="34" text-anchor="middle" font-size="12.5" font-weight="600">扩展多选：<tspan font-family="Consolas,monospace">LBS_STANDARD | LBS_EXTENDEDSEL</tspan></text>
+
+<!-- 左：单选列表框 -->
+<rect x="280" y="60" width="200" height="152" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="460" y="61" width="18" height="150" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="463" y="64" width="12" height="44" rx="2" fill="var(--rule)"/>
+<rect x="284" y="121" width="173" height="26" fill="#1971c2" opacity=".22"/>
+<rect x="285" y="123" width="170" height="22" fill="none" stroke="#1971c2" stroke-width="1" stroke-dasharray="3 2"/>
+<g font-family="Consolas,monospace" font-size="10.5">
+<text class="svgmuted" x="292" y="82">0</text>
+<text class="svgmuted" x="292" y="110">1</text>
+<text class="svgmuted" x="292" y="138">2</text>
+<text class="svgmuted" x="292" y="166">3</text>
+<text class="svgmuted" x="292" y="194">4</text>
+</g>
+<g font-size="12">
+<text class="svgtext" x="316" y="83">Ada</text>
+<text class="svgtext" x="316" y="111">Bob</text>
+<text class="svgtext" x="316" y="139">Cathy</text>
+<text class="svgtext" x="316" y="167">Dave</text>
+<text class="svgtext" x="316" y="195">Eve</text>
+</g>
+
+<!-- 右：扩展多选列表框 -->
+<rect x="540" y="60" width="200" height="152" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="720" y="61" width="18" height="150" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="723" y="64" width="12" height="44" rx="2" fill="var(--rule)"/>
+<rect x="544" y="93" width="173" height="26" fill="#1971c2" opacity=".22"/>
+<rect x="544" y="93" width="3" height="26" fill="#e8590c"/>
+<rect x="544" y="121" width="173" height="26" fill="#1971c2" opacity=".22"/>
+<rect x="544" y="121" width="3" height="26" fill="#e8590c"/>
+<rect x="544" y="177" width="173" height="26" fill="#1971c2" opacity=".22"/>
+<rect x="544" y="177" width="3" height="26" fill="#1098ad"/>
+<rect x="545" y="179" width="170" height="22" fill="none" stroke="#1098ad" stroke-width="1" stroke-dasharray="3 2"/>
+<g font-family="Consolas,monospace" font-size="10.5">
+<text class="svgmuted" x="554" y="82">0</text>
+<text class="svgmuted" x="554" y="110">1</text>
+<text class="svgmuted" x="554" y="138">2</text>
+<text class="svgmuted" x="554" y="166">3</text>
+<text class="svgmuted" x="554" y="194">4</text>
+</g>
+<g font-size="12">
+<text class="svgtext" x="578" y="83">Ada</text>
+<text class="svgtext" x="578" y="111">Bob</text>
+<text class="svgtext" x="578" y="139">Cathy</text>
+<text class="svgtext" x="578" y="167">Dave</text>
+<text class="svgtext" x="578" y="195">Eve</text>
+</g>
+
+<!-- 左侧标注：LB_ADDSTRING -->
+<text x="20" y="62" font-weight="600" fill="#0ca678"><tspan font-family="Consolas,monospace">LB_ADDSTRING</tspan> 逐条追加</text>
+<text class="svgmuted" x="20" y="79" font-size="11">循环跑 5 次，返回值就是新索引 0~4</text>
+<circle cx="182" cy="58" r="3" fill="#0ca678"/>
+<polyline points="182,58 262,58 262,78 272,78" fill="none" stroke="#0ca678" stroke-width="1.6"/>
+<path d="M279,78 l-7,-3.5 v7 z" fill="#0ca678"/>
+
+<!-- 左侧标注：LBN_SELCHANGE -->
+<text x="20" y="118" font-weight="600" fill="#1971c2">单击 2 号 Cathy</text>
+<text class="svgmuted" x="20" y="135" font-size="11">控件自己画高亮，同时向父窗口发</text>
+<text class="svgmuted" x="20" y="152" font-size="11">WM_COMMAND，通知码 <tspan font-family="Consolas,monospace" fill="#1971c2">LBN_SELCHANGE</tspan></text>
+<circle cx="128" cy="114" r="3" fill="#1971c2"/>
+<polyline points="128,114 256,114 256,128 272,128" fill="none" stroke="#1971c2" stroke-width="1.6"/>
+<path d="M279,128 l-7,-3.5 v7 z" fill="#1971c2"/>
+
+<!-- 右侧标注：Shift 连选 -->
+<polyline points="743,94 750,94 750,146 743,146" fill="none" stroke="#e8590c" stroke-width="1.6"/>
+<line x1="750" y1="120" x2="758" y2="120" stroke="#e8590c" stroke-width="1.6"/>
+<circle cx="758" cy="120" r="3" fill="#e8590c"/>
+<text x="766" y="112" font-weight="600" fill="#e8590c">先点 1，再 Shift+点 2</text>
+<text class="svgmuted" x="766" y="129" font-size="11">1~2 之间整段连选</text>
+
+<!-- 右侧标注：Ctrl 点选 -->
+<path d="M743,190 l7,-3.5 v7 z" fill="#1098ad"/>
+<polyline points="750,190 758,190" fill="none" stroke="#1098ad" stroke-width="1.6"/>
+<circle cx="758" cy="190" r="3" fill="#1098ad"/>
+<text x="766" y="186" font-weight="600" fill="#1098ad">Ctrl+点 4：跳着加选</text>
+<text class="svgmuted" x="766" y="203" font-size="11">已选的 1、2 保持不动</text>
+
+<!-- 底部左：单选取结果 -->
+<rect x="40" y="252" width="420" height="96" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text x="56" y="279" font-family="Consolas,monospace" font-size="13"><tspan class="svgtext">LB_GETCURSEL</tspan><tspan class="svgmuted"> → </tspan><tspan fill="#7048e8" font-weight="600">2</tspan></text>
+<text x="56" y="305" font-family="Consolas,monospace" font-size="13"><tspan class="svgtext">LB_GETTEXT(2, buf)</tspan><tspan class="svgmuted"> → </tspan><tspan class="svgtext">"Cathy"</tspan></text>
+<text class="svgmuted" x="56" y="331" font-size="10.5">标准流程：先 LB_GETTEXTLEN(2) 问长度、备好缓冲区再取文本</text>
+<circle cx="210" cy="274" r="3" fill="#7048e8"/>
+<polyline points="210,274 236,274 236,246 268,246 268,141 272,141" fill="none" stroke="#7048e8" stroke-width="1.6"/>
+<path d="M279,141 l-7,-3.5 v7 z" fill="#7048e8"/>
+
+<!-- 底部右：多选取结果 -->
+<rect x="500" y="252" width="420" height="96" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text x="516" y="279" font-family="Consolas,monospace" font-size="13"><tspan class="svgtext">LB_GETSELCOUNT</tspan><tspan class="svgmuted"> → </tspan><tspan class="svgtext">3</tspan></text>
+<text x="516" y="305" font-family="Consolas,monospace" font-size="13"><tspan class="svgtext">LB_GETSELITEMS</tspan><tspan class="svgmuted"> → </tspan><tspan class="svgtext">{ </tspan><tspan fill="#e8590c" font-weight="600">1, 2</tspan><tspan class="svgtext">, </tspan><tspan fill="#1098ad" font-weight="600">4</tspan><tspan class="svgtext"> }</tspan></text>
+<text class="svgmuted" x="516" y="331" font-size="10.5">多选框别问 LB_GETCURSEL——要「哪些被选中」得批量拿</text>
+
+<text class="svgmuted" x="480" y="382" text-anchor="middle" font-size="12">两边都靠 LBS_NOTIFY 才收得到 LBN_ 通知；键盘方向键改选，同样会发 LBN_SELCHANGE。</text>
+</svg>
+<figcaption>图 9-X　单选与扩展多选列表框：条目从哪来、通知何时发、选中项怎么取（原创绘制）</figcaption>
+</figure>
+
 
 <h2 id="w9-combobox">9.6 组合框 COMBOBOX</h2>
 
@@ -3433,6 +3633,104 @@ SendMessageW(hCombo, CB_SETCURSEL, 1, 0);        <span class="cm">// 默认选"�
 
 <span class="cm">// WM_COMMAND / CBN_SELCHANGE 里：</span>
 <span class="kw">int</span> sel = (<span class="kw">int</span>)SendMessageW(hCombo, CB_GETCURSEL, 0, 0);</code></pre>
+<figure data-mark="fig-combo-3styles">
+<svg viewBox="0 0 960 500" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="组合框三种形态并排对照">
+<!-- 列标题 -->
+<g font-family="Consolas,monospace" font-size="13.5" font-weight="600" text-anchor="middle">
+<text class="svgtext" x="170" y="34">CBS_SIMPLE</text>
+<text class="svgtext" x="480" y="34">CBS_DROPDOWN</text>
+<text class="svgtext" x="780" y="34">CBS_DROPDOWNLIST</text>
+</g>
+<rect x="858" y="20" width="56" height="20" rx="10" fill="#0ca678" opacity=".15"/>
+<text x="886" y="34" text-anchor="middle" font-size="11" font-weight="600" fill="#0ca678">最常用</text>
+<g class="svgmuted" font-size="11" text-anchor="middle">
+<text x="170" y="54">列表永远摊开在下方</text>
+<text x="480" y="54">可输入 + 可下拉（图为展开状态）</text>
+<text x="780" y="54">只能选不能打（图为收起状态）</text>
+</g>
+
+<!-- 第一列：CBS_SIMPLE -->
+<rect x="60" y="84" width="220" height="26" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/>
+<text class="svgtext" x="68" y="102" font-size="12.5">中</text>
+<line x1="84" y1="89" x2="84" y2="105" stroke="#1971c2" stroke-width="1.6"/>
+<rect x="60" y="110" width="220" height="84" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/>
+<text class="svgtext" x="70" y="129" font-size="12.5">低</text>
+<rect x="61.5" y="138.5" width="217" height="27" fill="#1971c2" opacity=".16"/>
+<text class="svgtext" x="70" y="157" font-size="12.5">中</text>
+<text class="svgtext" x="70" y="185" font-size="12.5">高</text>
+
+<!-- 第二列：CBS_DROPDOWN（展开） -->
+<rect x="370" y="84" width="192" height="26" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/>
+<text class="svgtext" x="378" y="102" font-size="12.5">中</text>
+<line x1="394" y1="89" x2="394" y2="105" stroke="#e8590c" stroke-width="1.6"/>
+<rect x="562" y="84" width="28" height="26" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1.2"/>
+<text class="svgtext" x="576" y="101" font-size="11" text-anchor="middle">▾</text>
+<rect x="374" y="114" width="220" height="84" fill="var(--rule)" opacity=".35"/>
+<rect x="370" y="110" width="220" height="84" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/>
+<text class="svgtext" x="380" y="129" font-size="12.5">低</text>
+<rect x="371.5" y="138.5" width="217" height="27" fill="#1971c2" opacity=".16"/>
+<text class="svgtext" x="380" y="157" font-size="12.5">中</text>
+<text class="svgtext" x="380" y="185" font-size="12.5">高</text>
+<!-- nHeight 标尺 -->
+<path d="M600 84 h7 v110 h-7" fill="none" stroke="#1098ad" stroke-width="1.5"/>
+<g fill="#1098ad" font-size="10.5">
+<text x="612" y="122" font-family="Consolas,monospace">nHeight</text>
+<text x="612" y="140">＝展开后</text>
+<text x="612" y="156">的总高度</text>
+</g>
+
+<!-- 第三列：CBS_DROPDOWNLIST（收起） -->
+<rect x="680" y="84" width="192" height="26" fill="var(--svg-soft2)" stroke="var(--rule)" stroke-width="1.2"/>
+<text class="svgtext" x="688" y="102" font-size="12.5">中</text>
+<rect x="872" y="84" width="28" height="26" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1.2"/>
+<text class="svgtext" x="886" y="101" font-size="11" text-anchor="middle">▾</text>
+<rect x="680" y="116" width="220" height="56" rx="3" fill="none" stroke="var(--rule)" stroke-dasharray="5 4"/>
+<text class="svgmuted" x="790" y="140" font-size="10.5" text-anchor="middle">平时收起，列表不占窗口地方</text>
+<text class="svgmuted" x="790" y="158" font-size="10" text-anchor="middle">点 ▾ 或发 CB_SHOWDROPDOWN 才浮出</text>
+
+<!-- 标注线：起点圆点 → 终点箭头 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="150,224 150,202" stroke="#0ca678"/>
+<polyline points="42,268 42,97 51,97" stroke="#1971c2"/>
+<polyline points="352,268 352,97 361,97" stroke="#e8590c"/>
+<polyline points="480,228 480,207" stroke="#7048e8"/>
+<polyline points="668,268 668,97 671,97" stroke="#e03131"/>
+</g>
+<circle cx="150" cy="224" r="3" fill="#0ca678"/><path d="M150,196 l-3.5,7 h7 z" fill="#0ca678"/>
+<circle cx="42" cy="268" r="3" fill="#1971c2"/><path d="M58,97 l-7,-3.5 v7 z" fill="#1971c2"/>
+<circle cx="352" cy="268" r="3" fill="#e8590c"/><path d="M368,97 l-7,-3.5 v7 z" fill="#e8590c"/>
+<circle cx="480" cy="228" r="3" fill="#7048e8"/><path d="M480,200 l-3.5,7 h7 z" fill="#7048e8"/>
+<circle cx="668" cy="268" r="3" fill="#e03131"/><path d="M678,97 l-7,-3.5 v7 z" fill="#e03131"/>
+
+<!-- 标注文字 -->
+<text x="150" y="242" font-size="11.5" fill="#0ca678" text-anchor="middle" font-weight="600">列表常驻摊开</text>
+<text class="svgmuted" x="150" y="258" font-size="10.5" text-anchor="middle">双击条目的 CBN_DBLCLK 仅此形态有</text>
+<text x="28" y="286" font-size="11.5" fill="#1971c2" font-weight="600">可自由键入（编辑区有插入符）</text>
+<text x="338" y="286" font-size="11.5" fill="#e8590c" font-weight="600">也可键入，还能下拉挑现成的</text>
+<text x="480" y="246" font-size="11.5" fill="#7048e8" text-anchor="middle" font-weight="600">点 ▾ 才浮出的下拉列表</text>
+<text class="svgmuted" x="480" y="262" font-size="10.5" text-anchor="middle">展开/收起时发 CBN_DROPDOWN / CBN_CLOSEUP</text>
+<text x="654" y="286" font-size="11.5" fill="#e03131" font-weight="600">编辑区只显示，键入无效——只能选</text>
+
+<!-- 对照表 -->
+<rect x="40" y="318" width="880" height="96" rx="8" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<line x1="48" y1="366" x2="912" y2="366" stroke="var(--rule)"/>
+<line x1="325" y1="324" x2="325" y2="408" stroke="var(--rule)" stroke-dasharray="3 3"/>
+<line x1="635" y1="324" x2="635" y2="408" stroke="var(--rule)" stroke-dasharray="3 3"/>
+<text class="svgtext" x="54" y="348" font-weight="600">能手输吗？</text>
+<text x="150" y="348" fill="#0ca678" font-weight="700">✓</text><text class="svgtext" x="166" y="348">可以打字</text>
+<text x="430" y="348" fill="#0ca678" font-weight="700">✓</text><text class="svgtext" x="446" y="348">可以打字</text>
+<text x="710" y="348" fill="#e03131" font-weight="700">✗</text><text class="svgtext" x="726" y="348">只能从列表里选</text>
+<text class="svgtext" x="54" y="394" font-weight="600">列表常驻吗？</text>
+<text x="150" y="394" fill="#0ca678" font-weight="700">✓</text><text class="svgtext" x="166" y="394">永远摊开</text>
+<text x="430" y="394" fill="#e03131" font-weight="700">✗</text><text class="svgtext" x="446" y="394">点 ▾ 才出现</text>
+<text x="710" y="394" fill="#e03131" font-weight="700">✗</text><text class="svgtext" x="726" y="394">点 ▾ 才出现</text>
+
+<text class="svgmuted" x="480" y="444" font-size="11" text-anchor="middle">条目即本节示例代码：CB_ADDSTRING 依次加入 低 / 中 / 高，CB_SETCURSEL(1) 让三者都默认选中「中」。</text>
+<text class="svgmuted" x="480" y="470" font-size="12" text-anchor="middle">三种形态共用同一套 CB_ 消息——差别只在「能不能打」与「列表要不要点开」。</text>
+</svg>
+<figcaption>图 9-X　组合框三种形态并排对照：能否手输与列表是否常驻（原创绘制）</figcaption>
+</figure>
+
 
 <p>顺带一提：需要"每项带小图标"的组合框，不必自己所有者绘制——ComCtl32 提供了现成的扩展组合框 <code>WC_COMBOBOXEX</code>（<code>"ComboBoxEx32"</code>），用 <code>CBEM_INSERTITEM</code> 插入带图像列表索引的条目即可。</p>
 
@@ -3468,6 +3766,70 @@ SendMessageW(hCombo, CB_SETCURSEL, 1, 0);        <span class="cm">// 默认选"�
 </tbody></table>
 
 <pre><code><span class="cl">SCROLLINFO si = { <span class="kw">sizeof</span>(si) };</span><span class="cl">si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;</span><span class="cl">si.nMin = 0;  si.nMax = 99;  si.nPage = 10;  si.nPos = 0;</span><span class="cl"><span class="cc" style="min-width:62.0ch">SetScrollInfo(hScroll, SB_CTL, &amp;si, TRUE);</span><span class="cm">// SB_CTL = 独立控件</span></span><span class="cl"> </span><span class="cl"><span class="kw">case</span> WM_HSCROLL:</span><span class="cl">    <span class="kw">if</span> ((HWND)lParam == hScroll)</span><span class="cl">    {</span><span class="cl">        si.fMask = SIF_ALL;</span><span class="cl">        GetScrollInfo(hScroll, SB_CTL, &amp;si);</span><span class="cl">        <span class="kw">switch</span> (LOWORD(wParam))</span><span class="cl">        {</span><span class="cl">        <span class="kw">case</span> SB_LINELEFT:   si.nPos -= 1;             <span class="kw">break</span>;</span><span class="cl">        <span class="kw">case</span> SB_LINERIGHT:  si.nPos += 1;             <span class="kw">break</span>;</span><span class="cl">        <span class="kw">case</span> SB_PAGELEFT:   si.nPos -= si.nPage;      <span class="kw">break</span>;</span><span class="cl">        <span class="kw">case</span> SB_PAGERIGHT:  si.nPos += si.nPage;      <span class="kw">break</span>;</span><span class="cl"><span class="cc" style="min-width:62.0ch">        <span class="kw">case</span> SB_THUMBTRACK: si.nPos  = si.nTrackPos;  <span class="kw">break</span>;</span><span class="cm">// 32 位安全</span></span><span class="cl">        }</span><span class="cl">        si.fMask = SIF_POS;</span><span class="cl"><span class="cc" style="min-width:62.0ch">        SetScrollInfo(hScroll, SB_CTL, &amp;si, TRUE);</span><span class="cm">// 会自动夹到合法范围</span></span><span class="cl">    }</span><span class="cl">    <span class="kw">return</span> 0;</span></code></pre>
+<figure data-mark="fig-scrollbar-vert-vs-ctl">
+<svg viewBox="0 0 900 475" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="同一窗口里的窗口版滚动条与控件版滚动条">
+  <text class="svgmuted" x="50" y="26" font-size="12.5" font-weight="600">同一套 SCROLLINFO API，第二个参数说明你指的是谁</text>
+
+  <!-- 窗口创建风格行 -->
+  <text class="svgmuted" x="50" y="50" font-family="Consolas,monospace" font-size="11">CreateWindowExW(..., WS_OVERLAPPEDWINDOW | <tspan fill="#1971c2" font-weight="600">WS_VSCROLL</tspan>, ...)</text>
+
+  <!-- 主窗口 -->
+  <rect x="50" y="64" width="400" height="266" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+  <rect x="50" y="64" width="400" height="26" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="60" y="81" font-size="12">示例窗口</text>
+  <text class="svgmuted" x="442" y="81" font-size="11" text-anchor="end">—  □  ✕</text>
+
+  <!-- 非客户区竖滚动条（WS_VSCROLL） -->
+  <rect x="430" y="108" width="19" height="203" fill="#1971c2" opacity=".08"/>
+  <rect x="430" y="90" width="19" height="18" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <path d="M439.5,95 l5,7 h-10 z" fill="var(--muted)"/>
+  <rect x="430" y="311" width="19" height="18" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <path d="M434.5,317 h10 l-5,7 z" fill="var(--muted)"/>
+  <rect x="431.5" y="135" width="16" height="60" rx="3" fill="#1971c2" opacity=".35" stroke="#1971c2"/>
+  <rect x="430" y="90" width="19" height="239" fill="none" stroke="var(--rule)"/>
+
+  <!-- 客户区 -->
+  <rect x="54" y="94" width="372" height="232" fill="none" stroke="var(--muted)" stroke-dasharray="4 3"/>
+  <text class="svgmuted" x="64" y="114" font-size="11">客户区</text>
+
+  <!-- 客户区里的 SCROLLBAR 控件（数值选择器） -->
+  <text class="svgmuted" x="100" y="238" font-size="11">nPos = 37（nMin 0，nMax 99，nPage 10）</text>
+  <rect x="118" y="248" width="224" height="18" fill="#0ca678" opacity=".10"/>
+  <rect x="100" y="248" width="18" height="18" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <path d="M113,252.5 v9 l-7,-4.5 z" fill="var(--muted)"/>
+  <rect x="342" y="248" width="18" height="18" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <path d="M347,252.5 v9 l7,-4.5 z" fill="var(--muted)"/>
+  <rect x="201" y="249.5" width="22" height="15" rx="3" fill="#0ca678" opacity=".35" stroke="#0ca678"/>
+  <rect x="100" y="248" width="260" height="18" fill="none" stroke="var(--rule)"/>
+  <text x="100" y="288" font-family="Consolas,monospace" font-size="11" fill="#0ca678">L"SCROLLBAR" + SBS_HORZ</text>
+
+  <text class="svgmuted" x="50" y="349" font-size="10.5">标题栏、边框和右侧这条竖滚动条都属于非客户区，由系统代管</text>
+
+  <!-- 右：SB_VERT 注解框 -->
+  <rect x="510" y="95" width="370" height="96" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text class="svgtext" x="524" y="122" font-family="Consolas,monospace" font-size="13">SetScrollInfo(hwnd, <tspan fill="#1971c2" font-weight="600">SB_VERT</tspan>, &amp;si, TRUE);</text>
+  <text class="svgmuted" x="524" y="148" font-size="11">第一参 = 主窗口句柄；SB_VERT 指它自带的竖滚动条</text>
+  <text class="svgmuted" x="524" y="168" font-size="11">非客户区部件，不是窗口（WM_VSCROLL 的 lParam == NULL）</text>
+
+  <!-- 右下：SB_CTL 注解框 -->
+  <rect x="510" y="360" width="370" height="96" rx="6" fill="var(--svg-soft)" stroke="#0ca678"/>
+  <text class="svgtext" x="524" y="387" font-family="Consolas,monospace" font-size="13">SetScrollInfo(hScroll, <tspan fill="#0ca678" font-weight="600">SB_CTL</tspan>, &amp;si, TRUE);</text>
+  <text class="svgmuted" x="524" y="413" font-size="11">第一参 = 控件自己的 HWND；SB_CTL 指这个控件本身</text>
+  <text class="svgmuted" x="524" y="433" font-size="11">独立子窗口，随处可摆（WM_HSCROLL 的 lParam == hScroll）</text>
+
+  <!-- 标注线：蓝 → 非客户区滚动条 -->
+  <circle cx="508" cy="143" r="3" fill="#1971c2"/>
+  <polyline points="508,143 472,143 472,165 460,165" fill="none" stroke="#1971c2" stroke-width="1.6"/>
+  <path d="M451,165 l9,-5 v10 z" fill="#1971c2"/>
+
+  <!-- 标注线：绿 → 客户区里的控件 -->
+  <circle cx="508" cy="405" r="3" fill="#0ca678"/>
+  <polyline points="508,405 336,405 336,280" fill="none" stroke="#0ca678" stroke-width="1.6"/>
+  <path d="M336,271 l-5,9 h10 z" fill="#0ca678"/>
+</svg>
+<figcaption>图 9-X　窗口版滚动条与控件版滚动条：SB_VERT 与 SB_CTL 各指谁（原创绘制）</figcaption>
+</figure>
+
 
 <div class="note old"><span class="t">🟡 别从 wParam 高位取拖动位置</span><p><code>HIWORD(wParam)</code> 里那个"当前拖动位置"只有 16 位——范围一旦超过 65535 就会回绕出错。这是 Win16 兼容包袱。正确做法如上：处理 <code>SB_THUMBTRACK</code> 时用 <code>GetScrollInfo</code> 取 32 位的 <code>nTrackPos</code>。</p></div>
 
@@ -4994,6 +5356,99 @@ BEGIN
     PUSHBUTTON      "取消", IDCANCEL, 162, 96, 50, 14
 END</code></pre>
 <p>逐行读一下你就懂了：<code>IDD_ABOUT</code> 是这个对话框的 ID；<code>DIALOGEX</code> 是关键字，后面四个数是左上角坐标与宽高；<code>STYLE</code> 给窗口本身定风格；<code>CAPTION</code> 是标题栏文字；<code>FONT</code> 指定用哪种字体渲染；<code>BEGIN…END</code> 之间每一行就是一个控件，格式大体是"控件类型 文字, ID, x, y, 宽, 高, 附加风格"。</p>
+<figure data-mark="fig-dlg-template-rc-vs-ui">
+<svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="DIALOGEX 对话框模板与运行时对话框的逐行精确对照">
+<text class="svgmuted" x="40" y="26" font-size="12.5" font-weight="600">resource.rc 里的 DIALOGEX 模板：声明「有什么、摆在哪」</text>
+<text class="svgmuted" x="600" y="26" font-size="12.5" font-weight="600">运行时的对话框（模板声明 220×120，单位是 DLU）</text>
+
+<!-- 左：资源脚本 -->
+<rect x="40" y="44" width="440" height="306" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="48" y="121" width="424" height="20" rx="3" fill="var(--muted)" opacity=".15"/>
+<rect x="48" y="187" width="424" height="20" rx="3" fill="#0ca678" opacity=".14"/>
+<rect x="48" y="209" width="424" height="20" rx="3" fill="#1098ad" opacity=".14"/>
+<rect x="48" y="231" width="424" height="20" rx="3" fill="#e8590c" opacity=".15"/>
+<rect x="48" y="253" width="424" height="20" rx="3" fill="#7048e8" opacity=".13"/>
+<rect x="48" y="275" width="424" height="20" rx="3" fill="#e03131" opacity=".13"/>
+<rect x="48" y="297" width="424" height="20" rx="3" fill="#1971c2" opacity=".14"/>
+<g font-family="Consolas,monospace" font-size="12.5">
+<text class="svgtext" x="56" y="70">IDD_ABOUT DIALOGEX 0, 0, 220, 120</text>
+<text class="svgtext" x="56" y="92">STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP</text>
+<text class="svgtext" x="104" y="114">| WS_CAPTION | WS_SYSMENU</text>
+<text class="svgtext" x="56" y="136">CAPTION "关于本程序"</text>
+<text class="svgtext" x="56" y="158">FONT 9, "Segoe UI"</text>
+<text class="svgtext" x="56" y="180">BEGIN</text>
+<text class="svgtext" x="76" y="202">LTEXT "示例程序  版本 1.0", IDC_STATIC, 14,12,190,10</text>
+<text class="svgtext" x="76" y="224">LTEXT "请输入你的名字：", IDC_STATIC, 14,30,90,10</text>
+<text class="svgtext" x="76" y="246">EDITTEXT IDC_NAME, 100,28,106,14, ES_AUTOHSCROLL</text>
+<text class="svgtext" x="76" y="268">AUTOCHECKBOX "记住我的选择", IDC_REMEMBER, 14,52,120,12</text>
+<text class="svgtext" x="76" y="290">DEFPUSHBUTTON "确定", IDOK, 108,96,50,14</text>
+<text class="svgtext" x="76" y="312">PUSHBUTTON "取消", IDCANCEL, 162,96,50,14</text>
+<text class="svgtext" x="56" y="334">END</text>
+</g>
+
+<!-- 右：运行时对话框实景 -->
+<rect x="600" y="80" width="330" height="206" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="600" y="80" width="330" height="26" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="614" y="97" font-size="12">关于本程序</text>
+<text class="svgmuted" x="912" y="98" text-anchor="middle" font-size="13">×</text>
+<!-- LTEXT ×2（彩色侧条标记） -->
+<rect x="612" y="124" width="3" height="15" fill="#0ca678"/>
+<text class="svgtext" x="621" y="135" font-size="12">示例程序  版本 1.0</text>
+<rect x="612" y="151" width="3" height="15" fill="#1098ad"/>
+<text class="svgtext" x="621" y="162" font-size="12">请输入你的名字：</text>
+<!-- EDITTEXT -->
+<rect x="750" y="148" width="159" height="21" fill="var(--svg-fill)" stroke="#e8590c" stroke-width="1.4"/>
+<line x1="757" y1="152" x2="757" y2="165" stroke="var(--muted)" stroke-width="1.2"/>
+<!-- AUTOCHECKBOX -->
+<rect x="621" y="186" width="13" height="13" fill="var(--svg-fill)" stroke="#7048e8" stroke-width="1.6"/>
+<path d="M624,192.5 l3.2,3.8 l6,-7.5" fill="none" stroke="#7048e8" stroke-width="1.8"/>
+<text class="svgtext" x="641" y="197" font-size="12">记住我的选择</text>
+<!-- DEFPUSHBUTTON / PUSHBUTTON -->
+<rect x="762" y="250" width="75" height="21" rx="3" fill="var(--svg-soft)" stroke="#e03131" stroke-width="2.2"/>
+<text class="svgtext" x="799" y="264" text-anchor="middle" font-size="12">确定</text>
+<rect x="843" y="250" width="75" height="21" rx="3" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="1.3"/>
+<text class="svgtext" x="880" y="264" text-anchor="middle" font-size="12">取消</text>
+<text class="svgmuted" x="600" y="302" font-size="10.5">WS_SYSMENU：标题栏只有关闭按钮</text>
+
+<!-- 七条精确对应线 -->
+<polyline points="46,131 24,131 24,40 760,40 760,79" fill="none" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="3 3"/>
+<g fill="none" stroke-width="1.6">
+<polyline points="486,197 512,197 512,131 609,131" stroke="#0ca678"/>
+<polyline points="486,219 528,219 528,158 609,158" stroke="#1098ad"/>
+<polyline points="486,241 544,241 544,178 790,178" stroke="#e8590c"/>
+<polyline points="486,263 560,263 560,193 609,193" stroke="#7048e8"/>
+<polyline points="486,285 592,285 592,318 820,318 820,280" stroke="#e03131"/>
+<polyline points="486,307 576,307 576,332 890,332 890,280" stroke="#1971c2"/>
+</g>
+<g>
+<circle cx="46" cy="131" r="3" fill="var(--muted)"/><path d="M760,86 l-3.5,-7 h7 z" fill="var(--muted)"/>
+<circle cx="486" cy="197" r="3" fill="#0ca678"/><path d="M616,131 l-7,-3.5 v7 z" fill="#0ca678"/>
+<circle cx="486" cy="219" r="3" fill="#1098ad"/><path d="M616,158 l-7,-3.5 v7 z" fill="#1098ad"/>
+<circle cx="486" cy="241" r="3" fill="#e8590c"/><path d="M790,171 l-3.5,7 h7 z" fill="#e8590c"/>
+<circle cx="486" cy="263" r="3" fill="#7048e8"/><path d="M616,193 l-7,-3.5 v7 z" fill="#7048e8"/>
+<circle cx="486" cy="285" r="3" fill="#e03131"/><path d="M820,273 l-3.5,7 h7 z" fill="#e03131"/>
+<circle cx="486" cy="307" r="3" fill="#1971c2"/><path d="M890,273 l-3.5,7 h7 z" fill="#1971c2"/>
+</g>
+
+<!-- 底部两个语法说明框 -->
+<rect x="40" y="396" width="430" height="88" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="54" y="420" font-family="Consolas,monospace" font-size="12">14, 12, 190, 10</text>
+<text class="svgmuted" x="162" y="420" font-size="12">→</text>
+<text class="svgtext" x="180" y="420" font-size="12">x, y, 宽, 高——单位是 DLU，不是像素</text>
+<text class="svgmuted" x="54" y="446" font-size="10.5">横向 1 DLU = 平均字符宽的 1/4，纵向 1 DLU = 字符高的 1/8</text>
+<text class="svgmuted" x="54" y="464" font-size="10.5">换大字体或高 DPI 时，整个对话框按比例放大，布局不乱</text>
+<rect x="500" y="396" width="430" height="88" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="514" y="420" font-family="Consolas,monospace" font-size="12">DEFPUSHBUTTON</text>
+<text class="svgmuted" x="618" y="420" font-size="12">→</text>
+<text class="svgtext" x="636" y="420" font-size="12">默认按钮：边框加粗，按回车即触发</text>
+<text class="svgmuted" x="514" y="446" font-size="10.5">IDOK / IDCANCEL 是系统预定义的按钮命令 ID</text>
+<text class="svgmuted" x="514" y="464" font-size="10.5">STYLE 行里的 DS_CENTER 让对话框弹出时自动居中</text>
+
+<text class="svgmuted" x="480" y="518" text-anchor="middle" font-size="12">模板只写「有什么、摆在哪」，坐标全用 DLU——字体和 DPI 变化时，整张界面会成比例长大。</text>
+</svg>
+<figcaption>图 11-X　DIALOGEX 对话框模板与运行时对话框的逐行对照（原创绘制）</figcaption>
+</figure>
+
 <p>这里有个容易被忽视但极其关键的点：<strong>模板里的坐标和尺寸不是像素，而是"对话框单位"（DLU）</strong>。横向 1 个 DLU 等于当前字体平均字符宽度的 1/4，纵向 1 个 DLU 等于字符高度的 1/8。为什么要搞这么一套看似别扭的单位？因为它让对话框能随字体和 DPI 自动缩放——换一套大字体，整个对话框会成比例长大，控件之间的相对布局纹丝不动。你用像素写死的手工界面在高 DPI 屏上会挤成一团，而 DLU 布局天生就"会长大"。</p>
 <div class="note new"><span class="t">🔵 现代提示：用 DIALOGEX，别用 DIALOG</span><p>老资源用 <code>DIALOG</code> 关键字，现代一律用 <span class="badge new">现代更新</span><code>DIALOGEX</code>（扩展对话框模板 <code>DLGTEMPLATEEX</code>）。它支持更多风格、能给每个控件带扩展风格和帮助 ID，是今天的默认选择。字体也建议写 <code>"Segoe UI"</code> 9pt——它是现代 Windows 的系统 UI 字体。历史上常见的 <code>"MS Shell Dlg 2"</code> 是一个会映射到系统默认字体的别名，仍可用，但直接写 Segoe UI 更直白。</p></div>
 <div class="note ok"><span class="t">🟢 模板也能在内存里手搓</span><p>模板不一定非得来自 <code>.rc</code> 资源。你也可以在内存里手工填一个 <code>DLGTEMPLATE</code>/<code>DLGTEMPLATEEX</code> 结构，再用 <code>DialogBoxIndirect</code> 系列函数弹出——需要在运行时根据数据动态生成界面时会用到。这条路径今天仍然有效，只是绝大多数场景用资源模板更省事，故不展开。</p></div>
