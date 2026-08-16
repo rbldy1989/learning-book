@@ -3428,6 +3428,140 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 <p>通知码（经 <code>WM_COMMAND</code>）：<code>EN_CHANGE</code>（文本<strong>已</strong>改变，此刻读到的是新内容——实时校验就挂这里）、<code>EN_UPDATE</code>（即将重绘，早于 CHANGE）、<code>EN_SETFOCUS</code>/<code>EN_KILLFOCUS</code>、<code>EN_MAXTEXT</code>（撞到长度上限）、<code>EN_HSCROLL</code>/<code>EN_VSCROLL</code>、<code>EN_ERRSPACE</code>（内存不足）。</p>
 
 <pre><code><span class="cl">HWND hEdit = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"",</span><span class="cl">    WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL,</span><span class="cl">    24, 70, 220, 28, hwnd, (HMENU)(INT_PTR)IDC_EDIT_NAME, hInst, NULL);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:46.0ch">SendMessageW(hEdit, EM_SETLIMITTEXT, 64, 0);</span><span class="cm">// 最多 64 字符</span></span><span class="cl">SendMessageW(hEdit, EM_SETCUEBANNER, TRUE,</span><span class="cl"><span class="cc" style="min-width:46.0ch">             (LPARAM)L"请输入用户名");</span><span class="cm">// 灰色占位提示</span></span><span class="cl"><span class="cc" style="min-width:46.0ch">SendMessageW(hEdit, EM_SETSEL, 0, -1);</span><span class="cm">// 全选既有内容</span></span><span class="cl"> </span><span class="cl">wchar_t buf[65];</span><span class="cl"><span class="cc" style="min-width:46.0ch">GetWindowTextW(hEdit, buf, 65);</span><span class="cm">// 读取文本</span></span></code></pre>
+<figure data-mark="fig-edit-styles">
+<svg viewBox="0 0 960 556" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="EDIT 控件的单行、密码、多行、只读四种形态与通知码、文本读写方向">
+<defs><clipPath id="w9editClip1"><rect x="120" y="83" width="296" height="24"/></clipPath></defs>
+
+<text class="svgmuted" x="40" y="24" font-size="12.5" font-weight="600">同一个 "EDIT" 类：风格位一换，普通输入框就变成密码框，再变成一台小记事本</text>
+
+<!-- 窗口 -->
+<rect x="40" y="40" width="430" height="300" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="40" y="40" width="430" height="24" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="50" y="57" font-size="12">账户设置</text>
+<text class="svgmuted" x="460" y="57" text-anchor="end" font-size="11">─ □ ×</text>
+
+<!-- 行1：单行输入框 -->
+<text class="svgtext" x="112" y="100" text-anchor="end" font-size="12">用户名：</text>
+<rect x="118" y="82" width="300" height="26" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M119.5,107.5 v-24 h297" fill="none" stroke="var(--rule)" stroke-width="2" opacity=".55"/>
+<g clip-path="url(#w9editClip1)">
+<text class="svgtext" x="60" y="100" font-family="Consolas,monospace" font-size="12">wang.administrator@example.com</text>
+</g>
+<rect x="279" y="87" width="1.6" height="17" fill="#1971c2"/>
+
+<!-- 行2：密码框 -->
+<text class="svgtext" x="112" y="140" text-anchor="end" font-size="12">密码：</text>
+<rect x="118" y="122" width="300" height="26" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M119.5,147.5 v-24 h297" fill="none" stroke="var(--rule)" stroke-width="2" opacity=".55"/>
+<g fill="#7048e8">
+<circle cx="129" cy="135" r="3.4"/><circle cx="140" cy="135" r="3.4"/><circle cx="151" cy="135" r="3.4"/>
+<circle cx="162" cy="135" r="3.4"/><circle cx="173" cy="135" r="3.4"/><circle cx="184" cy="135" r="3.4"/>
+<circle cx="195" cy="135" r="3.4"/><circle cx="206" cy="135" r="3.4"/><circle cx="217" cy="135" r="3.4"/>
+</g>
+<rect x="226" y="127" width="1.6" height="17" fill="#7048e8"/>
+
+<!-- 行3：多行编辑区 -->
+<text class="svgtext" x="112" y="180" text-anchor="end" font-size="12">备注：</text>
+<rect x="118" y="162" width="300" height="90" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M119.5,251.5 v-88 h297" fill="none" stroke="var(--rule)" stroke-width="2" opacity=".55"/>
+<text class="svgtext" x="126" y="180" font-size="12">多行 EDIT 就是一台小记事本：</text>
+<text class="svgtext" x="126" y="198" font-size="12">Enter 换行、方向键移动光标、</text>
+<text class="svgtext" x="126" y="216" font-size="12">Ctrl+Z 撤销（只有一级）。</text>
+<text class="svgtext" x="126" y="234" font-size="12">满页后自动上滚，右边出滚动条</text>
+<rect x="308" y="222" width="1.6" height="16" fill="#0ca678"/>
+<!-- 垂直滚动条 -->
+<rect x="400" y="163" width="17" height="88" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="400" y="163" width="17" height="17" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<path d="M408.5,168 l5,8 h-10 z" fill="#0ca678"/>
+<rect x="400" y="234" width="17" height="17" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<path d="M408.5,246 l-5,-8 h10 z" fill="#0ca678"/>
+<rect x="402" y="196" width="13" height="34" rx="2" fill="#0ca678" opacity=".28" stroke="#0ca678"/>
+
+<!-- 行4：只读框 -->
+<text class="svgtext" x="112" y="284" text-anchor="end" font-size="12">安装路径：</text>
+<rect x="118" y="266" width="300" height="26" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<path d="M119.5,291.5 v-24 h297" fill="none" stroke="var(--rule)" stroke-width="2" opacity=".55"/>
+<text class="svgmuted" x="128" y="284" font-family="Consolas,monospace" font-size="11.5">C:\Program Files\MyApp</text>
+
+<text class="svgmuted" x="460" y="330" text-anchor="end" font-size="10.5">客户区</text>
+
+<!-- 四条精确对应线 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="419,95 582,95" stroke="#1971c2"/>
+<polyline points="419,135 500,135 500,169 582,169" stroke="#7048e8"/>
+<polyline points="419,207 520,207 520,250 582,250" stroke="#0ca678"/>
+<polyline points="419,279 546,279 546,326 582,326" stroke="#e8590c"/>
+</g>
+<g>
+<circle cx="419" cy="95" r="3" fill="#1971c2"/><path d="M589,95 l-7,-3.5 v7 z" fill="#1971c2"/>
+<circle cx="419" cy="135" r="3" fill="#7048e8"/><path d="M589,169 l-7,-3.5 v7 z" fill="#7048e8"/>
+<circle cx="419" cy="207" r="3" fill="#0ca678"/><path d="M589,250 l-7,-3.5 v7 z" fill="#0ca678"/>
+<circle cx="419" cy="279" r="3" fill="#e8590c"/><path d="M589,326 l-7,-3.5 v7 z" fill="#e8590c"/>
+</g>
+
+<!-- 四张风格位说明卡 -->
+<rect x="590" y="61" width="330" height="68" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+<text x="602" y="82" font-family="Consolas,monospace" font-size="12" font-weight="700" fill="#1971c2">ES_AUTOHSCROLL</text>
+<text class="svgmuted" x="602" y="101" font-size="10.5">光标顶到右缘时内容自动左移（前几个字已滚出</text>
+<text class="svgmuted" x="602" y="118" font-size="10.5">左边）。单行框不加它，超宽文本根本打不进去</text>
+
+<rect x="590" y="135" width="330" height="68" rx="6" fill="var(--svg-soft)" stroke="#7048e8"/>
+<text x="602" y="156" font-family="Consolas,monospace" font-size="12" font-weight="700" fill="#7048e8">ES_PASSWORD</text>
+<text class="svgmuted" x="602" y="175" font-size="10.5">屏幕上只是 ●，控件里存的仍是真字符；</text>
+<text class="svgmuted" x="602" y="192" font-size="10.5">EM_SETPASSWORDCHAR 可换字符，传 0 取消遮盖</text>
+
+<rect x="590" y="209" width="330" height="82" rx="6" fill="var(--svg-soft)" stroke="#0ca678"/>
+<text x="602" y="230" font-family="Consolas,monospace" font-size="11.5" font-weight="700" fill="#0ca678">ES_MULTILINE | WS_VSCROLL</text>
+<text x="602" y="247" font-family="Consolas,monospace" font-size="11.5" font-weight="700" fill="#0ca678">| ES_AUTOVSCROLL | ES_WANTRETURN</text>
+<text class="svgmuted" x="602" y="266" font-size="10.5">滚动条归 WS_VSCROLL 管，不是 EDIT 自带的；</text>
+<text class="svgmuted" x="602" y="283" font-size="10.5">ES_WANTRETURN 让对话框里的 Enter 换行</text>
+
+<rect x="590" y="297" width="330" height="58" rx="6" fill="var(--svg-soft)" stroke="#e8590c"/>
+<text x="602" y="318" font-family="Consolas,monospace" font-size="12" font-weight="700" fill="#e8590c">ES_READONLY</text>
+<text class="svgmuted" x="602" y="337" font-size="10.5">底色变灰、敲不进去，但仍可选中复制；</text>
+<text class="svgmuted" x="602" y="352" font-size="10.5">EM_SETREADONLY 可在运行时来回切换</text>
+
+<!-- ① 通知时序 -->
+<rect x="40" y="366" width="880" height="76" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgmuted" x="56" y="384" font-size="12.5" font-weight="600">① 用户改动一个字：两个通知码的先后顺序（都经 WM_COMMAND 送到父窗口，通知码在 HIWORD(wParam)）</text>
+<rect x="56" y="392" width="150" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="131" y="410" text-anchor="middle" font-size="11.5">用户按键 / 粘贴</text>
+<rect x="232" y="392" width="176" height="28" rx="4" fill="var(--svg-fill)" stroke="#e8590c" stroke-width="1.4"/>
+<text x="320" y="410" text-anchor="middle" font-family="Consolas,monospace" font-size="12" font-weight="700" fill="#e8590c">EN_UPDATE</text>
+<rect x="434" y="392" width="150" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="509" y="410" text-anchor="middle" font-size="11.5">控件把新文本画出来</text>
+<rect x="610" y="392" width="176" height="28" rx="4" fill="var(--svg-fill)" stroke="#0ca678" stroke-width="1.4"/>
+<text x="698" y="410" text-anchor="middle" font-family="Consolas,monospace" font-size="12" font-weight="700" fill="#0ca678">EN_CHANGE</text>
+<g fill="none" stroke="#1971c2" stroke-width="1.6">
+<line x1="206" y1="406" x2="224" y2="406"/><line x1="408" y1="406" x2="426" y2="406"/><line x1="584" y1="406" x2="602" y2="406"/>
+</g>
+<g fill="#1971c2">
+<path d="M231,406 l-7,-3.5 v7 z"/><path d="M433,406 l-7,-3.5 v7 z"/><path d="M609,406 l-7,-3.5 v7 z"/>
+</g>
+<text class="svgmuted" x="56" y="434" font-size="10.5">撞到长度上限时另发 EN_MAXTEXT</text>
+<text class="svgmuted" x="320" y="434" text-anchor="middle" font-size="10.5">即将重绘：读到的还是旧文本</text>
+<text class="svgmuted" x="698" y="434" text-anchor="middle" font-size="10.5">文本已改变：读到的是新内容</text>
+<text class="svgmuted" x="904" y="402" text-anchor="end" font-size="10.5">实时校验、字数统计</text>
+<text class="svgmuted" x="904" y="418" text-anchor="end" font-size="10.5">都挂在 EN_CHANGE 上</text>
+
+<!-- ② 文本读写方向 -->
+<rect x="40" y="452" width="880" height="96" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgmuted" x="56" y="471" font-size="12.5" font-weight="600">② 文本进出编辑框：两个方向，别搞反</text>
+<text class="svgmuted" x="904" y="471" text-anchor="end" font-size="10.5">读整数还有 GetDlgItemInt</text>
+<rect x="56" y="482" width="180" height="56" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="146" y="515" text-anchor="middle" font-size="12">你的代码（父窗口）</text>
+<rect x="684" y="482" width="180" height="56" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="774" y="515" text-anchor="middle" font-size="12">EDIT 里的文本缓冲</text>
+<text x="460" y="497" text-anchor="middle" font-size="10.5" fill="#1971c2">写入：SetWindowTextW / SetDlgItemTextW　→　控件收到 WM_SETTEXT，整段替换</text>
+<line x1="240" y1="506" x2="675" y2="506" stroke="#1971c2" stroke-width="1.6"/>
+<circle cx="240" cy="506" r="3" fill="#1971c2"/><path d="M682,506 l-7,-3.5 v7 z" fill="#1971c2"/>
+<line x1="675" y1="524" x2="249" y2="524" stroke="#0ca678" stroke-width="1.6"/>
+<circle cx="675" cy="524" r="3" fill="#0ca678"/><path d="M242,524 l7,-3.5 v7 z" fill="#0ca678"/>
+<text x="460" y="538" text-anchor="middle" font-size="10.5" fill="#0ca678">读出：GetWindowTextW / GetDlgItemTextW　←　把控件里的文本拷进你的缓冲区</text>
+</svg>
+<figcaption>图 9-X　EDIT 的四种形态、关键风格位与文本读写方向（原创绘制）</figcaption>
+</figure>
+
 
 <div class="note new"><span class="t">🔵 需要富文本？换 Rich Edit</span><p>经典 EDIT 只认纯文本、单一字体、一级撤销。要字体混排、颜色、图片、无限撤销，用它的大表哥 <strong>Rich Edit</strong>：<code>LoadLibraryW(L"Msftedit.dll")</code> 后以类名 <code>MSFTEDIT_CLASS</code>（<code>L"RICHEDIT50W"</code>）创建，消息集是 EDIT 的超集（<code>EM_SETCHARFORMAT</code>、<code>EM_STREAMIN</code>…）。写字板就是围着它建起来的。</p></div>
 
@@ -4264,6 +4398,113 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 </tbody></table>
 
 <pre><code><span class="cl">TVINSERTSTRUCTW tvis = {};</span><span class="cl">tvis.hParent      = TVI_ROOT;</span><span class="cl">tvis.hInsertAfter = TVI_LAST;</span><span class="cl">tvis.item.mask    = TVIF_TEXT;</span><span class="cl">tvis.item.pszText = (LPWSTR)L"项目";</span><span class="cl">HTREEITEM hRoot = TreeView_InsertItem(hTree, &amp;tvis);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:44.0ch">tvis.hParent      = hRoot;</span><span class="cm">// 挂到根下面</span></span><span class="cl">tvis.item.pszText = (LPWSTR)L"源代码";</span><span class="cl">TreeView_InsertItem(hTree, &amp;tvis);</span><span class="cl">tvis.item.pszText = (LPWSTR)L"文档";</span><span class="cl">TreeView_InsertItem(hTree, &amp;tvis);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:44.0ch">TreeView_Expand(hTree, hRoot, TVE_EXPAND);</span><span class="cm">// 展开根节点</span></span></code></pre>
+<figure data-mark="fig-treeview-insert-map">
+<svg viewBox="0 0 960 510" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="TreeView 插入代码与跑出来的树的逐字段对照">
+<text class="svgmuted" x="40" y="20" font-size="12.5" font-weight="600">本节这段代码：三次插入 + 一次展开</text>
+<text class="svgmuted" x="560" y="20" font-size="12.5" font-weight="600">运行后 TreeView 里长出来的树</text>
+
+<!-- 左：代码 -->
+<rect x="40" y="44" width="400" height="286" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="48" y="70" width="384" height="18" rx="3" fill="#1971c2" opacity=".15"/>
+<rect x="48" y="182" width="384" height="18" rx="3" fill="#0ca678" opacity=".15"/>
+<rect x="48" y="202" width="384" height="18" rx="3" fill="#1098ad" opacity=".15"/>
+<rect x="48" y="242" width="384" height="18" rx="3" fill="#7048e8" opacity=".14"/>
+<rect x="48" y="294" width="384" height="18" rx="3" fill="#e8590c" opacity=".16"/>
+<g font-family="Consolas,monospace" font-size="12.5">
+<text class="svgtext" x="52" y="64">TVINSERTSTRUCTW tvis = {};</text>
+<text class="svgtext" x="52" y="84">tvis.hParent&#160;&#160;&#160;&#160;&#160;&#160;= TVI_ROOT;</text>
+<text class="svgtext" x="52" y="104">tvis.hInsertAfter = TVI_LAST;</text>
+<text class="svgtext" x="52" y="124">tvis.item.mask&#160;&#160;&#160;&#160;= TVIF_TEXT;</text>
+<text class="svgtext" x="52" y="144">tvis.item.pszText = (LPWSTR)L"项目";</text>
+<text class="svgtext" x="52" y="164">HTREEITEM hRoot = TreeView_InsertItem(hTree, &amp;tvis);</text>
+<text class="svgtext" x="52" y="196">tvis.hParent&#160;&#160;&#160;&#160;&#160;&#160;= hRoot;</text>
+<text class="svgtext" x="52" y="216">tvis.item.pszText = (LPWSTR)L"源代码";</text>
+<text class="svgtext" x="52" y="236">TreeView_InsertItem(hTree, &amp;tvis);</text>
+<text class="svgtext" x="52" y="256">tvis.item.pszText = (LPWSTR)L"文档";</text>
+<text class="svgtext" x="52" y="276">TreeView_InsertItem(hTree, &amp;tvis);</text>
+<text class="svgtext" x="52" y="308">TreeView_Expand(hTree, hRoot, TVE_EXPAND);</text>
+</g>
+<text class="svgmuted" x="248" y="196" font-size="10.5">// 挂到根下面</text>
+<text class="svgmuted" x="352" y="308" font-size="10.5">// 展开根节点</text>
+
+<!-- 右：跑出来的树 -->
+<rect x="560" y="40" width="340" height="172" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="561" y="59" width="3" height="26" fill="#1971c2"/>
+<rect x="561" y="95" width="3" height="26" fill="#1098ad"/>
+<rect x="561" y="129" width="3" height="26" fill="#7048e8"/>
+
+<path class="svgtext" d="M571,68 L585,68 L578,79 Z"/>
+<text class="svgtext" x="594" y="78" font-size="13">项目</text>
+<g stroke="var(--muted)" stroke-dasharray="2 2" opacity=".9" fill="none">
+<line x1="608" y1="80" x2="608" y2="141"/>
+<line x1="608" y1="107" x2="624" y2="107"/>
+<line x1="608" y1="141" x2="624" y2="141"/>
+</g>
+<text class="svgtext" x="630" y="112" font-size="13">源代码</text>
+<text class="svgtext" x="630" y="146" font-size="13">文档</text>
+
+<!-- 缩进尺寸标注 -->
+<g stroke="var(--muted)" opacity=".7" fill="none">
+<line x1="594" y1="156" x2="594" y2="176" stroke-dasharray="3 3"/>
+<line x1="630" y1="156" x2="630" y2="176" stroke-dasharray="3 3"/>
+<line x1="596" y1="172" x2="628" y2="172"/>
+</g>
+<g opacity=".7"><path d="M593,172 l6,-3 v6 z" fill="var(--muted)"/>
+<path d="M631,172 l-6,-3 v6 z" fill="var(--muted)"/></g>
+<text class="svgmuted" x="638" y="176" font-size="10.5">一级缩进：子节点整体右移一格</text>
+
+<text class="svgmuted" x="560" y="234" font-size="10.5">① mask 只给了 TVIF_TEXT，所以三个节点都没有图标</text>
+<text class="svgmuted" x="560" y="252" font-size="10.5">② 两次子节点插入都用 TVI_LAST，兄弟按插入顺序排</text>
+<text class="svgmuted" x="560" y="270" font-size="10.5">③ ▶/▼ 按钮与层级点线来自 TVS_HASBUTTONS、</text>
+<text class="svgmuted" x="576" y="288" font-size="10.5">TVS_HASLINES、TVS_LINESATROOT 三个风格</text>
+
+<!-- 五条精确对应线 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="440,79 490,79 490,73 554,73" stroke="#1971c2"/>
+<polyline points="440,191 485,191 485,90 599,90" stroke="#0ca678"/>
+<polyline points="440,211 510,211 510,107 554,107" stroke="#1098ad"/>
+<polyline points="440,251 532,251 532,141 554,141" stroke="#7048e8"/>
+<polyline points="46,303 26,303 26,30 578,30 578,54" stroke="#e8590c"/>
+</g>
+<g>
+<circle cx="441" cy="79" r="3" fill="#1971c2"/><path d="M561,73 l-7,-3.5 v7 z" fill="#1971c2"/>
+<circle cx="441" cy="191" r="3" fill="#0ca678"/><path d="M606,90 l-7,-3.5 v7 z" fill="#0ca678"/>
+<circle cx="441" cy="211" r="3" fill="#1098ad"/><path d="M561,107 l-7,-3.5 v7 z" fill="#1098ad"/>
+<circle cx="441" cy="251" r="3" fill="#7048e8"/><path d="M561,141 l-7,-3.5 v7 z" fill="#7048e8"/>
+<circle cx="46" cy="303" r="3" fill="#e8590c"/><path d="M578,61 l-3.5,-7 h7 z" fill="#e8590c"/>
+</g>
+
+<!-- 惰性加载提示条 -->
+<rect x="40" y="350" width="880" height="110" rx="6" fill="var(--svg-soft)" stroke="#e03131" stroke-dasharray="6 3"/>
+<text x="56" y="374" font-family="Consolas,monospace" font-size="12" font-weight="700" fill="#e03131">cChildren = 1</text>
+<text class="svgtext" x="150" y="374" font-size="12">：惰性加载的关键——先假装有孩子，等用户展开时才真的去填</text>
+
+<rect x="56" y="390" width="200" height="52" rx="5" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<path class="svgtext" d="M66,405 L66,417 L75,411 Z"/>
+<text class="svgtext" x="82" y="415" font-size="12.5">源代码</text>
+<text class="svgmuted" x="126" y="415" font-size="10.5">← 带上了展开箭头</text>
+<text class="svgmuted" x="66" y="433" font-size="10.5">cChildren=1，其实还没插子节点</text>
+
+<rect x="288" y="390" width="230" height="52" rx="5" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="298" y="412" font-size="12.5">用户点 ▶ 想展开它</text>
+<text class="svgmuted" x="298" y="432" font-size="10.5">控件先发 TVN_ITEMEXPANDING 通知</text>
+
+<rect x="550" y="390" width="354" height="52" rx="5" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="560" y="412" font-size="12.5">此刻才用 TVM_INSERTITEM 把真子节点插进去</text>
+<text class="svgmuted" x="560" y="432" font-size="10.5">填完返回，控件立刻画出子树——大树不必开机就全读一遍</text>
+
+<g stroke="#e03131" stroke-width="1.6" fill="none">
+<line x1="262" y1="416" x2="278" y2="416"/>
+<line x1="524" y1="416" x2="540" y2="416"/>
+</g>
+<path d="M283,416 l-7,-3.5 v7 z" fill="#e03131"/>
+<path d="M545,416 l-7,-3.5 v7 z" fill="#e03131"/>
+
+<text class="svgmuted" x="480" y="486" text-anchor="middle" font-size="12">树里没有下标，只有 HTREEITEM：hParent 决定挂在谁下面，hInsertAfter 决定排在兄弟里的第几个。</text>
+</svg>
+<figcaption>图 9-X　TVINSERTSTRUCT 三次插入跑出来的树与各字段的落点（原创绘制）</figcaption>
+</figure>
+
 
 <h2 id="w9-moretools">9.11 Tab、进度条、滑块与 UpDown</h2>
 
@@ -4723,6 +4964,145 @@ WNDPROC g_oldProc = (WNDPROC)SetWindowLongPtrW(hEdit, GWLP_WNDPROC,
 </tbody></table>
 
 <p>配套规则：不等高列表（<code>LBS_OWNERDRAWVARIABLE</code>）会先发 <code>WM_MEASUREITEM</code> 问每项多高；没开 <code>LBS_HASSTRINGS</code> 的所有者绘制列表框销毁条目时发 <code>WM_DELETEITEM</code>，让你释放 itemData。</p>
+<figure data-mark="fig-subclass-ownerdraw">
+<svg viewBox="0 0 960 552" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="左：子类化的消息拦截链；右：BS_OWNERDRAW 按钮的 DRAWITEMSTRUCT 字段对位">
+
+<line x1="494" y1="16" x2="494" y2="522" stroke="var(--rule)" stroke-dasharray="5 4" opacity=".85"/>
+
+<!-- ================= 左半：子类化 ================= -->
+<text class="svgmuted" x="24" y="28" font-size="12.5" font-weight="600">左半：子类化——把你的过程插进控件的消息流</text>
+
+<rect x="40" y="44" width="340" height="32" rx="5" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="52" y="64" font-size="11.5">用户敲下一个键 → WM_CHAR 派送到 hEdit</text>
+
+<line x1="210" y1="76" x2="210" y2="92" stroke="var(--rule)" stroke-width="1.6"/>
+<path d="M210,98 l-4,-7 h8 z" fill="var(--rule)"/>
+
+<!-- 子类过程 -->
+<rect x="40" y="98" width="340" height="202" rx="6" fill="var(--svg-fill)" stroke="#1971c2" stroke-width="1.6"/>
+<rect x="41" y="99" width="338" height="25" fill="#1971c2" opacity=".13"/>
+<text x="52" y="116" font-family="Consolas,monospace" font-size="11.5" font-weight="700" fill="#1971c2">NumOnlyProc</text>
+<text class="svgmuted" x="132" y="116" font-size="10.5">你的子类过程：消息先到你手里</text>
+
+<rect x="52" y="132" width="316" height="28" rx="4" fill="#0ca678" opacity=".14"/>
+<text class="svgtext" x="62" y="150" font-size="10.5">WM_CHAR：wParam 在 '0'~'9'</text>
+<text x="358" y="150" text-anchor="end" font-size="10.5" fill="#0ca678">break → 放行</text>
+
+<rect x="52" y="166" width="316" height="28" rx="4" fill="#0ca678" opacity=".14"/>
+<text class="svgtext" x="62" y="184" font-size="10.5">wParam &lt; L'&#160;'（退格等控制字符）</text>
+<text x="358" y="184" text-anchor="end" font-size="10.5" fill="#0ca678">break → 放行</text>
+
+<rect x="52" y="200" width="316" height="28" rx="4" fill="#e03131" opacity=".14"/>
+<text class="svgtext" x="62" y="218" font-size="10.5">其余字符：MessageBeep</text>
+<text x="358" y="218" text-anchor="end" font-size="10.5" fill="#e03131">return 0 → 吞掉</text>
+
+<rect x="44" y="236" width="3" height="50" fill="#7048e8"/>
+<text x="54" y="250" font-family="Consolas,monospace" font-size="10.5" fill="#7048e8">SetWindowSubclass(hEdit, NumOnlyProc, 1, 0);</text>
+<text class="svgmuted" x="54" y="266" font-size="10">现代做法：带子类 ID 与 dwRefData，多方子类化互不打架</text>
+<text class="svgmuted" x="54" y="282" font-size="10">WM_NCDESTROY 里 RemoveWindowSubclass 自我拆除</text>
+
+<!-- 红：拦下后原路返回 -->
+<polyline points="368,214 410,214 410,62 384,62" fill="none" stroke="#e03131" stroke-width="1.6"/>
+<circle cx="368" cy="214" r="3" fill="#e03131"/>
+<path d="M378,62 l7,-4 v8 z" fill="#e03131"/>
+<text x="416" y="132" font-family="Consolas,monospace" font-size="10" fill="#e03131">return 0</text>
+<text x="416" y="147" font-size="10" fill="#e03131">消息就地终结</text>
+
+<!-- 绿：放行往下走 -->
+<line x1="210" y1="300" x2="210" y2="314" stroke="#0ca678" stroke-width="1.6"/>
+<path d="M210,320 l-4,-7 h8 z" fill="#0ca678"/>
+<text x="224" y="314" font-size="10" fill="#0ca678">放行的消息继续下传</text>
+
+<rect x="40" y="320" width="340" height="44" rx="6" fill="var(--svg-soft)" stroke="#0ca678"/>
+<text class="svgtext" x="52" y="340" font-family="Consolas,monospace" font-size="10.5">return DefSubclassProc(hwnd, msg, wParam, lParam);</text>
+<text class="svgmuted" x="52" y="356" font-size="10">不必自己保存原过程指针——链上的下一环由系统找</text>
+
+<line x1="210" y1="364" x2="210" y2="378" stroke="var(--rule)" stroke-width="1.6"/>
+<path d="M210,384 l-4,-7 h8 z" fill="var(--rule)"/>
+
+<rect x="40" y="384" width="340" height="44" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="52" y="404" font-size="11.5">EDIT 控件原来的窗口过程</text>
+<text class="svgmuted" x="52" y="420" font-size="10">插字符、移光标、选中反白——这些你一行都没重写</text>
+
+<!-- ================= 右半：所有者绘制 ================= -->
+<text class="svgmuted" x="506" y="28" font-size="12.5" font-weight="600">右半：所有者绘制——DRAWITEMSTRUCT 各字段对应按钮的哪一块</text>
+
+<rect x="506" y="44" width="430" height="36" rx="5" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="518" y="61" font-size="11.5">按钮加了 BS_OWNERDRAW → 需要重绘时给父窗口发 WM_DRAWITEM</text>
+<text class="svgmuted" x="518" y="75" font-size="10">lParam = (DRAWITEMSTRUCT*)：作画要用的一切都在这个结构里</text>
+
+<!-- 放大的按钮 -->
+<rect x="660" y="118" width="200" height="84" fill="var(--svg-soft2)" stroke="#1971c2" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text class="svgtext" x="760" y="172" text-anchor="middle" font-size="15">确定</text>
+<text class="svgmuted" x="660" y="112" font-size="9.5">(rcItem.left, rcItem.top)</text>
+<text class="svgmuted" x="860" y="216" text-anchor="end" font-size="9.5">(rcItem.right, rcItem.bottom)</text>
+
+<rect x="506" y="112" width="134" height="42" rx="5" fill="var(--svg-soft)" stroke="#1971c2"/>
+<text x="516" y="130" font-family="Consolas,monospace" font-size="11.5" font-weight="700" fill="#1971c2">rcItem</text>
+<text class="svgmuted" x="516" y="146" font-size="9.8">允许作画的矩形</text>
+
+<rect x="506" y="166" width="134" height="42" rx="5" fill="var(--svg-soft)" stroke="#1098ad"/>
+<text x="516" y="184" font-family="Consolas,monospace" font-size="11.5" font-weight="700" fill="#1098ad">hDC</text>
+<text class="svgmuted" x="516" y="200" font-size="9.8">所有 GDI 都画在它上</text>
+
+<line x1="640" y1="130" x2="652" y2="130" stroke="#1971c2" stroke-width="1.6"/>
+<circle cx="640" cy="130" r="3" fill="#1971c2"/>
+<path d="M660,130 l-7,-4 v8 z" fill="#1971c2"/>
+
+<line x1="640" y1="187" x2="694" y2="187" stroke="#1098ad" stroke-width="1.6"/>
+<circle cx="640" cy="187" r="3" fill="#1098ad"/>
+<path d="M702,187 l-7,-4 v8 z" fill="#1098ad"/>
+
+<text class="svgmuted" x="506" y="228" font-size="10">rcItem 用的是控件自身坐标：左上角就是 (0,0)，画到框外会被裁掉</text>
+
+<!-- itemState 四态 -->
+<text class="svgmuted" x="506" y="256" font-size="11.5" font-weight="600">itemState：同一段绘制代码，状态位不同就得画出不同长相</text>
+
+<rect x="514" y="270" width="84" height="42" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="556" y="296" text-anchor="middle" font-size="12">确定</text>
+<text class="svgmuted" x="556" y="332" text-anchor="middle" font-family="Consolas,monospace" font-size="10">itemState = 0</text>
+<text class="svgmuted" x="556" y="347" text-anchor="middle" font-size="9.8">按常态画</text>
+
+<rect x="624" y="270" width="84" height="42" rx="3" fill="#e8590c" opacity=".18"/>
+<rect x="624" y="270" width="84" height="42" rx="3" fill="none" stroke="#e8590c" stroke-width="1.6"/>
+<path d="M627,311 v-38 h78" fill="none" stroke="var(--rule)" stroke-width="2.5"/>
+<text class="svgtext" x="667" y="297" text-anchor="middle" font-size="12">确定</text>
+<text x="666" y="332" text-anchor="middle" font-family="Consolas,monospace" font-size="10" fill="#e8590c">ODS_SELECTED</text>
+<text class="svgmuted" x="666" y="347" text-anchor="middle" font-size="9.8">画成按下去的样子</text>
+
+<rect x="734" y="270" width="84" height="42" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="739" y="275" width="74" height="32" fill="none" stroke="#7048e8" stroke-width="1.4" stroke-dasharray="3 2"/>
+<text class="svgtext" x="776" y="296" text-anchor="middle" font-size="12">确定</text>
+<text x="776" y="332" text-anchor="middle" font-family="Consolas,monospace" font-size="10" fill="#7048e8">ODS_FOCUS</text>
+<text class="svgmuted" x="776" y="347" text-anchor="middle" font-size="9.8">焦点虚框自己画</text>
+
+<rect x="844" y="270" width="84" height="42" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+<text class="svgmuted" x="886" y="296" text-anchor="middle" font-size="12">确定</text>
+<text class="svgmuted" x="886" y="332" text-anchor="middle" font-family="Consolas,monospace" font-size="10">ODS_DISABLED</text>
+<text class="svgmuted" x="886" y="347" text-anchor="middle" font-size="9.8">文字画灰、不响应</text>
+
+<text class="svgmuted" x="506" y="378" font-size="10">itemAction 说明「为何而画」：ODA_DRAWENTIRE 整块重画 /</text>
+<text class="svgmuted" x="506" y="394" font-size="10">ODA_SELECT 选中态变了 / ODA_FOCUS 焦点变了——可以只重画变化的那部分</text>
+<text class="svgmuted" x="506" y="414" font-size="10">CtlType/CtlID 认领是谁；列表框另有 itemID（第几项）和 itemData（私有数据）</text>
+
+<!-- ================= 底部两条总结带 ================= -->
+<rect x="24" y="440" width="464" height="76" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="38" y="455" width="14" height="8" rx="2" fill="#0ca678"/>
+<text class="svgtext" x="58" y="463" font-size="10.5">绿 = 放行：break 之后走 DefSubclassProc，控件照常处理</text>
+<rect x="38" y="475" width="14" height="8" rx="2" fill="#e03131"/>
+<text class="svgtext" x="58" y="483" font-size="10.5">红 = 拦下：return 0，消息就地终结，原过程永远看不到</text>
+<text class="svgmuted" x="38" y="503" font-size="10">旧办法用 SetWindowLongPtrW + CallWindowProcW：指针自存，链条易断</text>
+
+<rect x="500" y="440" width="436" height="76" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="514" y="463" font-size="10.5">接管绘制 = 接管全部：焦点框、按下反馈、禁用灰化都归你</text>
+<text class="svgtext" x="514" y="483" font-size="10.5">ListView/TreeView/工具栏没有这个风格，走 NM_CUSTOMDRAW 微调</text>
+<text class="svgmuted" x="514" y="503" font-size="10">不等高列表先答 WM_MEASUREITEM，销毁条目答 WM_DELETEITEM 释放 itemData</text>
+
+<text class="svgmuted" x="480" y="538" text-anchor="middle" font-size="11.5">能用风格解决的不子类化，能子类化解决的不所有者绘制——每往下一层，就多一批要自己重新负责的东西。</text>
+</svg>
+<figcaption>图 9-X　子类化的消息拦截链与所有者绘制的 DRAWITEMSTRUCT 对位（原创绘制）</figcaption>
+</figure>
+
 
 <div class="note new"><span class="t">🔵 通用控件请用 Custom Draw，别硬来</span><p>ListView/TreeView/工具栏没有"所有者绘制"风格，它们的定制通道是 <code>WM_NOTIFY</code> 里的 <code>NM_CUSTOMDRAW</code>：绘制分阶段征询（<code>CDDS_PREPAINT</code> → 返回 <code>CDRF_NOTIFYITEMDRAW</code> → 每项 <code>CDDS_ITEMPREPAINT</code>），你可以只改某一行的文字颜色、背景或字体，其余仍由控件自己画——比整个接管轻巧得多。"报表里负数标红"这种需求，十几行代码就完。</p></div>
 
@@ -4930,6 +5310,121 @@ IDI_APP     ICON    "app.ico"
 
 <span class="cm">// 一个光标资源</span>
 IDC_HAND    CURSOR  "hand.cur"</code></pre>
+<figure data-mark="fig-rc-manifest-to-exe">
+<svg viewBox="0 0 960 545" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="资源脚本里的五类条目与编译进 exe 资源节后的逐条对应">
+<text class="svgmuted" x="40" y="26" font-size="12.5" font-weight="600">app.rc：一张纯声明的「购物清单」</text>
+<text class="svgmuted" x="620" y="26" font-size="12.5" font-weight="600">app.exe 内部：清单上的每一条都落进了资源节</text>
+
+<!-- 左：资源脚本 -->
+<rect x="40" y="44" width="362" height="332" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="48" y="84" width="346" height="22" rx="3" fill="#1971c2" opacity=".14"/>
+<rect x="48" y="108" width="346" height="22" rx="3" fill="#1098ad" opacity=".16"/>
+<rect x="48" y="134" width="346" height="88" rx="3" fill="#0ca678" opacity=".13"/>
+<rect x="48" y="228" width="346" height="84" rx="3" fill="#e8590c" opacity=".15"/>
+<rect x="48" y="316" width="346" height="46" rx="3" fill="#7048e8" opacity=".13"/>
+<g font-family="Consolas,monospace" font-size="12.5">
+<text class="svgmuted" x="56" y="70">#include "resource.h"</text>
+<text class="svgtext" x="56" y="100">IDI_APP&#160;&#160;&#160;&#160;&#160;&#160;ICON&#160;&#160;&#160;&#160;"app.ico"</text>
+<text class="svgtext" x="56" y="124">IDC_HAND&#160;&#160;&#160;&#160;&#160;CURSOR&#160;&#160;"hand.cur"</text>
+<text class="svgtext" x="56" y="150">IDR_MAINMENU MENU</text>
+<text class="svgtext" x="56" y="171">BEGIN</text>
+<text class="svgtext" x="72" y="192">POPUP "文件(&amp;F)" BEGIN … END</text>
+<text class="svgtext" x="56" y="213">END</text>
+<text class="svgtext" x="56" y="244">STRINGTABLE</text>
+<text class="svgtext" x="56" y="265">BEGIN</text>
+<text class="svgtext" x="72" y="286">IDS_ERR_OPENFILE "无法打开文件…"</text>
+<text class="svgtext" x="56" y="307">END</text>
+<text class="svgtext" x="56" y="332">IDD_ABOUT DIALOGEX 0, 0, 220, 120</text>
+<text class="svgtext" x="56" y="353">BEGIN … END</text>
+</g>
+
+<!-- 右：exe 里的资源节 -->
+<rect x="620" y="44" width="320" height="332" rx="6" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="620" y="44" width="320" height="30" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="632" y="64" font-size="12" font-weight="600">资源节（.rsrc）：按类型分栏，每条挂一个 ID</text>
+
+<rect x="630" y="86" width="300" height="44" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="630" y="86" width="4" height="44" fill="#1971c2"/>
+<text class="svgtext" x="644" y="104" font-size="12">图标　<tspan font-family="Consolas,monospace">IDI_APP</tspan></text>
+<text class="svgmuted" x="644" y="121" font-size="10.5">app.ico 的图像数据，已复制进来</text>
+
+<rect x="630" y="138" width="300" height="44" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="630" y="138" width="4" height="44" fill="#1098ad"/>
+<text class="svgtext" x="644" y="156" font-size="12">光标　<tspan font-family="Consolas,monospace">IDC_HAND</tspan></text>
+<text class="svgmuted" x="644" y="173" font-size="10.5">hand.cur 的图像数据</text>
+
+<rect x="630" y="190" width="300" height="44" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="630" y="190" width="4" height="44" fill="#0ca678"/>
+<text class="svgtext" x="644" y="208" font-size="12">菜单　<tspan font-family="Consolas,monospace">IDR_MAINMENU</tspan></text>
+<text class="svgmuted" x="644" y="225" font-size="10.5">整棵菜单树：每项的文字 + 命令 ID</text>
+
+<rect x="630" y="242" width="300" height="44" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="630" y="242" width="4" height="44" fill="#e8590c"/>
+<text class="svgtext" x="644" y="260" font-size="12">字符串表</text>
+<text class="svgmuted" x="644" y="277" font-size="10.5">每条文字配一个 ID，翻译时只换这一块</text>
+
+<rect x="630" y="294" width="300" height="44" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="630" y="294" width="4" height="44" fill="#7048e8"/>
+<text class="svgtext" x="644" y="312" font-size="12">对话框模板　<tspan font-family="Consolas,monospace">IDD_ABOUT</tspan></text>
+<text class="svgmuted" x="644" y="329" font-size="10.5">控件布局（第 11 章展开）</text>
+
+<text class="svgmuted" x="630" y="360" font-size="10.5">运行时：Load××(hInstance, ID) 拿着门牌号来这里取</text>
+
+<!-- 五条精确对应线 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="404,95 528,95 528,108 620,108" stroke="#1971c2"/>
+<polyline points="404,119 506,119 506,160 620,160" stroke="#1098ad"/>
+<polyline points="404,145 484,145 484,212 620,212" stroke="#0ca678"/>
+<polyline points="404,239 462,239 462,264 620,264" stroke="#e8590c"/>
+<polyline points="404,327 440,327 440,316 620,316" stroke="#7048e8"/>
+</g>
+<g>
+<circle cx="404" cy="95" r="3" fill="#1971c2"/><path d="M628,108 l-8,-4 v8 z" fill="#1971c2"/>
+<circle cx="404" cy="119" r="3" fill="#1098ad"/><path d="M628,160 l-8,-4 v8 z" fill="#1098ad"/>
+<circle cx="404" cy="145" r="3" fill="#0ca678"/><path d="M628,212 l-8,-4 v8 z" fill="#0ca678"/>
+<circle cx="404" cy="239" r="3" fill="#e8590c"/><path d="M628,264 l-8,-4 v8 z" fill="#e8590c"/>
+<circle cx="404" cy="327" r="3" fill="#7048e8"/><path d="M628,316 l-8,-4 v8 z" fill="#7048e8"/>
+</g>
+
+<!-- 底部：工具链 -->
+<text class="svgmuted" x="40" y="406" font-size="12.5" font-weight="600">中间发生了什么：整条工具链</text>
+
+<rect x="40" y="430" width="150" height="60" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="115" y="454" text-anchor="middle" font-family="Consolas,monospace" font-size="12">app.rc</text>
+<text class="svgmuted" x="115" y="473" text-anchor="middle" font-size="10.5">＋ app.ico / hand.cur</text>
+
+<text class="svgmuted" x="245" y="444" text-anchor="middle" font-family="Consolas,monospace" font-size="11.5">rc.exe</text>
+<line x1="196" y1="460" x2="288" y2="460" stroke="var(--rule)" stroke-width="2"/>
+<path d="M298,460 l-10,-5 v10 z" fill="var(--rule)"/>
+
+<rect x="300" y="430" width="140" height="60" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="370" y="454" text-anchor="middle" font-family="Consolas,monospace" font-size="12">app.res</text>
+<text class="svgmuted" x="370" y="473" text-anchor="middle" font-size="10.5">编译好的二进制资源</text>
+
+<text class="svgmuted" x="500" y="428" text-anchor="middle" font-family="Consolas,monospace" font-size="11.5">link.exe</text>
+<text class="svgmuted" x="500" y="445" text-anchor="middle" font-size="10.5">＋ 你的 .obj</text>
+<line x1="446" y1="460" x2="544" y2="460" stroke="var(--rule)" stroke-width="2"/>
+<path d="M554,460 l-10,-5 v10 z" fill="var(--rule)"/>
+
+<rect x="560" y="418" width="180" height="84" rx="6" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<text class="svgtext" x="570" y="436" font-family="Consolas,monospace" font-size="12" font-weight="600">app.exe</text>
+<rect x="568" y="442" width="164" height="18" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgmuted" x="576" y="455" font-size="10.5">.text　代码节</text>
+<rect x="568" y="462" width="164" height="18" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgmuted" x="576" y="475" font-size="10.5">.data　数据节</text>
+<rect x="568" y="482" width="164" height="18" fill="#1971c2" opacity=".16"/>
+<rect x="568" y="482" width="164" height="18" fill="none" stroke="#1971c2"/>
+<text class="svgtext" x="576" y="495" font-size="10.5">.rsrc　资源节</text>
+
+<text class="svgmuted" x="760" y="438" font-size="10.5">资源不是随程序分发的外挂文件，</text>
+<text class="svgmuted" x="760" y="456" font-size="10.5">而是被链接器缝进 exe 内部。</text>
+<text class="svgmuted" x="760" y="474" font-size="10.5">代码只管拿 ID 去那里按图索骥。</text>
+
+<text class="svgmuted" x="480" y="528" text-anchor="middle" font-size="12">resource.h 里的 #define 让 .rc 和 .cpp 写同一个符号名 —— ID 就是资源的门牌号，两边靠它对上。</text>
+</svg>
+<figcaption>图 10-X　一份 .rc 清单里的五类条目，与编译进 exe 资源节后的逐条对应（原创绘制）</figcaption>
+</figure>
+
 
 <div class="note new">
 <span class="t">🔵 现代提示：resource.h 是代码与资源的握手协议</span>
@@ -5101,6 +5596,120 @@ IDC_HAND    CURSOR  "hand.cur"</code></pre>
     }
     <span class="kw">return</span> DefWindowProcW(hwnd, msg, wParam, lParam);
 }</code></pre>
+<figure data-mark="fig-command-three-routes">
+<svg viewBox="0 0 940 550" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="菜单、快捷键、子控件三条来路汇流成同一条 WM_COMMAND 并进入同一个 switch">
+<text class="svgmuted" x="470" y="22" text-anchor="middle" font-size="12.5" font-weight="600">三条不同的来路，最后都变成同一条 WM_COMMAND，落进同一个 switch</text>
+
+<!-- 三个来源 -->
+<rect x="16" y="36" width="290" height="84" rx="6" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="1.4"/>
+<text x="28" y="58" font-size="12.5" font-weight="600" fill="#1971c2">① 点菜单项「打开(O)」</text>
+<text class="svgmuted" x="28" y="76" font-size="10.5">用户用鼠标在菜单上选中它</text>
+<g font-family="Consolas,monospace" font-size="10.5">
+<text class="svgtext" x="28" y="96">HIWORD(wParam)=0（菜单）</text>
+<text class="svgtext" x="28" y="112">LOWORD(wParam)=IDM_OPEN,  lParam=NULL</text>
+</g>
+
+<rect x="325" y="36" width="290" height="84" rx="6" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.4"/>
+<text x="337" y="58" font-size="12.5" font-weight="600" fill="#0ca678">② 按快捷键 Ctrl+O</text>
+<text class="svgmuted" x="337" y="76" font-size="10.5">TranslateAcceleratorW 查表命中后翻译而来</text>
+<g font-family="Consolas,monospace" font-size="10.5">
+<text class="svgtext" x="337" y="96">HIWORD(wParam)=1（快捷键）</text>
+<text class="svgtext" x="337" y="112">LOWORD(wParam)=IDM_OPEN,  lParam=NULL</text>
+</g>
+
+<rect x="634" y="36" width="290" height="84" rx="6" fill="var(--svg-soft)" stroke="#7048e8" stroke-width="1.4"/>
+<text x="646" y="58" font-size="12.5" font-weight="600" fill="#7048e8">③ 子控件汇报：「确定」按钮</text>
+<text class="svgmuted" x="646" y="76" font-size="10.5">按钮被按下并松开，向父窗口报告</text>
+<g font-family="Consolas,monospace" font-size="10.5">
+<text class="svgtext" x="646" y="96">HIWORD(wParam)=BN_CLICKED</text>
+<text class="svgtext" x="646" y="112">LOWORD(wParam)=IDC_OK,  lParam=按钮的 HWND</text>
+</g>
+
+<!-- 三路汇入 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="161,120 161,136 300,136 300,146" stroke="#1971c2"/>
+<polyline points="470,120 470,146" stroke="#0ca678"/>
+<polyline points="779,120 779,136 640,136 640,146" stroke="#7048e8"/>
+</g>
+<g>
+<path d="M296,146 h8 l-4,8 z" fill="#1971c2"/>
+<path d="M466,146 h8 l-4,8 z" fill="#0ca678"/>
+<path d="M636,146 h8 l-4,8 z" fill="#7048e8"/>
+</g>
+
+<!-- WM_COMMAND 参数解剖 -->
+<rect x="130" y="156" width="680" height="156" rx="8" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="470" y="177" text-anchor="middle" font-size="12.5" font-weight="600">同一条 WM_COMMAND —— 三样信息挤在两个参数里</text>
+
+<text class="svgmuted" x="355" y="198" text-anchor="middle" font-size="11">wParam（32 位）</text>
+<text class="svgmuted" x="680" y="198" text-anchor="middle" font-size="11">lParam</text>
+<rect x="155" y="204" width="400" height="30" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<line x1="355" y1="204" x2="355" y2="234" stroke="var(--rule)"/>
+<text class="svgtext" x="255" y="223" text-anchor="middle" font-size="11.5">高 16 位</text>
+<text class="svgtext" x="455" y="223" text-anchor="middle" font-size="11.5">低 16 位</text>
+<rect x="580" y="204" width="200" height="30" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgmuted" x="680" y="223" text-anchor="middle" font-size="11">一整份，不分高低位</text>
+
+<!-- 三条精确标注线 -->
+<g fill="none" stroke-width="1.6">
+<line x1="250" y1="234" x2="250" y2="244" stroke="#e8590c"/>
+<line x1="460" y1="234" x2="460" y2="244" stroke="#1098ad"/>
+<line x1="683" y1="234" x2="683" y2="244" stroke="#e03131"/>
+</g>
+<g>
+<circle cx="250" cy="235" r="3" fill="#e8590c"/><path d="M246,242 h8 l-4,7 z" fill="#e8590c"/>
+<circle cx="460" cy="235" r="3" fill="#1098ad"/><path d="M456,242 h8 l-4,7 z" fill="#1098ad"/>
+<circle cx="683" cy="235" r="3" fill="#e03131"/><path d="M679,242 h8 l-4,7 z" fill="#e03131"/>
+</g>
+
+<rect x="145" y="250" width="210" height="56" rx="6" fill="var(--svg-soft2)" stroke="#e8590c"/>
+<text x="155" y="268" font-family="Consolas,monospace" font-size="11.5" font-weight="700" fill="#e8590c">HIWORD(wParam)</text>
+<text class="svgmuted" x="155" y="285" font-size="10.5">通知码 = 这条命令是谁触发的</text>
+<text class="svgmuted" x="155" y="300" font-size="10.5">菜单 0 / 快捷键 1 / 控件各自的码</text>
+
+<rect x="365" y="250" width="205" height="56" rx="6" fill="var(--svg-soft2)" stroke="#1098ad"/>
+<text x="375" y="268" font-family="Consolas,monospace" font-size="11.5" font-weight="700" fill="#1098ad">LOWORD(wParam)</text>
+<text class="svgmuted" x="375" y="285" font-size="10.5">命令 ID = 要做什么</text>
+<text class="svgmuted" x="375" y="300" font-size="10.5">三条路都靠它进同一个 case</text>
+
+<rect x="580" y="250" width="215" height="56" rx="6" fill="var(--svg-soft2)" stroke="#e03131"/>
+<text x="590" y="268" font-family="Consolas,monospace" font-size="11.5" font-weight="700" fill="#e03131">lParam</text>
+<text class="svgmuted" x="590" y="285" font-size="10.5">触发它的那个控件的 HWND</text>
+<text class="svgmuted" x="590" y="300" font-size="10.5">菜单 / 快捷键触发时为 NULL</text>
+
+<!-- 汇入窗口过程 -->
+<line x1="470" y1="312" x2="470" y2="326" stroke="var(--rule)" stroke-width="1.8"/>
+<path d="M466,326 h8 l-4,8 z" fill="var(--rule)"/>
+
+<!-- 窗口过程里的 switch -->
+<rect x="95" y="334" width="750" height="182" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="105" y="364" width="730" height="20" rx="3" fill="#1098ad" opacity=".14"/>
+<rect x="158" y="404" width="375" height="20" rx="3" fill="#0ca678" opacity=".13"/>
+<g font-family="Consolas,monospace" font-size="12.5">
+<text class="svgtext" x="112" y="358">case WM_COMMAND:</text>
+<text class="svgtext" x="140" y="378">switch (LOWORD(wParam))</text>
+<text class="svgtext" x="140" y="398">{</text>
+<text class="svgtext" x="168" y="418">case IDM_OPEN:</text>
+<text class="svgtext" x="290" y="418">DoOpenFile(hwnd);</text>
+<text class="svgtext" x="445" y="418">return 0;</text>
+<text class="svgtext" x="168" y="438">case IDM_SAVE:</text>
+<text class="svgtext" x="290" y="438">DoSaveFile(hwnd);</text>
+<text class="svgtext" x="445" y="438">return 0;</text>
+<text class="svgtext" x="168" y="458">case IDM_EXIT:</text>
+<text class="svgtext" x="290" y="458">DestroyWindow(hwnd);</text>
+<text class="svgtext" x="445" y="458">return 0;</text>
+<text class="svgtext" x="140" y="478">}</text>
+<text class="svgtext" x="140" y="498">break;</text>
+</g>
+<text x="340" y="378" font-size="11" fill="#1098ad">← 三条路在这里合流：只看低 16 位的命令 ID</text>
+<text class="svgmuted" x="555" y="418" font-size="11">← 点菜单和按 Ctrl+O 都落到这一行</text>
+<text class="svgmuted" x="555" y="458" font-size="11">按钮那条则落在它自己的 IDC_ 分支上</text>
+
+<text class="svgmuted" x="470" y="536" text-anchor="middle" font-size="11.5">要区分来路时才去看 HIWORD 和 lParam；多数时候你只关心「哪个命令」，所以几乎总是先 LOWORD(wParam)。</text>
+</svg>
+<figcaption>图 10-X　WM_COMMAND 的三路汇流：菜单、快捷键、子控件通知（原创绘制）</figcaption>
+</figure>
+
 
 <p>这里有个设计上的巧妙之处，值得你停下来体会：<strong>菜单项自己不知道该干什么</strong>。资源脚本里，<code>IDM_OPEN</code> 只是一个数字，它不携带任何「打开文件」的逻辑。逻辑完全住在代码这一边。菜单和代码之间唯一的纽带，就是那个 ID。</p>
 
@@ -5144,6 +5753,132 @@ wc.hIconSm = LoadIconW(hInstance, MAKEINTRESOURCEW(IDI_APP));
 wc.hCursor = LoadCursorW(<span class="kw">nullptr</span>, IDC_ARROW);
 
 RegisterClassExW(&amp;wc);</code></pre>
+<figure data-mark="fig-icon-sizes-in-ui">
+<svg viewBox="0 0 940 532" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="同一个图标资源的三种像素尺寸分别出现在标题栏、任务栏与 Alt+Tab 切换器">
+<text class="svgmuted" x="40" y="26" font-size="12.5" font-weight="600">一个 app.ico 里打包了多种分辨率</text>
+<text class="svgmuted" x="400" y="26" font-size="12.5" font-weight="600">三处界面，取的都是同一个 IDI_APP —— 只是要的像素数不同</text>
+
+<!-- 左：.ico 里的多分辨率 -->
+<rect x="40" y="44" width="260" height="330" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="52" y="66" font-family="Consolas,monospace" font-size="12" font-weight="600">app.ico</text>
+<text class="svgmuted" x="118" y="66" font-size="11">资源 ID = IDI_APP</text>
+<line x1="48" y1="76" x2="292" y2="76" stroke="var(--rule)"/>
+
+<!-- 16 -->
+<rect x="56" y="94" width="16" height="16" rx="3" fill="#1971c2" opacity=".22"/>
+<rect x="56" y="94" width="16" height="16" rx="3" fill="none" stroke="#1971c2"/>
+<rect x="60" y="99" width="8" height="6" fill="var(--svg-fill)" stroke="#1971c2" stroke-width=".7"/>
+<text class="svgtext" x="90" y="103" font-size="11.5">16 × 16 像素</text>
+<text class="svgmuted" x="90" y="119" font-size="10.5">给窗口标题栏左上角用</text>
+
+<!-- 32 -->
+<rect x="56" y="138" width="32" height="32" rx="5" fill="#0ca678" opacity=".22"/>
+<rect x="56" y="138" width="32" height="32" rx="5" fill="none" stroke="#0ca678"/>
+<rect x="63" y="146" width="18" height="14" fill="var(--svg-fill)" stroke="#0ca678" stroke-width=".8"/>
+<line x1="66" y1="151" x2="78" y2="151" stroke="#0ca678" stroke-width=".8"/>
+<text class="svgtext" x="104" y="153" font-size="11.5">32 × 32 像素</text>
+<text class="svgmuted" x="104" y="169" font-size="10.5">给任务栏按钮用</text>
+
+<!-- 48 -->
+<rect x="56" y="194" width="48" height="48" rx="8" fill="#7048e8" opacity=".22"/>
+<rect x="56" y="194" width="48" height="48" rx="8" fill="none" stroke="#7048e8"/>
+<rect x="66" y="206" width="28" height="22" fill="var(--svg-fill)" stroke="#7048e8" stroke-width=".9"/>
+<line x1="70" y1="213" x2="90" y2="213" stroke="#7048e8" stroke-width=".9"/>
+<line x1="70" y1="220" x2="84" y2="220" stroke="#7048e8" stroke-width=".9"/>
+<text class="svgtext" x="120" y="213" font-size="11.5">48 × 48 像素</text>
+<text class="svgmuted" x="120" y="229" font-size="10.5">给 Alt+Tab 切换器用</text>
+
+<!-- 256 -->
+<rect x="56" y="264" width="64" height="64" rx="10" fill="#e8590c" opacity=".20"/>
+<rect x="56" y="264" width="64" height="64" rx="10" fill="none" stroke="#e8590c"/>
+<rect x="70" y="280" width="36" height="28" fill="var(--svg-fill)" stroke="#e8590c"/>
+<line x1="76" y1="289" x2="100" y2="289" stroke="#e8590c"/>
+<line x1="76" y1="297" x2="94" y2="297" stroke="#e8590c"/>
+<text class="svgtext" x="136" y="284" font-size="11.5">256 × 256 像素</text>
+<text class="svgmuted" x="136" y="300" font-size="10.5">桌面大图标视图；也是</text>
+<text class="svgmuted" x="136" y="316" font-size="10.5">高 DPI 缩放时的取材来源</text>
+<text class="svgmuted" x="136" y="332" font-size="9.5">（图中只按比例示意，未按真实像素画）</text>
+
+<text class="svgmuted" x="52" y="360" font-size="10.5">系统按当前场景要多少像素，就从这堆里挑最贴近的一张</text>
+
+<!-- 场景一：窗口标题栏 -->
+<rect x="400" y="60" width="350" height="112" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="400" y="60" width="350" height="28" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="408" y="66" width="16" height="16" rx="3" fill="#1971c2" opacity=".22"/>
+<rect x="408" y="66" width="16" height="16" rx="3" fill="none" stroke="#1971c2"/>
+<rect x="412" y="71" width="8" height="6" fill="var(--svg-fill)" stroke="#1971c2" stroke-width=".7"/>
+<text class="svgtext" x="434" y="80" font-size="12">我的编辑器</text>
+<text class="svgmuted" x="740" y="80" text-anchor="end" font-size="11">─ □ ×</text>
+<text class="svgmuted" x="740" y="160" text-anchor="end" font-size="10.5">客户区</text>
+<text x="772" y="74" font-size="12" font-weight="600" fill="#1971c2">① 标题栏左上角</text>
+<text class="svgmuted" x="772" y="93" font-size="10.5">要 16 px：wc.hIconSm</text>
+
+<!-- 场景二：任务栏 -->
+<rect x="400" y="196" width="350" height="48" rx="4" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<rect x="414" y="204" width="32" height="32" rx="5" fill="#0ca678" opacity=".22"/>
+<rect x="414" y="204" width="32" height="32" rx="5" fill="none" stroke="#0ca678"/>
+<rect x="421" y="212" width="18" height="14" fill="var(--svg-fill)" stroke="#0ca678" stroke-width=".8"/>
+<line x1="424" y1="217" x2="436" y2="217" stroke="#0ca678" stroke-width=".8"/>
+<rect x="458" y="204" width="32" height="32" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="502" y="204" width="32" height="32" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgmuted" x="740" y="226" text-anchor="end" font-size="10.5">任务栏</text>
+<text x="772" y="210" font-size="12" font-weight="600" fill="#0ca678">② 任务栏按钮</text>
+<text class="svgmuted" x="772" y="229" font-size="10.5">要 32 px：wc.hIcon</text>
+
+<!-- 场景三：Alt+Tab 切换器 -->
+<rect x="400" y="268" width="350" height="106" rx="8" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1.5"/>
+<text class="svgmuted" x="412" y="288" font-size="10.5">Alt + Tab</text>
+<rect x="412" y="294" width="72" height="72" rx="4" fill="var(--svg-fill)" stroke="#7048e8" stroke-width="1.8"/>
+<rect x="424" y="300" width="48" height="48" rx="8" fill="#7048e8" opacity=".22"/>
+<rect x="424" y="300" width="48" height="48" rx="8" fill="none" stroke="#7048e8"/>
+<rect x="434" y="312" width="28" height="22" fill="var(--svg-fill)" stroke="#7048e8" stroke-width=".9"/>
+<line x1="438" y1="319" x2="458" y2="319" stroke="#7048e8" stroke-width=".9"/>
+<line x1="438" y1="326" x2="452" y2="326" stroke="#7048e8" stroke-width=".9"/>
+<text class="svgmuted" x="448" y="361" text-anchor="middle" font-size="9">我的编辑器</text>
+<rect x="496" y="294" width="72" height="72" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="508" y="300" width="48" height="48" rx="8" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgmuted" x="532" y="361" text-anchor="middle" font-size="9">浏览器</text>
+<rect x="580" y="294" width="72" height="72" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="592" y="300" width="48" height="48" rx="8" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgmuted" x="616" y="361" text-anchor="middle" font-size="9">记事本</text>
+<rect x="664" y="294" width="72" height="72" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="676" y="300" width="48" height="48" rx="8" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgmuted" x="700" y="361" text-anchor="middle" font-size="9">终端</text>
+<text x="772" y="302" font-size="12" font-weight="600" fill="#7048e8">③ Alt+Tab 切换器</text>
+<text class="svgmuted" x="772" y="321" font-size="10.5">要 48 px：同样是 wc.hIcon</text>
+
+<!-- 三条精确对应线 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="300,102 378,102 378,74 398,74" stroke="#1971c2"/>
+<polyline points="300,152 360,152 360,220 406,220" stroke="#0ca678"/>
+<polyline points="300,212 340,212 340,324 414,324" stroke="#7048e8"/>
+</g>
+<g>
+<circle cx="300" cy="102" r="3" fill="#1971c2"/><path d="M406,74 l-8,-4 v8 z" fill="#1971c2"/>
+<circle cx="300" cy="152" r="3" fill="#0ca678"/><path d="M412,220 l-8,-4 v8 z" fill="#0ca678"/>
+<circle cx="300" cy="212" r="3" fill="#7048e8"/><path d="M422,324 l-8,-4 v8 z" fill="#7048e8"/>
+</g>
+
+<!-- 底部：代码只有两行 -->
+<text class="svgmuted" x="40" y="400" font-size="12.5" font-weight="600">代码里只有两行，尺寸是系统替你挑的</text>
+
+<rect x="40" y="412" width="600" height="80" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="54" y="436" font-family="Consolas,monospace" font-size="12">wc.hIconSm = LoadIconW(hInstance, MAKEINTRESOURCEW(IDI_APP));</text>
+<text x="510" y="436" font-size="11" font-weight="700" fill="#1971c2">→ ①</text>
+<text class="svgtext" x="54" y="458" font-family="Consolas,monospace" font-size="12">wc.hIcon&#160;&#160;&#160;= LoadIconW(hInstance, MAKEINTRESOURCEW(IDI_APP));</text>
+<text x="510" y="458" font-size="11" font-weight="700" fill="#0ca678">→ ②<tspan fill="#7048e8">③</tspan></text>
+<text class="svgmuted" x="54" y="480" font-size="10.5">两行的 ID 一模一样——差别只在于系统拿它去要多大的一张图。</text>
+
+<rect x="656" y="412" width="244" height="80" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="668" y="434" font-size="11.5" font-weight="600">挑不到合适尺寸怎么办？</text>
+<text class="svgmuted" x="668" y="454" font-size="10.5">hIconSm 不填时，系统直接从</text>
+<text class="svgmuted" x="668" y="472" font-size="10.5">hIcon 缩放，标题栏那张会发糊。</text>
+
+<text class="svgmuted" x="470" y="518" text-anchor="middle" font-size="12">所以现代程序把 16 / 32 / 48 / 256 都打包进同一个 .ico —— 每处界面都能拿到不必缩放的那一张。</text>
+</svg>
+<figcaption>图 10-X　同一图标资源的三种尺寸，分别出现在标题栏、任务栏与 Alt+Tab 切换器（原创绘制）</figcaption>
+</figure>
+
 
 <p>请特别留意 <code>LoadCursorW</code> 那行的第一个参数是 <code>nullptr</code>。这是一个统一而优雅的约定：<strong>第一个参数是「去哪个模块找资源」</strong>。传你自己的 <code>hInstance</code>，就去你的 exe 里找你自己画的资源；传 <code>nullptr</code>，就去系统模块里找 Windows 预定义的那批标准资源（标准箭头、沙漏、手形，标准错误图标、问号图标等）。同一个函数，靠第一个参数切换「找自己的」还是「用系统的」。</p>
 
@@ -5204,6 +5939,118 @@ MessageBoxW(hwnd, buf, L"错误", MB_OK | MB_ICONERROR);</code></pre>
 <p>但快捷键表要生效，需要你在消息循环里额外做一步「翻译」。为什么？因为键盘按下时，系统投递的是原始的 <code>WM_KEYDOWN</code>（「O 键被按下了」），它并不知道这该被解释成命令。<code>TranslateAcceleratorW</code> 的活儿，就是在消息进入分发之前拦一道，查表：这个按键组合在快捷键表里有登记吗？有的话，就地把它翻译成一条 <code>WM_COMMAND</code> 直接送给窗口过程，并告诉消息循环「这条我处理了，你别再往下走了」。</p>
 
 <pre><code><span class="cl"><span class="cm">// 启动时按 ID 加载快捷键表，拿到句柄 HACCEL</span></span><span class="cl">HACCEL hAccel = LoadAcceleratorsW(hInstance, MAKEINTRESOURCEW(IDR_ACCEL));</span><span class="cl"> </span><span class="cl">MSG msg;</span><span class="cl"><span class="kw">while</span> (GetMessageW(&amp;msg, <span class="kw">nullptr</span>, 0, 0))</span><span class="cl">{</span><span class="cl">    <span class="cm">// 先给快捷键表一次机会：若这条消息命中了某个快捷键，</span></span><span class="cl">    <span class="cm">// 它会被翻译成 WM_COMMAND 送出，函数返回非 0，我们就跳过后续</span></span><span class="cl">    <span class="kw">if</span> (!TranslateAcceleratorW(msg.hwnd, hAccel, &amp;msg))</span><span class="cl">    {</span><span class="cl"><span class="cc" style="min-width:33.0ch">        TranslateMessage(&amp;msg);</span><span class="cm">// 常规按键翻译（生成字符消息）</span></span><span class="cl"><span class="cc" style="min-width:33.0ch">        DispatchMessageW(&amp;msg);</span><span class="cm">// 分发给窗口过程</span></span><span class="cl">    }</span><span class="cl">}</span></code></pre>
+<figure data-mark="fig-accel-msgflow">
+<svg viewBox="0 0 940 558" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="按下 Ctrl+O 后 WM_KEYDOWN 被 TranslateAcceleratorW 翻译成 WM_COMMAND 的消息流">
+<text class="svgmuted" x="470" y="22" text-anchor="middle" font-size="12.5" font-weight="600">按下 Ctrl+O：一条 WM_KEYDOWN 怎样在消息循环里变成 WM_COMMAND(IDM_OPEN)</text>
+
+<!-- 左侧消息流 -->
+<rect x="30" y="44" width="300" height="44" rx="6" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.4"/>
+<text x="42" y="64" font-size="12.5" font-weight="600" fill="#0ca678">① 用户按下 Ctrl+O</text>
+<text class="svgmuted" x="42" y="80" font-size="10.5">键盘 → 系统 → 你这个线程的消息队列</text>
+
+<rect x="30" y="100" width="300" height="62" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="42" y="120" font-family="Consolas,monospace" font-size="12">WM_KEYDOWN, wParam = &apos;O&apos;</text>
+<text class="svgmuted" x="42" y="138" font-size="10.5">这时它只是「某个键被按下了」，</text>
+<text class="svgmuted" x="42" y="154" font-size="10.5">系统并不知道该把它解释成一条命令</text>
+
+<rect x="30" y="174" width="300" height="42" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="42" y="193" font-family="Consolas,monospace" font-size="12">GetMessageW(&amp;msg, ...)</text>
+<text class="svgmuted" x="42" y="209" font-size="10.5">消息循环把它取出来</text>
+
+<rect x="30" y="228" width="300" height="72" rx="6" fill="var(--svg-soft2)" stroke="#e8590c" stroke-width="1.6"/>
+<g font-family="Consolas,monospace" font-size="12">
+<text class="svgtext" x="42" y="250" font-weight="700">TranslateAcceleratorW(msg.hwnd,</text>
+<text class="svgtext" x="194" y="266" font-weight="700">hAccel, &amp;msg)</text>
+</g>
+<text class="svgmuted" x="42" y="288" font-size="10.5">拦在分发之前，拿这条消息去查表：登记过吗？</text>
+
+<g fill="none" stroke="var(--rule)" stroke-width="1.6">
+<line x1="180" y1="88" x2="180" y2="96"/>
+<line x1="180" y1="162" x2="180" y2="170"/>
+<line x1="180" y1="216" x2="180" y2="224"/>
+</g>
+<g fill="var(--rule)">
+<path d="M176,94 h8 l-4,8 z"/>
+<path d="M176,168 h8 l-4,8 z"/>
+<path d="M176,222 h8 l-4,8 z"/>
+</g>
+
+<!-- 右侧：快捷键表 -->
+<text class="svgmuted" x="470" y="142" font-size="11.5" font-weight="600">app.rc 里的快捷键表：一张「按键组合 → 命令 ID」的映射</text>
+<text class="svgmuted" x="470" y="160" font-size="10.5">启动时用 LoadAcceleratorsW 载入一次，拿到 HACCEL hAccel</text>
+<rect x="470" y="170" width="450" height="132" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="478" y="218" width="434" height="21" rx="3" fill="#0ca678" opacity=".18"/>
+<g font-family="Consolas,monospace" font-size="12">
+<text class="svgtext" x="486" y="190">IDR_ACCEL ACCELERATORS</text>
+<text class="svgtext" x="486" y="211">BEGIN</text>
+<text class="svgtext" x="502" y="232">&quot;O&quot;,</text>
+<text class="svgtext" x="562" y="232">IDM_OPEN,</text>
+<text class="svgtext" x="662" y="232">VIRTKEY, CONTROL</text>
+<text class="svgtext" x="502" y="253">&quot;S&quot;,</text>
+<text class="svgtext" x="562" y="253">IDM_SAVE,</text>
+<text class="svgtext" x="662" y="253">VIRTKEY, CONTROL</text>
+<text class="svgtext" x="502" y="274">VK_F1,</text>
+<text class="svgtext" x="562" y="274">IDM_ABOUT,</text>
+<text class="svgtext" x="662" y="274">VIRTKEY</text>
+<text class="svgtext" x="486" y="295">END</text>
+</g>
+<text x="798" y="232" font-size="11" fill="#0ca678" font-weight="600">← 命中这一行</text>
+
+<polyline points="331,264 400,264 400,228 462,228" fill="none" stroke="#e8590c" stroke-width="1.6"/>
+<circle cx="331" cy="264" r="3" fill="#e8590c"/>
+<path d="M462,224 v8 l8,-4 z" fill="#e8590c"/>
+<text x="406" y="248" font-size="10.5" fill="#e8590c">查表</text>
+
+<!-- 命中 / 未命中 两个分支 -->
+<g fill="none" stroke-width="1.6">
+<line x1="150" y1="300" x2="150" y2="314" stroke="#0ca678"/>
+<polyline points="280,300 280,314 700,314" stroke="var(--rule)"/>
+</g>
+<path d="M146,312 h8 l-4,8 z" fill="#0ca678"/>
+<path d="M696,312 h8 l-4,8 z" fill="var(--rule)"/>
+
+<rect x="30" y="322" width="440" height="84" rx="6" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.6"/>
+<text x="42" y="343" font-size="12.5" font-weight="600" fill="#0ca678">命中：函数返回非 0</text>
+<text class="svgtext" x="42" y="363" font-family="Consolas,monospace" font-size="11.5">就地合成 WM_COMMAND 直接送给窗口过程</text>
+<text class="svgmuted" x="42" y="381" font-size="10.5">HIWORD(wParam)=1（快捷键）、LOWORD(wParam)=IDM_OPEN</text>
+<text class="svgmuted" x="42" y="398" font-size="10.5">if 条件为假 → 跳过 TranslateMessage / DispatchMessageW</text>
+
+<rect x="490" y="322" width="430" height="84" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)" stroke-dasharray="6 3"/>
+<text class="svgtext" x="502" y="343" font-size="12.5" font-weight="600">没命中：返回 0</text>
+<text class="svgtext" x="502" y="363" font-family="Consolas,monospace" font-size="11.5">TranslateMessage(&amp;msg); DispatchMessageW(&amp;msg);</text>
+<text class="svgmuted" x="502" y="381" font-size="10.5">普通按键照旧：该变字符的变字符，该分发的分发</text>
+<text class="svgmuted" x="502" y="398" font-size="10.5">忘写 TranslateAcceleratorW，Ctrl+O 就永远走这一条，毫无反应</text>
+
+<!-- 窗口过程：两路合并 -->
+<rect x="140" y="428" width="560" height="100" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgmuted" x="154" y="448" font-size="11">窗口过程 WndProc —— 两条路在这里殊途同归</text>
+<rect x="148" y="498" width="544" height="20" rx="3" fill="#0ca678" opacity=".13"/>
+<g font-family="Consolas,monospace" font-size="12.5">
+<text class="svgtext" x="154" y="470">case WM_COMMAND:</text>
+<text class="svgtext" x="182" y="490">switch (LOWORD(wParam))</text>
+<text class="svgtext" x="210" y="512">case IDM_OPEN: DoOpenFile(hwnd); return 0;</text>
+</g>
+
+<polyline points="60,406 60,508 138,508" fill="none" stroke="#0ca678" stroke-width="1.6"/>
+<circle cx="60" cy="406" r="3" fill="#0ca678"/>
+<path d="M138,504 v8 l8,-4 z" fill="#0ca678"/>
+
+<!-- 另一条路：点菜单 -->
+<rect x="720" y="428" width="200" height="100" rx="6" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="1.4"/>
+<text x="732" y="450" font-size="12" font-weight="600" fill="#1971c2">② 另一条路：点菜单</text>
+<text class="svgmuted" x="732" y="470" font-size="10.5">用鼠标选中「打开(O)」</text>
+<text class="svgmuted" x="732" y="487" font-size="10.5">系统直接发 WM_COMMAND</text>
+<text class="svgtext" x="732" y="512" font-family="Consolas,monospace" font-size="10.5">HIWORD=0, LOWORD=IDM_OPEN</text>
+
+<line x1="720" y1="508" x2="712" y2="508" stroke="#1971c2" stroke-width="1.6"/>
+<circle cx="720" cy="508" r="3" fill="#1971c2"/>
+<path d="M712,504 v8 l-8,-4 z" fill="#1971c2"/>
+
+<text class="svgmuted" x="470" y="546" text-anchor="middle" font-size="11.5">快捷键不是「另写一套打开逻辑」，只是换一种方式发出同一个命令 ID —— 所以你的 switch 一行都不用改。</text>
+</svg>
+<figcaption>图 10-X　按下 Ctrl+O 的消息流：从 WM_KEYDOWN 到 WM_COMMAND（原创绘制）</figcaption>
+</figure>
+
 
 <p>这里要小心一个常见错误：<strong>忘了加 <code>TranslateAcceleratorW</code> 这一步</strong>。菜单里 Ctrl+O 的提示字照样显示，程序也不报错，可你按 Ctrl+O 就是没反应——因为没人去查那张表。快捷键表是「声明」，<code>TranslateAcceleratorW</code> 是「执行」，两者缺一不可。这是初学者踩得最多的坑之一。</p>
 
@@ -5231,6 +6078,105 @@ LoadStringW      (hInstance, IDS_ERR_OPENFILE, buf, ARRAYSIZE(buf));</code></pre
 <p><strong>第二，<code>MAKEINTRESOURCEW</code> 是什么魔法？</strong> 这是个历史留下的小把戏，但至今好用。这些加载函数的第二个参数，类型上是「字符串指针」，因为资源<strong>既可以用整数 ID 标识，也可以用字符串名字标识</strong>。当你想用整数 ID 时，就得把这个整数「伪装」成一个指针塞进去。<code>MAKEINTRESOURCEW</code> 干的就是这个伪装：它把小整数编码进指针值的低位，系统一看指针高位是空的，就明白「哦，这其实是个整数 ID，不是真的字符串地址」，于是按 ID 查找。</p>
 
 <pre><code><span class="cl"><span class="cm">// 两种标识资源的方式，加载函数都认：</span></span><span class="cl"><span class="cc" style="min-width:50.0ch">LoadIconW(hInstance, MAKEINTRESOURCEW(IDI_APP));</span><span class="cm">// 按整数 ID（最常用）</span></span><span class="cl"><span class="cc" style="min-width:50.0ch">LoadIconW(hInstance, L"MyNamedIcon");</span><span class="cm">// 按字符串名字</span></span></code></pre>
+<figure data-mark="fig-makeintresource-pun">
+<svg viewBox="0 0 940 548" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="MAKEINTRESOURCEW 把整数 ID 伪装成假指针，与真字符串指针共用同一个参数">
+<text class="svgmuted" x="470" y="26" text-anchor="middle" font-size="12.5" font-weight="600">同一个参数位置，收下的可能是「整数 ID 伪装的假指针」，也可能是真正的字符串指针</text>
+
+<!-- 上：两种写法 -->
+<rect x="40" y="44" width="390" height="86" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+<text x="52" y="66" font-size="12" font-weight="600" fill="#1971c2">写法一：按整数 ID（最常用）</text>
+<text class="svgtext" x="52" y="90" font-family="Consolas,monospace" font-size="12">LoadIconW(hInstance, MAKEINTRESOURCEW(IDI_APP));</text>
+<text class="svgmuted" x="52" y="114" font-size="10.5">resource.h 里：#define IDI_APP 101</text>
+
+<rect x="510" y="44" width="390" height="86" rx="6" fill="var(--svg-soft)" stroke="#0ca678"/>
+<text x="522" y="66" font-size="12" font-weight="600" fill="#0ca678">写法二：按字符串名字</text>
+<text class="svgtext" x="522" y="90" font-family="Consolas,monospace" font-size="12">LoadIconW(hInstance, L"MyNamedIcon");</text>
+<text class="svgmuted" x="522" y="114" font-size="10.5">资源脚本里：MyNamedIcon ICON "app.ico"</text>
+
+<!-- 中上：两种比特形态 -->
+<text class="svgmuted" x="44" y="158" font-size="11">真正塞进第二个参数的值（十六进制，每格 16 位）</text>
+<text class="svgmuted" x="514" y="158" font-size="11">真正塞进第二个参数的值</text>
+
+<text class="svgmuted" x="44" y="194" font-family="Consolas,monospace" font-size="12">0x</text>
+<rect x="64" y="172" width="88" height="34" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<rect x="152" y="172" width="88" height="34" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<rect x="240" y="172" width="88" height="34" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<rect x="328" y="172" width="88" height="34" fill="#1971c2" opacity=".18"/>
+<rect x="328" y="172" width="88" height="34" fill="none" stroke="#1971c2" stroke-width="1.6"/>
+<g font-family="Consolas,monospace" font-size="14" text-anchor="middle">
+<text class="svgmuted" x="108" y="195">0000</text>
+<text class="svgmuted" x="196" y="195">0000</text>
+<text class="svgmuted" x="284" y="195">0000</text>
+<text x="372" y="195" font-weight="700" fill="#1971c2">0065</text>
+</g>
+<g class="svgmuted" font-size="9.5" text-anchor="middle">
+<text x="108" y="220">63…48</text><text x="196" y="220">47…32</text><text x="284" y="220">31…16</text><text x="372" y="220">15…0</text>
+</g>
+<text x="64" y="242" font-size="11" fill="#1971c2">低 16 位放着 0x65 = 101 = IDI_APP，其余位全是 0</text>
+<text class="svgmuted" x="64" y="259" font-size="10">（32 位进程同理，指针短一半，规矩不变）</text>
+
+<text class="svgmuted" x="514" y="194" font-family="Consolas,monospace" font-size="12">0x</text>
+<rect x="534" y="172" width="88" height="34" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.2"/>
+<rect x="622" y="172" width="88" height="34" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.2"/>
+<rect x="710" y="172" width="88" height="34" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.2"/>
+<rect x="798" y="172" width="88" height="34" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.2"/>
+<g font-family="Consolas,monospace" font-size="14" text-anchor="middle">
+<text class="svgtext" x="578" y="195">0000</text>
+<text class="svgtext" x="666" y="195">7FF6</text>
+<text class="svgtext" x="754" y="195">A2C4</text>
+<text class="svgtext" x="842" y="195">1180</text>
+</g>
+<g class="svgmuted" font-size="9.5" text-anchor="middle">
+<text x="578" y="220">63…48</text><text x="666" y="220">47…32</text><text x="754" y="220">31…16</text><text x="842" y="220">15…0</text>
+</g>
+<text x="534" y="242" font-size="11" fill="#0ca678">一个货真价实的内存地址，高位不可能是空的</text>
+<text class="svgmuted" x="534" y="259" font-size="10">（指向常量区里那串 wchar_t：M y N a m e d …）</text>
+
+<!-- 汇流到同一个参数 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="340,208 340,284" stroke="#1971c2"/>
+<polyline points="812,208 812,272 600,272 600,284" stroke="#0ca678"/>
+</g>
+<circle cx="340" cy="208" r="3" fill="#1971c2"/>
+<path d="M340,292 l-5,-8 h10 z" fill="#1971c2"/>
+<circle cx="812" cy="208" r="3" fill="#0ca678"/>
+<path d="M600,292 l-5,-8 h10 z" fill="#0ca678"/>
+
+<rect x="280" y="292" width="380" height="56" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)" stroke-width="1.5"/>
+<text class="svgtext" x="470" y="315" text-anchor="middle" font-family="Consolas,monospace" font-size="11.5">HICON LoadIconW(HINSTANCE, LPCWSTR lpIconName);</text>
+<text class="svgmuted" x="470" y="336" text-anchor="middle" font-size="10.5">同一个函数、同一个参数、同一个类型：LPCWSTR「字符串指针」</text>
+
+<line x1="470" y1="348" x2="470" y2="362" stroke="var(--rule)" stroke-width="2"/>
+<path d="M470,370 l-5,-8 h10 z" fill="var(--rule)"/>
+
+<rect x="290" y="372" width="360" height="40" rx="20" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1.5"/>
+<text class="svgtext" x="470" y="397" text-anchor="middle" font-size="12">函数内部只问一句：除了最低 16 位，其余全是 0 吗？</text>
+
+<!-- 两个分支 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="350,412 350,424 235,424 235,432" stroke="#1971c2"/>
+<polyline points="590,412 590,424 705,424 705,432" stroke="#0ca678"/>
+</g>
+<circle cx="350" cy="412" r="3" fill="#1971c2"/>
+<path d="M235,440 l-5,-8 h10 z" fill="#1971c2"/>
+<circle cx="590" cy="412" r="3" fill="#0ca678"/>
+<path d="M705,440 l-5,-8 h10 z" fill="#0ca678"/>
+<text x="296" y="419" text-anchor="middle" font-size="12" font-weight="700" fill="#1971c2">是</text>
+<text x="644" y="419" text-anchor="middle" font-size="12" font-weight="700" fill="#0ca678">否</text>
+
+<rect x="40" y="442" width="390" height="82" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+<text x="52" y="464" font-size="12" font-weight="600" fill="#1971c2">这是个假指针 → 当整数 ID 用</text>
+<text class="svgmuted" x="52" y="484" font-size="10.5">绝不解引用它，直接把低 16 位的 101 取出来，</text>
+<text class="svgmuted" x="52" y="502" font-size="10.5">到本模块资源节里找 ID = 101 的那个图标。</text>
+
+<rect x="510" y="442" width="390" height="82" rx="6" fill="var(--svg-soft)" stroke="#0ca678"/>
+<text x="522" y="464" font-size="12" font-weight="600" fill="#0ca678">这是真指针 → 当字符串名字用</text>
+<text class="svgmuted" x="522" y="484" font-size="10.5">按地址解引用，读出 "MyNamedIcon"，</text>
+<text class="svgmuted" x="522" y="502" font-size="10.5">再拿这个名字去资源节里逐个比对。</text>
+</svg>
+<figcaption>图 10-X　MAKEINTRESOURCE 的双关：整数 ID 伪装成指针，与字符串名共用同一个参数（原创绘制）</figcaption>
+</figure>
+
 
 <div class="note ok">
 <span class="t">🟢 为什么整数 ID 是主流</span>
@@ -5459,6 +6405,107 @@ END</code></pre>
 <p>头号差别：<strong>DlgProc 并不是这个窗口真正的窗口过程</strong>。真正的窗口过程属于系统的对话框类，它内部干完导航、绘制等杂活后，把消息"回调"给你的 DlgProc 征求意见。所以你不写 <code>CreateWindow</code>，也不调 <code>DefWindowProc</code>——凡是你不想管的消息，直接 <code>return FALSE</code>，系统那个内部窗口过程会替你处理默认行为。</p>
 <p>第二个差别在返回值。窗口过程返回 <code>LRESULT</code>（是消息结果本身）；对话框过程返回的是"我处理了没有"这个布尔意图：<code>TRUE</code> 表示"这条消息我管了"，<code>FALSE</code> 表示"我没管，你按默认来"。注意签名里的返回类型是 <span class="badge new">现代更新</span><code>INT_PTR</code> 而不是老代码里常见的 <code>BOOL</code>——这是为了在 64 位下和某些消息需要回传的指针宽度对齐，现代代码请一律写 <code>INT_PTR</code>。</p>
 <p>第三个差别是初始化消息。普通窗口在 <code>WM_CREATE</code> 里初始化，但那时子控件还没造好；对话框专门给了 <code>WM_INITDIALOG</code>，它在<strong>所有控件都创建完毕、即将显示之前</strong>发来，是你给编辑框填默认文字、勾选复选框、把数据装进界面的黄金时机。</p>
+<figure data-mark="fig-dlgproc-vs-wndproc">
+<svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="窗口过程与对话框过程的兜底路径对照">
+<text class="svgmuted" x="30" y="26" font-size="12.5" font-weight="600">普通窗口：你写的那个就是窗口过程本身</text>
+<text class="svgmuted" x="478" y="26" font-size="12.5" font-weight="600">对话框：系统的窗口过程在外圈，你的 DlgProc 只是被它回调</text>
+
+<!-- 两个消息入口 -->
+<rect x="140" y="52" width="190" height="28" rx="5" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="235" y="71" text-anchor="middle" font-size="12">消息 WM_XXX 到达</text>
+<rect x="605" y="52" width="190" height="28" rx="5" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="700" y="71" text-anchor="middle" font-size="12">消息 WM_XXX 到达</text>
+<g fill="none" stroke="var(--rule)" stroke-width="1.6">
+<line x1="235" y1="80" x2="235" y2="94"/>
+<line x1="700" y1="80" x2="700" y2="94"/>
+</g>
+<path d="M235,100 l-4,-7 h8 z" fill="var(--rule)"/>
+<path d="M700,100 l-4,-7 h8 z" fill="var(--rule)"/>
+
+<!-- 左：WndProc -->
+<rect x="30" y="100" width="410" height="290" rx="8" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="1.6"/>
+<text class="svgtext" x="235" y="122" text-anchor="middle" font-size="12" font-weight="600">你注册的 WndProc（RegisterClassW 填进去的）</text>
+<text class="svgmuted" x="235" y="140" text-anchor="middle" font-size="10.5">它就是这个窗口真正的窗口过程，外面没有别人</text>
+
+<rect x="54" y="170" width="362" height="150" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<g font-family="Consolas,monospace" font-size="11.5">
+<text class="svgtext" x="68" y="192">LRESULT CALLBACK WndProc(hwnd, msg, …)</text>
+<text class="svgtext" x="68" y="214">{</text>
+<text class="svgtext" x="68" y="236">  switch (msg) { case WM_PAINT: … }</text>
+<text x="68" y="262" fill="#e8590c" font-weight="700">  return DefWindowProcW(hwnd, msg, …);</text>
+<text class="svgtext" x="68" y="284">}</text>
+</g>
+<text class="svgmuted" x="68" y="308" font-size="10.5">返回的 LRESULT 就是这条消息的结果值本身</text>
+
+<rect x="54" y="344" width="362" height="34" rx="5" fill="var(--svg-fill)" stroke="#e8590c"/>
+<text class="svgtext" x="235" y="365" text-anchor="middle" font-size="11.5">不想管的消息，必须自己转交 DefWindowProcW</text>
+
+<g fill="none" stroke="#e8590c" stroke-width="1.6">
+<polyline points="60,262 44,262 44,361 50,361"/>
+</g>
+<circle cx="61" cy="262" r="3" fill="#e8590c"/>
+<path d="M54,361 l-7,-4 v8 z" fill="#e8590c"/>
+
+<!-- 右：DefDlgProc 外圈 + DlgProc 内圈 -->
+<rect x="478" y="100" width="444" height="290" rx="8" fill="var(--svg-soft)" stroke="#7048e8" stroke-width="1.6"/>
+<text class="svgtext" x="700" y="120" text-anchor="middle" font-size="12" font-weight="600">系统对话框类的窗口过程（DefDlgProcW）</text>
+<text class="svgmuted" x="700" y="138" text-anchor="middle" font-size="10.5">它才是真正的窗口过程：先干完 Tab 导航、默认按钮、绘制等杂活</text>
+
+<g fill="none" stroke="#1971c2" stroke-width="1.6">
+<line x1="700" y1="148" x2="700" y2="170"/>
+</g>
+<path d="M700,176 l-4,-7 h8 z" fill="#1971c2"/>
+<text class="svgmuted" x="712" y="166" font-size="10.5">① 回调：这条消息你管吗？</text>
+
+<rect x="520" y="178" width="360" height="152" rx="5" fill="var(--svg-fill)" stroke="#1971c2"/>
+<text class="svgtext" x="700" y="198" text-anchor="middle" font-size="12" font-weight="600">你的 DlgProc（INT_PTR CALLBACK）</text>
+<g font-family="Consolas,monospace" font-size="11.5">
+<text class="svgtext" x="534" y="224">case WM_INITDIALOG:  return TRUE;</text>
+<text class="svgtext" x="534" y="248">case IDOK: EndDialog(…); return TRUE;</text>
+<text x="534" y="278" fill="#e8590c" font-weight="700">return FALSE;</text>
+</g>
+<text x="772" y="224" font-size="10.5" fill="#0ca678">我管了</text>
+<text class="svgmuted" x="700" y="306" text-anchor="middle" font-size="10.5">TRUE / FALSE 只回答「我处理了没」，不是消息结果</text>
+
+<!-- 两条精确出口 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="816,224 900,224 900,338" stroke="#0ca678"/>
+<polyline points="528,278 496,278 496,338" stroke="#e8590c"/>
+</g>
+<circle cx="817" cy="224" r="3" fill="#0ca678"/>
+<path d="M900,344 l-4,-7 h8 z" fill="#0ca678"/>
+<circle cx="527" cy="278" r="3" fill="#e8590c"/>
+<path d="M496,344 l-4,-7 h8 z" fill="#e8590c"/>
+
+<rect x="486" y="344" width="200" height="34" rx="5" fill="var(--svg-fill)" stroke="#e8590c"/>
+<text class="svgtext" x="586" y="365" text-anchor="middle" font-size="11.5">外圈执行默认行为</text>
+<rect x="756" y="344" width="156" height="34" rx="5" fill="var(--svg-fill)" stroke="#0ca678"/>
+<text class="svgtext" x="834" y="365" text-anchor="middle" font-size="11.5">外圈不再插手</text>
+
+<!-- 三个对照小卡 -->
+<rect x="30" y="410" width="290" height="84" rx="6" fill="var(--svg-soft)" stroke="#e8590c"/>
+<text class="svgtext" x="44" y="430" font-size="12" font-weight="600">谁来兜底</text>
+<text class="svgmuted" x="44" y="452" font-size="10.5">WndProc：不想管的自己转 DefWindowProcW</text>
+<text class="svgmuted" x="44" y="470" font-size="10.5">DlgProc：return FALSE，外圈那位接手</text>
+<text class="svgmuted" x="44" y="488" font-size="10.5">在 DlgProc 里调 DefWindowProc 是错的</text>
+
+<rect x="335" y="410" width="290" height="84" rx="6" fill="var(--svg-soft)" stroke="#0ca678"/>
+<text class="svgtext" x="349" y="430" font-size="12" font-weight="600">初始化时机</text>
+<text class="svgmuted" x="349" y="452" font-size="10.5">WndProc：WM_CREATE —— 此时子控件还没造好</text>
+<text class="svgmuted" x="349" y="470" font-size="10.5">DlgProc：WM_INITDIALOG —— 控件已全部就绪</text>
+<text class="svgmuted" x="349" y="488" font-size="10.5">给编辑框灌初值就在这一刻</text>
+
+<rect x="640" y="410" width="290" height="84" rx="6" fill="var(--svg-soft)" stroke="#7048e8"/>
+<text class="svgtext" x="654" y="430" font-size="12" font-weight="600">要回传值的消息怎么办</text>
+<text class="svgmuted" x="654" y="452" font-size="10.5">WM_CTLCOLOREDIT 要求返回画刷句柄，可</text>
+<text class="svgmuted" x="654" y="470" font-size="10.5">返回值已被 TRUE/FALSE 占用 —— 正解是</text>
+<text class="svgmuted" x="654" y="488" font-size="10.5">return TRUE，再用 DWLP_MSGRESULT 塞结果</text>
+
+<text class="svgmuted" x="480" y="518" text-anchor="middle" font-size="12">一句话：WndProc 是主人，自己善后；DlgProc 只是顾问，只回答「管不管」，善后交给外圈那位。</text>
+</svg>
+<figcaption>图 11-X　DlgProc 与 WndProc 的兜底路径对照（原创绘制）</figcaption>
+</figure>
+
 <table>
 <thead><tr><th>方面</th><th>普通窗口过程 WndProc</th><th>对话框过程 DlgProc</th></tr></thead>
 <tbody>
@@ -5477,6 +6524,118 @@ END</code></pre>
 <p>这行代码有个让初学者惊讶的性质：<strong><code>DialogBoxW</code> 不会立刻返回</strong>。它会一直卡在那里，直到对话框被关闭，返回值正是你在 <code>EndDialog</code> 里传的那个数。这就是"模态"二字的由来——程序进入了一个专属的"模式"，出不来。</p>
 <p>它凭什么能卡住？因为 <code>DialogBoxW</code> 内部<strong>自己开了一圈消息循环</strong>。你平时主窗口那个 <code>while(GetMessage...)</code> 在这段时间是停摆的，取而代之的是系统在对话框内部跑的循环：它抓消息、处理 Tab 导航、把消息派发给各个控件，直到你调 <code>EndDialog</code> 才拆掉这圈循环、让 <code>DialogBoxW</code> 带着结果返回。所以模态对话框不需要你操心消息循环——那圈循环藏在函数里看不见。</p>
 <p>关闭模态对话框<strong>只能</strong>用 <code>EndDialog(hDlg, 结果)</code>，绝不要用 <code>DestroyWindow</code>。<code>EndDialog</code> 会拆掉那圈内部循环并重新启用拥有者窗口；用 <code>DestroyWindow</code> 会把窗口销毁但循环还傻等着，程序就挂死了。</p>
+<figure data-mark="fig-modal-loop">
+<svg viewBox="0 0 960 546" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="DialogBoxW 弹出模态对话框的全过程与那圈内部消息循环">
+<text class="svgmuted" x="30" y="24" font-size="12.5" font-weight="600">一次 DialogBoxW 调用的全过程：主循环把棒交出去，直到 EndDialog 才交回来</text>
+
+<text class="svgtext" x="30" y="50" font-size="12" font-weight="600">① DialogBoxW 之前</text>
+<text class="svgtext" x="345" y="50" font-size="12" font-weight="600">② DialogBoxW 卡住的这段时间</text>
+<text class="svgtext" x="660" y="50" font-size="12" font-weight="600">③ EndDialog 之后</text>
+
+<!-- ① 正常的主窗口 -->
+<rect x="30" y="58" width="270" height="150" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="30" y="58" width="270" height="22" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="40" y="74" font-size="11.5">我的程序</text>
+<text class="svgmuted" x="292" y="74" text-anchor="end" font-size="11">─ □ ×</text>
+<rect x="30" y="80" width="270" height="20" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="40" y="94" font-size="11">文件(F)</text>
+<text class="svgtext" x="92" y="94" font-size="11">帮助(H)</text>
+<text class="svgmuted" x="44" y="151" font-size="10.5">菜单能点、窗口能拖</text>
+<text class="svgmuted" x="44" y="169" font-size="10.5">主消息循环照常转</text>
+
+<!-- ② 被禁用的主窗口（整组降低不透明度 = 变灰点不动） -->
+<g opacity="0.38">
+<rect x="345" y="58" width="270" height="150" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="345" y="58" width="270" height="22" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="355" y="74" font-size="11.5">我的程序</text>
+<text class="svgmuted" x="607" y="74" text-anchor="end" font-size="11">─ □ ×</text>
+<rect x="345" y="80" width="270" height="20" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="355" y="94" font-size="11">文件(F)</text>
+<text class="svgtext" x="407" y="94" font-size="11">帮助(H)</text>
+</g>
+<text x="352" y="158" font-size="10.5" fill="#e03131" font-weight="600">禁用中</text>
+<circle cx="368" cy="186" r="11" fill="none" stroke="#e03131" stroke-width="2"/>
+<line x1="360" y1="178" x2="376" y2="194" stroke="#e03131" stroke-width="2"/>
+
+<!-- ② 上面的模态对话框 -->
+<rect x="400" y="110" width="200" height="112" fill="var(--svg-fill)" stroke="#1971c2" stroke-width="1.6"/>
+<rect x="400" y="110" width="200" height="20" fill="var(--svg-soft)" stroke="#1971c2"/>
+<text class="svgtext" x="409" y="124" font-size="11">关于</text>
+<text class="svgtext" x="410" y="153" font-size="10.5">名字：</text>
+<rect x="452" y="140" width="100" height="18" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="458" y="153" font-size="10.5">匿名</text>
+<rect x="440" y="188" width="64" height="22" rx="3" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.4"/>
+<text class="svgtext" x="472" y="203" text-anchor="middle" font-size="11">确定</text>
+<rect x="516" y="188" width="64" height="22" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="548" y="203" text-anchor="middle" font-size="11">取消</text>
+
+<!-- ③ 恢复的主窗口 -->
+<rect x="660" y="58" width="270" height="150" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="660" y="58" width="270" height="22" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="670" y="74" font-size="11.5">我的程序</text>
+<text class="svgmuted" x="922" y="74" text-anchor="end" font-size="11">─ □ ×</text>
+<rect x="660" y="80" width="270" height="20" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="670" y="94" font-size="11">文件(F)</text>
+<text class="svgtext" x="722" y="94" font-size="11">帮助(H)</text>
+<text x="674" y="151" font-size="10.5" fill="#0ca678" font-weight="600">拥有者又能点了</text>
+<text class="svgmuted" x="674" y="169" font-size="10.5">对话框已经不在了</text>
+
+<!-- 三条精确落点的对应线 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="115,210 115,342" stroke="#1971c2"/>
+<polyline points="600,224 760,224 760,293 736,293" stroke="#7048e8"/>
+<polyline points="847,210 847,342" stroke="#0ca678"/>
+</g>
+<circle cx="115" cy="209" r="3" fill="#1971c2"/>
+<path d="M115,350 l-4,-8 h8 z" fill="#1971c2"/>
+<circle cx="599" cy="223" r="3" fill="#7048e8"/>
+<path d="M728,293 l8,-4 v8 z" fill="#7048e8"/>
+<circle cx="847" cy="209" r="3" fill="#0ca678"/>
+<path d="M847,350 l-4,-8 h8 z" fill="#0ca678"/>
+
+<!-- DialogBoxW 内部 -->
+<text class="svgtext" x="482" y="258" text-anchor="middle" font-size="12" font-weight="600">DialogBoxW 内部：一整套你看不见的活</text>
+<rect x="222" y="266" width="520" height="212" rx="8" fill="var(--svg-soft)" stroke="#7048e8" stroke-width="1.6"/>
+
+<rect x="240" y="276" width="486" height="34" rx="4" fill="var(--svg-fill)" stroke="#7048e8"/>
+<text class="svgtext" x="252" y="297" font-size="11">① 按模板造出对话框，并把拥有者窗口禁用（EnableWindow(hOwner, FALSE)）</text>
+
+<rect x="240" y="318" width="486" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="252" y="339" font-size="11">② 给 DlgProc 发 WM_INITDIALOG —— 你在这里给编辑框灌初值</text>
+
+<rect x="240" y="360" width="486" height="52" rx="4" fill="var(--svg-fill)" stroke="#e8590c"/>
+<text class="svgtext" x="252" y="381" font-size="11">③ 自己开一圈消息循环：抓消息、处理 Tab 导航与默认按钮、派发给各控件</text>
+<text class="svgmuted" x="252" y="401" font-size="10.5">你那圈 while(GetMessage…) 在这段时间是停摆的 —— 模态的「模」就在这里</text>
+
+<rect x="240" y="420" width="486" height="48" rx="4" fill="var(--svg-fill)" stroke="#0ca678"/>
+<text class="svgtext" x="252" y="441" font-size="11">④ 用户点「确定」→ DlgProc 里的 EndDialog(hDlg, IDOK) 拆掉这圈循环、</text>
+<text class="svgmuted" x="252" y="461" font-size="10.5">重新启用拥有者窗口，然后让 DialogBoxW 带着 IDOK 返回</text>
+
+<!-- 左右两端 -->
+<rect x="30" y="350" width="170" height="72" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+<text class="svgtext" x="115" y="374" text-anchor="middle" font-size="11.5">你的主消息循环</text>
+<text class="svgtext" x="115" y="394" text-anchor="middle" font-family="Consolas,monospace" font-size="10.5">while (GetMessage…)</text>
+<text class="svgmuted" x="115" y="412" text-anchor="middle" font-size="10.5">走到这一行就交棒</text>
+
+<rect x="764" y="350" width="166" height="72" rx="6" fill="var(--svg-soft)" stroke="#0ca678"/>
+<text class="svgtext" x="847" y="374" text-anchor="middle" font-size="11.5">DialogBoxW 才返回</text>
+<text class="svgtext" x="847" y="394" text-anchor="middle" font-family="Consolas,monospace" font-size="10.5">r == IDOK</text>
+<text class="svgmuted" x="847" y="412" text-anchor="middle" font-size="10.5">主循环接着转</text>
+
+<line x1="200" y1="386" x2="214" y2="386" stroke="#1971c2" stroke-width="1.6"/>
+<line x1="742" y1="386" x2="756" y2="386" stroke="#0ca678" stroke-width="1.6"/>
+<path d="M222,386 l-8,-4 v8 z" fill="#1971c2"/>
+<path d="M764,386 l-8,-4 v8 z" fill="#0ca678"/>
+
+<!-- 收场提醒 -->
+<rect x="30" y="490" width="900" height="46" rx="6" fill="var(--svg-soft)" stroke="#e03131" stroke-dasharray="6 3"/>
+<text x="46" y="510" font-size="11.5" font-weight="700" fill="#e03131">收场只能用 EndDialog</text>
+<text class="svgmuted" x="178" y="510" font-size="10.5">换成 DestroyWindow：窗口是没了，可 ③ 那圈内部循环还傻等着 —— 程序当场挂死。</text>
+<text class="svgmuted" x="46" y="528" font-size="10.5">想在关闭前做校验？收到 IDOK 时先检查，不合格就别调 EndDialog、直接 return，对话框就留在原地。</text>
+</svg>
+<figcaption>图 11-X　DialogBoxW 弹出模态对话框的全过程与那圈藏起来的消息循环（原创绘制）</figcaption>
+</figure>
+
 <div class="note ok"><span class="t">🟢 IDOK 与 IDCANCEL 的默契</span><p>系统对这两个 ID 有内建约定：用户按回车，相当于点了默认按钮（通常 ID 是 <code>IDOK</code>=1）；按 Esc，系统会自动给你发一条 <code>WM_COMMAND</code>，其 ID 为 <code>IDCANCEL</code>=2。所以哪怕模板里没有取消按钮，你也应该在 DlgProc 里处理 <code>IDCANCEL</code>，否则用户按 Esc 会没反应。想在关闭前做校验（比如"名字不能为空"），就在收到 <code>IDOK</code> 时先检查，不合格就别调 <code>EndDialog</code>、直接 return，对话框就留在原地了。</p></div>
 <div class="note new"><span class="t">🔵 要给对话框传数据？用 DialogBoxParam</span><p>常需要把一份数据结构传进对话框、再把用户改好的结果带出来。用 <span class="badge new">现代更新</span><code>DialogBoxParamW</code>，它比 <code>DialogBoxW</code> 多一个 <code>LPARAM</code> 参数，这个值会随 <code>WM_INITDIALOG</code> 的 <code>lParam</code> 送到你手里。典型写法是传一个指向数据结构的指针，在 <code>WM_INITDIALOG</code> 里用 <code>SetWindowLongPtr(hDlg, DWLP_USER, lParam)</code> 存起来，后面各条消息再取出来用——这就是最朴素的"把视图和它的数据绑在一起"。</p></div>
 
@@ -5518,6 +6677,136 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <p>要给下拉列表、列表框这类需要发特定消息的控件干活，用 <code>SendDlgItemMessageW(hDlg, id, 消息, w, l)</code>——它等价于"取句柄再 <code>SendMessage</code>"的合并写法。比如往组合框里加一项就是 <code>SendDlgItemMessageW(hDlg, IDC_COMBO, CB_ADDSTRING, 0, (LPARAM)L"选项一")</code>。</p>
 <p>把这些零碎函数串起来，你会发现对话框的完整生命周期其实是一个很干净的"数据往返"模式：</p>
 <pre><code><span class="cl"><span class="cm">// 一个把数据结构和对话框绑在一起的典型骨架</span></span><span class="cl"><span class="kw">struct</span> Settings { <span class="kw">wchar_t</span> name[128]; <span class="kw">int</span> count; <span class="kw">bool</span> remember; };</span><span class="cl"> </span><span class="cl"><span class="kw">case</span> WM_INITDIALOG: {</span><span class="cl"><span class="cc" style="min-width:56.0ch">    <span class="kw">auto</span>* s = (Settings*)lParam;</span><span class="cm">// DialogBoxParam 传进来的数据</span></span><span class="cl"><span class="cc" style="min-width:56.0ch">    SetWindowLongPtrW(hDlg, DWLP_USER, (LONG_PTR)s);</span><span class="cm">// 存起来备用</span></span><span class="cl"><span class="cc" style="min-width:56.0ch">    SetDlgItemTextW(hDlg, IDC_NAME, s-&gt;name);</span><span class="cm">// 数据 → 界面（装载）</span></span><span class="cl">    SetDlgItemInt (hDlg, IDC_COUNT, s-&gt;count, FALSE);</span><span class="cl">    CheckDlgButton(hDlg, IDC_REMEMBER, s-&gt;remember ? BST_CHECKED : BST_UNCHECKED);</span><span class="cl">    <span class="kw">return</span> TRUE;</span><span class="cl">}</span><span class="cl"><span class="kw">case</span> WM_COMMAND:</span><span class="cl">    <span class="kw">if</span> (LOWORD(wParam) == IDOK) {</span><span class="cl">        <span class="kw">auto</span>* s = (Settings*)GetWindowLongPtrW(hDlg, DWLP_USER);</span><span class="cl"><span class="cc" style="min-width:56.0ch">        GetDlgItemTextW(hDlg, IDC_NAME, s-&gt;name, 128);</span><span class="cm">// 界面 → 数据（回收）</span></span><span class="cl">        s-&gt;count    = GetDlgItemInt(hDlg, IDC_COUNT, <span class="kw">nullptr</span>, FALSE);</span><span class="cl">        s-&gt;remember = IsDlgButtonChecked(hDlg, IDC_REMEMBER) == BST_CHECKED;</span><span class="cl">        EndDialog(hDlg, IDOK);</span><span class="cl">    }</span><span class="cl">    <span class="kw">break</span>;</span></code></pre>
+<figure data-mark="fig-dlg-data-roundtrip">
+<svg viewBox="0 0 960 486" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="对话框控件与变量之间的双向数据搬运，每个函数精确对应一个控件和一个变量">
+<text class="svgmuted" x="14" y="22" font-size="12.5" font-weight="600">对话框的一次数据往返：WM_INITDIALOG 把变量装进控件，收到 IDOK 再把控件读回变量——同色 = 同一个字段</text>
+
+<text class="svgmuted" x="14" y="48" font-size="11">① 调用前：你的变量</text>
+<text class="svgmuted" x="262" y="48" font-size="11" text-anchor="middle">装载：数据 → 界面</text>
+<text class="svgmuted" x="364" y="48" font-size="11">② 对话框控件（模板里各有一个 ID）</text>
+<text class="svgmuted" x="707" y="48" font-size="11" text-anchor="middle">回收：界面 → 数据</text>
+<text class="svgmuted" x="804" y="48" font-size="11">③ 返回后：变量已更新</text>
+
+<!-- ① 左：调用前的结构体 -->
+<rect x="14" y="58" width="150" height="250" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="22" y="92" font-family="Consolas,monospace" font-size="10.5">Settings s;</text>
+<rect x="22" y="101" width="134" height="46" rx="3" fill="#1971c2" opacity=".13"/>
+<rect x="22" y="101" width="4" height="46" fill="#1971c2"/>
+<text class="svgtext" x="34" y="119" font-family="Consolas,monospace" font-size="10">wchar_t name[128]</text>
+<text class="svgtext" x="34" y="136" font-family="Consolas,monospace" font-size="10.5" font-weight="700">L"张三"</text>
+<rect x="22" y="157" width="134" height="46" rx="3" fill="#0ca678" opacity=".13"/>
+<rect x="22" y="157" width="4" height="46" fill="#0ca678"/>
+<text class="svgtext" x="34" y="175" font-family="Consolas,monospace" font-size="10">int count</text>
+<text class="svgtext" x="34" y="192" font-family="Consolas,monospace" font-size="10.5" font-weight="700">42</text>
+<rect x="22" y="207" width="134" height="46" rx="3" fill="#e8590c" opacity=".15"/>
+<rect x="22" y="207" width="4" height="46" fill="#e8590c"/>
+<text class="svgtext" x="34" y="225" font-family="Consolas,monospace" font-size="10">bool remember</text>
+<text class="svgtext" x="34" y="242" font-family="Consolas,monospace" font-size="10.5" font-weight="700">true</text>
+<text class="svgmuted" x="22" y="272" font-size="9.5">DialogBoxParamW 把</text>
+<text class="svgmuted" x="22" y="286" font-size="9.5">&amp;s 交给对话框，</text>
+<text class="svgmuted" x="22" y="300" font-size="9.5">先存进 DWLP_USER</text>
+
+<!-- ② 中：对话框 -->
+<rect x="364" y="58" width="250" height="286" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="364" y="58" width="250" height="26" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="374" y="76" font-size="12">设置</text>
+<text class="svgmuted" x="604" y="76" text-anchor="end" font-size="11">×</text>
+
+<text class="svgmuted" x="376" y="104" font-size="10.5">名字</text>
+<text x="602" y="104" text-anchor="end" font-family="Consolas,monospace" font-size="10" fill="#1971c2">IDC_NAME</text>
+<rect x="376" y="110" width="226" height="28" fill="var(--svg-fill)" stroke="#1971c2" stroke-width="1.5"/>
+<text class="svgtext" x="384" y="129" font-size="12">李四</text>
+
+<text class="svgmuted" x="376" y="160" font-size="10.5">数量</text>
+<text x="602" y="160" text-anchor="end" font-family="Consolas,monospace" font-size="10" fill="#0ca678">IDC_COUNT</text>
+<rect x="376" y="166" width="110" height="28" fill="var(--svg-fill)" stroke="#0ca678" stroke-width="1.5"/>
+<text class="svgtext" x="384" y="185" font-size="12">7</text>
+
+<text x="602" y="210" text-anchor="end" font-family="Consolas,monospace" font-size="10" fill="#e8590c">IDC_REMEMBER</text>
+<rect x="376" y="222" width="15" height="15" fill="var(--svg-fill)" stroke="#e8590c" stroke-width="1.5"/>
+<text class="svgtext" x="398" y="234" font-size="12">记住我</text>
+<text class="svgmuted" x="376" y="262" font-size="9.5">（图上画的是用户改过之后的状态）</text>
+
+<rect x="446" y="296" width="68" height="28" rx="3" fill="var(--svg-soft)" stroke="#7048e8" stroke-width="1.6"/>
+<text class="svgtext" x="480" y="315" text-anchor="middle" font-size="12">确定</text>
+<text x="442" y="314" text-anchor="end" font-family="Consolas,monospace" font-size="10" fill="#7048e8">IDOK</text>
+<rect x="522" y="296" width="68" height="28" rx="3" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="556" y="315" text-anchor="middle" font-size="12">取消</text>
+<text class="svgmuted" x="590" y="338" text-anchor="end" font-family="Consolas,monospace" font-size="9.5">IDCANCEL</text>
+
+<!-- ③ 右：返回后的结构体 -->
+<rect x="804" y="58" width="140" height="250" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="812" y="92" font-family="Consolas,monospace" font-size="10.5">Settings s;</text>
+<rect x="812" y="101" width="124" height="46" rx="3" fill="#1971c2" opacity=".13"/>
+<rect x="812" y="101" width="4" height="46" fill="#1971c2"/>
+<text class="svgtext" x="824" y="119" font-family="Consolas,monospace" font-size="10">wchar_t name[128]</text>
+<text class="svgtext" x="824" y="136" font-family="Consolas,monospace" font-size="10.5" font-weight="700">L"李四"</text>
+<rect x="812" y="157" width="124" height="46" rx="3" fill="#0ca678" opacity=".13"/>
+<rect x="812" y="157" width="4" height="46" fill="#0ca678"/>
+<text class="svgtext" x="824" y="175" font-family="Consolas,monospace" font-size="10">int count</text>
+<text class="svgtext" x="824" y="192" font-family="Consolas,monospace" font-size="10.5" font-weight="700">7</text>
+<rect x="812" y="207" width="124" height="46" rx="3" fill="#e8590c" opacity=".15"/>
+<rect x="812" y="207" width="4" height="46" fill="#e8590c"/>
+<text class="svgtext" x="824" y="225" font-family="Consolas,monospace" font-size="10">bool remember</text>
+<text class="svgtext" x="824" y="242" font-family="Consolas,monospace" font-size="10.5" font-weight="700">false</text>
+<text class="svgmuted" x="812" y="272" font-size="9.5">DialogBoxParamW</text>
+<text class="svgmuted" x="812" y="286" font-size="9.5">返回后，s 里已经</text>
+<text class="svgmuted" x="812" y="300" font-size="9.5">是用户的新数据</text>
+
+<!-- 装载：三条线（变量 → 控件） -->
+<g font-family="Consolas,monospace" text-anchor="middle">
+<text x="262" y="102" font-size="11" fill="#1971c2" font-weight="700">SetDlgItemTextW</text>
+<text class="svgtext" x="262" y="116" font-size="10">(hDlg, IDC_NAME, s-&gt;name)</text>
+<text x="262" y="158" font-size="11" fill="#0ca678" font-weight="700">SetDlgItemInt</text>
+<text class="svgtext" x="262" y="172" font-size="10">(hDlg, IDC_COUNT, s-&gt;count)</text>
+<text x="262" y="208" font-size="11" fill="#e8590c" font-weight="700">CheckDlgButton</text>
+<text class="svgtext" x="262" y="222" font-size="10">(hDlg, IDC_REMEMBER, BST_CHECKED)</text>
+</g>
+<g fill="none" stroke-width="1.6">
+<line x1="166" y1="124" x2="366" y2="124" stroke="#1971c2"/>
+<line x1="166" y1="180" x2="366" y2="180" stroke="#0ca678"/>
+<line x1="166" y1="230" x2="366" y2="230" stroke="#e8590c"/>
+</g>
+<g>
+<circle cx="166" cy="124" r="3" fill="#1971c2"/><path d="M374,124 l-8,-4 v8 z" fill="#1971c2"/>
+<circle cx="166" cy="180" r="3" fill="#0ca678"/><path d="M374,180 l-8,-4 v8 z" fill="#0ca678"/>
+<circle cx="166" cy="230" r="3" fill="#e8590c"/><path d="M374,230 l-8,-4 v8 z" fill="#e8590c"/>
+</g>
+
+<!-- 回收：三条线（控件 → 变量） -->
+<g font-family="Consolas,monospace" text-anchor="middle">
+<text x="707" y="102" font-size="11" fill="#1971c2" font-weight="700">GetDlgItemTextW</text>
+<text class="svgtext" x="707" y="116" font-size="10">(hDlg, IDC_NAME, s-&gt;name, 128)</text>
+<text x="707" y="158" font-size="11" fill="#0ca678" font-weight="700">GetDlgItemInt</text>
+<text class="svgtext" x="707" y="172" font-size="10">(hDlg, IDC_COUNT, &amp;ok, FALSE)</text>
+<text x="707" y="194" font-size="11" fill="#e8590c" font-weight="700">IsDlgButtonChecked</text>
+<text class="svgtext" x="707" y="208" font-size="10">(hDlg, IDC_REMEMBER)</text>
+<text class="svgtext" x="707" y="222" font-size="10">== BST_CHECKED</text>
+</g>
+<g fill="none" stroke-width="1.6">
+<line x1="602" y1="124" x2="796" y2="124" stroke="#1971c2"/>
+<line x1="486" y1="180" x2="796" y2="180" stroke="#0ca678"/>
+<line x1="440" y1="230" x2="796" y2="230" stroke="#e8590c"/>
+</g>
+<g>
+<circle cx="602" cy="124" r="3" fill="#1971c2"/><path d="M804,124 l-8,-4 v8 z" fill="#1971c2"/>
+<circle cx="486" cy="180" r="3" fill="#0ca678"/><path d="M804,180 l-8,-4 v8 z" fill="#0ca678"/>
+<circle cx="440" cy="230" r="3" fill="#e8590c"/><path d="M804,230 l-8,-4 v8 z" fill="#e8590c"/>
+</g>
+
+<!-- 紫：确定按钮触发回收 -->
+<line x1="480" y1="326" x2="480" y2="382" stroke="#7048e8" stroke-width="1.6"/>
+<circle cx="480" cy="326" r="3" fill="#7048e8"/>
+<path d="M480,390 l-4,-8 h8 z" fill="#7048e8"/>
+
+<rect x="14" y="392" width="930" height="80" rx="6" fill="var(--svg-soft)" stroke="#7048e8" stroke-dasharray="6 3"/>
+<text x="30" y="414" font-family="Consolas,monospace" font-size="11.5" font-weight="700" fill="#7048e8">case WM_COMMAND: if (LOWORD(wParam) == IDOK) { ... EndDialog(hDlg, IDOK); }</text>
+<text class="svgmuted" x="30" y="436" font-size="10.5">回收就发生在这一刻：从 DWLP_USER 取回结构体地址，逐个 Get 回去，再 EndDialog 收摊。GetDlgItemInt 的第三个参数能回一个 BOOL，FALSE 说明用户输的不是合法数字。</text>
+<text class="svgmuted" x="30" y="458" font-size="10.5">下拉列表、列表框这类要发特定消息的控件，改用 SendDlgItemMessageW(hDlg, id, 消息, w, l)——等价于「先 GetDlgItem 取句柄、再 SendMessage」的合并写法。</text>
+</svg>
+<figcaption>图 11-X　对话框控件与变量之间的双向数据搬运（原创绘制）</figcaption>
+</figure>
+
 <div class="note new"><span class="t">🔵 现代视角：这就是"数据绑定"的手工版</span><p>上面这套"进对话框时把数据结构灌进控件、出对话框时把控件读回结构"的模式，你要是写多了会觉得机械又重复。历史上的 MFC 用 <code>DoDataExchange</code>（DDX/DDV 宏）把它自动化；今天的 WinUI/WPF/XAML 更进一步，用<strong>双向数据绑定</strong>让控件和数据模型自动同步——你改数据界面就变，用户改界面数据就变，中间的搬运代码彻底消失。理解了这段手工搬运的痛点，你就明白现代框架里"绑定"二字到底替你省了什么。</p></div>
 
 <h2 id="w11-keyboard">对话框的键盘接口：Tab 序、默认按钮与分组</h2>
@@ -5537,6 +6826,169 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <h2 id="w11-commfile">通用对话框：打开与保存文件</h2>
 <p>有些对话框每个程序都要用，长得还应该一模一样——"打开文件""保存文件""选颜色""选字体""打印"。Windows 干脆把它们做进系统（<code>comdlg32.dll</code>），叫<strong>通用对话框</strong>。你不用画模板、不用写 DlgProc，只要填一个结构体、调一个函数，一个功能完整、外观统一的对话框就弹出来了。最常用的是打开/保存文件：</p>
 <pre><code><span class="cl"><span class="cc" style="min-width:60.8ch"><span class="kw">wchar_t</span> file[MAX_PATH] = L"";</span><span class="cm">// 结果写回这个缓冲区</span></span><span class="cl"><span class="cc" style="min-width:60.8ch">OPENFILENAMEW ofn = { <span class="kw">sizeof</span>(ofn) };</span><span class="cm">// 第一个字段必须是结构大小</span></span><span class="cl">ofn.hwndOwner   = hwnd;</span><span class="cl"><span class="cc" style="min-width:60.8ch">ofn.lpstrFilter = L"文本文件\0*.txt\0所有文件\0*.*\0";</span><span class="cm">// 注意双 \0 结尾</span></span><span class="cl">ofn.lpstrFile   = file;</span><span class="cl">ofn.nMaxFile    = MAX_PATH;</span><span class="cl"><span class="cc" style="min-width:60.8ch">ofn.lpstrDefExt = L"txt";</span><span class="cm">// 用户没打后缀时补上</span></span><span class="cl">ofn.Flags       = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;</span><span class="cl"> </span><span class="cl"><span class="kw">if</span> (GetOpenFileNameW(&amp;ofn)) {</span><span class="cl">    <span class="cm">// file 里现在是用户选中的完整路径，去打开它</span></span><span class="cl">}</span></code></pre>
+<figure data-mark="fig-ofn-anatomy">
+<svg viewBox="0 0 960 560" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="OPENFILENAMEW 各字段与 GetOpenFileNameW 弹出的打开文件对话框各部位的对应关系">
+<text class="svgmuted" x="20" y="22" font-size="12.5" font-weight="600">你只填一个结构体、调一个函数：模板、导航、筛选、外观全由系统的 comdlg32 负责——结构体的每个字段，都落在界面的某个部位上</text>
+
+<text class="svgmuted" x="20" y="44" font-size="11">你填的 OPENFILENAMEW</text>
+<text class="svgmuted" x="360" y="44" font-size="11">GetOpenFileNameW 弹出来的对话框</text>
+
+<!-- 左：结构体填写 -->
+<rect x="20" y="52" width="280" height="286" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<g font-family="Consolas,monospace" font-size="10.5">
+<text class="svgtext" x="28" y="72">wchar_t file[MAX_PATH] = L"";</text>
+<text class="svgtext" x="28" y="88">OPENFILENAMEW ofn = { sizeof(ofn) };</text>
+<rect x="26" y="100" width="268" height="24" rx="3" fill="#7048e8" opacity=".14"/>
+<text class="svgtext" x="32" y="116">ofn.lpstrTitle  = L"选择要打开的文件";</text>
+<rect x="26" y="130" width="268" height="36" rx="3" fill="#e8590c" opacity=".16"/>
+<text class="svgtext" x="32" y="146">ofn.lpstrFilter =</text>
+<text class="svgtext" x="42" y="161">L"文本文件\0*.txt\0所有文件\0*.*\0"</text>
+<rect x="26" y="172" width="268" height="24" rx="3" fill="#1971c2" opacity=".14"/>
+<text class="svgtext" x="32" y="188">ofn.lpstrFile   = file;</text>
+<rect x="26" y="202" width="268" height="24" rx="3" fill="#1098ad" opacity=".16"/>
+<text class="svgtext" x="32" y="218">ofn.nMaxFile    = MAX_PATH;</text>
+<rect x="26" y="232" width="268" height="24" rx="3" fill="var(--svg-soft2)"/>
+<text class="svgtext" x="32" y="248">ofn.lpstrDefExt = L"txt";</text>
+<rect x="26" y="262" width="268" height="36" rx="3" fill="#0ca678" opacity=".15"/>
+<text class="svgtext" x="32" y="278">ofn.Flags = OFN_FILEMUSTEXIST |</text>
+<text class="svgtext" x="32" y="293">  OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;</text>
+<text class="svgmuted" x="28" y="320">if (GetOpenFileNameW(&amp;ofn)) { ... }</text>
+</g>
+<text class="svgmuted" x="188" y="248" font-size="9">← 没打后缀就补上</text>
+
+<!-- 右：对话框实景 -->
+<rect x="360" y="52" width="580" height="286" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="360" y="52" width="580" height="26" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="362" y="54" width="4" height="22" fill="#7048e8"/>
+<text class="svgtext" x="376" y="70" font-size="12">选择要打开的文件</text>
+<text class="svgmuted" x="930" y="70" text-anchor="end" font-size="11">─ □ ×</text>
+
+<rect x="360" y="78" width="580" height="28" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgmuted" x="372" y="97" font-size="11">←　→　↑</text>
+<text class="svgmuted" x="432" y="97" font-size="11">此电脑 › 文档 › 项目</text>
+<rect x="790" y="82" width="140" height="20" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgmuted" x="798" y="97" font-size="10">搜索 项目</text>
+
+<rect x="362" y="108" width="150" height="120" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<g class="svgmuted" font-size="10.5">
+<text x="372" y="126">快速访问</text>
+<text x="372" y="145">桌面</text>
+<text x="372" y="164">文档</text>
+<text x="372" y="183">下载</text>
+<text x="372" y="202">此电脑</text>
+<text x="372" y="221">网络</text>
+</g>
+
+<rect x="518" y="108" width="420" height="120" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="518" y="108" width="420" height="20" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgmuted" x="528" y="122" font-size="10.5">名称</text>
+<text class="svgmuted" x="760" y="122" font-size="10.5">修改日期</text>
+<text class="svgmuted" x="880" y="122" font-size="10.5">大小</text>
+<rect x="520" y="130" width="416" height="20" fill="#1971c2" opacity=".16"/>
+<text class="svgtext" x="528" y="144" font-size="11">notes.txt</text>
+<text class="svgmuted" x="760" y="144" font-size="10.5">2026-08-14 10:02</text>
+<text class="svgmuted" x="880" y="144" font-size="10.5">3 KB</text>
+<text class="svgtext" x="528" y="166" font-size="11">readme.txt</text>
+<text class="svgmuted" x="760" y="166" font-size="10.5">2026-08-02 09:41</text>
+<text class="svgmuted" x="880" y="166" font-size="10.5">1 KB</text>
+<text class="svgtext" x="528" y="188" font-size="11">日志.txt</text>
+<text class="svgmuted" x="760" y="188" font-size="10.5">2026-07-30 18:20</text>
+<text class="svgmuted" x="880" y="188" font-size="10.5">12 KB</text>
+<text x="528" y="214" font-size="10" fill="#e8590c">列表里只剩 *.txt —— 是下面那个下拉当前选中项在筛</text>
+
+<rect x="362" y="240" width="4" height="26" fill="#1971c2"/>
+<text class="svgtext" x="376" y="258" font-size="11.5">文件名(N):</text>
+<rect x="460" y="240" width="340" height="26" fill="var(--svg-fill)" stroke="#1971c2" stroke-width="1.5"/>
+<text class="svgtext" x="468" y="258" font-size="11.5">notes.txt</text>
+<rect x="812" y="240" width="120" height="26" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="872" y="258" text-anchor="middle" font-size="11.5">打开(O)</text>
+
+<rect x="362" y="274" width="4" height="26" fill="#e8590c"/>
+<text class="svgtext" x="376" y="292" font-size="11.5">文件类型(T):</text>
+<rect x="460" y="274" width="340" height="26" fill="var(--svg-fill)" stroke="#e8590c" stroke-width="1.5"/>
+<text class="svgtext" x="468" y="292" font-size="11.5">文本文件  (*.txt)</text>
+<path d="M778,286 l10,0 l-5,7 z" fill="#e8590c"/>
+<rect x="812" y="274" width="120" height="26" rx="3" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="872" y="292" text-anchor="middle" font-size="11.5">取消</text>
+
+<rect x="362" y="308" width="4" height="18" fill="#0ca678"/>
+<rect x="376" y="309" width="14" height="14" fill="none" stroke="#0ca678" stroke-dasharray="3 2"/>
+<text x="398" y="321" font-size="11" fill="#0ca678" opacity=".75">以只读方式打开(R)</text>
+<line x1="396" y1="317" x2="502" y2="317" stroke="#0ca678" stroke-width="1.2"/>
+<text class="svgmuted" x="516" y="321" font-size="10">这一项本来在这儿，被 OFN_HIDEREADONLY 藏掉了</text>
+
+<!-- 五条连线 -->
+<g fill="none" stroke-width="1.6">
+<polyline points="300,112 310,112 310,65 352,65" stroke="#7048e8"/>
+<polyline points="300,148 330,148 330,287 352,287" stroke="#e8590c"/>
+<polyline points="300,184 340,184 340,253 352,253" stroke="#1971c2"/>
+<polyline points="300,280 320,280 320,317 352,317" stroke="#0ca678"/>
+<polyline points="26,214 12,214 12,386 14,386" stroke="#1098ad"/>
+</g>
+<g>
+<circle cx="300" cy="112" r="3" fill="#7048e8"/><path d="M360,65 l-8,-4 v8 z" fill="#7048e8"/>
+<circle cx="300" cy="148" r="3" fill="#e8590c"/><path d="M360,287 l-8,-4 v8 z" fill="#e8590c"/>
+<circle cx="300" cy="184" r="3" fill="#1971c2"/><path d="M360,253 l-8,-4 v8 z" fill="#1971c2"/>
+<circle cx="300" cy="280" r="3" fill="#0ca678"/><path d="M360,317 l-8,-4 v8 z" fill="#0ca678"/>
+<circle cx="26" cy="214" r="3" fill="#1098ad"/><path d="M22,386 l-8,-4 v8 z" fill="#1098ad"/>
+</g>
+
+<!-- 结果缓冲区 -->
+<text class="svgmuted" x="22" y="362" font-size="10.5">返回 TRUE 后，file 缓冲区里是完整路径：</text>
+<rect x="22" y="368" width="318" height="36" rx="4" fill="var(--svg-soft)" stroke="#1098ad" stroke-width="1.4"/>
+<text class="svgtext" x="34" y="391" font-family="Consolas,monospace" font-size="11">C:\Users\me\Documents\notes.txt</text>
+<g stroke="#1098ad" stroke-width="1.3" fill="none">
+<line x1="22" y1="414" x2="340" y2="414"/>
+<line x1="22" y1="409" x2="22" y2="419"/>
+<line x1="340" y1="409" x2="340" y2="419"/>
+</g>
+<text x="181" y="430" text-anchor="middle" font-size="10.5" fill="#1098ad">nMaxFile = MAX_PATH：这块缓冲区最多能装多少个 wchar_t</text>
+
+<rect x="360" y="352" width="580" height="80" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgmuted" x="372" y="374" font-size="10.5">lpstrFile 是进出两用的：进去时可以放一个初始文件名，出来时是用户选中的完整路径。</text>
+<text class="svgmuted" x="372" y="396" font-size="10.5">保存文件几乎一样，换成 GetSaveFileNameW，通常再加一个 OFN_OVERWRITEPROMPT（覆盖已有文件前弹确认）。</text>
+<text class="svgmuted" x="372" y="418" font-size="10.5">调用返回 FALSE 时，用 CommDlgExtendedError() 查具体错误码。</text>
+
+<!-- 双 \0 的坑 -->
+<text x="20" y="464" font-size="12" font-weight="600" fill="#e03131">⚠ lpstrFilter 不是普通字符串：它是一串以 \0 分隔、末尾再多一个 \0 收尾的「显示名 / 通配符」配对</text>
+<g font-family="Consolas,monospace" font-size="12">
+<rect x="20" y="476" width="42" height="28" fill="var(--svg-soft)" stroke="var(--rule)"/><text class="svgtext" x="41" y="495" text-anchor="middle">文</text>
+<rect x="62" y="476" width="42" height="28" fill="var(--svg-soft)" stroke="var(--rule)"/><text class="svgtext" x="83" y="495" text-anchor="middle">本</text>
+<rect x="104" y="476" width="42" height="28" fill="var(--svg-soft)" stroke="var(--rule)"/><text class="svgtext" x="125" y="495" text-anchor="middle">文</text>
+<rect x="146" y="476" width="42" height="28" fill="var(--svg-soft)" stroke="var(--rule)"/><text class="svgtext" x="167" y="495" text-anchor="middle">件</text>
+<rect x="188" y="476" width="42" height="28" fill="#e03131" opacity=".18"/><rect x="188" y="476" width="42" height="28" fill="none" stroke="var(--rule)"/><text x="209" y="495" text-anchor="middle" fill="#e03131">\0</text>
+<rect x="230" y="476" width="42" height="28" fill="var(--svg-soft2)" stroke="var(--rule)"/><text class="svgtext" x="251" y="495" text-anchor="middle">*</text>
+<rect x="272" y="476" width="42" height="28" fill="var(--svg-soft2)" stroke="var(--rule)"/><text class="svgtext" x="293" y="495" text-anchor="middle">.</text>
+<rect x="314" y="476" width="42" height="28" fill="var(--svg-soft2)" stroke="var(--rule)"/><text class="svgtext" x="335" y="495" text-anchor="middle">t</text>
+<rect x="356" y="476" width="42" height="28" fill="var(--svg-soft2)" stroke="var(--rule)"/><text class="svgtext" x="377" y="495" text-anchor="middle">x</text>
+<rect x="398" y="476" width="42" height="28" fill="var(--svg-soft2)" stroke="var(--rule)"/><text class="svgtext" x="419" y="495" text-anchor="middle">t</text>
+<rect x="440" y="476" width="42" height="28" fill="#e03131" opacity=".18"/><rect x="440" y="476" width="42" height="28" fill="none" stroke="var(--rule)"/><text x="461" y="495" text-anchor="middle" fill="#e03131">\0</text>
+<rect x="482" y="476" width="42" height="28" fill="var(--svg-soft)" stroke="var(--rule)"/><text class="svgtext" x="503" y="495" text-anchor="middle">所</text>
+<rect x="524" y="476" width="42" height="28" fill="var(--svg-soft)" stroke="var(--rule)"/><text class="svgtext" x="545" y="495" text-anchor="middle">有</text>
+<rect x="566" y="476" width="42" height="28" fill="var(--svg-soft)" stroke="var(--rule)"/><text class="svgtext" x="587" y="495" text-anchor="middle">文</text>
+<rect x="608" y="476" width="42" height="28" fill="var(--svg-soft)" stroke="var(--rule)"/><text class="svgtext" x="629" y="495" text-anchor="middle">件</text>
+<rect x="650" y="476" width="42" height="28" fill="#e03131" opacity=".18"/><rect x="650" y="476" width="42" height="28" fill="none" stroke="var(--rule)"/><text x="671" y="495" text-anchor="middle" fill="#e03131">\0</text>
+<rect x="692" y="476" width="42" height="28" fill="var(--svg-soft2)" stroke="var(--rule)"/><text class="svgtext" x="713" y="495" text-anchor="middle">*</text>
+<rect x="734" y="476" width="42" height="28" fill="var(--svg-soft2)" stroke="var(--rule)"/><text class="svgtext" x="755" y="495" text-anchor="middle">.</text>
+<rect x="776" y="476" width="42" height="28" fill="var(--svg-soft2)" stroke="var(--rule)"/><text class="svgtext" x="797" y="495" text-anchor="middle">*</text>
+<rect x="818" y="476" width="42" height="28" fill="#e03131" opacity=".18"/><rect x="818" y="476" width="42" height="28" fill="none" stroke="var(--rule)"/><text x="839" y="495" text-anchor="middle" fill="#e03131">\0</text>
+<rect x="860" y="476" width="42" height="28" fill="#e03131" opacity=".34"/><rect x="860" y="476" width="42" height="28" fill="none" stroke="#e03131" stroke-width="1.6"/><text x="881" y="495" text-anchor="middle" fill="#e03131" font-weight="700">\0</text>
+</g>
+<text x="940" y="460" text-anchor="end" font-size="10.5" fill="#e03131">字面量自带的这个 \0 才是封底</text>
+<polyline points="930,466 930,490 910,490" fill="none" stroke="#e03131" stroke-width="1.6"/>
+<circle cx="930" cy="466" r="3" fill="#e03131"/>
+<path d="M902,490 l8,-4 v8 z" fill="#e03131"/>
+<g stroke="#e8590c" stroke-width="1.4" opacity=".65" fill="none">
+<polyline points="20,512 20,518 482,518 482,512"/>
+<polyline points="482,512 482,518 860,518 860,512"/>
+</g>
+<text class="svgmuted" x="251" y="534" text-anchor="middle" font-size="10.5">第 1 对：显示名「文本文件」+ 通配符 *.txt</text>
+<text class="svgmuted" x="671" y="534" text-anchor="middle" font-size="10.5">第 2 对：显示名「所有文件」+ 通配符 *.*</text>
+<text class="svgmuted" x="20" y="552" font-size="10.5">少写那个终止零、或者误把它当普通字符串来拼：下拉里的过滤项要么残缺，要么对话框根本不弹。</text>
+</svg>
+<figcaption>图 11-X　OPENFILENAMEW 各字段与打开文件对话框各部位的对应（原创绘制）</figcaption>
+</figure>
+
 <p>这个结构体字段不少，但套路很固定：<code>lStructSize</code> 填结构大小（初始化时那句 <code>{ sizeof(ofn) }</code> 顺手就干了）；<code>lpstrFilter</code> 定义下拉里的文件类型；<code>lpstrFile</code> 既是"给个初始文件名"的入口，也是"结果路径"的出口，<code>nMaxFile</code> 告诉系统这个缓冲区多大；<code>Flags</code> 用一堆 <code>OFN_*</code> 位调行为。保存文件几乎一样，换成 <code>GetSaveFileNameW</code>，通常再加个 <code>OFN_OVERWRITEPROMPT</code>（覆盖已有文件前弹确认）。</p>
 <div class="note old"><span class="t">🟡 那个双反斜杠零结尾的过滤串，是头号大坑</span><p><code>lpstrFilter</code> 不是普通字符串，而是<strong>一串以 <code>\0</code> 分隔、并以额外一个 <code>\0</code> 收尾</strong>的"显示名/通配符"配对。写成 <code>L"文本文件\0*.txt\0所有文件\0*.*\0"</code>：每一对是"给人看的名字 + 实际通配符"，最后必须再多一个 <code>\0</code> 封底（字符串字面量结尾自带一个，所以你看到的是连着两个零的效果）。少写这个终止零、或误用普通字符串，对话框要么过滤项残缺要么直接不弹。调用返回 <code>FALSE</code> 时，可以用 <code>CommDlgExtendedError()</code> 查具体错误码。</p></div>
 <div class="note ok"><span class="t">🟢 它仍然完全可用</span><p><code>GetOpenFileNameW</code>/<code>GetSaveFileNameW</code> <span class="badge ok">仍适用</span>：至今受支持，在现代 Windows 上内部也会呈现新式外观，小工具、老代码维护里用它没有任何问题。只是微软给新代码推荐的是下一节的 <code>IFileDialog</code>——功能更强、更贴合现代 Shell。二者可以按需取舍：图省事用前者，要现代能力用后者。</p></div>
@@ -5545,6 +6997,151 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <p>从 Windows Vista 起，文件对话框有了一套基于 COM 的现代接口：<span class="badge new">现代更新</span><code>IFileOpenDialog</code> 和 <code>IFileSaveDialog</code>（都从 <code>IFileDialog</code> 派生）。它比老 <code>GetOpenFileName</code> 强在哪？能选文件夹、支持多选返回 Shell 项、能加自定义位置和自定义控件、和资源管理器的库/收藏体系无缝配合。代价是你得踏进 COM 的门：先初始化、创建对象、用完释放。</p>
 <pre><code><span class="cl"><span class="cc" style="min-width:52.0ch">CoInitializeEx(<span class="kw">nullptr</span>, COINIT_APARTMENTTHREADED);</span><span class="cm">// 程序启动时来一次</span></span><span class="cl"> </span><span class="cl">IFileOpenDialog* pfd = <span class="kw">nullptr</span>;</span><span class="cl"><span class="kw">HRESULT</span> hr = CoCreateInstance(CLSID_FileOpenDialog, <span class="kw">nullptr</span>,</span><span class="cl">                              CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&amp;pfd));</span><span class="cl"><span class="kw">if</span> (SUCCEEDED(hr)) {</span><span class="cl"><span class="cc" style="min-width:52.0ch">    COMDLG_FILTERSPEC types[] = {</span><span class="cm">// 文件类型，结构化、不再玩 \0 拼串</span></span><span class="cl">        { L"文本文件", L"*.txt" },</span><span class="cl">        { L"所有文件", L"*.*"   },</span><span class="cl">    };</span><span class="cl">    pfd-&gt;SetFileTypes(ARRAYSIZE(types), types);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:52.0ch">    <span class="kw">if</span> (SUCCEEDED(pfd-&gt;Show(hwnd))) {</span><span class="cm">// 弹出；用户取消则失败</span></span><span class="cl">        IShellItem* item = <span class="kw">nullptr</span>;</span><span class="cl">        <span class="kw">if</span> (SUCCEEDED(pfd-&gt;GetResult(&amp;item))) {</span><span class="cl">            <span class="kw">PWSTR</span> path = <span class="kw">nullptr</span>;</span><span class="cl">            item-&gt;GetDisplayName(SIGDN_FILESYSTEMPATH, &amp;path);</span><span class="cl">            <span class="cm">// path 就是完整文件系统路径，拿去用</span></span><span class="cl"><span class="cc" style="min-width:52.0ch">            CoTaskMemFree(path);</span><span class="cm">// COM 分配的内存，自己释放</span></span><span class="cl">            item-&gt;Release();</span><span class="cl">        }</span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:52.0ch">    pfd-&gt;Release();</span><span class="cm">// 每个 COM 接口用完都要 Release</span></span><span class="cl">}</span></code></pre>
 <p>读一遍你就抓住 COM 的节奏了：<code>CoCreateInstance</code> 按类 ID 造出对象、拿到接口指针；调它的方法（<code>SetFileTypes</code>、<code>Show</code>、<code>GetResult</code>）；结果不是简单路径，而是一个 <code>IShellItem</code>——Shell 世界里对"一个项"的抽象，你用 <code>GetDisplayName(SIGDN_FILESYSTEMPATH, ...)</code> 把它翻译成文件路径。凡是 COM 给你的接口指针，用完都得 <code>Release()</code>；凡是它替你分配的字符串，用 <code>CoTaskMemFree</code> 还回去。</p>
+<figure data-mark="fig-ifiledialog-hr-chain">
+<svg viewBox="0 0 960 560" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="IFileDialog 的 COM 调用时序与每一步的 HRESULT 失败分支">
+<text class="svgmuted" x="24" y="20" font-size="12.5" font-weight="600">IFileDialog 的一次完整调用：每一步都返回 HRESULT —— 成功才往下一层走，失败各有各的含义</text>
+
+<text class="svgmuted" x="24" y="41" font-size="11" font-weight="600">你手上持有什么</text>
+<text class="svgmuted" x="160" y="41" font-size="11" font-weight="600">COM 调用序列（自上而下）</text>
+<text class="svgmuted" x="596" y="41" font-size="11" font-weight="600">这一步失败时：hr 是什么、该怎么办</text>
+
+<!-- 左：三条资源生命期 -->
+<g>
+<rect x="34" y="127" width="8" height="333" rx="4" fill="#1971c2" opacity=".38"/>
+<rect x="72" y="295" width="8" height="171" rx="4" fill="#7048e8" opacity=".38"/>
+<rect x="110" y="351" width="8" height="56" rx="4" fill="#0ca678" opacity=".42"/>
+</g>
+<g font-family="Consolas,monospace" font-size="10">
+<text x="52" y="300" text-anchor="middle" fill="#1971c2" transform="rotate(-90 52 300)">pfd &#160;IFileOpenDialog*</text>
+<text x="90" y="382" text-anchor="middle" fill="#7048e8" transform="rotate(-90 90 382)">item &#160;IShellItem*</text>
+<text x="128" y="379" text-anchor="middle" fill="#0ca678" transform="rotate(-90 128 379)">PWSTR path</text>
+</g>
+<g stroke-dasharray="3 3" stroke-width="1.2" opacity=".55">
+<line x1="38" y1="127" x2="158" y2="127" stroke="#1971c2"/>
+<line x1="76" y1="295" x2="158" y2="295" stroke="#7048e8"/>
+<line x1="114" y1="351" x2="158" y2="351" stroke="#0ca678"/>
+<line x1="114" y1="407" x2="158" y2="407" stroke="#0ca678"/>
+<line x1="38" y1="460" x2="158" y2="460" stroke="#1971c2"/>
+<line x1="76" y1="466" x2="158" y2="466" stroke="#7048e8"/>
+</g>
+
+<!-- 中：八个步骤 -->
+<g>
+<rect x="160" y="50" width="410" height="42" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="160" y="106" width="410" height="42" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="160" y="162" width="410" height="42" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="160" y="218" width="410" height="42" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="160" y="274" width="410" height="42" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="160" y="330" width="410" height="42" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="160" y="386" width="410" height="42" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="160" y="442" width="410" height="42" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
+</g>
+<g>
+<rect x="161" y="107" width="4" height="40" fill="#1971c2"/>
+<rect x="161" y="275" width="4" height="40" fill="#7048e8"/>
+<rect x="161" y="331" width="4" height="40" fill="#0ca678"/>
+<rect x="161" y="387" width="4" height="40" fill="#0ca678"/>
+<rect x="161" y="443" width="4" height="20" fill="#1971c2"/>
+<rect x="161" y="463" width="4" height="20" fill="#7048e8"/>
+</g>
+<g font-family="Consolas,monospace" font-size="11" class="svgtext">
+<text x="176" y="68">CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);</text>
+<text x="176" y="124">hr = CoCreateInstance(CLSID_FileOpenDialog, …, &amp;pfd);</text>
+<text x="176" y="180">pfd-&gt;SetFileTypes(ARRAYSIZE(types), types);</text>
+<text x="176" y="236">hr = pfd-&gt;Show(hwnd);</text>
+<text x="176" y="292">hr = pfd-&gt;GetResult(&amp;item);</text>
+<text x="176" y="348">item-&gt;GetDisplayName(SIGDN_FILESYSTEMPATH, &amp;path);</text>
+<text x="176" y="404">CoTaskMemFree(path);</text>
+<text x="176" y="460">item-&gt;Release();&#160;&#160;pfd-&gt;Release();</text>
+</g>
+<g class="svgmuted" font-size="10">
+<text x="176" y="84">程序启动时来一次；这是踏进 COM 的门</text>
+<text x="176" y="140">按类 ID 造出对象，拿到 IFileOpenDialog* 接口指针</text>
+<text x="176" y="196">或 pfd-&gt;SetOptions(FOS_PICKFOLDERS) 让它变成「选文件夹」模式</text>
+<text x="176" y="252">模态弹出；用户按「打开」才算成功</text>
+<text x="176" y="308">结果不是路径，是一个 IShellItem —— Shell 里对「一个项」的抽象</text>
+<text x="176" y="364">把 Shell 项翻译成真正的文件系统路径，写进 path</text>
+<text x="176" y="420">COM 替你分配的字符串，得用这个函数还回去</text>
+<text x="176" y="476">凡是 COM 给你的接口指针，用完都得 Release()</text>
+</g>
+
+<!-- 成功往下走 -->
+<g stroke="#0ca678" stroke-width="1.6">
+<line x1="350" y1="93" x2="350" y2="100"/>
+<line x1="350" y1="149" x2="350" y2="156"/>
+<line x1="350" y1="205" x2="350" y2="212"/>
+<line x1="350" y1="261" x2="350" y2="268"/>
+<line x1="350" y1="317" x2="350" y2="324"/>
+<line x1="350" y1="373" x2="350" y2="380"/>
+<line x1="350" y1="429" x2="350" y2="436"/>
+</g>
+<g fill="#0ca678">
+<path d="M350,106 l-4,-7 h8 z"/><path d="M350,162 l-4,-7 h8 z"/><path d="M350,218 l-4,-7 h8 z"/>
+<path d="M350,274 l-4,-7 h8 z"/><path d="M350,330 l-4,-7 h8 z"/><path d="M350,386 l-4,-7 h8 z"/>
+<path d="M350,442 l-4,-7 h8 z"/>
+</g>
+
+<!-- 失败分支箭头 -->
+<g stroke-width="1.6">
+<line x1="572" y1="71" x2="588" y2="71" stroke="#e03131"/>
+<line x1="572" y1="127" x2="588" y2="127" stroke="#e03131"/>
+<line x1="572" y1="183" x2="588" y2="183" stroke="#e03131"/>
+<line x1="572" y1="239" x2="588" y2="239" stroke="#e8590c"/>
+<line x1="572" y1="295" x2="588" y2="295" stroke="#e03131"/>
+<line x1="572" y1="351" x2="588" y2="351" stroke="#e03131"/>
+</g>
+<g>
+<circle cx="572" cy="71" r="3" fill="#e03131"/><path d="M594,71 l-7,-4 v8 z" fill="#e03131"/>
+<circle cx="572" cy="127" r="3" fill="#e03131"/><path d="M594,127 l-7,-4 v8 z" fill="#e03131"/>
+<circle cx="572" cy="183" r="3" fill="#e03131"/><path d="M594,183 l-7,-4 v8 z" fill="#e03131"/>
+<circle cx="572" cy="239" r="3" fill="#e8590c"/><path d="M594,239 l-7,-4 v8 z" fill="#e8590c"/>
+<circle cx="572" cy="295" r="3" fill="#e03131"/><path d="M594,295 l-7,-4 v8 z" fill="#e03131"/>
+<circle cx="572" cy="351" r="3" fill="#e03131"/><path d="M594,351 l-7,-4 v8 z" fill="#e03131"/>
+</g>
+
+<!-- 右：失败分支 -->
+<g fill="var(--svg-soft2)" stroke="var(--rule)">
+<rect x="596" y="50" width="348" height="42" rx="5"/>
+<rect x="596" y="106" width="348" height="42" rx="5"/>
+<rect x="596" y="162" width="348" height="42" rx="5"/>
+<rect x="596" y="218" width="348" height="42" rx="5"/>
+<rect x="596" y="274" width="348" height="42" rx="5"/>
+<rect x="596" y="330" width="348" height="42" rx="5"/>
+</g>
+<g font-family="Consolas,monospace" font-size="10.5">
+<text x="608" y="68" fill="#e03131">RPC_E_CHANGED_MODE</text>
+<text x="608" y="124" fill="#e03131">REGDB_E_CLASSNOTREG / E_NOINTERFACE</text>
+<text x="608" y="180" fill="#e03131">E_INVALIDARG / E_UNEXPECTED</text>
+<text x="608" y="236" fill="#e8590c">HRESULT_FROM_WIN32(ERROR_CANCELLED) = 0x800704C7</text>
+<text x="608" y="292" fill="#e03131">E_UNEXPECTED</text>
+<text x="608" y="348" fill="#e03131">E_INVALIDARG</text>
+</g>
+<g class="svgmuted" font-size="10">
+<text x="608" y="84">本线程早已按另一种套间模式初始化过</text>
+<text x="608" y="140">pfd 仍是 nullptr —— 后面整段都必须跳过</text>
+<text x="608" y="196">过滤器没生效；Show 之后再来设置必然失败</text>
+<text x="608" y="252">用户点了取消 —— 这不是 bug，是最常见的分支</text>
+<text x="608" y="308">Show 没成功就来取结果，item 不会被填上</text>
+<text x="608" y="364">该项不在文件系统里（虚拟项），path 仍是 nullptr</text>
+</g>
+
+<!-- 收尾两步 -->
+<rect x="596" y="386" width="348" height="98" rx="5" fill="var(--svg-soft)" stroke="#0ca678" stroke-dasharray="6 3"/>
+<text class="svgtext" x="608" y="408" font-size="11" font-weight="600">这两步没有 hr 分支，但一步都不能省</text>
+<g class="svgmuted" font-size="10">
+<text x="608" y="430">凡 COM 替你分配的字符串 → CoTaskMemFree</text>
+<text x="608" y="450">凡 COM 给你的接口指针 → Release()</text>
+<text x="608" y="470">提前 return 或抛异常最容易漏掉 —— 交给 ComPtr 托管</text>
+</g>
+
+<!-- 底部读法 -->
+<rect x="24" y="498" width="920" height="54" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="40" y="520" font-size="11.5">读法：整条链就是一串 if (SUCCEEDED(hr)) 的嵌套 —— 绿箭头是「成功再往里走一层」，红箭头是「就地折返」，橙色那条是用户取消，同样走失败分支。</text>
+<text class="svgmuted" x="40" y="540" font-size="10.5">折返路上，已经拿到手的接口指针和字符串照样要还回去 —— 这正是工程里该用 ComPtr 之类智能指针托管 COM 生命周期的原因。</text>
+</svg>
+<figcaption>图 11-X　IFileDialog 的 COM 调用时序与每一步的 HRESULT 失败分支（原创绘制）</figcaption>
+</figure>
+
 <div class="note new"><span class="t">🔵 想选文件夹？现代接口一句话搞定</span><p>过去要让用户挑一个"文件夹"，得用 <span class="badge old">已过时</span><code>SHBrowseForFolder</code>——那个树形小框又丑又难用。现代做法是直接用 <code>IFileOpenDialog</code>，在 <code>Show</code> 之前调 <code>pfd-&gt;SetOptions(FOS_PICKFOLDERS)</code>，同一个漂亮的文件对话框立刻变成"选文件夹"模式。这是 <code>IFileDialog</code> 相比老 API 一个立竿见影的好处。</p></div>
 <div class="note ok"><span class="t">🟢 C++ 里请用智能指针管 COM 生命周期</span><p>手动配对 <code>Release()</code> 很容易在提前 return 或异常时漏掉，导致泄漏。实际工程里建议用 <code>Microsoft::WRL::ComPtr</code> 或 <code>_com_ptr_t</code> 这类智能指针包住接口指针，让它出作用域时自动 <code>Release</code>。上面的裸指针写法只是为了把每一步露出来讲清楚，落到代码里请交给智能指针托管。</p></div>
 
@@ -5554,6 +7151,227 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <p><strong>选字体</strong>同理，围绕 <code>CHOOSEFONT</code> 结构和一个 <code>LOGFONT</code>：</p>
 <pre><code><span class="cl">LOGFONTW lf = { 0 };</span><span class="cl">CHOOSEFONTW cf = { <span class="kw">sizeof</span>(cf) };</span><span class="cl">cf.hwndOwner = hwnd;</span><span class="cl"><span class="cc" style="min-width:45.0ch">cf.lpLogFont = &amp;lf;</span><span class="cm">// 选中的字体信息写回这里</span></span><span class="cl">cf.Flags     = CF_SCREENFONTS | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT;</span><span class="cl"> </span><span class="cl"><span class="kw">if</span> (ChooseFontW(&amp;cf)) {</span><span class="cl"><span class="cc" style="min-width:45.0ch">    <span class="kw">HFONT</span> hFont = CreateFontIndirectW(&amp;lf);</span><span class="cm">// 拿 lf 造出真正的字体对象</span></span><span class="cl">    <span class="cm">// ... 用完记得 DeleteObject(hFont)</span></span><span class="cl">}</span></code></pre>
 <p>注意用 <code>CF_INITTOLOGFONTSTRUCT</code> 时，<code>lpLogFont</code> 是双向的：进去时是"初始字体"，出来时是"用户选定字体"。选完得到的 <code>LOGFONT</code> 只是"描述"，真要用它绘制，还得 <code>CreateFontIndirectW</code> 造成 <code>HFONT</code>（GDI 字体对象的知识见第 17 章的字体章节），用完 <code>DeleteObject</code>。</p>
+<figure data-mark="fig-choosecolor-font-inout">
+<svg viewBox="0 0 960 560" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="ChooseColorW 与 ChooseFontW 对话框外观，以及结构字段进去与回填的对应">
+<text class="svgmuted" x="24" y="20" font-size="12.5" font-weight="600">通用对话框的共同节奏：填结构 → 调函数 → 读结构；标 &#8596; 的字段「进去是初值，出来是结果」</text>
+<text class="svgmuted" x="24" y="52" font-size="11" font-weight="600">&#9312; ChooseColorW —— 调用前把这个结构填好</text>
+<rect x="24" y="58" width="252" height="170" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="28" y="121" width="244" height="15" rx="3" fill="#7048e8" opacity=".14"/>
+<rect x="28" y="139" width="244" height="15" rx="3" fill="#1971c2" opacity=".14"/>
+<g font-family="Consolas,monospace" font-size="10.5" class="svgtext">
+<text x="32" y="78">static COLORREF custom[16] = {0};</text>
+<text x="32" y="96">CHOOSECOLORW cc = { sizeof(cc) };</text>
+<text x="32" y="114">cc.hwndOwner    = hwnd;</text>
+<text x="32" y="132">cc.lpCustColors = custom;</text>
+<text x="32" y="150">cc.rgbResult    = RGB(0,120,215);</text>
+<text x="32" y="168">cc.Flags = <tspan fill="#1971c2" font-weight="700">CC_RGBINIT</tspan></text>
+<text x="32" y="186">         | <tspan fill="#1098ad" font-weight="700">CC_FULLOPEN</tspan> | CC_ANYCOLOR;</text>
+<text x="32" y="214">if (ChooseColorW(&amp;cc)) { … }</text>
+</g>
+<line x1="32" y1="196" x2="268" y2="196" stroke="var(--rule)" stroke-dasharray="3 3"/>
+<text x="250" y="133" font-size="12" font-weight="700" fill="#7048e8">&#8596;</text>
+<text x="250" y="151" font-size="12" font-weight="700" fill="#1971c2">&#8596;</text>
+<rect x="316" y="44" width="300" height="228" rx="3" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="316" y="44" width="300" height="22" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="325" y="60" font-size="11">颜色</text>
+<text class="svgmuted" x="606" y="60" font-size="11" text-anchor="end">&#215;</text>
+<text class="svgmuted" x="326" y="80" font-size="10">基本颜色(&amp;B):</text>
+<g stroke="var(--rule)" stroke-width=".6">
+<rect x="326" y="86" width="15" height="15" fill="#e03131" opacity="0.82"/>
+<rect x="342" y="86" width="15" height="15" fill="#e8590c" opacity="0.82"/>
+<rect x="358" y="86" width="15" height="15" fill="#0ca678" opacity="0.82"/>
+<rect x="374" y="86" width="15" height="15" fill="#1098ad" opacity="0.82"/>
+<rect x="390" y="86" width="15" height="15" fill="#1971c2" opacity="0.82"/>
+<rect x="406" y="86" width="15" height="15" fill="#7048e8" opacity="0.82"/>
+<rect x="422" y="86" width="15" height="15" fill="#e03131" opacity="0.82"/>
+<rect x="438" y="86" width="15" height="15" fill="#1971c2" opacity="0.82"/>
+<rect x="326" y="102" width="15" height="15" fill="#e8590c" opacity="0.68"/>
+<rect x="342" y="102" width="15" height="15" fill="#0ca678" opacity="0.68"/>
+<rect x="358" y="102" width="15" height="15" fill="#1098ad" opacity="0.68"/>
+<rect x="374" y="102" width="15" height="15" fill="#1971c2" opacity="0.68"/>
+<rect x="390" y="102" width="15" height="15" fill="#7048e8" opacity="0.68"/>
+<rect x="406" y="102" width="15" height="15" fill="#e03131" opacity="0.68"/>
+<rect x="422" y="102" width="15" height="15" fill="#1971c2" opacity="0.68"/>
+<rect x="438" y="102" width="15" height="15" fill="#e03131" opacity="0.68"/>
+<rect x="326" y="118" width="15" height="15" fill="#1971c2" opacity="1"/>
+<rect x="342" y="118" width="15" height="15" fill="#1098ad" opacity="0.54"/>
+<rect x="358" y="118" width="15" height="15" fill="#1971c2" opacity="0.54"/>
+<rect x="374" y="118" width="15" height="15" fill="#7048e8" opacity="0.54"/>
+<rect x="390" y="118" width="15" height="15" fill="#e03131" opacity="0.54"/>
+<rect x="406" y="118" width="15" height="15" fill="#1971c2" opacity="0.54"/>
+<rect x="422" y="118" width="15" height="15" fill="#e03131" opacity="0.54"/>
+<rect x="438" y="118" width="15" height="15" fill="#e8590c" opacity="0.54"/>
+<rect x="326" y="134" width="15" height="15" fill="#1098ad" opacity="0.40"/>
+<rect x="342" y="134" width="15" height="15" fill="#1971c2" opacity="0.40"/>
+<rect x="358" y="134" width="15" height="15" fill="#7048e8" opacity="0.40"/>
+<rect x="374" y="134" width="15" height="15" fill="#e03131" opacity="0.40"/>
+<rect x="390" y="134" width="15" height="15" fill="#1971c2" opacity="0.40"/>
+<rect x="406" y="134" width="15" height="15" fill="#e03131" opacity="0.40"/>
+<rect x="422" y="134" width="15" height="15" fill="#e8590c" opacity="0.40"/>
+<rect x="438" y="134" width="15" height="15" fill="#0ca678" opacity="0.40"/>
+<rect x="326" y="150" width="15" height="15" fill="#1971c2" opacity="0.26"/>
+<rect x="342" y="150" width="15" height="15" fill="#7048e8" opacity="0.26"/>
+<rect x="358" y="150" width="15" height="15" fill="#e03131" opacity="0.26"/>
+<rect x="374" y="150" width="15" height="15" fill="#1971c2" opacity="0.26"/>
+<rect x="390" y="150" width="15" height="15" fill="#e03131" opacity="0.26"/>
+<rect x="406" y="150" width="15" height="15" fill="#e8590c" opacity="0.26"/>
+<rect x="422" y="150" width="15" height="15" fill="#0ca678" opacity="0.26"/>
+<rect x="438" y="150" width="15" height="15" fill="#1098ad" opacity="0.26"/>
+</g>
+<rect x="324" y="116" width="19" height="19" fill="none" stroke="#1971c2" stroke-width="1.8"/>
+<text class="svgmuted" x="326" y="185" font-size="10">自定义颜色(&amp;C):</text>
+<g stroke="var(--rule)" stroke-width=".6">
+<rect x="326" y="191" width="15" height="15" fill="#0ca678" opacity=".62"/>
+<rect x="342" y="191" width="15" height="15" fill="#e8590c" opacity=".62"/>
+<rect x="358" y="191" width="15" height="15" fill="#7048e8" opacity=".62"/>
+<rect x="374" y="191" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="390" y="191" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="406" y="191" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="422" y="191" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="438" y="191" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="326" y="207" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="342" y="207" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="358" y="207" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="374" y="207" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="390" y="207" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="406" y="207" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="422" y="207" width="15" height="15" fill="var(--svg-soft2)"/>
+<rect x="438" y="207" width="15" height="15" fill="var(--svg-soft2)"/>
+</g>
+<rect x="326" y="232" width="124" height="18" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="388" y="245" font-size="9.5" text-anchor="middle">规定自定义颜色(&amp;D) &gt;&gt;</text>
+<rect x="464" y="78" width="140" height="94" rx="4" fill="none" stroke="#1098ad" stroke-width="1.3" stroke-dasharray="5 3"/>
+<g stroke="var(--rule)" stroke-width=".6">
+<rect x="470.0" y="86" width="17.4" height="79" fill="#e03131" opacity=".45"/>
+<rect x="487.3" y="86" width="17.4" height="79" fill="#e8590c" opacity=".45"/>
+<rect x="504.7" y="86" width="17.4" height="79" fill="#0ca678" opacity=".45"/>
+<rect x="522.0" y="86" width="17.4" height="79" fill="#1098ad" opacity=".45"/>
+<rect x="539.3" y="86" width="17.4" height="79" fill="#1971c2" opacity=".45"/>
+<rect x="556.6" y="86" width="17.4" height="79" fill="#7048e8" opacity=".45"/>
+</g>
+<rect x="470" y="86" width="104" height="79" fill="none" stroke="var(--rule)"/>
+<circle cx="504" cy="118" r="4" fill="none" stroke="var(--fg)" stroke-width="1.4"/>
+<rect x="584" y="86" width="14" height="79" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<path d="M602,124 l6,-4 v8 z" fill="var(--rule)"/>
+<rect x="470" y="180" width="48" height="26" fill="#1971c2" stroke="var(--rule)"/>
+<text class="svgmuted" x="470" y="218" font-size="9.5">颜色|纯色(&amp;O)</text>
+<rect x="470" y="232" width="48" height="18" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="494" y="245" font-size="9.5" text-anchor="middle">确定</text>
+<rect x="526" y="232" width="48" height="18" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="550" y="245" font-size="9.5" text-anchor="middle">取消</text>
+<text x="464" y="36" font-size="10" fill="#1098ad">CC_FULLOPEN：右半边一进来就展开</text>
+<line x1="534" y1="41" x2="534" y2="72" stroke="#1098ad" stroke-width="1.4"/>
+<path d="M534,78 l-4,-7 h8 z" fill="#1098ad"/>
+<rect x="650" y="64" width="294" height="140" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="660" y="84" font-size="11" font-weight="600">ChooseColorW 返回非零之后，去结构里取结果</text>
+<text x="660" y="110" font-family="Consolas,monospace" font-size="10.5" fill="#0ca678" font-weight="700">cc.rgbResult</text>
+<text class="svgmuted" x="660" y="126" font-size="10">用户最终选定的那个 COLORREF</text>
+<text x="660" y="152" font-family="Consolas,monospace" font-size="10.5" fill="#e8590c" font-weight="700">custom[16]</text>
+<text class="svgmuted" x="660" y="168" font-size="10">用户在右半边调出来、按下「规定自定义颜色」</text>
+<text class="svgmuted" x="660" y="184" font-size="10">存进去的色；static 让下次弹出还认得这些格子</text>
+<rect x="650" y="214" width="294" height="80" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="660" y="234" font-size="10.5" font-weight="600">这几个通用对话框，都是同一个模具刻出来的</text>
+<text class="svgmuted" x="660" y="253" font-size="10">&#9312; { sizeof(x) } 把首字段设成结构大小</text>
+<text class="svgmuted" x="660" y="270" font-size="10">&#9313; 填 hwndOwner 和输入项　&#9314; Flags 微调行为</text>
+<text class="svgmuted" x="660" y="287" font-size="10">&#9315; 返回非零＝用户确认，才去读结果字段</text>
+<g fill="none" stroke-width="1.6">
+<polyline points="278,132 292,132 292,206 318,206" stroke="#7048e8"/>
+<polyline points="278,150 306,150 306,126 318,126" stroke="#1971c2"/>
+<polyline points="520,193 630,193 630,110 649,110" stroke="#0ca678"/>
+<polyline points="455,207 455,282 640,282 640,160 649,160" stroke="#e8590c"/>
+</g>
+<g>
+<circle cx="278" cy="132" r="3" fill="#7048e8"/><path d="M324,206 l-7,-4 v8 z" fill="#7048e8"/>
+<circle cx="278" cy="150" r="3" fill="#1971c2"/><path d="M324,126 l-7,-4 v8 z" fill="#1971c2"/>
+<circle cx="520" cy="193" r="3" fill="#0ca678"/><path d="M656,110 l-7,-4 v8 z" fill="#0ca678"/>
+<circle cx="455" cy="207" r="3" fill="#e8590c"/><path d="M656,160 l-7,-4 v8 z" fill="#e8590c"/>
+</g>
+<line x1="24" y1="300" x2="944" y2="300" stroke="var(--rule)" stroke-dasharray="4 4" opacity=".7"/>
+<text class="svgmuted" x="24" y="318" font-size="11" font-weight="600">&#9313; ChooseFontW —— 同一个模具，换一副结构</text>
+<rect x="24" y="324" width="252" height="150" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<rect x="28" y="387" width="244" height="15" rx="3" fill="#7048e8" opacity=".14"/>
+<rect x="28" y="423" width="244" height="15" rx="3" fill="#1098ad" opacity=".14"/>
+<g font-family="Consolas,monospace" font-size="10.5" class="svgtext">
+<text x="32" y="344">LOGFONTW lf = { 0 };</text>
+<text x="32" y="362">CHOOSEFONTW cf = { sizeof(cf) };</text>
+<text x="32" y="380">cf.hwndOwner = hwnd;</text>
+<text x="32" y="398">cf.lpLogFont = &amp;lf;</text>
+<text x="32" y="416">cf.Flags = CF_SCREENFONTS</text>
+<text x="32" y="434">         | CF_EFFECTS</text>
+<text x="32" y="452">         | CF_INITTOLOGFONTSTRUCT;</text>
+</g>
+<text x="250" y="399" font-size="12" font-weight="700" fill="#7048e8">&#8596;</text>
+<rect x="310" y="306" width="310" height="222" rx="3" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+<rect x="310" y="306" width="310" height="22" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="319" y="322" font-size="11">字体</text>
+<text class="svgmuted" x="610" y="322" font-size="11" text-anchor="end">&#215;</text>
+<text class="svgmuted" x="320" y="346" font-size="10">字体(&amp;F):</text>
+<text class="svgmuted" x="444" y="346" font-size="10">字形(&amp;Y):</text>
+<text class="svgmuted" x="522" y="346" font-size="10">大小(&amp;S):</text>
+<rect x="320" y="352" width="118" height="86" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="444" y="352" width="72" height="86" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="522" y="352" width="56" height="86" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="321" y="354" width="116" height="17" fill="#1971c2" opacity=".18"/>
+<rect x="445" y="354" width="70" height="17" fill="#1971c2" opacity=".18"/>
+<rect x="523" y="388" width="54" height="17" fill="#1971c2" opacity=".18"/>
+<g class="svgtext" font-size="10">
+<text x="326" y="367">微软雅黑</text>
+<text x="326" y="384">宋体</text>
+<text x="326" y="401">Consolas</text>
+<text x="326" y="418">Segoe UI</text>
+<text x="450" y="367">常规</text>
+<text x="450" y="384">斜体</text>
+<text x="450" y="401">粗体</text>
+<text x="528" y="367">9</text>
+<text x="528" y="384">10</text>
+<text x="528" y="401">11</text>
+<text x="528" y="418">12</text>
+</g>
+<text class="svgmuted" x="320" y="444" font-size="9.5">效果</text>
+<rect x="320" y="448" width="136" height="54" rx="3" fill="none" stroke="var(--rule)"/>
+<rect x="324" y="460" width="128" height="15" rx="3" fill="#e8590c" opacity=".13"/>
+<rect x="324" y="479" width="128" height="15" rx="3" fill="#e8590c" opacity=".13"/>
+<rect x="328" y="462" width="10" height="10" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="344" y="471" font-size="10">删除线(&amp;K)</text>
+<rect x="328" y="481" width="10" height="10" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M330,486 l2.5,3 l4-6" fill="none" stroke="#1971c2" stroke-width="1.6"/>
+<text class="svgtext" x="344" y="490" font-size="10">下划线(&amp;U)</text>
+<text class="svgmuted" x="464" y="444" font-size="9.5">示例</text>
+<rect x="464" y="448" width="146" height="54" rx="3" fill="none" stroke="var(--rule)"/>
+<text class="svgtext" x="537" y="480" font-size="15" text-anchor="middle" text-decoration="underline">AaBb 字体</text>
+<rect x="464" y="505" width="56" height="17" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="492" y="517" font-size="9.5" text-anchor="middle">确定</text>
+<rect x="528" y="505" width="56" height="17" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgtext" x="556" y="517" font-size="9.5" text-anchor="middle">取消</text>
+<rect x="650" y="330" width="294" height="196" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text class="svgtext" x="660" y="350" font-size="11" font-weight="600">ChooseFontW 返回非零之后：lf 被整个回填</text>
+<g font-family="Consolas,monospace" font-size="10.5">
+<text x="660" y="376" fill="#0ca678">lf.lfFaceName = L"微软雅黑";</text>
+<text x="660" y="394" fill="#0ca678">lf.lfHeight   = -15;</text>
+<text x="660" y="412" fill="#0ca678">lf.lfWeight   = FW_NORMAL;</text>
+<text x="660" y="430" fill="#e8590c">lf.lfUnderline = 1;</text>
+<text x="660" y="448" fill="#e8590c">lf.lfItalic = 0;  lf.lfStrikeOut = 0;</text>
+</g>
+<line x1="660" y1="462" x2="934" y2="462" stroke="var(--rule)" stroke-dasharray="3 3"/>
+<text class="svgmuted" x="660" y="480" font-size="10">LOGFONT 只是「描述」，还得造出 GDI 字体对象：</text>
+<text x="660" y="498" font-family="Consolas,monospace" font-size="10.5" fill="#1971c2">HFONT hFont = CreateFontIndirectW(&amp;lf);</text>
+<text class="svgmuted" x="660" y="516" font-size="10">用完记得 DeleteObject(hFont)</text>
+<g fill="none" stroke-width="1.6">
+<polyline points="278,398 296,398 296,366 309,366" stroke="#7048e8"/>
+<polyline points="278,434 304,434 304,470 309,470" stroke="#1098ad"/>
+<polyline points="580,396 630,396 630,394 649,394" stroke="#0ca678"/>
+<polyline points="400,502 400,542 640,542 640,430 649,430" stroke="#e8590c"/>
+</g>
+<g>
+<circle cx="278" cy="398" r="3" fill="#7048e8"/><path d="M316,366 l-7,-4 v8 z" fill="#7048e8"/>
+<circle cx="278" cy="434" r="3" fill="#1098ad"/><path d="M316,470 l-7,-4 v8 z" fill="#1098ad"/>
+<circle cx="580" cy="396" r="3" fill="#0ca678"/><path d="M656,394 l-7,-4 v8 z" fill="#0ca678"/>
+<circle cx="400" cy="502" r="3" fill="#e8590c"/><path d="M656,430 l-7,-4 v8 z" fill="#e8590c"/>
+</g>
+</svg>
+<figcaption>图 11-X　ChooseColorW 与 ChooseFontW：结构字段怎样进去、又怎样被回填（原创绘制）</figcaption>
+</figure>
+
 <p>最后是<strong>打印</strong>。它的通用对话框不仅让用户选打印机、设份数，还会顺手交给你一个可以直接往上画的设备上下文（DC）——你拿这个 DC 配合 <code>StartDoc</code>/<code>StartPage</code>/<code>EndPage</code>/<code>EndDoc</code> 就能出纸。现代请用 <code>PrintDlgEx</code>：</p>
 <table>
 <thead><tr><th>函数</th><th>状态</th><th>说明</th></tr></thead>
