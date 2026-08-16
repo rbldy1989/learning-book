@@ -113,10 +113,7 @@ pre {
 pre code { background: none; color: var(--fg); padding: 0; font-size: 0.85em; }
 pre .cm { color: var(--muted); }
 pre .kw { color: var(--accent); font-weight: 600; }
-table { border-collapse: collapse; width: 100%; margin: 0 0 1.5em; font-size: 0.92em; line-height: 1.7; table-layout: auto; display: table; }
-th, td { border: 1px solid var(--pre-border); padding: 0.35em 0.9em; text-align: left; vertical-align: top; }
-th { background: var(--pre-bg); font-weight: 600; }
-tbody tr:nth-child(even) { background: var(--pre-bg); }
+
 .badge { display:inline; font-size:inherit; font-family:inherit; font-weight:inherit;
   color:inherit; padding:0; border:none; background:none; vertical-align:baseline;
   margin:0; white-space:normal; }
@@ -145,24 +142,33 @@ figcaption { font-size: 0.85em; color: var(--muted); margin-top: 0.6em; }
 
 body.nav-hidden #sidebar, body.nav-hidden .sb-resizer{display:none;}
 #sidebar .booktitle, #sidebar .toc-title{padding-left:1.2em;}
-th{white-space:nowrap;}
+
 td code{white-space:nowrap;}
 pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
 .fsum { margin: .2em 0 1.1em; color: var(--muted); font-size: .95em; line-height: 1.7; }
 
 /* ===== 渲染性能：视口外内容跳过布局与绘制 ===== */
-section.chapter{content-visibility:auto;contain-intrinsic-size:auto 1200px;}
-figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
-pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
-table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
+section.chapter{}
+figure{}
+pre{}
+
 #sidebar,#toc{will-change:scroll-position;}
 
-/* 表格：短内容不折行，长文本正常折行 */
-table th { white-space: nowrap; }
-table td:first-child, table th:first-child { white-space: nowrap; }
-table td { overflow-wrap: break-word; }
-table td.nw { white-space: nowrap; }
+           /* 首列不再强制单行 */
+
+table{border-collapse:collapse;width:100%;margin:0 0 1.5em;
+      font-size:.92em;line-height:1.7;table-layout:fixed;}
+th,td{border:1px solid var(--pre-border);padding:.35em .9em;text-align:left;
+      vertical-align:top;overflow-wrap:anywhere;word-break:normal;}
+th{background:var(--pre-bg);font-weight:600;}
+tbody tr:nth-child(even){background:var(--pre-bg);}
+td code,th code{white-space:normal;}
+table tr>:first-child:nth-last-child(2){width:36%;}
+table tr>:first-child:nth-last-child(3){width:26%;}
+table tr>:first-child:nth-last-child(3)+*{width:22%;}
+table tr>:first-child:nth-last-child(4){width:22%;}
+table tr>:first-child:nth-last-child(4)+*{width:20%;}
 </style>
 </head>
 <body>
@@ -263,7 +269,7 @@ table td.nw { white-space: nowrap; }
 <tr><td class="nw"><code>winbase.h</code></td><td><strong>kernel32</strong> 的主战场：进程线程、文件、内存、同步、时间</td><td> 内核服务的核心声明</td></tr>
 <tr><td class="nw"><code>winuser.h</code></td><td><strong>user32</strong> 的主战场：窗口、消息、菜单、对话框、输入</td><td> <code>WM_</code>/<code>WS_</code>/<code>MB_</code> 等常量在此</td></tr>
 <tr><td class="nw"><code>wingdi.h</code></td><td><strong>gdi32</strong> 的主战场：设备上下文、画笔画刷、字体、位图、绘图</td><td> <code>DT_</code>/<code>COLOR_</code>/<code>ROP</code> 等在此</td></tr>
-<tr><td class="nw"><code>wingdi.h</code>→<code>winnt.h</code></td><td>NT 底层类型与常量：<code>LONG</code>、访问权限、SEH 结构、Unicode 宏</td><td>由 windef 间接引入，定义 <code>UNICODE_STRING</code> 等</td></tr>
+<tr><td><code>wingdi.h</code>→<code>winnt.h</code></td><td>NT 底层类型与常量：<code>LONG</code>、访问权限、SEH 结构、Unicode 宏</td><td>由 windef 间接引入，定义 <code>UNICODE_STRING</code> 等</td></tr>
 <tr><td class="nw"><code>winnls.h</code></td><td>本地化与代码页：<code>MultiByteToWideChar</code>、区域设置</td><td class="nw">A/W 转换绕不开它</td></tr>
 <tr><td class="nw"><code>winreg.h</code></td><td>注册表 API：<code>RegOpenKeyEx</code>、<code>RegQueryValueEx</code></td><td class="nw">实现在 advapi32</td></tr>
 <tr><td class="nw"><code>winsvc.h</code></td><td>服务控制管理器 API：<code>OpenSCManager</code>、<code>CreateService</code></td><td class="nw">实现在 advapi32</td></tr>
@@ -312,7 +318,7 @@ table td.nw { white-space: nowrap; }
 <tr><td><code>MessageBox</code>（无后缀宏）</td><td>据 <code>UNICODE</code> 宏展开为 A 或 W</td><td>建议全工程定义 <code>UNICODE</code> 使其落到 W</td></tr>
 <tr><td class="nw"><code>TCHAR</code></td><td>随 <code>_UNICODE</code> 在 <code>char</code>/<code>wchar_t</code> 间切换的字符类型</td><td> 双编译遗留方案，新代码可直接用 <code>wchar_t</code></td></tr>
 <tr><td><code>TEXT("...")</code> / <code>_T("...")</code></td><td>字面量包装宏，随 <code>UNICODE</code> 产出 <code>L"..."</code> 或窄串</td><td>配合 <code>TCHAR</code> 使用；纯 W 工程可直接写 <code>L"..."</code></td></tr>
-<tr><td class="nw"><code>LPTSTR</code> / <code>LPCTSTR</code></td><td>随编译模式变化的（常量）字符串指针类型</td><td>对应纯 W 下的 <code>LPWSTR</code>/<code>LPCWSTR</code></td></tr>
+<tr><td><code>LPTSTR</code> / <code>LPCTSTR</code></td><td>随编译模式变化的（常量）字符串指针类型</td><td>对应纯 W 下的 <code>LPWSTR</code>/<code>LPCWSTR</code></td></tr>
 <tr><td><code>WideCharToMultiByte</code></td><td>宽字符转指定代码页窄字符</td><td>与 <code>MultiByteToWideChar</code> 配对做编码转换</td></tr>
 </tbody></table>
 <div class="note new"><span class="t">🔵 现代提示</span><p>今天新写 Win32 代码，标准做法是<strong>定义 <code>UNICODE</code> 与 <code>_UNICODE</code>，全程使用 <code>W</code> 版 API 与 <code>wchar_t</code>/<code>L"..."</code></strong>。ANSI 版仅在维护老代码或对接窄字符接口时才用。若数据源是 UTF‑8，用 <code>MultiByteToWideChar(CP_UTF8, ...)</code> 转成 UTF‑16 再调 W 版。</p></div>
@@ -367,18 +373,18 @@ table td.nw { white-space: nowrap; }
 <tr><td class="nw"><code>ES_</code></td><td>编辑框样式(Edit Style)</td><td><code>ES_MULTILINE</code> <code>ES_PASSWORD</code> <code>ES_AUTOHSCROLL</code> <code>ES_NUMBER</code></td></tr>
 <tr><td class="nw"><code>EN_</code></td><td>编辑框通知码(Edit Notification)</td><td><code>EN_CHANGE</code> <code>EN_UPDATE</code> <code>EN_KILLFOCUS</code></td></tr>
 <tr><td class="nw"><code>LBS_</code></td><td>列表框样式(List Box Style)</td><td><code>LBS_NOTIFY</code> <code>LBS_SORT</code> <code>LBS_MULTIPLESEL</code></td></tr>
-<tr><td class="nw"><code>LB_</code> / <code>LBN_</code></td><td>列表框消息 / 通知码</td><td><code>LB_ADDSTRING</code> <code>LB_GETCURSEL</code>；<code>LBN_SELCHANGE</code></td></tr>
+<tr><td><code>LB_</code> / <code>LBN_</code></td><td>列表框消息 / 通知码</td><td><code>LB_ADDSTRING</code> <code>LB_GETCURSEL</code>；<code>LBN_SELCHANGE</code></td></tr>
 <tr><td class="nw"><code>CBS_</code></td><td>组合框样式(Combo Box Style)</td><td><code>CBS_DROPDOWN</code> <code>CBS_DROPDOWNLIST</code> <code>CBS_SORT</code></td></tr>
-<tr><td class="nw"><code>CB_</code> / <code>CBN_</code></td><td>组合框消息 / 通知码</td><td><code>CB_ADDSTRING</code> <code>CB_GETCURSEL</code>；<code>CBN_SELCHANGE</code></td></tr>
+<tr><td><code>CB_</code> / <code>CBN_</code></td><td>组合框消息 / 通知码</td><td><code>CB_ADDSTRING</code> <code>CB_GETCURSEL</code>；<code>CBN_SELCHANGE</code></td></tr>
 <tr><td class="nw"><code>LVS_</code></td><td>列表视图样式(ListView Style)，comctl32</td><td><code>LVS_REPORT</code> <code>LVS_ICON</code> <code>LVS_LIST</code>；需 <code>commctrl.h</code></td></tr>
-<tr><td class="nw"><code>LVS_EX_</code> / <code>LVM_</code></td><td>列表视图扩展样式 / 消息</td><td><code>LVS_EX_FULLROWSELECT</code> <code>LVS_EX_GRIDLINES</code></td></tr>
+<tr><td><code>LVS_EX_</code> / <code>LVM_</code></td><td>列表视图扩展样式 / 消息</td><td><code>LVS_EX_FULLROWSELECT</code> <code>LVS_EX_GRIDLINES</code></td></tr>
 <tr><td class="nw"><code>TVS_</code></td><td>树视图样式(TreeView Style)，comctl32</td><td><code>TVS_HASLINES</code> <code>TVS_HASBUTTONS</code> <code>TVS_LINESATROOT</code></td></tr>
-<tr><td class="nw"><code>TVM_</code> / <code>TVN_</code></td><td>树视图消息 / 通知码</td><td><code>TVM_INSERTITEM</code>；<code>TVN_SELCHANGED</code></td></tr>
+<tr><td><code>TVM_</code> / <code>TVN_</code></td><td>树视图消息 / 通知码</td><td><code>TVM_INSERTITEM</code>；<code>TVN_SELCHANGED</code></td></tr>
 <tr><td class="nw"><strong><code>SW_</code></strong></td><td>窗口显示方式(Show Window)，<code>ShowWindow</code></td><td> <code>SW_SHOW</code> <code>SW_HIDE</code> <code>SW_MINIMIZE</code> <code>SW_SHOWMAXIMIZED</code></td></tr>
 <tr><td class="nw"><code>HWND_</code></td><td class="nw">特殊窗口句柄常量</td><td><code>HWND_TOP</code> <code>HWND_TOPMOST</code> <code>HWND_BROADCAST</code> <code>HWND_DESKTOP</code></td></tr>
 <tr><td class="nw"><code>COLOR_</code></td><td>系统颜色索引(System Color)，<code>GetSysColor</code>/背景刷</td><td><code>COLOR_WINDOW</code> <code>COLOR_BTNFACE</code> <code>COLOR_HIGHLIGHT</code></td></tr>
-<tr><td class="nw"><code>GWL_</code> / <code>GWLP_</code></td><td>窗口长指针索引(Window Long / Pointer)，<code>GetWindowLongPtr</code></td><td> 64 位下用 <code>GWLP_</code> 版：<code>GWLP_WNDPROC</code> <code>GWL_STYLE</code></td></tr>
-<tr><td class="nw"><code>GCL_</code> / <code>GCLP_</code></td><td>窗口类长指针索引(Class Long)，<code>GetClassLongPtr</code></td><td><code>GCLP_HBRBACKGROUND</code> <code>GCLP_WNDPROC</code></td></tr>
+<tr><td><code>GWL_</code> / <code>GWLP_</code></td><td>窗口长指针索引(Window Long / Pointer)，<code>GetWindowLongPtr</code></td><td> 64 位下用 <code>GWLP_</code> 版：<code>GWLP_WNDPROC</code> <code>GWL_STYLE</code></td></tr>
+<tr><td><code>GCL_</code> / <code>GCLP_</code></td><td>窗口类长指针索引(Class Long)，<code>GetClassLongPtr</code></td><td><code>GCLP_HBRBACKGROUND</code> <code>GCLP_WNDPROC</code></td></tr>
 <tr><td class="nw"><strong><code>VK_</code></strong></td><td>虚拟键码(Virtual Key)，键盘消息与 <code>GetAsyncKeyState</code></td><td> <code>VK_RETURN</code> <code>VK_ESCAPE</code> <code>VK_F1</code> <code>VK_LEFT</code></td></tr>
 <tr><td class="nw"><code>MK_</code></td><td>鼠标键/修饰键标志(Mouse Key)，鼠标消息的 <code>wParam</code></td><td><code>MK_LBUTTON</code> <code>MK_CONTROL</code> <code>MK_SHIFT</code></td></tr>
 <tr><td class="nw"><code>PM_</code></td><td><code>PeekMessage</code> 的移除标志</td><td><code>PM_REMOVE</code> <code>PM_NOREMOVE</code> <code>PM_NOYIELD</code></td></tr>
@@ -395,7 +401,7 @@ table td.nw { white-space: nowrap; }
 <tr><td class="nw"><code>SPI_</code></td><td>系统参数信息(System Parameters Info)，<code>SystemParametersInfo</code></td><td><code>SPI_GETWORKAREA</code> <code>SPI_SETMOUSESPEED</code></td></tr>
 <tr><td class="nw"><code>OFN_</code></td><td>打开/保存对话框标志(Open File Name)，comdlg32</td><td><code>OFN_FILEMUSTEXIST</code> <code>OFN_OVERWRITEPROMPT</code></td></tr>
 <tr><td class="nw"><code>CF_</code></td><td>剪贴板格式(Clipboard Format)</td><td><code>CF_TEXT</code> <code>CF_UNICODETEXT</code> <code>CF_BITMAP</code></td></tr>
-<tr><td class="nw"><code>GMEM_</code> / <code>GHND</code></td><td>全局内存分配标志(Global Memory)，<code>GlobalAlloc</code></td><td> 除剪贴板外，堆内存首选 <code>HeapAlloc</code></td></tr>
+<tr><td><code>GMEM_</code> / <code>GHND</code></td><td>全局内存分配标志(Global Memory)，<code>GlobalAlloc</code></td><td> 除剪贴板外，堆内存首选 <code>HeapAlloc</code></td></tr>
 </tbody></table>
 <div class="note new"><span class="t">🔵 现代提示</span><p>看到 <strong>下划线前缀</strong> 就能反推 API 归属：<code>WM_/WS_/CS_/SW_/MB_/VK_</code> 多在 <code>winuser.h</code>（user32）；<code>DT_/COLOR_/ROP</code> 多在 <code>wingdi.h</code>（gdi32）；<code>LVS_/TVS_</code> 在 <code>commctrl.h</code>（comctl32，需单独 include）。这一"前缀 → 头文件 → DLL"的心智映射，是快速查阅本手册后续各章的钥匙。</p></div>
 
@@ -411,15 +417,15 @@ table td.nw { white-space: nowrap; }
 <table>
 <thead><tr><th>前缀 / 后缀</th><th>含义</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td class="nw"><code>b</code> / <code>f</code></td><td class="nw">布尔 / 标志位</td><td>如 <code>bResult</code>、<code>fSuccess</code>，底层多是 <code>BOOL</code></td></tr>
-<tr><td class="nw"><code>n</code> / <code>i</code></td><td class="nw">整数 / 索引</td><td>计数、下标</td></tr>
-<tr><td class="nw"><code>c</code> / <code>cb</code> / <code>cch</code></td><td>计数 / 字节数 / 字符数</td><td><strong><code>cb</code>=count of bytes，<code>cch</code>=count of chars</strong>，缓冲区 API 反复出现</td></tr>
-<tr><td class="nw"><code>dw</code> / <code>w</code></td><td class="nw">DWORD / WORD</td><td>32 位、16 位无符号量</td></tr>
-<tr><td class="nw"><code>h</code> / <code>H</code>前缀类型</td><td class="nw">句柄</td><td><code>hWnd</code>、<code>hDC</code>；类型名如 <code>HWND</code>、<code>HDC</code></td></tr>
-<tr><td class="nw"><code>p</code> / <code>lp</code></td><td class="nw">指针 / "长指针"</td><td>🟡 <code>lp</code> 是 16 位远指针遗产，Win32 里 <strong><code>P</code> 与 <code>LP</code> 完全等价</strong></td></tr>
+<tr><td><code>b</code> / <code>f</code></td><td class="nw">布尔 / 标志位</td><td>如 <code>bResult</code>、<code>fSuccess</code>，底层多是 <code>BOOL</code></td></tr>
+<tr><td><code>n</code> / <code>i</code></td><td class="nw">整数 / 索引</td><td>计数、下标</td></tr>
+<tr><td><code>c</code> / <code>cb</code> / <code>cch</code></td><td>计数 / 字节数 / 字符数</td><td><strong><code>cb</code>=count of bytes，<code>cch</code>=count of chars</strong>，缓冲区 API 反复出现</td></tr>
+<tr><td><code>dw</code> / <code>w</code></td><td class="nw">DWORD / WORD</td><td>32 位、16 位无符号量</td></tr>
+<tr><td><code>h</code> / <code>H</code>前缀类型</td><td class="nw">句柄</td><td><code>hWnd</code>、<code>hDC</code>；类型名如 <code>HWND</code>、<code>HDC</code></td></tr>
+<tr><td><code>p</code> / <code>lp</code></td><td class="nw">指针 / "长指针"</td><td>🟡 <code>lp</code> 是 16 位远指针遗产，Win32 里 <strong><code>P</code> 与 <code>LP</code> 完全等价</strong></td></tr>
 <tr><td class="nw"><code>c</code>(在 P/LP 后)</td><td class="nw">const 只读</td><td><code>LPCWSTR</code> = <code>const</code> 宽串指针</td></tr>
-<tr><td class="nw"><code>sz</code> / <code>lpsz</code></td><td>以 <code>\0</code> 结尾的字符串</td><td>sz = "string, zero-terminated"</td></tr>
-<tr><td class="nw">后缀 <code>W</code> / <code>A</code></td><td>Unicode / ANSI 版</td><td>🟢 同一函数的宽/窄两套实现，见 §泛型文本映射</td></tr>
+<tr><td><code>sz</code> / <code>lpsz</code></td><td>以 <code>\0</code> 结尾的字符串</td><td>sz = "string, zero-terminated"</td></tr>
+<tr><td>后缀 <code>W</code> / <code>A</code></td><td>Unicode / ANSI 版</td><td>🟢 同一函数的宽/窄两套实现，见 §泛型文本映射</td></tr>
 <tr><td class="nw">后缀 <code>Ex</code></td><td class="nw">扩展 / 新版</td><td>如 <code>RegisterClassEx</code>、<code>CreateWindowEx</code>，一般优先用它</td></tr>
 </tbody>
 </table>
@@ -458,8 +464,8 @@ table td.nw { white-space: nowrap; }
 <tr><td class="nw"> <code>LPCSTR</code></td><td class="nw"><code>const char*</code></td><td class="nw">只读 ANSI 串入参</td></tr>
 <tr><td class="nw"> <code>LPWSTR</code></td><td class="nw"><code>wchar_t*</code> 宽串</td><td>UTF-16 字符串；对应 <code>*W</code> 函数(真正实现)</td></tr>
 <tr><td class="nw"> <code>LPCWSTR</code></td><td class="nw"><code>const wchar_t*</code></td><td><strong>最常见的字符串入参类型</strong>(只读宽串)</td></tr>
-<tr><td class="nw"><code>PWSTR</code> / <code>PCWSTR</code></td><td>同 <code>LPWSTR</code>/<code>LPCWSTR</code></td><td><strong><code>P</code> 与 <code>LP</code> 在 Win32 完全等价</strong>，仅历史命名差异</td></tr>
-<tr><td class="nw"><code>PSTR</code> / <code>PCSTR</code></td><td class="nw">同 <code>LPSTR</code>/<code>LPCSTR</code></td><td>同上，窄串版本</td></tr>
+<tr><td><code>PWSTR</code> / <code>PCWSTR</code></td><td>同 <code>LPWSTR</code>/<code>LPCWSTR</code></td><td><strong><code>P</code> 与 <code>LP</code> 在 Win32 完全等价</strong>，仅历史命名差异</td></tr>
+<tr><td><code>PSTR</code> / <code>PCSTR</code></td><td>同 <code>LPSTR</code>/<code>LPCSTR</code></td><td>同上，窄串版本</td></tr>
 <tr><td class="nw"><code>WCHAR</code></td><td>16 位宽字符(<code>wchar_t</code>)</td><td>一枚 <strong>UTF-16 代码单元</strong>，非"一个字符"(代理对占两枚)</td></tr>
 <tr><td class="nw"><code>CHAR</code></td><td class="nw">8 位字符(<code>char</code>)</td><td>ANSI / 单字节字符</td></tr>
 <tr><td class="nw"> <code>TCHAR</code></td><td>按 <code>UNICODE</code> 宏映射为 <code>WCHAR</code> 或 <code>CHAR</code></td><td>ANSI/Unicode 双编译兼容宏；新代码建议直接用 <code>wchar_t</code></td></tr>
@@ -472,12 +478,12 @@ table td.nw { white-space: nowrap; }
 <table>
 <thead><tr><th>名称</th><th>展开为</th><th>说明</th></tr></thead>
 <tbody>
-<tr><td class="nw"><code>TCHAR</code></td><td class="nw"><code>WCHAR</code> 或 <code>CHAR</code></td><td>定义 <code>UNICODE</code> 时=宽，否则=窄</td></tr>
-<tr><td><code>TEXT("…")</code> / <code>_T("…")</code></td><td class="nw"><code>L"…"</code> 或 <code>"…"</code></td><td>文本字面量包裹宏，随编译模式生成宽/窄常量</td></tr>
-<tr><td class="nw"><code>LPTSTR</code> / <code>LPCTSTR</code></td><td><code>TCHAR*</code> / <code>const TCHAR*</code></td><td>泛型字符串指针(可变 / 只读)</td></tr>
+<tr><td class="nw"><code>TCHAR</code></td><td><code>WCHAR</code> 或 <code>CHAR</code></td><td>定义 <code>UNICODE</code> 时=宽，否则=窄</td></tr>
+<tr><td><code>TEXT("…")</code> / <code>_T("…")</code></td><td><code>L"…"</code> 或 <code>"…"</code></td><td>文本字面量包裹宏，随编译模式生成宽/窄常量</td></tr>
+<tr><td><code>LPTSTR</code> / <code>LPCTSTR</code></td><td><code>TCHAR*</code> / <code>const TCHAR*</code></td><td>泛型字符串指针(可变 / 只读)</td></tr>
 <tr><td class="nw"> 函数后缀 <code>W</code></td><td class="nw">Unicode 实现</td><td><strong>系统内部真正实现所在</strong>；无损、无区域设置歧义</td></tr>
 <tr><td class="nw"> 函数后缀 <code>A</code></td><td class="nw">ANSI 包装</td><td>内部把参数转成 UTF-16 再调 <code>W</code>，有性能损耗与代码页乱码风险</td></tr>
-<tr><td class="nw">无后缀宏名</td><td class="nw"><code>…W</code> 或 <code>…A</code></td><td>如 <code>MessageBox</code> → <code>MessageBoxW</code>/<code>MessageBoxA</code></td></tr>
+<tr><td class="nw">无后缀宏名</td><td><code>…W</code> 或 <code>…A</code></td><td>如 <code>MessageBox</code> → <code>MessageBoxW</code>/<code>MessageBoxA</code></td></tr>
 </tbody>
 </table>
 <div class="note new"><span class="t">🔵 现代提示</span><p>新项目应<strong>统一定义 <code>UNICODE</code> 与 <code>_UNICODE</code></strong>，并尽量直接调用 <code>W</code> 函数、直接用 <code>wchar_t</code>/<code>std::wstring</code>，把 <code>TCHAR</code> 当历史包袱。若确需处理 UTF-8，可在应用清单(manifest)里声明 <code>activeCodePage=UTF-8</code>，让 <code>A</code> 函数按 UTF-8 解释，而非老式本地代码页。</p></div>
@@ -502,7 +508,7 @@ table td.nw { white-space: nowrap; }
 <tr><td class="nw"><code>HCURSOR</code></td><td class="nw">光标</td><td><strong>与 <code>HICON</code> 同一底层类型</strong>；<code>LoadCursor</code></td></tr>
 <tr><td class="nw"><code>HMENU</code></td><td class="nw">菜单句柄</td><td>菜单栏/弹出菜单；在子窗口创建时兼作控件 ID</td></tr>
 <tr><td class="nw"><code>HKEY</code></td><td class="nw">注册表键句柄</td><td><code>RegOpenKeyEx</code>/<code>RegCreateKeyEx</code> 得到；<code>RegCloseKey</code> 关闭</td></tr>
-<tr><td class="nw"> <code>HGLOBAL</code> / <code>HLOCAL</code></td><td>全局 / 局部内存句柄</td><td>16 位遗产；今仅剪贴板、OLE(<code>STGMEDIUM</code>)等场合还需，普通分配用 <code>HeapAlloc</code>/<code>malloc</code></td></tr>
+<tr><td> <code>HGLOBAL</code> / <code>HLOCAL</code></td><td>全局 / 局部内存句柄</td><td>16 位遗产；今仅剪贴板、OLE(<code>STGMEDIUM</code>)等场合还需，普通分配用 <code>HeapAlloc</code>/<code>malloc</code></td></tr>
 </tbody>
 </table>
 <div class="note new"><span class="t">🔵 现代提示</span><p>GDI 对象(笔/刷/字体/位图/DC)有系统级<strong>配额上限(每进程约 1 万)</strong>，忘记 <code>DeleteObject</code>/<code>ReleaseDC</code> 会让"任务管理器→GDI 对象"数字持续攀升直至绘图失灵。C++ 里应用 RAII(如自写 <code>unique_gdiobj</code> 或 WIL 的 <code>wil::unique_hgdiobj</code>)。图形密集的新代码更推荐改用 <strong>Direct2D / DirectWrite</strong> 取代 GDI。</p></div>

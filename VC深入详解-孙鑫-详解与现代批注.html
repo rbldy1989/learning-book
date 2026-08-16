@@ -113,10 +113,7 @@ pre {
 pre code { background: none; color: var(--fg); padding: 0; font-size: 0.85em; }
 pre .cm { color: var(--muted); }
 pre .kw { color: var(--accent); font-weight: 600; }
-table { border-collapse: collapse; width: 100%; margin: 0 0 1.5em; font-size: 0.92em; line-height: 1.7; table-layout: auto; display: table; }
-th, td { border: 1px solid var(--pre-border); padding: 0.35em 0.9em; text-align: left; vertical-align: top; }
-th { background: var(--pre-bg); font-weight: 600; }
-tbody tr:nth-child(even) { background: var(--pre-bg); }
+
 .badge { display:inline; font-size:inherit; font-family:inherit; font-weight:inherit;
   color:inherit; padding:0; border:none; background:none; vertical-align:baseline;
   margin:0; white-space:normal; }
@@ -149,17 +146,26 @@ pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
 
 /* ===== 渲染性能：视口外内容跳过布局与绘制 ===== */
-section.chapter{content-visibility:auto;contain-intrinsic-size:auto 1200px;}
-figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
-pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
-table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
+section.chapter{}
+figure{}
+pre{}
+
 #sidebar,#toc{will-change:scroll-position;}
 
-/* 表格：短内容不折行，长文本正常折行 */
-table th { white-space: nowrap; }
-table td:first-child, table th:first-child { white-space: nowrap; }
-table td { overflow-wrap: break-word; }
-table td.nw { white-space: nowrap; }
+           /* 首列不再强制单行 */
+
+table{border-collapse:collapse;width:100%;margin:0 0 1.5em;
+      font-size:.92em;line-height:1.7;table-layout:fixed;}
+th,td{border:1px solid var(--pre-border);padding:.35em .9em;text-align:left;
+      vertical-align:top;overflow-wrap:anywhere;word-break:normal;}
+th{background:var(--pre-bg);font-weight:600;}
+tbody tr:nth-child(even){background:var(--pre-bg);}
+td code,th code{white-space:normal;}
+table tr>:first-child:nth-last-child(2){width:36%;}
+table tr>:first-child:nth-last-child(3){width:26%;}
+table tr>:first-child:nth-last-child(3)+*{width:22%;}
+table tr>:first-child:nth-last-child(4){width:22%;}
+table tr>:first-child:nth-last-child(4)+*{width:20%;}
 </style>
 </head>
 <body>
@@ -487,7 +493,7 @@ table td.nw { white-space: nowrap; }
 <tr><td class="nw"><code>message</code></td><td>消息类型编号（一个 UINT）</td><td><code>WM_LBUTTONDOWN</code>（左键按下）</td></tr>
 <tr><td class="nw"><code>wParam</code></td><td>附加信息（随消息类型而变）</td><td class="nw">按键时是虚拟键码</td></tr>
 <tr><td class="nw"><code>lParam</code></td><td>附加信息（常放坐标等）</td><td>鼠标消息里打包着 x、y 坐标</td></tr>
-<tr><td class="nw"><code>time</code> / <code>pt</code></td><td>发生时刻 / 光标位置</td><td>时间戳、屏幕坐标点</td></tr>
+<tr><td><code>time</code> / <code>pt</code></td><td>发生时刻 / 光标位置</td><td>时间戳、屏幕坐标点</td></tr>
 </tbody>
 </table>
 <p>你会注意到，所有以 <code>WM_</code> 开头的常量（WM = Window Message）就是消息类型的名字。<code>WM_LBUTTONDOWN</code>、<code>WM_KEYDOWN</code>、<code>WM_PAINT</code>、<code>WM_DESTROY</code>……它们背后其实都是一个整数编号，用宏起了个人能读的名字而已。</p>
@@ -1235,6 +1241,67 @@ END_MESSAGE_MAP()</code></pre>
     pDC-&gt;DrawText(_T(&quot;标题：居中一行&quot;), &amp;box,
                   DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }</code></pre>
+<p>把这段 <code>OnDraw</code> 跑起来，客户区上会出现两处文字：一处从固定点开始「敲」出来，一处在一个看不见的矩形里被「摆」到正中。</p>
+<figure data-mark="fig-c5-textout-runtime">
+<svg viewBox="0 0 720 290" role="img" aria-label="TextOut 与 DrawText 在客户区中的落点与排版效果示意图">
+  <defs>
+    <marker id="c5to-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#e03131"/></marker>
+    <marker id="c5to-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1971c2"/></marker>
+    <marker id="c5to-gend" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#0ca678"/></marker>
+    <marker id="c5to-gstart" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M10,0 L0,5 L10,10 Z" fill="#0ca678"/></marker>
+  </defs>
+
+  <!-- 窗口外框与标题栏 -->
+  <rect x="56" y="40" width="364" height="212" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="56" y="40" width="364" height="20" fill="var(--svg-soft)"/>
+  <line x1="56" y1="60" x2="420" y2="60" stroke="var(--rule)"/>
+  <text class="svgmuted" x="66" y="54" font-size="10">MyApp — 客户区（Client Area）</text>
+  <line x1="388" y1="51" x2="396" y2="51" stroke="var(--muted)"/>
+  <rect x="400" y="46" width="8" height="8" fill="none" stroke="var(--muted)"/>
+  <line x1="411" y1="47" x2="417" y2="53" stroke="var(--muted)"/>
+  <line x1="417" y1="47" x2="411" y2="53" stroke="var(--muted)"/>
+
+  <!-- 客户区原点 -->
+  <text class="svgmuted" x="52" y="64" font-size="10" text-anchor="end">(0,0)</text>
+
+  <!-- TextOut：从 (20,20) 起的单行文本 -->
+  <line x1="56" y1="80" x2="76" y2="80" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <line x1="76" y1="60" x2="76" y2="80" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <circle cx="76" cy="80" r="3" fill="#e03131"/>
+  <text class="svgtext" x="84" y="74" font-size="10" style="fill:#e03131">(20, 20) 左上角</text>
+  <text class="svgtext" x="76" y="90" font-size="12">你好，GDI 文本世界</text>
+  <line x1="196" y1="86" x2="428" y2="86" stroke="#e03131" marker-end="url(#c5to-red)"/>
+
+  <!-- DrawText：矩形排版 -->
+  <text class="svgmuted" x="76" y="114" font-size="10">(20, 60)</text>
+  <rect x="76" y="120" width="280" height="60" fill="none" stroke="#1971c2" stroke-dasharray="5 4"/>
+  <circle cx="76" cy="120" r="2.5" fill="#1971c2"/>
+  <circle cx="356" cy="180" r="2.5" fill="#1971c2"/>
+  <text class="svgmuted" x="356" y="193" font-size="10" text-anchor="end">(300, 120)</text>
+  <text class="svgtext" x="216" y="154" font-size="12" text-anchor="middle">标题：居中一行</text>
+  <line x1="78" y1="150" x2="170" y2="150" stroke="#0ca678" marker-start="url(#c5to-gstart)" marker-end="url(#c5to-gend)"/>
+  <line x1="262" y1="150" x2="354" y2="150" stroke="#0ca678" marker-start="url(#c5to-gstart)" marker-end="url(#c5to-gend)"/>
+  <line x1="216" y1="122" x2="216" y2="140" stroke="#0ca678" marker-start="url(#c5to-gstart)" marker-end="url(#c5to-gend)"/>
+  <line x1="216" y1="160" x2="216" y2="178" stroke="#0ca678" marker-start="url(#c5to-gstart)" marker-end="url(#c5to-gend)"/>
+  <line x1="358" y1="150" x2="428" y2="150" stroke="#1971c2" marker-end="url(#c5to-blue)"/>
+
+  <!-- 右侧标注 -->
+  <text class="svgtext" x="442" y="90" font-size="11" style="fill:#e03131">pDC-&gt;TextOut(20, 20, …)</text>
+  <text class="svgmuted" x="442" y="105" font-size="10.5">(x, y) = 这一行字的左上角起点</text>
+  <text class="svgmuted" x="442" y="119" font-size="10.5">单行输出，不自动换行、越界即截断</text>
+
+  <text class="svgtext" x="442" y="154" font-size="11" style="fill:#1971c2">CRect box(20, 60, 300, 120)</text>
+  <text class="svgmuted" x="442" y="169" font-size="10.5">DrawText 只在这个矩形内排版</text>
+  <text class="svgtext" x="442" y="184" font-size="10.5" style="fill:#0ca678">DT_CENTER → 水平居中，左右留白相等</text>
+  <text class="svgtext" x="442" y="199" font-size="10.5" style="fill:#0ca678">DT_VCENTER | DT_SINGLELINE</text>
+  <text class="svgtext" x="442" y="213" font-size="10.5" style="fill:#0ca678">→ 垂直居中，上下留白相等</text>
+  <text class="svgmuted" x="442" y="228" font-size="10">（虚线框只是排版范围，不会被画出来）</text>
+
+  <text class="svgmuted" x="56" y="272" font-size="10.5">客户区坐标原点在左上角、y 轴向下；TextOut 给的是「起点」，DrawText 给的是「范围」。</text>
+</svg>
+<figcaption>图 5-4　TextOut 与 DrawText 的运行效果：一个定起点、一个定矩形（原创绘制）</figcaption>
+</figure>
+
 <div class="note new"><span class="t">🔵 现代更新（2026）</span><p><span class="badge old">已过时</span> 一旦文字涉及<strong>自动换行的段落、双向文字（阿拉伯/希伯来）、复杂脚本、连字、OpenType 特性</strong>，<code>DrawText</code> 就力不从心了——它的排版能力很基础。这类需求用 DirectWrite 的 <code>IDWriteTextLayout</code>，它把「一段富文本如何在给定宽度里排开」建模成一个可查询的布局对象，远比 <code>DrawText</code> 的一把格式标志强大。</p></div>
 
 <h2 id="c5-color-bkmode">文字颜色与背景模式</h2>
@@ -1731,6 +1798,9 @@ END</code></pre>
 <p>整套机制的入口只有一个虚函数 <code>DoDataExchange(CDataExchange* pDX)</code>。它<strong>从不由你直接调用</strong>，而是被 <code>UpdateData(BOOL)</code> 驱动：参数决定方向，方向记录在 <code>pDX-&gt;m_bSaveAndValidate</code> 里，每个 <code>DDX_</code> 函数内部各自照这个标志决定"读控件写变量"还是"读变量写控件"——一份代码，双向通用：</p>
 
 <pre><code><span class="cl"><span class="kw">void</span> CLoginDlg::DoDataExchange(CDataExchange* pDX)</span><span class="cl">{</span><span class="cl">    CDialogEx::DoDataExchange(pDX);</span><span class="cl">    <span class="cm">// pDX-&gt;m_bSaveAndValidate == TRUE  : 控件 → 变量(保存 + 校验),对应 UpdateData(TRUE)</span></span><span class="cl">    <span class="cm">//                         == FALSE : 变量 → 控件(初始化显示),对应 UpdateData(FALSE)</span></span><span class="cl"> </span><span class="cl">    DDX_Text (pDX, IDC_EDIT_USER,    m_strUser);</span><span class="cl"><span class="cc" style="min-width:53.0ch">    DDV_MaxChars(pDX, m_strUser, 32);</span><span class="cm">// DDV 必须紧跟它要校验的那条 DDX</span></span><span class="cl"> </span><span class="cl">    DDX_Text (pDX, IDC_EDIT_PWD,     m_strPwd);</span><span class="cl">    DDX_Check(pDX, IDC_CHK_REMEMBER, m_bRemember);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:53.0ch">    DDX_Control (pDX, IDC_CMB_SERVER, m_cmbServer);</span><span class="cm">// 控件变量:拿到整个 CComboBox 对象</span></span><span class="cl"><span class="cc" style="min-width:53.0ch">    DDX_CBString(pDX, IDC_CMB_SERVER, m_strServer);</span><span class="cm">// 值变量:只拿当前文本</span></span><span class="cl"> </span><span class="cl">    DDX_Text (pDX, IDC_EDIT_PORT, m_nPort);</span><span class="cl"><span class="cc" style="min-width:53.0ch">    DDV_MinMaxInt(pDX, m_nPort, 1, 65535);</span><span class="cm">// 越界:弹提示、聚焦肇事控件、UpdateData 返回 FALSE</span></span><span class="cl">}</span></code></pre>
+<p>把上面这段 <code>DoDataExchange</code> 摊开看：左边是用户看到的对话框，右边是 <code>CLoginDlg</code> 的成员变量，中间每一行 <code>DDX_</code> 就是一条搬运通道——通道本身不认方向，方向由 <code>UpdateData</code> 的参数决定。</p>
+<figure data-mark="c7-ddx-updatedata-lanes"><svg viewBox="0 0 720 304" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DDX 数据交换示意：对话框控件与成员变量之间的双向搬运"><defs><marker id="c7ddx-al" viewBox="0 0 9 9" refX="0" refY="4.5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse"><path d="M9,0.5 L0,4.5 L9,8.5 z" fill="#1971c2"/></marker><marker id="c7ddx-ar" viewBox="0 0 9 9" refX="9" refY="4.5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse"><path d="M0,0.5 L9,4.5 L0,8.5 z" fill="#e03131"/></marker></defs><line x1="20" y1="22" x2="100" y2="22" stroke="#1971c2" stroke-width="1.6" marker-start="url(#c7ddx-al)"/><text x="110" y="26" class="svgtext" font-size="11">UpdateData(FALSE)　变量 → 控件：进对话框时把初值填进控件</text><line x1="20" y1="42" x2="100" y2="42" stroke="#e03131" stroke-width="1.6" marker-end="url(#c7ddx-ar)"/><text x="110" y="46" class="svgtext" font-size="11">UpdateData(TRUE)　控件 → 变量：点[确定]时读回控件内容并校验</text><rect x="14" y="54" width="220" height="238" rx="6" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1.5"/><path d="M14,60 a6,6 0 0 1 6,-6 h208 a6,6 0 0 1 6,6 v16 h-220 z" fill="var(--svg-soft2)"/><line x1="14" y1="76" x2="234" y2="76" stroke="var(--rule)" stroke-width="1"/><text x="24" y="70" class="svgtext" font-size="12">登录</text><text x="216" y="70" class="svgmuted" font-size="12">✕</text><text x="24" y="104" class="svgtext" font-size="12">用户名</text><rect x="76" y="89" width="150" height="22" rx="2" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/><text x="84" y="104" class="svgtext" font-size="11">admin</text><text x="24" y="138" class="svgtext" font-size="12">密　码</text><rect x="76" y="123" width="150" height="22" rx="2" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/><text x="84" y="138" class="svgtext" font-size="11">••••••</text><rect x="76" y="161" width="14" height="14" rx="2" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/><path d="M79,168 L82.5,171.5 L88,163.5" fill="none" stroke="#0ca678" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="96" y="172" class="svgtext" font-size="12">记住我</text><text x="24" y="206" class="svgtext" font-size="12">服务器</text><rect x="76" y="191" width="150" height="22" rx="2" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/><rect x="204" y="191" width="22" height="22" rx="2" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1.2"/><path d="M210,199 L220,199 L215,205 z" fill="var(--muted)"/><text x="84" y="206" class="svgtext" font-size="11">10.0.0.8</text><text x="24" y="240" class="svgtext" font-size="12">端　口</text><rect x="76" y="225" width="150" height="22" rx="2" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/><text x="84" y="240" class="svgtext" font-size="11">8080</text><rect x="134" y="258" width="44" height="22" rx="3" fill="var(--svg-fill)" stroke="var(--accent)" stroke-width="2"/><text x="156" y="273" class="svgtext" font-size="11.5" text-anchor="middle">确定</text><rect x="184" y="258" width="44" height="22" rx="3" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.2"/><text x="206" y="273" class="svgtext" font-size="11.5" text-anchor="middle">取消</text><rect x="510" y="54" width="196" height="208" rx="6" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><path d="M510,60 a6,6 0 0 1 6,-6 h184 a6,6 0 0 1 6,6 v16 h-196 z" fill="var(--svg-soft)"/><line x1="510" y1="76" x2="706" y2="76" stroke="var(--rule)" stroke-width="1"/><text x="520" y="70" class="svgtext" font-size="11">CLoginDlg 的成员变量</text><rect x="518" y="90" width="182" height="20" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)" stroke-width="1"/><text x="524" y="104" class="svgmuted" font-size="10">CString</text><text x="580" y="104" class="svgtext" font-size="11">m_strUser</text><text x="694" y="104" class="svgmuted" font-size="10" text-anchor="end">admin</text><rect x="518" y="124" width="182" height="20" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)" stroke-width="1"/><text x="524" y="138" class="svgmuted" font-size="10">CString</text><text x="580" y="138" class="svgtext" font-size="11">m_strPwd</text><text x="694" y="138" class="svgmuted" font-size="10" text-anchor="end">••••••</text><rect x="518" y="158" width="182" height="20" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)" stroke-width="1"/><text x="524" y="172" class="svgmuted" font-size="10">BOOL</text><text x="580" y="172" class="svgtext" font-size="11">m_bRemember</text><text x="694" y="172" class="svgmuted" font-size="10" text-anchor="end">TRUE</text><rect x="518" y="185" width="182" height="34" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)" stroke-width="1"/><text x="524" y="199" class="svgmuted" font-size="10">CComboBox</text><text x="580" y="199" class="svgtext" font-size="11">m_cmbServer</text><text x="524" y="214" class="svgmuted" font-size="10">CString</text><text x="580" y="214" class="svgtext" font-size="11">m_strServer</text><text x="694" y="214" class="svgmuted" font-size="10" text-anchor="end">10.0.0.8</text><rect x="518" y="226" width="182" height="20" rx="3" fill="var(--svg-soft2)" stroke="var(--rule)" stroke-width="1"/><text x="524" y="240" class="svgmuted" font-size="10">int</text><text x="580" y="240" class="svgtext" font-size="11">m_nPort</text><text x="694" y="240" class="svgmuted" font-size="10" text-anchor="end">8080</text><line x1="238" y1="100" x2="508" y2="100" stroke="var(--rule)" stroke-width="1.4" marker-start="url(#c7ddx-al)" marker-end="url(#c7ddx-ar)"/><text x="373" y="92" class="svgtext" font-size="11" text-anchor="middle">DDX_Text ( IDC_EDIT_USER )</text><text x="373" y="114" class="svgmuted" font-size="10" text-anchor="middle">DDV_MaxChars ( m_strUser, 32 ) 紧跟其后</text><line x1="238" y1="134" x2="508" y2="134" stroke="var(--rule)" stroke-width="1.4" marker-start="url(#c7ddx-al)" marker-end="url(#c7ddx-ar)"/><text x="373" y="126" class="svgtext" font-size="11" text-anchor="middle">DDX_Text ( IDC_EDIT_PWD )</text><line x1="238" y1="168" x2="508" y2="168" stroke="var(--rule)" stroke-width="1.4" marker-start="url(#c7ddx-al)" marker-end="url(#c7ddx-ar)"/><text x="373" y="160" class="svgtext" font-size="11" text-anchor="middle">DDX_Check ( IDC_CHK_REMEMBER )</text><line x1="238" y1="202" x2="508" y2="202" stroke="var(--rule)" stroke-width="1.4" marker-start="url(#c7ddx-al)" marker-end="url(#c7ddx-ar)"/><text x="373" y="194" class="svgtext" font-size="11" text-anchor="middle">DDX_Control（控件变量·子类化，不搬数据）</text><text x="373" y="216" class="svgtext" font-size="11" text-anchor="middle">DDX_CBString（值变量·只搬当前文本）</text><line x1="238" y1="236" x2="508" y2="236" stroke="var(--rule)" stroke-width="1.4" marker-start="url(#c7ddx-al)" marker-end="url(#c7ddx-ar)"/><text x="373" y="228" class="svgtext" font-size="11" text-anchor="middle">DDX_Text ( IDC_EDIT_PORT )</text><text x="373" y="250" class="svgmuted" font-size="10" text-anchor="middle">DDV_MinMaxInt ( m_nPort, 1, 65535 ) 越界即 Fail()</text><text x="470" y="284" class="svgmuted" font-size="10" text-anchor="middle">一次 UpdateData 是全量快照：上面每一行 DDX_ 一起跑完，无法只同步某一个变量</text></svg><figcaption>图 7-5　DDX 数据交换：一次 UpdateData 在控件与成员变量间双向搬运（原创绘制）</figcaption></figure>
+
 
 <p>校验失败时的内部动作值得一说：<code>DDV_</code> 函数发现不合格，调用 <code>pDX-&gt;Fail()</code>——弹出提示框、把焦点设回出错控件并全选内容，然后<strong>抛出 <code>CUserException</code></strong> 中断整个交换过程；<code>UpdateData</code> 捕获这个异常并返回 <code>FALSE</code>。这也解释了那条铁律：<strong>DDV 必须紧跟对应的 DDX</strong>——只有紧跟，<code>Fail()</code> 才知道该聚焦哪个控件；也只有紧跟，前面控件校验失败时才不会让后面的脏数据混进变量。</p>
 
@@ -1749,7 +1819,7 @@ END</code></pre>
 
 <table><thead><tr><th>DDX 函数</th><th>搭配控件</th><th>变量类型</th><th>说明</th></tr></thead><tbody>
 <tr><td class="nw"><code>DDX_Text</code></td><td class="nw">编辑框</td><td><code>CString</code>/<code>int</code>/<code>UINT</code>/<code>long</code>/<code>DWORD</code>/<code>float</code>/<code>double</code> 等多个重载</td><td>文本 ⇆ 数值自动互转；转不动(如输入非数字)视同校验失败</td></tr>
-<tr><td class="nw"><code>DDX_Check</code></td><td class="nw">复选框</td><td class="nw"><code>BOOL</code>/<code>int</code></td><td>0=未选，1=选中，2=不确定态(三态复选框)</td></tr>
+<tr><td class="nw"><code>DDX_Check</code></td><td class="nw">复选框</td><td><code>BOOL</code>/<code>int</code></td><td>0=未选，1=选中，2=不确定态(三态复选框)</td></tr>
 <tr><td class="nw"><code>DDX_Radio</code></td><td class="nw">单选按钮组</td><td class="nw"><code>int</code></td><td>绑定到组内<strong>带 WS_GROUP 的第一个</strong>按钮；值为组内序号，-1 表示都没选</td></tr>
 <tr><td class="nw"><code>DDX_Control</code></td><td class="nw">任意控件</td><td>控件类对象(<code>CEdit</code>、<code>CButton</code>…)</td><td>不传数据，把成员对象子类化到控件上(见 7.10)</td></tr>
 <tr><td class="nw"><code>DDX_CBString</code></td><td class="nw">组合框</td><td class="nw"><code>CString</code></td><td>编辑区/选中项文本；写入方向会选中<em>前缀匹配</em>的项</td></tr>
@@ -1876,7 +1946,7 @@ END</code></pre>
 <p>编辑框单行/多行(<code>ES_MULTILINE</code>)通吃，密码框只是加了 <code>ES_PASSWORD</code> 风格。它是成员函数最"富"的基础控件：</p>
 
 <table><thead><tr><th>常用成员函数</th><th>说明</th></tr></thead><tbody>
-<tr><td class="nw"><code>GetSel</code> / <code>SetSel</code></td><td>取/设选区；<code>SetSel(0,-1)</code> 全选，<code>SetSel(-1,0)</code> 取消选择并把光标放末尾</td></tr>
+<tr><td><code>GetSel</code> / <code>SetSel</code></td><td>取/设选区；<code>SetSel(0,-1)</code> 全选，<code>SetSel(-1,0)</code> 取消选择并把光标放末尾</td></tr>
 <tr><td class="nw"><code>ReplaceSel</code></td><td>用文本替换当前选区——"在光标处插入"的标准写法</td></tr>
 <tr><td><code>SetLimitText</code> / <code>GetLimitText</code></td><td>限制可输入的最大字符数(超限时发 <code>EN_MAXTEXT</code>)</td></tr>
 <tr><td class="nw"><code>SetPasswordChar</code></td><td>设置密码回显字符；传 0 取消密码模式</td></tr>
@@ -1884,7 +1954,7 @@ END</code></pre>
 <tr><td><code>GetModify</code> / <code>SetModify</code></td><td>"改没改过"脏标志——做"退出前提示保存"用</td></tr>
 <tr><td><code>GetLineCount</code> / <code>GetLine</code> / <code>LineIndex</code> / <code>LineLength</code></td><td>多行模式按行存取；注意 <code>GetLine</code> 不自动补字符串结尾，需按返回长度截断</td></tr>
 <tr><td class="nw"><code>LineScroll</code></td><td class="nw">滚动到指定行</td></tr>
-<tr><td class="nw"><code>Undo</code> / <code>CanUndo</code></td><td class="nw">撤销上一次编辑</td></tr>
+<tr><td><code>Undo</code> / <code>CanUndo</code></td><td class="nw">撤销上一次编辑</td></tr>
 <tr><td class="nw"><code>SetCueBanner</code></td><td>灰色占位提示文字("请输入用户名")，Vista+ 才有，VC6 时代要自绘</td></tr>
 </tbody></table>
 
@@ -1981,6 +2051,76 @@ pEdit-&gt;SetSel(0, -1);                <span class="cm">// 本条消息的处�
 <span class="cm">// 写法二:控件变量——DDX_Control 子类化,与对话框同生共死</span>
 m_editUser.SetSel(0, -1);
 m_editUser.ReplaceSel(_T("admin"));</code></pre>
+<p>下面把这两段代码"跑起来"看：两条路最终碰到的是<strong>同一个控件窗口</strong>，屏幕上的效果（用户名框里的文字被全选）也一模一样；真正的差别在于——谁持有那个包装对象，以及能持有多久。</p>
+<figure data-mark="fig-c7-getdlgitem-vs-ddx">
+<svg viewBox="0 0 720 304" role="img" aria-label="GetDlgItem 与 DDX_Control 控件变量两条访问路径的对比：都指向对话框上同一个编辑框 HWND，但临时包装对象只在本次消息处理内有效，控件变量则与对话框同生共死">
+<defs>
+<marker id="c7gdi-arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1971c2"/></marker>
+<marker id="c7gdi-aro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#e8590c"/></marker>
+</defs>
+
+<rect x="20" y="14" width="232" height="30" rx="8" fill="var(--svg-soft)" stroke="#1971c2"/>
+<text x="136" y="34" text-anchor="middle" font-size="12" class="svgtext">路径一　GetDlgItem（临时工）</text>
+<rect x="468" y="14" width="232" height="30" rx="8" fill="var(--svg-soft2)" stroke="#e8590c"/>
+<text x="584" y="34" text-anchor="middle" font-size="12" class="svgtext">路径二　控件变量（正式工）</text>
+
+<rect x="20" y="52" width="232" height="62" rx="7" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="32" y="72" font-size="10.5" class="svgtext">CEdit* pEdit = (CEdit*)</text>
+<text x="32" y="89" font-size="10.5" class="svgtext">    GetDlgItem(IDC_EDIT_USER);</text>
+<text x="32" y="106" font-size="10.5" class="svgtext">pEdit-&gt;SetSel(0, -1);</text>
+
+<rect x="468" y="52" width="232" height="62" rx="7" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="480" y="72" font-size="10.5" class="svgtext">DDX_Control(pDX, IDC_EDIT_USER,</text>
+<text x="480" y="89" font-size="10.5" class="svgtext">            m_editUser);</text>
+<text x="480" y="106" font-size="10.5" class="svgtext">m_editUser.SetSel(0, -1);</text>
+
+<rect x="20" y="126" width="232" height="44" rx="7" fill="var(--svg-soft)" stroke="#1971c2" stroke-dasharray="5 3"/>
+<text x="136" y="145" text-anchor="middle" font-size="12" class="svgtext">临时 CWnd 包装对象</text>
+<text x="136" y="162" text-anchor="middle" font-size="10" class="svgmuted">框架从「临时句柄映射」现造</text>
+
+<rect x="468" y="126" width="232" height="44" rx="7" fill="var(--svg-soft2)" stroke="#e8590c"/>
+<text x="584" y="145" text-anchor="middle" font-size="12" class="svgtext">成员对象 m_editUser</text>
+<text x="584" y="162" text-anchor="middle" font-size="10" class="svgmuted">「永久映射」·子类化了控件</text>
+
+<text x="360" y="104" text-anchor="middle" font-size="10" class="svgmuted">运行结果：同一个控件</text>
+<rect x="280" y="112" width="160" height="90" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M280,130 H440" fill="none" stroke="var(--rule)"/>
+<text x="290" y="126" font-size="10" class="svgmuted">登录</text>
+<text x="292" y="152" font-size="10.5" class="svgtext">用户名</text>
+<rect x="292" y="158" width="136" height="24" rx="3" fill="var(--svg-fill)" stroke="#7048e8" stroke-width="1.6"/>
+<rect x="298" y="163" width="42" height="14" fill="#1971c2" opacity="0.25"/>
+<text x="300" y="175" font-size="10.5" class="svgtext">admin</text>
+<text x="360" y="196" text-anchor="middle" font-size="10" class="svgmuted">IDC_EDIT_USER（文字被全选）</text>
+
+<path d="M252,148 H266 V170 H286" fill="none" stroke="#1971c2" stroke-width="1.6" marker-end="url(#c7gdi-arb)"/>
+<path d="M468,148 H454 V170 H434" fill="none" stroke="#e8590c" stroke-width="1.6" marker-end="url(#c7gdi-aro)"/>
+
+<rect x="20" y="212" width="232" height="42" rx="7" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="36" cy="226" r="4" fill="#e03131"/>
+<text x="48" y="230" font-size="11" class="svgtext">有效期：仅本次消息处理内</text>
+<text x="48" y="246" font-size="10" class="svgmuted">OnIdle 统一销毁 → 存成员即悬空</text>
+
+<rect x="468" y="212" width="232" height="42" rx="7" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="484" cy="226" r="4" fill="#0ca678"/>
+<text x="496" y="230" font-size="11" class="svgtext">有效期：与对话框同生共死</text>
+<text x="496" y="246" font-size="10" class="svgmuted">OnInitDialog 绑定 → 关窗才失效</text>
+
+<rect x="272" y="212" width="176" height="84" rx="7" fill="none" stroke="var(--rule)" stroke-dasharray="4 3"/>
+<text x="360" y="236" text-anchor="middle" font-size="11" class="svgtext">同一个 HWND</text>
+<text x="360" y="258" text-anchor="middle" font-size="10" class="svgmuted">差别在谁持有包装对象</text>
+<text x="360" y="276" text-anchor="middle" font-size="10" class="svgmuted">以及能持有多久</text>
+
+<rect x="20" y="262" width="232" height="34" rx="7" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text x="136" y="277" text-anchor="middle" font-size="11" class="svgtext">适用：偶尔碰一下的控件</text>
+<text x="136" y="291" text-anchor="middle" font-size="10" class="svgmuted">GetDlgItem(IDOK)-&gt;EnableWindow(FALSE)</text>
+
+<rect x="468" y="262" width="232" height="34" rx="7" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text x="584" y="277" text-anchor="middle" font-size="11" class="svgtext">适用：反复操作 / 需高级功能</text>
+<text x="584" y="291" text-anchor="middle" font-size="10" class="svgmuted">自绘按钮、派生控件类全靠它</text>
+</svg>
+<figcaption>图 7-4　GetDlgItem 与 DDX_Control 控件变量：两条路指向同一个控件，寿命却不同（原创绘制）</figcaption>
+</figure>
+
 
 <p><code>GetDlgItem</code> 返回的 <code>CWnd*</code> 大概率是 MFC 从<strong>临时句柄映射</strong>里现造的包装对象：框架在空闲处理(OnIdle)时会统一销毁这些临时对象。所以它只在<em>当前消息处理过程内</em>有效——缓存到成员变量里，下条消息再用就是悬空指针。而 <code>DDX_Control</code> 生成的控件变量是<strong>永久映射</strong>：对象是你类的成员，在 <code>OnInitDialog</code> 的首次数据交换时与控件 HWND 绑定(子类化)，直到对话框销毁，还能借助 C++ 类型系统避免强制转换写错类的低级事故。</p>
 
@@ -2993,6 +3133,140 @@ m_wndStatusBar.SetPaneText(idx, _T("holmesliam"));</code></pre>
     <span class="kw">if</span> (dlg.DoModal() == IDOK)
         m_clrPen = dlg.GetColor();
 }</code></pre>
+<p>这段代码本身只有四行，但它换来的是一整张系统级界面。下图把对话框上的每一块与代码里的对应参数连起来，并顺着 <code>GetColor()</code> 的返回值一路走到最终的绘图结果。</p>
+<figure data-mark="fig-c10-colordlg-flow">
+<svg viewBox="0 0 720 320" role="img" aria-label="CColorDialog 运行效果：弹出的系统颜色对话框中，构造参数决定预选色、CC_FULLOPEN 展开右半自定义色区、确定按钮对应 DoModal 返回 IDOK；随后 GetColor 取回的 COLORREF 被用来创建画笔与画刷，决定最终线条与填充的颜色">
+<defs>
+<marker id="c10clr-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)"/></marker>
+<marker id="c10clr-tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="var(--muted)"/></marker>
+<linearGradient id="c10clr-lum" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="var(--svg-fill)"/><stop offset="0.5" stop-color="#e03131"/><stop offset="1" stop-color="var(--muted)"/>
+</linearGradient>
+</defs>
+
+<text x="360" y="24" text-anchor="middle" font-size="12" class="svgtext">CColorDialog：系统出品的选色界面，DoModal 之后只带回一个 COLORREF</text>
+
+<rect x="214" y="42" width="292" height="160" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="214" y="42" width="292" height="20" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text x="224" y="56" font-size="11" class="svgtext">颜色</text>
+<text x="256" y="56" font-size="10" class="svgmuted">系统公共对话框 · comdlg32</text>
+<path d="M489,49 L496,56 M496,49 L489,56" stroke="var(--muted)" stroke-width="1.2" fill="none"/>
+
+<text x="224" y="76" font-size="10" class="svgmuted">基本颜色(B)：</text>
+<rect x="224" y="82" width="13" height="10" fill="#e03131" opacity="0.5" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="239" y="82" width="13" height="10" fill="#e8590c" opacity="0.5" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="254" y="82" width="13" height="10" fill="#0ca678" opacity="0.5" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="269" y="82" width="13" height="10" fill="#1971c2" opacity="0.5" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="284" y="82" width="13" height="10" fill="#7048e8" opacity="0.5" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="299" y="82" width="13" height="10" fill="#e03131" opacity="0.3" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="314" y="82" width="13" height="10" fill="#0ca678" opacity="0.3" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="329" y="82" width="13" height="10" fill="#1971c2" opacity="0.3" stroke="var(--rule)" stroke-width="0.6"/>
+
+<rect x="224" y="94" width="13" height="10" fill="#e03131" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="239" y="94" width="13" height="10" fill="#e8590c" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="254" y="94" width="13" height="10" fill="#0ca678" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="269" y="94" width="13" height="10" fill="#1971c2" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="284" y="94" width="13" height="10" fill="#7048e8" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="299" y="94" width="13" height="10" fill="#e8590c" opacity="0.7" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="314" y="94" width="13" height="10" fill="#7048e8" opacity="0.7" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="329" y="94" width="13" height="10" fill="#0ca678" opacity="0.7" stroke="var(--rule)" stroke-width="0.6"/>
+
+<rect x="224" y="106" width="13" height="10" fill="#7048e8" opacity="0.75" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="239" y="106" width="13" height="10" fill="#1971c2" opacity="0.75" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="254" y="106" width="13" height="10" fill="#0ca678" opacity="0.75" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="269" y="106" width="13" height="10" fill="#e8590c" opacity="0.75" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="284" y="106" width="13" height="10" fill="#e03131" opacity="0.75" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="299" y="106" width="13" height="10" fill="#1971c2" opacity="0.45" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="314" y="106" width="13" height="10" fill="#e03131" opacity="0.45" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="329" y="106" width="13" height="10" fill="#e8590c" opacity="0.45" stroke="var(--rule)" stroke-width="0.6"/>
+
+<rect x="224" y="118" width="13" height="10" fill="#1971c2" opacity="0.35" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="239" y="118" width="13" height="10" fill="#0ca678" opacity="0.35" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="254" y="118" width="13" height="10" fill="#e8590c" opacity="0.35" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="269" y="118" width="13" height="10" fill="#e03131" opacity="0.35" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="284" y="118" width="13" height="10" fill="#7048e8" opacity="0.35" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="299" y="118" width="13" height="10" fill="var(--muted)" opacity="0.55" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="314" y="118" width="13" height="10" fill="var(--muted)" opacity="0.3" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="329" y="118" width="13" height="10" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="0.6"/>
+
+<rect x="222" y="92" width="17" height="14" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+
+<text x="224" y="146" font-size="10" class="svgmuted">自定义颜色(C)：</text>
+<rect x="224" y="152" width="13" height="10" fill="#0ca678" opacity="0.6" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="239" y="152" width="13" height="10" fill="#7048e8" opacity="0.6" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="254" y="152" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="269" y="152" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="284" y="152" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="299" y="152" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="314" y="152" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="329" y="152" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="224" y="164" width="13" height="10" fill="#e8590c" opacity="0.6" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="239" y="164" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="254" y="164" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="269" y="164" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="284" y="164" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="299" y="164" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="314" y="164" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+<rect x="329" y="164" width="13" height="10" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="0.6"/>
+
+<rect x="350" y="72" width="140" height="98" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="356" y="80" width="17" height="66" fill="#e03131" opacity="0.6" stroke="none"/>
+<rect x="373" y="80" width="17" height="66" fill="#e8590c" opacity="0.6" stroke="none"/>
+<rect x="390" y="80" width="17" height="66" fill="#0ca678" opacity="0.6" stroke="none"/>
+<rect x="407" y="80" width="17" height="66" fill="#1971c2" opacity="0.6" stroke="none"/>
+<rect x="424" y="80" width="17" height="66" fill="#7048e8" opacity="0.6" stroke="none"/>
+<rect x="441" y="80" width="19" height="66" fill="var(--muted)" opacity="0.45" stroke="none"/>
+<rect x="356" y="80" width="104" height="66" fill="none" stroke="var(--rule)"/>
+<path d="M356,104 H373 M364,88 V120" stroke="var(--svg-fill)" stroke-width="1.2" fill="none"/>
+<circle cx="364" cy="104" r="4" fill="none" stroke="var(--svg-fill)" stroke-width="1.4"/>
+<rect x="468" y="80" width="12" height="66" fill="url(#c10clr-lum)" stroke="var(--rule)"/>
+<path d="M486,104 L481,100 L481,108 Z" fill="var(--muted)"/>
+<text x="356" y="162" font-size="10" class="svgtext">红 224　绿 49　蓝 49</text>
+
+<rect x="356" y="174" width="52" height="20" rx="3" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="382" y="188" text-anchor="middle" font-size="11" class="svgtext">确定</text>
+<rect x="416" y="174" width="52" height="20" rx="3" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="442" y="188" text-anchor="middle" font-size="11" class="svgmuted">取消</text>
+
+<text x="200" y="90" text-anchor="end" font-size="11" class="svgtext">CColorDialog dlg(m_clrPen);</text>
+<text x="200" y="112" text-anchor="end" font-size="10" class="svgmuted">构造传入当前色，打开即预选这一格</text>
+<path d="M204,99 H221" stroke="var(--muted)" stroke-width="1.2" fill="none" marker-end="url(#c10clr-tip)"/>
+
+<text x="200" y="154" text-anchor="end" font-size="11" class="svgtext">16 格自定义色由调用方提供存储</text>
+<text x="200" y="176" text-anchor="end" font-size="10" class="svgmuted">MFC 已内置进程内静态数组</text>
+<path d="M204,163 H221" stroke="var(--muted)" stroke-width="1.2" fill="none" marker-end="url(#c10clr-tip)"/>
+
+<text x="512" y="100" font-size="11" class="svgtext">m_cc.Flags |= CC_FULLOPEN;</text>
+<text x="512" y="122" font-size="10" class="svgmuted">右半区（自定义色）默认展开</text>
+<path d="M508,111 H494" stroke="var(--muted)" stroke-width="1.2" fill="none" marker-end="url(#c10clr-tip)"/>
+
+<path d="M382,202 V216 H158 V237" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c10clr-ar)"/>
+<text x="268" y="211" text-anchor="middle" font-size="11" class="svgtext">DoModal() == IDOK</text>
+<text x="516" y="214" font-size="10" class="svgmuted">点「取消」则原值不变</text>
+
+<rect x="60" y="240" width="196" height="46" rx="8" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text x="158" y="260" text-anchor="middle" font-size="11" class="svgtext">m_clrPen = dlg.GetColor();</text>
+<text x="158" y="277" text-anchor="middle" font-size="10" class="svgmuted">COLORREF = RGB(224, 49, 49)</text>
+
+<path d="M259,263 H286" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c10clr-ar)"/>
+
+<rect x="290" y="240" width="200" height="46" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="390" y="259" text-anchor="middle" font-size="10" class="svgtext">CPen pen(PS_SOLID, 3, m_clrPen);</text>
+<text x="390" y="276" text-anchor="middle" font-size="10" class="svgtext">CBrush brush(m_clrPen);</text>
+
+<path d="M493,263 H516" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c10clr-ar)"/>
+
+<rect x="520" y="240" width="184" height="46" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M534,278 L560,252 L586,272 L612,250" fill="none" stroke="#e03131" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="634" y="250" width="56" height="26" rx="3" fill="#e03131" opacity="0.85" stroke="#e03131"/>
+
+<text x="158" y="303" text-anchor="middle" font-size="10" class="svgmuted">① 取回 32 位颜色值</text>
+<text x="390" y="303" text-anchor="middle" font-size="10" class="svgmuted">② 变成 GDI 画笔 / 画刷</text>
+<text x="612" y="303" text-anchor="middle" font-size="10" class="svgmuted">③ 线与填充都成了这个色</text>
+</svg>
+<figcaption>图 10-4　CColorDialog 的运行效果：从预选色、CC_FULLOPEN 到 GetColor() 决定笔刷颜色（原创绘制）</figcaption>
+</figure>
+
 
 <p>不用 MFC 时，<code>CHOOSECOLOR</code> 里有一个容易踩的坑——<code>lpCustColors</code>：</p>
 
@@ -3167,6 +3441,91 @@ HPEN hPen = ExtCreatePen(PS_GEOMETRIC | PS_DASH | PS_ENDCAP_FLAT,
 <p><strong>原理：</strong>这里要完成一次关键的观念转身：<strong><code>WM_PAINT</code> 重画的从来不是"痕迹"，而是"数据"</strong>。一条直线在屏幕上是几百个像素，但在逻辑上只是四个信息：<em>什么类型、从哪起、到哪止、什么颜色</em>。把这四个信息存下来，像素随时可以再生。于是每完成一笔，我们不急着让它成为过眼云烟，而是先给它建一张"档案卡"：</p>
 
 <pre><code><span class="cl"><span class="cm">// Figure.h —— 一笔图形的档案卡</span></span><span class="cl"><span class="kw">class</span> CFigure : <span class="kw">public</span> CObject</span><span class="cl">{</span><span class="cl"><span class="kw">public</span>:</span><span class="cl">    CFigure(UINT kind, CPoint from, CPoint to, COLORREF clr)</span><span class="cl">        : m_nKind(kind), m_ptFrom(from), m_ptTo(to), m_clr(clr) {}</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:32.0ch">    UINT     m_nKind;</span><span class="cm">// 1=点 2=直线 3=矩形 4=椭圆</span></span><span class="cl"><span class="cc" style="min-width:32.0ch">    CPoint   m_ptFrom;</span><span class="cm">// 起点：按下鼠标处</span></span><span class="cl"><span class="cc" style="min-width:32.0ch">    CPoint   m_ptTo;</span><span class="cm">// 终点：松开鼠标处</span></span><span class="cl"><span class="cc" style="min-width:32.0ch">    COLORREF m_clr;</span><span class="cm">// 颜色</span></span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:32.0ch">    <span class="kw">void</span> Draw(CDC* pDC) <span class="kw">const</span>;</span><span class="cm">// 每张档案卡自己知道怎么"再现"自己</span></span><span class="cl">};</span></code></pre>
+<p>同一张"档案卡"、同一对起止点，只因 <code>m_nKind</code> 不同，落到屏幕上就是四种截然不同的图形；而颜色与线宽这两项，四者共用同一支笔。</p>
+<figure data-mark="fig-c11-figure-four-kinds">
+<svg viewBox="0 0 720 310" role="img" aria-label="同一套图形参数经 switch(m_nKind) 分支画出点、直线、矩形、椭圆四种图形">
+<defs>
+<marker id="s11fig-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)"/></marker>
+</defs>
+
+<text x="110" y="19" font-size="11" class="svgmuted">一笔的档案卡 CFigure：同一套图形参数</text>
+<rect x="110" y="26" width="500" height="34" rx="8" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<line x1="210" y1="26" x2="210" y2="60" stroke="var(--rule)"/>
+<line x1="310" y1="26" x2="310" y2="60" stroke="var(--rule)"/>
+<line x1="410" y1="26" x2="410" y2="60" stroke="var(--rule)"/>
+<line x1="510" y1="26" x2="510" y2="60" stroke="var(--rule)"/>
+<text x="160" y="47" text-anchor="middle" font-size="11" class="svgtext">m_nKind</text>
+<text x="260" y="47" text-anchor="middle" font-size="11" class="svgtext">m_ptFrom</text>
+<text x="360" y="47" text-anchor="middle" font-size="11" class="svgtext">m_ptTo</text>
+<rect x="438" y="39" width="9" height="9" fill="#1971c2" stroke="var(--rule)"/>
+<text x="452" y="47" font-size="11" class="svgtext">m_clr</text>
+<text x="560" y="47" text-anchor="middle" font-size="11" class="svgtext">线宽 1</text>
+
+<line x1="360" y1="60" x2="360" y2="68" stroke="var(--accent)" marker-end="url(#s11fig-ar)"/>
+<rect x="250" y="70" width="220" height="26" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text x="360" y="87" text-anchor="middle" font-size="11" class="svgtext">CFigure::Draw　switch (m_nKind)</text>
+
+<line x1="360" y1="96" x2="360" y2="104" stroke="var(--accent)"/>
+<line x1="96" y1="104" x2="624" y2="104" stroke="var(--accent)"/>
+<line x1="96" y1="104" x2="96" y2="112" stroke="var(--accent)" marker-end="url(#s11fig-ar)"/>
+<line x1="272" y1="104" x2="272" y2="112" stroke="var(--accent)" marker-end="url(#s11fig-ar)"/>
+<line x1="448" y1="104" x2="448" y2="112" stroke="var(--accent)" marker-end="url(#s11fig-ar)"/>
+<line x1="624" y1="104" x2="624" y2="112" stroke="var(--accent)" marker-end="url(#s11fig-ar)"/>
+
+<rect x="17" y="114" width="158" height="142" rx="8" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text x="96" y="132" text-anchor="middle" font-size="11" class="svgtext">m_nKind = 1　点</text>
+<rect x="27" y="142" width="138" height="66" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="59" cy="158" r="4" fill="none" stroke="var(--muted)" stroke-dasharray="2 2"/>
+<text x="59" y="152" text-anchor="middle" font-size="10" class="svgmuted">起点未用</text>
+<circle cx="133" cy="198" r="9" fill="none" stroke="var(--muted)" stroke-dasharray="2 2"/>
+<circle cx="133" cy="198" r="3.5" fill="#1971c2"/>
+<text x="96" y="220" text-anchor="middle" font-size="10" class="svgmuted">屏幕上只亮 1 个像素</text>
+<text x="96" y="234" text-anchor="middle" font-size="11" fill="#1971c2">SetPixel(</text>
+<text x="96" y="247" text-anchor="middle" font-size="11" fill="#1971c2">m_ptTo, m_clr)</text>
+
+<rect x="193" y="114" width="158" height="142" rx="8" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text x="272" y="132" text-anchor="middle" font-size="11" class="svgtext">m_nKind = 2　直线</text>
+<rect x="203" y="142" width="138" height="66" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<line x1="235" y1="158" x2="309" y2="198" stroke="#1971c2" stroke-width="2"/>
+<circle cx="235" cy="158" r="3.5" fill="#1971c2"/>
+<circle cx="309" cy="198" r="3.5" fill="#1971c2"/>
+<text x="223" y="162" text-anchor="end" font-size="10" class="svgmuted">起</text>
+<text x="323" y="202" font-size="10" class="svgmuted">止</text>
+<text x="272" y="220" text-anchor="middle" font-size="10" class="svgmuted">两点 = 线段的两个端点</text>
+<text x="272" y="234" text-anchor="middle" font-size="11" fill="#1971c2">MoveTo(m_ptFrom);</text>
+<text x="272" y="247" text-anchor="middle" font-size="11" fill="#1971c2">LineTo(m_ptTo);</text>
+
+<rect x="369" y="114" width="158" height="142" rx="8" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text x="448" y="132" text-anchor="middle" font-size="11" class="svgtext">m_nKind = 3　矩形</text>
+<rect x="379" y="142" width="138" height="66" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="411" y="158" width="74" height="40" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="2"/>
+<circle cx="411" cy="158" r="3.5" fill="#1971c2"/>
+<circle cx="485" cy="198" r="3.5" fill="#1971c2"/>
+<text x="399" y="162" text-anchor="end" font-size="10" class="svgmuted">起</text>
+<text x="499" y="202" font-size="10" class="svgmuted">止</text>
+<text x="448" y="220" text-anchor="middle" font-size="10" class="svgmuted">两点 = 矩形的一组对角</text>
+<text x="448" y="234" text-anchor="middle" font-size="11" fill="#1971c2">Rectangle(CRect(</text>
+<text x="448" y="247" text-anchor="middle" font-size="11" fill="#1971c2">m_ptFrom, m_ptTo))</text>
+
+<rect x="545" y="114" width="158" height="142" rx="8" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text x="624" y="132" text-anchor="middle" font-size="11" class="svgtext">m_nKind = 4　椭圆</text>
+<rect x="555" y="142" width="138" height="66" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="587" y="158" width="74" height="40" fill="none" stroke="var(--muted)" stroke-dasharray="3 3"/>
+<ellipse cx="624" cy="178" rx="37" ry="20" fill="none" stroke="#1971c2" stroke-width="2"/>
+<circle cx="587" cy="158" r="3.5" fill="#1971c2"/>
+<circle cx="661" cy="198" r="3.5" fill="#1971c2"/>
+<text x="575" y="162" text-anchor="end" font-size="10" class="svgmuted">起</text>
+<text x="675" y="202" font-size="10" class="svgmuted">止</text>
+<text x="624" y="220" text-anchor="middle" font-size="10" class="svgmuted">内切于同一个外接矩形</text>
+<text x="624" y="234" text-anchor="middle" font-size="11" fill="#1971c2">Ellipse(CRect(</text>
+<text x="624" y="247" text-anchor="middle" font-size="11" fill="#1971c2">m_ptFrom, m_ptTo))</text>
+
+<text x="17" y="276" font-size="11" class="svgtext">起 = m_ptFrom（按下鼠标处）　　止 = m_ptTo（松开鼠标处）　　m_nKind 只换形状，两点始终是同一对坐标</text>
+<text x="17" y="294" font-size="11" class="svgmuted">四种图形共用同一支笔 CPen(PS_SOLID, 1, m_clr)：m_clr 决定线条颜色，线宽恒为 1</text>
+</svg>
+<figcaption>图 11-2　一套图形参数如何画出四种图形（原创绘制）</figcaption>
+</figure>
+
 
 <p>把绘制逻辑也放进这个类，是顺手而重要的一步——数据自带再现方法，调用方无需了解细节：</p>
 

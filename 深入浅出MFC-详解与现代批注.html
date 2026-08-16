@@ -113,10 +113,7 @@ pre {
 pre code { background: none; color: var(--fg); padding: 0; font-size: 0.85em; }
 pre .cm { color: var(--muted); }
 pre .kw { color: var(--accent); font-weight: 600; }
-table { border-collapse: collapse; width: 100%; margin: 0 0 1.5em; font-size: 0.92em; line-height: 1.7; table-layout: auto; display: table; }
-th, td { border: 1px solid var(--pre-border); padding: 0.35em 0.9em; text-align: left; vertical-align: top; }
-th { background: var(--pre-bg); font-weight: 600; }
-tbody tr:nth-child(even) { background: var(--pre-bg); }
+
 .badge { display:inline; font-size:inherit; font-family:inherit; font-weight:inherit;
   color:inherit; padding:0; border:none; background:none; vertical-align:baseline;
   margin:0; white-space:normal; }
@@ -149,17 +146,26 @@ pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
 
 /* ===== 渲染性能：视口外内容跳过布局与绘制 ===== */
-section.chapter{content-visibility:auto;contain-intrinsic-size:auto 1200px;}
-figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
-pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
-table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
+section.chapter{}
+figure{}
+pre{}
+
 #sidebar,#toc{will-change:scroll-position;}
 
-/* 表格：短内容不折行，长文本正常折行 */
-table th { white-space: nowrap; }
-table td:first-child, table th:first-child { white-space: nowrap; }
-table td { overflow-wrap: break-word; }
-table td.nw { white-space: nowrap; }
+           /* 首列不再强制单行 */
+
+table{border-collapse:collapse;width:100%;margin:0 0 1.5em;
+      font-size:.92em;line-height:1.7;table-layout:fixed;}
+th,td{border:1px solid var(--pre-border);padding:.35em .9em;text-align:left;
+      vertical-align:top;overflow-wrap:anywhere;word-break:normal;}
+th{background:var(--pre-bg);font-weight:600;}
+tbody tr:nth-child(even){background:var(--pre-bg);}
+td code,th code{white-space:normal;}
+table tr>:first-child:nth-last-child(2){width:36%;}
+table tr>:first-child:nth-last-child(3){width:26%;}
+table tr>:first-child:nth-last-child(3)+*{width:22%;}
+table tr>:first-child:nth-last-child(4){width:22%;}
+table tr>:first-child:nth-last-child(4)+*{width:20%;}
 </style>
 </head>
 <body>
@@ -2361,6 +2367,88 @@ m_pFind-&gt;ShowWindow(SW_SHOW);</code></pre>
     }
     <span class="cm">// 谁把 pDC 递进来、画完挂到哪，是框架的事，这里一概不管</span>
 }</code></pre>
+<p>把这段 <code>OnDraw</code> 放进 Scribble 里跑一遍，屏幕上出现的就是下面这几笔——代码里的每一次 <code>MoveTo</code>／<code>LineTo</code>，都能在窗口上找到确切的落点。</p>
+<figure data-mark="fig-ch12-cdc-ondraw">
+<svg viewBox="0 0 720 300" role="img" aria-label="左侧列出 OnDraw 中三句关键调用，右侧是运行后的窗口与两条折线笔画，底部说明 CDC 只是 HDC 的 C++ 薄封装">
+  <defs>
+    <marker id="ch12cdc-arV" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#7048e8"/></marker>
+    <marker id="ch12cdc-arM" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--muted)"/></marker>
+  </defs>
+
+  <text class="svgtext" x="24" y="36" font-size="11.5">代码里的每一句 → 屏幕上的哪一笔</text>
+
+  <circle cx="34" cy="50" r="8.5" fill="var(--svg-fill)" stroke="#e03131" stroke-width="1.3"/>
+  <text x="34" y="54" font-size="10" fill="#e03131" text-anchor="middle">1</text>
+  <text class="svgtext" x="50" y="54" font-size="10" font-family="ui-monospace, Consolas, monospace">pDC-&gt;MoveTo(stroke.Front())</text>
+  <text class="svgmuted" x="50" y="70" font-size="10.5">抬笔移到起点，不在屏幕上留痕</text>
+
+  <circle cx="34" cy="104" r="8.5" fill="var(--svg-fill)" stroke="#1971c2" stroke-width="1.3"/>
+  <text x="34" y="108" font-size="10" fill="#1971c2" text-anchor="middle">2</text>
+  <text class="svgtext" x="50" y="108" font-size="10" font-family="ui-monospace, Consolas, monospace">pDC-&gt;LineTo(pt)  // stroke.Rest()</text>
+  <text class="svgmuted" x="50" y="124" font-size="10.5">从当前点画一段到 pt，当前点随之前移</text>
+
+  <circle cx="34" cy="158" r="8.5" fill="var(--svg-fill)" stroke="#0ca678" stroke-width="1.3"/>
+  <text x="34" y="162" font-size="10" fill="#0ca678" text-anchor="middle">3</text>
+  <text class="svgtext" x="50" y="162" font-size="10" font-family="ui-monospace, Consolas, monospace">for (auto&amp; stroke : Strokes())</text>
+  <text class="svgmuted" x="50" y="178" font-size="10.5">换一条笔画就重新 MoveTo，中间不连线</text>
+
+  <text class="svgmuted" x="24" y="203" font-size="10">红点＝MoveTo 落笔处　　折线＝LineTo 逐段画出</text>
+
+  <rect x="268" y="20" width="428" height="190" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="268" y="20" width="428" height="22" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <circle cx="281" cy="31" r="3" fill="var(--muted)"/><circle cx="291" cy="31" r="3" fill="var(--muted)"/><circle cx="301" cy="31" r="3" fill="var(--muted)"/>
+  <text class="svgmuted" x="314" y="35" font-size="10.5">Scribble — 未命名（CScribbleView 的客户区）</text>
+
+  <text class="svgmuted" x="286" y="58" font-size="10">(0,0) 客户区左上角 · MM_TEXT 下 y 轴朝下</text>
+  <line x1="296" y1="64" x2="352" y2="64" stroke="var(--muted)" stroke-width="1" marker-end="url(#ch12cdc-arM)"/>
+  <line x1="296" y1="64" x2="296" y2="110" stroke="var(--muted)" stroke-width="1" marker-end="url(#ch12cdc-arM)"/>
+  <text class="svgmuted" x="357" y="68" font-size="10">+x</text>
+  <text class="svgmuted" x="286" y="124" font-size="10">+y</text>
+
+  <polyline points="330,142 384,100 444,150 510,98 580,140" fill="none" stroke="#1971c2" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="384" cy="100" r="3.2" fill="#1971c2"/><circle cx="444" cy="150" r="3.2" fill="#1971c2"/><circle cx="510" cy="98" r="3.2" fill="#1971c2"/><circle cx="580" cy="140" r="3.2" fill="#1971c2"/>
+  <circle cx="330" cy="142" r="4.5" fill="#e03131"/>
+
+  <polyline points="322,188 386,172 452,194 524,168 600,190" fill="none" stroke="#0ca678" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="386" cy="172" r="3" fill="#0ca678"/><circle cx="452" cy="194" r="3" fill="#0ca678"/><circle cx="524" cy="168" r="3" fill="#0ca678"/><circle cx="600" cy="190" r="3" fill="#0ca678"/>
+  <circle cx="322" cy="188" r="4.5" fill="#e03131"/>
+
+  <circle cx="326" cy="120" r="8.5" fill="var(--svg-fill)" stroke="#e03131" stroke-width="1.3"/>
+  <text x="326" y="124" font-size="10" fill="#e03131" text-anchor="middle">1</text>
+  <line x1="327" y1="129" x2="329" y2="136" stroke="#e03131" stroke-width="1" stroke-dasharray="3 2"/>
+
+  <circle cx="476" cy="86" r="8.5" fill="var(--svg-fill)" stroke="#1971c2" stroke-width="1.3"/>
+  <text x="476" y="90" font-size="10" fill="#1971c2" text-anchor="middle">2</text>
+  <line x1="476" y1="95" x2="476" y2="116" stroke="#1971c2" stroke-width="1" stroke-dasharray="3 2"/>
+
+  <circle cx="312" cy="166" r="8.5" fill="var(--svg-fill)" stroke="#0ca678" stroke-width="1.3"/>
+  <text x="312" y="170" font-size="10" fill="#0ca678" text-anchor="middle">3</text>
+  <line x1="315" y1="174" x2="320" y2="183" stroke="#0ca678" stroke-width="1" stroke-dasharray="3 2"/>
+
+  <rect x="24" y="232" width="196" height="42" rx="8" fill="var(--svg-soft)" stroke="#7048e8" stroke-width="1.5"/>
+  <text class="svgtext" x="36" y="250" font-size="11">CDC 对象（就是 pDC）</text>
+  <text class="svgmuted" x="36" y="266" font-size="10" font-family="ui-monospace, Consolas, monospace">HDC m_hDC;  ← 设备句柄</text>
+
+  <text class="svgmuted" x="239" y="246" font-size="10" text-anchor="middle">转调</text>
+  <line x1="220" y1="253" x2="256" y2="253" stroke="#7048e8" stroke-width="1.4" marker-end="url(#ch12cdc-arV)"/>
+
+  <rect x="258" y="232" width="214" height="42" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="270" y="250" font-size="11">Win32 GDI（C 接口）</text>
+  <text class="svgmuted" x="270" y="266" font-size="10" font-family="ui-monospace, Consolas, monospace">::MoveToEx(m_hDC,…) / ::LineTo</text>
+
+  <text class="svgmuted" x="491" y="246" font-size="10" text-anchor="middle">落笔</text>
+  <line x1="472" y1="253" x2="508" y2="253" stroke="#7048e8" stroke-width="1.4" marker-end="url(#ch12cdc-arV)"/>
+
+  <rect x="510" y="232" width="186" height="42" rx="8" fill="var(--svg-fill)" stroke="#1971c2" stroke-width="1.5"/>
+  <text class="svgtext" x="522" y="250" font-size="11">同一块画布</text>
+  <text class="svgmuted" x="522" y="266" font-size="10">屏幕 DC 画屏幕，打印机 DC 出纸</text>
+  <line x1="603" y1="230" x2="603" y2="213" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#ch12cdc-arM)"/>
+
+  <text class="svgmuted" x="24" y="292" font-size="10.5">CDC 只是 HDC 的一层 C++ 薄封装：换成打印机 DC，变的只有 m_hDC，上面这段 OnDraw 一个字都不用改</text>
+</svg>
+<figcaption>图 12-1　OnDraw 中 MoveTo/LineTo 的运行结果，以及 CDC 与 HDC 的封装关系（原创绘制）</figcaption>
+</figure>
+
 <p>比方：<code>OnDraw</code> 像一位画师，CDC 是递到他手里的画板。画师不关心画板钉在墙上（屏幕）还是摊在桌上（打印机），他只照图作画；谁递板子、画完挂哪儿，是画廊（框架）的事。这正是文档/视图设计的红利兑现——绘图逻辑只写一次，三种输出共享。</p>
 <div class="note new"><span class="t">🔵 现代更新：抽象还在，实现换代</span><p><span class="badge old">已过时</span> 的是 GDI 的 CDC 本身。Direct2D 用同一思路的现代版：绘图目标抽象成 <code>ID2D1RenderTarget</code>，屏幕用 <code>ID2D1HwndRenderTarget</code>，打印用 <code>ID2D1PrintControl</code>，而你发出的绘图命令保持一致。WPF/WinUI3 更进一步，用统一的 <code>DrawingContext</code>；Web 端的 Canvas 2D、Skia 的 <code>SkCanvas</code> 都是"一块设备无关画布"的同一个主意。学会 CDC 的思维，这些一看就懂。</p></div>
 
@@ -2939,7 +3027,125 @@ $$ENDIF</code></pre>
 <h1 id="appA"><span class="part">第五篇 · 附录 A ★</span>MFC 类别阶层图</h1>
 <p>学 MFC 有句老实话：<strong>熟记类别的阶层架构，是不二法门。</strong>几百个类看着吓人，但它们规规矩矩挂在一棵继承树上，你只要记住树的主干形状，就能对任何一个陌生类「按图索骥、猜出它大概有什么本事」。下面这张<strong>原创精简主干图</strong>只画最该刻进脑子里的那几根枝干：</p>
 
-<h2 id="appA-map">原创阶层总图</h2>
+<h2 id="appA-map">
+<p>主干图只画了「必须刻进脑子」的那几根枝干。真正写代码时会碰到的类，绝大多数挂在这些枝干的<strong>支线</strong>上。下面这张补全图按「用途」把常用支线分成五组——看图时不要逐个背类名，而是记住<strong>每一组的位置和它挂在谁下面</strong>：</p>
+<figure data-mark="appA-branch-map-v1">
+<svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" font-size="10">
+<defs>
+<marker id="appAmap-arA" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 z" fill="#1971c2"/></marker>
+<marker id="appAmap-arB" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 z" fill="#0ca678"/></marker>
+<marker id="appAmap-arC" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 z" fill="#e8590c"/></marker>
+<marker id="appAmap-arD" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 z" fill="#7048e8"/></marker>
+</defs>
+
+<!-- ============ ① 窗口与控件 ============ -->
+<path d="M 92,18 H 702 A 8 8 0 0 1 710 26 V 73 A 8 8 0 0 1 702 81 H 18 A 8 8 0 0 1 10 73 V 26 A 8 8 0 0 1 18 18" fill="none" stroke="#1971c2" stroke-width="1.2"/>
+<text x="22" y="22" font-size="10.5" font-weight="700" fill="#1971c2">① 窗口与控件</text>
+
+<line x1="100" y1="51" x2="112" y2="51" stroke="#1971c2"/>
+<line x1="112" y1="38" x2="112" y2="64" stroke="#1971c2"/>
+<line x1="112" y1="38" x2="124" y2="38" stroke="#1971c2" marker-end="url(#appAmap-arA)"/>
+<line x1="112" y1="64" x2="124" y2="64" stroke="#1971c2" marker-end="url(#appAmap-arA)"/>
+<rect x="24" y="42" width="76" height="18" rx="5" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="1.5"/>
+<text class="svgtext" x="62" y="54.5" text-anchor="middle" font-weight="700">CWnd</text>
+<text class="svgmuted" x="132" y="41.5" font-size="10.5">标准控件</text>
+<text class="svgmuted" x="132" y="67.5" font-size="10.5">通用控件</text>
+
+<rect x="178" y="29" width="58" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="207" y="41.5" text-anchor="middle">CStatic</text>
+<rect x="244" y="29" width="58" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="273" y="41.5" text-anchor="middle">CButton</text>
+<rect x="310" y="29" width="46" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="333" y="41.5" text-anchor="middle">CEdit</text>
+<rect x="364" y="29" width="64" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="396" y="41.5" text-anchor="middle">CListBox</text>
+<rect x="436" y="29" width="76" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="474" y="41.5" text-anchor="middle">CComboBox</text>
+<rect x="520" y="29" width="76" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="558" y="41.5" text-anchor="middle">CScrollBar</text>
+<text class="svgmuted" x="608" y="41.5">六个老牌控件</text>
+
+<rect x="178" y="55" width="70" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="213" y="67.5" text-anchor="middle">CListCtrl</text>
+<rect x="256" y="55" width="70" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="291" y="67.5" text-anchor="middle">CTreeCtrl</text>
+<rect x="334" y="55" width="64" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="366" y="67.5" text-anchor="middle">CTabCtrl</text>
+<rect x="406" y="55" width="94" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="453" y="67.5" text-anchor="middle">CProgressCtrl</text>
+<rect x="508" y="55" width="82" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="549" y="67.5" text-anchor="middle">CSliderCtrl</text>
+<rect x="598" y="55" width="88" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="642" y="67.5" text-anchor="middle">CToolBarCtrl</text>
+
+<!-- ============ ② 框架与视图 ============ -->
+<path d="M 92,95 H 702 A 8 8 0 0 1 710 103 V 150 A 8 8 0 0 1 702 158 H 18 A 8 8 0 0 1 10 150 V 103 A 8 8 0 0 1 18 95" fill="none" stroke="#0ca678" stroke-width="1.2"/>
+<text x="22" y="99" font-size="10.5" font-weight="700" fill="#0ca678">② 框架与视图</text>
+
+<line x1="100" y1="115" x2="120" y2="115" stroke="#0ca678" marker-end="url(#appAmap-arB)"/>
+<line x1="100" y1="141" x2="120" y2="141" stroke="#0ca678" marker-end="url(#appAmap-arB)"/>
+<rect x="24" y="106" width="76" height="18" rx="5" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.5"/>
+<text class="svgtext" x="62" y="118.5" text-anchor="middle" font-weight="700">CFrameWnd</text>
+<rect x="24" y="132" width="76" height="18" rx="5" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.5"/>
+<text class="svgtext" x="62" y="144.5" text-anchor="middle" font-weight="700">CView</text>
+
+<rect x="126" y="106" width="94" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="173" y="118.5" text-anchor="middle">CMDIFrameWnd</text>
+<rect x="228" y="106" width="94" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="275" y="118.5" text-anchor="middle">CMDIChildWnd</text>
+<text class="svgmuted" x="336" y="118.5">MDI 多文档：主框架 + 子框架</text>
+
+<rect x="126" y="132" width="82" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="167" y="144.5" text-anchor="middle">CScrollView</text>
+<rect x="216" y="132" width="70" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="251" y="144.5" text-anchor="middle">CFormView</text>
+<rect x="294" y="132" width="70" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="329" y="144.5" text-anchor="middle">CEditView</text>
+<rect x="372" y="132" width="70" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="407" y="144.5" text-anchor="middle">CListView</text>
+<rect x="450" y="132" width="70" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="485" y="144.5" text-anchor="middle">CTreeView</text>
+<rect x="528" y="132" width="82" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="569" y="144.5" text-anchor="middle">CRecordView</text>
+<text class="svgmuted" x="622" y="144.5">★ 最常派生</text>
+
+<!-- ============ ③ 对话框族 ============ -->
+<path d="M 82,172 H 702 A 8 8 0 0 1 710 180 V 202 A 8 8 0 0 1 702 210 H 18 A 8 8 0 0 1 10 202 V 180 A 8 8 0 0 1 18 172" fill="none" stroke="#e8590c" stroke-width="1.2"/>
+<text x="22" y="176" font-size="10.5" font-weight="700" fill="#e8590c">③ 对话框族</text>
+
+<line x1="100" y1="192" x2="120" y2="192" stroke="#e8590c" marker-end="url(#appAmap-arC)"/>
+<rect x="24" y="183" width="76" height="18" rx="5" fill="var(--svg-soft)" stroke="#e8590c" stroke-width="1.5"/>
+<text class="svgtext" x="62" y="195.5" text-anchor="middle" font-weight="700">CDialog</text>
+
+<rect x="126" y="183" width="82" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="167" y="195.5" text-anchor="middle">CFileDialog</text>
+<rect x="216" y="183" width="88" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="260" y="195.5" text-anchor="middle">CColorDialog</text>
+<rect x="312" y="183" width="82" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="353" y="195.5" text-anchor="middle">CFontDialog</text>
+<rect x="402" y="183" width="88" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="446" y="195.5" text-anchor="middle">CPrintDialog</text>
+<rect x="498" y="183" width="94" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="545" y="195.5" text-anchor="middle">CPropertyPage</text>
+<text class="svgmuted" x="604" y="195.5">系统通用对话框</text>
+
+<!-- ============ ④ GDI 与 DC ============ -->
+<path d="M 92,224 H 702 A 8 8 0 0 1 710 232 V 279 A 8 8 0 0 1 702 287 H 18 A 8 8 0 0 1 10 279 V 232 A 8 8 0 0 1 18 224" fill="none" stroke="#7048e8" stroke-width="1.2"/>
+<text x="22" y="228" font-size="10.5" font-weight="700" fill="#7048e8">④ GDI 与 DC</text>
+
+<line x1="100" y1="244" x2="120" y2="244" stroke="#7048e8" marker-end="url(#appAmap-arD)"/>
+<line x1="100" y1="270" x2="120" y2="270" stroke="#7048e8" marker-end="url(#appAmap-arD)"/>
+<rect x="24" y="235" width="76" height="18" rx="5" fill="var(--svg-soft)" stroke="#7048e8" stroke-width="1.5"/>
+<text class="svgtext" x="62" y="247.5" text-anchor="middle" font-weight="700">CGdiObject</text>
+<rect x="24" y="261" width="76" height="18" rx="5" fill="var(--svg-soft)" stroke="#7048e8" stroke-width="1.5"/>
+<text class="svgtext" x="62" y="273.5" text-anchor="middle" font-weight="700">CDC</text>
+
+<rect x="126" y="235" width="40" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="146" y="247.5" text-anchor="middle">CPen</text>
+<rect x="174" y="235" width="52" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="200" y="247.5" text-anchor="middle">CBrush</text>
+<rect x="234" y="235" width="46" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="257" y="247.5" text-anchor="middle">CFont</text>
+<rect x="288" y="235" width="58" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="317" y="247.5" text-anchor="middle">CBitmap</text>
+<rect x="354" y="235" width="64" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="386" y="247.5" text-anchor="middle">CPalette</text>
+<rect x="426" y="235" width="40" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="446" y="247.5" text-anchor="middle">CRgn</text>
+<text class="svgmuted" x="478" y="247.5">画笔·画刷·字体·位图·调色板·区域</text>
+
+<rect x="126" y="261" width="70" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="161" y="273.5" text-anchor="middle">CClientDC</text>
+<rect x="204" y="261" width="64" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="236" y="273.5" text-anchor="middle">CPaintDC</text>
+<rect x="276" y="261" width="70" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="311" y="273.5" text-anchor="middle">CWindowDC</text>
+<rect x="354" y="261" width="82" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="395" y="273.5" text-anchor="middle">CMetaFileDC</text>
+<text class="svgmuted" x="448" y="273.5">OnPaint 里用 CPaintDC，别处用 CClientDC</text>
+
+<!-- ============ ⑤ 值类 / 辅助类 ============ -->
+<path d="M 104,301 H 702 A 8 8 0 0 1 710 309 V 331 A 8 8 0 0 1 702 339 H 18 A 8 8 0 0 1 10 331 V 309 A 8 8 0 0 1 18 301" fill="none" stroke="#e03131" stroke-width="1.2"/>
+<text x="22" y="305" font-size="10.5" font-weight="700" fill="#e03131">⑤ 值类 / 辅助类</text>
+
+<text class="svgmuted" x="26" y="324.5" font-size="10.5">不从 CObject 派生</text>
+<rect x="126" y="312" width="58" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="155" y="324.5" text-anchor="middle">CString</text>
+<rect x="192" y="312" width="52" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="218" y="324.5" text-anchor="middle">CPoint</text>
+<rect x="252" y="312" width="46" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="275" y="324.5" text-anchor="middle">CRect</text>
+<rect x="306" y="312" width="46" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="329" y="324.5" text-anchor="middle">CSize</text>
+<rect x="360" y="312" width="46" height="18" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="383" y="324.5" text-anchor="middle">CTime</text>
+<text class="svgmuted" x="418" y="324.5">值语义：当普通变量用，不进消息映射与序列化</text>
+
+<text class="svgmuted" x="360" y="354" text-anchor="middle" font-size="11">记住分组比记住每个类名有用 —— 遇到陌生类，先判断它属于哪一支，再去查它的成员函数。</text>
+</svg>
+<figcaption>图 A-2　支线补全图：主干之外最常用的五组分支（原创绘制）</figcaption>
+</figure>
+原创阶层总图</h2>
 <figure>
 <svg viewBox="0 0 880 440" xmlns="http://www.w3.org/2000/svg" font-size="12.5">
 <defs><marker id="arh" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 z" fill="var(--muted)"/></marker></defs>
