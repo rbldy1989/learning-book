@@ -1420,6 +1420,30 @@ g.SetSmoothingMode(SmoothingModeAntiAlias);</code></pre>
     <span class="kw">const</span> wchar_t *text = L"你好，Win32！Hello, world.";
     TextOutW(hdc, 20, 20, text, lstrlenW(text));
 }</code></pre>
+<figure data-mark="fig-align">
+<svg viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="18" font-size="12.5">TextOut 给的 (x, y) 是哪个点？由 SetTextAlign 决定：</text>
+<rect x="24" y="34" width="200" height="86" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="60" cy="58" r="4" fill="#e03131"/>
+<text x="60" y="92" font-size="20" fill="var(--fg)">文字示例</text>
+<text class="svgmuted" x="124" y="140" text-anchor="middle" font-size="11.5">TA_LEFT | TA_TOP（默认）</text>
+<text class="svgmuted" x="124" y="158" text-anchor="middle" font-size="11">(x,y) = 左上角</text>
+<rect x="256" y="34" width="200" height="86" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="356" cy="58" r="4" fill="#e03131"/>
+<text x="356" y="92" font-size="20" fill="var(--fg)" text-anchor="middle">文字示例</text>
+<text class="svgmuted" x="356" y="140" text-anchor="middle" font-size="11.5">TA_CENTER</text>
+<text class="svgmuted" x="356" y="158" text-anchor="middle" font-size="11">(x,y) = 顶边中点</text>
+<rect x="488" y="34" width="200" height="86" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="652" cy="58" r="4" fill="#e03131"/>
+<text x="652" y="92" font-size="20" fill="var(--fg)" text-anchor="end">文字示例</text>
+<text class="svgmuted" x="588" y="140" text-anchor="middle" font-size="11.5">TA_RIGHT</text>
+<text class="svgmuted" x="588" y="158" text-anchor="middle" font-size="11">(x,y) = 右上角</text>
+<text class="svgmuted" x="24" y="192" font-size="12">还有 <tspan font-weight="600">TA_BASELINE</tspan>：y 表示<tspan font-weight="600">基线</tspan>位置而非顶端——排版对齐多行不同字号的文字时用它最准。</text>
+<text class="svgmuted" x="24" y="212" font-size="12">红点即你传进去的那个 (x, y)。搞错基准，文字就会整体偏上或偏左，这是最常见的「位置对不上」原因。</text>
+</svg>
+<figcaption>图 5-3　TextOut 的坐标基准与对齐方式（原创绘制）</figcaption>
+</figure>
+
 <figure data-mark="fig-lines">
 <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-size="12">
 <text class="svgmuted" x="24" y="18" font-size="12.5">上面这段代码画出来是这样——每行落在哪个 y，全由字体度量算出：</text>
@@ -1465,6 +1489,37 @@ ExtTextOutW(hdc, 20, 60, ETO_OPAQUE | ETO_CLIPPED, &amp;box,
 <p>你画了第一行字，马上会碰到第二个问题：<strong>下一行该往下挪多少像素？</strong>如果你拍脑袋写"每行 16 像素"，换个字体、换台高分屏就全乱了。正确做法是<strong>向系统询问当前字体的度量（metrics）</strong>，让排版随字体自适应。这正是 Petzold 当年反复强调的功夫：不要假设字符尺寸，去问。</p>
 <p>问的方法是 <code>GetTextMetricsW</code>，它填一个 <code>TEXTMETRICW</code> 结构：</p>
 <pre><code><span class="cl">TEXTMETRICW tm;</span><span class="cl"><span class="cc" style="min-width:54.0ch">GetTextMetricsW(hdc, &amp;tm);</span><span class="cm">// 针对当前选进 hdc 的字体</span></span><span class="cl"><span class="cc" style="min-width:54.0ch"><span class="kw">int</span> lineHeight = tm.tmHeight + tm.tmExternalLeading;</span><span class="cm">// 标准行距</span></span><span class="cl"><span class="cc" style="min-width:54.0ch"><span class="kw">int</span> charW     = tm.tmAveCharWidth;</span><span class="cm">// 平均字宽</span></span></code></pre>
+<figure data-mark="fig-tm">
+<svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="18" font-size="12.5">TEXTMETRIC 的几个字段，对应字形上的这些位置：</text>
+<line x1="60" y1="70" x2="600" y2="70" stroke="#e03131" stroke-dasharray="4 3"/>
+<text x="608" y="74" font-size="11" fill="#e03131">顶线（ascent 顶端）</text>
+<line x1="60" y1="170" x2="600" y2="170" stroke="#1971c2" stroke-width="1.6"/>
+<text x="608" y="174" font-size="11" fill="#1971c2">基线 baseline</text>
+<line x1="60" y1="206" x2="600" y2="206" stroke="#e03131" stroke-dasharray="4 3"/>
+<text x="608" y="210" font-size="11" fill="#e03131">底线（descent 底端）</text>
+<line x1="60" y1="242" x2="600" y2="242" stroke="var(--muted)" stroke-dasharray="2 3"/>
+<text x="608" y="246" font-size="11" class="svgmuted">下一行的顶线</text>
+<text x="80" y="170" font-size="88" fill="var(--fg)" font-family="Georgia,serif">Hgpy</text>
+<line x1="44" y1="70" x2="44" y2="170" stroke="#0ca678" stroke-width="1.6"/>
+<line x1="38" y1="70" x2="50" y2="70" stroke="#0ca678"/><line x1="38" y1="170" x2="50" y2="170" stroke="#0ca678"/>
+<text x="16" y="126" font-size="11" fill="#0ca678">tmAscent</text>
+<line x1="44" y1="170" x2="44" y2="206" stroke="#0ca678" stroke-width="1.6"/>
+<line x1="38" y1="206" x2="50" y2="206" stroke="#0ca678"/>
+<text x="8" y="192" font-size="11" fill="#0ca678">tmDescent</text>
+<line x1="330" y1="70" x2="330" y2="206" stroke="#7048e8" stroke-width="1.6"/>
+<line x1="324" y1="70" x2="336" y2="70" stroke="#7048e8"/><line x1="324" y1="206" x2="336" y2="206" stroke="#7048e8"/>
+<text x="340" y="106" font-size="11.5" fill="#7048e8">tmHeight = Ascent + Descent</text>
+<text x="340" y="124" font-size="11" class="svgmuted">字形本身占的高度</text>
+<line x1="480" y1="206" x2="480" y2="242" stroke="#e8590c" stroke-width="1.6"/>
+<line x1="474" y1="242" x2="486" y2="242" stroke="#e8590c"/>
+<text x="492" y="230" font-size="11.5" fill="#e8590c">tmExternalLeading</text>
+<text x="492" y="248" font-size="11" class="svgmuted">行与行之间建议留的空隙</text>
+<text class="svgmuted" x="24" y="272" font-size="12">所以「下一行 y 该加多少」= tmHeight + tmExternalLeading，而不是随手写个 20。</text>
+</svg>
+<figcaption>图 5-2　TEXTMETRIC：基线、上高、下深与行间距（原创绘制）</figcaption>
+</figure>
+
 <p>下面这张表是你真正需要盯住的几个字段。理解它们，就理解了一行字在垂直方向是怎么"搭"起来的：</p>
 <table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody>
 <tr><td><code>tmHeight</code></td><td>字符总高度 = 上伸部 + 下伸部（tmAscent + tmDescent），<strong>不含</strong>行间空白</td></tr>
@@ -1493,6 +1548,28 @@ ExtTextOutW(hdc, 20, 60, ETO_OPAQUE | ETO_CLIPPED, &amp;box,
 <h2 id="w5-extent">精确测量：GetTextExtentPoint32 与对齐</h2>
 <p>要做真正的排版——居中标题、右对齐数字、自己实现换行——你必须能<strong>预先算出一串字画出来占多大</strong>。这就是 <code>GetTextExtentPoint32W</code> 的活儿：给它一串字，它按当前字体量出宽和高，填进一个 <code>SIZE</code>。</p>
 <pre><code><span class="cl">SIZE sz;</span><span class="cl"><span class="kw">const</span> wchar_t *s = L"居中的标题";</span><span class="cl"><span class="cc" style="min-width:50.0ch">GetTextExtentPoint32W(hdc, s, lstrlenW(s), &amp;sz);</span><span class="cm">// sz.cx = 宽, sz.cy = 高</span></span><span class="cl"> </span><span class="cl">RECT rc; GetClientRect(hwnd, &amp;rc);</span><span class="cl"><span class="cc" style="min-width:50.0ch"><span class="kw">int</span> x = (rc.right  - sz.cx) / 2;</span><span class="cm">// 水平居中</span></span><span class="cl"><span class="cc" style="min-width:50.0ch"><span class="kw">int</span> y = (rc.bottom - sz.cy) / 2;</span><span class="cm">// 垂直居中</span></span><span class="cl">TextOutW(hdc, x, y, s, lstrlenW(s));</span></code></pre>
+<figure data-mark="fig-extent">
+<svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="18" font-size="12.5">测量的用途：先问「这串字多宽」，才能把它摆到正确位置。</text>
+<rect x="24" y="34" width="300" height="100" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="52" y="90" font-size="20" fill="var(--fg)">Hello 世界</text>
+<line x1="52" y1="104" x2="196" y2="104" stroke="#1971c2" stroke-width="1.6"/>
+<line x1="52" y1="98" x2="52" y2="110" stroke="#1971c2"/><line x1="196" y1="98" x2="196" y2="110" stroke="#1971c2"/>
+<text x="124" y="124" font-size="11" fill="#1971c2" text-anchor="middle">SIZE.cx（宽）</text>
+<line x1="212" y1="66" x2="212" y2="96" stroke="#0ca678" stroke-width="1.6"/>
+<line x1="206" y1="66" x2="218" y2="66" stroke="#0ca678"/><line x1="206" y1="96" x2="218" y2="96" stroke="#0ca678"/>
+<text x="224" y="86" font-size="11" fill="#0ca678">SIZE.cy（高）</text>
+<text class="svgmuted" x="356" y="56" font-size="12">拿到宽高之后能做的事：</text>
+<text class="svgmuted" x="356" y="80" font-size="11.5">· <tspan font-weight="600">水平居中</tspan>：x = (窗口宽 − cx) / 2</text>
+<text class="svgmuted" x="356" y="102" font-size="11.5">· <tspan font-weight="600">右对齐</tspan>：x = 右边界 − cx</text>
+<text class="svgmuted" x="356" y="124" font-size="11.5">· <tspan font-weight="600">自动换行</tspan>：累加宽度超出就换行</text>
+<text class="svgmuted" x="356" y="146" font-size="11.5">· <tspan font-weight="600">画背景框</tspan>：按 cx/cy 画个矩形垫在下面</text>
+<text class="svgmuted" x="24" y="176" font-size="12">中英混排时字宽差异很大，<tspan font-weight="600">不能用「字数 × 固定宽度」估算</tspan>，必须实测。</text>
+<text class="svgmuted" x="24" y="196" font-size="12">这也是 GDI 时代要自己写换行算法的原因——现代框架的布局系统把这类计算全包了。</text>
+</svg>
+<figcaption>图 5-4　GetTextExtentPoint32：先量再摆（原创绘制）</figcaption>
+</figure>
+
 <p>它的近亲 <code>GetTextExtentExPointW</code> 更进一步：你给一个"最大宽度"，它告诉你<strong>在这个宽度内最多能塞下前几个字符</strong>，还能顺带返回每个字符的累计宽度。这正是自己实现"按词折行"时要用的核心零件。</p>
 <p>另一条路是改<strong>对齐参考点</strong>本身，用 <code>SetTextAlign</code>。默认情况下你给 <code>TextOut</code> 的坐标是文字的左上角；但你可以改成"这个坐标是右边界"或"这个坐标是基线"：</p>
 <table><thead><tr><th>标志</th><th>作用</th></tr></thead><tbody>
@@ -1540,6 +1617,30 @@ InflateRect(&amp;rc, -12, -12); <span class="cm">// 留点内边距</span>
 
 <span class="cm">// 多行、自动折行、左对齐</span>
 DrawTextW(hdc, para, -1, &amp;rc, DT_WORDBREAK | DT_LEFT);</code></pre>
+<figure data-mark="fig-drawtext">
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="18" font-size="12.5">DrawText 把「摆放」也一起做了——同一个矩形，换个标志位就是另一种排版：</text>
+<rect x="24" y="34" width="150" height="84" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="34" y="52" font-size="12" fill="var(--fg)">左上角起排</text>
+<text class="svgmuted" x="99" y="136" text-anchor="middle" font-size="11">DT_LEFT | DT_TOP</text>
+<rect x="196" y="34" width="150" height="84" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="271" y="80" font-size="12" fill="var(--fg)" text-anchor="middle">水平垂直都居中</text>
+<text class="svgmuted" x="271" y="136" text-anchor="middle" font-size="11">DT_CENTER | DT_VCENTER | DT_SINGLELINE</text>
+<rect x="368" y="34" width="150" height="84" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="378" y="52" font-size="11.5" fill="var(--fg)">这段文字很长会</text>
+<text x="378" y="70" font-size="11.5" fill="var(--fg)">自动折到下一行</text>
+<text x="378" y="88" font-size="11.5" fill="var(--fg)">继续排下去</text>
+<text class="svgmuted" x="443" y="136" text-anchor="middle" font-size="11">DT_WORDBREAK（自动换行）</text>
+<rect x="540" y="34" width="150" height="84" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="550" y="80" font-size="11.5" fill="var(--fg)">很长的文件名…</text>
+<text class="svgmuted" x="615" y="136" text-anchor="middle" font-size="11">DT_END_ELLIPSIS（尾部省略号）</text>
+<text class="svgmuted" x="24" y="180" font-size="12"><tspan font-weight="600">TextOut 与 DrawText 的分工：</tspan>前者只管在指定点吐一行字，位置全靠你算；</text>
+<text class="svgmuted" x="24" y="200" font-size="12">后者接受一个矩形，居中、换行、截断、加省略号这些「排版活」由它代劳。</text>
+<text class="svgmuted" x="24" y="226" font-size="12">要精细控制每个字的落点用 TextOut；只是把一段话规规矩矩塞进一块区域，用 DrawText 省事得多。</text>
+</svg>
+<figcaption>图 5-5　DrawText 常用标志位的排版效果（原创绘制）</figcaption>
+</figure>
+
 <p>第三个参数传 <code>-1</code> 表示"字符串以 <code>\0</code> 结尾，长度你自己数"。真正的表达力在最后那个标志位。下面是最常用的一组：</p>
 <table><thead><tr><th>标志</th><th>作用</th></tr></thead><tbody>
 <tr><td><code>DT_SINGLELINE</code></td><td>强制单行，忽略文本里的换行符</td></tr>
