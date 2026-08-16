@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bash 与命令行工具 · 现代详解</title>
+<title>Shell 脚本与命令行工具 · 现代详解</title>
 <style>
 :root {
   --bg: #faf9f7; --fg: #2d2d2d; --muted: #8a8378;
@@ -159,7 +159,7 @@ table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
 <body>
 <button id="themeBtn" title="切换深浅色"></button>
 <nav id="sidebar">
-<div class="booktitle">Bash 与命令行工具</div>
+<div class="booktitle">Shell 脚本与命令行工具</div>
 <details><summary><a class="ch" href="#b1">第 1 章 Shell 是什么：从登录到执行一条命令</a></summary>
 <a class="sec" href="#b1-role">shell 的角色：你和内核之间的翻译官</a>
 <a class="sec" href="#b1-family">sh、bash、dash、zsh：一份家谱</a>
@@ -245,6 +245,12 @@ table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
 <main><div class="inner">
 <section class="chapter">
 <h1 id="b1"><span class="part">第 1 章</span>Shell 是什么：从登录到执行一条命令</h1>
+
+<div class="note ok">
+<span class="t">先说清本书的立场：以 bash 为准</span>
+<p>「Shell 脚本」是个统称。真正动手时你必须选一个具体的 shell，本书选 <strong>bash</strong>——因为它是绝大多数 Linux 发行版的默认登录 shell，也是别人说「写个 shell 脚本」时默认指的那一个。书中的数组、关联数组、<code>[[ ]]</code>、以及大部分参数展开语法，都是 bash 的能力，标准的 POSIX <code>sh</code> 并不具备。</p>
+<p>凡是涉及<strong>可移植性</strong>的地方，本书会明确标注。最值得先记住的一条：<strong>Ubuntu 上的 <code>/bin/sh</code> 其实是 dash，不是 bash</strong>——所以脚本开头写 <code>#!/bin/sh</code> 就只能用 POSIX 语法，一旦用了数组或 <code>[[ ]]</code> 就会报错。想用 bash 的能力，开头必须写 <code>#!/usr/bin/env bash</code>。这个坑下一节还会展开。</p>
+</div>
 
 <h2 id="b1-role">shell 的角色：你和内核之间的翻译官</h2>
 
