@@ -3146,7 +3146,7 @@ SetWaitableTimer(hTimer, &amp;due, 1, NULL, NULL, FALSE);</code></pre>
 <tr><td><code>BS_SPLITBUTTON</code> / <code>BS_DEFSPLITBUTTON</code></td><td>分割按钮：右侧带下拉箭头（Vista+，箭头点击发 <code>BCN_DROPDOWN</code>）</td></tr>
 <tr><td><code>BS_COMMANDLINK</code> / <code>BS_DEFCOMMANDLINK</code></td><td>命令链接按钮：大字标题+小字说明（Vista+，说明文字用 <code>BCM_SETNOTE</code> 设置）</td></tr>
 </tbody></table>
-
+<p>再看消息（宏）：</p>
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
 <tr><td class="nw"><code>BM_CLICK</code></td><td>模拟一次完整点击（内部发按下/抬起，最终触发 <code>BN_CLICKED</code>）</td></tr>
 <tr><td class="nw"><code>BM_GETCHECK</code></td><td>取勾选态：返回 <code>BST_UNCHECKED</code>(0) / <code>BST_CHECKED</code>(1) / <code>BST_INDETERMINATE</code>(2)</td></tr>
@@ -3274,7 +3274,7 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 <tr><td class="nw"><code>SS_EDITCONTROL</code></td><td>换行规则模拟多行编辑框（预览编辑框内容时保证折行一致）</td></tr>
 <tr><td class="nw"><code>SS_OWNERDRAW</code></td><td class="nw">所有者绘制</td></tr>
 </tbody></table>
-
+<p>再看消息（宏）：</p>
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>STM_SETICON</code> / <code>STM_GETICON</code></td><td>设/取图标（<code>SS_ICON</code> 控件）</td></tr>
 <tr><td><code>STM_SETIMAGE</code> / <code>STM_GETIMAGE</code></td><td>设/取图像，wParam 指明 <code>IMAGE_BITMAP</code>/<code>IMAGE_ICON</code>/<code>IMAGE_ENHMETAFILE</code>；返回旧句柄（注意释放，防泄漏）</td></tr>
@@ -3302,7 +3302,7 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 <tr><td class="nw"><code>ES_NOHIDESEL</code></td><td>失去焦点时选区仍然高亮（默认会隐藏）</td></tr>
 <tr><td class="nw"><code>ES_OEMCONVERT</code></td><td>ANSI↔OEM 字符集转换，DOS 文件名时代的遗物，别再用</td></tr>
 </tbody></table>
-
+<p>再看消息（宏）：</p>
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>EM_GETSEL</code> / <code>EM_SETSEL</code></td><td>取/设选区。<code>EM_SETSEL(0, -1)</code> 全选；<code>(-1, 0)</code> 取消选择并把光标放到末尾</td></tr>
 <tr><td class="nw"><code>EM_REPLACESEL</code></td><td>用 lParam 文本替换当前选区（无选区=在光标处插入）。wParam=TRUE 时可被撤销。<strong>向多行框追加日志的标准姿势</strong>：先 <code>EM_SETSEL(-1,-1)</code> 再 REPLACESEL</td></tr>
@@ -3346,7 +3346,7 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 <tr><td><code>LBS_DISABLENOSCROLL</code></td><td>不需要滚动时显示禁用滚动条，而不是隐藏</td></tr>
 <tr><td class="nw"><code>LBS_NOSEL</code></td><td class="nw">只能看不能选</td></tr>
 </tbody></table>
-
+<p>再看消息（宏）：</p>
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
 <tr><td class="nw"><code>LB_ADDSTRING</code></td><td>追加条目（有 <code>LBS_SORT</code> 则按序插入），返回新条目索引</td></tr>
 <tr><td class="nw"><code>LB_INSERTSTRING</code></td><td>插入到 wParam 指定索引处（-1=追加），不理会排序</td></tr>
@@ -3442,7 +3442,7 @@ SendMessageW(hCombo, CB_SETCURSEL, 1, 0);        <span class="cm">// 默认选"�
 <tr><td class="nw"><code>SBS_SIZEBOX</code></td><td>尺寸盒（两条滚动条交角的方块）</td></tr>
 <tr><td class="nw"><code>SBS_SIZEGRIP</code></td><td>右下角带斜纹的窗口缩放抓手</td></tr>
 </tbody></table>
-
+<p>再看消息 / 函数：</p>
 <table><thead><tr><th>消息 / 函数</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>SetScrollInfo</code> / <code>GetScrollInfo</code></td><td>用 <code>SCROLLINFO</code> 结构一次设/取范围、页大小、位置（<code>SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS</code>）。<strong>现代标准做法</strong></td></tr>
 <tr><td><code>SBM_SETSCROLLINFO</code> / <code>SBM_GETSCROLLINFO</code></td><td>上面两个函数对控件版滚动条的消息形式</td></tr>
@@ -3756,7 +3756,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 <tr><td><code>LVS_EX_INFOTIP</code> / <code>LVS_EX_LABELTIP</code></td><td>悬停提示 / 截断标签的展开提示</td></tr>
 <tr><td><code>LVS_EX_SUBITEMIMAGES</code></td><td class="nw">子项也能显示图标</td></tr>
 </tbody></table>
-
+<p>再看消息（宏）：</p>
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>LVM_INSERTCOLUMN</code> / <code>LVM_DELETECOLUMN</code></td><td>插入/删除报表列（<code>LVCOLUMNW</code>：掩码+文本+宽度+对齐）</td></tr>
 <tr><td><code>LVM_SETCOLUMNWIDTH</code></td><td>调列宽；特殊值 <code>LVSCW_AUTOSIZE</code>、<code>LVSCW_AUTOSIZE_USEHEADER</code></td></tr>
@@ -3776,7 +3776,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 <tr><td class="nw"><code>LVM_SETITEMCOUNT</code></td><td>虚拟列表：告知总项数</td></tr>
 <tr><td class="nw"><code>LVM_EDITLABEL</code></td><td>程序化进入就地重命名</td></tr>
 </tbody></table>
-
+<p>再看通知（WM_NOTIFY）：</p>
 <table><thead><tr><th>通知（WM_NOTIFY）</th><th>说明</th></tr></thead><tbody>
 <tr><td class="nw"><code>LVN_ITEMCHANGED</code></td><td>项状态变化（选中/取消选中都来，检查 <code>NMLISTVIEW.uNewState &amp; LVIS_SELECTED</code>）</td></tr>
 <tr><td class="nw"><code>LVN_COLUMNCLICK</code></td><td>报表列头被点击——实现点列排序的入口</td></tr>
@@ -3870,7 +3870,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 <tr><td><code>TVS_DISABLEDRAGDROP</code></td><td>禁止发 <code>TVN_BEGINDRAG</code></td></tr>
 <tr><td class="nw"><code>TVS_INFOTIP</code></td><td>发 <code>TVN_GETINFOTIP</code> 索要悬停提示</td></tr>
 </tbody></table>
-
+<p>再看消息（宏）：</p>
 <table><thead><tr><th>消息（宏）</th><th>说明</th></tr></thead><tbody>
 <tr><td class="nw"><code>TVM_INSERTITEM</code></td><td>插入节点（<code>TVINSERTSTRUCTW</code>：父节点+位置+<code>TVITEMW</code>），返回 <code>HTREEITEM</code></td></tr>
 <tr><td class="nw"><code>TVM_DELETEITEM</code></td><td>删除节点及其整棵子树；传 <code>TVI_ROOT</code> 清空整棵树</td></tr>
@@ -3885,7 +3885,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 <tr><td class="nw"><code>TVM_HITTEST</code></td><td>坐标 → 节点（右键菜单）</td></tr>
 <tr><td class="nw"><code>TVM_SETIMAGELIST</code></td><td>挂图像列表；<code>TVITEMW.iImage</code>/<code>iSelectedImage</code> 分别是常态/选中态图标</td></tr>
 </tbody></table>
-
+<p>再看通知（WM_NOTIFY）：</p>
 <table><thead><tr><th>通知（WM_NOTIFY）</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>TVN_SELCHANGING</code> / <code>TVN_SELCHANGED</code></td><td>选择将变（返回 TRUE 可拦截）/ 已变（<code>NMTREEVIEWW.itemNew</code>）</td></tr>
 <tr><td><code>TVN_ITEMEXPANDING</code> / <code>TVN_ITEMEXPANDED</code></td><td>展开/折叠前后。<strong>惰性加载的关键</strong>：先给节点挂 <code>cChildren=1</code> 假装有孩子，EXPANDING 时才真正填充子节点</td></tr>

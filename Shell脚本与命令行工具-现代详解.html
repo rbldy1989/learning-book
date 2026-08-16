@@ -903,7 +903,7 @@ $ ./check.sh /nope; echo "退出码=$?"
 <tr><td><code>readlink -f /bin/sh</code></td><td>看 <code>/bin/sh</code> 实际指向谁</td><td>判断有没有 bashism 风险</td></tr>
 </tbody>
 </table>
-
+<p>再看变量：</p>
 <table>
 <thead><tr><th>变量</th><th>含义</th><th>典型值 / 用法</th></tr></thead>
 <tbody>
@@ -3427,7 +3427,7 @@ jobs                       <span class="cm"># [1]+  Running    sleep 30 &amp;</s
 <tr><td class="nw"><code>setsid cmd</code></td><td>另起新会话，彻底脱离控制终端</td></tr>
 </tbody>
 </table>
-
+<p>再看作业标识：</p>
 <table>
 <thead><tr><th>作业标识</th><th>指代</th></tr></thead>
 <tbody>
@@ -4629,7 +4629,7 @@ column -s',' -t report.csv | less -S
 <tr><td class="nw"><code>unzip</code></td><td class="nw">解 zip 包</td><td><code>-l</code> 先列内容；<code>-d 目录</code> 解到指定位置</td></tr>
 </tbody>
 </table>
-
+<p>再看你想干什么：</p>
 <table>
 <thead><tr><th>你想干什么</th><th>tar 怎么写</th><th>记忆法</th></tr></thead>
 <tbody>
@@ -4780,7 +4780,7 @@ journalctl <span class="kw">-u</span> nginx <span class="kw">-f</span>
 <tr><td><code>@csv</code> / <code>@tsv</code></td><td>把数组格式化成 CSV/TSV 行</td><td><code>jq -r '.[] | [.id,.name] | @csv'</code></td></tr>
 </tbody>
 </table>
-
+<p>再看命令行选项：</p>
 <table>
 <thead><tr><th>命令行选项</th><th>作用</th></tr></thead>
 <tbody>
@@ -4880,7 +4880,7 @@ jq <span class="kw">--arg</span> n "$name" '.items[] | select(.name == $n)' data
 <tr><td class="nw"><code>umask</code></td><td>设定「新建文件时默认扣掉哪些权限」</td><td><code>umask</code> 查看；<code>umask 077</code> 只留自己可读写</td></tr>
 </tbody>
 </table>
-
+<p>再看数字：</p>
 <table>
 <thead><tr><th>数字</th><th>符号</th><th>对文件意味着</th><th>对目录意味着</th></tr></thead>
 <tbody>

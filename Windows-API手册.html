@@ -288,6 +288,7 @@ table tr>:first-child:nth-last-child(4)+*{width:20%;}
 <tr><td class="nw"><strong><code>user32.dll</code></strong></td><td><strong>用户界面</strong>：窗口与窗口类、消息队列、菜单、对话框、键鼠输入、剪贴板</td><td><code>CreateWindowEx</code> <code>SendMessage</code> <code>MessageBox</code> <code>GetMessage</code>；<code>WM_</code>/<code>WS_</code> 常量归属于此</td></tr>
 <tr><td class="nw"><strong><code>gdi32.dll</code></strong></td><td><strong>图形设备接口</strong>：设备上下文(DC)、绘图对象(笔/刷/字体/位图)、绘制文字与图元、坐标映射</td><td><code>BeginPaint</code> <code>TextOut</code> <code>CreatePen</code> <code>BitBlt</code>；与 user32 协作绘制窗口内容</td></tr>
 </tbody></table>
+<p>再看常见配角 DLL：</p>
 <table><thead><tr><th>常见配角 DLL</th><th>作用</th><th>备注</th></tr></thead><tbody>
 <tr><td class="nw"><code>ntdll.dll</code></td><td>NT 原生系统调用层，kernel32 的底座</td><td>一般不直接编程调用</td></tr>
 <tr><td class="nw"><code>advapi32.dll</code></td><td>注册表、服务、安全/ACL、加密旧接口</td><td><code>RegOpenKeyEx</code> <code>CryptAcquireContext</code></td></tr>
@@ -5129,6 +5130,7 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 <tr><td><code>WM_DISPLAYCHANGE</code><br><small>0x007E</small></td><td>显示分辨率/色深改变后</td><td>wParam=色深(bpp)；lParam LOWORD=宽 HIWORD=高</td><td>重新评估布局与缓存位图</td></tr>
 </tbody>
 </table>
+<p>再看消息：</p>
 <table>
 <thead><tr><th>消息</th><th>触发时机</th><th>wParam / lParam</th><th>备注</th></tr></thead>
 <tbody>
@@ -5188,6 +5190,7 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 <tr><td class="nw"><code>WM_INPUT</code><br><small>0x00FF</small></td><td>原始输入（Raw Input）到达</td><td>wParam=输入码；lParam=RAWINPUT 句柄</td><td>高精度鼠标/多设备/游戏输入，需 <code>RegisterRawInputDevices</code></td></tr>
 </tbody>
 </table>
+<p>再看消息：</p>
 <table>
 <thead><tr><th>消息</th><th>触发时机</th><th>wParam / lParam</th><th>备注</th></tr></thead>
 <tbody>
