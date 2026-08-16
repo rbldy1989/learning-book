@@ -1087,6 +1087,87 @@ InvalidateRect(hWnd, <span class="kw">nullptr</span>, TRUE);</code></pre>
 
 <div class="note new"><span class="t">🔵 现代提示：闪烁与高刷新场景</span><p>本节讲的是经典 GDI 的按需重绘模型，它今天依然是所有窗口绘制的底层规则。若你要做动画或消除闪烁，现代做法是<strong>双缓冲</strong>（先画到内存位图再一次性贴出），或直接上 Direct2D/Direct3D 走独立的呈现管线——但即便如此，「无效区域驱动 <span class="kw">WM_PAINT</span>」这套机制仍在你脚下运转，理解它才不会写出满屏闪烁或空耗 CPU 的代码。</p></div>
 
+
+<h3>系统凭什么知道「你被挡住过」</h3>
+<p>这里值得停一下。<strong>发现「被挡住了」的从来不是你的程序，而是系统。</strong>窗口管理器掌握着所有窗口的位置与层叠次序——每一次窗口的移动、显示、隐藏、置顶，都要经它的手办理，所以你的窗口被谁盖住了多少、盖在哪个矩形上，它一清二楚。别人的窗口一移开，它立刻能算出「你这块刚露出来」。</p>
+<p>但更根本的问题是：<strong>为什么非得让你重画？系统自己存一份不行吗？</strong>答案藏在显存里——</p>
+<figure data-mark="fig-pixel-lost">
+<svg viewBox="0 0 720 236" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<defs><marker id="pxl-ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs>
+<text class="svgmuted" x="24" y="18" font-size="12.5">显存里就那一块地方——别人画上去，你原来的像素就<tspan font-weight="600">真的没了</tspan>：</text>
+
+<rect x="24" y="34" width="170" height="110" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="70" cy="76" r="18" fill="#1971c2" opacity=".6"/>
+<rect x="102" y="92" width="60" height="34" fill="#0ca678" opacity=".5"/>
+<text class="svgmuted" x="109" y="164" text-anchor="middle" font-size="11.5">① 你画的内容在显存里</text>
+
+<line x1="200" y1="89" x2="234" y2="89" stroke="var(--accent)" marker-end="url(#pxl-ar)"/>
+
+<rect x="242" y="34" width="170" height="110" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="288" cy="76" r="18" fill="#1971c2" opacity=".6"/>
+<rect x="310" y="52" width="94" height="80" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
+<text class="svgmuted" x="357" y="96" text-anchor="middle" font-size="11">别的窗口</text>
+<text class="svgmuted" x="327" y="164" text-anchor="middle" font-size="11.5">② 它的像素<tspan font-weight="600">覆盖</tspan>了你的</text>
+
+<line x1="418" y1="89" x2="452" y2="89" stroke="var(--accent)" marker-end="url(#pxl-ar)"/>
+
+<rect x="460" y="34" width="170" height="110" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="506" cy="76" r="18" fill="#1971c2" opacity=".6"/>
+<rect x="528" y="52" width="94" height="80" fill="#fff4e6" stroke="#e8590c" stroke-dasharray="4 3"/>
+<text x="575" y="90" text-anchor="middle" font-size="11" fill="#e8590c">这里是空的</text>
+<text x="575" y="108" text-anchor="middle" font-size="10.5" fill="#e8590c">原像素已丢失</text>
+<text class="svgmuted" x="545" y="164" text-anchor="middle" font-size="11.5">③ 移开后：系统<tspan font-weight="600">无从恢复</tspan></text>
+
+<text class="svgmuted" x="24" y="196" font-size="12">系统<tspan font-weight="600">不替你留底</tspan>——留底意味着每个窗口都要额外占一份显存，1985 年的机器负担不起。</text>
+<text class="svgmuted" x="24" y="216" font-size="12">于是形成了这条契约：<tspan font-weight="600">系统负责告诉你「哪块脏了」，你负责把它重新画出来。</tspan></text>
+</svg>
+<figcaption>图 3-3　被遮挡的像素是真的丢了，所以必须由你补画（原创绘制）</figcaption>
+</figure>
+
+<h3>动手验证：把无效区域打印出来</h3>
+<p>这个机制光看文字容易半信半疑，做一次实验就再也不会忘。在 <code>WM_PAINT</code> 里把系统给你的矩形打印出来：</p>
+<pre><code><span class="kw">case</span> WM_PAINT: {
+    PAINTSTRUCT ps;
+    HDC hdc = BeginPaint(hwnd, &amp;ps);
+
+    <span class="cm">// ps.rcPaint 就是系统算出的「需要重画的那块矩形」</span>
+    wchar_t buf[128];
+    swprintf_s(buf, L"需重画: (%d,%d)-(%d,%d)\n",
+               ps.rcPaint.left,  ps.rcPaint.top,
+               ps.rcPaint.right, ps.rcPaint.bottom);
+    OutputDebugStringW(buf);      <span class="cm">// VS 输出窗口 / DebugView 里看</span>
+
+    <span class="cm">// ……正常绘制……</span>
+    EndPaint(hwnd, &amp;ps);
+    <span class="kw">return</span> 0;
+}</code></pre>
+<p>跑起来后，<strong>拿另一个窗口在你的窗口上来回划</strong>，输出窗口里会不断刷出一串矩形坐标——那正是系统实时算出的「刚刚被暴露的区域」。你会直观地看到：<strong>它只给你被划过的那一小条，而不是整个窗口。</strong></p>
+<p>不在 <code>WM_PAINT</code> 里也能查当前有没有待重画的区域：</p>
+<pre><code>RECT rc;
+<span class="kw">if</span> (GetUpdateRect(hwnd, &amp;rc, FALSE)) {
+    <span class="cm">// 返回非零 = 此刻存在无效区域</span>
+}</code></pre>
+
+<h3>三种「变无效」的来源</h3>
+<table>
+<thead><tr><th>来源</th><th>谁标记的</th><th>典型场景</th></tr></thead>
+<tbody>
+<tr><td>被遮挡后重新暴露</td><td><strong>系统</strong></td><td>别的窗口移开、从最小化恢复、切换回本窗口</td></tr>
+<tr><td>窗口尺寸或位置变化</td><td><strong>系统</strong></td><td>拖大窗口时新露出来的区域</td></tr>
+<tr><td>你主动请求</td><td><strong>你</strong></td><td><code>InvalidateRect(hwnd, &amp;rc, TRUE)</code></td></tr>
+</tbody>
+</table>
+<p>第三种是你唯一能主动触发的。记住这个用法上的分寸：<strong>数据变了想刷新界面，不要自己抓个 DC 直接画，而是把对应区域标脏，让系统按它的节奏发 <code>WM_PAINT</code></strong>——这样连续多次修改会被合并成一次重绘，比你每改一次画一次高效得多。</p>
+
+<div class="note old">
+<span class="t">一个例外：CS_SAVEBITS</span>
+<p>注册窗口类时加上 <code>CS_SAVEBITS</code> 样式，系统<strong>会</strong>替你保存被遮挡区域的像素，移开时直接贴回来，不发 <code>WM_PAINT</code>。但它只适合<strong>小而短命</strong>的窗口——菜单、工具提示这类弹出一下就消失的东西。大窗口用它得不偿失：保存像素要占内存，而窗口越大代价越高。所以普通窗口一律走「丢了重画」这条路。</p>
+</div>
+<div class="note new">
+<span class="t">现代提示：DWM 之后其实不丢了</span>
+<p>Vista 引入桌面窗口管理器（DWM）后，每个窗口都<strong>画在自己独立的缓冲区</strong>里，再由 DWM 合成到屏幕——别人的窗口压根碰不到你的像素，遮挡不再造成真正的丢失。但 <code>WM_PAINT</code> 这套机制作为兼容层<strong>完整保留</strong>了下来，你的代码写法一行都不用改。理解这段历史的意义在于：你会明白为什么这个模型看起来「多此一举」，以及为什么它至今仍是所有 Win32 程序必须遵守的契约。</p>
+</div>
+
 <h2 id="w3-lifecycle">生与死：WM_CLOSE、WM_DESTROY 与 PostQuitMessage</h2>
 
 <p>最后把窗口的一生串起来。你点右上角那个 × 的时候，背后到底发生了一连串什么事？很多人以为「点 × = 程序退出」，其实中间隔着好几道关，而这几道关正是你能插手的地方。</p>
