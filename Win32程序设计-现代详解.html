@@ -269,6 +269,7 @@ table td.nw { white-space: nowrap; }
 </details>
 <details><summary><a class="ch" href="#w9">第 9 章 子窗口控件与通用控件</a></summary>
 <a class="sec" href="#w9-model">9.1 控件就是子窗口</a>
+<a class="sec" href="#w9-notify">9.2 通知码：控件如何汇报</a>
 <a class="sec" href="#w9-button">9.2 按钮 BUTTON</a>
 <a class="sec" href="#w9-static">9.3 静态控件 STATIC</a>
 <a class="sec" href="#w9-edit">9.4 编辑框 EDIT</a>
@@ -2671,16 +2672,172 @@ SetWaitableTimer(hTimer, &amp;due, 1, NULL, NULL, FALSE);</code></pre>
 
 <table><thead><tr><th>窗口类名</th><th>控件</th><th>主要通知途径</th></tr></thead><tbody>
 <tr><td class="nw"><code>L"BUTTON"</code></td><td>按钮、复选框、单选按钮、分组框</td><td><code>WM_COMMAND</code>（<code>BN_</code>）</td></tr>
-<tr><td class="nw"><code>L"STATIC"</code></td><td>静态文本、图像、分隔线</td><td><code>WM_COMMAND</code>（<code>STN_</code>，须 <code>SS_NOTIFY</code>）</td></tr>
+<tr><td class="nw"><code>L"STATIC"</code></td><td>静态文本、图像、分隔线</td><td><code>WM_COMMAND</code>（<code>STN_</code>，须&nbsp;<code>SS_NOTIFY</code>）</td></tr>
 <tr><td class="nw"><code>L"EDIT"</code></td><td>单行/多行文本编辑框</td><td><code>WM_COMMAND</code>（<code>EN_</code>）</td></tr>
-<tr><td class="nw"><code>L"LISTBOX"</code></td><td class="nw">列表框</td><td><code>WM_COMMAND</code>（<code>LBN_</code>，须 <code>LBS_NOTIFY</code>）</td></tr>
+<tr><td class="nw"><code>L"LISTBOX"</code></td><td class="nw">列表框</td><td><code>WM_COMMAND</code>（<code>LBN_</code>，须&nbsp;<code>LBS_NOTIFY</code>）</td></tr>
 <tr><td class="nw"><code>L"COMBOBOX"</code></td><td>组合框（编辑框+下拉列表）</td><td><code>WM_COMMAND</code>（<code>CBN_</code>）</td></tr>
 <tr><td class="nw"><code>L"SCROLLBAR"</code></td><td>独立滚动条、尺寸抓手</td><td><code>WM_HSCROLL</code> / <code>WM_VSCROLL</code></td></tr>
 </tbody></table>
 
 <p>它们的默认外观如下图：</p>
 <figure><svg viewBox="0 0 720 268" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="基础控件外观示意（一）"><rect x="14" y="14" width="150" height="36" rx="6" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="89" y="37" class="svgtext" font-size="15" text-anchor="middle">按钮</text><text x="89" y="76" class="svgmuted" font-size="12" text-anchor="middle">普通按钮</text><rect x="285" y="14" width="150" height="36" rx="6" fill="var(--svg-fill)" stroke="var(--accent)" stroke-width="2.5"/><text x="360" y="37" class="svgtext" font-size="15" text-anchor="middle">确定</text><text x="360" y="76" class="svgmuted" font-size="12" text-anchor="middle">默认按钮（粗边框）</text><rect x="560" y="14" width="16" height="16" rx="3" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><path d="M563.5 22 L567.5 26.5 L573 15.5" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><text x="584" y="27" class="svgtext" font-size="14">显示网格</text><rect x="560" y="42" width="16" height="16" rx="3" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="584" y="55" class="svgtext" font-size="14">自动换行</text><text x="630" y="76" class="svgmuted" font-size="12" text-anchor="middle">复选框（勾选 / 未勾选）</text><rect x="230" y="110" width="260" height="118" rx="8" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><rect x="246" y="103" width="66" height="14" fill="var(--svg-fill)"/><text x="252" y="114" class="svgtext" font-size="13">对齐方式</text><circle cx="258" cy="146" r="8" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><circle cx="258" cy="146" r="2.2" fill="none" stroke="var(--accent)" stroke-width="4.4"/><text x="276" y="151" class="svgtext" font-size="14">左对齐</text><circle cx="258" cy="178" r="8" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="276" y="183" class="svgtext" font-size="14">居中</text><circle cx="258" cy="210" r="8" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="276" y="215" class="svgtext" font-size="14">右对齐</text><text x="360" y="252" class="svgmuted" font-size="12" text-anchor="middle">分组框（标题嵌于左上）内含一组单选按钮，其中一项选中</text></svg><figcaption>基础控件外观(一)：按钮 / 复选 / 单选 / 分组框（原创绘制）</figcaption></figure>
-<figure><svg viewBox="0 0 720 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="基础控件外观示意（二）"><text x="14" y="48" class="svgtext" font-size="15">用户名：</text><text x="48" y="116" class="svgmuted" font-size="12" text-anchor="middle">静态文本</text><rect x="130" y="28" width="200" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="140" y="50" class="svgtext" font-size="14">Liam Holmes</text><line x1="226" y1="35" x2="226" y2="55" stroke="var(--old-fg)" stroke-width="1.5"/><text x="230" y="116" class="svgmuted" font-size="12" text-anchor="middle">编辑框（单行，含插入光标）</text><rect x="420" y="14" width="286" height="86" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="432" y="38" class="svgtext" font-size="13">这是一个多行编辑框，</text><text x="432" y="58" class="svgtext" font-size="13">可以输入多行文字，</text><text x="432" y="78" class="svgtext" font-size="13">按回车换到下一行……</text><text x="563" y="116" class="svgmuted" font-size="12" text-anchor="middle">多行编辑框</text><rect x="14" y="144" width="180" height="110" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><rect x="15" y="166" width="178" height="22" fill="var(--svg-soft)"/><text x="24" y="160" class="svgtext" font-size="13">苹果 Apple</text><text x="24" y="182" class="svgtext" font-size="13">香蕉 Banana</text><text x="24" y="204" class="svgtext" font-size="13">樱桃 Cherry</text><text x="24" y="226" class="svgtext" font-size="13">葡萄 Grape</text><text x="24" y="248" class="svgtext" font-size="13">柠檬 Lemon</text><text x="104" y="278" class="svgmuted" font-size="12" text-anchor="middle">列表框（第二行高亮选中）</text><rect x="240" y="150" width="180" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="250" y="172" class="svgtext" font-size="14">北京</text><line x1="388" y1="154" x2="388" y2="180" stroke="var(--rule)" stroke-width="1"/><text x="404" y="172" class="svgmuted" font-size="11" text-anchor="middle">▼</text><text x="330" y="210" class="svgmuted" font-size="12" text-anchor="middle">组合框（收起）</text><rect x="470" y="150" width="180" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="480" y="172" class="svgtext" font-size="14">北京</text><line x1="618" y1="154" x2="618" y2="180" stroke="var(--rule)" stroke-width="1"/><text x="634" y="172" class="svgmuted" font-size="11" text-anchor="middle">▼</text><rect x="470" y="188" width="180" height="90" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><rect x="471" y="189" width="178" height="21" fill="var(--svg-soft)"/><text x="480" y="204" class="svgtext" font-size="13">北京</text><text x="480" y="226" class="svgtext" font-size="13">上海</text><text x="480" y="248" class="svgtext" font-size="13">广州</text><text x="480" y="270" class="svgtext" font-size="13">深圳</text><text x="560" y="298" class="svgmuted" font-size="12" text-anchor="middle">组合框（展开下拉列表）</text><rect x="684" y="144" width="20" height="132" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><rect x="684" y="144" width="20" height="20" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1"/><text x="694" y="158" class="svgmuted" font-size="10" text-anchor="middle">▲</text><rect x="684" y="256" width="20" height="20" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1"/><text x="694" y="270" class="svgmuted" font-size="10" text-anchor="middle">▼</text><rect x="687" y="176" width="14" height="44" rx="3" fill="var(--svg-soft)" stroke="var(--muted)" stroke-width="1"/><text x="706" y="298" class="svgmuted" font-size="12" text-anchor="end">垂直滚动条</text></svg><figcaption>基础控件外观(二)：静态 / 编辑框 / 列表框 / 组合框 / 滚动条（原创绘制）</figcaption></figure>
+<figure><svg viewBox="0 0 720 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="基础控件外观示意（二）"><text x="14" y="48" class="svgtext" font-size="15">用户名：</text><text x="43" y="80" class="svgmuted" font-size="12" text-anchor="middle">静态文本</text><rect x="130" y="28" width="200" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="140" y="50" class="svgtext" font-size="14">Liam Holmes</text><line x1="226" y1="35" x2="226" y2="55" stroke="var(--old-fg)" stroke-width="1.5"/><text x="230" y="80" class="svgmuted" font-size="12" text-anchor="middle">编辑框（单行，含插入光标）</text><rect x="420" y="14" width="286" height="86" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="432" y="38" class="svgtext" font-size="13">这是一个多行编辑框，</text><text x="432" y="58" class="svgtext" font-size="13">可以输入多行文字，</text><text x="432" y="78" class="svgtext" font-size="13">按回车换到下一行……</text><text x="563" y="118" class="svgmuted" font-size="12" text-anchor="middle">多行编辑框</text><rect x="14" y="144" width="180" height="110" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><rect x="15" y="166" width="178" height="22" fill="var(--svg-soft)"/><text x="24" y="160" class="svgtext" font-size="13">苹果 Apple</text><text x="24" y="182" class="svgtext" font-size="13">香蕉 Banana</text><text x="24" y="204" class="svgtext" font-size="13">樱桃 Cherry</text><text x="24" y="226" class="svgtext" font-size="13">葡萄 Grape</text><text x="24" y="248" class="svgtext" font-size="13">柠檬 Lemon</text><text x="104" y="272" class="svgmuted" font-size="12" text-anchor="middle">列表框（第二行高亮选中）</text><rect x="240" y="150" width="180" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="250" y="172" class="svgtext" font-size="14">北京</text><line x1="388" y1="154" x2="388" y2="180" stroke="var(--rule)" stroke-width="1"/><text x="404" y="172" class="svgmuted" font-size="11" text-anchor="middle">▼</text><text x="330" y="202" class="svgmuted" font-size="12" text-anchor="middle">组合框（收起）</text><rect x="470" y="150" width="180" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><text x="480" y="172" class="svgtext" font-size="14">北京</text><line x1="618" y1="154" x2="618" y2="180" stroke="var(--rule)" stroke-width="1"/><text x="634" y="172" class="svgmuted" font-size="11" text-anchor="middle">▼</text><rect x="470" y="188" width="180" height="90" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><rect x="471" y="189" width="178" height="21" fill="var(--svg-soft)"/><text x="480" y="204" class="svgtext" font-size="13">北京</text><text x="480" y="226" class="svgtext" font-size="13">上海</text><text x="480" y="248" class="svgtext" font-size="13">广州</text><text x="480" y="270" class="svgtext" font-size="13">深圳</text><text x="560" y="296" class="svgmuted" font-size="12" text-anchor="middle">组合框（展开下拉列表）</text><rect x="684" y="144" width="20" height="132" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/><rect x="684" y="144" width="20" height="20" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1"/><text x="694" y="158" class="svgmuted" font-size="10" text-anchor="middle">▲</text><rect x="684" y="256" width="20" height="20" fill="var(--svg-soft)" stroke="var(--rule)" stroke-width="1"/><text x="694" y="270" class="svgmuted" font-size="10" text-anchor="middle">▼</text><rect x="687" y="176" width="14" height="44" rx="3" fill="var(--svg-soft)" stroke="var(--muted)" stroke-width="1"/><text x="694" y="296" class="svgmuted" font-size="11" text-anchor="middle">滚动条</text></svg><figcaption>基础控件外观(二)：静态 / 编辑框 / 列表框 / 组合框 / 滚动条（原创绘制）</figcaption></figure>
+
+
+<h2 id="w9-notify">9.2 通知码：控件用什么向你汇报</h2>
+<p>上一节说控件靠 <code>WM_COMMAND</code> 向父窗口汇报。但「汇报」两个字太笼统了——按钮被点了是汇报，编辑框内容变了也是汇报，列表框换了选中项还是汇报。父窗口收到一条 <code>WM_COMMAND</code>，怎么知道到底发生了哪件事？</p>
+<p>答案就是<strong>通知码（notification code）</strong>：控件在发消息时，把「发生了什么」编成一个数字塞进参数里。你只要把它拆出来看一眼，就知道该做什么。</p>
+
+<h3>先把 WM_COMMAND 的三个参数拆开</h3>
+<figure data-mark="fig-notify-code">
+<svg viewBox="0 0 720 226" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<defs><marker id="ntf-ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs>
+<text class="svgmuted" x="24" y="18" font-size="12.5">一条 WM_COMMAND 里，三样信息挤在两个参数中：</text>
+
+<rect x="24" y="34" width="300" height="46" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text class="svgtext" x="174" y="54" text-anchor="middle" font-size="12.5" font-weight="700">wParam（32 位）</text>
+<line x1="174" y1="60" x2="174" y2="80" stroke="var(--rule)"/>
+<text class="svgmuted" x="99" y="74" text-anchor="middle" font-size="11">高 16 位</text>
+<text class="svgmuted" x="249" y="74" text-anchor="middle" font-size="11">低 16 位</text>
+
+<line x1="99" y1="80" x2="99" y2="106" stroke="var(--accent)" marker-end="url(#ntf-ar)"/>
+<line x1="249" y1="80" x2="249" y2="106" stroke="var(--accent)" marker-end="url(#ntf-ar)"/>
+
+<rect x="24" y="108" width="150" height="44" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="99" y="128" text-anchor="middle" font-size="12">HIWORD(wParam)</text>
+<text x="99" y="145" text-anchor="middle" font-size="11.5" fill="#e8590c" font-weight="600">通知码 = 发生了什么</text>
+
+<rect x="180" y="108" width="144" height="44" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="252" y="128" text-anchor="middle" font-size="12">LOWORD(wParam)</text>
+<text x="252" y="145" text-anchor="middle" font-size="11.5" fill="#1971c2" font-weight="600">控件 ID = 谁在说</text>
+
+<rect x="396" y="34" width="300" height="46" rx="6" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
+<text class="svgtext" x="546" y="62" text-anchor="middle" font-size="12.5" font-weight="700">lParam</text>
+<line x1="546" y1="80" x2="546" y2="106" stroke="var(--accent)" marker-end="url(#ntf-ar)"/>
+<rect x="396" y="108" width="300" height="44" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="546" y="128" text-anchor="middle" font-size="12">该控件的 HWND</text>
+<text class="svgmuted" x="546" y="145" text-anchor="middle" font-size="11">可直接拿去发消息，省一次 GetDlgItem</text>
+
+<text class="svgmuted" x="24" y="184" font-size="12">菜单项与快捷键也走 WM_COMMAND，靠通知码区分：<tspan font-weight="600">菜单为 0、快捷键为 1、控件则是各自的 xxN_ 码</tspan>，</text>
+<text class="svgmuted" x="24" y="204" font-size="12">且它们的 lParam 为 NULL——所以「这条命令是菜单点的还是按钮点的」，看 lParam 是否为空最直接。</text>
+</svg>
+<figcaption>图 9-1　WM_COMMAND 的参数拆解：谁在说、说了什么（原创绘制）</figcaption>
+</figure>
+
+<pre><code><span class="kw">case</span> WM_COMMAND: {
+    <span class="kw">int</span>  id     = LOWORD(wParam);      <span class="cm">// 谁在说：控件 ID</span>
+    <span class="kw">int</span>  code   = HIWORD(wParam);      <span class="cm">// 说了什么：通知码</span>
+    HWND hCtrl  = (HWND)lParam;        <span class="cm">// 该控件的窗口句柄（菜单/快捷键时为 NULL）</span>
+
+    <span class="kw">if</span> (id == IDC_OK &amp;&amp; code == BN_CLICKED) {
+        <span class="cm">// 「确定」按钮被按下了</span>
+    }
+    <span class="kw">return</span> 0;
+}</code></pre>
+
+<h3>六类控件的常用通知码</h3>
+<p>通知码的前缀就是控件的缩写：按钮 <code>BN_</code>、编辑框 <code>EN_</code>、列表框 <code>LBN_</code>、组合框 <code>CBN_</code>、静态控件 <code>STN_</code>。下表按控件分组，挑出实际会用到的：</p>
+
+<p><strong>按钮 BUTTON</strong></p>
+<table>
+<thead><tr><th>通知码</th><th>什么时候来</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>BN_CLICKED</code></td><td>按钮被按下并松开</td><td><strong>唯一常用的一个</strong>；复选框/单选钮的勾选变化也是它</td></tr>
+<tr><td class="nw"><code>BN_DBLCLK</code></td><td>双击</td><td>仅 <code>BS_RADIOBUTTON</code> / <code>BS_OWNERDRAW</code> 等样式才发</td></tr>
+<tr><td class="nw"><code>BN_SETFOCUS</code> / <code>BN_KILLFOCUS</code></td><td>获得 / 失去焦点</td><td>须带 <code>BS_NOTIFY</code> 样式才会发</td></tr>
+</tbody>
+</table>
+
+<p><strong>编辑框 EDIT</strong>——这是通知码用得最密的控件</p>
+<table>
+<thead><tr><th>通知码</th><th>什么时候来</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>EN_CHANGE</code></td><td>内容<strong>已经</strong>改变、且屏幕已更新</td><td><strong>最常用</strong>：实时校验、联动搜索都挂在它上面</td></tr>
+<tr><td class="nw"><code>EN_UPDATE</code></td><td>内容将改变，<strong>但还没画到屏幕上</strong></td><td>想在显示前拦下/修改内容时用</td></tr>
+<tr><td class="nw"><code>EN_SETFOCUS</code> / <code>EN_KILLFOCUS</code></td><td>获得 / 失去焦点</td><td>失焦时做整体校验的好时机</td></tr>
+<tr><td class="nw"><code>EN_MAXTEXT</code></td><td>输入超出长度上限，被截断</td><td>配合 <code>EM_LIMITTEXT</code> 提示用户</td></tr>
+<tr><td class="nw"><code>EN_ERRSPACE</code></td><td>内存不足，操作失败</td><td>罕见但应处理</td></tr>
+</tbody>
+</table>
+
+<p><strong>列表框 LISTBOX</strong>（须带 <code>LBS_NOTIFY</code> 样式才发选择类通知）</p>
+<table>
+<thead><tr><th>通知码</th><th>什么时候来</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>LBN_SELCHANGE</code></td><td>选中项改变</td><td><strong>最常用</strong>；用 <code>LB_GETCURSEL</code> 取新选中的索引</td></tr>
+<tr><td class="nw"><code>LBN_DBLCLK</code></td><td>双击某一项</td><td>典型用法：双击即「打开/确认」</td></tr>
+<tr><td class="nw"><code>LBN_SETFOCUS</code> / <code>LBN_KILLFOCUS</code></td><td>获得 / 失去焦点</td><td>—</td></tr>
+</tbody>
+</table>
+
+<p><strong>组合框 COMBOBOX</strong></p>
+<table>
+<thead><tr><th>通知码</th><th>什么时候来</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>CBN_SELCHANGE</code></td><td>从下拉列表中<strong>选了一项</strong></td><td><strong>最常用</strong>；用 <code>CB_GETCURSEL</code> 取索引</td></tr>
+<tr><td class="nw"><code>CBN_EDITCHANGE</code></td><td>用户<strong>在编辑区打字</strong>改了内容</td><td>与上一条互不重叠：一个是选、一个是打字</td></tr>
+<tr><td class="nw"><code>CBN_DROPDOWN</code> / <code>CBN_CLOSEUP</code></td><td>下拉列表展开 / 收起</td><td>常用于「展开前动态填充列表项」</td></tr>
+<tr><td class="nw"><code>CBN_SELENDOK</code></td><td>用户确认了选择</td><td>比 <code>CBN_SELCHANGE</code> 更「终态」</td></tr>
+</tbody>
+</table>
+
+<p><strong>静态控件 STATIC</strong>（须带 <code>SS_NOTIFY</code> 样式，否则它连鼠标都不接）</p>
+<table>
+<thead><tr><th>通知码</th><th>什么时候来</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>STN_CLICKED</code></td><td>被点击</td><td>做「可点击的文字链接」就靠它</td></tr>
+<tr><td class="nw"><code>STN_DBLCLK</code></td><td>被双击</td><td>—</td></tr>
+</tbody>
+</table>
+
+<h3>一个完整的例子</h3>
+<p>把上面串起来——一个带输入框、列表框和按钮的窗口，三种通知码各司其职：</p>
+<pre><code><span class="kw">case</span> WM_COMMAND: {
+    <span class="kw">int</span>  id   = LOWORD(wParam);
+    <span class="kw">int</span>  code = HIWORD(wParam);
+    HWND hCtl = (HWND)lParam;
+
+    <span class="cm">// ① 编辑框内容一变，就实时更新下方提示</span>
+    <span class="kw">if</span> (id == IDC_SEARCH &amp;&amp; code == EN_CHANGE) {
+        wchar_t text[256];
+        GetWindowTextW(hCtl, text, 256);      <span class="cm">// lParam 就是控件句柄，直接用</span>
+        UpdateSuggestList(text);
+        <span class="kw">return</span> 0;
+    }
+
+    <span class="cm">// ② 列表框换了选中项，同步显示详情</span>
+    <span class="kw">if</span> (id == IDC_LIST &amp;&amp; code == LBN_SELCHANGE) {
+        <span class="kw">int</span> sel = (<span class="kw">int</span>)SendMessageW(hCtl, LB_GETCURSEL, 0, 0);
+        <span class="kw">if</span> (sel != LB_ERR) ShowDetail(sel);
+        <span class="kw">return</span> 0;
+    }
+
+    <span class="cm">// ③ 按钮被点</span>
+    <span class="kw">if</span> (id == IDC_OK &amp;&amp; code == BN_CLICKED) {
+        DoSubmit();
+        <span class="kw">return</span> 0;
+    }
+
+    <span class="cm">// ④ 菜单项：lParam 为 NULL、通知码为 0</span>
+    <span class="kw">if</span> (hCtl == <span class="kw">nullptr</span> &amp;&amp; code == 0) {
+        <span class="kw">switch</span> (id) {
+            <span class="kw">case</span> IDM_FILE_OPEN: OnFileOpen(); <span class="kw">return</span> 0;
+            <span class="kw">case</span> IDM_FILE_EXIT: DestroyWindow(hwnd); <span class="kw">return</span> 0;
+        }
+    }
+    <span class="kw">break</span>;
+}</code></pre>
+
+<div class="note old">
+<span class="t">两个必踩的坑</span>
+<p><strong>① <code>EN_CHANGE</code> 会被你自己触发。</strong>只要有人改了编辑框内容就发，<strong>包括你在代码里调 <code>SetWindowTextW</code></strong>。如果你在 <code>EN_CHANGE</code> 处理函数里又去设置同一个编辑框的文本，就会无限递归。解法是加一个「正在程序内更新」的标志位，进处理函数先判断它。</p>
+<p><strong>② 很多通知码要样式配合才发。</strong>静态控件不加 <code>SS_NOTIFY</code> 就收不到点击、列表框不加 <code>LBS_NOTIFY</code> 就不报选择变化、按钮不加 <code>BS_NOTIFY</code> 就不报焦点变化。「我的消息怎么不来」十有八九是漏了样式，而不是代码写错。</p>
+</div>
+
+<div class="note new">
+<span class="t">新式控件走的是另一条路：WM_NOTIFY</span>
+<p><code>WM_COMMAND</code> 是 16 位时代的产物——通知码只有 16 位、除了控件 ID 之外几乎带不了别的信息。后来的通用控件（ListView、TreeView、Tab 等）改用 <code>WM_NOTIFY</code>：<code>lParam</code> 指向一个 <code>NMHDR</code> 结构（或以它开头的扩展结构），可以携带任意多的上下文——点中了哪一行哪一列、拖动到了什么位置、正在编辑哪个单元格。本章第 9 节讲 ListView 时会详细展开，那里你会看到同一个「控件汇报」的思路是如何被扩展的。</p>
+</div>
 
 <h2 id="w9-button">9.2 按钮 BUTTON：一个类名，八副面孔</h2>
 
@@ -2772,7 +2929,7 @@ CheckDlgButton(hwnd, IDC_CHK_ICE, BST_CHECKED);   <span class="cm">// 复选框�
 <tr><td><code>STM_SETIMAGE</code> / <code>STM_GETIMAGE</code></td><td>设/取图像，wParam 指明 <code>IMAGE_BITMAP</code>/<code>IMAGE_ICON</code>/<code>IMAGE_ENHMETAFILE</code>；返回旧句柄（注意释放，防泄漏）</td></tr>
 </tbody></table>
 
-<p>通知（须 <code>SS_NOTIFY</code>）：<code>STN_CLICKED</code>、<code>STN_DBLCLK</code>、<code>STN_ENABLE</code>、<code>STN_DISABLE</code>。</p>
+<p>通知（须&nbsp;<code>SS_NOTIFY</code>）：<code>STN_CLICKED</code>、<code>STN_DBLCLK</code>、<code>STN_ENABLE</code>、<code>STN_DISABLE</code>。</p>
 <p>想改标签的文字颜色？静态控件重绘前会给父窗口发 <code>WM_CTLCOLORSTATIC</code>，wParam 是它即将使用的 HDC，返回值是背景画刷——这是给基础控件"换肤"的正规轻量手段（编辑框对应 <code>WM_CTLCOLOREDIT</code>，列表框对应 <code>WM_CTLCOLORLISTBOX</code>，禁用的按钮文字则不吃这一套）：</p>
 
 <pre><code><span class="cl"><span class="kw">case</span> WM_CTLCOLORSTATIC:</span><span class="cl"><span class="cc" style="min-width:58.0ch">    <span class="kw">if</span> ((HWND)lParam == hLabelWarn)</span><span class="cm">// 只染这一个标签</span></span><span class="cl">    {</span><span class="cl">        SetTextColor((HDC)wParam, RGB(200, 0, 0));</span><span class="cl">        SetBkMode((HDC)wParam, TRANSPARENT);</span><span class="cl"><span class="cc" style="min-width:58.0ch">        <span class="kw">return</span> (LRESULT)GetSysColorBrush(COLOR_BTNFACE);</span><span class="cm">// 背景画刷</span></span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:58.0ch">    <span class="kw">break</span>;</span><span class="cm">// 其余交给 DefWindowProc</span></span></code></pre>
