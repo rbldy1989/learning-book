@@ -3301,6 +3301,84 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 </svg><figcaption>通用控件外观(二)：进度条 / 滑块 / 调节 / 日期 / 状态栏 / 工具栏（原创绘制）</figcaption></figure>
 
 <p>库里还有些成员本章不展开：超链接 SysLink、可拖工具条容器 Rebar、扩展组合框 ComboBoxEx；也有些已经进了历史博物馆：播放 AVI 的 Animate 控件、HotKey 与 IP 地址控件——见到认识即可，新代码不必再用。</p>
+<figure data-mark="fig-misc-ctrls">
+<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="16" font-size="12.5" font-weight="600">仍然值得知道的三个</text>
+
+<!-- SysLink -->
+<rect x="24" y="28" width="200" height="52" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="36" y="50" font-size="12.5">点击<tspan fill="#1971c2" text-decoration="underline">这里查看帮助</tspan></text>
+<text class="svgtext" x="36" y="70" font-size="12.5">或<tspan fill="#1971c2" text-decoration="underline">访问官网</tspan>了解更多</text>
+<text class="svgmuted" x="124" y="98" text-anchor="middle" font-size="11.5">SysLink（超链接）</text>
+<text class="svgmuted" x="124" y="114" text-anchor="middle" font-size="10.5">文本里嵌 &lt;a&gt; 标签，点击发 NM_CLICK</text>
+
+<!-- Rebar -->
+<rect x="256" y="28" width="240" height="52" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="256" y="28" width="240" height="26" fill="var(--svg-soft)"/>
+<rect x="262" y="32" width="5" height="18" rx="2" fill="var(--muted)" opacity=".55"/>
+<rect x="273" y="34" width="16" height="14" rx="2" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="293" y="34" width="16" height="14" rx="2" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="313" y="34" width="16" height="14" rx="2" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="344" y="32" width="5" height="18" rx="2" fill="var(--muted)" opacity=".55"/>
+<rect x="355" y="33" width="130" height="16" rx="2" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgmuted" x="362" y="45" font-size="10">地址栏…</text>
+<rect x="262" y="58" width="5" height="18" rx="2" fill="var(--muted)" opacity=".55"/>
+<rect x="273" y="60" width="70" height="14" rx="2" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgmuted" x="279" y="71" font-size="10">另一条带</text>
+<text class="svgmuted" x="376" y="98" text-anchor="middle" font-size="11.5">Rebar（可拖动的工具条容器）</text>
+<text class="svgmuted" x="376" y="114" text-anchor="middle" font-size="10.5">左侧竖纹是抓手，可拖动重排、折叠成多行</text>
+
+<!-- ComboBoxEx -->
+<rect x="528" y="28" width="168" height="30" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="536" y="35" width="16" height="16" rx="3" fill="#1971c2" opacity=".45"/>
+<text class="svgtext" x="560" y="48" font-size="12">本地磁盘 (C:)</text>
+<line x1="668" y1="32" x2="668" y2="54" stroke="var(--rule)"/>
+<text class="svgmuted" x="682" y="48" text-anchor="middle" font-size="10">▼</text>
+<rect x="528" y="60" width="168" height="22" rx="3" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<rect x="536" y="64" width="14" height="14" rx="3" fill="#0ca678" opacity=".45"/>
+<text class="svgtext" x="558" y="76" font-size="11.5">文档</text>
+<text class="svgmuted" x="612" y="98" text-anchor="middle" font-size="11.5">ComboBoxEx（带图标的组合框）</text>
+<text class="svgmuted" x="612" y="114" text-anchor="middle" font-size="10.5">每项可挂图标与缩进，资源管理器地址栏即是</text>
+
+<line x1="24" y1="134" x2="696" y2="134" stroke="var(--rule)"/>
+
+<text class="svgmuted" x="24" y="158" font-size="12.5" font-weight="600">已成历史，认得出即可（新代码不要用）</text>
+
+<!-- Animate -->
+<rect x="24" y="170" width="150" height="66" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M62 190 h30 v6 h-30 z M62 200 h30 v6 h-30 z" fill="var(--muted)" opacity=".35"/>
+<path d="M74 214 l16 -9 l0 18 z" fill="var(--muted)" opacity=".55"/>
+<text class="svgmuted" x="99" y="252" text-anchor="middle" font-size="11.5">Animate（播放 AVI）</text>
+<text x="99" y="268" text-anchor="middle" font-size="10.5" fill="#e8590c">当年「复制文件」的飞纸动画</text>
+
+<!-- HotKey -->
+<rect x="206" y="170" width="150" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="218" y="192" font-size="12">Ctrl + Alt + F5</text>
+<text class="svgmuted" x="281" y="252" text-anchor="middle" font-size="11.5">HotKey（录快捷键）</text>
+<text x="281" y="268" text-anchor="middle" font-size="10.5" fill="#e8590c">点进去按组合键，自动显示成文字</text>
+
+<!-- IP Address -->
+<rect x="388" y="170" width="180" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="404" y="192" font-size="12">192</text>
+<text class="svgmuted" x="436" y="192" font-size="12">.</text>
+<text class="svgtext" x="448" y="192" font-size="12">168</text>
+<text class="svgmuted" x="480" y="192" font-size="12">.</text>
+<text class="svgtext" x="492" y="192" font-size="12">1</text>
+<text class="svgmuted" x="516" y="192" font-size="12">.</text>
+<text class="svgtext" x="528" y="192" font-size="12">1</text>
+<text class="svgmuted" x="478" y="252" text-anchor="middle" font-size="11.5">IP Address（四段输入）</text>
+<text x="478" y="268" text-anchor="middle" font-size="10.5" fill="#e8590c">只认 IPv4，IPv6 时代已无用</text>
+
+<rect x="592" y="170" width="104" height="66" rx="6" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
+<text class="svgmuted" x="644" y="196" text-anchor="middle" font-size="11">这三个今天</text>
+<text class="svgmuted" x="644" y="214" text-anchor="middle" font-size="11">只在老程序里</text>
+<text class="svgmuted" x="644" y="232" text-anchor="middle" font-size="11">还能见到</text>
+
+<text class="svgmuted" x="24" y="298" font-size="12">前三个在现代 Win32 程序里仍有实际用处；后三个属于时代产物——维护老代码时认得出来就够了。</text>
+</svg>
+<figcaption>图 9-6　本章未展开的其余通用控件（原创绘制）</figcaption>
+</figure>
+
 
 <h2 id="w9-listview">9.9 列表视图 ListView：资源管理器的主角</h2>
 
