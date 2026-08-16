@@ -2689,11 +2689,14 @@ var SUN_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke
   var cur = null, ticking = false;
   function compute(){
     ticking = false;
-    var threshold = window.innerHeight / 3, best = -1e9, id = null;
-    for (var i = 0; i < heads.length; i++) {
-      var top = heads[i].getBoundingClientRect().top;
-      if (top <= threshold && top > best) { best = top; id = heads[i].id; }
+    var threshold = window.innerHeight / 3, id = null;
+    var lo = 0, hi = heads.length - 1, ans = -1;
+    while (lo <= hi) {
+      var mid = (lo + hi) >> 1;
+      if (heads[mid].getBoundingClientRect().top <= threshold) { ans = mid; lo = mid + 1; }
+      else { hi = mid - 1; }
     }
+    if (ans >= 0) id = heads[ans].id;
     if (id === cur) return;
     if (cur && linkMap[cur]) linkMap[cur].classList.remove('active');
     cur = id;
@@ -2711,7 +2714,7 @@ var SUN_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke
   sb.parentNode.insertBefore(rez, sb.nextSibling);
   var drag=false;
   rez.addEventListener('mousedown',function(e){drag=true;rez.classList.add('drag');document.body.style.userSelect='none';e.preventDefault();});
-  document.addEventListener('mousemove',function(e){if(!drag)return;var w=Math.max(180,Math.min(680,e.clientX));document.documentElement.style.setProperty('--sb',w+'px');});
+  var pw=0,pend=false;document.addEventListener('mousemove',function(e){if(!drag)return;pw=Math.max(180,Math.min(680,e.clientX));if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;document.documentElement.style.setProperty('--sb',pw+'px');});});
   document.addEventListener('mouseup',function(){if(!drag)return;drag=false;rez.classList.remove('drag');document.body.style.userSelect='';});
 })();
 </script><script>
