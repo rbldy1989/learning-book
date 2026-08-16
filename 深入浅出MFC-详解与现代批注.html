@@ -147,6 +147,13 @@ body.nav-hidden #sidebar, body.nav-hidden .sb-resizer{display:none;}
 #sidebar .booktitle, #sidebar .toc-title{padding-left:1.2em;}
 pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
+
+/* ===== 渲染性能：视口外内容跳过布局与绘制 ===== */
+section.chapter{content-visibility:auto;contain-intrinsic-size:auto 1200px;}
+figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
+pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
+table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
+#sidebar,#toc{will-change:scroll-position;}
 </style>
 </head>
 <body>
@@ -847,9 +854,162 @@ pre code .cc{display:inline-block;vertical-align:top;}
 <h2 id="ch3-t1">技术 ①　MFC 程序的生死因果</h2>
 <p>即上图揭示的启动/关闭链路。要点：<strong>控制权在框架手里，你只是往框架的几个「钩子」(<code>InitInstance</code> 等虚函数)里填代码。</strong>这是「控制反转 / 好莱坞原则(Don't call us, we'll call you)」的经典体现——你别调框架，框架会调你。</p>
 
+
+<p>这一节最容易让人迷路的地方是：你从头到尾没写过 <code>main()</code>，程序却跑了起来。下面这条时间轴把 <code>theApp</code> 的一生摊开——请特别留意最右边那一列，它标出每一步究竟是谁在驱动：C++ 运行期、MFC 内部，还是你自己写的那几行代码。</p>
+<figure data-mark="fig-ch3-t1-app-lifecycle">
+<svg viewBox="0 0 720 352" role="img" aria-label="MFC 程序从启动到结束的时间轴">
+<defs>
+<marker id="ch3t1-arw" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#868e96"/></marker>
+<marker id="ch3t1-loop" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#1971c2"/></marker>
+</defs>
+<text x="20" y="16" class="svgmuted" font-size="10.5">纵轴 = 时间；最右一列标出这一步由谁驱动</text>
+<line x1="32" y1="28" x2="32" y2="338" stroke="#868e96" stroke-width="1.5" marker-end="url(#ch3t1-arw)"/>
+<circle cx="32" cy="48" r="5.5" fill="#868e96" stroke="var(--svg-fill)" stroke-width="2"/>
+<line x1="38" y1="48" x2="54" y2="48" stroke="var(--rule)"/>
+<rect x="56" y="34" width="628" height="28" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="68" y="52" class="svgtext" font-size="12" font-weight="600">theApp 构造</text>
+<text x="192" y="52" class="svgmuted" font-size="10.5">在 main 之前，C++ 全局对象初始化阶段就完成</text>
+<text x="674" y="52" font-size="10" fill="#868e96" text-anchor="end">C++ 运行期</text>
+<circle cx="32" cy="86" r="5.5" fill="#1971c2" stroke="var(--svg-fill)" stroke-width="2"/>
+<line x1="38" y1="86" x2="54" y2="86" stroke="var(--rule)"/>
+<rect x="56" y="72" width="628" height="28" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="68" y="90" class="svgtext" font-size="12" font-weight="600">AfxWinMain()</text>
+<text x="192" y="90" class="svgmuted" font-size="10.5">你没写 main：MFC 库里的 WinMain 拿到控制权</text>
+<text x="674" y="90" font-size="10" fill="#1971c2" text-anchor="end">MFC 内部</text>
+<circle cx="32" cy="124" r="5.5" fill="#1971c2" stroke="var(--svg-fill)" stroke-width="2"/>
+<line x1="38" y1="124" x2="54" y2="124" stroke="var(--rule)"/>
+<rect x="56" y="110" width="628" height="28" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="68" y="128" class="svgtext" font-size="12" font-weight="600">找到 theApp</text>
+<text x="192" y="128" class="svgmuted" font-size="10.5">AfxGetApp() 取得那个全局唯一的应用程序对象</text>
+<text x="674" y="128" font-size="10" fill="#1971c2" text-anchor="end">MFC 内部</text>
+<circle cx="32" cy="162" r="5.5" fill="#0ca678" stroke="var(--svg-fill)" stroke-width="2"/>
+<line x1="38" y1="162" x2="54" y2="162" stroke="var(--rule)"/>
+<rect x="56" y="148" width="628" height="28" rx="6" fill="var(--svg-fill)" stroke="#0ca678"/>
+<text x="68" y="166" class="svgtext" font-size="12" font-weight="600">InitInstance()</text>
+<text x="192" y="166" class="svgmuted" font-size="10.5">你写的代码：new CMainFrame → ShowWindow → UpdateWindow</text>
+<text x="674" y="166" font-size="10" fill="#0ca678" text-anchor="end">你的代码</text>
+<circle cx="32" cy="200" r="5.5" fill="#1971c2" stroke="var(--svg-fill)" stroke-width="2"/>
+<line x1="38" y1="200" x2="54" y2="200" stroke="var(--rule)"/>
+<rect x="56" y="186" width="628" height="28" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="68" y="204" class="svgtext" font-size="12" font-weight="600">Run() 消息循环</text>
+<text x="192" y="204" class="svgmuted" font-size="10.5">GetMessage → TranslateMessage → DispatchMessage 反复</text>
+<text x="674" y="204" font-size="10" fill="#1971c2" text-anchor="end">MFC 内部</text>
+<path d="M684 192C712 192 712 208 688 208" fill="none" stroke="#1971c2" stroke-width="1.4" marker-end="url(#ch3t1-loop)"/>
+<circle cx="32" cy="238" r="5.5" fill="#e8590c" stroke="var(--svg-fill)" stroke-width="2"/>
+<line x1="38" y1="238" x2="54" y2="238" stroke="var(--rule)"/>
+<rect x="56" y="224" width="628" height="28" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text x="68" y="242" class="svgtext" font-size="12" font-weight="600">用户关闭窗口</text>
+<text x="192" y="242" class="svgmuted" font-size="10.5">WM_CLOSE → PostQuitMessage() → GetMessage 返回 0</text>
+<text x="674" y="242" font-size="10" fill="#e8590c" text-anchor="end">用户操作</text>
+<circle cx="32" cy="276" r="5.5" fill="#0ca678" stroke="var(--svg-fill)" stroke-width="2"/>
+<line x1="38" y1="276" x2="54" y2="276" stroke="var(--rule)"/>
+<rect x="56" y="262" width="628" height="28" rx="6" fill="var(--svg-fill)" stroke="#0ca678"/>
+<text x="68" y="280" class="svgtext" font-size="12" font-weight="600">ExitInstance()</text>
+<text x="192" y="280" class="svgmuted" font-size="10.5">你写的善后代码：释放资源、保存设置</text>
+<text x="674" y="280" font-size="10" fill="#0ca678" text-anchor="end">你的代码</text>
+<circle cx="32" cy="314" r="5.5" fill="#868e96" stroke="var(--svg-fill)" stroke-width="2"/>
+<line x1="38" y1="314" x2="54" y2="314" stroke="var(--rule)"/>
+<rect x="56" y="300" width="628" height="28" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="68" y="318" class="svgtext" font-size="12" font-weight="600">theApp 析构</text>
+<text x="192" y="318" class="svgmuted" font-size="10.5">全局对象最后被销毁，进程到此真正结束</text>
+<text x="674" y="318" font-size="10" fill="#868e96" text-anchor="end">C++ 运行期</text>
+</svg>
+<figcaption>图 3-1　MFC 程序的生死链路：从 theApp 构造到 theApp 析构（原创绘制）</figcaption>
+</figure>
 <h2 id="ch3-t2">技术 ②　RTTI（执行期型别辨识）</h2>
 <p>要在运行时认出「手上这对象到底是谁」，核心是一个小小的数据结构 <strong><code>CRuntimeClass</code></strong>。每个类都配一个<strong>静态的</strong> <code>CRuntimeClass</code> 实例（静态，所以同一个类的所有对象共用这一份「身份证」），里面装三样东西：<strong>类名字符串、对象大小、一根指向父类那张身份证的指针</strong>。就是这根「指向父类」的指针，把所有类的身份证串成了一张网——顺着它往上爬，就能查清一个类的完整血统。</p>
 <pre><code><span class="cl"><span class="cm">// 原创极简示意：模拟 CRuntimeClass 的思路</span></span><span class="cl"><span class="kw">struct</span> CRuntimeClass {</span><span class="cl"><span class="cc" style="min-width:34.0ch">    <span class="kw">const char</span>* m_className;</span><span class="cm">// 类名</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    <span class="kw">int</span>          m_objSize;</span><span class="cm">// 对象大小</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    CRuntimeClass* m_pBaseClass;</span><span class="cm">// 指向父类的 CRuntimeClass → 串成链</span></span><span class="cl">};</span><span class="cl"><span class="cm">// IsKindOf：沿 m_pBaseClass 链往上找，看看是不是某类或其派生</span></span><span class="cl"><span class="kw">bool</span> IsKindOf(CRuntimeClass* pTarget) {</span><span class="cl">    <span class="kw">for</span> (CRuntimeClass* p = GetRuntimeClass(); p; p = p-&gt;m_pBaseClass)</span><span class="cl">        <span class="kw">if</span> (p == pTarget) <span class="kw">return</span> <span class="kw">true</span>;</span><span class="cl">    <span class="kw">return</span> <span class="kw">false</span>;</span><span class="cl">}</span></code></pre>
+<p>C++ 本身并不记得对象的类名，MFC 就自己补了一张：每个类随身带一张编译期生成的静态「身份证」<code>CRuntimeClass</code>，上面写着自己叫什么、多大、父亲那张在哪儿、以及怎么把自己造出来。这些身份证靠父指针彼此挂钩，织成一张覆盖整个类库的网——所谓运行期类型识别，不过是在这张网上向上走几步而已。</p>
+<figure data-mark="fig-ch3-t2-runtimeclass-net">
+<svg viewBox="0 0 720 340" role="img" aria-label="CRuntimeClass 型录网与 IsKindOf 向上遍历">
+<defs>
+<marker id="ch3t2-ptr" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#1971c2"/></marker>
+<marker id="ch3t2-walk" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#7048e8"/></marker>
+</defs>
+<text x="25" y="18" class="svgmuted" font-size="10.5">每类一张静态「身份证」CRuntimeClass；箭头 = m_pBaseClass，指向父类那张</text>
+<rect x="25" y="30" width="142" height="100" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M25 38a8 8 0 0 1 8-8h126a8 8 0 0 1 8 8v16H25z" fill="var(--svg-soft2)"/>
+<line x1="25" y1="54" x2="167" y2="54" stroke="var(--rule)"/>
+<text x="35" y="47" class="svgtext" font-size="12.5" font-weight="600">CObject</text>
+<text x="34" y="68" class="svgmuted" font-size="9.5">类名</text>
+<text x="71" y="68" class="svgtext" font-size="10">"CObject"</text>
+<text x="34" y="87" class="svgmuted" font-size="9.5">大小</text>
+<text x="71" y="87" class="svgtext" font-size="10">4 字节</text>
+<text x="34" y="106" class="svgmuted" font-size="9.5">父类</text>
+<text x="71" y="106" class="svgmuted" font-size="10">NULL（根）</text>
+<text x="34" y="125" class="svgmuted" font-size="9.5">创建</text>
+<text x="71" y="125" class="svgmuted" font-size="10">NULL</text>
+<rect x="201" y="30" width="142" height="100" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M201 38a8 8 0 0 1 8-8h126a8 8 0 0 1 8 8v16H201z" fill="var(--svg-soft)"/>
+<line x1="201" y1="54" x2="343" y2="54" stroke="var(--rule)"/>
+<text x="211" y="47" class="svgtext" font-size="12.5" font-weight="600">CCmdTarget</text>
+<text x="210" y="68" class="svgmuted" font-size="9.5">类名</text>
+<text x="247" y="68" class="svgtext" font-size="10">"CCmdTarget"</text>
+<text x="210" y="87" class="svgmuted" font-size="9.5">大小</text>
+<text x="247" y="87" class="svgtext" font-size="10">8 字节</text>
+<text x="210" y="106" class="svgmuted" font-size="9.5">父类</text>
+<text x="247" y="106" font-size="10" fill="#1971c2">→ CObject</text>
+<text x="210" y="125" class="svgmuted" font-size="9.5">创建</text>
+<text x="247" y="125" class="svgmuted" font-size="10">NULL</text>
+<rect x="377" y="30" width="142" height="100" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M377 38a8 8 0 0 1 8-8h126a8 8 0 0 1 8 8v16H377z" fill="var(--svg-soft)"/>
+<line x1="377" y1="54" x2="519" y2="54" stroke="var(--rule)"/>
+<text x="387" y="47" class="svgtext" font-size="12.5" font-weight="600">CWnd</text>
+<text x="386" y="68" class="svgmuted" font-size="9.5">类名</text>
+<text x="423" y="68" class="svgtext" font-size="10">"CWnd"</text>
+<text x="386" y="87" class="svgmuted" font-size="9.5">大小</text>
+<text x="423" y="87" class="svgtext" font-size="10">96 字节</text>
+<text x="386" y="106" class="svgmuted" font-size="9.5">父类</text>
+<text x="423" y="106" font-size="10" fill="#1971c2">→ CCmdTarget</text>
+<text x="386" y="125" class="svgmuted" font-size="9.5">创建</text>
+<text x="423" y="125" class="svgmuted" font-size="10">NULL</text>
+<rect x="553" y="30" width="142" height="100" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M553 38a8 8 0 0 1 8-8h126a8 8 0 0 1 8 8v16H553z" fill="var(--svg-soft)"/>
+<line x1="553" y1="54" x2="695" y2="54" stroke="var(--rule)"/>
+<text x="563" y="47" class="svgtext" font-size="12.5" font-weight="600">CView</text>
+<text x="562" y="68" class="svgmuted" font-size="9.5">类名</text>
+<text x="599" y="68" class="svgtext" font-size="10">"CView"</text>
+<text x="562" y="87" class="svgmuted" font-size="9.5">大小</text>
+<text x="599" y="87" class="svgtext" font-size="10">116 字节</text>
+<text x="562" y="106" class="svgmuted" font-size="9.5">父类</text>
+<text x="599" y="106" font-size="10" fill="#1971c2">→ CWnd</text>
+<text x="562" y="125" class="svgmuted" font-size="9.5">创建</text>
+<text x="599" y="125" class="svgtext" font-size="10">CreateObject</text>
+<rect x="377" y="152" width="142" height="100" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M377 160a8 8 0 0 1 8-8h126a8 8 0 0 1 8 8v16H377z" fill="var(--svg-soft)"/>
+<line x1="377" y1="176" x2="519" y2="176" stroke="var(--rule)"/>
+<text x="387" y="169" class="svgtext" font-size="12.5" font-weight="600">CFrameWnd</text>
+<text x="386" y="190" class="svgmuted" font-size="9.5">类名</text>
+<text x="423" y="190" class="svgtext" font-size="10">"CFrameWnd"</text>
+<text x="386" y="209" class="svgmuted" font-size="9.5">大小</text>
+<text x="423" y="209" class="svgtext" font-size="10">220 字节</text>
+<text x="386" y="228" class="svgmuted" font-size="9.5">父类</text>
+<text x="423" y="228" font-size="10" fill="#1971c2">→ CWnd</text>
+<text x="386" y="247" class="svgmuted" font-size="9.5">创建</text>
+<text x="423" y="247" class="svgtext" font-size="10">CreateObject</text>
+<line x1="199" y1="80" x2="169" y2="80" stroke="#1971c2" stroke-width="1.5" marker-end="url(#ch3t2-ptr)"/>
+<line x1="375" y1="80" x2="345" y2="80" stroke="#1971c2" stroke-width="1.5" marker-end="url(#ch3t2-ptr)"/>
+<line x1="551" y1="80" x2="521" y2="80" stroke="#1971c2" stroke-width="1.5" marker-end="url(#ch3t2-ptr)"/>
+<line x1="448" y1="152" x2="448" y2="133" stroke="#1971c2" stroke-width="1.5" marker-end="url(#ch3t2-ptr)"/>
+<line x1="553" y1="168" x2="553" y2="234" stroke="var(--rule)" stroke-width="2"/>
+<text x="562" y="180" class="svgmuted" font-size="9.5">注：只有声明了</text>
+<text x="562" y="196" class="svgmuted" font-size="9.5">DECLARE_DYNCREATE 的类，</text>
+<text x="562" y="212" class="svgmuted" font-size="9.5">才填「创建」这一栏，</text>
+<text x="562" y="228" class="svgmuted" font-size="9.5">这就是动态创建的钥匙。</text>
+<text x="25" y="272" class="svgtext" font-size="11">pView-&gt;IsKindOf(RUNTIME_CLASS(CCmdTarget))：从自己那张出发，沿父指针向上逐张比对</text>
+<rect x="560" y="286" width="128" height="26" rx="13" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="624" y="303" class="svgtext" font-size="10.5" text-anchor="middle">① CView ≠ 目标</text>
+<line x1="558" y1="299" x2="516" y2="299" stroke="#7048e8" stroke-width="1.5" marker-end="url(#ch3t2-walk)"/>
+<rect x="384" y="286" width="128" height="26" rx="13" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="448" y="303" class="svgtext" font-size="10.5" text-anchor="middle">② CWnd ≠ 目标</text>
+<line x1="382" y1="299" x2="340" y2="299" stroke="#7048e8" stroke-width="1.5" marker-end="url(#ch3t2-walk)"/>
+<rect x="208" y="286" width="128" height="26" rx="13" fill="var(--svg-fill)" stroke="#0ca678" stroke-width="1.5"/>
+<text x="272" y="303" font-size="10.5" fill="#0ca678" text-anchor="middle" font-weight="600">③ CCmdTarget = 目标</text>
+<text x="272" y="330" font-size="10.5" fill="#0ca678" text-anchor="middle">IsKindOf 返回 TRUE</text>
+</svg>
+<figcaption>图 3-2　CRuntimeClass 型录网：静态身份证靠父指针串成网，IsKindOf 就是沿网上溯（原创绘制）</figcaption>
+</figure>
+
 <p>这套东西靠宏 <code>DECLARE_DYNAMIC</code> / <code>IMPLEMENT_DYNAMIC</code> 自动生成。<strong>宏的作用就是「帮你把那段重复的 <code>CRuntimeClass</code> 声明与初始化代码，一键展开塞进每个类」</strong>——看穿这一点，MFC 满屏的宏就不再吓人。</p>
 <div class="note new">
 <span class="t">🔵 现代更新</span>
@@ -875,6 +1035,70 @@ pre code .cc{display:inline-block;vertical-align:top;}
 <h2 id="ch3-t5">技术 ⑤　Message Mapping（消息映射）</h2>
 <p>还记得第 1 章埋的那个伏笔吗——用「查表」干掉丑陋的 <code>switch(msg)</code>。这里就把它兑现成完整机制。你平时在类里写的，是这么一组宏：</p>
 <pre><code><span class="cl">BEGIN_MESSAGE_MAP(CMyWnd, CFrameWnd)</span><span class="cl"><span class="cc" style="min-width:42.0ch">    ON_WM_PAINT()</span><span class="cm">// WM_PAINT   → OnPaint()</span></span><span class="cl"><span class="cc" style="min-width:42.0ch">    ON_WM_LBUTTONDOWN()</span><span class="cm">// 左键按下   → OnLButtonDown()</span></span><span class="cl"><span class="cc" style="min-width:42.0ch">    ON_COMMAND(ID_FILE_OPEN, OnFileOpen)</span><span class="cm">// 菜单命令   → OnFileOpen()</span></span><span class="cl">END_MESSAGE_MAP()</span></code></pre>
+<p>在把消息映射当成魔法之前，先看看它在内存里到底长什么样。每个类都有一张编译期就生成好的静态表，表里是一条条 <code>{ 消息 ID , 处理函数 }</code>；表头留了一个 <code>pBase</code> 指针指向父类的表——于是全体类的表串成了一条链。消息进来时，MFC 做的事朴素得让人失望：沿着这条链一级一级往上找，谁先认领就交给谁。</p>
+<figure data-mark="fig-ch3-t5-msgmap-chain">
+<svg viewBox="0 0 720 358" role="img" aria-label="消息映射表串成链表，消息沿链逐级查找">
+<defs>
+<marker id="ch3t5-ptr" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#1971c2"/></marker>
+<marker id="ch3t5-seek" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#7048e8"/></marker>
+<marker id="ch3t5-hit" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#0ca678"/></marker>
+</defs>
+<text x="40" y="40" class="svgmuted" font-size="10.5">每类一张静态表；每条 = { 消息 ID , 处理函数 }</text>
+<rect x="40" y="50" width="330" height="70" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M40 58a8 8 0 0 1 8-8h314a8 8 0 0 1 8 8v14H40z" fill="var(--svg-soft)"/>
+<line x1="40" y1="72" x2="370" y2="72" stroke="var(--rule)"/>
+<rect x="48" y="54" width="54" height="14" rx="3" fill="var(--svg-fill)" stroke="#1971c2"/>
+<text x="75" y="64.5" font-size="9.5" fill="#1971c2" text-anchor="middle">pBase</text>
+<text x="112" y="66" class="svgtext" font-size="12" font-weight="600">CMyView 的 AFX_MSGMAP</text>
+<line x1="232" y1="72" x2="232" y2="120" stroke="var(--rule)"/>
+<text x="52" y="89" class="svgtext" font-size="11">WM_PAINT</text>
+<text x="244" y="89" class="svgtext" font-size="11">OnPaint</text>
+<text x="52" y="113" class="svgtext" font-size="11">WM_CHAR</text>
+<text x="244" y="113" class="svgtext" font-size="11">OnChar</text>
+<line x1="75" y1="120" x2="75" y2="144" stroke="#1971c2" stroke-width="1.5" marker-end="url(#ch3t5-ptr)"/>
+<text x="86" y="137" font-size="10" fill="#1971c2">指向父类的表</text>
+<rect x="40" y="146" width="330" height="70" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M40 154a8 8 0 0 1 8-8h314a8 8 0 0 1 8 8v14H40z" fill="var(--svg-soft)"/>
+<line x1="40" y1="168" x2="370" y2="168" stroke="var(--rule)"/>
+<rect x="48" y="150" width="54" height="14" rx="3" fill="var(--svg-fill)" stroke="#1971c2"/>
+<text x="75" y="160.5" font-size="9.5" fill="#1971c2" text-anchor="middle">pBase</text>
+<text x="112" y="162" class="svgtext" font-size="12" font-weight="600">CView 的 AFX_MSGMAP</text>
+<line x1="232" y1="168" x2="232" y2="216" stroke="var(--rule)"/>
+<text x="52" y="185" class="svgtext" font-size="11">WM_MOUSEACTIVATE</text>
+<text x="244" y="185" class="svgtext" font-size="11">OnMouseActivate</text>
+<text x="52" y="209" class="svgtext" font-size="11">WM_ERASEBKGND</text>
+<text x="244" y="209" class="svgtext" font-size="11">OnEraseBkgnd</text>
+<line x1="75" y1="216" x2="75" y2="240" stroke="#1971c2" stroke-width="1.5" marker-end="url(#ch3t5-ptr)"/>
+<rect x="40" y="242" width="330" height="70" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<path d="M40 250a8 8 0 0 1 8-8h314a8 8 0 0 1 8 8v14H40z" fill="var(--svg-soft)"/>
+<line x1="40" y1="264" x2="370" y2="264" stroke="var(--rule)"/>
+<rect x="48" y="246" width="54" height="14" rx="3" fill="var(--svg-fill)" stroke="#1971c2"/>
+<text x="75" y="256.5" font-size="9.5" fill="#1971c2" text-anchor="middle">pBase</text>
+<text x="112" y="258" class="svgtext" font-size="12" font-weight="600">CWnd 的 AFX_MSGMAP</text>
+<line x1="232" y1="264" x2="232" y2="312" stroke="var(--rule)"/>
+<rect x="43" y="266" width="324" height="20" rx="4" fill="none" stroke="#0ca678" stroke-width="1.5"/>
+<text x="52" y="281" class="svgtext" font-size="11">WM_LBUTTONDOWN</text>
+<text x="244" y="281" class="svgtext" font-size="11">OnLButtonDown</text>
+<text x="52" y="305" class="svgtext" font-size="11">WM_MOUSEMOVE</text>
+<text x="244" y="305" class="svgtext" font-size="11">OnMouseMove</text>
+<line x1="75" y1="312" x2="75" y2="332" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ch3t5-ptr)"/>
+<text x="86" y="329" class="svgmuted" font-size="10">CCmdTarget → CObject（链尾）</text>
+<text x="40" y="348" class="svgmuted" font-size="10.5">走到链尾仍未命中 → 交给 DefWindowProc() 默认处理</text>
+<rect x="400" y="12" width="300" height="28" rx="14" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text x="550" y="31" class="svgtext" font-size="12" text-anchor="middle">消息进来：WM_LBUTTONDOWN</text>
+<line x1="550" y1="40" x2="550" y2="292" stroke="#7048e8" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ch3t5-seek)"/>
+<line x1="548" y1="92" x2="378" y2="92" stroke="#7048e8" stroke-width="1.5" marker-end="url(#ch3t5-seek)"/>
+<text x="463" y="80" font-size="11" fill="#7048e8" text-anchor="middle">① 查 CMyView 表 · 未命中</text>
+<line x1="548" y1="188" x2="378" y2="188" stroke="#7048e8" stroke-width="1.5" marker-end="url(#ch3t5-seek)"/>
+<text x="463" y="176" font-size="11" fill="#7048e8" text-anchor="middle">② 上溯 CView 表 · 未命中</text>
+<line x1="548" y1="281" x2="378" y2="281" stroke="#0ca678" stroke-width="1.8" marker-end="url(#ch3t5-hit)"/>
+<text x="463" y="269" font-size="11" fill="#0ca678" text-anchor="middle">③ 上溯 CWnd 表 · 命中</text>
+<rect x="406" y="298" width="288" height="30" rx="6" fill="var(--svg-fill)" stroke="#0ca678"/>
+<text x="550" y="317" font-size="11.5" fill="#0ca678" text-anchor="middle" font-weight="600">调用 CWnd::OnLButtonDown()</text>
+</svg>
+<figcaption>图 3-5　消息映射表串成的链：一条消息如何沿链逐级找到自己的处理函数（原创绘制）</figcaption>
+</figure>
+
 <p>宏展开后，其实是在类里生成一张<strong>静态的「消息 ID → 成员函数指针」表(<code>AFX_MSGMAP</code>)</strong>，并让每个类的表<strong>记住父类的表地址</strong>，从而串成一条链。MFC 内部那个统一的窗口函数收到消息后，就<strong>从本类的表开始查，查不到就顺着链到父类表继续查</strong>，直到找到处理函数或到达 <code>CObject</code>。</p>
 <figure>
 <svg viewBox="0 0 700 172" xmlns="http://www.w3.org/2000/svg" font-size="13">
@@ -1506,6 +1730,71 @@ m_pMainWnd-&gt;DragAcceptFiles();
 </ol>
 <p>所以你从头到尾没写一句 <code>new CMyDoc</code>，对象却齐活了。<strong>这正是第 3 章技术③(动态创建)最大的实战舞台。</strong>没有动态创建，文档模板这套「按配方造对象」的机制根本不成立——你现在该体会到六大技术为什么环环相扣了。</p>
 
+
+<p>文档模板本身不是文档，也不是窗口，它更像户籍科的档案柜：柜子里放着三张「身份证」（CRuntimeClass），等你点下【新建】，它就照着身份证把三个对象一次造齐，再顺手把它们互相牵上线。</p>
+<figure data-mark="fig-ch8-template-trio">
+<svg viewBox="0 0 720 360" role="img" aria-label="文档模板握着文档类、视图类、框架窗口类三张运行时类信息，在新建时动态创建三个对象并互相关联">
+  <defs>
+    <marker id="ch8t-arB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#1971c2"/></marker>
+    <marker id="ch8t-arG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#0ca678"/></marker>
+    <marker id="ch8t-arO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#e8590c"/></marker>
+  </defs>
+
+  <rect x="30" y="14" width="660" height="100" rx="12" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+  <text class="svgtext" x="46" y="36" font-size="13">CDocTemplate（文档模板）：手里攥着三张「身份证」</text>
+
+  <rect x="46" y="46" width="200" height="54" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <circle cx="66" cy="64" r="9" fill="#1971c2"/>
+  <text x="66" y="68" font-size="11" fill="#ffffff" text-anchor="middle">1</text>
+  <text class="svgtext" x="82" y="68" font-size="12">文档类 CMyDoc</text>
+  <text class="svgmuted" x="58" y="90" font-size="11" font-family="ui-monospace, Consolas, monospace">RUNTIME_CLASS(CMyDoc)</text>
+
+  <rect x="260" y="46" width="200" height="54" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <circle cx="280" cy="64" r="9" fill="#e8590c"/>
+  <text x="280" y="68" font-size="11" fill="#ffffff" text-anchor="middle">2</text>
+  <text class="svgtext" x="296" y="68" font-size="12">视图类 CMyView</text>
+  <text class="svgmuted" x="272" y="90" font-size="11" font-family="ui-monospace, Consolas, monospace">RUNTIME_CLASS(CMyView)</text>
+
+  <rect x="474" y="46" width="200" height="54" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <circle cx="494" cy="64" r="9" fill="#0ca678"/>
+  <text x="494" y="68" font-size="11" fill="#ffffff" text-anchor="middle">3</text>
+  <text class="svgtext" x="510" y="68" font-size="12">框架类 CMainFrame</text>
+  <text class="svgmuted" x="486" y="90" font-size="11" font-family="ui-monospace, Consolas, monospace">RUNTIME_CLASS(CMainFrame)</text>
+
+  <rect x="150" y="128" width="420" height="36" rx="18" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <text class="svgtext" x="360" y="151" font-size="12" text-anchor="middle">用户点【文件 → 新建】：模板按身份证 CreateObject() 造出对象</text>
+
+  <line x1="135" y1="170" x2="135" y2="208" stroke="#1971c2" stroke-width="1.6" marker-end="url(#ch8t-arB)"/>
+  <line x1="560" y1="170" x2="560" y2="190" stroke="#0ca678" stroke-width="1.6" marker-end="url(#ch8t-arG)"/>
+
+  <rect x="30" y="214" width="200" height="104" rx="10" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="1.5"/>
+  <circle cx="52" cy="236" r="9" fill="#1971c2"/>
+  <text x="52" y="240" font-size="11" fill="#ffffff" text-anchor="middle">1</text>
+  <text class="svgtext" x="68" y="240" font-size="12">CMyDoc　文档</text>
+  <text class="svgmuted" x="46" y="266" font-size="11">只管数据，不碰屏幕</text>
+  <text class="svgmuted" x="46" y="288" font-size="11">m_viewList：我有哪些视图</text>
+
+  <rect x="300" y="196" width="390" height="140" rx="10" fill="var(--svg-fill)" stroke="#0ca678" stroke-width="1.5"/>
+  <circle cx="322" cy="218" r="9" fill="#0ca678"/>
+  <text x="322" y="222" font-size="11" fill="#ffffff" text-anchor="middle">3</text>
+  <text class="svgtext" x="338" y="222" font-size="12">CMainFrame　框架窗口（菜单、工具栏、边框）</text>
+
+  <rect x="318" y="240" width="354" height="78" rx="8" fill="var(--svg-soft2)" stroke="#e8590c" stroke-width="1.5"/>
+  <circle cx="340" cy="262" r="9" fill="#e8590c"/>
+  <text x="340" y="266" font-size="11" fill="#ffffff" text-anchor="middle">2</text>
+  <text class="svgtext" x="356" y="266" font-size="12">CMyView　视图：负责把数据画到屏幕上</text>
+  <text class="svgmuted" x="336" y="294" font-size="11">GetDocument() 随时拿到文档指针</text>
+  <text class="svgmuted" x="318" y="331" font-size="11">视图铺满框架的客户区，是框架的子窗口</text>
+
+  <line x1="314" y1="254" x2="236" y2="254" stroke="#e8590c" stroke-width="1.4" marker-end="url(#ch8t-arO)"/>
+  <text x="275" y="246" font-size="11" fill="#e8590c" text-anchor="middle" font-family="ui-monospace, Consolas, monospace">m_pDocument</text>
+  <line x1="236" y1="292" x2="314" y2="292" stroke="#1971c2" stroke-width="1.4" marker-end="url(#ch8t-arB)"/>
+  <text x="275" y="284" font-size="11" fill="#1971c2" text-anchor="middle" font-family="ui-monospace, Consolas, monospace">AddView</text>
+
+  <text class="svgmuted" x="30" y="352" font-size="11">三个对象一出生就互相认识 —— 这条「牵线」正是模板替你做的事。</text>
+</svg>
+<figcaption>图 8-2　文档模板用三张「身份证」造齐三件套并互相牵线（原创绘制）</figcaption>
+</figure>
 <h2 id="ch8-getdoc">View 找 Doc：GetDocument 的门道</h2>
 <p>视图要画数据，得先拿到文档。方法是 <code>GetDocument()</code>。这里有个值得说的细节：向导为你生成的 <code>GetDocument()</code> 会<strong>做一次向下转型</strong>，把基类的 <code>CDocument*</code> 转成你的 <code>CMyDoc*</code>，让你能直接访问自己文档的成员：</p>
 <pre><code><span class="cl"><span class="cc" style="min-width:59.0ch">CMyDoc* CMyView::GetDocument() {</span><span class="cm">// 向导生成的版本（示意）</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">    ASSERT(m_pDocument-&gt;IsKindOf(RUNTIME_CLASS(CMyDoc)));</span><span class="cm">// ★ 用第 3 章的 RTTI 自检</span></span><span class="cl">    <span class="kw">return</span> (CMyDoc*)m_pDocument;</span><span class="cl">}</span></code></pre>
@@ -1547,6 +1836,59 @@ m_pMainWnd-&gt;DragAcceptFiles();
 <p>这套设计很巧，但产出的是<strong>MFC 私有二进制格式</strong>，换个语言、换个平台都读不了，加个字段还容易让旧文件失效。今天做持久化，优先 <strong>JSON</strong>(通用、可读)或 <strong>Protobuf/FlatBuffers</strong>(高效、强 schema、带版本演进)。学这一节，带走「读写合一」的设计思路即可，格式本身别用于新项目。</p>
 </div>
 
+
+<p>存盘和读盘看上去是两件事，你却只写了一个函数。奥妙在于 CArchive 身上有个「方向开关」：同一段代码被走两遍，一遍往外倒，一遍往里灌。</p>
+<figure data-mark="fig-ch8-serialize-flow">
+<svg viewBox="0 0 720 348" role="img" aria-label="同一个Serialize函数在存储态用左移运算符写盘，在载入态由框架先动态创建对象再用右移运算符读回成员">
+  <defs>
+    <marker id="ch8s-arB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#1971c2"/></marker>
+    <marker id="ch8s-arG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#0ca678"/></marker>
+  </defs>
+
+  <text x="97" y="28" font-size="12.5" fill="#1971c2" text-anchor="middle">① 存盘（写出去）</text>
+  <rect x="20" y="40" width="155" height="52" rx="8" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="1.5"/>
+  <text class="svgtext" x="97" y="62" font-size="11.5" text-anchor="middle">内存里的文档对象</text>
+  <text class="svgmuted" x="97" y="80" font-size="11" text-anchor="middle">成员变量都有值</text>
+  <line x1="97" y1="92" x2="97" y2="114" stroke="#1971c2" stroke-width="1.5" marker-end="url(#ch8s-arB)"/>
+  <rect x="20" y="114" width="155" height="52" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="97" y="136" font-size="11.5" text-anchor="middle">CArchive：存储态</text>
+  <text class="svgmuted" x="97" y="154" font-size="10.5" text-anchor="middle" font-family="ui-monospace, Consolas, monospace">IsStoring() 为 TRUE</text>
+  <line x1="175" y1="140" x2="228" y2="140" stroke="#1971c2" stroke-width="1.5" marker-end="url(#ch8s-arB)"/>
+  <text x="200" y="132" font-size="11" fill="#1971c2" text-anchor="middle" font-family="ui-monospace, Consolas, monospace">ar &lt;&lt;</text>
+
+  <rect x="230" y="96" width="230" height="148" rx="10" fill="var(--svg-fill)" stroke="#7048e8" stroke-width="1.6"/>
+  <text class="svgtext" x="345" y="120" font-size="12.5" text-anchor="middle">你只写这一个函数</text>
+  <text class="svgmuted" x="345" y="138" font-size="10" text-anchor="middle" font-family="ui-monospace, Consolas, monospace">void CMyDoc::Serialize(CArchive&amp; ar)</text>
+  <text class="svgtext" x="248" y="166" font-size="11" font-family="ui-monospace, Consolas, monospace">if (ar.IsStoring())</text>
+  <text x="248" y="186" font-size="11" fill="#1971c2" font-family="ui-monospace, Consolas, monospace">    ar &lt;&lt; m_n &lt;&lt; m_str;</text>
+  <text class="svgtext" x="248" y="206" font-size="11" font-family="ui-monospace, Consolas, monospace">else</text>
+  <text x="248" y="226" font-size="11" fill="#0ca678" font-family="ui-monospace, Consolas, monospace">    ar &gt;&gt; m_n &gt;&gt; m_str;</text>
+
+  <text x="592" y="28" font-size="12.5" fill="#0ca678" text-anchor="middle">② 打开（读回来）</text>
+  <rect x="515" y="40" width="155" height="52" rx="8" fill="var(--svg-soft)" stroke="#0ca678" stroke-width="1.5"/>
+  <text class="svgtext" x="592" y="62" font-size="11.5" text-anchor="middle">按类名动态创建</text>
+  <text class="svgmuted" x="592" y="80" font-size="11" text-anchor="middle">先造一个空对象</text>
+  <line x1="592" y1="92" x2="592" y2="114" stroke="#0ca678" stroke-width="1.5" marker-end="url(#ch8s-arG)"/>
+  <rect x="515" y="114" width="155" height="52" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="592" y="136" font-size="11.5" text-anchor="middle">CArchive：载入态</text>
+  <text class="svgmuted" x="592" y="154" font-size="10.5" text-anchor="middle" font-family="ui-monospace, Consolas, monospace">IsStoring() 为 FALSE</text>
+  <line x1="513" y1="140" x2="462" y2="140" stroke="#0ca678" stroke-width="1.5" marker-end="url(#ch8s-arG)"/>
+  <text x="490" y="132" font-size="11" fill="#0ca678" text-anchor="middle" font-family="ui-monospace, Consolas, monospace">ar &gt;&gt;</text>
+
+  <line x1="345" y1="244" x2="345" y2="268" stroke="#1971c2" stroke-width="1.5" marker-end="url(#ch8s-arB)"/>
+  <text class="svgmuted" x="355" y="261" font-size="11">成员值流进文件</text>
+
+  <rect x="275" y="272" width="140" height="50" rx="8" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <text class="svgtext" x="345" y="294" font-size="11.5" text-anchor="middle">磁盘文件 .dat</text>
+  <text class="svgmuted" x="345" y="312" font-size="10.5" text-anchor="middle">先写类名，再写数据</text>
+
+  <path d="M415 297 L694 297 L694 66 L674 66" fill="none" stroke="#0ca678" stroke-width="1.5" marker-end="url(#ch8s-arG)"/>
+  <text class="svgmuted" x="430" y="289" font-size="10.5">文件里的类名 → 决定造哪种对象</text>
+
+  <text class="svgmuted" x="20" y="340" font-size="11">同一个 Serialize 走两遍：方向由 CArchive 决定，你只维护一份读写代码。</text>
+</svg>
+<figcaption>图 8-5　Serialize 的双向流程：一个函数，两条路径（原创绘制）</figcaption>
+</figure>
 <h2 id="ch8-serializable">一个类要能序列化，得满足什么</h2>
 <p>不是随便哪个类都能丢进 <code>CArchive</code> 存盘。要让你的类「可序列化」，MFC 要求三件事凑齐——正好对应第 3 章的三项技术，看完你会真正理解「六大技术环环相扣」不是空话：</p>
 <ol>
@@ -1878,6 +2220,64 @@ m_pFind-&gt;ShowWindow(SW_SHOW);</code></pre>
     CCellHint hint(r, c);
     UpdateAllViews(nullptr, HINT_CELL, &amp;hint);   <span class="cm">// lHint=类型码, pHint=细节</span>
 }</code></pre>
+<p>文档只负责喊一嗓子，至于「要重画多大一块」，答案藏在那个不起眼的 hint 参数里。同样一次改动，给不给 hint，屏幕上的工作量能差出十几倍。</p>
+<figure data-mark="fig-ch11-hint-repaint">
+<svg viewBox="0 0 720 346" role="img" aria-label="文档通过UpdateAllViews广播给三个视图，下半部对比整幅重画与按hint只重画一小块的开销">
+  <defs>
+    <marker id="ch11h-arB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#1971c2"/></marker>
+  </defs>
+
+  <rect x="24" y="56" width="196" height="56" rx="9" fill="var(--svg-soft)" stroke="#1971c2" stroke-width="1.5"/>
+  <text class="svgtext" x="38" y="80" font-size="12">CMyDoc　只改了一格数据</text>
+  <text class="svgmuted" x="38" y="100" font-size="11" font-family="ui-monospace, Consolas, monospace">UpdateAllViews(…, pHint)</text>
+  <text class="svgmuted" x="24" y="136" font-size="11">pHint 里写着：只有第 3 行第 2 格变了</text>
+
+  <path d="M220 84 L268 84 M268 32 L268 136" fill="none" stroke="#1971c2" stroke-width="1.4"/>
+  <line x1="268" y1="32" x2="294" y2="32" stroke="#1971c2" stroke-width="1.4" marker-end="url(#ch11h-arB)"/>
+  <line x1="268" y1="84" x2="294" y2="84" stroke="#1971c2" stroke-width="1.4" marker-end="url(#ch11h-arB)"/>
+  <line x1="268" y1="136" x2="294" y2="136" stroke="#1971c2" stroke-width="1.4" marker-end="url(#ch11h-arB)"/>
+
+  <rect x="296" y="16" width="150" height="32" rx="7" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="310" y="36" font-size="11.5">视图 1（表格）</text>
+  <rect x="296" y="68" width="150" height="32" rx="7" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="310" y="88" font-size="11.5">视图 2（图表）</text>
+  <rect x="296" y="120" width="150" height="32" rx="7" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="310" y="140" font-size="11.5">视图 3（大纲）</text>
+
+  <path d="M452 18 C458 18 458 22 458 28 L458 78 C458 84 460 84 464 84 C460 84 458 84 458 90 L458 140 C458 146 458 150 452 150" fill="none" stroke="var(--muted)" stroke-width="1.2"/>
+  <text class="svgtext" x="472" y="72" font-size="12">每个视图的 OnUpdate() 都被调用</text>
+  <text class="svgmuted" x="472" y="94" font-size="11">视图自己决定：整幅重画，还是只补一小块</text>
+
+  <line x1="24" y1="170" x2="696" y2="170" stroke="var(--rule)" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <text x="175" y="196" font-size="12" fill="#e03131" text-anchor="middle">没给 hint：Invalidate() 整幅重画</text>
+  <rect x="60" y="210" width="230" height="100" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="60" y="210" width="230" height="16" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <circle cx="71" cy="218" r="3" fill="var(--muted)"/><circle cx="81" cy="218" r="3" fill="var(--muted)"/><circle cx="91" cy="218" r="3" fill="var(--muted)"/>
+  <rect x="61" y="226" width="228" height="84" fill="#e03131" opacity="0.18"/>
+  <g stroke="var(--rule)" stroke-width="0.8">
+    <line x1="99" y1="226" x2="99" y2="310"/><line x1="137" y1="226" x2="137" y2="310"/><line x1="175" y1="226" x2="175" y2="310"/><line x1="213" y1="226" x2="213" y2="310"/><line x1="251" y1="226" x2="251" y2="310"/>
+    <line x1="61" y1="254" x2="289" y2="254"/><line x1="61" y1="282" x2="289" y2="282"/>
+  </g>
+  <text x="175" y="330" font-size="11" fill="#e03131" text-anchor="middle">18 格全部重算 + 重画（其中 17 格白忙）</text>
+
+  <text class="svgmuted" x="355" y="264" font-size="12" text-anchor="middle">VS</text>
+
+  <text x="535" y="196" font-size="12" fill="#0ca678" text-anchor="middle">带上 hint：InvalidateRect() 只补一块</text>
+  <rect x="420" y="210" width="230" height="100" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="420" y="210" width="230" height="16" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <circle cx="431" cy="218" r="3" fill="var(--muted)"/><circle cx="441" cy="218" r="3" fill="var(--muted)"/><circle cx="451" cy="218" r="3" fill="var(--muted)"/>
+  <rect x="459" y="254" width="38" height="28" fill="#0ca678" opacity="0.30"/>
+  <rect x="459" y="254" width="38" height="28" fill="none" stroke="#0ca678" stroke-width="1.6"/>
+  <g stroke="var(--rule)" stroke-width="0.8">
+    <line x1="459" y1="226" x2="459" y2="310"/><line x1="497" y1="226" x2="497" y2="310"/><line x1="535" y1="226" x2="535" y2="310"/><line x1="573" y1="226" x2="573" y2="310"/><line x1="611" y1="226" x2="611" y2="310"/>
+    <line x1="421" y1="254" x2="649" y2="254"/><line x1="421" y1="282" x2="649" y2="282"/>
+  </g>
+  <text x="535" y="330" font-size="11" fill="#0ca678" text-anchor="middle">只有 1 格重算 + 重画，其余原样保留</text>
+</svg>
+<figcaption>图 11-3　UpdateAllViews 广播，与 hint 带来的精准重绘（原创绘制）</figcaption>
+</figure>
+
 <p>视图这头负责解码：</p>
 <pre><code><span class="cl"><span class="kw">void</span> CSheetView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) {</span><span class="cl">    <span class="kw">if</span> (lHint == HINT_CELL &amp;&amp; pHint) {</span><span class="cl">        <span class="kw">auto</span>* h = <span class="kw">static_cast</span>&lt;CCellHint*&gt;(pHint);</span><span class="cl"><span class="cc" style="min-width:46.0ch">        CRect rc = CellRect(h-&gt;row, h-&gt;col);</span><span class="cm">// 算出那个格子的矩形</span></span><span class="cl"><span class="cc" style="min-width:46.0ch">        InvalidateRect(&amp;rc);</span><span class="cm">// 只作废这一小块</span></span><span class="cl">        <span class="kw">return</span>;</span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:46.0ch">    Invalidate();</span><span class="cm">// 不认识的 hint，退回全画：正确性优先</span></span><span class="cl">}</span></code></pre>
 <p>打个比方：hint 就像快递面单上的「详情」。没有它（默认）时是「你家这栋楼有个包裹，整栋挨家挨户翻一遍去找」；有了面单写清「3 楼 502」，只需上那一层、敲那一户。</p>
@@ -2708,18 +3108,24 @@ var SUN_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke
     if (h && h.charAt(0) === '#') linkMap[h.slice(1)] = a;
   });
   var heads = Array.prototype.slice.call(document.querySelectorAll('main h1[id], main h2[id]'));
-  function update(){
-    var threshold = window.innerHeight / 3, cur = null, best = -1e9;
-    heads.forEach(function(el){
-      var top = el.getBoundingClientRect().top;
-      if (top <= threshold && top > best) { best = top; cur = el.id; }
-    });
-    for (var id in linkMap) linkMap[id].classList.toggle('active', id === cur);
+  var cur = null, ticking = false;
+  function compute(){
+    ticking = false;
+    var threshold = window.innerHeight / 3, best = -1e9, id = null;
+    for (var i = 0; i < heads.length; i++) {
+      var top = heads[i].getBoundingClientRect().top;
+      if (top <= threshold && top > best) { best = top; id = heads[i].id; }
+    }
+    if (id === cur) return;
+    if (cur && linkMap[cur]) linkMap[cur].classList.remove('active');
+    cur = id;
+    if (cur && linkMap[cur]) linkMap[cur].classList.add('active');
   }
+  function update(){ if (!ticking) { ticking = true; requestAnimationFrame(compute); } }
   window.addEventListener('scroll', update, {passive:true});
   window.addEventListener('resize', update, {passive:true});
-  window.addEventListener('load', update);
-  update();
+  window.addEventListener('load', compute);
+  compute();
 })();
 (function(){
   var sb=document.getElementById('sidebar'); if(!sb) return;

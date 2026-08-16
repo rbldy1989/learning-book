@@ -147,6 +147,13 @@ body.nav-hidden #sidebar, body.nav-hidden .sb-resizer{display:none;}
 #sidebar .booktitle, #sidebar .toc-title{padding-left:1.2em;}
 pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
+
+/* ===== 渲染性能：视口外内容跳过布局与绘制 ===== */
+section.chapter{content-visibility:auto;contain-intrinsic-size:auto 1200px;}
+figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
+pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
+table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
+#sidebar,#toc{will-change:scroll-position;}
 </style>
 </head>
 <body>
@@ -409,6 +416,61 @@ pre code .cc{display:inline-block;vertical-align:top;}
 <p>为什么要这么设计，宁可绕一层也不给你裸指针？两个动机。其一是<strong>隔离与安全</strong>：系统可以在内部随意搬动、重整那个数据结构（比如内存整理），只要句柄这张"牌子"对应关系不变，你的程序就毫无察觉，不会因为持有一个失效指针而崩溃。其二是<strong>可控</strong>：所有操作都得经过系统这道柜台，系统就有机会做校验（这个句柄合法吗？这个窗口还活着吗？），也能跨进程使用——你甚至能拿到别的程序窗口的 HWND。</p>
 <div class="note ok"><span class="t">🟢 句柄思想至今通用</span><p>"用一个不透明的标识符代表一份你不该直接触碰的资源"——这个模式后来无处不在：文件描述符（fd）、数据库连接句柄、GPU 纹理 id、Web 里的 <code>ClientRect</code> 引用……本质都是"给你个牌子，别碰后台"。理解了 HWND，你就理解了一大类 API 的设计哲学。</p></div>
 
+
+<p>HWND 常被叫作「窗口句柄」，可它既不是窗口，也不是指向窗口的指针。把它想成寄存处的取货牌，一切就顺了。</p>
+<figure data-mark="fig-c1-handle-ticket">
+<svg viewBox="0 0 720 300" role="img" aria-label="句柄的本质：程序持有编号，系统查表找到真正的窗口对象">
+  <defs>
+    <marker id="c1wh-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#1971c2"/></marker>
+    <marker id="c1wh-arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--muted)"/></marker>
+  </defs>
+
+  <text x="16" y="42" class="svgmuted" font-size="11">你的程序（用户态）</text>
+  <rect x="16" y="52" width="250" height="190" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+
+  <rect x="36" y="76" width="210" height="52" rx="6" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <circle cx="52" cy="102" r="4.5" fill="var(--svg-fill)" stroke="#e8590c"/>
+  <text x="156" y="99" class="svgtext" font-size="12" text-anchor="middle">HWND hWnd = 0x000A0C3C</text>
+  <text x="156" y="117" class="svgmuted" font-size="11" text-anchor="middle">取货牌：只是一个编号</text>
+
+  <text x="36" y="162" class="svgmuted" font-size="11">你手里没有窗口的任何数据，</text>
+  <text x="36" y="181" class="svgmuted" font-size="11">拿不到它的内存地址，</text>
+  <text x="36" y="200" class="svgmuted" font-size="11">也无法直接改它的字段。</text>
+
+  <path d="M270 110 H392" stroke="#1971c2" fill="none" marker-end="url(#c1wh-ar)"/>
+  <text x="331" y="98" class="svgtext" font-size="11" text-anchor="middle">① 把编号递进去</text>
+  <text x="331" y="127" class="svgmuted" font-size="11" text-anchor="middle">SetWindowText(hWnd)</text>
+
+  <path d="M392 210 H270" stroke="var(--muted)" fill="none" marker-end="url(#c1wh-arg)"/>
+  <text x="331" y="199" class="svgtext" font-size="11" text-anchor="middle">④ 只回一个结果</text>
+  <text x="331" y="228" class="svgmuted" font-size="11" text-anchor="middle">你从未碰到对象本身</text>
+
+  <text x="396" y="42" class="svgmuted" font-size="11">系统内部（你看不见的地方）</text>
+  <rect x="396" y="52" width="308" height="190" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+
+  <text x="490" y="76" class="svgtext" font-size="11" text-anchor="middle">② 系统拿编号去查句柄表</text>
+  <rect x="408" y="84" width="136" height="102" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+  <rect x="408" y="84" width="136" height="24" rx="4" fill="var(--svg-soft)" stroke="var(--muted)"/>
+  <text x="476" y="100" class="svgmuted" font-size="11" text-anchor="middle">编号 → 对象</text>
+  <rect x="408" y="134" width="136" height="26" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <path d="M408 108 H544 M408 134 H544 M408 160 H544" stroke="var(--muted)" fill="none"/>
+  <text x="476" y="125" class="svgmuted" font-size="11" text-anchor="middle">0x000A0C10</text>
+  <text x="476" y="151" class="svgtext" font-size="11" text-anchor="middle">0x000A0C3C</text>
+  <text x="476" y="177" class="svgmuted" font-size="11" text-anchor="middle">0x000A0C58</text>
+
+  <path d="M546 147 H562" stroke="#1971c2" fill="none" marker-end="url(#c1wh-ar)"/>
+
+  <rect x="566" y="92" width="126" height="94" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text x="629" y="112" class="svgtext" font-size="12" text-anchor="middle">真正的窗口对象</text>
+  <text x="574" y="133" class="svgmuted" font-size="11">· 标题、位置、样式</text>
+  <text x="574" y="152" class="svgmuted" font-size="11">· 窗口过程地址</text>
+  <text x="574" y="171" class="svgmuted" font-size="11">· 父子关系、Z 序</text>
+  <text x="629" y="206" class="svgtext" font-size="11" text-anchor="middle">③ 找到真身，再动手</text>
+
+  <text x="16" y="278" class="svgmuted" font-size="11">牌子过期时（窗口已销毁），系统查不到对应项，API 直接失败——这正是 IsWindow(hWnd) 存在的理由。</text>
+</svg>
+<figcaption>图 1-3　句柄就是取货牌：编号在你手里，真身在系统表里（原创绘制）</figcaption>
+</figure>
 <h2 id="c1-message-queue">消息与消息队列：系统怎么"通知"你</h2>
 <p>你在窗口上点了一下鼠标。你的程序是怎么知道这件事的？它并没有一个线程死死盯着鼠标。答案是：操作系统在你点击的那一刻，把这个事件<strong>打包成一条消息</strong>，然后投进你这个窗口所属线程的<strong>消息队列</strong>里排队。</p>
 <p>一条消息在 C 层面就是一个 <code>MSG</code> 结构体，它记录了"发生了什么、发生在哪、附带什么参数"。核心字段如下：</p>
@@ -426,6 +488,82 @@ pre code .cc{display:inline-block;vertical-align:top;}
 <p>那"消息队列"呢？把它想象成餐厅后厨挂单的那个夹子，或者银行的叫号机。前台（各种硬件中断、系统事件）不停地把新单子夹上去，后厨（你的程序）按顺序一张张取下来做。关键在于——挂单的人和做单的人<strong>不必同步</strong>。系统不会因为你这一秒忙着处理上一条消息，就把新的鼠标点击丢掉；它先塞进队列，你忙完了自然会来取。</p>
 <div class="note ok"><span class="t">🟢 为什么用队列而不是直接调用</span><p>队列做的是<strong>解耦 + 缓冲</strong>。硬件中断的节奏和你程序处理的节奏对不上，中间垫一个队列，两边就都能按自己的步调走。这个"生产者投递、消费者按需取用"的异步模型，你在消息队列、任务队列、Kafka、浏览器的事件队列里会一次次重逢。</p></div>
 
+
+<p>消息不是凭空出现在窗口过程里的。它要走完下面这条流水线——前半段由 Windows 跑完，后半段才轮到你的代码。</p>
+<figure data-mark="fig-c1-message-journey">
+<svg viewBox="0 0 720 300" role="img" aria-label="消息从硬件到窗口过程的完整旅程">
+  <defs>
+    <marker id="c1mq-arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#1971c2"/></marker>
+    <marker id="c1mq-aro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#e8590c"/></marker>
+  </defs>
+
+  <rect x="16" y="15" width="13" height="13" rx="2" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text x="36" y="26" class="svgmuted" font-size="11">系统替你完成</text>
+  <rect x="126" y="15" width="13" height="13" rx="2" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="146" y="26" class="svgmuted" font-size="11">你亲手写的代码</text>
+
+  <rect x="16" y="56" width="132" height="44" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text x="82" y="78" class="svgtext" font-size="12" text-anchor="middle">① 敲键盘 · 点鼠标</text>
+  <text x="82" y="93" class="svgmuted" font-size="11" text-anchor="middle">一个物理动作</text>
+
+  <path d="M148 78 H186" stroke="#1971c2" fill="none" marker-end="url(#c1mq-arb)"/>
+
+  <rect x="190" y="56" width="132" height="44" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text x="256" y="78" class="svgtext" font-size="12" text-anchor="middle">② 硬件中断</text>
+  <text x="256" y="93" class="svgmuted" font-size="11" text-anchor="middle">驱动程序上报</text>
+
+  <path d="M322 78 H360" stroke="#1971c2" fill="none" marker-end="url(#c1mq-arb)"/>
+
+  <rect x="364" y="56" width="132" height="44" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text x="430" y="78" class="svgtext" font-size="12" text-anchor="middle">③ 系统消息队列</text>
+  <text x="430" y="93" class="svgmuted" font-size="11" text-anchor="middle">还不属于任何窗口</text>
+
+  <path d="M496 78 H534" stroke="#1971c2" fill="none" marker-end="url(#c1mq-arb)"/>
+
+  <rect x="538" y="56" width="166" height="44" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text x="621" y="78" class="svgtext" font-size="12" text-anchor="middle">④ 投递到目标线程</text>
+  <text x="621" y="93" class="svgmuted" font-size="11" text-anchor="middle">每个 UI 线程一个队列</text>
+
+  <path d="M621 100 V128" stroke="#1971c2" fill="none" marker-end="url(#c1mq-arb)"/>
+
+  <rect x="538" y="132" width="166" height="44" rx="6" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="621" y="154" class="svgtext" font-size="12" text-anchor="middle">⑤ GetMessage</text>
+  <text x="621" y="169" class="svgmuted" font-size="11" text-anchor="middle">等在这里，取出一条</text>
+
+  <path d="M538 154 H500" stroke="#e8590c" fill="none" marker-end="url(#c1mq-aro)"/>
+
+  <rect x="330" y="132" width="166" height="44" rx="6" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="413" y="154" class="svgtext" font-size="12" text-anchor="middle">⑥ TranslateMessage</text>
+  <text x="413" y="169" class="svgmuted" font-size="11" text-anchor="middle">按键 → 生成 WM_CHAR</text>
+
+  <path d="M330 154 H292" stroke="#e8590c" fill="none" marker-end="url(#c1mq-aro)"/>
+
+  <rect x="122" y="132" width="166" height="44" rx="6" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="205" y="154" class="svgtext" font-size="12" text-anchor="middle">⑦ DispatchMessage</text>
+  <text x="205" y="169" class="svgmuted" font-size="11" text-anchor="middle">把消息交回系统</text>
+
+  <path d="M205 176 V204" stroke="#e8590c" fill="none" marker-end="url(#c1mq-aro)"/>
+
+  <rect x="107" y="208" width="196" height="44" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text x="205" y="230" class="svgtext" font-size="12" text-anchor="middle">系统按 hWnd 查表</text>
+  <text x="205" y="245" class="svgmuted" font-size="11" text-anchor="middle">找到这个窗口的窗口过程</text>
+
+  <path d="M303 230 H326" stroke="#1971c2" fill="none" marker-end="url(#c1mq-arb)"/>
+
+  <rect x="330" y="208" width="210" height="44" rx="6" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="435" y="230" class="svgtext" font-size="12" text-anchor="middle">⑧ 你的窗口过程 WndProc</text>
+  <text x="435" y="245" class="svgmuted" font-size="11" text-anchor="middle">switch (message) 逐条处理</text>
+
+  <path d="M540 230 H564" stroke="#e8590c" fill="none" marker-end="url(#c1mq-aro)"/>
+
+  <rect x="568" y="208" width="136" height="44" rx="6" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text x="636" y="230" class="svgtext" font-size="12" text-anchor="middle">没接住的消息</text>
+  <text x="636" y="245" class="svgmuted" font-size="11" text-anchor="middle">DefWindowProc 兜底</text>
+
+  <text x="16" y="278" class="svgmuted" font-size="11">整趟旅程里，只有橙色这几块是你写的代码；其余环节 Windows 已经替你做完，你既插不进手，也不必操心。</text>
+</svg>
+<figcaption>图 1-2　一条消息从按键到窗口过程的完整旅程（原创绘制）</figcaption>
+</figure>
 <h2 id="c1-event-driven">以消息为基础、以事件驱动</h2>
 <p>现在把上一节的画面拉远一点看。控制台程序的结构是一条直线：读输入 → 算 → 打印 → 结束，你规定了它每一步干什么，它就老老实实走到底。可 GUI 程序不一样：用户下一秒是点按钮、拖窗口、按键盘、还是关程序，你根本无法预知，也无法按顺序排。你怎么可能写出一段"顺序执行"的代码来应对这种随机洪流？</p>
 <p>答案就是<strong>事件驱动（event-driven）</strong>：你不再主动去问"用户点了吗？用户按键了吗？"，而是反过来——把"每种事件发生时该怎么办"的处理逻辑<strong>登记</strong>好，然后交出控制权，让系统在事件真正发生时来"回调"你。这在软件设计上有个著名的说法叫<strong>好莱坞原则</strong>："别打电话给我们，有消息我们会打给你（Don't call us, we'll call you）"。</p>
@@ -722,6 +860,69 @@ w-&gt;doWork();
 <p>这里有个容易被忽略的分叉：<strong>CWnd 这一支都是"看得见的窗口"，而 CDocument 虽然也从 CCmdTarget 来，却没有窗口</strong>。为什么把数据（CDocument）和显示（CView）拆成两个类？因为微软想强推"数据与界面分离"的设计——同一份数据可以配多个视图（比如一份表格同时用柱状图和折线图显示）。这就是本章后面文档 / 视图架构的伏笔。</p>
 <div class="note ok"><span class="t">🟢 记住主干就够了</span><p>CObject → CCmdTarget → CWnd →（CFrameWnd / CView / CDialog），外加旁边的 CWinApp 和 CDocument。这六七个类撑起了一个典型 MFC 程序九成的结构，其余几百个类多是工具类（CString、CFile、CArray 之类），用到再查即可。</p></div>
 
+
+<p>MFC 有两百多个类，但主干只有这么一条。看懂下面这棵树，你就知道自己该往哪儿派生。</p>
+<figure data-mark="fig-c3-mfc-tree">
+<svg viewBox="0 0 720 386" role="img" aria-label="MFC 类继承主干树">
+  <path d="M32 41 V338 M70 69 V254 M116 97 V114 M116 153 V226" stroke="var(--muted)" fill="none"/>
+  <path d="M32 58 H54 M32 282 H54 M32 310 H54 M32 338 H54" stroke="var(--muted)" fill="none"/>
+  <path d="M70 86 H100 M70 142 H100 M70 254 H100" stroke="var(--muted)" fill="none"/>
+  <path d="M116 114 H152 M116 170 H152 M116 198 H152 M116 226 H152" stroke="var(--muted)" fill="none"/>
+
+  <path d="M272 14 V352" stroke="var(--rule)" stroke-dasharray="2 4" fill="none"/>
+
+  <rect x="16" y="19" width="104" height="22" rx="4" fill="var(--svg-soft)" stroke="#1971c2"/>
+  <text x="28" y="34" class="svgtext" font-size="12">CObject</text>
+  <text x="286" y="34" class="svgmuted" font-size="11">万类之根：运行时类型信息、序列化、诊断输出</text>
+
+  <rect x="54" y="47" width="104" height="22" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+  <text x="66" y="62" class="svgtext" font-size="12">CCmdTarget</text>
+  <text x="286" y="62" class="svgmuted" font-size="11">命令目标：能接住菜单、工具栏发来的命令消息</text>
+
+  <rect x="100" y="75" width="104" height="22" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+  <text x="112" y="90" class="svgtext" font-size="12">CWinThread</text>
+  <text x="286" y="90" class="svgmuted" font-size="11">线程对象：一个线程配一套消息循环</text>
+
+  <rect x="152" y="103" width="104" height="22" rx="4" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="162" y="118" class="svgtext" font-size="12"><tspan fill="#e8590c">★ </tspan>CWinApp</text>
+  <text x="286" y="118" class="svgmuted" font-size="11">应用程序对象：每个程序有且只有一个，必须派生</text>
+
+  <rect x="100" y="131" width="104" height="22" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+  <text x="112" y="146" class="svgtext" font-size="12">CWnd</text>
+  <text x="286" y="146" class="svgmuted" font-size="11">所有窗口的基类：把 HWND 和窗口过程包进对象</text>
+
+  <rect x="152" y="159" width="104" height="22" rx="4" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="162" y="174" class="svgtext" font-size="12"><tspan fill="#e8590c">★ </tspan>CFrameWnd</text>
+  <text x="286" y="174" class="svgmuted" font-size="11">主框架窗口：菜单、工具栏、状态栏都挂在它身上</text>
+
+  <rect x="152" y="187" width="104" height="22" rx="4" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="162" y="202" class="svgtext" font-size="12"><tspan fill="#e8590c">★ </tspan>CView</text>
+  <text x="286" y="202" class="svgmuted" font-size="11">视图：界面在 OnDraw 里画，键鼠消息先落到这里</text>
+
+  <rect x="152" y="215" width="104" height="22" rx="4" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="162" y="230" class="svgtext" font-size="12"><tspan fill="#e8590c">★ </tspan>CDialog</text>
+  <text x="286" y="230" class="svgmuted" font-size="11">对话框：模态与非模态，控件的容器</text>
+
+  <rect x="100" y="243" width="104" height="22" rx="4" fill="var(--svg-soft2)" stroke="#e8590c"/>
+  <text x="110" y="258" class="svgtext" font-size="12"><tspan fill="#e8590c">★ </tspan>CDocument</text>
+  <text x="286" y="258" class="svgmuted" font-size="11">文档：只管数据与存盘（Serialize），不画界面</text>
+
+  <rect x="54" y="271" width="104" height="22" rx="4" fill="var(--svg-fill)" stroke="var(--muted)" stroke-dasharray="4 3"/>
+  <text x="66" y="286" class="svgtext" font-size="12">CGdiObject</text>
+  <text x="286" y="286" class="svgmuted" font-size="11">旁支：CPen / CBrush / CFont / CBitmap 的共同基类</text>
+
+  <rect x="54" y="299" width="104" height="22" rx="4" fill="var(--svg-fill)" stroke="var(--muted)" stroke-dasharray="4 3"/>
+  <text x="66" y="314" class="svgtext" font-size="12">CFile</text>
+  <text x="286" y="314" class="svgmuted" font-size="11">旁支：文件读写，CStdioFile、CMemFile 由它派生</text>
+
+  <rect x="54" y="327" width="104" height="22" rx="4" fill="var(--svg-fill)" stroke="var(--muted)" stroke-dasharray="4 3"/>
+  <text x="66" y="342" class="svgtext" font-size="12">CException</text>
+  <text x="286" y="342" class="svgmuted" font-size="11">旁支：异常体系，配合 TRY / CATCH 宏使用</text>
+
+  <text x="16" y="372" class="svgmuted" font-size="11">橙色 ★ 的五个类，是你写 MFC 程序时几乎一定要亲手派生的；虚线三支各管一摊，不参与消息与命令路由。</text>
+</svg>
+<figcaption>图 3-1　MFC 类继承主干：你该往哪儿派生（原创绘制）</figcaption>
+</figure>
 <h2 id="c3-theapp">那个叫 theApp 的全局对象</h2>
 <p>翻开任何一个 MFC 程序，你都会在某个 .cpp 文件的顶层看到孤零零的一行：一个从 CWinApp 派生的类，定义了一个全局对象，通常就叫 <code>theApp</code>。它看起来平平无奇，却是整个程序的"总开关"。</p>
 <pre><code><span class="cl"><span class="kw">class</span> CMyApp : <span class="kw">public</span> CWinApp {</span><span class="cl"><span class="kw">public</span>:</span><span class="cl"><span class="cc" style="min-width:34.0ch">    <span class="kw">virtual</span> BOOL InitInstance();</span><span class="cm">// 你要重写的初始化入口</span></span><span class="cl">};</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:34.0ch">CMyApp theApp;</span><span class="cm">// 全局唯一对象,在 WinMain 之前就被构造</span></span></code></pre>
@@ -826,6 +1027,60 @@ END_MESSAGE_MAP()</code></pre>
 <p>打个比方：DC 就像画家面前的一整套<strong>工作台</strong>。台面已经夹好了某种纸（绑定的设备），笔筒里此刻插着的那支笔、调色盘上此刻的那种颜料、当前笔尖悬停的位置——都是工作台的「当前状态」。你喊一声「画」，用的就是台面上此刻摆着的这套家伙。想换效果，不是在「画」这个动作里带参数，而是先换掉台面上的工具。</p>
 <p>在 MFC 里，这个 <code>HDC</code> 被包成了一个 C++ 类 <strong><code>CDC</code></strong>。所有画图函数都成了它的成员：<code>pDC-&gt;MoveTo(...)</code>、<code>pDC-&gt;LineTo(...)</code>、<code>pDC-&gt;Rectangle(...)</code>。<code>CDC</code> 还有几个专门的派生类，对应「从哪种场合、用哪种方式借到 DC」——下一节就讲它们。</p>
 <pre><code><span class="cl"><span class="cm">// DC 是「有状态的画板」：先摆工具，再画。示意，非原书代码</span></span><span class="cl"><span class="kw">void</span> DrawSomething(CDC* pDC) {</span><span class="cl"><span class="cc" style="min-width:42.0ch">    pDC-&gt;SetTextColor(RGB(200, 30, 30));</span><span class="cm">// 往画板上「设」一个属性：文字用红色</span></span><span class="cl"><span class="cc" style="min-width:42.0ch">    pDC-&gt;MoveTo(10, 10);</span><span class="cm">// 设当前位置</span></span><span class="cl"><span class="cc" style="min-width:42.0ch">    pDC-&gt;LineTo(120, 80);</span><span class="cm">// 用画板上「当前」那支笔，从当前位置画到这里</span></span><span class="cl"><span class="cc" style="min-width:42.0ch">}</span><span class="cm">// 注意：没有任何一处直接写像素地址</span></span></code></pre>
+<p>初学者常把 DC 当成"一个句柄"，其实它更像一块<strong>带着全套工具的画板</strong>：画笔、画刷、字体、文字颜色、背景模式都别在它身上。绘图函数本身不携带任何样式参数，它们只是对 DC 下命令；画成什么样、最终画到哪里，全由 DC 的当前状态和它绑定的目标决定。</p>
+<figure data-mark="fig-c4-dc-role">
+<svg viewBox="0 0 720 300" role="img" aria-label="设备上下文 DC 是一块带着当前工具状态的画布，绘图函数只对 DC 下命令，DC 再输出到窗口、内存位图或打印机">
+<defs>
+<marker id="c4dc-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)"/></marker>
+</defs>
+<text x="360" y="26" text-anchor="middle" font-size="12" class="svgtext">画笔·画刷·字体·颜色·背景模式 —— 统统挂在 DC 上</text>
+
+<rect x="16" y="98" width="150" height="116" rx="10" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="91" y="122" text-anchor="middle" font-size="12" class="svgtext">绘图函数</text>
+<text x="91" y="144" text-anchor="middle" font-size="11" class="svgmuted">MoveTo / LineTo</text>
+<text x="91" y="164" text-anchor="middle" font-size="11" class="svgmuted">Rectangle / Ellipse</text>
+<text x="91" y="184" text-anchor="middle" font-size="11" class="svgmuted">TextOut</text>
+<text x="91" y="204" text-anchor="middle" font-size="11" class="svgmuted">FillRect …</text>
+
+<path d="M166,156 H226" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c4dc-ar)"/>
+<text x="196" y="146" text-anchor="middle" font-size="11" class="svgmuted">传 hDC</text>
+
+<rect x="232" y="56" width="250" height="200" rx="12" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text x="357" y="78" text-anchor="middle" font-size="13" class="svgtext">设备上下文 DC</text>
+<text x="357" y="96" text-anchor="middle" font-size="11" class="svgmuted">一块带着当前工具状态的画布</text>
+
+<rect x="246" y="112" width="104" height="30" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="298" y="131" text-anchor="middle" font-size="11" class="svgtext">画笔 Pen</text>
+<rect x="364" y="112" width="104" height="30" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="416" y="131" text-anchor="middle" font-size="11" class="svgtext">画刷 Brush</text>
+<rect x="246" y="148" width="104" height="30" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="298" y="167" text-anchor="middle" font-size="11" class="svgtext">字体 Font</text>
+<rect x="364" y="148" width="104" height="30" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="416" y="167" text-anchor="middle" font-size="11" class="svgtext">文字/背景色</text>
+<rect x="246" y="184" width="104" height="30" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="298" y="203" text-anchor="middle" font-size="11" class="svgtext">背景模式</text>
+<rect x="364" y="184" width="104" height="30" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="416" y="203" text-anchor="middle" font-size="11" class="svgtext">映射模式</text>
+<text x="357" y="238" text-anchor="middle" font-size="11" class="svgmuted">SelectObject 换工具，后续绘制立刻改样貌</text>
+
+<text x="622" y="32" text-anchor="middle" font-size="11" class="svgmuted">输出目标（三选一）</text>
+<path d="M482,156 H512 V88 H530" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c4dc-ar)"/>
+<path d="M482,156 H530" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c4dc-ar)"/>
+<path d="M482,156 H512 V224 H530" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c4dc-ar)"/>
+
+<rect x="540" y="62" width="164" height="52" rx="10" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="622" y="84" text-anchor="middle" font-size="12" class="svgtext">窗口客户区（屏幕）</text>
+<text x="622" y="102" text-anchor="middle" font-size="11" class="svgmuted">GetDC / BeginPaint</text>
+<rect x="540" y="130" width="164" height="52" rx="10" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="622" y="152" text-anchor="middle" font-size="12" class="svgtext">内存位图</text>
+<text x="622" y="170" text-anchor="middle" font-size="11" class="svgmuted">CreateCompatibleDC</text>
+<rect x="540" y="198" width="164" height="52" rx="10" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="622" y="220" text-anchor="middle" font-size="12" class="svgtext">打印机 / 绘图仪</text>
+<text x="622" y="238" text-anchor="middle" font-size="11" class="svgmuted">CreateDC(打印机)</text>
+</svg>
+<figcaption>图 4-2　DC 是一块"带工具状态的画布"：函数只下命令，DC 决定样貌与去向（原创绘制）</figcaption>
+</figure>
+
 <div class="note ok"><span class="t">🟢 一句话记住 DC</span><p>DC ＝「绑定了某个设备 ＋ 存着一整套当前绘图状态」的画板。你所有的画图动作都发生在某个 DC 上，用的都是这个 DC 当前摆着的工具。<code>CDC</code> 就是它的 MFC 封装。</p></div>
 
 <h2 id="c4-getdc">怎么拿到 DC：OnPaint 里的 CPaintDC 与别处的 CClientDC</h2>
@@ -3019,6 +3274,68 @@ std::vector&lt;Figure&gt; m_figures;                  <span class="cm">// 🔵 �
 
 <p><strong>现代批注：</strong> 这张对照表的思维方式比结论更值钱：矢量与位图、语义与快照、重算与缓存，是图形系统里永恒的一组张力，从 GDI 一直张到 GPU。</p>
 
+
+<p>窗口被遮挡后再露出来，之前画的东西就没了 —— 因为 Windows 不替你记住客户区的像素。要让图形"留得住"，只有两条路：<strong>记住怎么画的</strong>，或者<strong>记住画成了什么样</strong>。二者的数据流与代价完全不同。</p>
+<figure data-mark="fig-c11-repaint-two-ways">
+<svg viewBox="0 0 720 356" role="img" aria-label="图形重绘的两种解法对比：保存绘图数据在 OnDraw 中遍历重画，与保存内存位图在 WM_PAINT 中 BitBlt 贴回">
+<defs>
+<marker id="c11db-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)"/></marker>
+</defs>
+
+<rect x="30" y="16" width="306" height="32" rx="9" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text x="183" y="37" text-anchor="middle" font-size="13" class="svgtext">方案一　保存图形数据</text>
+<rect x="384" y="16" width="306" height="32" rx="9" fill="var(--svg-soft2)" stroke="#e8590c"/>
+<text x="537" y="37" text-anchor="middle" font-size="13" class="svgtext">方案二　保存内存位图</text>
+
+<rect x="30" y="64" width="306" height="48" rx="9" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="183" y="85" text-anchor="middle" font-size="12" class="svgtext">① 每画一笔，记下参数</text>
+<text x="183" y="103" text-anchor="middle" font-size="11" class="svgmuted">起点、终点、颜色、线宽 → 一个对象</text>
+<rect x="384" y="64" width="306" height="48" rx="9" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="537" y="85" text-anchor="middle" font-size="12" class="svgtext">① 每画一笔，画两遍</text>
+<text x="537" y="103" text-anchor="middle" font-size="11" class="svgmuted">屏幕 DC 与 内存 DC 同步绘制</text>
+
+<path d="M183,112 V126" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c11db-ar)"/>
+<path d="M537,112 V126" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c11db-ar)"/>
+
+<rect x="30" y="130" width="306" height="64" rx="9" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text x="183" y="150" text-anchor="middle" font-size="12" class="svgtext">② 存进集合 CObArray</text>
+<rect x="44" y="160" width="68" height="26" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="78" y="178" text-anchor="middle" font-size="11" class="svgmuted">笔 #1</text>
+<rect x="124" y="160" width="68" height="26" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="158" y="178" text-anchor="middle" font-size="11" class="svgmuted">笔 #2</text>
+<rect x="204" y="160" width="68" height="26" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="238" y="178" text-anchor="middle" font-size="11" class="svgmuted">笔 #3</text>
+<text x="300" y="178" text-anchor="middle" font-size="11" class="svgmuted">…</text>
+
+<rect x="384" y="130" width="306" height="64" rx="9" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+<text x="537" y="150" text-anchor="middle" font-size="12" class="svgtext">② 一张内存位图（兼容 DC）</text>
+<rect x="452" y="158" width="170" height="30" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<polyline points="464,180 484,166 504,182 528,164 556,180 578,168 610,176" fill="none" stroke="#1971c2" stroke-width="1.8"/>
+
+<path d="M183,194 V208" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c11db-ar)"/>
+<path d="M537,194 V208" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c11db-ar)"/>
+
+<rect x="30" y="212" width="306" height="52" rx="9" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="183" y="234" text-anchor="middle" font-size="12" class="svgtext">③ OnDraw 遍历集合，逐笔重画</text>
+<text x="183" y="252" text-anchor="middle" font-size="11" class="svgmuted">for each：MoveTo / LineTo</text>
+<rect x="384" y="212" width="306" height="52" rx="9" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="537" y="234" text-anchor="middle" font-size="12" class="svgtext">③ WM_PAINT 时 BitBlt 贴回</text>
+<text x="537" y="252" text-anchor="middle" font-size="11" class="svgmuted">内存 DC → 屏幕，一次拷贝</text>
+
+<rect x="30" y="282" width="306" height="56" rx="9" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="48" cy="300" r="4" fill="#0ca678"/>
+<text x="60" y="304" font-size="11" class="svgtext">优：可撤销、可编辑、缩放不失真</text>
+<circle cx="48" cy="322" r="4" fill="#e03131"/>
+<text x="60" y="326" font-size="11" class="svgtext">劣：图元一多，重画就慢</text>
+
+<rect x="384" y="282" width="306" height="56" rx="9" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="402" cy="300" r="4" fill="#0ca678"/>
+<text x="414" y="304" font-size="11" class="svgtext">优：重画只是一次拷贝，还天然防闪烁</text>
+<circle cx="402" cy="322" r="4" fill="#e03131"/>
+<text x="414" y="326" font-size="11" class="svgtext">劣：吃内存、缩放糊、改不了单笔</text>
+</svg>
+<figcaption>图 11-3　保存数据与保存位图：同一个重绘问题的两条数据流（原创绘制）</figcaption>
+</figure>
 <h2 id="s11-modern">11.9 现代批注：从"自己重绘"到"保留模式"——这一章思想的今生</h2>
 
 <p><strong>设问：</strong>今天用 WPF、Qt Quick、Flutter 或浏览器写界面，好像从没手写过 <code>WM_PAINT</code>，本章这些机制是不是屠龙之技？</p>
@@ -3684,6 +4001,53 @@ awaitable&lt;<span class="kw">void</span>&gt; session(tcp::socket sock) {
 <p><strong>为什么?</strong>因为 Windows 的窗口有<strong>线程亲和性(thread affinity)</strong>:一个窗口、它的控件、它的设备上下文,都"归属于"创建它的那个线程,它们的内部状态是围绕"只有这个线程会来动我"来设计的,没做跨线程保护。你从别的线程直接调它的方法,等于绕过了它赖以协调的消息机制,轻则界面状态错乱、重则崩溃或死锁。窗口消息本就是设计成排队、由拥有者线程串行处理的。</p>
 <p><strong>那工作线程算好了结果、想更新进度条怎么办?正确姿势是"发消息,不动手":</strong>工作线程用 <code>PostMessage</code> 往窗口投递一条自定义消息(编号用 <code>WM_APP</code> 往上),把数据放在参数里;真正的界面更新写在 UI 线程的窗口过程里——那段代码运行在主线程,操作界面天然安全。</p>
 <pre><code><span class="cl"><span class="cc" style="min-width:34.0ch"><span class="kw">#define</span> WM_PROGRESS (WM_APP + 1)</span><span class="cm">// 自定义消息编号</span></span><span class="cl"> </span><span class="cl"><span class="cm">// ——— 工作线程里：只发消息，绝不直接改界面 ———</span></span><span class="cl">PostMessage(hWnd, WM_PROGRESS, percent, 0);</span><span class="cl"> </span><span class="cl"><span class="cm">// ——— UI 线程的窗口过程里：这里才动界面，安全 ———</span></span><span class="cl"><span class="kw">case</span> WM_PROGRESS:</span><span class="cl"><span class="cc" style="min-width:34.0ch">    setProgressBar((<span class="kw">int</span>)wParam);</span><span class="cm">// 运行在主线程</span></span><span class="cl">    <span class="kw">break</span>;</span></code></pre>
+<p>多线程程序最容易踩的坑，是在工作线程里直接去改界面。MFC 的窗口对象与句柄映射表是<strong>按线程私有</strong>的，跨线程碰控件轻则不刷新、重则崩溃。正确的做法只有一条：工作线程把结果 <code>PostMessage</code> 给主窗口，界面永远由主线程自己动手改。</p>
+<figure data-mark="fig-c10-ui-thread-rule">
+<svg viewBox="0 0 720 340" role="img" aria-label="工作线程不能直接访问界面控件，必须通过 PostMessage 把结果交给主线程，由主线程的消息循环取出后更新界面">
+<defs>
+<marker id="c10ui-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#0ca678"/></marker>
+<marker id="c10ui-no" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#e03131"/></marker>
+<marker id="c10ui-in" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)"/></marker>
+</defs>
+<text x="360" y="24" text-anchor="middle" font-size="12" class="svgtext">工作线程只管算，界面只由主线程改</text>
+
+<rect x="24" y="76" width="190" height="140" rx="12" fill="var(--svg-soft2)" stroke="#e8590c"/>
+<text x="119" y="100" text-anchor="middle" font-size="13" class="svgtext">工作线程</text>
+<text x="119" y="118" text-anchor="middle" font-size="11" class="svgmuted">AfxBeginThread(…)</text>
+<rect x="40" y="132" width="158" height="66" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="119" y="156" text-anchor="middle" font-size="11" class="svgtext">耗时计算 / 下载 / 扫描</text>
+<text x="119" y="178" text-anchor="middle" font-size="11" class="svgmuted">算出结果 nPercent</text>
+
+<text x="324" y="82" text-anchor="middle" font-size="11" fill="#0ca678">✓ 正确路径</text>
+<text x="324" y="100" text-anchor="middle" font-size="11" class="svgmuted">PostMessage(WM_USER+1, …)</text>
+<path d="M214,114 H430" fill="none" stroke="#0ca678" stroke-width="2" marker-end="url(#c10ui-ok)"/>
+
+<rect x="420" y="40" width="276" height="252" rx="12" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text x="558" y="64" text-anchor="middle" font-size="13" class="svgtext">主线程（UI 线程）</text>
+
+<rect x="436" y="80" width="244" height="52" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="558" y="102" text-anchor="middle" font-size="12" class="svgtext">消息队列</text>
+<text x="558" y="120" text-anchor="middle" font-size="11" class="svgmuted">WM_USER+1 排队等待</text>
+<path d="M558,132 V144" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c10ui-in)"/>
+
+<rect x="436" y="150" width="244" height="54" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="558" y="172" text-anchor="middle" font-size="12" class="svgtext">消息循环取出并分发</text>
+<text x="558" y="190" text-anchor="middle" font-size="11" class="svgmuted">ON_MESSAGE(WM_USER+1, OnCalcDone)</text>
+<path d="M558,204 V218" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#c10ui-in)"/>
+
+<rect x="436" y="224" width="244" height="54" rx="8" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text x="558" y="246" text-anchor="middle" font-size="12" class="svgtext">更新界面控件</text>
+<text x="558" y="264" text-anchor="middle" font-size="11" class="svgmuted">m_progress.SetPos(nPercent)</text>
+
+<path d="M119,216 V310 H558 V284" fill="none" stroke="#e03131" stroke-width="1.8" stroke-dasharray="6 5" marker-end="url(#c10ui-no)"/>
+<circle cx="300" cy="310" r="11" fill="var(--svg-fill)" stroke="#e03131" stroke-width="2"/>
+<path d="M292,318 L308,302" stroke="#e03131" stroke-width="2"/>
+<text x="396" y="298" text-anchor="middle" font-size="11" fill="#e03131">✗ 禁止：工作线程直接改控件</text>
+<text x="340" y="330" text-anchor="middle" font-size="11" class="svgmuted">句柄映射表按线程私有，跨线程访问会失效或崩溃</text>
+</svg>
+<figcaption>图 10-3　跨线程更新界面：红色直连禁止，绿色 PostMessage 才是唯一入口（原创绘制）</figcaption>
+</figure>
+
 <p><strong>为什么强调是 <code>PostMessage</code> 而不是 <code>SendMessage</code>?</strong>因为 <code>SendMessage</code> 是<em>同步</em>的——它会阻塞工作线程,一直等到 UI 线程把这条消息处理完才返回。如果此时 UI 线程正好在等这个工作线程(比如在等它结束),两边一互等就死锁了。<code>PostMessage</code> 是<em>异步</em>的:把消息扔进队列就立刻返回,工作线程接着干自己的,不产生这种互等。所以跨线程通知界面,<strong>默认用 PostMessage</strong>。</p>
 <div class="note new"><span class="t">🔵 现代更新:每个框架都有自己的"回主线程"通道</span><p>"UI 只能主线程碰"这条铁律在所有 GUI 框架里都成立,只是"发消息回主线程"的写法不同:WinForms 用 <code>Control.Invoke/BeginInvoke</code>,WPF 用 <code>Dispatcher.Invoke</code>,Qt 用跨线程的信号槽(队列连接)或 <code>QMetaObject::invokeMethod</code>,前端则是主线程与 Web Worker 之间 <code>postMessage</code>。名字全不一样,本质完全一样:<strong>后台线程只把"要更新什么"打包投递给主线程,由主线程实际动界面</strong>。你学会了 Win32 的 PostMessage 版本,其余的都是换皮。</p></div>
 
@@ -4633,18 +4997,24 @@ var SUN_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke
     if (h && h.charAt(0) === '#') linkMap[h.slice(1)] = a;
   });
   var heads = Array.prototype.slice.call(document.querySelectorAll('main h1[id], main h2[id]'));
-  function update(){
-    var threshold = window.innerHeight / 3, cur = null, best = -1e9;
-    heads.forEach(function(el){
-      var top = el.getBoundingClientRect().top;
-      if (top <= threshold && top > best) { best = top; cur = el.id; }
-    });
-    for (var id in linkMap) linkMap[id].classList.toggle('active', id === cur);
+  var cur = null, ticking = false;
+  function compute(){
+    ticking = false;
+    var threshold = window.innerHeight / 3, best = -1e9, id = null;
+    for (var i = 0; i < heads.length; i++) {
+      var top = heads[i].getBoundingClientRect().top;
+      if (top <= threshold && top > best) { best = top; id = heads[i].id; }
+    }
+    if (id === cur) return;
+    if (cur && linkMap[cur]) linkMap[cur].classList.remove('active');
+    cur = id;
+    if (cur && linkMap[cur]) linkMap[cur].classList.add('active');
   }
+  function update(){ if (!ticking) { ticking = true; requestAnimationFrame(compute); } }
   window.addEventListener('scroll', update, {passive:true});
   window.addEventListener('resize', update, {passive:true});
-  window.addEventListener('load', update);
-  update();
+  window.addEventListener('load', compute);
+  compute();
 })();
 (function(){
   var sb=document.getElementById('sidebar'); if(!sb) return;

@@ -151,6 +151,13 @@ td code{white-space:nowrap;}
 pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
 .fsum { margin: .2em 0 1.1em; color: var(--muted); font-size: .95em; line-height: 1.7; }
+
+/* ===== 渲染性能：视口外内容跳过布局与绘制 ===== */
+section.chapter{content-visibility:auto;contain-intrinsic-size:auto 1200px;}
+figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
+pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
+table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
+#sidebar,#toc{will-change:scroll-position;}
 </style>
 </head>
 <body>
@@ -5310,18 +5317,24 @@ var SUN_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke
     if (h && h.charAt(0) === '#') linkMap[h.slice(1)] = a;
   });
   var heads = Array.prototype.slice.call(document.querySelectorAll('main h1[id], main h2[id]'));
-  function update(){
-    var threshold = window.innerHeight / 3, cur = null, best = -1e9;
-    heads.forEach(function(el){
-      var top = el.getBoundingClientRect().top;
-      if (top <= threshold && top > best) { best = top; cur = el.id; }
-    });
-    for (var id in linkMap) linkMap[id].classList.toggle('active', id === cur);
+  var cur = null, ticking = false;
+  function compute(){
+    ticking = false;
+    var threshold = window.innerHeight / 3, best = -1e9, id = null;
+    for (var i = 0; i < heads.length; i++) {
+      var top = heads[i].getBoundingClientRect().top;
+      if (top <= threshold && top > best) { best = top; id = heads[i].id; }
+    }
+    if (id === cur) return;
+    if (cur && linkMap[cur]) linkMap[cur].classList.remove('active');
+    cur = id;
+    if (cur && linkMap[cur]) linkMap[cur].classList.add('active');
   }
+  function update(){ if (!ticking) { ticking = true; requestAnimationFrame(compute); } }
   window.addEventListener('scroll', update, {passive:true});
   window.addEventListener('resize', update, {passive:true});
-  window.addEventListener('load', update);
-  update();
+  window.addEventListener('load', compute);
+  compute();
 })();
 (function(){
   var sb=document.getElementById('sidebar'); if(!sb) return;

@@ -147,6 +147,13 @@ body.nav-hidden #sidebar, body.nav-hidden .sb-resizer{display:none;}
 #sidebar .booktitle, #sidebar .toc-title{padding-left:1.2em;}
 pre code .cl{display:block;}
 pre code .cc{display:inline-block;vertical-align:top;}
+
+/* ===== 渲染性能：视口外内容跳过布局与绘制 ===== */
+section.chapter{content-visibility:auto;contain-intrinsic-size:auto 1200px;}
+figure{content-visibility:auto;contain-intrinsic-size:auto 320px;}
+pre{content-visibility:auto;contain-intrinsic-size:auto 180px;}
+table{content-visibility:auto;contain-intrinsic-size:auto 260px;}
+#sidebar,#toc{will-change:scroll-position;}
 </style>
 </head>
 <body>
@@ -1146,6 +1153,60 @@ PostMessageW(hwndMain, WM_APP_WORKDONE, resultCode, 0);</code></pre>
 <tr><td>当前位置</td><td>(0, 0)</td><td>MoveToEx</td></tr>
 </tbody>
 </table>
+<h3>那「画布」到底是什么</h3>
+<p>上面反复说 DC 是「一块带状态的画布」，但画布本身指的是什么？答案是 DC 内部记着一个<strong>目标表面（surface）</strong>——真正承接像素的那块内存或设备。<strong>同一套绘图函数，因为 DC 绑的表面不同，结果就落到完全不同的地方</strong>：</p>
+<figure data-mark="fig-dc-surface">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<defs><marker id="dcs-ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs>
+
+<rect x="24" y="94" width="150" height="96" rx="8" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="2"/>
+<text class="svgtext" x="99" y="120" text-anchor="middle" font-weight="700">HDC</text>
+<text class="svgmuted" x="99" y="142" text-anchor="middle" font-size="11">当前画笔/画刷/字体</text>
+<text class="svgmuted" x="99" y="160" text-anchor="middle" font-size="11">颜色/坐标系/裁剪区</text>
+<text class="svgmuted" x="99" y="178" text-anchor="middle" font-size="11" font-weight="600">+ 目标表面 ←</text>
+<text class="svgmuted" x="99" y="80" text-anchor="middle" font-size="11.5">你调 TextOut / LineTo…</text>
+
+<line x1="174" y1="122" x2="286" y2="62" stroke="var(--accent)" marker-end="url(#dcs-ar)"/>
+<line x1="174" y1="142" x2="286" y2="142" stroke="var(--accent)" marker-end="url(#dcs-ar)"/>
+<line x1="174" y1="162" x2="286" y2="222" stroke="var(--accent)" marker-end="url(#dcs-ar)"/>
+
+<rect x="292" y="34" width="180" height="56" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="382" y="58" text-anchor="middle" font-size="12.5">窗口的客户区</text>
+<text class="svgmuted" x="382" y="78" text-anchor="middle" font-size="11">显存里那一块矩形像素</text>
+<text class="svgmuted" x="486" y="58" font-size="11">BeginPaint / GetDC</text>
+<text class="svgmuted" x="486" y="76" font-size="11">→ 画上去用户立刻看见</text>
+
+<rect x="292" y="114" width="180" height="56" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="382" y="138" text-anchor="middle" font-size="12.5">内存位图</text>
+<text class="svgmuted" x="382" y="158" text-anchor="middle" font-size="11">一块普通内存，用户看不见</text>
+<text class="svgmuted" x="486" y="138" font-size="11">CreateCompatibleDC</text>
+<text class="svgmuted" x="486" y="156" font-size="11">→ 双缓冲、离屏合成</text>
+
+<rect x="292" y="194" width="180" height="56" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="382" y="218" text-anchor="middle" font-size="12.5">打印机 / 元文件</text>
+<text class="svgmuted" x="382" y="238" text-anchor="middle" font-size="11">纸张或一串可回放的指令</text>
+<text class="svgmuted" x="486" y="218" font-size="11">CreateDC / PrintDlg</text>
+<text class="svgmuted" x="486" y="236" font-size="11">→ 同一份代码画到纸上</text>
+
+<text class="svgmuted" x="24" y="286" font-size="12">这正是「设备无关」的落点：你的绘图代码<tspan font-weight="600">从不关心</tspan>目标是屏幕、内存还是打印机——那是 DC 的事。</text>
+</svg>
+<figcaption>图 4-2　同一套绘图指令，随 DC 绑定的表面落到不同地方（原创绘制）</figcaption>
+</figure>
+<p>所以「获取一个 DC」这个动作，本质是<strong>问系统要一块画布并配好默认工具</strong>。不同的获取方式，拿到的画布范围也不同：</p>
+<table>
+<thead><tr><th>获取方式</th><th>拿到的画布是</th><th>典型场景</th></tr></thead>
+<tbody>
+<tr><td><code>BeginPaint</code></td><td>客户区中<strong>当前无效的那一块</strong>（已自动设好裁剪区）</td><td>只能在 <code>WM_PAINT</code> 里用</td></tr>
+<tr><td><code>GetDC</code></td><td><strong>整个客户区</strong></td><td>响应鼠标拖动等临时绘制</td></tr>
+<tr><td><code>GetWindowDC</code></td><td><strong>整个窗口</strong>，含标题栏与边框</td><td>自绘非客户区，少用</td></tr>
+<tr><td><code>CreateCompatibleDC</code></td><td>一块<strong>内存位图</strong>（离屏）</td><td>双缓冲、图像处理</td></tr>
+</tbody>
+</table>
+<div class="note ok">
+<span class="t">一个常被忽略的推论</span>
+<p>DC 是<strong>系统资源，数量有限</strong>。<code>GetDC</code> 必须配 <code>ReleaseDC</code>、<code>BeginPaint</code> 必须配 <code>EndPaint</code>、<code>CreateCompatibleDC</code> 必须配 <code>DeleteDC</code>——漏掉配对，程序跑久了会出现「画不出来了」「界面花了」的怪象，而且往往在长时间运行后才暴露。任务管理器里的 <strong>GDI 对象</strong>那一列若持续上涨，八成就是这里漏了。</p>
+</div>
+
 <div class="note new"><span class="t">🔵 现代提示</span><p>如果你要一次改很多属性、画完再全部还原，别一项项记着旧值。用 <code>SaveDC</code> 把整块 DC 状态压栈，画完 <code>RestoreDC</code> 一次性弹回。这在临时切换坐标系、裁剪区时特别省心。</p></div>
 
 <h2 id="w4-get-dc">取得 DC 的两条主路：BeginPaint 与 GetDC</h2>
@@ -1373,26 +1434,26 @@ DeleteObject(hBrush);</code></pre>
 <line x1="360" y1="34" x2="360" y2="446" stroke="var(--rule)" stroke-dasharray="4 4"/>
 
 <!-- ① 抗锯齿 -->
-<text class="svgmuted" x="24" y="58" font-size="13" font-weight="600">① 抗锯齿（Anti-aliasing）</text>
+<text class="svgmuted" x="360" y="58" text-anchor="middle" font-size="13" font-weight="600">① 抗锯齿（Anti-aliasing）</text>
 <g>
   <rect x="24" y="70" width="14" height="14" fill="#1971c2"/><rect x="38" y="84" width="14" height="14" fill="#1971c2"/>
   <rect x="52" y="98" width="14" height="14" fill="#1971c2"/><rect x="66" y="112" width="14" height="14" fill="#1971c2"/>
   <rect x="80" y="126" width="14" height="14" fill="#1971c2"/><rect x="94" y="140" width="14" height="14" fill="#1971c2"/>
 </g>
 <circle cx="230" cy="112" r="42" fill="none" stroke="#1971c2" stroke-width="3" stroke-dasharray="3 2.4" opacity=".85"/>
-<text class="svgmuted" x="180" y="172" text-anchor="middle" font-size="11.5">斜线与圆弧呈阶梯状「毛边」</text>
+<text x="180" y="76" text-anchor="middle" font-size="11.5" fill="#e03131" font-weight="600">✗ 无抗锯齿</text><text class="svgmuted" x="180" y="172" text-anchor="middle" font-size="11.5">斜线与圆弧呈阶梯状「毛边」</text>
 
 <line x1="400" y1="70" x2="500" y2="154" stroke="#1971c2" stroke-width="5" stroke-linecap="round"/>
 <circle cx="600" cy="112" r="42" fill="none" stroke="#1971c2" stroke-width="3"/>
-<text class="svgmuted" x="540" y="172" text-anchor="middle" font-size="11.5">边缘平滑，与真实曲线一致</text>
+<text x="540" y="76" text-anchor="middle" font-size="11.5" fill="#0ca678" font-weight="600">✓ 有抗锯齿</text><text class="svgmuted" x="540" y="172" text-anchor="middle" font-size="11.5">边缘平滑，与真实曲线一致</text>
 
 <line x1="24" y1="192" x2="696" y2="192" stroke="var(--rule)"/>
 
 <!-- ② 渐变 -->
-<text class="svgmuted" x="24" y="216" font-size="13" font-weight="600">② 渐变（Gradient）</text>
+<text class="svgmuted" x="360" y="216" text-anchor="middle" font-size="13" font-weight="600">② 渐变（Gradient）</text>
 <rect x="24" y="228" width="150" height="56" rx="4" fill="#1971c2"/>
 <rect x="186" y="228" width="150" height="56" rx="4" fill="#e03131"/>
-<text class="svgmuted" x="180" y="302" text-anchor="middle" font-size="11.5">只能一块一块地填纯色</text>
+<text x="180" y="234" text-anchor="middle" font-size="11.5" fill="#e03131" font-weight="600">✗ 无渐变</text><text class="svgmuted" x="180" y="302" text-anchor="middle" font-size="11.5">只能一块一块地填纯色</text>
 
 <rect x="400" y="228" width="272" height="56" rx="4" fill="url(#gf-lg)"/>
 <text class="svgmuted" x="536" y="302" text-anchor="middle" font-size="11.5">一次调用完成平滑过渡，无色带</text>
@@ -1400,16 +1461,16 @@ DeleteObject(hBrush);</code></pre>
 <line x1="24" y1="322" x2="696" y2="322" stroke="var(--rule)"/>
 
 <!-- ③ 半透明 -->
-<text class="svgmuted" x="24" y="346" font-size="13" font-weight="600">③ 半透明（Alpha 通道）</text>
+<text class="svgmuted" x="360" y="346" text-anchor="middle" font-size="13" font-weight="600">③ 半透明（Alpha 通道）</text>
 <rect x="24" y="358" width="200" height="86" fill="url(#gf-ck)" stroke="var(--rule)"/>
 <circle cx="96" cy="401" r="32" fill="#e03131"/>
 <circle cx="152" cy="401" r="32" fill="#1971c2"/>
-<text class="svgmuted" x="180" y="462" text-anchor="middle" font-size="11.5">后画的把先画的完全盖死</text>
+<text x="180" y="352" text-anchor="middle" font-size="11.5" fill="#e03131" font-weight="600">✗ 无半透明</text><text class="svgmuted" x="180" y="462" text-anchor="middle" font-size="11.5">后画的把先画的完全盖死</text>
 
 <rect x="400" y="358" width="200" height="86" fill="url(#gf-ck)" stroke="var(--rule)"/>
 <circle cx="472" cy="401" r="32" fill="#e03131" fill-opacity="0.62"/>
 <circle cx="528" cy="401" r="32" fill="#1971c2" fill-opacity="0.62"/>
-<text class="svgmuted" x="540" y="462" text-anchor="middle" font-size="11.5">透出下层，重叠处混出新色</text>
+<text x="540" y="352" text-anchor="middle" font-size="11.5" fill="#0ca678" font-weight="600">✓ 有半透明</text><text class="svgmuted" x="540" y="462" text-anchor="middle" font-size="11.5">透出下层，重叠处混出新色</text>
 </svg>
 <figcaption>图 4-2　GDI 与现代绘图 API 的三处关键差距（原创绘制）</figcaption>
 </figure>
@@ -4681,18 +4742,24 @@ var SUN_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke
     if (h && h.charAt(0) === '#') linkMap[h.slice(1)] = a;
   });
   var heads = Array.prototype.slice.call(document.querySelectorAll('main h1[id], main h2[id]'));
-  function update(){
-    var threshold = window.innerHeight / 3, cur = null, best = -1e9;
-    heads.forEach(function(el){
-      var top = el.getBoundingClientRect().top;
-      if (top <= threshold && top > best) { best = top; cur = el.id; }
-    });
-    for (var id in linkMap) linkMap[id].classList.toggle('active', id === cur);
+  var cur = null, ticking = false;
+  function compute(){
+    ticking = false;
+    var threshold = window.innerHeight / 3, best = -1e9, id = null;
+    for (var i = 0; i < heads.length; i++) {
+      var top = heads[i].getBoundingClientRect().top;
+      if (top <= threshold && top > best) { best = top; id = heads[i].id; }
+    }
+    if (id === cur) return;
+    if (cur && linkMap[cur]) linkMap[cur].classList.remove('active');
+    cur = id;
+    if (cur && linkMap[cur]) linkMap[cur].classList.add('active');
   }
+  function update(){ if (!ticking) { ticking = true; requestAnimationFrame(compute); } }
   window.addEventListener('scroll', update, {passive:true});
   window.addEventListener('resize', update, {passive:true});
-  window.addEventListener('load', update);
-  update();
+  window.addEventListener('load', compute);
+  compute();
 })();
 (function(){
   var sb=document.getElementById('sidebar'); if(!sb) return;
