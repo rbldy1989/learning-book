@@ -67,7 +67,7 @@ figure table { width: 100%; }
 <div class="wrap">
 <header>
   <h1>现代编程书系 · AI 重构版</h1>
-  <p class="lead">沿用经典教材的知识脉络，剔除已废弃技术，补上现代实践 &middot; 三本教材 + 两本速查手册</p>
+  <p class="lead">沿用经典教材的知识脉络，剔除已废弃技术，补上现代实践 &middot; 六本教材 + 两本速查手册</p>
 </header>
 <div class="grid">
 <a class="card" href="Win32程序设计-现代详解.html" style="--accent:#1971c2">
@@ -118,6 +118,41 @@ figure table { width: 100%; }
     <div class="meta">8 分类 · 99 个函数详解</div>
     <p>按头文件分类，二级标题即函数名。每个条目含原型、参数表、返回值、示例与经典陷阱提醒。</p>
     <div class="tags"><span class="tag">速查手册</span><span class="tag">99 个函数</span><span class="tag">含安全版 _s</span></div>
+  </div>
+</a>
+</div>
+
+<h2 class="secttl">脚本与命令行</h2>
+<p class="sectsub">三种日常自动化语言，同样的教材 + 速查双重结构。</p>
+<div class="grid">
+<a class="card" href="CMD批处理-现代详解.html" style="--accent:#868e96">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><rect x="28" y="60" width="144" height="150" rx="6" fill="#1a1a1a" stroke="#868e96" stroke-width="2"/><text x="42" y="92" font-family="Consolas,monospace" font-size="15" fill="#cfcfcf">C:\&gt;_</text><rect x="42" y="112" width="86" height="7" rx="3" fill="#7a7a7a"/><rect x="42" y="130" width="110" height="7" rx="3" fill="#5a5a5a"/><rect x="42" y="148" width="64" height="7" rx="3" fill="#5a5a5a"/><rect x="42" y="166" width="98" height="7" rx="3" fill="#5a5a5a"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#868e96"/></svg></div>
+  <div class="info">
+    <h2>CMD 批处理脚本</h2>
+    <div class="sub">现代详解</div>
+    <div class="meta">5 章 · 49 节 · 12 图</div>
+    <p>从 COMMAND.COM 的历史包袱讲起：变量展开时机、延迟展开、for /F 解析、转义与引号陷阱，把存量脚本改对改稳。</p>
+    <div class="tags"><span class="tag">教材+速查</span><span class="tag">含十大陷阱</span><span class="tag">参数修饰符全表</span></div>
+  </div>
+</a>
+<a class="card" href="PowerShell-现代详解.html" style="--accent:#1856a8">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><rect x="28" y="60" width="144" height="150" rx="6" fill="#012456" stroke="#1856a8" stroke-width="2"/><text x="44" y="106" font-family="Consolas,monospace" font-size="26" fill="#e8e8e8">PS&gt;</text><rect x="44" y="128" width="104" height="7" rx="3" fill="#7fa8d8"/><rect x="44" y="146" width="76" height="7" rx="3" fill="#5a83b0"/><circle cx="60" cy="180" r="7" fill="none" stroke="#7fa8d8" stroke-width="2"/><path d="M74 180 h34" stroke="#7fa8d8" stroke-width="2"/><circle cx="122" cy="180" r="7" fill="none" stroke="#7fa8d8" stroke-width="2"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#1856a8"/></svg></div>
+  <div class="info">
+    <h2>PowerShell 脚本</h2>
+    <div class="sub">现代详解</div>
+    <div class="meta">6 章 · 59 节 · 17 图</div>
+    <p>核心观念是「管道里传对象而非文本」。涵盖类型与比较运算、对象管道、函数与参数、文件注册表管理、错误处理与调试。</p>
+    <div class="tags"><span class="tag">教材+速查</span><span class="tag">对象管道</span><span class="tag">PS 5.1 与 7</span></div>
+  </div>
+</a>
+<a class="card" href="Bash与命令行工具-现代详解.html" style="--accent:#0ca678">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><rect x="28" y="60" width="144" height="150" rx="6" fill="#1e1e1e" stroke="#0ca678" stroke-width="2"/><text x="42" y="94" font-family="Consolas,monospace" font-size="15" fill="#6ee787">$ _</text><rect x="42" y="114" width="96" height="7" rx="3" fill="#8a8a8a"/><text x="42" y="146" font-family="Consolas,monospace" font-size="13" fill="#79c0ff">| grep</text><text x="42" y="168" font-family="Consolas,monospace" font-size="13" fill="#79c0ff">| awk</text><text x="42" y="190" font-family="Consolas,monospace" font-size="13" fill="#79c0ff">| sed</text><rect x="0" y="0" width="200" height="8" rx="4" fill="#0ca678"/></svg></div>
+  <div class="info">
+    <h2>Bash 与命令行工具</h2>
+    <div class="sub">现代详解</div>
+    <div class="meta">7 章 · 67 节 · 20 图</div>
+    <p>引号与展开、健壮脚本三件套 set -euo pipefail、重定向与进程替换，外加 grep/sed/awk 三剑客与常用工具速查。</p>
+    <div class="tags"><span class="tag">教材+速查</span><span class="tag">三剑客专章</span><span class="tag">工具速查表</span></div>
   </div>
 </a>
 </div>
