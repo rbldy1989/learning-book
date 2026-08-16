@@ -3439,6 +3439,68 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 </tbody></table>
 
 <pre><code><span class="cl">HWND hLV = CreateWindowExW(0, WC_LISTVIEW, L"",</span><span class="cl">    WS_CHILD | WS_VISIBLE | WS_TABSTOP | LVS_REPORT | LVS_SINGLESEL,</span><span class="cl">    0, 0, 420, 260, hwnd, (HMENU)(INT_PTR)IDC_LV, hInst, NULL);</span><span class="cl">ListView_SetExtendedListViewStyle(hLV,</span><span class="cl">    LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);</span><span class="cl"> </span><span class="cl">LVCOLUMNW col = {};</span><span class="cl">col.mask = LVCF_TEXT | LVCF_WIDTH;</span><span class="cl">col.pszText = (LPWSTR)L"文件名"; col.cx = 220;</span><span class="cl">ListView_InsertColumn(hLV, 0, &amp;col);</span><span class="cl">col.pszText = (LPWSTR)L"大小";   col.cx = 100;</span><span class="cl">ListView_InsertColumn(hLV, 1, &amp;col);</span><span class="cl"> </span><span class="cl">LVITEMW it = {};</span><span class="cl">it.mask = LVIF_TEXT;</span><span class="cl">it.iItem = 0; it.pszText = (LPWSTR)L"readme.txt";</span><span class="cl"><span class="cc" style="min-width:58.2ch">ListView_InsertItem(hLV, &amp;it);</span><span class="cm">// 第 0 列</span></span><span class="cl"><span class="cc" style="min-width:58.2ch">ListView_SetItemText(hLV, 0, 1, (LPWSTR)L"1,024 字节");</span><span class="cm">// 第 1 列（子项）</span></span></code></pre>
+<p>这段代码跑出来是下面这个样子。把代码和结果对照着看，每一行对应界面上的哪一块就一目了然了：</p>
+<figure data-mark="fig-listview-result">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<defs><marker id="lvr-ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 z" fill="var(--muted)"/></marker></defs>
+
+<!-- 控件本体 -->
+<rect x="150" y="40" width="420" height="180" fill="var(--svg-fill)" stroke="var(--rule)" stroke-width="1.5"/>
+
+<!-- 表头 -->
+<rect x="150" y="40" width="420" height="28" fill="var(--svg-soft)"/>
+<line x1="150" y1="68" x2="570" y2="68" stroke="var(--rule)"/>
+<line x1="370" y1="40" x2="370" y2="220" stroke="var(--rule)"/>
+<text class="svgtext" x="162" y="59" font-size="12.5">文件名</text>
+<text class="svgtext" x="382" y="59" font-size="12.5">大小</text>
+
+<!-- 选中行（整行高亮） -->
+<rect x="151" y="69" width="418" height="26" fill="var(--svg-soft)"/>
+<text class="svgtext" x="162" y="87" font-size="12.5">readme.txt</text>
+<text class="svgtext" x="382" y="87" font-size="12.5">1,024 字节</text>
+
+<!-- 网格线 -->
+<line x1="150" y1="95" x2="570" y2="95" stroke="var(--rule)" stroke-dasharray="2 2"/>
+<line x1="150" y1="121" x2="570" y2="121" stroke="var(--rule)" stroke-dasharray="2 2"/>
+<line x1="150" y1="147" x2="570" y2="147" stroke="var(--rule)" stroke-dasharray="2 2"/>
+<line x1="150" y1="173" x2="570" y2="173" stroke="var(--rule)" stroke-dasharray="2 2"/>
+<line x1="150" y1="199" x2="570" y2="199" stroke="var(--rule)" stroke-dasharray="2 2"/>
+<text class="svgmuted" x="162" y="113" font-size="12" opacity=".45">（后续项…）</text>
+
+<!-- 标注：LVS_REPORT -->
+<line x1="330" y1="30" x2="330" y2="38" stroke="var(--muted)" marker-end="url(#lvr-ar)"/>
+<text class="svgmuted" x="330" y="24" text-anchor="middle" font-size="11">LVS_REPORT：带表头的多列报表模式</text>
+
+<!-- 标注：列 -->
+<line x1="260" y1="240" x2="260" y2="224" stroke="var(--muted)" marker-end="url(#lvr-ar)"/>
+<text class="svgmuted" x="260" y="254" text-anchor="middle" font-size="11">第 0 列，col.cx = 220</text>
+<text class="svgmuted" x="260" y="270" text-anchor="middle" font-size="10.5">InsertColumn(hLV, 0, &amp;col)</text>
+<line x1="470" y1="240" x2="470" y2="224" stroke="var(--muted)" marker-end="url(#lvr-ar)"/>
+<text class="svgmuted" x="470" y="254" text-anchor="middle" font-size="11">第 1 列，col.cx = 100</text>
+<text class="svgmuted" x="470" y="270" text-anchor="middle" font-size="10.5">InsertColumn(hLV, 1, &amp;col)</text>
+
+<!-- 标注：项与子项 -->
+<line x1="140" y1="82" x2="148" y2="82" stroke="var(--muted)" marker-end="url(#lvr-ar)"/>
+<text class="svgmuted" x="134" y="78" text-anchor="end" font-size="11">iItem = 0</text>
+<text class="svgmuted" x="134" y="94" text-anchor="end" font-size="10.5">InsertItem 只填第 0 列</text>
+<text class="svgmuted" x="134" y="112" text-anchor="end" font-size="10.5">SetItemText 补第 1 列</text>
+
+<!-- 右侧扩展样式说明 -->
+<text class="svgmuted" x="584" y="60" font-size="11" font-weight="600">扩展样式的效果</text>
+<rect x="584" y="70" width="10" height="10" fill="var(--svg-soft)" stroke="var(--rule)"/>
+<text class="svgmuted" x="600" y="79" font-size="10.5">FULLROWSELECT</text>
+<text class="svgmuted" x="600" y="93" font-size="10">整行高亮，而非只亮首列</text>
+<line x1="584" y1="106" x2="594" y2="106" stroke="var(--rule)" stroke-dasharray="2 2"/>
+<text class="svgmuted" x="600" y="110" font-size="10.5">GRIDLINES</text>
+<text class="svgmuted" x="600" y="124" font-size="10">显示这些浅色分隔线</text>
+<text class="svgmuted" x="584" y="146" font-size="10.5">DOUBLEBUFFER</text>
+<text class="svgmuted" x="584" y="160" font-size="10">滚动时不闪烁（看不见但很重要）</text>
+
+<text class="svgmuted" x="24" y="294" font-size="12">注意「项（item）」与「子项（subitem）」的分工：<tspan font-weight="600">InsertItem 只负责第 0 列</tspan>，其余各列一律用 SetItemText 逐个补上。</text>
+</svg>
+<figcaption>图 9-7　上面那段代码运行出来的样子（原创绘制）</figcaption>
+</figure>
+
 
 <div class="note ok"><span class="t">🟢 十万行数据？用虚拟列表</span><p>一条条 <code>LVM_INSERTITEM</code> 灌十万行，插入慢、内存翻倍。加 <code>LVS_OWNERDATA</code> 变身虚拟列表：数据留在你自己的数组/数据库里，只需 <code>LVM_SETITEMCOUNT</code> 报个总数，控件滚到哪儿就发 <code>LVN_GETDISPINFO</code> 向你要哪几行。显示百万行照样丝滑——任务管理器就是这么干的。</p></div>
 
