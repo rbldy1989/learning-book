@@ -1039,6 +1039,35 @@ PostMessageW(hWnd, WM_APP + 1, 0, 0);</code></pre>
 <p>什么叫「失效」？当窗口从被别的窗口盖住的状态露出来、被从最小化恢复、尺寸变大露出新区域、或者你自己主动声明「这块内容过时了」时，系统会把对应的矩形加进该窗口的<strong>无效区域（invalid region）</strong>，并投递一条 <span class="kw">WM_PAINT</span>。你在窗口过程里接住 <span class="kw">WM_PAINT</span>，用 <span class="kw">BeginPaint</span> / <span class="kw">EndPaint</span> 完成绘制。<span class="kw">BeginPaint</span> 做两件关键事：给你一个可以画图的设备上下文（<span class="kw">HDC</span>），并<strong>把无效区域标记为有效</strong>——这一步至关重要。</p>
 
 <pre><code><span class="cl"><span class="kw">case</span> WM_PAINT:</span><span class="cl">{</span><span class="cl">    PAINTSTRUCT ps;</span><span class="cl"><span class="cc" style="min-width:38.0ch">    HDC hdc = BeginPaint(hWnd, &amp;ps);</span><span class="cm">// 取得 HDC，并清掉无效标记</span></span><span class="cl"> </span><span class="cl">    <span class="cm">// ps.rcPaint 就是这次需要重绘的矩形，可只画这一块以提速</span></span><span class="cl">    TextOutW(hdc, 10, 10, L<span class="cm">"Hello, Win32"</span>, 12);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:38.0ch">    EndPaint(hWnd, &amp;ps);</span><span class="cm">// 收尾，释放绘制资源</span></span><span class="cl">    <span class="kw">return</span> 0;</span><span class="cl">}</span></code></pre>
+<figure data-mark="fig-invalid">
+<svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="18" font-size="12.5">系统不会没事让你重画——只有窗口出现「无效区域」时才发 WM_PAINT：</text>
+<rect x="24" y="34" width="150" height="100" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="70" cy="76" r="18" fill="#1971c2" opacity=".6"/>
+<rect x="100" y="88" width="46" height="30" fill="#0ca678" opacity=".5"/>
+<text class="svgmuted" x="99" y="152" text-anchor="middle" font-size="11.5">① 正常显示</text>
+<rect x="200" y="34" width="150" height="100" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="246" cy="76" r="18" fill="#1971c2" opacity=".6"/>
+<rect x="276" y="88" width="46" height="30" fill="#0ca678" opacity=".5"/>
+<rect x="256" y="52" width="86" height="64" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
+<text class="svgmuted" x="299" y="88" text-anchor="middle" font-size="11">别的窗口</text>
+<text class="svgmuted" x="275" y="152" text-anchor="middle" font-size="11.5">② 被遮挡</text>
+<rect x="376" y="34" width="150" height="100" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="422" cy="76" r="18" fill="#1971c2" opacity=".6"/>
+<rect x="432" y="52" width="86" height="64" fill="#fff4e6" stroke="#e8590c" stroke-dasharray="4 3"/>
+<text x="475" y="88" text-anchor="middle" font-size="11" fill="#e8590c">无效区域</text>
+<text class="svgmuted" x="451" y="152" text-anchor="middle" font-size="11.5">③ 移开后：这块「脏」了</text>
+<rect x="552" y="34" width="150" height="100" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<circle cx="598" cy="76" r="18" fill="#1971c2" opacity=".6"/>
+<rect x="628" y="88" width="46" height="30" fill="#0ca678" opacity=".5"/>
+<text class="svgmuted" x="627" y="152" text-anchor="middle" font-size="11.5">④ WM_PAINT 后恢复</text>
+<text class="svgmuted" x="24" y="188" font-size="12"><tspan font-weight="600">关键点：</tspan>系统只把「脏掉的那一小块」标为无效，BeginPaint 会自动把裁剪区设成它——</text>
+<text class="svgmuted" x="24" y="208" font-size="12">所以你即使在 WM_PAINT 里画满整个窗口，实际落笔的也只有那一小块，其余被裁掉，开销很小。</text>
+<text class="svgmuted" x="24" y="230" font-size="12">主动让某块重画：<tspan font-weight="600">InvalidateRect</tspan>(hwnd, &amp;rc, TRUE) —— 把它标脏，系统随后自会发 WM_PAINT。</text>
+</svg>
+<figcaption>图 3-2　无效区域：重绘只发生在「脏」的地方（原创绘制）</figcaption>
+</figure>
+
 
 <p>这里藏着一个新手必踩的坑：<strong>如果你收到 <span class="kw">WM_PAINT</span> 却不调用 <span class="kw">BeginPaint</span>/<span class="kw">EndPaint</span>（或不调用 <span class="kw">ValidateRect</span>）去清除无效标记，那块区域会一直「无效」，系统会一遍又一遍地投递 <span class="kw">WM_PAINT</span>，程序陷入 100% CPU 的疯狂重绘。</strong>所以接住 <span class="kw">WM_PAINT</span> 就必须把无效区域清掉——这正是 <span class="kw">BeginPaint</span> 替你做的。</p>
 
@@ -1223,6 +1252,43 @@ DeleteObject(hBrush);</code></pre>
 <p>注意公制/英制那几种模式 <strong>y 是向上为正</strong>的（符合数学直觉），和 MM_TEXT 相反。这意味着切过去以后，你想画在可见区域里，y 坐标往往得用负数——很多人第一次用这些模式时“东西画到窗口外去了”，就是没意识到 y 翻了向。</p>
 <p>要完全自定义比例和方向，用 <code>MM_ISOTROPIC</code>（保持 x/y 等比，画圆不会被拉成椭圆）或 <code>MM_ANISOTROPIC</code>（x/y 可独立缩放）。你通过两对函数设定“逻辑窗口”到“设备视口”的映射：<code>SetWindowExtEx</code>/<code>SetViewportExtEx</code> 定缩放比例，<code>SetWindowOrgEx</code>/<code>SetViewportOrgEx</code> 定原点平移。概念上：视口在设备（像素）里，窗口在你的逻辑坐标里，GDI 按两者的比例换算。</p>
 <pre><code><span class="cl"><span class="cm">// 让逻辑坐标 0..1000 铺满整个客户区，等比缩放，原点放左下角、y 向上</span></span><span class="cl">RECT rc; GetClientRect(hwnd, &amp;rc);</span><span class="cl">SetMapMode(hdc, MM_ISOTROPIC);</span><span class="cl"><span class="cc" style="min-width:52.0ch">SetWindowExtEx  (hdc, 1000, 1000, <span class="kw">NULL</span>);</span><span class="cm">// 逻辑范围</span></span><span class="cl"><span class="cc" style="min-width:52.0ch">SetViewportExtEx(hdc, rc.right, -rc.bottom, <span class="kw">NULL</span>);</span><span class="cm">// y 取负 → 翻成向上</span></span><span class="cl"><span class="cc" style="min-width:52.0ch">SetViewportOrgEx(hdc, 0, rc.bottom, <span class="kw">NULL</span>);</span><span class="cm">// 原点挪到左下角</span></span></code></pre>
+<figure data-mark="fig-mapping">
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<text class="svgmuted" x="24" y="18" font-size="12.5">映射模式决定「你说的 1 个单位，落到屏幕上是多少像素、朝哪个方向」：</text>
+<rect x="24" y="34" width="200" height="120" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<line x1="44" y1="54" x2="204" y2="54" stroke="var(--muted)"/>
+<line x1="44" y1="54" x2="44" y2="144" stroke="var(--muted)"/>
+<path d="M196,50 L204,54 L196,58" fill="none" stroke="var(--muted)"/>
+<path d="M40,136 L44,144 L48,136" fill="none" stroke="var(--muted)"/>
+<text class="svgmuted" x="210" y="58" font-size="10.5">+x</text>
+<text class="svgmuted" x="34" y="156" font-size="10.5">+y</text>
+<circle cx="44" cy="54" r="3" fill="#e03131"/>
+<text class="svgmuted" x="52" y="48" font-size="10.5">(0,0)</text>
+<rect x="84" y="84" width="60" height="36" fill="#1971c2" opacity=".5"/>
+<text class="svgmuted" x="124" y="176" text-anchor="middle" font-size="11.5">MM_TEXT（默认）</text>
+<text class="svgmuted" x="124" y="194" text-anchor="middle" font-size="11">1 单位 = 1 像素，y 轴<tspan font-weight="600">向下</tspan></text>
+<rect x="264" y="34" width="200" height="120" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<line x1="284" y1="134" x2="444" y2="134" stroke="var(--muted)"/>
+<line x1="284" y1="134" x2="284" y2="44" stroke="var(--muted)"/>
+<path d="M436,130 L444,134 L436,138" fill="none" stroke="var(--muted)"/>
+<path d="M280,52 L284,44 L288,52" fill="none" stroke="var(--muted)"/>
+<text class="svgmuted" x="450" y="138" font-size="10.5">+x</text>
+<text class="svgmuted" x="274" y="42" font-size="10.5">+y</text>
+<circle cx="284" cy="134" r="3" fill="#e03131"/>
+<rect x="324" y="68" width="60" height="36" fill="#1971c2" opacity=".5"/>
+<text class="svgmuted" x="364" y="176" text-anchor="middle" font-size="11.5">MM_LOMETRIC 等</text>
+<text class="svgmuted" x="364" y="194" text-anchor="middle" font-size="11">1 单位 = 物理长度，y 轴<tspan font-weight="600">向上</tspan></text>
+<text class="svgmuted" x="500" y="66" font-size="11.5">为什么需要它：</text>
+<text class="svgmuted" x="500" y="88" font-size="11">屏幕按像素画没问题，可一旦要</text>
+<text class="svgmuted" x="500" y="106" font-size="11"><tspan font-weight="600">打印</tspan>——300 DPI 的打印机上，</text>
+<text class="svgmuted" x="500" y="124" font-size="11">100 像素只有指甲盖那么大。</text>
+<text class="svgmuted" x="500" y="148" font-size="11">改用物理单位，同一份绘图代码</text>
+<text class="svgmuted" x="500" y="166" font-size="11">在屏幕和纸上尺寸才一致。</text>
+<text class="svgmuted" x="24" y="228" font-size="12">这就是第 13 章「打印」能复用同一套 OnDraw 的底层原因：<tspan font-weight="600">换个映射模式，坐标含义就变了</tspan>。</text>
+</svg>
+<figcaption>图 4-5　映射模式：同样的坐标，不同的物理含义（原创绘制）</figcaption>
+</figure>
+
 <p>需要在两套坐标间手动换算时，用 <code>LPtoDP</code>（逻辑→设备）和 <code>DPtoLP</code>（设备→逻辑）。比如鼠标消息给你的是设备像素坐标，而你正用逻辑坐标作画，就得先 <code>DPtoLP</code> 转过来。</p>
 <div class="note new"><span class="t">🔵 现代提示：DPI 缩放</span><p>今天“1 像素”不再对应固定的物理尺寸——高 DPI 屏、系统缩放（125%/150%/200%）让同样的像素数在不同机器上物理大小不同。<code>MM_TEXT</code> 下你按像素画，就得自己乘以缩放系数才能保证清晰、大小一致。正规做法是把程序声明为 <strong>Per-Monitor DPI Aware</strong>，并用 <code>GetDpiForWindow</code> 拿到当前 DPI 去换算尺寸。忽视 DPI，你的界面在高分屏上要么糊、要么小得看不清。</p></div>
 
@@ -1230,6 +1296,41 @@ DeleteObject(hBrush);</code></pre>
 <p>有时你想让绘制只发生在某个不规则形状之内，形状外的一律不落笔——这就是<strong>裁剪（clipping）</strong>。承载“形状”的东西叫<strong>区域（region，HRGN）</strong>：它可以是矩形、椭圆、圆角矩形、多边形，甚至是它们经过布尔运算组合出的复杂形状。</p>
 <p>创建区域：<code>CreateRectRgn</code>、<code>CreateEllipticRgn</code>、<code>CreateRoundRectRgn</code>、<code>CreatePolygonRgn</code>。组合区域用 <code>CombineRgn</code>，支持并（<code>RGN_OR</code>）、交（<code>RGN_AND</code>）、异或（<code>RGN_XOR</code>）、差（<code>RGN_DIFF</code>）。把区域设为 DC 的裁剪区用 <code>SelectClipRgn</code>；也可以用 <code>IntersectClipRect</code>（收窄到与某矩形的交集）、<code>ExcludeClipRect</code>（挖掉某矩形）在现有裁剪区上继续加限制。</p>
 <pre><code><span class="cl"><span class="cm">// 让后续绘制只落在一个椭圆内</span></span><span class="cl">HRGN hRgn = CreateEllipticRgn(40, 40, 300, 220);</span><span class="cl">SelectClipRgn(hdc, hRgn);</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:33.0ch">Rectangle(hdc, 0, 0, 400, 300);</span><span class="cm">// 矩形只有落在椭圆内的部分被画出</span></span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:33.0ch">SelectClipRgn(hdc, <span class="kw">NULL</span>);</span><span class="cm">// 解除裁剪</span></span><span class="cl"><span class="cc" style="min-width:33.0ch">DeleteObject(hRgn);</span><span class="cm">// 区域也是 GDI 对象，用完要删</span></span></code></pre>
+<figure data-mark="fig-clip">
+<svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<defs>
+  <clipPath id="cl-rect"><rect x="256" y="46" width="120" height="80"/></clipPath>
+  <clipPath id="cl-circ"><circle cx="596" cy="86" r="46"/></clipPath>
+</defs>
+<text class="svgmuted" x="24" y="18" font-size="12.5">裁剪区域＝一块「只有这里的笔迹算数」的模板，区域外的绘制指令直接被丢弃：</text>
+<rect x="24" y="34" width="180" height="104" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<line x1="34" y1="50" x2="194" y2="122" stroke="#1971c2" stroke-width="3"/>
+<circle cx="80" cy="100" r="26" fill="#e03131" opacity=".55"/>
+<rect x="130" y="46" width="52" height="40" fill="#0ca678" opacity=".5"/>
+<text class="svgmuted" x="114" y="158" text-anchor="middle" font-size="11.5">无裁剪：画什么出什么</text>
+<rect x="236" y="34" width="180" height="104" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<g clip-path="url(#cl-rect)">
+  <line x1="246" y1="50" x2="406" y2="122" stroke="#1971c2" stroke-width="3"/>
+  <circle cx="292" cy="100" r="26" fill="#e03131" opacity=".55"/>
+  <rect x="342" y="46" width="52" height="40" fill="#0ca678" opacity=".5"/>
+</g>
+<rect x="256" y="46" width="120" height="80" fill="none" stroke="#e8590c" stroke-dasharray="4 3"/>
+<text class="svgmuted" x="326" y="158" text-anchor="middle" font-size="11.5">矩形裁剪区（橙色虚线）</text>
+<text class="svgmuted" x="326" y="176" text-anchor="middle" font-size="11">框外的部分被切掉</text>
+<rect x="456" y="34" width="180" height="104" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<g clip-path="url(#cl-circ)">
+  <line x1="466" y1="50" x2="626" y2="122" stroke="#1971c2" stroke-width="3"/>
+  <circle cx="512" cy="100" r="26" fill="#e03131" opacity=".55"/>
+  <rect x="562" y="46" width="52" height="40" fill="#0ca678" opacity=".5"/>
+</g>
+<circle cx="596" cy="86" r="46" fill="none" stroke="#e8590c" stroke-dasharray="4 3"/>
+<text class="svgmuted" x="546" y="158" text-anchor="middle" font-size="11.5">区域可以是任意形状</text>
+<text class="svgmuted" x="24" y="204" font-size="12"><tspan font-weight="600">两个典型用途：</tspan>① 把绘制限制在控件范围内，不越界污染邻居；</text>
+<text class="svgmuted" x="24" y="224" font-size="12">② 只重绘真正变脏的那一小块 —— BeginPaint 会自动把裁剪区设为无效区域，这正是重绘高效的原因。</text>
+</svg>
+<figcaption>图 4-4　裁剪区域：区域之外的绘制被直接丢弃（原创绘制）</figcaption>
+</figure>
+
 <p>这里有个和画笔画刷不同的细节：<code>SelectClipRgn</code> 会把你的区域<strong>拷贝一份</strong>存进 DC，所以选入之后你就可以立即 <code>DeleteObject</code> 掉自己那份，不必等到解除裁剪。这和“笔/刷正被选用时不能删”的规矩正好相反，别混。</p>
 <p>你其实一直在被裁剪，只是没意识到。还记得 <code>WM_PAINT</code> 里的 <code>ps.rcPaint</code> 吗？系统在给你 DC 之前，已经把裁剪区设成了那块“无效区域”。所以哪怕你在 <code>WM_PAINT</code> 里老老实实重画了整个客户区，落在有效区域上的绘制也会被自动丢弃——这正是“只重画脏区域”能高效的底层原因：GDI 用裁剪替你挡掉了多余的落笔。你顺势只画 <code>rcPaint</code> 范围，是锦上添花的进一步优化。</p>
 <p>区域除了裁剪，也能直接当图形画：<code>FillRgn</code>（填充）、<code>FrameRgn</code>（描边框）、<code>PaintRgn</code>（用当前刷填）、<code>InvertRgn</code>（反色）。要做异形高亮、异形擦除时很趁手。</p>
@@ -1537,6 +1638,30 @@ ExtTextOutW(hdc, 20, 60, ETO_OPAQUE | ETO_CLIPPED, &amp;box,
 <h2 id="w5-color">文字颜色与背景模式</h2>
 <p>字画上去了，颜色怎么控制？三个函数管这件事，全都是设置 DC 状态：</p>
 <pre><code><span class="cl"><span class="cc" style="min-width:43.0ch">SetTextColor(hdc, RGB(0x20, 0x20, 0x20));</span><span class="cm">// 字的前景色（笔画颜色）</span></span><span class="cl"><span class="cc" style="min-width:43.0ch">SetBkColor(hdc,   RGB(0xFF, 0xFF, 0xFF));</span><span class="cm">// 背景色（仅在不透明模式下起作用）</span></span><span class="cl"><span class="cc" style="min-width:43.0ch">SetBkMode(hdc,    TRANSPARENT);</span><span class="cm">// 背景模式：透明 或 OPAQUE(不透明)</span></span></code></pre>
+<figure data-mark="fig-bkmode">
+<svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" font-size="12">
+<defs>
+  <pattern id="bk-grid" width="12" height="12" patternUnits="userSpaceOnUse">
+    <rect width="12" height="12" fill="#eef3fa"/>
+    <path d="M12 0 L0 0 0 12" fill="none" stroke="#c6d4e6" stroke-width="1"/>
+  </pattern>
+</defs>
+<text class="svgmuted" x="24" y="18" font-size="12.5">写字时，字符<tspan font-weight="600">之间的空隙</tspan>要不要用背景色填掉？这就是背景模式管的事：</text>
+<rect x="24" y="34" width="300" height="90" fill="url(#bk-grid)" stroke="var(--rule)"/>
+<rect x="44" y="62" width="180" height="34" fill="#ffffff"/>
+<text x="52" y="87" font-size="20" fill="#1971c2">GDI 文字</text>
+<text class="svgmuted" x="174" y="144" text-anchor="middle" font-size="11.5">OPAQUE（默认）</text>
+<text class="svgmuted" x="174" y="162" text-anchor="middle" font-size="11">字后面垫一块背景色，把底图盖住</text>
+<rect x="360" y="34" width="300" height="90" fill="url(#bk-grid)" stroke="var(--rule)"/>
+<text x="388" y="87" font-size="20" fill="#1971c2">GDI 文字</text>
+<text class="svgmuted" x="510" y="144" text-anchor="middle" font-size="11.5">TRANSPARENT</text>
+<text class="svgmuted" x="510" y="162" text-anchor="middle" font-size="11">只画笔画本身，底图透出来</text>
+<text class="svgmuted" x="24" y="196" font-size="12">在有背景图或彩色底的窗口上写字，忘了 <tspan font-weight="600">SetBkMode(hdc, TRANSPARENT)</tspan> 就会出现</text>
+<text class="svgmuted" x="24" y="214" font-size="12">「每行字后面拖着一条白色矩形」的经典 bug —— 这是新手最常撞的一个坑。</text>
+</svg>
+<figcaption>图 5-6　背景模式：OPAQUE 与 TRANSPARENT（原创绘制）</figcaption>
+</figure>
+
 <p><code>SetBkMode</code> 是这里最容易踩坑、也最能体现设计动机的一个。它只有两个取值：</p>
 <ul>
 <li><strong><code>OPAQUE</code>（不透明）</strong>：画每个字符时，先用 <code>SetBkColor</code> 指定的背景色，把字符外框那个小矩形填满，再画笔画。好处是字一定清晰；坏处是如果窗口本身有背景图或渐变，字后面会出现一块块难看的"底色补丁"。</li>
