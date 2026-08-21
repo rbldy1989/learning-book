@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>全栈工程师知识体系</title>
+<script>
+/* 主题与目录开关的初值在这里定好：解析 <body> 之前完成，避免加载完再改 <html> 属性触发一次全量样式重算 */
+(function(){var r=document.documentElement;
+r.setAttribute('data-theme',window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+try{if(localStorage.getItem('navHidden')==='1')r.className='nav-hidden';}catch(e){}
+try{if(localStorage.getItem('depth')==='thin')r.setAttribute('data-depth','thin');}catch(e){}})();
+</script>
+<style>
+:root {
+  --bg: #faf9f7; --fg: #2d2d2d; --muted: #8a8378;
+  --accent: #1971c2; --code-fg: #b3410e; --code-bg: #f4ede4;
+  --pre-bg: #f2f0ec; --pre-border: #e2ddd4; --rule: #e6e1d8;
+  --side-bg: #f3f1ec; --side-current: #e4edf9;
+  --ok-bg: #e6f4ea; --ok-fg: #1b7a3d; --ok-br: #a8d8b9;
+  --old-bg: #fdf4e3; --old-fg: #9a6a12; --old-br: #ecd39a;
+  --dead-bg: #fbeaea; --dead-fg: #b0322c; --dead-br: #e8b4b1;
+  --new-bg: #e8f0fb; --new-fg: #1856a8; --new-br: #b8cdec;
+  --svg-fill: #ffffff; --svg-soft: #eef3fa; --svg-soft2: #fdf3e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e1f22; --fg: #d6d3cd; --muted: #7d7a74;
+    --accent: #6aa9e0; --code-fg: #e8a06a; --code-bg: #2b2a27;
+    --pre-bg: #26272b; --pre-border: #3a3b40; --rule: #3a3b40;
+    --side-bg: #232428; --side-current: #2b3a4d;
+    --ok-bg: #1c2c22; --ok-fg: #7fd39b; --ok-br: #2e4a38;
+    --old-bg: #2e2820; --old-fg: #e0b970; --old-br: #4a3f28;
+    --dead-bg: #2e1f1e; --dead-fg: #e59a95; --dead-br: #4a2f2d;
+    --new-bg: #1d2735; --new-fg: #86b6ea; --new-br: #2c3f5a;
+    --svg-fill: #2a2b30; --svg-soft: #24303f; --svg-soft2: #322a20;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #faf9f7; --fg: #2d2d2d; --muted: #8a8378;
+  --accent: #1971c2; --code-fg: #b3410e; --code-bg: #f4ede4;
+  --pre-bg: #f2f0ec; --pre-border: #e2ddd4; --rule: #e6e1d8;
+  --side-bg: #f3f1ec; --side-current: #e4edf9;
+  --ok-bg: #e6f4ea; --ok-fg: #1b7a3d; --ok-br: #a8d8b9;
+  --old-bg: #fdf4e3; --old-fg: #9a6a12; --old-br: #ecd39a;
+  --dead-bg: #fbeaea; --dead-fg: #b0322c; --dead-br: #e8b4b1;
+  --new-bg: #e8f0fb; --new-fg: #1856a8; --new-br: #b8cdec;
+  --svg-fill: #ffffff; --svg-soft: #eef3fa; --svg-soft2: #fdf3e6;
+}
+:root[data-theme="dark"] {
+  --bg: #1e1f22; --fg: #d6d3cd; --muted: #7d7a74;
+  --accent: #6aa9e0; --code-fg: #e8a06a; --code-bg: #2b2a27;
+  --pre-bg: #26272b; --pre-border: #3a3b40; --rule: #3a3b40;
+  --side-bg: #232428; --side-current: #2b3a4d;
+  --ok-bg: #1c2c22; --ok-fg: #7fd39b; --ok-br: #2e4a38;
+  --old-bg: #2e2820; --old-fg: #e0b970; --old-br: #4a3f28;
+  --dead-bg: #2e1f1e; --dead-fg: #e59a95; --dead-br: #4a2f2d;
+  --new-bg: #1d2735; --new-fg: #86b6ea; --new-br: #2c3f5a;
+  --svg-fill: #2a2b30; --svg-soft: #24303f; --svg-soft2: #322a20;
+}
+#themeBtn{position:fixed;top:12px;right:14px;z-index:11;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--rule);background:var(--side-bg);color:var(--muted);cursor:pointer;line-height:0;}#themeBtn:hover{color:var(--accent);border-color:var(--accent);}#themeBtn svg{display:block;}
+#themeBtn:hover { border-color: var(--accent); }
+* { box-sizing: border-box; }
+.chapter + .chapter { border-top: 1px dashed var(--rule); margin-top: 3em; }
+body {
+  margin: 0; display: flex; background: var(--bg); color: var(--fg);
+  font-family: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+  font-size: 17px; line-height: 2.0;
+}
+#sidebar {
+  width: var(--sb, 320px); flex-shrink: 0; position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; background: var(--side-bg);
+  padding: 1.2em 1em 3em; font-size: 0.86em; line-height: 1.75;
+}
+#sidebar .booktitle {
+  font-weight: 700; font-size: 1.05em; margin-bottom: 0.3em;
+  padding-bottom: 0.6em; border-bottom: 2px solid var(--accent);
+}
+#sidebar .booksub { font-size: 0.8em; color: var(--muted); margin: 0.5em 0 1em; }
+#sidebar .part { font-size: 0.78em; color: var(--muted); letter-spacing: 0.08em;
+  margin: 1.1em 0 0.3em; padding-top: 0.5em; border-top: 1px dashed var(--rule); }
+#sidebar details { margin: 0.1em 0; }
+#sidebar summary { list-style: none; cursor: pointer; padding: 3px 8px 3px 1.4em; text-indent: -1.4em; border-radius: 6px; transition: background .15s; }
+#sidebar summary::-webkit-details-marker { display: none; }
+#sidebar summary::before { content: "▸ "; color: var(--muted); font-size: 0.8em; }
+#sidebar details[open] summary::before { content: "▾ "; }
+#sidebar a { text-decoration: none; color: var(--fg); }
+#sidebar a.ch { font-weight: 600; }
+#sidebar a.sec { display: block; padding-left: 2.3em; color: var(--muted); font-size: 0.95em; }
+#sidebar a:hover { color: var(--accent); }
+#sidebar a.sec.active { color: var(--accent); font-weight: 600; }
+#sidebar summary, #sidebar a { white-space: nowrap; overflow: hidden; }
+.sb-resizer { flex: 0 0 6px; cursor: col-resize; background: var(--rule); position: sticky; top: 0; height: 100vh; }
+.sb-resizer:hover, .sb-resizer.drag { background: var(--accent); }
+#sidebar .todo { color: var(--muted); opacity: 0.7; }
+main { flex: 1; min-width: 0; padding: 2.5rem 2rem 6rem; }
+main .inner { max-width: 880px; margin: 0 auto; }
+h1 {
+  font-size: 1.6em; line-height: 1.5; margin: 1.4em 0 1.1em;
+  padding-bottom: 0.45em; border-bottom: 3px solid var(--accent);
+}
+h1 .part { display: block; font-size: 0.5em; color: var(--muted); font-weight: 400; letter-spacing: 0.15em; margin-bottom: 0.4em; }
+h2 {
+  font-size: 1.22em; margin: 2.3em 0 0.9em; line-height: 1.5;
+}
+h3 { font-size: 1.06em; margin: 1.8em 0 0.7em; line-height: 1.5; color: var(--accent); }
+main p { margin: 0 0 1.05em; text-align: left; }
+main li { margin: 0.3em 0; }
+main ul, main ol { padding-left: 1.5em; }
+code {
+  font-family: Consolas, "Cascadia Mono", "JetBrains Mono", monospace;
+  font-size: 0.88em; color: var(--code-fg); background: var(--code-bg);
+  padding: 0.12em 0.38em; border-radius: 4px;
+}
+pre {
+  background: var(--pre-bg); border: 1px solid var(--pre-border);
+  border-radius: 8px; padding: 0.9em 1.1em; overflow-x: auto;
+  line-height: 1.6; margin: 0 0 1.3em;
+}
+pre code { background: none; color: var(--fg); padding: 0; font-size: 0.85em; }
+pre .cm { color: var(--muted); }
+pre .kw { color: var(--accent); font-weight: 600; }
+
+.badge { display:inline; font-size:inherit; font-family:inherit; font-weight:inherit;
+  color:inherit; padding:0; border:none; background:none; vertical-align:baseline;
+  margin:0; white-space:normal; }
+.badge.ok, .badge.old, .badge.dead, .badge.new { color:inherit; font-weight:inherit; }
+.note { border-radius: 8px; padding: 0.85em 1.1em; margin: 0 0 1.4em;  font-size: 0.95em; }
+.note p { margin: 0 0 0.5em; } .note p:last-child { margin: 0; }
+.note .t { font-weight: 700; display: block; margin-bottom: 0.4em; }
+.note.new { background: var(--new-bg); } .note.new .t { color: var(--new-fg); }
+.note.old { background: var(--old-bg); } .note.old .t { color: var(--old-fg); }
+.note.dead { background: var(--dead-bg); } .note.dead .t{ color: var(--dead-fg); }
+.note.ok { background: var(--ok-bg); } .note.ok .t  { color: var(--ok-fg); }
+.legend { display: flex; flex-wrap: wrap; gap: 0.8em; margin: 1.5em 0 2em; }
+.legend > div { flex: 1 1 200px; border: 1px solid var(--rule); border-radius: 8px; padding: 0.7em 0.9em; font-size: 0.88em; }
+.disclaimer { background: var(--pre-bg); border: 1px solid var(--pre-border); border-radius: 8px;
+  padding: 1em 1.2em; font-size: 0.9em; color: var(--muted); margin: 1.5em 0 2em; }
+.updated { font-size: 0.8em; color: var(--muted); }
+figure { margin: 1.1em 0; text-align: center; }
+figure svg { max-width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--svg-fill); padding: 6px; }
+figcaption { font-size: 0.85em; color: var(--muted); margin-top: 0.6em; }
+.svgtext { fill: var(--fg); font-family: "Noto Sans SC","Microsoft YaHei",sans-serif; }
+.svgmuted { fill: var(--muted); }
+.scaffold { border: 1px dashed var(--old-br); background: var(--old-bg); border-radius: 8px; padding: 0.8em 1.1em; margin: 0 0 1.4em; font-size: 0.92em; }
+@media (max-width: 900px) { #sidebar { display: none; } }
+
+#navBtn{position:fixed;top:16px;left:10px;z-index:11;width:9px;height:9px;padding:0;border-radius:50%;border:none;background:var(--muted);opacity:.45;cursor:pointer;transition:opacity .15s,background .15s;}#navBtn:hover{opacity:1;background:var(--accent);}#navBtn svg{display:block;}
+
+.nav-hidden #sidebar, .nav-hidden .sb-resizer{display:none;}
+#sidebar .booktitle, #sidebar .toc-title{padding-left:1.2em;}
+pre code .cl{display:block;}
+pre code .cc{display:inline-block;vertical-align:top;}
+
+#sidebar{will-change:scroll-position;}
+
+           /* 首列不再强制单行 */
+
+table{border-collapse:collapse;width:100%;margin:0 0 1.5em;
+      font-size:.92em;line-height:1.7;table-layout:auto;}
+th,td{border:1px solid var(--pre-border);padding:.35em .9em;text-align:left;
+      vertical-align:top;overflow-wrap:anywhere;word-break:normal;}
+th{background:var(--pre-bg);font-weight:600;}
+tbody tr:nth-child(even){background:var(--pre-bg);}
+td code,th code{white-space:normal;}
+td.nw,th.nw,td.nw code,th.nw code{white-space:nowrap;}
+
+/* 性能:视口外的整章、代码块、插图、表格、批注框都跳过布局与绘制。
+   每个元素上还写了实测的 contain-intrinsic-size,占位高度=真实高度,
+   所以滚动条长度从一开始就是准的,不会边滚边变。 */
+section.chapter{content-visibility:auto;contain-intrinsic-size:auto 14000px;}
+figure{content-visibility:auto;contain-intrinsic-size:auto 400px;}
+main pre{content-visibility:auto;contain-intrinsic-size:auto 240px;}
+main table{content-visibility:auto;contain-intrinsic-size:auto 400px;}
+main .note{content-visibility:auto;contain-intrinsic-size:auto 200px;}
+/* 打印时必须全部展开,否则跳过渲染的部分会印成空白 */
+@media print{section.chapter,figure,main pre,main table,main .note{content-visibility:visible !important;}}
+
+
+
+
+/* —— 薄/厚阅读模式 —— */
+#depthBtn{position:fixed;top:12px;right:52px;z-index:11;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--rule);background:var(--side-bg);color:var(--muted);cursor:pointer;line-height:0;}
+#depthBtn:hover{color:var(--accent);border-color:var(--accent);}
+#depthBtn svg{display:block;}
+#depthBtn.none{display:none;}
+html[data-depth="thin"] .deep{display:none !important;}
+/* 薄模式下整章变矮:用另一套烘焙高度(--thin-h,由 bake.js 写进每章的 style),content-visibility 仍是 auto,滚动才不卡 */
+html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h,6000px) !important;}   /* 行内 style 里写的是厚模式高度,必须 !important 才压得过 */
+@media (max-width:900px){#depthBtn{right:50px;}}
+/* —— 薄/厚阅读模式 end —— */
+</style>
+</head>
+<body>
+<button id="themeBtn" title="切换深浅色"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+<button id="depthBtn" title="薄/厚阅读:点一下只看主干(薄),再点一下看全部(厚)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
+<button id="navBtn" title="显示/隐藏目录"></button>
+<nav id="sidebar">
+<div class="booktitle">全栈工程师知识体系</div>
+<details><summary><a class="ch" href="#f0">什么是全栈,以及怎么用这份地图</a></summary>
+<a class="sec" href="#f0-map">1.1 一张总图:五层加四条横切</a>
+<a class="sec" href="#f0-books">1.2 关于「推荐书籍」的说明</a>
+</details>
+<details><summary><a class="ch" href="#f1">计算机科学基础</a></summary>
+<a class="sec" href="#f1-dsa">2.1 数据结构与算法</a>
+<a class="sec" href="#f1-os">2.2 操作系统</a>
+<a class="sec" href="#f1-net">2.3 计算机网络</a>
+<a class="sec" href="#f1-db-theory">2.4 数据库原理</a>
+<a class="sec" href="#f1-encoding">2.5 编码与数据表示</a>
+</details>
+<details><summary><a class="ch" href="#f2">前端</a></summary>
+<a class="sec" href="#f2-htmlcss">3.1 HTML / CSS</a>
+<a class="sec" href="#f2-js">3.2 JavaScript 语言本体</a>
+<a class="sec" href="#f2-ts">3.3 TypeScript</a>
+<a class="sec" href="#f2-browser">3.4 浏览器工作原理</a>
+<a class="sec" href="#f2-framework">3.5 一个主流框架</a>
+<a class="sec" href="#f2-perf">3.6 前端性能与工程化</a>
+</details>
+<details><summary><a class="ch" href="#f3">网络与接口层</a></summary>
+<a class="sec" href="#f3-api">4.1 API 设计</a>
+<a class="sec" href="#f3-styles">4.2 gRPC / GraphQL / 实时</a>
+<a class="sec" href="#f3-auth">4.3 认证与授权</a>
+<a class="sec" href="#f3-gateway">4.4 网关与边界</a>
+</details>
+<details><summary><a class="ch" href="#f4">后端</a></summary>
+<a class="sec" href="#f4-lang">5.1 主力语言(一门,精)</a>
+<a class="sec" href="#f4-framework">5.2 Web 框架与请求生命周期</a>
+<a class="sec" href="#f4-cache">5.3 缓存体系</a>
+<a class="sec" href="#f4-async">5.4 异步与消息队列</a>
+</details>
+<details><summary><a class="ch" href="#f5">数据层</a></summary>
+<a class="sec" href="#f5-sql">6.1 SQL 纵深</a>
+<a class="sec" href="#f5-engine">6.2 一个关系库精通</a>
+<a class="sec" href="#f5-redis">6.3 Redis 与非关系存储</a>
+</details>
+<details><summary><a class="ch" href="#f6">基础设施与交付</a></summary>
+<a class="sec" href="#f6-linux">7.1 Linux 与命令行</a>
+<a class="sec" href="#f6-container">7.2 容器</a>
+<a class="sec" href="#f6-orchestration">7.3 编排(Kubernetes)</a>
+<a class="sec" href="#f6-cicd">7.4 CI/CD 与交付</a>
+<a class="sec" href="#f6-cloud">7.5 云与 SRE 心智</a>
+</details>
+<details><summary><a class="ch" href="#f7">贯穿所有层的四条能力</a></summary>
+<a class="sec" href="#f7-security">8.1 安全</a>
+<a class="sec" href="#f7-testing">8.2 测试与质量</a>
+<a class="sec" href="#f7-observability">8.3 可观测性</a>
+<a class="sec" href="#f7-distributed">8.4 分布式思维</a>
+</details>
+<details><summary><a class="ch" href="#f8">AI 工程</a></summary>
+<a class="sec" href="#f8-llm">9.1 LLM 应用开发</a>
+<a class="sec" href="#f8-rag">9.2 RAG 与向量检索</a>
+<a class="sec" href="#f8-agent">9.3 Agent 与工程守护</a>
+</details>
+<details><summary><a class="ch" href="#f9">工程素养与系统思维</a></summary>
+<a class="sec" href="#f9-git">10.1 Git 与协作</a>
+<a class="sec" href="#f9-debug">10.2 调试方法论</a>
+<a class="sec" href="#f9-craft">10.3 代码素养与表达</a>
+<a class="sec" href="#f9-design">10.4 系统设计与选型</a>
+</details>
+<details><summary><a class="ch" href="#f10">成长阶段与学习方法</a></summary>
+<a class="sec" href="#f10-stages">11.1 三个成长阶段</a>
+<a class="sec" href="#f10-method">11.2 学习方法与反模式</a>
+</details>
+</nav>
+<div class="sb-resizer"></div>
+<main><div class="inner">
+<section class="chapter" style="contain-intrinsic-size:auto 1646.89px;--thin-h:1646.89px">
+<h1 id="f0"><span class="part">导读</span>什么是全栈,以及怎么用这份地图</h1>
+<p>全栈工程师不是「什么都会一点」,而是<strong>能独立把一个产品从想法带到线上、并让它活下去</strong>的人——需求成形、界面呈现、服务支撑、数据落地、部署运维、故障排除,链条上没有他跨不过去的断点。能力形状是 <strong>T 型</strong>:横向覆盖整条链路(每一环都能上手),纵向在一两环上有真正的深度(出了疑难问题别人来找你)。全栈的价值不在「都会」,在<strong>没有断点</strong>。</p>
+<h2 id="f0-map">1.1 一张总图:五层加四条横切</h2>
+<p>把整个技术栈立起来,是五个纵向层加四条横切能力,底下垫着计算机科学底座,旁边多出一个新维度(AI 工程):</p>
+<table style="contain-intrinsic-size:auto 347.64px">
+<thead><tr><th>层</th><th>管什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">① 客户端层</td><td>浏览器 / 移动端 / 桌面——用户直接接触的一切</td></tr>
+<tr><td class="nw">② 网络与接口层</td><td>HTTP·TLS·API·网关——数据怎么在客户端和服务之间流动</td></tr>
+<tr><td class="nw">③ 服务层</td><td>业务逻辑·认证·异步任务——产品的大脑</td></tr>
+<tr><td class="nw">④ 数据层</td><td>关系库·缓存·搜索·对象存储——产品的记忆</td></tr>
+<tr><td class="nw">⑤ 基础设施层</td><td>Linux·容器·编排·CI/CD——上面这一切跑在哪</td></tr>
+<tr><td class="nw">横切</td><td>安全 · 测试 · 可观测性 · 分布式思维——贯穿所有层</td></tr>
+<tr><td class="nw">底座</td><td>操作系统 · 网络 · 数据结构 · 数据库原理——上层每个「为什么」的答案</td></tr>
+<tr><td class="nw">新维度</td><td>AI 工程——2026 年的全栈已经绕不开的一层</td></tr>
+</tbody>
+</table>
+<p>每一层的知识都分两档:<strong>工作档</strong>(日常开发必须熟练)与<strong>深挖档</strong>(出疑难问题时的破案能力)。这份地图后面每一节都给出<strong>可验证的掌握判据</strong>——能做到就是会了,做不到就还没会,不看学了多少教程、读了多少书。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163.14px"><span class="t">🟢 怎么用这份地图</span><p>三步:①对照判据给自己每一格打分(达成/在学/空白),别高估;②按「离你现有工作最近 + 缺口最痛」排序,而不是按兴趣或热度;③每个格子用一个<strong>真实小项目</strong>收口——「学会」的定义是「东西在线上跑着」,不是「视频看完了」。每半年重扫一遍,涂掉新达成的格子。</p></div>
+<h2 id="f0-books">1.2 关于「推荐书籍」的说明</h2>
+<p>这份地图每一节末尾都附<strong>推荐书籍</strong>,选书遵循三条:<strong>①优先机制层经典</strong>(讲「为什么」的书,保质期是整个职业生涯;讲「怎么用」的书三五年就过时);<strong>②每域先读一本打骨架,再用官方文档长血肉</strong>——二手教程只当导览;<strong>③标注难度</strong>,别拿进阶书当入门。</p>
+<table style="contain-intrinsic-size:auto 193.58px">
+<thead><tr><th>书目定位标记</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td class="nw">入门</td><td class="nw">零基础可读,建立整体认知</td></tr>
+<tr><td class="nw">进阶</td><td class="nw">有基础后深入,机制层</td></tr>
+<tr><td class="nw">查阅</td><td class="nw">工具书,不必通读,遇到查</td></tr>
+<tr><td class="nw">免费</td><td class="nw">有合法免费在线版</td></tr>
+</tbody>
+</table>
+<div class="note dead" style="contain-intrinsic-size:auto 195.45px"><span class="t">🔴 书的常见误用</span><p>①<strong>收集而不读</strong>:买一堆经典摆着,不如一本读透并做完练习。②<strong>拿查阅书当教材</strong>:CLRS、《数据库系统概念》是查阅型,从头啃容易劝退——先用入门书建立框架。③<strong>只读不做</strong>:每本机制书都配练习或项目,跳过练习等于没读。④<strong>迷信旧版经典</strong>:技术书要看版本,前端/云/AI 领域三年前的书可能已误导——这类领域官方文档优先于任何书。</p></div>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 2879.23px;--thin-h:2879.23px">
+<h1 id="f1"><span class="part">底座</span>计算机科学基础</h1>
+<p>一切上层技术的保质期是三五年,底座的保质期是整个职业生涯。上层每一个「为什么」,答案都在这一层。全栈工程师和「会用框架的人」的分水岭,就在这里。</p>
+<h2 id="f1-dsa">2.1 数据结构与算法</h2>
+<p>核心内容:数组/链表/哈希表/树/堆/图;排序与查找;复杂度分析(大 O)。目标不是刷竞赛题,是<strong>面对场景能选对结构并说出代价</strong>。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>拿到一个需求,能说出「这里用哈希表不用树,因为只需要按 key 查、不需要有序,O(1) 对 O(log n)」;能识别自己写的循环是不是 O(n²) 会不会炸。不追求手撕红黑树。</p></div>
+<table style="contain-intrinsic-size:auto 193.58px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《算法(第4版)》</td><td class="nw">Sedgewick</td><td>入门·最佳的算法第一本,可视化好</td></tr>
+<tr><td class="nw">《labuladong 的算法小抄》</td><td class="nw">labuladong</td><td>入门·刷题套路化,配 LeetCode</td></tr>
+<tr><td class="nw">《算法导论》(CLRS)</td><td class="nw">Cormen 等</td><td>查阅·理论权威,不要从头啃</td></tr>
+<tr><td class="nw">《编程珠玑》</td><td class="nw">Jon Bentley</td><td>进阶·教「怎么思考」而非背算法</td></tr>
+</tbody>
+</table>
+<h2 id="f1-os">2.2 操作系统</h2>
+<p>核心内容:进程/线程/调度;虚拟内存;文件系统;I/O 模型(阻塞/非阻塞/多路复用/异步);锁与并发。这是全栈里回报最高的底座——服务性能、并发 bug、内存问题全从这里解释。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>能解释:一次「内存不足」为什么死的可能是别的进程(OOM killer);epoll 为什么比 select 快;死锁的四个条件与排查路径。本书系的《Linux 系统编程手册》就是这一档的实战。</p></div>
+<table style="contain-intrinsic-size:auto 193.58px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《操作系统导论》(OSTEP)</td><td class="nw">Remzi 夫妇</td><td>入门·免费·讲得极清楚,首选</td></tr>
+<tr><td class="nw">《深入理解计算机系统》(CSAPP)</td><td>Bryant & O'Hallaron</td><td>进阶·程序员视角的系统课,神书</td></tr>
+<tr><td>《Linux/UNIX 系统编程手册》(TLPI)</td><td class="nw">Kerrisk</td><td>查阅·Linux 系统调用圣经</td></tr>
+<tr><td class="nw">本书系《Linux 系统编程手册》</td><td class="nw">—</td><td>进阶·机制层实战,配 TLPI</td></tr>
+</tbody>
+</table>
+<h2 id="f1-net">2.3 计算机网络</h2>
+<p>核心内容:TCP/IP 分层;TCP 握手挥手/滑动窗口/拥塞控制;HTTP 1.1→2→3;TLS 握手;DNS 解析链。全栈日常的一大类故障(跨域、缓存不生效、连接超时、证书链)全在这层。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>能对着抓包(Wireshark)解释一次 HTTPS 请求的完整往返;一个「连接超时」能定位到断在 DNS / TCP / TLS / HTTP 哪一层。</p></div>
+<table style="contain-intrinsic-size:auto 232.09px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《计算机网络:自顶向下方法》</td><td class="nw">Kurose & Ross</td><td>入门·从应用层往下讲,最贴全栈</td></tr>
+<tr><td class="nw">《图解 HTTP》/《图解 TCP/IP》</td><td class="nw">上野宣 / 竹下隆史</td><td>入门·图多,快速建立直觉</td></tr>
+<tr><td class="nw">《HTTP 权威指南》</td><td class="nw">Gourley 等</td><td>查阅·HTTP 细节大全</td></tr>
+<tr><td class="nw">《TCP/IP 详解 卷1:协议》</td><td class="nw">Stevens</td><td>进阶·协议级权威,抓包党必备</td></tr>
+<tr><td class="nw">《Web 性能权威指南》</td><td class="nw">Ilya Grigorik</td><td>进阶·免费·网络性能与 HTTP/2 讲透</td></tr>
+</tbody>
+</table>
+<h2 id="f1-db-theory">2.4 数据库原理</h2>
+<p>核心内容:B+ 树索引;事务 ACID;隔离级别与锁;MVCC;WAL 与崩溃恢复。这一层和操作系统底座接轨(文件锁、mmap、fsync),是「会写 SQL」和「懂数据库」的分界。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>能解释一条慢查询为什么慢(没走索引?回表?锁等待?)、一个死锁怎么发生的、一个隔离级别下会不会出现幻读。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《数据库系统概念》</td><td class="nw">Silberschatz 等</td><td>查阅·数据库理论教科书权威</td></tr>
+<tr><td class="nw">《数据密集型应用系统设计》(DDIA)</td><td>Martin Kleppmann</td><td>进阶·全栈必读神书,数据层+分布式的总纲</td></tr>
+<tr><td class="nw">《数据库系统内幕》</td><td class="nw">Alex Petrov</td><td>进阶·B+树/LSM/存储引擎实现级</td></tr>
+</tbody>
+</table>
+<h2 id="f1-encoding">2.5 编码与数据表示</h2>
+<p>核心内容:字符编码(UTF-8);字节序;浮点数(IEEE 754);时间与时区。这四样是「玄学 bug」的高发地,懂了机制就不再是玄学。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>乱码、浮点精度丢失、时区错乱这三类 bug,能直接说出机制根源并给出修法。</p></div>
+<table style="contain-intrinsic-size:auto 234.8px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">CSAPP 第 2 章</td><td class="nw">Bryant</td><td>进阶·信息表示讲得最清楚</td></tr>
+<tr><td>《The Absolute Minimum Every Developer Must Know About Unicode》</td><td class="nw">Joel Spolsky</td><td>入门·免费·一篇文章讲透编码</td></tr>
+<tr><td class="nw">本书系《C++ 标准库 API 编程手册》</td><td class="nw">—</td><td>查阅·chrono 时间、浮点极限章</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 2984.69px;--thin-h:2984.69px">
+<h1 id="f2"><span class="part">客户端</span>前端</h1>
+<p>用户对产品的全部第一印象都在这一层。全栈的前端不需要做到专精前端工程师的深度,但要能<strong>独立完成一个体验合格的界面</strong>,并懂得它底下的机制。</p>
+<h2 id="f2-htmlcss">3.1 HTML / CSS</h2>
+<p>核心内容:语义化标签;盒模型;Flex/Grid 布局;响应式;层叠与优先级。目标是拿到设计稿能徒手还原,不靠试错凑样式。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>拿到一张设计稿,能有条理地还原布局,清楚每一处用 Flex 还是 Grid、为什么这个样式没生效(优先级/层叠)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">MDN Web Docs</td><td class="nw">Mozilla</td><td>查阅·免费·前端唯一权威参考,首选</td></tr>
+<tr><td class="nw">《CSS 揭秘》</td><td class="nw">Lea Verou</td><td>进阶·47 个真实难题,CSS 思维跃迁</td></tr>
+<tr><td class="nw">《CSS 世界》/《CSS 新世界》</td><td class="nw">张鑫旭</td><td>进阶·中文·把 CSS 机制讲透</td></tr>
+</tbody>
+</table>
+<h2 id="f2-js">3.2 JavaScript 语言本体</h2>
+<p>核心内容:原型链;闭包与作用域;this 绑定;<strong>事件循环与微任务</strong>(和操作系统的 epoll 循环同构);Promise / async-await;模块系统。这是前端的地基,也是最容易「会用不懂」的地方。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>能解释一段混合了 setTimeout / Promise / await 的代码的精确执行顺序;闭包导致的内存泄漏能定位。</p></div>
+<table style="contain-intrinsic-size:auto 193.58px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《你不知道的 JavaScript》(上中下)</td><td class="nw">Kyle Simpson</td><td>进阶·免费·把闭包/this/原型讲透,首选</td></tr>
+<tr><td class="nw">《JavaScript 高级程序设计(第4版)》</td><td class="nw">红宝书</td><td>入门·全面系统的大部头</td></tr>
+<tr><td class="nw">《深入理解 ES6》</td><td class="nw">Nicholas Zakas</td><td>进阶·现代 JS 特性</td></tr>
+<tr><td class="nw">MDN JavaScript 指南</td><td class="nw">Mozilla</td><td>查阅·免费·最准的语言参考</td></tr>
+</tbody>
+</table>
+<h2 id="f2-ts">3.3 TypeScript</h2>
+<p>核心内容:类型系统;泛型;类型收窄;类型体操的边界;和构建链的关系。2026 年的严肃前端项目默认 TS。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>新项目默认用 TS 起;能给一个既有 JS 库写类型声明;知道什么时候该停手(别过度类型体操)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">TypeScript 官方 Handbook</td><td class="nw">微软</td><td>入门·查阅·免费·最权威,首选</td></tr>
+<tr><td class="nw">《Effective TypeScript》</td><td class="nw">Dan Vanderkam</td><td>进阶·62 条实战建议,条款式</td></tr>
+<tr><td class="nw">《Programming TypeScript》</td><td class="nw">Boris Cherny</td><td>进阶·类型系统原理</td></tr>
+</tbody>
+</table>
+<h2 id="f2-browser">3.4 浏览器工作原理</h2>
+<p>核心内容:渲染管线(解析→布局→绘制→合成);重排/重绘;存储(Cookie/localStorage/IndexedDB);同源策略与跨域(CORS)。懂它才能定位卡顿和跨域这两类高频问题。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>能判断一次页面卡顿是 JS 长任务还是布局抖动;CORS 报错能在五分钟内定位是缺哪个响应头。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《How Browsers Work》</td><td class="nw">Tali Garsiel</td><td>入门·免费·经典长文</td></tr>
+<tr><td class="nw">《WebKit 技术内幕》</td><td class="nw">朱永盛</td><td>进阶·中文·渲染引擎实现级</td></tr>
+<tr><td class="nw">web.dev(Google)</td><td class="nw">Google</td><td>查阅·免费·性能与现代 Web 实践</td></tr>
+</tbody>
+</table>
+<h2 id="f2-framework">3.5 一个主流框架</h2>
+<p>核心内容:选 React 或 Vue 之一;组件模型;状态管理;副作用与渲染时机;路由。全栈只需精一个,能独立做中等复杂度单页应用即可。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>能独立完成一个带路由、状态管理、和后端联调的 SPA;能解释「为什么这个组件重渲染了」并优化。</p></div>
+<table style="contain-intrinsic-size:auto 193.58px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">React 官方文档(react.dev)</td><td class="nw">Meta</td><td>入门·进阶·免费·新版极好,首选</td></tr>
+<tr><td class="nw">Vue 官方文档</td><td class="nw">尤雨溪团队</td><td>入门·进阶·免费·中文一流</td></tr>
+<tr><td class="nw">《React 设计原理》</td><td class="nw">卡颂</td><td>进阶·中文·Fiber/调度机制</td></tr>
+<tr><td class="nw">《深入浅出 Vue.js》</td><td class="nw">刘博文</td><td>进阶·中文·响应式原理</td></tr>
+</tbody>
+</table>
+<h2 id="f2-perf">3.6 前端性能与工程化</h2>
+<p>核心内容:Core Web Vitals(LCP/INP/CLS);懒加载与代码分割;缓存策略;构建工具(Vite 一代);包体积分析。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>能把一个 LCP 4 秒的页面按数据(而非感觉)优化到 2 秒内;能从零搭一个带 lint/format/test 的前端工程。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《Web 性能权威指南》</td><td class="nw">Ilya Grigorik</td><td>进阶·免费·网络层性能</td></tr>
+<tr><td class="nw">web.dev/vitals</td><td class="nw">Google</td><td>查阅·免费·指标与优化手册</td></tr>
+<tr><td class="nw">各构建工具官方文档(Vite 等)</td><td class="nw">—</td><td>查阅·工程化以文档为准,书易过时</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 2053.34px;--thin-h:2053.34px">
+<h1 id="f3"><span class="part">接口</span>网络与接口层</h1>
+<p>客户端和服务之间的契约与通道。这一层设计得好不好,直接决定前后端协作的顺畅度和系统的可演化性。</p>
+<h2 id="f3-api">4.1 API 设计</h2>
+<p>核心内容:REST 语义(资源/动词/状态码);版本化;分页;错误规范;<strong>幂等设计</strong>。好的接口别人不看文档能猜对一半。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>设计的接口别人不看文档能猜对一半;能把 PUT/POST 的幂等差异落到「网络重试要不要紧」的实际决策上。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">Google API Design Guide</td><td class="nw">Google</td><td>入门·免费·工业级规范,简洁</td></tr>
+<tr><td class="nw">《RESTful Web APIs》</td><td>Richardson & Amundsen</td><td>进阶·REST 成熟度与超媒体</td></tr>
+<tr><td class="nw">《Web API 的设计与开发》</td><td class="nw">水野贵明</td><td>入门·中文友好,实战向</td></tr>
+</tbody>
+</table>
+<h2 id="f3-styles">4.2 gRPC / GraphQL / 实时</h2>
+<p>核心内容:gRPC(强类型/流式/内部服务);GraphQL(前端聚合、按需取);WebSocket / SSE(实时推送)。按场景选型,每种都有运维代价。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>能按场景选型:内部服务高频调用选 gRPC、前端聚合多源选 GraphQL、服务端推送选 SSE/WebSocket,并说出各自的代价。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">gRPC / GraphQL 官方文档</td><td class="nw">—</td><td>入门·查阅·免费·首选</td></tr>
+<tr><td class="nw">《gRPC: Up and Running》</td><td>Indrasiri & Kuruppu</td><td>进阶·gRPC 系统学习</td></tr>
+<tr><td class="nw">《学习 GraphQL》</td><td>Porcello & Banks</td><td>入门·概念到实践</td></tr>
+</tbody>
+</table>
+<h2 id="f3-auth">4.3 认证与授权</h2>
+<p>核心内容:Session vs JWT 的真实取舍;OAuth2 四种授权流程;OIDC;RBAC/ABAC。这是安全的第一道门,也是最容易做错的地方。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>能画出「用第三方账号登录」的完整时序图;知道 JWT 的吊销难题及其几种解法(短期 token + refresh、黑名单)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《OAuth 2 in Action》</td><td class="nw">Richer & Sanso</td><td>进阶·OAuth2 讲得最透</td></tr>
+<tr><td class="nw">OAuth 2.0 / OIDC 官方规范导读</td><td class="nw">oauth.net</td><td>查阅·免费</td></tr>
+<tr><td class="nw">《微服务安全实战》</td><td class="nw">Siriwardena</td><td>进阶·分布式场景的认证授权</td></tr>
+</tbody>
+</table>
+<h2 id="f3-gateway">4.4 网关与边界</h2>
+<p>核心内容:反向代理;负载均衡;限流熔断;CDN;TLS 证书管理。这是流量进入系统的第一站。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>能解释一次 502 和 504 分别可能断在哪;亲手配过一个从域名解析到证书签发到回源的完整入口。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《深入理解 Nginx(第2版)》</td><td class="nw">陶辉</td><td>进阶·中文·Nginx 机制与模块开发</td></tr>
+<tr><td class="nw">Nginx / Envoy 官方文档</td><td class="nw">—</td><td>查阅·免费</td></tr>
+<tr><td class="nw">《Web 性能权威指南》</td><td class="nw">Grigorik</td><td>进阶·免费·TLS 与 CDN 章</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 2236.89px;--thin-h:2236.89px">
+<h1 id="f4"><span class="part">服务</span>后端</h1>
+<p>产品的大脑。全栈需要一门主力后端语言精通到「能读框架源码」,加上把业务组织成可维护系统的架构能力。</p>
+<h2 id="f4-lang">5.1 主力语言(一门,精)</h2>
+<p>核心内容:选一门主攻(Go / Java / Node·TS / Python / C# 任一);吃透它的并发模型、内存模型、生态。<strong>对全栈,Go 常是性价比之选</strong>——离系统底座近、并发模型简单、部署是单文件。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>到「能读框架源码、能解释性能特征」的深度;并发原语是用对而不是用过(知道什么时候该加锁、什么时候用 channel)。</p></div>
+<table style="contain-intrinsic-size:auto 270.61px">
+<thead><tr><th>推荐书籍(按语言)</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td>《The Go Programming Language》</td><td>Donovan & Kernighan</td><td>进阶·Go 圣经</td></tr>
+<tr><td class="nw">《Go 语言设计与实现》</td><td class="nw">draveness</td><td>进阶·免费·中文·runtime 机制</td></tr>
+<tr><td class="nw">《Effective Java(第3版)》</td><td class="nw">Joshua Bloch</td><td>进阶·Java 必读条款集</td></tr>
+<tr><td class="nw">《深入理解 Java 虚拟机》</td><td class="nw">周志明</td><td>进阶·中文·JVM 神书</td></tr>
+<tr><td class="nw">《Node.js 设计模式》</td><td class="nw">Casciaro</td><td>进阶·Node 工程化</td></tr>
+<tr><td class="nw">《流畅的 Python》</td><td class="nw">Ramalho</td><td>进阶·Python 深入</td></tr>
+</tbody>
+</table>
+<h2 id="f4-framework">5.2 Web 框架与请求生命周期</h2>
+<p>核心内容:路由与中间件模型;请求生命周期;依赖注入或等价物。选型跟着语言走,重点是理解「一个请求从 socket 到 handler 走过哪些层」。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>能解释一个请求从进入框架到你的处理函数之间,经过了哪些中间件、每层干了什么。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">所选框架官方文档</td><td class="nw">—</td><td>入门·查阅·框架以文档为准</td></tr>
+<tr><td class="nw">《架构整洁之道》</td><td>Robert C. Martin</td><td>进阶·框架无关的分层思想</td></tr>
+<tr><td class="nw">《领域驱动设计》(DDD)</td><td class="nw">Eric Evans</td><td>进阶·复杂业务的组织方法</td></tr>
+</tbody>
+</table>
+<h2 id="f4-cache">5.3 缓存体系</h2>
+<p>核心内容:本地缓存 vs 分布式缓存;失效策略(TTL/LRU);穿透/击穿/雪崩;一致性(先更库还是先删缓存)。缓存是性能利器,也是脏数据之源。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>能解释「为什么加了缓存反而出了脏数据」并给出修法(如延迟双删、更新失效而非更新缓存)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《Redis 设计与实现》</td><td class="nw">黄健宏</td><td>进阶·中文·Redis 内部机制,极好</td></tr>
+<tr><td class="nw">《Redis 深度历险》</td><td class="nw">钱文品</td><td>入门·场景驱动,好上手</td></tr>
+<tr><td class="nw">DDIA 缓存与一致性章</td><td class="nw">Kleppmann</td><td>进阶·一致性的理论根基</td></tr>
+</tbody>
+</table>
+<h2 id="f4-async">5.4 异步与消息队列</h2>
+<p>核心内容:消息队列(投递语义:至多一次/至少一次/恰好一次);延迟任务;定时任务;背压。核心纪律:消费者写成幂等。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>把消费者写成幂等是肌肉记忆;能按场景选「消息队列还是直接调用」;理解「恰好一次」在分布式里为什么是幻觉。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">DDIA 第 11 章(流处理)</td><td class="nw">Kleppmann</td><td>进阶·消息与流的理论</td></tr>
+<tr><td class="nw">Kafka / RabbitMQ 官方文档</td><td class="nw">—</td><td>查阅·免费</td></tr>
+<tr><td class="nw">《深入理解 Kafka》</td><td class="nw">朱忠华</td><td>进阶·中文·Kafka 机制</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 1627.88px;--thin-h:1627.88px">
+<h1 id="f5"><span class="part">数据</span>数据层</h1>
+<p>产品的记忆。全栈的另一半状态都在这里,而数据问题往往是最难恢复、最要命的。这一层的深度直接决定你能扛多大的系统。</p>
+<h2 id="f5-sql">6.1 SQL 纵深</h2>
+<p>核心内容:建模与范式(及反范式时机);索引设计;执行计划;事务与隔离级别实战。这是数据层的基本功。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>EXPLAIN 看得懂、改得动;能设计一套百万行量级不失速的表结构;知道联合索引的最左前缀原则怎么影响查询。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《SQL 必知必会》</td><td class="nw">Ben Forta</td><td>入门·最快上手 SQL</td></tr>
+<tr><td class="nw">《高性能 MySQL(第4版)》</td><td class="nw">Schwartz 等</td><td>进阶·MySQL 优化圣经</td></tr>
+<tr><td class="nw">《MySQL 是怎样运行的》</td><td class="nw">小孩子4919</td><td>进阶·中文·InnoDB 机制,通俗</td></tr>
+</tbody>
+</table>
+<h2 id="f5-engine">6.2 一个关系库精通</h2>
+<p>核心内容:选 PostgreSQL 或 MySQL 之一精通——存储引擎、MVCC、锁、复制、备份恢复。<strong>恢复演练必须真做过,不是备份配过就算。</strong></p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>主从延迟、长事务拖垮 vacuum/undo 这类事故能独立处置;做过一次真实的「从备份恢复」演练。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《高性能 MySQL》</td><td class="nw">Schwartz 等</td><td>进阶·MySQL 首选</td></tr>
+<tr><td class="nw">《PostgreSQL 修炼之道》</td><td class="nw">唐成</td><td>进阶·中文·PG 实战</td></tr>
+<tr><td class="nw">《数据库系统内幕》</td><td class="nw">Alex Petrov</td><td>进阶·存储引擎实现原理</td></tr>
+</tbody>
+</table>
+<h2 id="f5-redis">6.3 Redis 与非关系存储</h2>
+<p>核心内容:Redis 数据结构与适用场景;过期与淘汰策略;持久化(RDB/AOF);分布式锁的坑。按需扩展:搜索(ES)、列式分析(ClickHouse)、对象存储。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>能说出「这个场景为什么用 zset 而不是 list」;知道 SETNX 分布式锁的三个缺陷(不可重入、超时误删、主从丢锁),以及 Redlock 之争。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《Redis 设计与实现》</td><td class="nw">黄健宏</td><td>进阶·中文·首选</td></tr>
+<tr><td class="nw">《Elasticsearch:权威指南》</td><td class="nw">Elastic</td><td>查阅·免费·搜索入门</td></tr>
+<tr><td class="nw">DDIA</td><td class="nw">Kleppmann</td><td>进阶·各类存储的取舍总纲</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 2549.64px;--thin-h:2549.64px">
+<h1 id="f6"><span class="part">基建</span>基础设施与交付</h1>
+<p>上面这一切跑在哪、怎么发上去、怎么保证不出事。这一层是「开发」和「能对线上负责」的分水岭。</p>
+<h2 id="f6-linux">7.1 Linux 与命令行</h2>
+<p>核心内容:文件/权限/进程/服务(systemd);网络排查(ss/ip/curl);性能三板斧(top/iostat/free);shell 脚本。这是所有服务器的通用语言。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>SSH 进一台故障机,十分钟内定位「慢」在 CPU / 内存 / IO / 网络哪一维;能读懂并改一个中等复杂度的 shell 脚本。</p></div>
+<table style="contain-intrinsic-size:auto 193.58px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《鸟哥的 Linux 私房菜》</td><td class="nw">鸟哥</td><td>入门·中文·系统管理最全</td></tr>
+<tr><td class="nw">《Linux 命令行大全》</td><td class="nw">William Shotts</td><td>入门·免费·命令行进阶</td></tr>
+<tr><td>本书系《Linux 系统编程手册》/《Shell 脚本手册》</td><td class="nw">—</td><td>进阶·机制层</td></tr>
+<tr><td class="nw">《性能之巅》</td><td class="nw">Brendan Gregg</td><td>进阶·系统性能分析权威</td></tr>
+</tbody>
+</table>
+<h2 id="f6-container">7.2 容器</h2>
+<p>核心内容:镜像分层;Dockerfile 最佳实践(多阶段/非 root/减体积);compose;容器网络与存储。有 Linux 底座的人学容器是「给已知机制起名字」(namespace/cgroup)。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>镜像能做小(多阶段构建);能讲清「容器不是虚拟机」的机制依据(共享内核 + namespace 隔离 + cgroup 限量)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《Docker 深入浅出》</td><td class="nw">Nigel Poulton</td><td>入门·概念清晰</td></tr>
+<tr><td class="nw">Docker 官方文档</td><td class="nw">Docker</td><td>查阅·免费</td></tr>
+<tr><td>本书系《Linux 系统编程手册》namespace/cgroup 节</td><td class="nw">—</td><td>进阶·容器的内核真相</td></tr>
+</tbody>
+</table>
+<h2 id="f6-orchestration">7.3 编排(Kubernetes)</h2>
+<p>核心内容:K8s 心智模型(Pod/Service/Deployment/Ingress);探针;资源 request/limit;配置与密钥。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>能把一个服务完整部署上去,并做一次不掉流量的滚动更新;能解释 CPU limit 设太低为什么导致 100ms 延迟毛刺(throttling)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《Kubernetes in Action》</td><td class="nw">Marko Lukša</td><td>进阶·K8s 学习最佳,首选</td></tr>
+<tr><td class="nw">Kubernetes 官方文档</td><td class="nw">CNCF</td><td>查阅·免费</td></tr>
+<tr><td class="nw">《每天 5 分钟玩转 Kubernetes》</td><td class="nw">阳明</td><td>入门·中文·渐进</td></tr>
+</tbody>
+</table>
+<h2 id="f6-cicd">7.4 CI/CD 与交付</h2>
+<p>核心内容:流水线设计(构建→测试→制品→部署);环境分级;回滚策略;基础设施即代码(Terraform 一类)。<strong>回滚要练过,不是理论上可以。</strong></p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>主干合并到生产可发布是自动的;亲手执行过一次线上回滚。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《持续交付》</td><td>Humble & Farley</td><td>进阶·CD 奠基之作</td></tr>
+<tr><td class="nw">《凤凰项目》</td><td class="nw">Kim 等</td><td>入门·小说体·DevOps 文化启蒙</td></tr>
+<tr><td class="nw">《SRE:Google 运维解密》</td><td class="nw">Google</td><td>进阶·免费·发布与运维哲学</td></tr>
+</tbody>
+</table>
+<h2 id="f6-cloud">7.5 云与 SRE 心智</h2>
+<p>核心内容:托管 vs 自建的取舍;核心件(计算/托管库/对象存储/队列/函数)的通用模型;成本意识;SLO 思维。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>换一朵云能快速对上概念;能算清一个方案每月大概烧多少钱;能给自己的服务定义并度量一条 SLO。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《SRE:Google 运维解密》</td><td class="nw">Google</td><td>进阶·免费·SRE 圣经</td></tr>
+<tr><td class="nw">《SRE 工作手册》</td><td class="nw">Google</td><td>进阶·免费·SLO 实操</td></tr>
+<tr><td class="nw">《云原生模式》</td><td class="nw">Cornelia Davis</td><td>进阶·云原生设计模式</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 2159.86px;--thin-h:2159.86px">
+<h1 id="f7"><span class="part">横切</span>贯穿所有层的四条能力</h1>
+<p>这四条不属于某一层,而是渗进每一层。它们是区分「能写功能」和「能对系统负责」的关键。</p>
+<h2 id="f7-security">8.1 安全</h2>
+<p>核心内容:OWASP Top 10(注入/XSS/CSRF/越权/SSRF);信任边界思维(一切外部输入不可信);密码与密钥(哈希加盐、密钥不进代码库、最小权限);供应链安全。全栈是安全责任的第一现场。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>每写一个接口能自动过一遍威胁清单;仓库里 grep 不到任何真实密钥;出 CVE 时当天能回答「我们受不受影响」。</p></div>
+<table style="contain-intrinsic-size:auto 193.58px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《白帽子讲 Web 安全》</td><td class="nw">吴翰清</td><td>入门·中文·Web 安全最佳入门</td></tr>
+<tr><td>OWASP Top 10 / Cheat Sheet</td><td class="nw">OWASP</td><td>查阅·免费·必读清单</td></tr>
+<tr><td class="nw">《图解密码技术》</td><td class="nw">结城浩</td><td>入门·密码学直觉,通俗</td></tr>
+<tr><td class="nw">《Web 应用安全权威指南》</td><td class="nw">德丸浩</td><td>进阶·攻防细节</td></tr>
+</tbody>
+</table>
+<h2 id="f7-testing">8.2 测试与质量</h2>
+<p>核心内容:测试金字塔(大量单测、适量集成、少量 E2E);可测试性设计(依赖注入、纯函数、边界清晰);契约测试与回归。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>核心业务逻辑有单测护着,重构不心虚;「这段代码不好测」能反推出设计问题。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《单元测试的艺术》</td><td class="nw">Roy Osherove</td><td>入门·单测实践</td></tr>
+<tr><td class="nw">《测试驱动开发》</td><td class="nw">Kent Beck</td><td>进阶·TDD 原典</td></tr>
+<tr><td class="nw">《Google 软件测试之道》</td><td class="nw">Whittaker 等</td><td>进阶·工业级测试文化</td></tr>
+</tbody>
+</table>
+<h2 id="f7-observability">8.3 可观测性</h2>
+<p>核心内容:三支柱(结构化日志、指标 RED/USE、分布式追踪);告警设计(可行动、分级、防疲劳);SLO 与错误预算。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>一次线上超时,能沿 trace 找到具体哪一跳慢;半夜被叫醒的告警,每一条都值得被叫醒。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td>《Observability Engineering》</td><td class="nw">Majors 等</td><td>进阶·可观测性系统方法</td></tr>
+<tr><td class="nw">《SRE:Google 运维解密》SLO 章</td><td class="nw">Google</td><td>进阶·免费·SLO/错误预算</td></tr>
+<tr><td class="nw">OpenTelemetry 官方文档</td><td class="nw">CNCF</td><td>查阅·免费·追踪标准</td></tr>
+</tbody>
+</table>
+<h2 id="f7-distributed">8.4 分布式思维</h2>
+<p>核心内容:网络不可靠是常态(超时/重试/幂等/退避四件套);一致性谱系(强一致的代价、最终一致的窗口、CAP 的实际含义);演化时机(单体→拆分的信号、分布式事务的逃法 Saga/对账)。你的并发章直觉可以平移到这里。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>任何跨网络调用,四件套齐备才算写完;能对一个业务说出「哪里可以最终一致、哪里绝不可以」;默认单体起步,拆分的理由能落到组织与部署。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《数据密集型应用系统设计》(DDIA)</td><td class="nw">Kleppmann</td><td>进阶·分布式圣经,全栈必读</td></tr>
+<tr><td class="nw">《微服务架构设计模式》</td><td>Chris Richardson</td><td>进阶·Saga/拆分模式大全</td></tr>
+<tr><td class="nw">《凤凰架构》</td><td class="nw">周志明</td><td>进阶·免费·中文·从单体到云原生</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 1527.56px;--thin-h:1527.56px">
+<h1 id="f8"><span class="part">新维度</span>AI 工程</h1>
+<p>2026 年的全栈 JD 里,AI 工程已经是标配项,而且是增量最大的一块。它不要求你会训模型,要求你会<strong>把模型接进产品</strong>并让它可靠。</p>
+<h2 id="f8-llm">9.1 LLM 应用开发</h2>
+<p>核心内容:模型 API(流式/上下文窗口/token 成本);提示工程;结构化输出;function calling / 工具调用。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>能把模型接进产品:流式渲染、工具调用闭环、失败兜底(超时/降级/重试)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td>各家模型 API 官方文档(Anthropic/OpenAI)</td><td class="nw">—</td><td>入门·查阅·免费·首选,变化快以文档为准</td></tr>
+<tr><td class="nw">DeepLearning.AI 短课程</td><td class="nw">吴恩达团队</td><td>入门·免费·提示工程/函数调用</td></tr>
+<tr><td>《Building LLM Powered Applications》</td><td class="nw">Alto</td><td>进阶·应用架构</td></tr>
+</tbody>
+</table>
+<h2 id="f8-rag">9.2 RAG 与向量检索</h2>
+<p>核心内容:嵌入(embedding);向量库;切块与召回;重排(rerank);评估召回质量。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>能搭一套「对私有文档问答」并<strong>评估它答得好不好</strong>(而不是「感觉能用」)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td>LangChain / LlamaIndex 官方文档</td><td class="nw">—</td><td>查阅·免费·RAG 工程实践</td></tr>
+<tr><td class="nw">各向量库文档(pgvector 等)</td><td class="nw">—</td><td>查阅·免费</td></tr>
+<tr><td class="nw">《动手学深度学习》</td><td class="nw">李沐等</td><td>进阶·免费·中文·打嵌入的底子</td></tr>
+</tbody>
+</table>
+<h2 id="f8-agent">9.3 Agent 与工程守护</h2>
+<p>核心内容:规划-执行循环;多步工具编排;人机协作边界;离线评估集;提示注入防御;成本监控。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>知道什么任务适合 agent、什么任务它必翻车;AI 功能有回归评估集,不是「感觉变好了」;会用 AI 辅助开发且能验收它的产出(知道它哪里可靠哪里幻觉)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">模型厂商的 Agent / 工具使用指南</td><td>Anthropic/OpenAI</td><td>入门·查阅·免费·最新实践</td></tr>
+<tr><td class="nw">OWASP Top 10 for LLM</td><td class="nw">OWASP</td><td>查阅·免费·提示注入等风险</td></tr>
+<tr><td class="nw">《AI 工程》(AI Engineering)</td><td class="nw">Chip Huyen</td><td>进阶·AI 产品工程系统方法</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 1944px;--thin-h:1944px">
+<h1 id="f9"><span class="part">素养</span>工程素养与系统思维</h1>
+<p>这一章的东西不属于任何技术栈,却决定你在每个技术栈上能走多远。工具会换,这些不会。</p>
+<h2 id="f9-git">10.1 Git 与协作</h2>
+<p>核心内容:分支模型;rebase/merge 取舍;bisect 破案;整洁的提交历史;冲突解决。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>敢在任何仓库做复杂的历史操作(rebase/cherry-pick/reflog 找回);提交历史能当变更文档读。</p></div>
+<table style="contain-intrinsic-size:auto 116.55px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《Pro Git》</td><td>Chacon & Straub</td><td>入门·进阶·免费·Git 官方书,首选</td></tr>
+<tr><td>Learn Git Branching(交互网站)</td><td class="nw">—</td><td>入门·免费·可视化练分支</td></tr>
+</tbody>
+</table>
+<h2 id="f9-debug">10.2 调试方法论</h2>
+<p>核心内容:二分定位;最小复现;读日志先于猜;假设-验证循环;工具链(调试器/profiler/抓包)。面对陌生系统的故障要有固定套路,不靠灵感。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>面对一个从没见过的系统的故障,有一套可复用的排查流程,而不是随机试。</p></div>
+<table style="contain-intrinsic-size:auto 116.55px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《调试九法》</td><td class="nw">David Agans</td><td>入门·九条调试铁律,薄而精</td></tr>
+<tr><td class="nw">《程序员修炼之道》</td><td class="nw">Hunt & Thomas</td><td>进阶·工程直觉总集</td></tr>
+</tbody>
+</table>
+<h2 id="f9-craft">10.3 代码素养与表达</h2>
+<p>核心内容:整洁代码;重构;设计文档(问题→方案→取舍);README;事故复盘。写的东西要让别人不开会就能给出有效意见。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 98.52px"><span class="t">🟢 掌握判据</span><p>写的设计文档能让人不开会就给出有效意见;能主导一次有价值的事故复盘(找系统原因而非追责)。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《代码整洁之道》</td><td>Robert C. Martin</td><td>入门·可读代码的共识</td></tr>
+<tr><td class="nw">《重构(第2版)》</td><td class="nw">Martin Fowler</td><td>进阶·重构手法目录</td></tr>
+<tr><td class="nw">《程序员修炼之道(第2版)》</td><td class="nw">Hunt & Thomas</td><td>进阶·全方位工程素养,必读</td></tr>
+</tbody>
+</table>
+<h2 id="f9-design">10.4 系统设计与选型</h2>
+<p>核心内容:把模糊需求拆成可验收的小步;技术选型按约束(团队/规模/运维力)而非热度;每个选择说得出放弃了什么;系统思维(对用户、对系统、对维护者各意味着什么)。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 掌握判据</span><p>选型文档里永远有「不选 X 的原因」;能预判「这个捷径三个月后会在哪里收利息」;能把一个「设计一个短链服务」这类开放题讲得有条理。</p></div>
+<table style="contain-intrinsic-size:auto 155.06px">
+<thead><tr><th>推荐书籍</th><th>作者 / 来源</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td class="nw">《系统设计面试》(卷1/卷2)</td><td class="nw">Alex Xu</td><td>入门·进阶·系统设计最佳教材</td></tr>
+<tr><td class="nw">《架构整洁之道》</td><td>Robert C. Martin</td><td>进阶·架构决策的原则</td></tr>
+<tr><td class="nw">DDIA</td><td class="nw">Kleppmann</td><td>进阶·数据系统选型的总纲</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 1554.41px;--thin-h:1554.41px">
+<h1 id="f10"><span class="part">路径</span>成长阶段与学习方法</h1>
+<p>知识地图有了,还要有走法。这一章讲三个成长阶段各该攒什么,以及哪些学习方法有效、哪些是自欺。</p>
+<h2 id="f10-stages">11.1 三个成长阶段</h2>
+<p>全栈的成长不是线性堆知识,而是能力层级的跃迁。每一阶段有明确的标志和该攒的东西:</p>
+<table style="contain-intrinsic-size:auto 314.53px">
+<thead><tr><th>阶段</th><th>标志</th><th>该攒什么</th><th>产出</th></tr></thead>
+<tbody>
+<tr><td class="nw">① 能交付功能</td><td>给清楚的需求,能独立做完前后端并上线</td><td>一条完整技术栈的熟练度 + 底座补课</td><td>2-3 个完整的个人项目(带部署带数据库,不是 demo)</td></tr>
+<tr><td class="nw">② 能负责系统</td><td>一个服务/产品线交给你,能设计、能扛增长、出事能救</td><td>深挖档:性能、事故处置、数据迁移、重构;横切四条从「知道」到「习惯」</td><td>几次亲手处置的事故复盘</td></tr>
+<tr><td class="nw">③ 能定方向</td><td>技术决策影响团队一年以上:选型、架构演化、平台建设</td><td>取舍的艺术;跨团队沟通;用系统思维平衡业务/技术/人</td><td>被时间验证过的架构决策</td></tr>
+</tbody>
+</table>
+<div class="note ok" style="contain-intrinsic-size:auto 130.83px"><span class="t">🟢 阶段不能跳</span><p>没交付过完整项目就想做架构,画出来的是空中楼阁——架构能力长在「被自己设计坑过」的疤上。老老实实在①攒够项目、在②攒够事故,③是自然长出来的,不是学出来的。</p></div>
+<h2 id="f10-method">11.2 学习方法与反模式</h2>
+<p>同样的时间,方法决定回报。先说有效的五条:</p>
+<table style="contain-intrinsic-size:auto 258.67px">
+<thead><tr><th>有效方法</th><th>要点</th></tr></thead>
+<tbody>
+<tr><td class="nw">项目驱动</td><td>每个知识域用一个真实小项目收口,「学完」= 东西在线上跑着</td></tr>
+<tr><td class="nw">深挖一层</td><td>用什么就往下懂一层:用 HTTP 懂 TCP,用 ORM 懂 SQL,用 Docker 懂 namespace。上层常换,下层十年不动</td></tr>
+<tr><td class="nw">判据导向</td><td>学之前先写下「学会的可验证标志」,对着验收,不数教程集数</td></tr>
+<tr><td class="nw">经典 + 官方文档</td><td>每域读一本机制经典立骨架,日常查官方文档长血肉;二手教程只当导览</td></tr>
+<tr><td class="nw">故障即教材</td><td>每次真实事故写复盘;别人的事故报告(大厂 postmortem)当案例库读</td></tr>
+</tbody>
+</table>
+<div class="note dead" style="contain-intrinsic-size:auto 195.45px"><span class="t">🔴 五个反模式(见到自己在做就停)</span><p>①<strong>教程循环</strong>:第五遍学同一框架入门,从不上线任何东西。②<strong>框架收集癖</strong>:横向追新永远在学,纵向机制一层没有——被淘汰得和框架一样快。③<strong>只学不用的底层</strong>:反过来把底层当收藏品,背了调度算法却没写过服务——底座的意义是支撑上层,脱离上层留不住。④<strong>无验收的「学完了」</strong>:说不出可验证判据的学习,默认没发生。⑤<strong>裸奔上线</strong>:没有监控、没有备份演练、没有回滚路径的系统,不叫完成,叫定时炸弹。</p></div>
+<p>最后一句:<strong>全栈的终点不是「会的技术最多」,而是「交付端到端价值时最少依赖别人」</strong>。这份地图不是要你每格填满——那不可能也没必要——而是让你清楚地图长什么样,知道自己站在哪、下一步该往哪走,以及需要时该翻哪本书。</p>
+</section>
+
+</div></main>
+<script>
+var MOON_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+var SUN_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+
+(function () {
+  // data-theme 已由 <head> 里的脚本定好，这里只补图标和点击，不再在加载后写一次属性
+  var btn = document.getElementById('themeBtn'), root = document.documentElement;
+  function cur(){ return root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light'); }
+  if (cur() === 'dark') btn.innerHTML = SUN_ICON;
+  btn.addEventListener('click', function(){
+    var t = cur()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', t);
+    btn.innerHTML = t==='dark' ? SUN_ICON : MOON_ICON;
+  });
+})();
+(function () {
+  // 单击大章节标题 = 展开/收起其小节（纯手动，不自动跳转、不被滚动强开）
+  document.querySelectorAll('#sidebar a.ch').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var d = a.closest('details');
+      if (!d) return;
+      e.preventDefault();
+      d.open = !d.open;
+    });
+  });
+  // 滚动时只高亮「当前所在小节」，章节从不高亮
+  var linkMap = {};
+  document.querySelectorAll('#sidebar a.sec').forEach(function(a){
+    var h = a.getAttribute('href');
+    if (h && h.charAt(0) === '#') linkMap[h.slice(1)] = a;
+  });
+  var heads = Array.prototype.slice.call(document.querySelectorAll('main h1[id], main h2[id]'));
+  var cur = null, ticking = false;
+  function compute(){
+    ticking = false;
+    var threshold = window.innerHeight / 3, id = null;
+    var lo = 0, hi = heads.length - 1, ans = -1;
+    while (lo <= hi) {
+      var mid = (lo + hi) >> 1;
+      if (heads[mid].getBoundingClientRect().top <= threshold) { ans = mid; lo = mid + 1; }
+      else { hi = mid - 1; }
+    }
+    if (ans >= 0) id = heads[ans].id;
+    if (id === cur) return;
+    if (cur && linkMap[cur]) linkMap[cur].classList.remove('active');
+    cur = id;
+    if (cur && linkMap[cur]) linkMap[cur].classList.add('active');
+  }
+  function update(){ if (!ticking) { ticking = true; requestAnimationFrame(compute); } }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update, {passive:true});
+  window.addEventListener('load', compute);
+  compute();
+})();
+(function(){
+  var rez=document.querySelector('.sb-resizer'); if(!rez) return;
+  var drag=false;
+  rez.addEventListener('mousedown',function(e){drag=true;rez.classList.add('drag');document.body.style.userSelect='none';e.preventDefault();});
+  var pw=0,pend=false;document.addEventListener('mousemove',function(e){if(!drag)return;pw=Math.max(180,Math.min(680,e.clientX));if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;document.documentElement.style.setProperty('--sb',pw+'px');});});
+  document.addEventListener('mouseup',function(){if(!drag)return;drag=false;rez.classList.remove('drag');document.body.style.userSelect='';});
+})();
+</script>
+
+<script>
+(function(){
+  // 按钮已写在 HTML 里，nav-hidden 初值在 <head> 里定好：加载后不再动 DOM，也不再改 class
+  var b=document.getElementById('navBtn'); if(!b) return;
+  var root=document.documentElement;
+  b.addEventListener('click', function(){
+    var h = !root.classList.contains('nav-hidden');
+    root.classList.toggle('nav-hidden', h);
+    try{ localStorage.setItem('navHidden', h?'1':'0'); }catch(e){}
+  });
+})();
+</script>
+<script>/*depth-toggle*/
+(function(){
+  // 薄/厚切换:初值在 <head> 里按 localStorage 定好;这里只接点击与图标
+  var ICON_THICK='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>';
+  var ICON_THIN='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h9M4 14h16M4 18h9"/></svg>';
+  var b=document.getElementById('depthBtn'), root=document.documentElement; if(!b) return;
+  var n=document.querySelectorAll('main div.deep').length;
+  if(!n){ b.classList.add('none'); root.removeAttribute('data-depth'); return; }
+  function paint(){ var thin=root.getAttribute('data-depth')==='thin';
+    b.innerHTML = thin ? ICON_THIN : ICON_THICK;
+    b.title = thin ? '当前:薄(只看主干,已折起 '+n+' 处深入内容)。点一下看全部' : '当前:厚(全部内容)。点一下只看主干'; }
+  paint();
+  b.addEventListener('click', function(){
+    var thin=root.getAttribute('data-depth')!=='thin';
+    if(thin) root.setAttribute('data-depth','thin'); else root.removeAttribute('data-depth');
+    try{ localStorage.setItem('depth', thin?'thin':'thick'); }catch(e){}
+    paint();
+    window.dispatchEvent(new Event('resize'));   // 让侧栏高亮重算
+  });
+})();
+</script>
+</body>
+</html>

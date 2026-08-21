@@ -13,3 +13,6 @@ desktop.ini
 *.tmp
 _toc*.txt
 原书/
+
+# 规范文档(不入库)
+规范/
