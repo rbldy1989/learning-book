@@ -67,7 +67,7 @@ figure table { width: 100%; }
 <div class="wrap">
 <header>
   <h1>现代编程书系 · AI 重构版</h1>
-  <p class="lead">沿用经典教材的知识脉络，剔除已废弃技术，补上现代实践 &middot; 六本教材 + 两本速查手册</p>
+  <p class="lead">沿用经典教材的知识脉络，剔除已废弃技术，补上现代实践 &middot; 十八本 · 教材 + 速查手册 + 源码精读</p>
 </header>
 <div class="grid">
 <a class="card" target="_blank" rel="noopener" href="Win32程序设计-现代详解.html" style="--accent:#1971c2">
@@ -75,7 +75,7 @@ figure table { width: 100%; }
   <div class="info">
     <h2>Win32 程序设计</h2>
     <div class="sub">现代详解</div>
-    <div class="meta">19 章 · 186 节 · 68 图 · 1156 KB</div>
+    <div class="meta">19 章 · 186 节 · 68 图 · 1162 KB</div>
     <p>从零讲透 Windows 原生编程：消息机制、GDI、控件、位图、多线程。只讲现代 32/64 位，去除废弃内容。</p>
     <div class="tags"><span class="tag">原创重讲</span><span class="tag">含环境搭建</span><span class="tag">含高DPI/深色模式</span></div>
   </div>
@@ -85,7 +85,7 @@ figure table { width: 100%; }
   <div class="info">
     <h2>深入浅出 MFC</h2>
     <div class="sub">详解与现代批注</div>
-    <div class="meta">21 章 · 153 节 · 19 图 · 631 KB</div>
+    <div class="meta">21 章 · 154 节 · 19 图 · 631 KB</div>
     <p>对照侯捷经典，原创重讲 MFC 六大关键技术、Document/View 架构与消息映射机制。</p>
     <div class="tags"><span class="tag">原创重讲</span><span class="tag">六大关键技术</span><span class="tag">现代批注</span></div>
   </div>
@@ -125,7 +125,7 @@ figure table { width: 100%; }
   <div class="info">
     <h2>C++ 标准库 API 编程手册</h2>
     <div class="sub">containers / ranges / chrono / concurrency …</div>
-    <div class="meta">20 分类 · 87 节 · 28 图 · 1030 KB</div>
+    <div class="meta">20 分类 · 87 节 · 28 图 · 1031 KB</div>
     <p>以 C++17 为底线，逐条标注 C++20 / 23 的新写法。每个条目都写清「什么时候别用它」——迭代器失效、悬垂 view、async 返回值不能丢。</p>
     <div class="tags"><span class="tag">速查手册</span><span class="tag">C++20 ranges</span><span class="tag">C++23 expected</span><span class="tag">PMR / 协程 / 异常安全</span><span class="tag">random / bit / &lt;=&gt;</span></div>
   </div>
@@ -138,6 +138,91 @@ figure table { width: 100%; }
     <div class="meta">19 分类 · 105 节 · 31 图 · 2395 KB</div>
     <p>站在系统调用层看 Linux：从文件描述符三张表，到 epoll 边缘触发、io_uring，再到容器背后的命名空间与 cgroup。每条都写清失败了怎么办。</p>
     <div class="tags"><span class="tag">速查手册</span><span class="tag">epoll / io_uring</span><span class="tag">容器原理</span><span class="tag">tty / 动态链接 / 零拷贝</span></div>
+  </div>
+</a>
+</div>
+
+<h2 class="secttl">Web 前端</h2>
+<p class="sectsub">五本一套,从 HTML/CSS 到语言、类型、浏览器与工程化,按需要单本读也成立。</p>
+<div class="grid">
+<a class="card" target="_blank" rel="noopener" href="HTML与CSS手册.html" style="--accent:#e8590c">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><rect x="34" y="52" width="132" height="86" rx="7" fill="none" stroke="#e8590c" stroke-width="2"/><text x="100" y="106" text-anchor="middle" font-size="34" font-weight="700" fill="#e8590c" font-family="Consolas,monospace">&lt;/&gt;</text><rect x="34" y="152" width="132" height="14" rx="4" fill="#e8590c" opacity=".5"/><rect x="34" y="174" width="96" height="14" rx="4" fill="#e8590c" opacity=".32"/><rect x="34" y="196" width="116" height="14" rx="4" fill="#e8590c" opacity=".22"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#e8590c"/></svg></div>
+  <div class="info">
+    <h2>HTML 与 CSS 手册</h2>
+    <div class="sub">结构语义 · 层叠盒子 · Flex/Grid · 内联格式化 · 架构与路线</div>
+    <div class="meta">11 章 · 53 节 · 11 图 · 1405 KB</div>
+    <p>前端五本的入口。从「浏览器是个什么运行时」讲到语义标签与可访问性,再到层叠、盒模型、值与单位、Flex/Grid 与响应式,最后是内联格式化上下文、视觉效果与样式架构。对标《CSS 世界》从渲染原理推「为什么」、《CSS 揭秘》问题→解法→原理的写法,末章给整套前端的学习路线图。</p>
+    <div class="tags"><span class="tag">入口书</span><span class="tag">CSS 世界 / CSS 揭秘</span><span class="tag">含学习路线</span></div>
+  </div>
+</a>
+<a class="card" target="_blank" rel="noopener" href="JavaScript语言手册.html" style="--accent:#f08c00">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><rect x="44" y="60" width="112" height="112" rx="10" fill="#f08c00" opacity=".88"/><text x="100" y="146" text-anchor="middle" font-size="56" font-weight="700" fill="#fff" font-family="Consolas,monospace">JS</text><rect x="44" y="190" width="112" height="9" rx="4" fill="#f08c00" opacity=".4"/><rect x="44" y="208" width="78" height="9" rx="4" fill="#f08c00" opacity=".26"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#f08c00"/></svg></div>
+  <div class="info">
+    <h2>JavaScript 语言手册</h2>
+    <div class="sub">类型与作用域 · this 与原型 · 标准库 · 事件循环与异步</div>
+    <div class="meta">9 章 · 41 节 · 6 图 · 1063 KB</div>
+    <p>语言本身与它自带的标准库。类型与隐式转换、作用域与闭包、this 的四条规则、原型与类、迭代协议、错误与模块;字符串/正则/数字/日期/集合/二进制/JSON/元编程逐个讲透;再到事件循环的宏微任务、Promise 组合子、async/await 与 fetch。对标红宝书、犀牛书与《你不知道的 JavaScript》。</p>
+    <div class="tags"><span class="tag">红宝书 / 犀牛书</span><span class="tag">YDKJS 反直觉例子</span><span class="tag">事件循环实测</span></div>
+  </div>
+</a>
+<a class="card" target="_blank" rel="noopener" href="TypeScript手册.html" style="--accent:#3178c6">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><rect x="44" y="60" width="112" height="112" rx="10" fill="#3178c6" opacity=".9"/><text x="100" y="146" text-anchor="middle" font-size="56" font-weight="700" fill="#fff" font-family="Consolas,monospace">TS</text><rect x="44" y="190" width="112" height="9" rx="4" fill="#3178c6" opacity=".4"/><rect x="44" y="208" width="66" height="9" rx="4" fill="#3178c6" opacity=".26"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#3178c6"/></svg></div>
+  <div class="info">
+    <h2>TypeScript 手册</h2>
+    <div class="sub">心智模型 · 泛型与类型运算 · 类型设计与不健全性 · 声明与迁移</div>
+    <div class="meta">8 章 · 39 节 · 4 图 · 985 KB</div>
+    <p>把类型系统当成一门要学的语言来讲。类型是值的集合、结构类型与多余属性检查、类型空间与值空间、推断的宽化与上下文;泛型、条件/映射/模板字面量与递归;让非法状态无法表示、错误处理四模式;以及「TS 什么时候会骗你」的不健全性清单,每条都有编译通过却运行崩溃的实跑证据。末尾是声明文件、JS→TS 六步迁移与类型检查性能调优。</p>
+    <div class="tags"><span class="tag">Effective TypeScript</span><span class="tag">Programming TS</span><span class="tag">Type-Level TS</span></div>
+  </div>
+</a>
+<a class="card" target="_blank" rel="noopener" href="浏览器API与工作原理手册.html" style="--accent:#087f5b">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><circle cx="100" cy="118" r="52" fill="none" stroke="#087f5b" stroke-width="2"/><ellipse cx="100" cy="118" rx="22" ry="52" fill="none" stroke="#087f5b" stroke-width="2" opacity=".6"/><line x1="48" y1="118" x2="152" y2="118" stroke="#087f5b" stroke-width="2" opacity=".6"/><line x1="58" y1="90" x2="142" y2="90" stroke="#087f5b" stroke-width="2" opacity=".35"/><line x1="58" y1="146" x2="142" y2="146" stroke="#087f5b" stroke-width="2" opacity=".35"/><rect x="40" y="192" width="120" height="10" rx="5" fill="#087f5b" opacity=".35"/><rect x="40" y="212" width="84" height="10" rx="5" fill="#087f5b" opacity=".22"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#087f5b"/></svg></div>
+  <div class="info">
+    <h2>浏览器 API 与工作原理手册</h2>
+    <div class="sub">DOM 与事件 · 图形/文件/实时 · 渲染管线 · 同源与安全排错</div>
+    <div class="meta">12 章 · 64 节 · 17 图 · 1778 KB</div>
+    <p>浏览器这个运行时能给你什么,以及它内部怎么跑。DOM 增删改查与事件流、表单与 BOM;Canvas/SVG/Web Components/文件与剪贴板/媒体设备/Service Worker/WebSocket 与 WebRTC/Performance;再往下是渲染管线、重排重绘、加载与缓存、同源与 CORS、TCP 到 HTTP/3;末章是 XSS/CSRF/CSP 与一套调试方法。</p>
+    <div class="tags"><span class="tag">MDN / web.dev</span><span class="tag">Web 性能权威指南</span><span class="tag">含安全与调试</span></div>
+  </div>
+</a>
+<a class="card" target="_blank" rel="noopener" href="前端框架与工程化手册.html" style="--accent:#ae3ec9">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><circle cx="100" cy="112" r="16" fill="#ae3ec9" opacity=".9"/><ellipse cx="100" cy="112" rx="54" ry="21" fill="none" stroke="#ae3ec9" stroke-width="2"/><ellipse cx="100" cy="112" rx="54" ry="21" fill="none" stroke="#ae3ec9" stroke-width="2" transform="rotate(60 100 112)"/><ellipse cx="100" cy="112" rx="54" ry="21" fill="none" stroke="#ae3ec9" stroke-width="2" transform="rotate(120 100 112)"/><rect x="40" y="192" width="120" height="10" rx="5" fill="#ae3ec9" opacity=".35"/><rect x="40" y="212" width="90" height="10" rx="5" fill="#ae3ec9" opacity=".22"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#ae3ec9"/></svg></div>
+  <div class="info">
+    <h2>前端框架与工程化手册</h2>
+    <div class="sub">React 与状态驱动 UI · 构建与 Web Vitals · 测试与质量</div>
+    <div class="meta">9 章 · 44 节 · 8 图 · 1153 KB</div>
+    <p>把前面四本的知识组装成能交付的工程。用 React 理解「状态驱动 UI」:组件与 JSX、状态与副作用、路由与数据、设计模式、状态管理生态、并发与 SSR,并与 Vue 对照;然后是构建链、环境与产物、代码规范与 CI、依赖治理、Web Vitals 实测与优化、部署;最后是测试金字塔、Vitest、Testing Library、Playwright 与可访问性测试。</p>
+    <div class="tags"><span class="tag">react.dev / web.dev</span><span class="tag">Web Vitals 实测</span><span class="tag">测试金字塔</span></div>
+  </div>
+</a>
+</div>
+
+<h2 class="secttl">工程协作</h2>
+<p class="sectsub">代码写完只是一半;剩下一半是版本、评审、发布与回滚——入职第一周就要用,却没有一本语言书会讲。</p>
+<div class="grid">
+<a class="card" target="_blank" rel="noopener" href="Git与工程协作手册.html" style="--accent:#f03e3e">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><path d="M40 200 L40 90 Q40 70 60 70 L110 70" fill="none" stroke="#f03e3e" stroke-width="2.5" opacity=".55"/><path d="M160 200 L160 140 Q160 120 140 120 L110 120" fill="none" stroke="#f03e3e" stroke-width="2.5" opacity=".55"/><circle cx="40" cy="215" r="13" fill="var(--cover-bg)" stroke="#f03e3e" stroke-width="2.5"/><circle cx="40" cy="90" r="13" fill="var(--cover-bg)" stroke="#f03e3e" stroke-width="2.5"/><circle cx="160" cy="215" r="13" fill="var(--cover-bg)" stroke="#f03e3e" stroke-width="2.5"/><circle cx="125" cy="70" r="15" fill="#f03e3e" opacity=".9"/><circle cx="125" cy="120" r="13" fill="var(--cover-bg)" stroke="#f03e3e" stroke-width="2.5" opacity=".7"/><line x1="40" y1="202" x2="40" y2="103" stroke="#f03e3e" stroke-width="2.5" opacity=".35"/><line x1="160" y1="202" x2="160" y2="133" stroke="#f03e3e" stroke-width="2.5" opacity=".35"/><text x="100" y="252" text-anchor="middle" font-family="Consolas,monospace" font-size="15" fill="#f03e3e" opacity=".75">a1b2c3d</text><rect x="0" y="0" width="200" height="8" rx="4" fill="#f03e3e"/></svg></div>
+  <div class="info">
+    <h2>Git 与工程协作手册</h2>
+    <div class="sub">对象库与三棵树 · 分支合并与重写历史 · 分支模型与发布策略 · 提交、评审与自动化闸门</div>
+    <div class="meta">11 章 · 58 节 · 29 图 · 1039 KB</div>
+    <p>给「只会 add / commit / push 三板斧」的人补上和人一起交付代码的那一层。先讲对象库、引用与三棵树,再讲命令——知道这三样,<code>reset --soft/--mixed/--hard</code> 不用背;然后是分支与冲突的本质、rebase 为什么是复制、远程三种引用的边界、log/blame/bisect/reflog 的排错手艺;后半讲分支模型与发布策略、提交信息与 code review、hooks 与 CI 闸门,最后走完一个从需求到上线的任务与一张误操作恢复地图。对标《Pro Git》、蒋鑫《Git 权威指南》、《Software Engineering at Google》与 DORA/《持续交付》,<strong>每条命令的终端输出都在真实仓库里跑过再抄录</strong>。</p>
+    <div class="tags"><span class="tag">Pro Git / Git 权威指南</span><span class="tag">SE at Google 评审</span><span class="tag">29 张原创图</span><span class="tag">输出全实跑</span></div>
+  </div>
+</a>
+</div>
+
+<h2 class="secttl">职业地图</h2>
+<p class="sectsub">跳出单本手册，从整个技术体系的角度看该学什么、学到什么程度、读哪本书。</p>
+<div class="grid">
+<a class="card" target="_blank" rel="noopener" href="全栈工程师知识体系.html" style="--accent:#d6336c">
+  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><rect x="34" y="46" width="132" height="26" rx="5" fill="#d6336c" opacity=".85"/><rect x="34" y="82" width="132" height="26" rx="5" fill="#d6336c" opacity=".62"/><rect x="34" y="118" width="132" height="26" rx="5" fill="#d6336c" opacity=".45"/><rect x="34" y="154" width="132" height="26" rx="5" fill="#d6336c" opacity=".32"/><rect x="34" y="190" width="132" height="26" rx="5" fill="#d6336c" opacity=".22"/><line x1="100" y1="40" x2="100" y2="222" stroke="#d6336c" stroke-width="2" opacity=".5" stroke-dasharray="3 3"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#d6336c"/></svg></div>
+  <div class="info">
+    <h2>全栈工程师知识体系</h2>
+    <div class="sub">分层知识地图 + 推荐书籍</div>
+    <div class="meta">11 章 · 42 节 · 42 张书单 · 70 KB</div>
+    <p>五层加四条横切，从操作系统底座到 AI 工程。每个知识点配「可验证的掌握判据」和精选书籍，外带三阶段成长路径与学习方法。</p>
+    <div class="tags"><span class="tag">知识地图</span><span class="tag">掌握判据</span><span class="tag">分域书单</span><span class="tag">成长路径</span></div>
   </div>
 </a>
 </div>
@@ -187,21 +272,6 @@ figure table { width: 100%; }
     <div class="meta">8 章 · 39 节 · 17 表 · 8 图 · 103 KB</div>
     <p>一个功能完整的记事本替代品，全部逻辑装在一个 C 文件里。逐段读透窗口骨架、文件编码识别、换行符归一化、控件子类化与配置双后端。</p>
     <div class="tags"><span class="tag">逐函数精读</span><span class="tag">85 个函数</span><span class="tag">配套中文注释源码</span></div>
-  </div>
-</a>
-</div>
-
-<h2 class="secttl">职业地图</h2>
-<p class="sectsub">跳出单本手册，从整个技术体系的角度看该学什么、学到什么程度、读哪本书。</p>
-<div class="grid">
-<a class="card" target="_blank" rel="noopener" href="全栈工程师知识体系.html" style="--accent:#d6336c">
-  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><rect x="34" y="46" width="132" height="26" rx="5" fill="#d6336c" opacity=".85"/><rect x="34" y="82" width="132" height="26" rx="5" fill="#d6336c" opacity=".62"/><rect x="34" y="118" width="132" height="26" rx="5" fill="#d6336c" opacity=".45"/><rect x="34" y="154" width="132" height="26" rx="5" fill="#d6336c" opacity=".32"/><rect x="34" y="190" width="132" height="26" rx="5" fill="#d6336c" opacity=".22"/><line x1="100" y1="40" x2="100" y2="222" stroke="#d6336c" stroke-width="2" opacity=".5" stroke-dasharray="3 3"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#d6336c"/></svg></div>
-  <div class="info">
-    <h2>全栈工程师知识体系</h2>
-    <div class="sub">分层知识地图 + 推荐书籍</div>
-    <div class="meta">11 章 · 42 节 · 42 张书单 · 70 KB</div>
-    <p>五层加四条横切，从操作系统底座到 AI 工程。每个知识点配「可验证的掌握判据」和精选书籍，外带三阶段成长路径与学习方法。</p>
-    <div class="tags"><span class="tag">知识地图</span><span class="tag">掌握判据</span><span class="tag">分域书单</span><span class="tag">成长路径</span></div>
   </div>
 </a>
 </div>

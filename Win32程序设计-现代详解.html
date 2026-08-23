@@ -179,6 +179,7 @@ main .note{content-visibility:auto;contain-intrinsic-size:auto 200px;}
 
 
 
+
 /* —— 薄/厚阅读模式 —— */
 #depthBtn{position:fixed;top:12px;right:52px;z-index:11;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--rule);background:var(--side-bg);color:var(--muted);cursor:pointer;line-height:0;}
 #depthBtn:hover{color:var(--accent);border-color:var(--accent);}
@@ -888,7 +889,7 @@ SetWindowTextW(hwnd, title.c_str());
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 22697.25px;--thin-h:22697.25px">
+<section class="chapter" style="contain-intrinsic-size:auto 24725.97px;--thin-h:24725.97px">
 <h1 id="w3"><span class="part">第 3 章</span>窗口、消息与窗口过程</h1>
 
 <p>这一章是全书的心脏。前面你已经知道了一个 Win32 程序的入口在哪里、Unicode 该怎么处理；从现在开始，你要亲手让一个真正的窗口出现在屏幕上，并让它对你的鼠标、键盘、乃至系统的每一次「打招呼」作出反应。我提醒你：如果只把本章当成一段可以照抄的模板背下来，你会永远停留在「能跑但不懂」的层次。相反，如果你真正理解了「窗口类 → 窗口实体 → 消息 → 窗口过程」这条链路，那么此后无论是按钮、编辑框、还是整套 GUI 框架，你看它们时都会有一种「原来底下就是这套东西」的透彻感。</p>
@@ -1568,6 +1569,52 @@ std::vector&lt;POINT&gt; g_circles;                 <span class="cm">// ← 状�
 <p>「数据是真相，画面是投影」不只是 <code>WM_PAINT</code> 的规矩，它是<strong>所有图形界面程序的通用架构原则</strong>。MFC 的 Document/View 把它固化成了框架——Document 存数据，View 负责投影；现代的 MVVM、React 的「状态驱动 UI」同样是它的后代：<strong>你永远只改状态，画面自动跟随。</strong></p>
 <p>换句话说，你现在理解的这条 <code>WM_PAINT</code> 契约，正是四十年后前端框架仍在遵循的那条原则。</p>
 </div>
+<h3>ps.rcPaint 与 PAINTSTRUCT:这次到底要重画哪一块</h3>
+<p>一句话:<code>ps.rcPaint</code> 是<strong>「这次 <code>WM_PAINT</code> 需要更新的那块矩形」</strong>,客户区坐标,由 <code>BeginPaint</code> 填进 <code>PAINTSTRUCT</code>。它从哪来,上面已经讲过一半:系统给每个窗口维护一个无效区域(update region),往里加东西的只有两种人——<strong>你自己</strong>(<code>InvalidateRect(hwnd, &amp;rc, …)</code>,<code>nullptr</code> 表示整个客户区)和<strong>系统</strong>(被别的窗口盖住又移开、窗口被拉大、从最小化恢复)。只要无效区域非空,消息队列空闲时就会生成一条 <code>WM_PAINT</code>。</p>
+<p><code>BeginPaint</code> 那一瞬间做了三件事,三件都记住:</p>
+<table style="contain-intrinsic-size:auto 234.8px">
+<thead><tr><th>#</th><th>它做了什么</th><th>对你意味着</th></tr></thead>
+<tbody>
+<tr><td class="nw">①</td><td>把无效区域的<strong>外接矩形</strong>填进 <code>ps.rcPaint</code></td><td>这是「这次要画哪一块」的提示,客户区坐标</td></tr>
+<tr><td class="nw">②</td><td>把返回的 <code>HDC</code> 的<strong>裁剪区</strong>设成无效区域(真正的区域,不是外接矩形)</td><td>超出这块的绘制被 GDI 直接丢弃——所以哪怕你整窗重画,结果也是对的,只是白画</td></tr>
+<tr><td class="nw">③</td><td><strong>清空无效区域</strong>(窗口重新变「干净」)</td><td>这就是必须调 <code>BeginPaint</code>/<code>EndPaint</code>(或 <code>ValidateRect</code>)的原因:不清空,队列一闲下来又是一条 <code>WM_PAINT</code>,死循环、CPU 跑满</td></tr>
+</tbody>
+</table>
+<pre style="contain-intrinsic-size:auto 250.09px"><code><span class="kw">typedef</span> <span class="kw">struct</span> tagPAINTSTRUCT {
+    HDC  hdc;          <span class="cm">// BeginPaint 给你的 DC,裁剪区已设成无效区域</span>
+    BOOL fErase;       <span class="cm">// 系统有没有替你擦过背景(WM_ERASEBKGND 被默认处理了就是 TRUE)</span>
+    RECT rcPaint;      <span class="cm">// 这次要更新的矩形:无效区域的外接矩形,客户区坐标</span>
+    BOOL fRestore;     <span class="cm">// 以下三个是系统内部用的,别碰</span>
+    BOOL fIncUpdate;
+    BYTE rgbReserved[32];
+} PAINTSTRUCT;</code></pre>
+<p>用一个双缓冲画图程序里的两个真实场景对照着看。窗口 700×500,客户区大约 684×437,<code>WM_PAINT</code> 里先把整帧画进内存位图,再 <code>BitBlt</code> 到屏幕:</p>
+<pre style="contain-intrinsic-size:auto 455.41px"><code><span class="cm">// 场景 A:拖动橡皮筋选框。WM_MOUSEMOVE 里 InvalidateRect(hwnd, nullptr, FALSE) —— nullptr = 整个客户区</span>
+<span class="cm">//   ps.rcPaint = { 0, 0, 684, 437 }      → BitBlt 贴整幅</span>
+<span class="cm">// 场景 B:别的窗口从底部划过又移开。系统只标脏被盖住的那一条</span>
+<span class="cm">//   ps.rcPaint = { 0, 300, 684, 437 }    → 只贴 684×137 的一条,上面那片一个像素都不动</span>
+<span class="kw">case</span> WM_PAINT: {
+    PAINTSTRUCT ps;
+    HDC hdc = BeginPaint(hwnd, &amp;ps);
+    RenderFrame(memDC);                                  <span class="cm">// 两种场景都整帧画进内存位图</span>
+    BitBlt(hdc, ps.rcPaint.left, ps.rcPaint.top,         <span class="cm">// 省的只是贴图这一步</span>
+           ps.rcPaint.right  - ps.rcPaint.left,
+           ps.rcPaint.bottom - ps.rcPaint.top,
+           memDC, ps.rcPaint.left, ps.rcPaint.top, SRCCOPY);
+    EndPaint(hwnd, &amp;ps);
+    <span class="kw">return</span> 0;
+}</code></pre>
+<p>注意 <code>RenderFrame</code> 两种场景下都把整帧画进了内存位图,省掉的只是贴图那一步。想连合成也省,就得在 <code>RenderFrame</code> 里也照 <code>rcPaint</code> 裁——一般不值当:合成是内存操作,贴图才是过屏幕的那一步。</p>
+<p>三个容易误解的点:</p>
+<table style="contain-intrinsic-size:auto 287.95px">
+<thead><tr><th>误解</th><th>实情</th></tr></thead>
+<tbody>
+<tr><td class="nw">它改变了坐标系</td><td><strong>不改。</strong><code>ps.rcPaint = {0, 300, …}</code> 不代表原点搬到了 (0, 300);<code>TextOutW(hdc, 10, 8, …)</code> 还是画在客户区 (10, 8),只是这次会被裁剪区裁掉</td></tr>
+<tr><td class="nw">它就是无效区域</td><td><strong>它是外接矩形,不是精确区域。</strong>无效区域内部是 <code>HRGN</code>,可以是分离的好几块(比如同时作废顶部的转轮和底部的状态行),<code>rcPaint</code> 会把中间没必要重画的一大片也包进来。GDI 的自动裁剪用的是真正的区域(精确);你拿 <code>rcPaint</code> 做判断则偏保守——可能多画,绝不会漏画</td></tr>
+<tr><td class="nw">不按它画就会出错</td><td><strong>它不负责正确性,只负责省事。</strong>完全无视它、每次画满整个客户区,画面也是对的,GDI 会裁掉多余的。反过来,如果去掉 <code>rcPaint</code> 判断后画面就花了,说明真正的 bug 在别处——多半是无效区域标得不对——不是这个判断没做</td></tr>
+</tbody>
+</table>
+<div class="note ok" style="contain-intrinsic-size:auto 199.95px"><span class="t">🟢 顺带:ps.fErase</span><p><code>fErase</code> 告诉你系统有没有替你擦过背景——<code>BeginPaint</code> 在填 <code>PAINTSTRUCT</code> 之前会先发 <code>WM_ERASEBKGND</code>,默认处理(用窗口类的 <code>hbrBackground</code> 刷一遍)完成后 <code>fErase</code> 为 TRUE;你自己在 <code>WM_ERASEBKGND</code> 里返回非零「拦掉」了它,<code>fErase</code> 就是 FALSE。双缓冲程序(见 12.6)正是这么做的:反正每个像素都会被 <code>BitBlt</code> 覆盖,擦背景只会多一次闪烁,所以拦掉,<code>fErase</code> 也就用不上了。</p></div>
 
 <h2 id="w3-lifecycle">3.9 生与死：WM_CLOSE、WM_DESTROY 与 PostQuitMessage</h2>
 
@@ -8817,7 +8864,7 @@ MATHLIB_API <span class="kw">int</span> AddNumbers(<span class="kw">int</span> a
 <div class="note dead" style="contain-intrinsic-size:auto 130.83px"><span class="t">🔴 发布铁律</span><p>给别人 <strong>Debug 版</strong>是经典翻车点：Debug 版依赖的调试运行库(ucrtbased.dll 等)微软<strong>不允许再分发</strong>，对方大概率没有。<strong>发布一律用 Release 配置。</strong></p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 6188.19px;--thin-h:6188.19px">
+<section class="chapter" style="contain-intrinsic-size:auto 6188.2px;--thin-h:6188.2px">
 <h1 id="w16"><span class="part">第 15 章</span>文件、注册表与剪贴板</h1>
 <p>窗口画得再漂亮，程序总要落地干活：读写文件、记住配置、和别的程序交换数据。这一章把三样日常武器一次配齐。</p>
 
@@ -8893,7 +8940,7 @@ WriteFile(h, utf8, cb - 1, &amp;written, NULL);    <span class="cm">// -1 去掉
 <p>现代读写一对 API 就够(内部帮你打开/关闭键)：</p>
 <pre style="contain-intrinsic-size:auto 356.34px"><code><span class="cl"><span class="cm">// 写一个字符串值(键不存在会自动创建)</span></span><span class="cl"><span class="kw">const</span> wchar_t* v = L"D:\\work";</span><span class="cl">RegSetKeyValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath",</span><span class="cl"><span class="cc" style="min-width:73.0ch">                REG_SZ, v, (DWORD)((wcslen(v) + 1) * <span class="kw">sizeof</span>(wchar_t)));</span><span class="cm">// cb：字节数！</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 读回来</span></span><span class="cl">wchar_t buf[260];</span><span class="cl">DWORD cb = <span class="kw">sizeof</span>(buf);</span><span class="cl">LSTATUS s = RegGetValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath",</span><span class="cl">                         RRF_RT_REG_SZ, NULL, buf, &amp;cb);</span><span class="cl"><span class="cc" style="min-width:73.0ch"><span class="kw">if</span> (s == ERROR_SUCCESS) { <span class="cm">/* buf 可用 */</span> }</span><span class="cm">// 注意：错误码直返风格</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 删除</span></span><span class="cl">RegDeleteKeyValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath");</span></code></pre>
 <p>维护老代码会见到经典五步族：<code>RegOpenKeyExW → RegQueryValueExW / RegSetValueExW → RegCloseKey</code>，逻辑相同、更啰嗦而已。</p>
-<div class="note new" style="contain-intrinsic-size:auto 231.14px"><span class="t">🔵 要写 HKLM / 需要管理员权限怎么办</span><p>进程不能运行到一半「升权」——提权是<strong>启动那一刻</strong>决定的。两条路：① 整个程序要求管理员：项目属性 → 清单工具 → UAC 执行级别 = <code>requireAdministrator</code>；② 只在需要时提权：<code>ShellExecuteW(NULL, L"runas", 自己的exe路径, 参数, NULL, SW_SHOWNORMAL)</code> 以管理员身份再启动一个自己。另外，小工具存配置的另一条路是 INI 文件放 exe 旁边(<code>GetPrivateProfileStringW</code>/<code>WritePrivateProfileStringW</code>)，绿色免安装软件的常规做法。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 231.16px"><span class="t">🔵 要写 HKLM / 需要管理员权限怎么办</span><p>进程不能运行到一半「升权」——提权是<strong>启动那一刻</strong>决定的。两条路：① 整个程序要求管理员：项目属性 → 清单工具 → UAC 执行级别 = <code>requireAdministrator</code>；② 只在需要时提权：<code>ShellExecuteW(NULL, L"runas", 自己的exe路径, 参数, NULL, SW_SHOWNORMAL)</code> 以管理员身份再启动一个自己。另外，小工具存配置的另一条路是 INI 文件放 exe 旁边(<code>GetPrivateProfileStringW</code>/<code>WritePrivateProfileStringW</code>)，绿色免安装软件的常规做法。</p></div>
 
 <h2 id="w16-sysinfo">15.8 常用系统信息拼盘</h2>
 <pre style="contain-intrinsic-size:auto 301.97px"><code><span class="cl"><span class="cc" style="min-width:59.0ch">GetTickCount64();</span><span class="cm">// 开机以来毫秒数(测耗时够用；高精度用 QueryPerformanceCounter)</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">Sleep(200);</span><span class="cm">// 当前线程睡 200ms(别在 UI 线程用！)</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">GetSystemMetrics(SM_CXSCREEN);</span><span class="cm">// 主屏宽度像素；SM_CYSCREEN 高度</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">GetComputerNameW(buf, &amp;size);</span><span class="cm">// 计算机名；GetUserNameW 在 advapi32</span></span><span class="cl">GetEnvironmentVariableW(L"PATH", buf, n);<span class="cm">// 环境变量</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 标准目录(别硬编码 C:\Users\...)：</span></span><span class="cl">#include &lt;shlobj.h&gt;</span><span class="cl">PWSTR docs = NULL;</span><span class="cl"><span class="cc" style="min-width:59.0ch">SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &amp;docs);</span><span class="cm">// 我的文档</span></span><span class="cl"><span class="cm">// 用完：CoTaskMemFree(docs);</span></span></code></pre>
@@ -8902,7 +8949,7 @@ WriteFile(h, utf8, cb - 1, &amp;written, NULL);    <span class="cm">// -1 去掉
 <pre style="contain-intrinsic-size:auto 587.59px"><code><span class="cl"><span class="cm">// 写入一段文本</span></span><span class="cl"><span class="kw">if</span> (OpenClipboard(hwnd)) {</span><span class="cl">    EmptyClipboard();</span><span class="cl">    <span class="kw">const</span> wchar_t* text = L"来自 Win32 的文本";</span><span class="cl">    SIZE_T bytes = (wcslen(text) + 1) * <span class="kw">sizeof</span>(wchar_t);</span><span class="cl">    HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, bytes);</span><span class="cl">    memcpy(GlobalLock(hMem), text, bytes);</span><span class="cl">    GlobalUnlock(hMem);</span><span class="cl"><span class="cc" style="min-width:45.0ch">    SetClipboardData(CF_UNICODETEXT, hMem);</span><span class="cm">// 所有权移交系统：不要再 GlobalFree！</span></span><span class="cl">    CloseClipboard();</span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="cm">// 读取(所有权方向反过来：内存是系统的，只能看不能动)</span></span><span class="cl"><span class="kw">if</span> (OpenClipboard(hwnd)) {</span><span class="cl">    HANDLE hData = GetClipboardData(CF_UNICODETEXT);</span><span class="cl">    <span class="kw">if</span> (hData) {</span><span class="cl">        <span class="kw">const</span> wchar_t* text = (<span class="kw">const</span> wchar_t*)GlobalLock(hData);</span><span class="cl">        <span class="kw">if</span> (text) {</span><span class="cl">            <span class="cm">// 使用 text(想留住内容就自己拷贝一份)</span></span><span class="cl"><span class="cc" style="min-width:45.0ch">            GlobalUnlock(hData);</span><span class="cm">// 只 Unlock，不要 GlobalFree</span></span><span class="cl">        }</span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:45.0ch">    CloseClipboard();</span><span class="cm">// 剪贴板是全系统共享资源，开关之间动作要快</span></span><span class="cl">}</span></code></pre>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 1966.89px;--thin-h:1966.89px">
+<section class="chapter" style="contain-intrinsic-size:auto 1966.88px;--thin-h:1966.88px">
 <h1 id="w17"><span class="part">第 16 章</span>调试与排错工具箱</h1>
 <p>会写只是一半功夫，另一半是「出了问题能自己查」。这一章把 Win32 排错的五样趁手工具一次交给你。</p>
 
@@ -9015,7 +9062,7 @@ DPI_AWARENESS_CONTEXT old =
 DialogBoxW(hInst, MAKEINTRESOURCEW(IDD_LEGACY), hwnd, LegacyDlgProc);
 SetThreadDpiAwarenessContext(old);         <span class="cm">// 立刻还原，别污染后续代码</span></code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 131.97px"><span class="t">🟡 EnableNonClientDpiScaling 是 V1 时代的补丁</span><p>网上老代码常在 <code>WM_NCCREATE</code> 里调 <code>EnableNonClientDpiScaling(hwnd)</code> 让标题栏跟着缩放——那是 Per-Monitor V1 的补救措施。声明了 PerMonitorV2 之后非客户区自动缩放，这个调用不再需要。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 131.94px"><span class="t">🟡 EnableNonClientDpiScaling 是 V1 时代的补丁</span><p>网上老代码常在 <code>WM_NCCREATE</code> 里调 <code>EnableNonClientDpiScaling(hwnd)</code> 让标题栏跟着缩放——那是 Per-Monitor V1 的补救措施。声明了 PerMonitorV2 之后非客户区自动缩放，这个调用不再需要。</p></div>
 
 <h2 id="w15-visualstyle">17.3 视觉样式与 SxS 清单：控件为什么长得像 Windows 2000</h2>
 
@@ -9079,7 +9126,7 @@ BOOL fDarkNow = (value == 0);
         RefreshTheme(hwnd);        <span class="cm">// 重读设置、换画刷、更新标题栏、重绘</span>
     <span class="kw">break</span>;</code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 164.25px"><span class="t">🔴 别碰 uxtheme 的未公开序号导出</span><p>网上流传用 <code>uxtheme.dll</code> 序号 133/135 导出的 <code>AllowDarkModeForWindow</code>、<code>SetPreferredAppMode</code> 给控件"开官方暗黑"。这些函数从未公开，签名和行为在系统更新中已经变过，随时可能再变或消失。个人玩具可以试，交付的产品不要赌。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 164.28px"><span class="t">🔴 别碰 uxtheme 的未公开序号导出</span><p>网上流传用 <code>uxtheme.dll</code> 序号 133/135 导出的 <code>AllowDarkModeForWindow</code>、<code>SetPreferredAppMode</code> 给控件"开官方暗黑"。这些函数从未公开，签名和行为在系统更新中已经变过，随时可能再变或消失。个人玩具可以试，交付的产品不要赌。</p></div>
 
 <h2 id="w15-coords">17.5 每监视器缩放下的坐标陷阱与 DLU</h2>
 
@@ -9262,7 +9309,7 @@ BOOL fDarkNow = (value == 0);
 
 <p>需要拖放位置的话，<code>DragQueryPoint</code> 能取到落点的客户区坐标。若要接收的不只是文件——文本、图片、拖出数据、拖放过程中的视觉反馈——那就得升级到完整的 OLE 拖放（<code>RegisterDragDrop</code> + 实现 <code>IDropTarget</code>），机制重得多，属于选修内容；只收文件的话，<code>WM_DROPFILES</code> 这套 1991 年的老接口至今够用，仍是正解。</p>
 
-<div class="note old" style="contain-intrinsic-size:auto 165.41px"><span class="t">🟡 管理员权限下拖放会"无声失灵"</span><p>如果你的程序以管理员身份运行，而资源管理器是普通权限，UIPI（用户界面特权隔离）会拦下从低完整性级别发往高完整性级别的 <code>WM_DROPFILES</code>——现象就是拖过去毫无反应，一行错误都没有。除非确有必要，别给需要拖放的程序要求提权；实在两者都要，需用 <code>ChangeWindowMessageFilterEx</code> 明确放行相关消息。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165.38px"><span class="t">🟡 管理员权限下拖放会"无声失灵"</span><p>如果你的程序以管理员身份运行，而资源管理器是普通权限，UIPI（用户界面特权隔离）会拦下从低完整性级别发往高完整性级别的 <code>WM_DROPFILES</code>——现象就是拖过去毫无反应，一行错误都没有。除非确有必要，别给需要拖放的程序要求提权；实在两者都要，需用 <code>ChangeWindowMessageFilterEx</code> 明确放行相关消息。</p></div>
 
 <h2 id="w15-tray">17.8 托盘图标与右键菜单</h2>
 <pre style="contain-intrinsic-size:auto 888.22px"><code><span class="cl"><span class="kw">#define</span> WM_TRAY (WM_APP + <span class="kw">30</span>)</span><span class="cl"> </span><span class="cl"><span class="kw">static</span> <span class="kw">void</span> TrayAdd(<span class="kw">HWND</span> hwnd, <span class="kw">HINSTANCE</span> hInst)</span><span class="cl">{</span><span class="cl">    <span class="kw">NOTIFYICONDATAW</span> nid = { <span class="kw">sizeof</span>(nid) };</span><span class="cl">    nid.hWnd             = hwnd;</span><span class="cl">    nid.uID              = <span class="kw">1</span>;</span><span class="cl">    nid.uFlags           = NIF_ICON | NIF_MESSAGE | NIF_TIP;</span><span class="cl"><span class="cc" style="min-width:44.0ch">    nid.uCallbackMessage = WM_TRAY;</span><span class="cm">// 托盘事件走这条自定义消息</span></span><span class="cl">    nid.hIcon            = LoadIconW(<span class="kw">NULL</span>, IDI_APPLICATION);</span><span class="cl">    lstrcpynW(nid.szTip, L<span class="kw">"我的程序"</span>, ARRAYSIZE(nid.szTip));</span><span class="cl">    Shell_NotifyIconW(NIM_ADD, &amp;nid);</span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="kw">static</span> <span class="kw">void</span> TrayRemove(<span class="kw">HWND</span> hwnd)</span><span class="cl">{</span><span class="cl">    <span class="kw">NOTIFYICONDATAW</span> nid = { <span class="kw">sizeof</span>(nid) };</span><span class="cl">    nid.hWnd = hwnd; nid.uID = <span class="kw">1</span>;</span><span class="cl"><span class="cc" style="min-width:44.0ch">    Shell_NotifyIconW(NIM_DELETE, &amp;nid);</span><span class="cm">// 不删就会留个僵尸图标</span></span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="kw">case</span> WM_TRAY:</span><span class="cl">    <span class="kw">if</span> (LOWORD(lParam) == WM_RBUTTONUP) {</span><span class="cl">        <span class="kw">POINT</span> pt; GetCursorPos(&amp;pt);</span><span class="cl">        <span class="kw">HMENU</span> hm = CreatePopupMenu();</span><span class="cl">        AppendMenuW(hm, MF_STRING, ID_TRAY_SHOW, L<span class="kw">"显示主窗口"</span>);</span><span class="cl">        AppendMenuW(hm, MF_STRING, ID_TRAY_EXIT, L<span class="kw">"退出"</span>);</span><span class="cl"><span class="cc" style="min-width:44.0ch">        SetForegroundWindow(hwnd);</span><span class="cm">// 少了它，点菜单外面菜单不消失</span></span><span class="cl">        TrackPopupMenu(hm, TPM_RIGHTBUTTON, pt.x, pt.y, <span class="kw">0</span>, hwnd, <span class="kw">NULL</span>);</span><span class="cl"><span class="cc" style="min-width:44.0ch">        PostMessageW(hwnd, WM_NULL, <span class="kw">0</span>, <span class="kw">0</span>);</span><span class="cm">// 官方要求的收尾动作</span></span><span class="cl">        DestroyMenu(hm);</span><span class="cl">    }</span><span class="cl">    <span class="kw">else</span> <span class="kw">if</span> (LOWORD(lParam) == WM_LBUTTONDBLCLK) {</span><span class="cl">        ShowWindow(hwnd, SW_RESTORE);</span><span class="cl">        SetForegroundWindow(hwnd);</span><span class="cl">    }</span><span class="cl">    <span class="kw">return</span> <span class="kw">0</span>;</span></code></pre>
@@ -9276,7 +9323,7 @@ BOOL fDarkNow = (value == 0);
 
 <p><strong>Unicode。</strong>2026 年的铁律只有一条：<strong>永远定义 <code>UNICODE</code> 和 <code>_UNICODE</code>，永远用 W 系 API 和 <code>wchar_t</code></strong>。A 系函数只是把参数转码后转发给 W 版的兼容垫片，转码依赖区域设置的 ANSI 代码页，遇到代码页外的字符直接变问号；前文说过 ComCtl32 v6 只注册 Unicode 窗口类；新 API 干脆只有 W 版。与外界交换数据用 UTF-8，进出程序时经 <code>MultiByteToWideChar</code>/<code>WideCharToMultiByte</code>（<code>CP_UTF8</code>）转换即可。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 165.38px"><span class="t">🔵 冷知识：A 系 API 也能说 UTF-8</span><p>Win10 1903 起，清单里声明 <code>activeCodePage</code> 为 UTF-8 后，本进程的 ANSI 代码页即被设为 CP_UTF8，A 系 API 从此收发 UTF-8 字符串。这主要是给移植跨平台代码（内部全用 <code>char</code>/UTF-8）的救生索；原生 Win32 项目仍以 W 系为正道。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165.41px"><span class="t">🔵 冷知识：A 系 API 也能说 UTF-8</span><p>Win10 1903 起，清单里声明 <code>activeCodePage</code> 为 UTF-8 后，本进程的 ANSI 代码页即被设为 CP_UTF8，A 系 API 从此收发 UTF-8 字符串。这主要是给移植跨平台代码（内部全用 <code>char</code>/UTF-8）的救生索；原生 Win32 项目仍以 W 系为正道。</p></div>
 
 <p>把本章串起来，其实大半功夫都落在同一个文件上。一份 2026 年像样的 Win32 程序清单，长这样：</p>
 
@@ -9301,7 +9348,7 @@ BOOL fDarkNow = (value == 0);
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 16976.81px;--thin-h:16976.81px">
+<section class="chapter" style="contain-intrinsic-size:auto 16976.84px;--thin-h:16976.84px">
 <h1 id="w18"><span class="part">第 18 章</span>实例精讲：线程、UI 与常用界面功能</h1>
 <p>前面十七章把零件一样样讲完了：窗口、消息、控件、GDI、线程。但真正写程序时最容易翻车的，不是某个 API 记不住，而是<strong>把这些零件装在一起的那一刻</strong>——尤其是「后台在算，前台要动」这类场景。这一章不再介绍新 API，而是给出三段<strong>完整可编译</strong>的程序，逐行拆开看：哪一行跑在哪条线程上、哪一段该由资源而不是代码来写。规则性的讲解都在各自的章节里（线程与 UI 见第 14 章，资源见第 10、11 章），这里只谈「装到一起之后是什么样」。</p>
 <p>本章代码一律按 Unicode 编译，用 <code>cl /W4 /D UNICODE /D _UNICODE 源文件.c user32.lib gdi32.lib comctl32.lib shell32.lib</code> 就能直接出可执行文件。</p>
@@ -9355,16 +9402,16 @@ BOOL fDarkNow = (value == 0);
 <p><strong>三、返回值语义完全不同。</strong>窗口过程返回 <code>LRESULT</code>，不处理的要转给 <code>DefWindowProc</code>；对话框过程返回 <code>INT_PTR</code>，语义是布尔——<strong>TRUE 表示「我处理了」，FALSE 表示「交给系统的默认对话框过程」</strong>。<code>DlgProc</code> 里<strong>绝对不能调 <code>DefWindowProc</code></strong>，那会把对话框的键盘导航搞坏。</p>
 <p><strong>四、控件字体自动就是对的。</strong>模板里那句 <code>FONT 9, "Segoe UI", 400, 0, 1</code> 配上 <code>DS_SHELLFONT</code>，系统会用当前的界面字体去创建所有控件——9.1 节那套手动发 <code>WM_SETFONT</code> 的活，资源版本免了。</p>
 <p><strong>五、模态对话框自带消息循环。</strong><code>DialogBoxParamW</code> 内部有一个完整的消息循环，一直转到 <code>EndDialog</code> 才返回。所以 <code>wWinMain</code> 里那个 <code>while (GetMessage…)</code> 整个消失了。后台线程 <code>PostMessage</code> 过来的 <code>WM_WORK_PROGRESS</code> 照样能被这个内部循环取出来分发给 <code>DlgProc</code>，跨线程通信一点没受影响。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 199.94px"><span class="t">🟢 通用控件为什么要写成字符串</span><p>模板里进度条那行用的是 <code>CONTROL "" , IDC_PROGRESS, "msctls_progress32", …</code>，直接把窗口类名写成了字面串。原因是 <code>commctrl.h</code> 里的 <code>PROGRESS_CLASS</code> 在 Unicode 下展开成带 <code>L</code> 前缀的宽字符串字面量，而资源脚本不认这个前缀。<code>BUTTON</code>、<code>STATIC</code>、<code>EDIT</code> 这些老牌控件有 <code>PUSHBUTTON</code>、<code>LTEXT</code>、<code>EDITTEXT</code> 等专门语句可用，通用控件则一律走 <code>CONTROL</code> + 类名字符串这条路。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 199.97px"><span class="t">🟢 通用控件为什么要写成字符串</span><p>模板里进度条那行用的是 <code>CONTROL "" , IDC_PROGRESS, "msctls_progress32", …</code>，直接把窗口类名写成了字面串。原因是 <code>commctrl.h</code> 里的 <code>PROGRESS_CLASS</code> 在 Unicode 下展开成带 <code>L</code> 前缀的宽字符串字面量，而资源脚本不认这个前缀。<code>BUTTON</code>、<code>STATIC</code>、<code>EDIT</code> 这些老牌控件有 <code>PUSHBUTTON</code>、<code>LTEXT</code>、<code>EDITTEXT</code> 等专门语句可用，通用控件则一律走 <code>CONTROL</code> + 类名字符串这条路。</p></div>
 <h3>要菜单和快捷键，就得改用非模态</h3>
 <p>上面那份代码里，<code>.rc</code> 中的加速键表其实<strong>根本没生效</strong>——因为加速键需要在消息循环里调 <code>TranslateAcceleratorW</code> 翻译，而模态对话框的循环在系统内部，你插不进去。想要快捷键、想挂菜单、想让主窗口是个对话框同时又完全受你控制，就得改用<strong>非模态</strong>：</p>
 <pre style="contain-intrinsic-size:auto 495.09px"><code><span class="cl"><span class="kw">int</span> <span class="kw">WINAPI</span> wWinMain(<span class="kw">HINSTANCE</span> hInst, <span class="kw">HINSTANCE</span> hPrev, <span class="kw">PWSTR</span> pCmd, <span class="kw">int</span> nShow)</span><span class="cl">{</span><span class="cl">    (<span class="kw">void</span>)hPrev; (<span class="kw">void</span>)pCmd;</span><span class="cl">    <span class="kw">INITCOMMONCONTROLSEX</span> icc = { <span class="kw">sizeof</span>(icc), ICC_PROGRESS_CLASS };</span><span class="cl">    InitCommonControlsEx(&amp;icc);</span><span class="cl">    g_hInst = hInst;</span><span class="cl"> </span><span class="cl">    <span class="kw">HWND</span> hDlg = CreateDialogParamW(hInst, MAKEINTRESOURCEW(IDD_MAIN), <span class="kw">NULL</span>, DlgProc, <span class="kw">0</span>);</span><span class="cl">    ShowWindow(hDlg, nShow);</span><span class="cl">    <span class="kw">HACCEL</span> hAccel = LoadAcceleratorsW(hInst, MAKEINTRESOURCEW(IDR_ACCEL));</span><span class="cl"> </span><span class="cl">    <span class="kw">MSG</span> msg;</span><span class="cl">    <span class="kw">while</span> (GetMessageW(&amp;msg, <span class="kw">NULL</span>, <span class="kw">0</span>, <span class="kw">0</span>) &gt; <span class="kw">0</span>) {</span><span class="cl"><span class="cc" style="min-width:66.0ch">        <span class="kw">if</span> (TranslateAcceleratorW(hDlg, hAccel, &amp;msg)) <span class="kw">continue</span>;</span><span class="cm">// ① 先给快捷键</span></span><span class="cl"><span class="cc" style="min-width:66.0ch">        <span class="kw">if</span> (IsDialogMessageW(hDlg, &amp;msg))              <span class="kw">continue</span>;</span><span class="cm">// ② 再给对话框</span></span><span class="cl"><span class="cc" style="min-width:66.0ch">        TranslateMessage(&amp;msg);</span><span class="cm">// ③ 剩下的照常走</span></span><span class="cl">        DispatchMessageW(&amp;msg);</span><span class="cl">    }</span><span class="cl">    <span class="kw">return</span> (<span class="kw">int</span>)msg.wParam;</span><span class="cl">}</span></code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 164.28px"><span class="t">🔴 漏掉 IsDialogMessage，Tab 键就废了</span><p>第 ② 步是非模态对话框的命门。控件之间用 Tab 切换、方向键在单选组里移动、回车触发默认按钮——这些<strong>全部由 <code>IsDialogMessageW</code> 负责</strong>，它不在循环里，对话框就退化成一堆互不相干的控件。这是非模态对话框最常见的 bug，症状是「按 Tab 没反应」，而代码里看不出任何毛病。</p></div>
-<div class="note old" style="contain-intrinsic-size:auto 165.41px"><span class="t">🟡 非模态不能用 EndDialog</span><p>改成非模态之后，<code>DlgProc</code> 里的 <code>IDCANCEL</code> 分支必须从 <code>EndDialog(hDlg, 0)</code> 改成 <code>DestroyWindow(hDlg);</code> 再配一句 <code>PostQuitMessage(0);</code>。<code>EndDialog</code> 只对 <code>DialogBox</code> 系列创建的模态对话框有效，用在非模态上不会销毁窗口，程序就退不出去了。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 164.25px"><span class="t">🔴 漏掉 IsDialogMessage，Tab 键就废了</span><p>第 ② 步是非模态对话框的命门。控件之间用 Tab 切换、方向键在单选组里移动、回车触发默认按钮——这些<strong>全部由 <code>IsDialogMessageW</code> 负责</strong>，它不在循环里，对话框就退化成一堆互不相干的控件。这是非模态对话框最常见的 bug，症状是「按 Tab 没反应」，而代码里看不出任何毛病。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165.38px"><span class="t">🟡 非模态不能用 EndDialog</span><p>改成非模态之后，<code>DlgProc</code> 里的 <code>IDCANCEL</code> 分支必须从 <code>EndDialog(hDlg, 0)</code> 改成 <code>DestroyWindow(hDlg);</code> 再配一句 <code>PostQuitMessage(0);</code>。<code>EndDialog</code> 只对 <code>DialogBox</code> 系列创建的模态对话框有效，用在非模态上不会销毁窗口，程序就退不出去了。</p></div>
 <h3>怎么把 .rc 编进 exe</h3>
 <p>资源不是被 C 编译器处理的，它有自己的编译器：先把 <code>.rc</code> 编成目标文件，再和 C 的目标文件一起链接。</p>
 <pre style="contain-intrinsic-size:auto 217.59px"><code><span class="cl">:: MSVC：rc 生成 .res，再交给 cl 一起链接</span><span class="cl">:: /c65001 是告诉 rc「这个 .rc 存的是 UTF-<span class="kw">8</span>」，少了它中文会变乱码</span><span class="cl">rc /nologo /c65001 app.rc</span><span class="cl">cl /nologo /W4 /D UNICODE /D _UNICODE main.c app.res user32.lib comctl32.lib</span><span class="cl"> </span><span class="cl">:: MinGW：windres 生成 COFF 目标文件，再交给 gcc</span><span class="cl">windres --codepage=<span class="kw">65001</span> app.rc -O coff -o app.res.o</span><span class="cl">gcc -municode -D UNICODE -D _UNICODE -Wall -o app.exe main.c app.res.o -lcomctl32 -luser32</span></code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 230.03px"><span class="t">🔴 .rc 里的中文最容易栽在编码上</span><p>资源编译器默认<strong>按系统 ANSI 代码页</strong>去读 .rc 文件，而你的编辑器多半存的是 UTF-8。两边对不上，编出来的字符串表就是乱码，偏偏<strong>编译不报任何错</strong>——直到程序跑起来界面上一片问号才发现。把上面那份 <code>STRINGTABLE</code> 用默认设置编一遍，<code>LoadStringW(IDS_WORKING)</code> 取回来的是七个码点的乱码；加上 <code>/c65001</code>（MSVC）或 <code>--codepage=65001</code>（windres）之后，才是正确的四个字。另一条路是把 .rc 存成带 BOM 的 UTF-16，资源编译器能自动认出来。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 .rc 里的中文最容易栽在编码上</span><p>资源编译器默认<strong>按系统 ANSI 代码页</strong>去读 .rc 文件，而你的编辑器多半存的是 UTF-8。两边对不上，编出来的字符串表就是乱码，偏偏<strong>编译不报任何错</strong>——直到程序跑起来界面上一片问号才发现。把上面那份 <code>STRINGTABLE</code> 用默认设置编一遍，<code>LoadStringW(IDS_WORKING)</code> 取回来的是七个码点的乱码；加上 <code>/c65001</code>（MSVC）或 <code>--codepage=65001</code>（windres）之后，才是正确的四个字。另一条路是把 .rc 存成带 BOM 的 UTF-16，资源编译器能自动认出来。</p></div>
 <p>用 Visual Studio 的话这一步是自动的：把 <code>.rc</code> 加进项目，IDE 会替你调 <code>rc.exe</code>，还附送一个可视化的对话框编辑器——拖控件、调位置，它直接改 <code>.rc</code> 里的数字。这是资源方案在工程上最实在的好处：<strong>界面可以被「画」出来，而不是「算」出来</strong>。</p>
 <h2 id="w18-splash">18.3 启动画面：子线程拥有自己的窗口</h2>
 <p>第三个实例演示的是「<strong>窗口归创建它的那条线程</strong>」这条规则能怎么用——规则本身在 <a href="#w14-own-queue">14.11 节</a>讲过，这里给出一份能直接编译的启动画面：主线程忙着加载，子线程独立地把那个「正在加载…」的窗口画得顺滑，两边互不拖累。</p>
@@ -9373,8 +9420,8 @@ BOOL fDarkNow = (value == 0);
 <p><strong>PostQuitMessage 是「每线程一个」的。</strong><code>SplashProc</code> 收到 <code>WM_DESTROY</code> 时调的 <code>PostQuitMessage(0)</code>，只会让 <code>SplashThread</code> 里那个 <code>GetMessageW</code> 返回 0、结束它自己的循环，主线程的消息循环毫发无伤。反过来也一样。这正是「每线程一条队列」的直接后果。</p>
 <p><strong>关闭必须靠投消息。</strong><code>SplashClose</code> 在主线程里执行，所以它不能调 <code>DestroyWindow(g_hSplash)</code>——那是 14.10 的写法四。它只能 <code>PostMessageW(g_hSplash, WM_CLOSE, …)</code>，由 splash 线程自己在收到消息后走 <code>DefWindowProc</code> 的默认关闭流程，最终在自己线程里完成销毁。</p>
 <p><strong>用事件对象等「窗口已就绪」。</strong>线程创建成功不等于窗口已经存在，中间隔着注册窗口类、创建窗口这些步骤。主线程刚 <code>_beginthreadex</code> 返回就去读 <code>g_hSplash</code>，多半读到 NULL。用一个 <code>CreateEventW</code> 事件把这个「就绪」时刻同步出来，是最省事的办法。</p>
-<div class="note old" style="contain-intrinsic-size:auto 198.81px"><span class="t">🟡 别把子线程窗口的 owner 设成主线程的窗口</span><p>代码里 <code>CreateWindowExW</code> 的父窗口参数特意传了 NULL。一旦你把两条线程的窗口用 owner 或 parent 关系连起来，系统就会把这两条线程的<strong>输入队列连到一起</strong>（等价于 <code>AttachThreadInput</code> 的效果）。从此一条线程卡住，另一条的鼠标键盘也跟着卡——你辛辛苦苦开线程换来的那点独立性，一句参数就还回去了。启动画面要置顶，用 <code>WS_EX_TOPMOST</code>，别用 owner。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 130.81px"><span class="t">🔵 现代替代品</span><p>如果只是想在加载时给个反馈，今天更常见的做法是主窗口先显示出来、内容区放个骨架屏或进度指示，加载完再替换——省掉一整条线程和一套同步。独立的 splash 窗口主要还是重量级桌面软件在用。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 198.84px"><span class="t">🟡 别把子线程窗口的 owner 设成主线程的窗口</span><p>代码里 <code>CreateWindowExW</code> 的父窗口参数特意传了 NULL。一旦你把两条线程的窗口用 owner 或 parent 关系连起来，系统就会把这两条线程的<strong>输入队列连到一起</strong>（等价于 <code>AttachThreadInput</code> 的效果）。从此一条线程卡住，另一条的鼠标键盘也跟着卡——你辛辛苦苦开线程换来的那点独立性，一句参数就还回去了。启动画面要置顶，用 <code>WS_EX_TOPMOST</code>，别用 owner。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 130.84px"><span class="t">🔵 现代替代品</span><p>如果只是想在加载时给个反馈，今天更常见的做法是主窗口先显示出来、内容区放个骨架屏或进度指示，加载完再替换——省掉一整条线程和一套同步。独立的 splash 窗口主要还是重量级桌面软件在用。</p></div>
 </section>
 
 
