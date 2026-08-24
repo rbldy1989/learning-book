@@ -1729,7 +1729,7 @@ $lines -match 'ID-(\d)'<span class="cm">     # 返回两行，但 $Matches 保�
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 17950px;--thin-h:17950px">
+<section class="chapter" style="contain-intrinsic-size:auto 17990px;--thin-h:17990px">
 <h1 id="p3"><span class="part">第 3 章</span>管道与对象处理</h1>
 
 <p>如果你只学 PowerShell 的一件事，那就学管道。它不是「把上一条命令的屏幕输出喂给下一条命令」——那是 cmd 和 bash 的玩法。PowerShell 的管道传的是活的对象：带类型、带属性、带方法。这一章讲清楚管道里到底流着什么，以及沿途那七八个负责筛、变、排、算、导出的命令各自把数据改成了什么形状。</p>
@@ -2092,7 +2092,12 @@ $byStatus['Running'].Count
 $data = <span class="kw">Get-Content</span> .\proc.json -Raw | <span class="kw">ConvertFrom-Json</span>
 </code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 365px"><span class="t">四个必踩的坑</span><p><strong>① Export-Csv 只会平铺一层。</strong>属性若是集合或复杂对象，落到 CSV 里就是 <code>System.Object[]</code> 这样的类型名——先用计算列把它压成字符串。<br><strong>② Import-Csv 出来的全是字符串。</strong><code>Import-Csv .\sales.csv | Where-Object Amount -gt 1000</code> 做的是字符串比较，而 <code>'99' -gt '1000'</code> 为真，你会筛出一堆错的。正确写法：<code>Where-Object { [double]$_.Amount -gt 1000 }</code>。<br><strong>③ ConvertTo-Json 默认 <code>-Depth 2</code>。</strong>PowerShell 7 会给出截断警告，Windows PowerShell 5.1 默默截断。习惯性写上 <code>-Depth</code>。<br><strong>④ 编码。</strong>Windows PowerShell 5.1 的默认编码不是 UTF-8，中文很容易变问号；PowerShell 6+ 默认 UTF-8 无 BOM。跨版本脚本一律显式写 <code>-Encoding utf8</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 405px"><span class="t">四个必踩的坑</span><ul>
+<li><strong>Export-Csv 只会平铺一层。</strong>属性若是集合或复杂对象，落到 CSV 里就是 <code>System.Object[]</code> 这样的类型名——先用计算列把它压成字符串。</li>
+<li><strong>Import-Csv 出来的全是字符串。</strong><code>Import-Csv .\sales.csv | Where-Object Amount -gt 1000</code> 做的是字符串比较，而 <code>'99' -gt '1000'</code> 为真，你会筛出一堆错的。正确写法：<code>Where-Object { [double]$_.Amount -gt 1000 }</code>。</li>
+<li><strong>ConvertTo-Json 默认 <code>-Depth 2</code>。</strong>PowerShell 7 会给出截断警告，Windows PowerShell 5.1 默默截断。习惯性写上 <code>-Depth</code>。</li>
+<li><strong>编码。</strong>Windows PowerShell 5.1 的默认编码不是 UTF-8，中文很容易变问号；PowerShell 6+ 默认 UTF-8 无 BOM。跨版本脚本一律显式写 <code>-Encoding utf8</code>。</li>
+</ul></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p><code>-NoTypeInformation</code> <span class="badge old">已过时</span>：它在 PowerShell 6 及以上是默认行为，只有为兼容 5.1 才需要写。PowerShell 7 另有 <code>Export-Csv -UseQuotes AsNeeded</code>（少加引号）、<code>ConvertTo-Json -AsArray -Compress -EnumsAsStrings</code>、<code>ConvertFrom-Json -AsHashtable</code> 等更趁手的开关。</p></div>
 
