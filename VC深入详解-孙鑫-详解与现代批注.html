@@ -3092,7 +3092,7 @@ m_wndStatusBar.SetPaneText(idx, _T("holmesliam"));</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 14245px;--thin-h:14245px">
+<section class="chapter" style="contain-intrinsic-size:auto 14359px;--thin-h:14359px">
 <h1 id="s10"><span class="part">第 10 章</span>绘图控制</h1>
 
 <p>上一阶段我们的画图程序只会一件事：用一根固定的黑色细线从鼠标按下处画到抬起处。它能"画"，但用户完全没有发言权。本章要给程序装上一块"控制面板"：让用户自己决定<strong>线型、线宽、颜色、字体</strong>，程序照单执行。这一路会串起 Windows 编程里好几件重要武器——自建设置对话框、系统现成的颜色/字体公共对话框、以及 <code>WM_CTLCOLOR</code> 这门给对话框"换装"的老手艺。</p>
@@ -3364,7 +3364,13 @@ HPEN hPen = ExtCreatePen(PS_GEOMETRIC | PS_DASH | PS_ENDCAP_FLAT,
 
 <pre style="contain-intrinsic-size:auto 773px"><code><span class="cl"><span class="cm">// 消息映射加 ON_WM_CTLCOLOR()；画刷必须是成员变量——生命周期！</span></span><span class="cl">CSettingDlg::CSettingDlg()</span><span class="cl">{</span><span class="cl"><span class="cc" style="min-width:53.0ch">    m_brDlg .CreateSolidBrush(RGB(232, 240, 254));</span><span class="cm">// 对话框底色</span></span><span class="cl"><span class="cc" style="min-width:53.0ch">    m_brEdit.CreateSolidBrush(RGB(255, 253, 208));</span><span class="cm">// 编辑框底色</span></span><span class="cl">}</span><span class="cl"> </span><span class="cl">HBRUSH CSettingDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)</span><span class="cl">{</span><span class="cl">    HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);</span><span class="cl"> </span><span class="cl">    <span class="kw">switch</span> (nCtlColor)</span><span class="cl">    {</span><span class="cl"><span class="cc" style="min-width:53.0ch">    <span class="kw">case</span> CTLCOLOR_DLG:</span><span class="cm">// 对话框本体背景</span></span><span class="cl">        <span class="kw">return</span> m_brDlg;</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:53.0ch">    <span class="kw">case</span> CTLCOLOR_STATIC:</span><span class="cm">// 静态文本（含单选/复选的文字）</span></span><span class="cl"><span class="cc" style="min-width:53.0ch">        pDC-&gt;SetTextColor(RGB(192, 0, 0));</span><span class="cm">// 文字变红</span></span><span class="cl"><span class="cc" style="min-width:53.0ch">        pDC-&gt;SetBkMode(TRANSPARENT);</span><span class="cm">// 文字底透明，露出对话框底色</span></span><span class="cl"><span class="cc" style="min-width:53.0ch">        <span class="kw">return</span> m_brDlg;</span><span class="cm">// 控件背景与对话框同色，浑然一体</span></span><span class="cl"> </span><span class="cl">    <span class="kw">case</span> CTLCOLOR_EDIT:</span><span class="cl"><span class="cc" style="min-width:53.0ch">        <span class="kw">if</span> (pWnd-&gt;GetDlgCtrlID() == IDC_EDIT_WIDTH)</span><span class="cm">// 按 ID 只改这一个</span></span><span class="cl">        {</span><span class="cl">            pDC-&gt;SetTextColor(RGB(0, 0, 160));</span><span class="cl"><span class="cc" style="min-width:53.0ch">            pDC-&gt;SetBkColor(RGB(255, 253, 208));</span><span class="cm">// 文字底色须与画刷一致</span></span><span class="cl">            <span class="kw">return</span> m_brEdit;</span><span class="cl">        }</span><span class="cl">        <span class="kw">break</span>;</span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:53.0ch">    <span class="kw">return</span> hbr;</span><span class="cm">// 其余控件维持系统默认</span></span><span class="cl">}</span></code></pre>
 
-<p>三个高频翻车点：<strong>① 画刷必须是成员变量</strong>——返回局部 <code>CBrush</code> 的句柄，函数一结束刷子就析构，系统拿到的是死句柄，轻则黑底闪烁重则花屏；<strong>② 文字底色与背景刷要么一致、要么干脆 <code>SetBkMode(TRANSPARENT)</code></strong>，否则每个字后面拖一块"补丁"；<strong>③ 下压式按钮改不了</strong>——启用视觉样式（XP 之后的默认）后按钮由主题引擎绘制，<code>WM_CTLCOLORBTN</code> 形同虚设，想换按钮脸面只能自绘（<code>BS_OWNERDRAW</code> + <code>DrawItem</code>）或用 <code>CMFCButton</code> 这类现成的自绘类。另外单选/复选框的<strong>文字</strong>其实走 <code>CTLCOLOR_STATIC</code>，别在 <code>CTLCOLOR_BTN</code> 里干等。</p>
+<p>三个高频翻车点：</p>
+<ul>
+<li><strong>画刷必须是成员变量。</strong>返回局部 <code>CBrush</code> 的句柄，函数一结束刷子就析构，系统拿到的是死句柄，轻则黑底闪烁重则花屏。</li>
+<li><strong>文字底色与背景刷要么一致，要么干脆 <code>SetBkMode(TRANSPARENT)</code>。</strong>否则每个字后面会拖一块"补丁"。</li>
+<li><strong>下压式按钮改不了。</strong>启用视觉样式（XP 之后的默认）后按钮由主题引擎绘制，<code>WM_CTLCOLORBTN</code> 形同虚设。想换按钮脸面只能自绘（<code>BS_OWNERDRAW</code> + <code>DrawItem</code>），或用 <code>CMFCButton</code> 这类现成的自绘类。</li>
+</ul>
+<p>另外单选/复选框的<strong>文字</strong>其实走 <code>CTLCOLOR_STATIC</code>，别在 <code>CTLCOLOR_BTN</code> 里干等。</p>
 
 <p><strong>【通俗比方】</strong>这是一出"后台问装"的戏：每个控件上台前都到导演（父窗口）那里领戏服，导演按角色类型（<code>nCtlColor</code>）发统一制服，对个别主角（控件 ID）单独定制。控件自己不懂时尚，只管穿上登台——集中配色、控件保持简单，正是这个协议的设计动机。</p>
 
