@@ -425,7 +425,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 3047px;--thin-h:3047px">
+<section class="chapter" style="contain-intrinsic-size:auto 3046px;--thin-h:3046px">
 <h1 id="w0"><span class="part">第 0 章</span>环境搭建与预备</h1>
 <h2 id="w0-classics">0.0 相关经典书籍</h2>
 <p>本手册讲透现代 Win32 编程;若想读原典或深入系统机制,下面几本是公认的顶级读物。</p>
@@ -496,7 +496,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </ul>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 15181px;--thin-h:15181px">
+<section class="chapter" style="contain-intrinsic-size:auto 15169px;--thin-h:15169px">
 <h1 id="w1"><span class="part">第 1 章</span>Windows 编程模型与第一个窗口程序</h1>
 
 <p>你大概写过控制台程序:一个 <code>main</code> 函数,从上往下跑,读一行输入、算一算、打印一行输出,跑完就退出。这种程序的世界观很简单——<strong>你的代码是主人,操作系统是仆人</strong>。你想要输入就调 <code>scanf</code>,操作系统乖乖把键盘数据递给你;你不问,它就一直等着。</p>
@@ -743,7 +743,7 @@ LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &amp;argc);   <span class="
 <p>两个要点：<strong>①</strong> <code>GetLastError</code> 取的是「本线程<strong>最后一次</strong>错误」——必须在失败发生后<strong>立刻</strong>取，中间夹任何其他 API 调用都可能把它冲掉；<strong>②</strong> 调试时的快捷方式：VS「监视」窗口里输入 <code>$err,hr</code>，随时显示当前线程最后错误码及其文字解释，连 FormatMessage 都省了。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 12136px;--thin-h:12136px">
+<section class="chapter" style="contain-intrinsic-size:auto 12126px;--thin-h:12126px">
 <h1 id="w2"><span class="part">第 2 章</span>Unicode 与字符处理</h1>
 
 <p>在你写下第一个窗口程序之前，得先想清楚一件更底层的事：程序里那句「标题栏文字」到底是<strong>什么</strong>。是一串字节吗？是的。可同样一串字节，换一台机器、换一种系统设置，就可能变成一堆问号或者乱码。文字这东西看起来天经地义，其实是整个 Windows 编程里最容易被忽视、又最容易踩坑的地基。这一章我们把地基夯实：先弄懂字符集与编码的来龙去脉，再落到 Win32 的具体做法上，最后给你一套今天就能照着用的规矩。</p>
@@ -933,7 +933,7 @@ SetWindowTextW(hwnd, title.c_str());
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 28301px;--thin-h:28301px">
+<section class="chapter" style="contain-intrinsic-size:auto 28276px;--thin-h:28276px">
 <h1 id="w3"><span class="part">第 3 章</span>窗口、消息与窗口过程</h1>
 
 <p>这一章是全书的心脏。前面你已经知道了一个 Win32 程序的入口在哪里、Unicode 该怎么处理；从现在开始，你要亲手让一个真正的窗口出现在屏幕上，并让它对你的鼠标、键盘、乃至系统的每一次「打招呼」作出反应。我提醒你：如果只把本章当成一段可以照抄的模板背下来，你会永远停留在「能跑但不懂」的层次。相反，如果你真正理解了「窗口类 → 窗口实体 → 消息 → 窗口过程」这条链路，那么此后无论是按钮、编辑框、还是整套 GUI 框架，你看它们时都会有一种「原来底下就是这套东西」的透彻感。</p>
@@ -1752,7 +1752,7 @@ PostMessageW(hwndMain, WM_APP_WORKDONE, resultCode, 0);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 16826px;--thin-h:16826px">
+<section class="chapter" style="contain-intrinsic-size:auto 16808px;--thin-h:16808px">
 <h1 id="w4"><span class="part">第 4 章</span>GDI 图形基础</h1>
 
 <p>到这一章为止，你的窗口还只会显示文字、响应鼠标和按键。可它就是一块空白画布——你还没在上面画过一条线、一个圆。这一章我们补上这块拼图：<strong>GDI（Graphics Device Interface，图形设备接口）</strong>，Windows 里最古老、也最“随处可用”的一套二维绘图机制。我会带你从“为什么需要它”出发，把设备上下文、绘图工具、坐标系、裁剪、资源管理一层层搭起来，最后诚实地告诉你：GDI 今天还能用，但已经老了，高质量的现代绘图该往哪儿走。</p>
@@ -2195,7 +2195,7 @@ g.SetSmoothingMode(SmoothingModeAntiAlias);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 14405px;--thin-h:14405px"><h1 id="w5"><span class="part">第 5 章</span>文字输出与字体</h1>
+<section class="chapter" style="contain-intrinsic-size:auto 14389px;--thin-h:14389px"><h1 id="w5"><span class="part">第 5 章</span>文字输出与字体</h1>
 
 <h2 id="w5-overview">5.1 先把问题摆正：文字是"画"出来的</h2>
 <p>你在控制台里 <code>printf</code> 一行字，脑子里想的是"把这串字符送到屏幕"。但在 Win32 的图形窗口里，观念要换一换：<strong>文字不是打印出来的，而是像线条、矩形一样被"画"到设备上下文（DC）里的。</strong>一个字母 A，本质上是一组像素；把它摆在窗口的哪个位置、用多大、什么颜色、什么字形，全由你在绘制那一刻的设置决定。理解了这一点，本章后面所有 API 都会变得顺理成章。</p>
@@ -2552,7 +2552,7 @@ pRT-&gt;DrawTextW(text, len, pFmt, layoutRect, pBrush);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 10682px;--thin-h:10682px">
+<section class="chapter" style="contain-intrinsic-size:auto 10670px;--thin-h:10670px">
 <h1 id="w6"><span class="part">第 6 章</span>键盘输入</h1>
 
 <p>上一章你已经能让窗口对鼠标做出反应。鼠标输入天然带着"位置"——指针落在哪个窗口上,消息就发给哪个窗口,路由问题不言自明。键盘却没有这份便利:你敲下一个 <code>A</code>,屏幕上可能同时开着十几个窗口,系统凭什么知道该把这一下交给谁?本章就从这个最朴素的问题出发,一步步把"一次敲键"拆开——它先变成按键消息,再被翻译成字符消息;它带着一整包状态信息;它需要一道会闪烁的竖线来标记落点;而当你想输入"你好"时,它还得穿过输入法这道关。到本章末尾,你会亲手把这些零件拼成一个能打字的最小窗口。</p>
@@ -2690,7 +2690,7 @@ HIMC himc = ImmGetContext(hwnd);
 <p>回头看这一章:你从"按键到底发给谁"出发,认识了焦点这条硬规则;把一次敲键拆成了按下/松开的按键消息与经 <code>TranslateMessage</code> 合成的字符消息两条流,学会了各让它们干各的活;用 <code>GetKeyState</code> 回看修饰键现场,用借来的 caret 标出落点;最后把这些拼成一个能打字、甚至能打汉字的最小窗口,并看清了 IME 和 Unicode 在现代文本输入里绕不开的分量。键盘之后,下一章我们转向另一类更需要你亲手绘制反馈的输入设备。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 13868px;--thin-h:13868px">
+<section class="chapter" style="contain-intrinsic-size:auto 13854px;--thin-h:13854px">
 <h1 id="w7"><span class="part">第 7 章</span>鼠标输入</h1>
 
 <p>上一章你把键盘输入摸清楚了：键盘是一条<strong>跟着焦点走</strong>的输入流——不管指针在哪儿，谁有焦点谁收键。鼠标恰恰相反，它是一条<strong>跟着位置走</strong>的输入流。用户把指针移到你的窗口上方按下按键，系统就把一张张"明信片"投进你的消息队列，每张上面都盖着当时的坐标和按键状态。本章我们就把这条输入流从头拆开：消息有哪些、坐标怎么读、双击怎么来、拖动为什么会"跑丢"、非客户区又是另一套什么规矩，最后亲手搭一个能画画的最小程序。</p>
@@ -2835,7 +2835,7 @@ RegisterClassExW(&amp;wc);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 10667px;--thin-h:10667px">
+<section class="chapter" style="contain-intrinsic-size:auto 10659px;--thin-h:10659px">
 <h1 id="w8"><span class="part">第 8 章</span>定时器</h1>
 
 <h2 id="w8-why">8.1 时间从哪里来：为什么 GUI 程序需要定时器</h2>
@@ -2992,7 +2992,7 @@ SetThreadpoolTimer(timer, &amp;due, 1000, 0);</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 本章要点回顾</span><p><code>SetTimer</code>/<code>KillTimer</code> 装拆闹钟，<code>WM_TIMER</code> 是一条低优先级、不堆积、有空才送的合成消息；它够用于秒级的界面更新，但不精确、会迟到。<strong>永远用真实时钟计时，把定时器当提醒而非计数器。</strong>需要高精度、后台并发或平滑动画时，转向等待定时器、线程池定时器与合成器，并记得跨线程更新界面要用 <code>PostMessage</code> 回到 UI 线程。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 48201px;--thin-h:48201px">
+<section class="chapter" style="contain-intrinsic-size:auto 50211px;--thin-h:50211px">
 <h1 id="w9"><span class="part">第 9 章</span>子窗口控件与通用控件</h1>
 
 <p>前面几章里，窗口上的每一个像素都是我们自己在 <code>WM_PAINT</code> 里画的，每一次鼠标点击都是我们自己解析坐标判断的。如果按钮、输入框、列表这些东西也要这样从零造，Windows 编程就没法干了。好消息是：<strong>系统早就替你把这些"零件"写好了</strong>。它们叫<strong>控件（Control）</strong>——本质上就是一批系统预先注册好窗口类、预先写好窗口过程的<strong>子窗口</strong>。你用 <code>CreateWindowExW</code> 把它们"生"在自己窗口里，它们就会自己绘制、自己响应键盘鼠标，只在"有事发生"时通知你。</p>
@@ -5147,6 +5147,48 @@ WNDPROC g_oldProc = (WNDPROC)SetWindowLongPtrW(hEdit, GWLP_WNDPROC,
 
 <div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 SetWindowLong 已死，Ptr 版永生</span><p>32 位时代的 <code>SetWindowLongW(hwnd, GWL_WNDPROC, (LONG)proc)</code> 在 64 位下直接截断指针，编译都过不去。凡是存指针的场合一律用 <code>SetWindowLongPtrW</code>/<code>GetWindowLongPtrW</code> 与 <code>GWLP_</code> 前缀常量。这也是排查老代码 64 位移植问题的高频雷区。</p></div>
 
+<h3 id="w9-subclass-posture">三种姿势：转发那一行写在哪，行为就不一样</h3>
+
+<p>上面两段代码都以「其余交回原过程」收尾，那只是最省事的一种写法。真正决定行为的，是你把 <code>DefSubclassProc</code>（或 <code>CallWindowProcW</code>）那一行<strong>写在自己代码的前面、后面，还是干脆不写</strong>。同一条消息、同一个控件，三种位置对应三件完全不同的事：</p>
+
+<table style="contain-intrinsic-size:auto 226px">
+<tr><th class="nw">姿势</th><th class="nw">转发的位置</th><th>用来干什么</th><th>典型场景</th></tr>
+<tr><td class="nw">① 后置</td><td class="nw">先转发，后补充</td><td>让控件先把本职做完，你在<strong>它的结果上</strong>追加动作</td><td>回车后自动缩进；光标移动后刷新状态栏的行列号</td></tr>
+<tr><td class="nw">② 替换</td><td class="nw">不转发</td><td>默认行为整个换掉，自己全权处理后 <code>return 0</code></td><td>不让 EDIT 弹系统的右键菜单，弹自己的</td></tr>
+<tr><td class="nw">③ 前置</td><td class="nw">先做，后转发</td><td>趁控件动手<strong>之前</strong>留底或改参数</td><td>记下改动前的选区以便撤销；拦下非法字符再放行</td></tr>
+</table>
+
+<p>「回车后自动缩进」是最能说明①的例子——系统的 EDIT 控件没有这个功能，二十来行就能给它补上：</p>
+
+<pre style="contain-intrinsic-size:auto 495px"><code><span class="kw">case</span> WM_CHAR:
+    <span class="kw">if</span> ((TCHAR)wParam == L'\r')
+    {
+        <span class="cm">// ← 先让原过程把这个回车换行做掉，光标已经落到新行开头</span>
+        CallWindowProcW(g_oldProc, hEdit, uMsg, wParam, lParam);
+
+        <span class="kw">if</span> (g_bAutoIndent)
+        {
+            <span class="cm">// 读上一行，抄出开头连续的 Tab 和空格</span>
+            CallWindowProcW(g_oldProc, hEdit, EM_GETLINE, iLine - 1, (LPARAM)szBuf);
+            <span class="kw">while</span> (szBuf[i] == L'\t' || szBuf[i] == L' ') szIndent[i] = szBuf[i], i++;
+            <span class="cm">// 插到新行开头</span>
+            CallWindowProcW(g_oldProc, hEdit, EM_REPLACESEL, TRUE, (LPARAM)szIndent);
+        }
+        <span class="kw">return</span> 0;   <span class="cm">// 已经亲手转发过了，不能再往下走到结尾那次转发</span>
+    }
+    <span class="kw">break</span>;</code></pre>
+
+<p>注意最后那句 <code>return 0</code>：既然分支里已经自己调过一次原过程，就不能再落到函数结尾的统一转发上，否则这个回车会被处理两遍、变成换两行。<strong>「转发恰好一次」是子类过程的基本纪律</strong>——漏转发控件就失灵，重复转发就出现幽灵行为。</p>
+
+<figure style="contain-intrinsic-size:auto 340px">
+<svg viewBox="0 6 720 250" xmlns="http://www.w3.org/2000/svg" font-size="13" role="img" aria-label="子类化三种姿势:后置、替换、前置,区别在转发那一行的位置"><defs><marker id="sbp-ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs><text class="svgmuted" x="12" y="24" font-size="11.5">同一条消息、同一个控件——转发那一行写在哪，行为完全不同</text><text class="svgmuted" x="104" y="52" font-size="10">先发生</text><text class="svgmuted" x="314" y="52" text-anchor="middle" font-size="10">后发生</text><rect x="12" y="66" width="80" height="46" rx="6" fill="var(--svg-soft2)" stroke="var(--old-fg)"/><text class="svgtext" x="52" y="86" text-anchor="middle" font-size="11.5">① 后置</text><text class="svgmuted" x="52" y="102" text-anchor="middle" font-size="9.5">先转发再补充</text><rect x="104" y="66" width="132" height="46" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="170" y="93" text-anchor="middle" font-size="11">转发给原过程</text><rect x="248" y="66" width="132" height="46" rx="6" fill="var(--new-bg)" stroke="var(--new-br)"/><text class="svgtext" x="314" y="93" text-anchor="middle" font-size="11">你的补充动作</text><line x1="380" y1="89" x2="410" y2="89" stroke="var(--accent)" marker-end="url(#sbp-ar)"/><text class="svgtext" x="420" y="86" font-size="10.5">控件已把本职做完，你在它的结果上追加</text><text class="svgmuted" x="420" y="102" font-size="10.5">自动缩进、光标移动后刷状态栏行列号</text><rect x="12" y="132" width="80" height="46" rx="6" fill="var(--svg-soft2)" stroke="var(--old-fg)"/><text class="svgtext" x="52" y="152" text-anchor="middle" font-size="11.5">② 替换</text><text class="svgmuted" x="52" y="168" text-anchor="middle" font-size="9.5">不转发</text><rect x="104" y="132" width="132" height="46" rx="6" fill="var(--new-bg)" stroke="var(--new-br)"/><text class="svgtext" x="170" y="159" text-anchor="middle" font-size="11">你全权处理</text><rect x="248" y="132" width="132" height="46" rx="6" fill="var(--dead-bg)" stroke="var(--dead-br)" stroke-dasharray="4 3"/><text class="svgmuted" x="314" y="159" text-anchor="middle" font-size="11">原过程没被叫到</text><line x1="380" y1="155" x2="410" y2="155" stroke="var(--accent)" marker-end="url(#sbp-ar)"/><text class="svgtext" x="420" y="152" font-size="10.5">默认行为整个换掉，处理完 return 0</text><text class="svgmuted" x="420" y="168" font-size="10.5">不让 EDIT 弹系统右键菜单，弹自己的</text><rect x="12" y="198" width="80" height="46" rx="6" fill="var(--svg-soft2)" stroke="var(--old-fg)"/><text class="svgtext" x="52" y="218" text-anchor="middle" font-size="11.5">③ 前置</text><text class="svgmuted" x="52" y="234" text-anchor="middle" font-size="9.5">先做再转发</text><rect x="104" y="198" width="132" height="46" rx="6" fill="var(--new-bg)" stroke="var(--new-br)"/><text class="svgtext" x="170" y="225" text-anchor="middle" font-size="11">你先记录/改参数</text><rect x="248" y="198" width="132" height="46" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="314" y="225" text-anchor="middle" font-size="11">转发给原过程</text><line x1="380" y1="221" x2="410" y2="221" stroke="var(--accent)" marker-end="url(#sbp-ar)"/><text class="svgtext" x="420" y="218" font-size="10.5">趁控件动手之前留底或改参数</text><text class="svgmuted" x="420" y="234" font-size="10.5">记下改动前的选区、拦下非法字符</text></svg>
+<figcaption>子类化的三种姿势：转发那一行的位置决定行为（原创绘制）</figcaption>
+</figure>
+
+<div class="note dead" style="contain-intrinsic-size:auto 331px"><span class="t">🔴 子类过程里操作自己这个控件，一律走原过程，不要用 SendMessage</span><p>上面代码里每一次操作控件用的都是 <code>CallWindowProcW(g_oldProc, ...)</code>，不是顺手的 <code>SendMessage</code>——这不是风格问题，是<strong>会出错的</strong>。<code>SendMessage(hEdit, EM_REPLACESEL, ...)</code> 走的是完整投递路径，等于从头再进一次这个窗口的窗口过程，而窗口过程现在<strong>就是你自己</strong>：消息又落回你的 <code>switch</code>，撞进你为 <code>EM_REPLACESEL</code> 写的那条分支，轻则行为错乱、重则无限递归爆栈。<code>CallWindowProcW</code>／<code>DefSubclassProc</code> 是直接调用原过程的函数指针，绕开自己这一层，才是你要的效果。<br>一句话记法：<strong>对外发消息用 <code>SendMessage</code>，对被自己子类化的窗口发消息用原过程。</strong>这条坑之所以隐蔽，是因为多数消息你并没有写分支，用 <code>SendMessage</code> 也照样对——直到某天你新增了一条分支，几百行外一个老调用就突然行为变了。</p></div>
+
+<p>最后补一句子类化<strong>为什么必须存在</strong>：<code>EDIT</code>、<code>BUTTON</code>、<code>LISTBOX</code> 这些控件的窗口过程躺在 user32.dll 里，你没有源码、改不了、也没有「继承一个 EDIT 类再重写虚函数」这种东西可用——Win32 的控件不是 C++ 对象。子类化就是这套体系里唯一的扩展口子：<strong>在消息到达那个闭源过程之前插一脚</strong>。后来 MFC 的 <code>CWnd::SubclassWindow</code>、WTL 的消息链，本质上都是把这一手包装了一层。</p>
+
 <h3 id="w9-ownerdraw">所有者绘制：外观全权接管</h3>
 
 <p>按钮、静态、列表框、组合框（还有菜单和 Tab）支持<strong>所有者绘制（owner draw）</strong>：加上 <code>BS_OWNERDRAW</code> / <code>LBS_OWNERDRAWFIXED</code> 之类的风格后，控件不再画自己，改为在需要重绘时给父窗口发 <code>WM_DRAWITEM</code>，把画笔交到你手上。<code>lParam</code> 指向的 <code>DRAWITEMSTRUCT</code> 给齐了作画所需的一切：</p>
@@ -5307,7 +5349,7 @@ WNDPROC g_oldProc = (WNDPROC)SetWindowLongPtrW(hEdit, GWLP_WNDPROC,
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 20056px;--thin-h:20056px">
+<section class="chapter" style="contain-intrinsic-size:auto 20037px;--thin-h:20037px">
 <h1 id="w10"><span class="part">第 10 章</span>菜单、图标与资源</h1>
 
 <p>到目前为止，你程序里凡是要显示给人看的东西——窗口标题、按钮上的字、一张图标——都是硬编码在源代码里的字符串和数字。这在最初的几十行练习里没问题，可一旦程序长大，你会撞上一个尴尬的现实：界面文本、菜单结构、图标图片，本质上都是<strong>数据</strong>，却被你塞进了逻辑代码里，和 <code>if</code>、<code>switch</code> 搅在一起。改一个菜单项要重新编译整个程序；想把界面翻译成日文，得让翻译人员去啃 C++ 源码。</p>
@@ -6502,7 +6544,7 @@ LoadStringW      (hInstance, IDS_ERR_OPENFILE, buf, ARRAYSIZE(buf));</code></pre
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 20496px;--thin-h:20496px">
+<section class="chapter" style="contain-intrinsic-size:auto 20476px;--thin-h:20476px">
 <h1 id="w11"><span class="part">第 11 章</span>对话框与通用对话框</h1>
 
 <p>到这一章为止，你已经会亲手创建窗口、注册窗口类、写窗口过程，也在前面几章里用 <code>CreateWindowExW</code> 一个一个地生出按钮、编辑框、静态文本这些子窗口控件。那套办法什么都能干，但只要界面稍微复杂一点，你立刻会被淹没：算坐标、排布局、管焦点、处理回车和 Esc、决定按 Tab 该跳到哪个控件……这些琐事跟你程序真正要做的事没半点关系。本章要讲的对话框，正是 Windows 给这类"一屏表单"准备的成套解决方案。我们先弄清它到底是什么、凭什么省事，再一步步把模态与非模态对话框搭起来，最后走进系统自带的那几个"通用对话框"，并把它们的现代替身 <code>IFileDialog</code> 一并讲透。</p>
@@ -8106,7 +8148,7 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 17527px;--thin-h:17527px">
+<section class="chapter" style="contain-intrinsic-size:auto 17512px;--thin-h:17512px">
 <h1 id="w12"><span class="part">第 12 章</span>位图、DIB 与 BitBlt</h1>
 
 <p>到目前为止，你在窗口里画的东西都是"算出来的"：一条线、一个矩形、一段文字，都是让 GDI 现场计算每个像素。可现实里有大量图形没法用几个函数画出来——一张照片、一个图标、一段游戏精灵动画。这些图形的本质是<strong>一大片事先准备好的像素</strong>，你要做的不是"画"它，而是把它整块<strong>搬</strong>到屏幕上。这一章讲的就是这件事：怎么把一块矩形像素装进内存、怎么高效地搬运它、以及现代 Windows 里更该用什么工具来干这活。</p>
@@ -8456,7 +8498,7 @@ conv-&gt;CopyPixels(<span class="kw">nullptr</span>, stride, stride * height, pB
 <div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 该怎么选，一句话收尾</span><p>把这一章的 GDI 位图知识当作<strong>地基和通用工具</strong>：小工具、截图、简单显示、维护旧代码，用它又快又省事，而且这些概念（像素布局、位块传输、双缓冲、alpha 合成）在任何图形 API 里都换汤不换药。当项目对画质、动画、合成量提出更高要求时，用 <strong>WIC + Direct2D</strong> 升级。先把地基这一章吃透，你再学 Direct2D 时会发现，它无非是把你已经理解的这些机制，搬到了 GPU 上、做得更快更漂亮而已。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 13889px;--thin-h:13889px"><h1 id="w13"><span class="part">第 13 章</span>打印</h1>
+<section class="chapter" style="contain-intrinsic-size:auto 13879px;--thin-h:13879px"><h1 id="w13"><span class="part">第 13 章</span>打印</h1>
 
 <p>到目前为止，你画的每一笔都落在屏幕上：拿到一个 <code>HDC</code>，调用 <code>TextOutW</code>、<code>LineTo</code>、<code>Rectangle</code>，像素就出现在窗口里。现在我要告诉你一件也许会让你松一口气的事——把这些像素送到纸上，用的几乎是同一套动作。打印在 Windows 里不是一门单独的学问，而是「往设备上下文里画图」这门老手艺的一次延伸。本章我们从这个核心思想出发，一步步把一个能真正吐出纸张的最小程序搭起来，再处理分页、缩放、中止、预览这些绕不开的现实问题。</p>
 
@@ -8721,7 +8763,7 @@ StartDocW(hdcPrn, &amp;di);
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 25183px;--thin-h:25183px">
+<section class="chapter" style="contain-intrinsic-size:auto 25158px;--thin-h:25158px">
 <h1 id="w14"><span class="part">第 14 章</span>DLL 与多线程</h1>
 
 <p>到这一章为止，你写的程序基本上都是「一个 .exe，一条执行线」：从 <code>wWinMain</code> 进去，消息循环转起来，一切都在同一根时间线上依次发生。这很好懂，但它撑不起真实世界的软件。真实的 Windows 程序几乎从不是孤零零的一个 .exe——它背后挂着几十上百个 DLL；它也几乎从不是单线程——一个能在后台读文件、同时还让窗口响应鼠标的程序，注定要有多条执行线并行跑。这一章我们就把这两件事一次讲透：<strong>DLL 解决「代码放在哪、怎么共享」，多线程解决「代码怎么同时跑」</strong>。它们看似无关，却常常一起出现，而且都藏着新手最容易踩的坑，所以放在同一章讲。</p>
@@ -8960,7 +9002,7 @@ MATHLIB_API <span class="kw">int</span> AddNumbers(<span class="kw">int</span> a
 <div class="note dead" style="contain-intrinsic-size:auto 131px"><span class="t">🔴 发布铁律</span><p>给别人 <strong>Debug 版</strong>是经典翻车点：Debug 版依赖的调试运行库(ucrtbased.dll 等)微软<strong>不允许再分发</strong>，对方大概率没有。<strong>发布一律用 Release 配置。</strong></p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 6534px;--thin-h:6534px">
+<section class="chapter" style="contain-intrinsic-size:auto 6530px;--thin-h:6530px">
 <h1 id="w16"><span class="part">第 15 章</span>文件、注册表与剪贴板</h1>
 <p>窗口画得再漂亮，程序总要落地干活：读写文件、记住配置、和别的程序交换数据。这一章把三样日常武器一次配齐。</p>
 
@@ -9045,7 +9087,7 @@ WriteFile(h, utf8, cb - 1, &amp;written, NULL);    <span class="cm">// -1 去掉
 <pre style="contain-intrinsic-size:auto 588px"><code><span class="cl"><span class="cm">// 写入一段文本</span></span><span class="cl"><span class="kw">if</span> (OpenClipboard(hwnd)) {</span><span class="cl">    EmptyClipboard();</span><span class="cl">    <span class="kw">const</span> wchar_t* text = L"来自 Win32 的文本";</span><span class="cl">    SIZE_T bytes = (wcslen(text) + 1) * <span class="kw">sizeof</span>(wchar_t);</span><span class="cl">    HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, bytes);</span><span class="cl">    memcpy(GlobalLock(hMem), text, bytes);</span><span class="cl">    GlobalUnlock(hMem);</span><span class="cl"><span class="cc" style="min-width:45.0ch">    SetClipboardData(CF_UNICODETEXT, hMem);</span><span class="cm">// 所有权移交系统：不要再 GlobalFree！</span></span><span class="cl">    CloseClipboard();</span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="cm">// 读取(所有权方向反过来：内存是系统的，只能看不能动)</span></span><span class="cl"><span class="kw">if</span> (OpenClipboard(hwnd)) {</span><span class="cl">    HANDLE hData = GetClipboardData(CF_UNICODETEXT);</span><span class="cl">    <span class="kw">if</span> (hData) {</span><span class="cl">        <span class="kw">const</span> wchar_t* text = (<span class="kw">const</span> wchar_t*)GlobalLock(hData);</span><span class="cl">        <span class="kw">if</span> (text) {</span><span class="cl">            <span class="cm">// 使用 text(想留住内容就自己拷贝一份)</span></span><span class="cl"><span class="cc" style="min-width:45.0ch">            GlobalUnlock(hData);</span><span class="cm">// 只 Unlock，不要 GlobalFree</span></span><span class="cl">        }</span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:45.0ch">    CloseClipboard();</span><span class="cm">// 剪贴板是全系统共享资源，开关之间动作要快</span></span><span class="cl">}</span></code></pre>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 1985px;--thin-h:1985px">
+<section class="chapter" style="contain-intrinsic-size:auto 1984px;--thin-h:1984px">
 <h1 id="w17"><span class="part">第 16 章</span>调试与排错工具箱</h1>
 <p>会写只是一半功夫，另一半是「出了问题能自己查」。这一章把 Win32 排错的五样趁手工具一次交给你。</p>
 
@@ -9101,7 +9143,7 @@ WriteFile(h, utf8, cb - 1, &amp;written, NULL);    <span class="cm">// -1 去掉
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 12751px;--thin-h:12751px">
+<section class="chapter" style="contain-intrinsic-size:auto 12742px;--thin-h:12742px">
 <h1 id="w15"><span class="part">第 17 章</span>现代 Win32 必修补遗</h1>
 
 <p>经典教材成书的年代，显示器清一色 96 DPI，控件只有一种长相，主题只有一种颜色，路径不超过 260 字符似乎是天经地义。这些前提在 2026 年一条也不成立了。本章补齐经典内容之外、今天写 Win32 程序<strong>必须懂</strong>的几件事：高 DPI、视觉样式清单、深色模式、现代文件对话框、拖放，以及长路径与 Unicode 的最后叮嘱。它们的共同点是：不做也能跑，但一眼就能看出"这程序是上个时代的"。</p>
@@ -9444,7 +9486,7 @@ BOOL fDarkNow = (value == 0);
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 17523px;--thin-h:17523px">
+<section class="chapter" style="contain-intrinsic-size:auto 17510px;--thin-h:17510px">
 <h1 id="w18"><span class="part">第 18 章</span>实例精讲：线程、UI 与常用界面功能</h1>
 <p>前面十七章把零件一样样讲完了：窗口、消息、控件、GDI、线程。但真正写程序时最容易翻车的，不是某个 API 记不住，而是<strong>把这些零件装在一起的那一刻</strong>——尤其是「后台在算，前台要动」这类场景。这一章不再介绍新 API，而是给出三段<strong>完整可编译</strong>的程序，逐行拆开看：哪一行跑在哪条线程上、哪一段该由资源而不是代码来写。规则性的讲解都在各自的章节里（线程与 UI 见第 14 章，资源见第 10、11 章），这里只谈「装到一起之后是什么样」。</p>
 <p>本章代码一律按 Unicode 编译，用 <code>cl /W4 /D UNICODE /D _UNICODE 源文件.c user32.lib gdi32.lib comctl32.lib shell32.lib</code> 就能直接出可执行文件。</p>
