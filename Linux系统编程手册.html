@@ -12646,7 +12646,7 @@ timegm     : 1787322612                                               ← 把 14
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 49565px;--thin-h:26853px">
+<section class="chapter" style="contain-intrinsic-size:auto 50057px;--thin-h:27345px">
 <h1 id="l12"><span class="part">分类 12</span>权限、用户与容器基础</h1>
 <p>最后一章讲「谁能做什么」:传统的 uid/gid 权限模型、把 root 切碎的 capabilities,以及容器背后那套命名空间与 cgroup。理解了它们,「容器」就不再是黑魔法,而是几个系统调用的组合。</p>
 <h2 id="l12-cred">12.1 用户、组与权限位</h2>
@@ -12686,7 +12686,33 @@ timegm     : 1787322612                                               ← 把 14
 <tr><td class="nw"><code>setfsuid(f)</code></td><td>f 必须是当前四套(含 fsuid)之一</td><td>任意</td><td>只影响文件访问检查,不影响发信号等;NFS 服务器这类「替别人访问文件但不想被别人 kill」的场景;正常情况 fsuid 自动跟随 euid,<strong>几乎不需要碰</strong></td></tr>
 </tbody>
 </table>
-<p><strong>返回值</strong></p><p>读取函数从不失败;设置函数成功 0,失败 -1 并设 <code>errno</code>:<code>EPERM</code>(没资格),<code>EAGAIN</code>(目标 uid 的进程数已达 <code>RLIMIT_NPROC</code>——<strong>这就是「setuid 可能失败、必须检查返回值」的真实来源</strong>,利用方式是攻击者先把目标用户的进程数占满,让降权失败而程序不知情)。<code>getuid</code>/<code>geteuid</code>/<code>setuid</code>/<code>seteuid</code>/<code>setreuid</code> 是 POSIX.1-2001;<code>setresuid</code>/<code>getresuid</code> 是 Linux/BSD 扩展(glibc 2.3.2);<code>setfsuid</code> Linux 特有。两条 Linux 细节:①内核的 <code>setuid</code> 系统调用<strong>只改调用线程</strong>,glibc 的封装会用内部信号通知进程里所有线程一起改——直接 <code>syscall(SYS_setuid)</code> 会造出「一个进程里各线程身份不同」的怪胎;②当 euid 从 0 变为非 0,内核同时清空 Effective capability 集合,三套都离开 0 时连 Permitted 也清空(除非设了 <code>PR_SET_KEEPCAPS</code>/<code>SECBIT_KEEP_CAPS</code>),所以「先 setuid 再 setcap 式地保留一项能力」必须在降权<strong>前</strong>打开 keepcaps。</p>
+<p><strong>返回值</strong></p><p>读取函数(<code>getuid</code> 一族)<strong>从不失败</strong>。设置函数成功返回 0,失败返回 -1 并设置 <code>errno</code>,只有两种取值:</p>
+
+<table style="contain-intrinsic-size:auto 189px">
+<thead><tr><th class="nw">errno</th><th>含义</th><th>为什么值得单独记</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>EPERM</code></td><td>调用进程没有资格做这次身份切换</td><td>参数越界或权限不足,属于可预期的失败</td></tr>
+<tr><td class="nw"><code>EAGAIN</code></td><td>目标 uid 名下的进程数已达 <code>RLIMIT_NPROC</code></td><td><strong>这是「setuid 可能失败」的真实来源。</strong>攻击者先把目标用户的进程数占满,特权程序降权时就会失败;不检查返回值的话,它会继续以 root 身份运行,而自己以为已经降权了</td></tr>
+</tbody>
+</table>
+
+<p><strong>可移植性</strong></p>
+
+<table style="contain-intrinsic-size:auto 202px">
+<thead><tr><th>函数</th><th class="nw">标准</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td><code>getuid</code> / <code>geteuid</code> / <code>setuid</code> / <code>seteuid</code> / <code>setreuid</code></td><td class="nw">POSIX.1-2001</td><td>各 Unix 通用,可放心使用</td></tr>
+<tr><td><code>setresuid</code> / <code>getresuid</code></td><td class="nw">Linux / BSD 扩展</td><td>glibc 2.3.2 起提供。语义最明确,单机程序优先用它</td></tr>
+<tr><td><code>setfsuid</code></td><td class="nw">Linux 特有</td><td>只影响文件访问检查,正常情况不需要直接调用</td></tr>
+</tbody>
+</table>
+
+<p><strong>两条 Linux 特有的细节</strong>,都属于不知道就会踩的类型:</p>
+
+<ul>
+<li><strong>内核的 <code>setuid</code> 只改调用线程。</strong>POSIX 要求「一个进程一个身份」,而 Linux 内核这一层是按线程记的;是 glibc 的封装用一个内部信号通知进程里所有线程一起改,才凑出 POSIX 的语义。所以绕开封装直接调 <code>syscall(SYS_setuid)</code>,会造出<strong>同一进程里各线程身份不同</strong>的状态——此后任何权限判断都不再可靠。</li>
+<li><strong>euid 离开 0 会清空 capability。</strong>euid 从 0 变为非 0 时,内核同时清空 Effective 集合;三套 id 都离开 0 时,连 Permitted 集合也一起清空。所以想「降权之后仍保留某一项能力」,必须<strong>在降权之前</strong>用 <code>PR_SET_KEEPCAPS</code>(或 <code>SECBIT_KEEP_CAPS</code>)打开保留开关,降权之后再设已经来不及。</li>
+</ul>
 <h3>权限检查的实际顺序</h3>
 <p>内核检查文件访问权限时按<strong>固定顺序</strong>走,一旦匹配就不再往下看:先看 euid 是不是文件属主,是就用<strong>属主那三位</strong>;否则看 egid 或附加组里有没有匹配文件的组,有就用<strong>组那三位</strong>;都不匹配才用<strong>其他人那三位</strong>。</p>
 <p>关键在于<strong>匹配即停</strong>:如果你是属主但属主位是 <code>---</code>,即使组位是 <code>rwx</code> 你也访问不了——不会「往下找一个更宽松的」。这个反直觉的规则偶尔会造出「明明在组里却读不了」的怪现象。</p>
