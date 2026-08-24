@@ -2992,7 +2992,7 @@ SetThreadpoolTimer(timer, &amp;due, 1000, 0);</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 本章要点回顾</span><p><code>SetTimer</code>/<code>KillTimer</code> 装拆闹钟，<code>WM_TIMER</code> 是一条低优先级、不堆积、有空才送的合成消息；它够用于秒级的界面更新，但不精确、会迟到。<strong>永远用真实时钟计时，把定时器当提醒而非计数器。</strong>需要高精度、后台并发或平滑动画时，转向等待定时器、线程池定时器与合成器，并记得跨线程更新界面要用 <code>PostMessage</code> 回到 UI 线程。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 50211px;--thin-h:50211px">
+<section class="chapter" style="contain-intrinsic-size:auto 52445px;--thin-h:52445px">
 <h1 id="w9"><span class="part">第 9 章</span>子窗口控件与通用控件</h1>
 
 <p>前面几章里，窗口上的每一个像素都是我们自己在 <code>WM_PAINT</code> 里画的，每一次鼠标点击都是我们自己解析坐标判断的。如果按钮、输入框、列表这些东西也要这样从零造，Windows 编程就没法干了。好消息是：<strong>系统早就替你把这些"零件"写好了</strong>。它们叫<strong>控件（Control）</strong>——本质上就是一批系统预先注册好窗口类、预先写好窗口过程的<strong>子窗口</strong>。你用 <code>CreateWindowExW</code> 把它们"生"在自己窗口里，它们就会自己绘制、自己响应键盘鼠标，只在"有事发生"时通知你。</p>
@@ -5130,7 +5130,7 @@ SendMessageW(hTip, TTM_ADDTOOLW, 0, (LPARAM)&amp;ti);</code></pre>
 
 <h3 id="w9-subclass-modern">子类化：截胡控件的消息流</h3>
 
-<p>子类化（subclassing）就是把控件的窗口过程偷换成你的函数：消息先到你手里，想改的拦下处理，不管的放行给原过程。现代做法是 ComCtl32 提供的三件套：<code>SetWindowSubclass</code> / <code>DefSubclassProc</code> / <code>RemoveWindowSubclass</code>——它维护一条规范的子类链，支持多方共存，还能给每个子类挂 ID 和私有数据：</p>
+<p>子类化（subclassing）就是把控件的窗口过程偷换成你的函数：消息先到你手里，想改的拦下处理，不管的放行给原过程。现代做法是 ComCtl32 提供的三件套：<code>SetWindowSubclass</code> / <code>DefSubclassProc</code> / <code>RemoveWindowSubclass</code>（<strong>它们凭什么比老办法强，下面单独讲</strong>）：</p>
 
 <pre style="contain-intrinsic-size:auto 541px"><code><span class="cl">#include &lt;commctrl.h&gt;</span><span class="cl"> </span><span class="cl"><span class="cm">// 子类过程：比普通窗口过程多两个参数（子类 ID + 你挂的私有数据）</span></span><span class="cl">LRESULT CALLBACK NumOnlyProc(HWND hwnd, UINT msg, WPARAM wParam,</span><span class="cl">    LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData)</span><span class="cl">{</span><span class="cl">    <span class="kw">switch</span> (msg)</span><span class="cl">    {</span><span class="cl">    <span class="kw">case</span> WM_CHAR:</span><span class="cl"><span class="cc" style="min-width:56.0ch">        <span class="kw">if</span> (wParam &gt;= L'0' &amp;&amp; wParam &lt;= L'9') <span class="kw">break</span>;</span><span class="cm">// 数字放行</span></span><span class="cl"><span class="cc" style="min-width:56.0ch">        <span class="kw">if</span> (wParam &lt; L' ')                    <span class="kw">break</span>;</span><span class="cm">// 退格等控制字符放行</span></span><span class="cl">        MessageBeep(MB_ICONWARNING);</span><span class="cl"><span class="cc" style="min-width:56.0ch">        <span class="kw">return</span> 0;</span><span class="cm">// 其余字符吞掉</span></span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:56.0ch">    <span class="kw">case</span> WM_NCDESTROY:</span><span class="cm">// 窗口销毁前自我拆除</span></span><span class="cl">        RemoveWindowSubclass(hwnd, NumOnlyProc, uIdSubclass);</span><span class="cl">        <span class="kw">break</span>;</span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:56.0ch">    <span class="kw">return</span> DefSubclassProc(hwnd, msg, wParam, lParam);</span><span class="cm">// 其余交回原过程</span></span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:56.0ch">SetWindowSubclass(hEdit, NumOnlyProc, 1, 0);</span><span class="cm">// ID=1，dwRefData 可挂任意指针</span></span></code></pre>
 
@@ -5143,7 +5143,49 @@ WNDPROC g_oldProc = (WNDPROC)SetWindowLongPtrW(hEdit, GWLP_WNDPROC,
 <span class="cm">// 自己的过程里必须用 CallWindowProcW 调回原过程：</span>
 <span class="kw">return</span> CallWindowProcW(g_oldProc, hwnd, msg, wParam, lParam);</code></pre>
 
-<p>它的毛病：原过程指针得自己找地方存（全局变量？每实例一个？）；两方先后子类化同一窗口后，先拆的那个会把链条撕断；忘了在销毁时恢复还会崩。<code>SetWindowSubclass</code> 把这些坑全填了——新代码没有理由不用它。</p>
+<h3 id="w9-subclass-chain">老办法到底坏在哪，三件套又凭什么好</h3>
+
+<p>「链条会断」不是一句吓唬人的话，它有确切的机制。假设 <code>A</code>、<code>B</code> 两个模块先后子类化了同一个 EDIT：</p>
+
+<pre style="contain-intrinsic-size:auto 169px"><code><span class="cm">// A 先装：拿到的「上一层」是 EDIT 自己的过程</span>
+A.next = SetWindowLongPtrW(hEdit, GWLP_WNDPROC, A_Proc);   <span class="cm">// A.next = EDIT</span>
+<span class="cm">// B 后装：拿到的「上一层」是 A</span>
+B.next = SetWindowLongPtrW(hEdit, GWLP_WNDPROC, B_Proc);   <span class="cm">// B.next = A</span>
+<span class="cm">// 此刻的链：B → A → EDIT</span></code></pre>
+
+<p>关键在于<strong>窗口自己只存了一个指针</strong>——就是链头那个 <code>B_Proc</code>。「B 的下一层是 A、A 的下一层是 EDIT」这两条信息，分别躺在 A、B 各自的变量里，窗口一无所知。于是拆除时窗口没有任何办法判断你拆的是不是链头：</p>
+
+<ul>
+<li><strong>B 先拆（后进先出，正好对）</strong>：写回 <code>B.next</code> 也就是 <code>A_Proc</code>，链变成 <code>A → EDIT</code>。没问题。</li>
+<li><strong>A 先拆（先进先出，一样常见）</strong>：A 只会写回自己记的 <code>A.next</code>，也就是 <code>EDIT</code>。窗口过程一步跳回 EDIT，<strong>B 被整条踢出去了</strong>——B 从此一条消息都收不到，而 B 自己完全不知情。更糟的在后面：B 稍后拆除时会写回 <code>B.next = A_Proc</code>，把<strong>一个已经拆掉、可能连所在 DLL 都卸载了的函数装回窗口</strong>，下一条消息到达即崩溃。</li>
+</ul>
+
+<p>而真实程序里，拆除顺序是由<strong>对象的生命周期</strong>决定的，不由子类化的先后决定——谁先析构谁先拆。这是你按后进先出的纪律根本管不住的事，尤其当 A、B 分属两个互不知情的模块（一个是你的代码，一个是第三方控件库）。</p>
+
+<figure style="contain-intrinsic-size:auto 320px">
+<svg viewBox="0 6 720 232" xmlns="http://www.w3.org/2000/svg" font-size="13" role="img" aria-label="旧式子类化按错误顺序拆除会撕断链条,新式子类链表任意顺序拆除都安全"><defs><marker id="chn-ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs><text class="svgmuted" x="12" y="24" font-size="11.5">A、B 先后子类化同一个 EDIT，然后 <tspan font-weight="600">A 先拆</tspan>（对象先析构，很常见）</text><text class="svgmuted" x="12" y="52" font-size="11" font-weight="600">旧法：窗口只存一个指针，每家自己记「我上一层是谁」</text><rect x="12" y="62" width="96" height="40" rx="6" fill="var(--new-bg)" stroke="var(--new-br)"/><text class="svgtext" x="60" y="79" text-anchor="middle" font-size="11.5">B 的过程</text><text class="svgmuted" x="60" y="94" text-anchor="middle" font-size="9.5">记着 next=A</text><line x1="108" y1="82" x2="140" y2="82" stroke="var(--accent)" marker-end="url(#chn-ar)"/><rect x="144" y="62" width="96" height="40" rx="6" fill="var(--dead-bg)" stroke="var(--dead-br)" stroke-dasharray="4 3"/><text class="svgmuted" x="192" y="79" text-anchor="middle" font-size="11.5">A 的过程</text><text class="svgmuted" x="192" y="94" text-anchor="middle" font-size="9.5">已拆除／已释放</text><line x1="240" y1="82" x2="272" y2="82" stroke="var(--accent)" marker-end="url(#chn-ar)"/><rect x="276" y="62" width="96" height="40" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="324" y="86" text-anchor="middle" font-size="11.5">EDIT 原过程</text><path d="M60,108 C60,132 324,132 324,110" fill="none" stroke="var(--dead-br)" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#chn-ar)"/><text class="svgmuted" x="192" y="128" text-anchor="middle" font-size="10">A 拆除时把窗口过程直接写回 EDIT——B 被整条踢出</text><text class="svgtext" x="392" y="79" font-size="10.5">① B 从此收不到任何消息，而它并不知道</text><text class="svgtext" x="392" y="95" font-size="10.5">② B 稍后拆除时写回 next=A，把已释放的 A 装回去 → 崩</text><text class="svgmuted" x="12" y="162" font-size="11" font-weight="600">新法：链表收归 ComCtl32 统一管理，挂在窗口自己身上</text><rect x="12" y="172" width="360" height="44" rx="6" fill="var(--svg-soft2)" stroke="var(--old-fg)"/><text class="svgmuted" x="24" y="189" font-size="10">窗口上的子类链表</text><text class="svgtext" x="24" y="206" font-size="10.5">[ B, ID, dwRefData ] → [ A, ID, dwRefData ] → EDIT 原过程</text><text class="svgtext" x="392" y="189" font-size="10.5">A 拆除 = 从链表<tspan font-weight="600">中间摘掉一项</tspan>，B 的位置不动</text><text class="svgmuted" x="392" y="205" font-size="10.5">DefSubclassProc 走的是链表下一项，不是自己存的指针</text></svg>
+<figcaption>拆除顺序错了会怎样：旧式子类化撕断链条，新式链表任意顺序拆都安全（原创绘制）</figcaption>
+</figure>
+
+<p>三件套的解法是把这条链<strong>从各家的私有变量里收上来，交给 ComCtl32 统一保管</strong>：它在窗口自己身上挂一份子类链表，每一项记着「子类过程 + 你给的 ID + 你挂的私有数据」。于是：</p>
+
+<table style="contain-intrinsic-size:auto 228px">
+<tr><th class="nw">函数</th><th>它实际做的事</th></tr>
+<tr><td class="nw"><code>SetWindowSubclass</code></td><td>往这份链表里<strong>加一项</strong>。同一窗口上 <code>(子类过程, ID)</code> 这一对是主键——用同一对再调一次<strong>不会加出第二项</strong>，而是更新它的 <code>dwRefData</code></td></tr>
+<tr><td class="nw"><code>DefSubclassProc</code></td><td>「交给下一层」。它走的是<strong>链表里的下一项</strong>，而不是某个你自己存着的指针；走到链尾才交给控件的原过程</td></tr>
+<tr><td class="nw"><code>RemoveWindowSubclass</code></td><td>按 <code>(子类过程, ID)</code> 从链表里<strong>精确摘掉那一项</strong>——中间的也能摘，前后两项自动接上。这就是「任意顺序拆除都安全」的全部含义</td></tr>
+</table>
+
+<p>顺带解释那两个参数存在的理由，它们不是装饰：</p>
+
+<ul>
+<li><strong><code>uIdSubclass</code>（子类 ID）</strong>：同一个子类过程函数常常要装在很多地方。<code>RemoveWindowSubclass</code> 必须知道摘哪一项，光凭函数地址在「同一窗口装了同一个函数两份」时分不清，所以主键是<code>(过程, ID)</code>。只装一份时随便给个 <code>1</code> 即可，但拆的时候必须给回同一个值。</li>
+<li><strong><code>dwRefData</code>（私有数据）</strong>：子类过程是个普通 C 函数，<strong>没有 <code>this</code></strong>。十个 EDIT 共用一个 <code>NumOnlyProc</code>，每个 EDIT 各自的状态（允许的最大值、关联的文档对象……）放哪？全局变量只能存一份。<code>dwRefData</code> 就是<strong>「每窗口每子类各一份」的私有指针</strong>，通常存 <code>this</code> 或一个结构体地址，子类过程的第六个参数原样送回来。这是 C 接口里给回调带上下文的标准手法，和 <code>CreateThread</code> 的 <code>lpParameter</code>、<code>EnumWindows</code> 的 <code>lParam</code> 是同一个套路。</li>
+</ul>
+
+<div class="note new" style="contain-intrinsic-size:auto 265px"><span class="t">🔵 为什么拆除要写在 WM_NCDESTROY 里</span><p><code>WM_NCDESTROY</code> 是一个窗口收到的<strong>最后一条消息</strong>（在 <code>WM_DESTROY</code> 之后，此时子窗口都已销毁，句柄即将失效）。把 <code>RemoveWindowSubclass</code> 放在这里，等于<strong>让子类过程自己给自己收尾</strong>——不管窗口是被谁、在什么时候销毁的，这条路都一定会走到，不需要外面那段代码记得来拆。<br>不写会怎样？链表本身随窗口一起消失，不会泄漏内核对象；<strong>漏掉的是你自己的东西</strong>——<code>dwRefData</code> 指向的堆对象没人释放，以及子类过程若来自一个可卸载的 DLL，就少了「窗口还活着时把自己摘干净」的最后机会。放在 <code>WM_DESTROY</code> 则太早：那之后仍有消息流过这个窗口。</p></div>
+
+<div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">🟡 三件套要 ComCtl32 v6，得靠 manifest 指定</span><p>这一组的正式支持起点是 ComCtl32 6.0，也就是<strong>要靠 manifest 声明依赖 <code>Microsoft.Windows.Common-Controls</code> 6.0.0.0</strong> 的那一版（跟启用视觉样式是同一份 manifest，见 <a href="#w9-comctl-manifest">9.9</a>）。编译期还有两道门：得 <code>#include &lt;commctrl.h&gt;</code> 并链接 <code>comctl32.lib</code>，且 <code>NTDDI_VERSION</code>／<code>_WIN32_WINNT</code> 要够高，否则声明会被条件编译挡在门外——「例子照抄却报未定义标识符」多半就是这里。</p></div>
 
 <div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 SetWindowLong 已死，Ptr 版永生</span><p>32 位时代的 <code>SetWindowLongW(hwnd, GWL_WNDPROC, (LONG)proc)</code> 在 64 位下直接截断指针，编译都过不去。凡是存指针的场合一律用 <code>SetWindowLongPtrW</code>/<code>GetWindowLongPtrW</code> 与 <code>GWLP_</code> 前缀常量。这也是排查老代码 64 位移植问题的高频雷区。</p></div>
 
