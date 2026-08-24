@@ -3446,7 +3446,7 @@ std::swap(x, y);                          <span class="cm">// ★ UB！pocs 为 
 <div class="note dead" style="contain-intrinsic-size:auto 231px"><span class="t">🔴 有状态分配器的容器,swap 时分配器不等是未定义行为</span><p>这是标准里少数几个「看起来正常的操作直接 UB」的地方。<code>propagate_on_container_swap</code> 为 <code>false</code> 且两个分配器<strong>不相等</strong>时,<code>swap</code> 的行为<strong>未定义</strong>——标准没有规定实现要检查或报错。实际后果是两个容器交换了内存块,之后各自用<strong>错误的分配器</strong>去释放对方的内存。这在 <code>pmr</code> 容器上尤其容易撞上,因为不同的 <code>memory_resource</code> 天然不相等。规避方法:<strong>要交换的 pmr 容器必须用同一个 memory_resource 构造</strong>,或者干脆不 swap,用移动+重建代替。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 23797px;--thin-h:22681px">
+<section class="chapter" style="contain-intrinsic-size:auto 23908px;--thin-h:22792px">
 <h1 id="c7"><span class="part">分类 7</span>工具类型</h1>
 <p>这一组类型解决同一类问题:<strong>把「可能没有」「可能是几种之一」「可能失败」这些情况编码进类型系统</strong>,而不是靠魔法返回值(-1、nullptr、空字符串)、输出参数或异常来暗示。用了它们之后,函数签名本身就说清了所有可能的结果,调用方漏处理某种情况时编译器会提醒。</p>
 <h2 id="c7-overview">7.1 速览:把不确定性写进类型</h2>
@@ -3923,7 +3923,13 @@ a = <span>"world"</span>;                      <span class="cm">// ✓ 合法</s
 <tr><td class="nw"><code>auto&amp;&amp; x = ...</code></td><td>✓ 这个<strong>是</strong>万能引用(auto 参与推导)——范围 for 用它才能同时接左右值</td></tr>
 </tbody>
 </table>
-<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 对万能引用重载,是 EMC 点名的头号陷阱</span><p>想「左值一个版本、右值一个版本」而写 <code>void f(const T&amp;)</code> + <code>void f(T&amp;&amp;)</code>——当 T&amp;&amp; 是<strong>万能引用</strong>时,它会<strong>贪婪地吞掉几乎一切</strong>:传一个非 const 左值,万能引用版(推成 T&amp;)比 const T&amp; 更匹配,选了它;传派生类、传能隐式转换的类型,它照单全收,把你精心写的其他重载全饿死,还会拦截拷贝/移动构造造成诡异错误。规避:①别对万能引用做重载,用 <code>if constexpr</code> 在函数体里分派;②真要限制,用 concept/<code>enable_if</code> 约束它能接什么。这是 Meyers《Effective Modern C++》条款 26-27 反复警告的坑,也是模板库作者最常踩的雷。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 341px"><span class="t">🔴 对万能引用重载,是 EMC 点名的头号陷阱</span><p>想「左值一个版本、右值一个版本」而写 <code>void f(const T&amp;)</code> + <code>void f(T&amp;&amp;)</code>——当 T&amp;&amp; 是<strong>万能引用</strong>时,它会<strong>贪婪地吞掉几乎一切</strong>:传一个非 const 左值,万能引用版(推成 T&amp;)比 const T&amp; 更匹配,选了它;传派生类、传能隐式转换的类型,它照单全收,把你精心写的其他重载全饿死,还会拦截拷贝/移动构造造成诡异错误。</p>
+<p>规避有两条路:</p>
+<ul>
+<li><strong>不要对万能引用做重载</strong>,改用 <code>if constexpr</code> 在函数体里分派。</li>
+<li><strong>真要限制它能接什么,就用 concept 或 <code>enable_if</code> 约束</strong>,把不该进来的类型挡在重载决议之外。</li>
+</ul>
+<p>这是 Meyers《Effective Modern C++》条款 26-27 反复警告的坑,也是模板库作者最常踩的雷。</p></div>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 19863px;--thin-h:18666px">
