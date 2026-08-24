@@ -2268,7 +2268,7 @@ fork 之前写的一行
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 63356px;--thin-h:36000px">
+<section class="chapter" style="contain-intrinsic-size:auto 63431px;--thin-h:36075px">
 <h1 id="l3"><span class="part">分类 3</span>文件系统与元数据</h1>
 <p>上一章讲的是「打开的文件」,这一章讲「文件系统里的文件」:它的元数据在哪、名字与内容是什么关系、怎么安全地遍历和修改。理解 <strong>inode 与目录项分离</strong>这一条,硬链接、符号链接、<code>unlink</code> 的语义、以及为什么 <code>rename</code> 能原子替换,全都能推出来。</p>
 <figure style="contain-intrinsic-size:auto 259px">
@@ -2985,7 +2985,13 @@ closedir(d);</code></pre>
 <span class="kw">char</span> *realpath(<span class="kw">const</span> <span class="kw">char</span> *path, <span class="kw">char</span> *resolved_path);   <span class="cm">// resolved_path 可为 NULL(malloc),否则至少 PATH_MAX 字节</span></code></pre>
 <p><strong>返回值</strong></p><p><code>getcwd</code> 成功返回 <code>buf</code>,失败返回 NULL:<code>ERANGE</code> 缓冲区不够(路径可以比 <code>PATH_MAX</code> 长),<code>ENOENT</code> <strong>当前目录已被删除</strong>,<code>EACCES</code> 某一级父目录没有 r 或 x。<code>chdir</code>/<code>fchdir</code>/<code>chroot</code> 成功 0,失败 -1。<code>realpath</code> 成功返回规范化的绝对路径(无 <code>.</code>、<code>..</code>、符号链接、重复斜杠),失败返回 NULL,<strong>路径的每一级都必须存在</strong>(否则 <code>ENOENT</code>)。标准:均为 POSIX.1-2001;<code>chroot</code> 在 POSIX.1-2001 里已被移除(SUSv2 标为 LEGACY),但所有 Unix 都有。</p>
 <p>工作目录是<strong>进程属性</strong>,多线程程序里所有线程共享一个(<code>CLONE_FS</code>),任何线程 <code>chdir</code> 都改了大家的相对路径基准——库代码里永远不要 <code>chdir</code>,要用 <code>openat</code> 系列相对一个目录 fd 工作。cwd 被别人 <code>rmdir</code> 后进程仍停在那个已无名字的 inode 上:相对路径全部 <code>ENOENT</code>,<code>getcwd</code> 失败,<code>ls -l /proc/PID/cwd</code> 显示 <code>(deleted)</code>。这就是「升级时把服务的工作目录整个替换掉,服务之后写不出文件也写不出日志」的机制,修法是重启,或让程序在启动时 <code>chdir("/")</code>(守护进程的规范动作)。shell 里的 <code>$PWD</code> 是 shell 自己维护的字符串,可能含符号链接,与 <code>getcwd</code> 返回的物理路径不同;<code>get_current_dir_name()</code>(GNU)在 <code>PWD</code> 正确时直接返回它。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 267px"><span class="t">🔴 chroot 不是安全边界</span><p><code>chroot</code> 只改「路径解析的起点」,没有别的。三个逃逸途径说明它挡不住有特权的代码:① <code>chroot</code> 不改 cwd,调用者如果没接着 <code>chdir("/")</code>,cwd 还在外面,<code>..</code> 一路往上就出去了;② 进程持有 chroot 之前打开的目录 fd,<code>fchdir(fd)</code> 之后再 <code>chdir("..")</code> 到根;③ 在 chroot 里有 root:<code>mkdir x; chroot("x")</code>(此时 cwd 在新根之外)再 <code>chdir("..")</code> 若干次即到真根。因此 chroot 适合「让 <code>ld.so</code> 找另一套库」「给编译器一个干净的 sysroot」,不适合关押不可信代码;后者用 mount namespace + <code>pivot_root</code>(容器运行时的做法)、seccomp、Landlock。正确使用 chroot 的最小仪式:<code>chroot(dir); chdir("/");</code> 然后<strong>立即永久放弃特权</strong>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 342px"><span class="t">🔴 chroot 不是安全边界</span><p><code>chroot</code> 只改「路径解析的起点」,没有别的。三个逃逸途径说明它挡不住有特权的代码:</p>
+<ul>
+<li><code>chroot</code> 不改 cwd。调用者如果没接着 <code>chdir("/")</code>,cwd 还在外面,<code>..</code> 一路往上就出去了。</li>
+<li>进程持有 chroot 之前打开的目录 fd,<code>fchdir(fd)</code> 之后再 <code>chdir("..")</code> 到根。</li>
+<li>在 chroot 里有 root:<code>mkdir x; chroot("x")</code>(此时 cwd 在新根之外)再 <code>chdir("..")</code> 若干次即到真根。</li>
+</ul>
+<p>因此 chroot 适合「让 <code>ld.so</code> 找另一套库」「给编译器一个干净的 sysroot」,不适合关押不可信代码;后者用 mount namespace + <code>pivot_root</code>(容器运行时的做法)、seccomp、Landlock。正确使用 chroot 的最小仪式:<code>chroot(dir); chdir("/");</code> 然后<strong>立即永久放弃特权</strong>。</p></div>
 <div class="deep"><h3>完整示例:用 nftw 打印一棵树,看 FTW_PHYS 与 FTW_DEPTH 的效果</h3>
 <p>这个程序用 <code>nftw</code> 遍历一棵含符号链接、悬空链接、进不去的目录的树,打印每一项的类型、深度和名字,带 <code>-depth</code> 参数时改用后序。编译:<code>gcc -Wall -O0 -o walk walk.c</code>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1244px"><code><span class="cm">// walk.c  —  gcc -Wall -O0 -o walk walk.c</span>
@@ -3581,7 +3587,7 @@ readlinkat(pfd, <span>""</span>) = <span>"missing.txt"</span></code></pre>
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 60124px;--thin-h:32643px">
+<section class="chapter" style="contain-intrinsic-size:auto 60387px;--thin-h:32792px">
 <h1 id="l4"><span class="part">分类 4</span>进程</h1>
 <p>Unix 创建进程的模型很特别:<strong>先复制自己(<code>fork</code>),再把自己换成目标程序(<code>exec</code>)</strong>。这个「先分裂再变身」的两步走看起来绕,却让父进程有机会在中间那一瞬间调整子进程的环境——重定向、改权限、设置信号、改工作目录。shell 的全部魔法都发生在这一步。</p>
 <h2 id="l4-fork">4.1 fork:写时复制与两个返回值</h2>
@@ -4502,7 +4508,13 @@ AT_PHNUM:             13</code></pre>
 <span class="kw">#define</span> _GNU_SOURCE
 <span class="kw">int</span> on_exit(<span class="kw">void</span> (*function)(<span class="kw">int</span> status, <span class="kw">void</span> *arg), <span class="kw">void</span> *arg);   <span class="cm">// SunOS 遗产,别在新代码里用</span></code></pre>
 <p><strong>返回值</strong></p><p>成功 0,失败非 0。注册上限 <code>sysconf(_SC_ATEXIT_MAX)</code>(POSIX 只保证 32;glibc 实际只受内存限制);同一函数可注册多次,就调多次。</p>
-<p>三条规矩:① <strong>逆序执行</strong>——后注册的先跑,所以依赖别人的清理要后注册;② <strong>fork 的子进程继承整张表</strong>,因此子进程里 <code>exit</code> 会把父进程的清理函数全跑一遍(删锁文件、关共享资源、刷父进程的 stdio 缓冲),这是子进程必须 <code>_exit</code> 的另一半原因;③ <strong>exec 清空</strong>——新程序从零开始。处理函数里再调 <code>exit</code> 或 <code>longjmp</code> 出去都是未定义行为。多线程程序还有一条隐含的:<code>exit</code> 只在调用它的线程里跑清理函数,<strong>其他线程此刻仍在运行</strong>,直到 <code>_exit</code> 才被内核一起干掉——「程序退出时偶发段错误」多半是别的线程还在用被 atexit 处理函数(或 C++ 全局析构)释放掉的对象。要么先停线程再 <code>exit</code>,要么干脆 <code>_exit</code>。</p>
+<p>三条规矩:</p>
+<ul>
+<li><strong>逆序执行</strong>——后注册的先跑,所以依赖别人的清理要后注册。</li>
+<li><strong>fork 的子进程继承整张表。</strong>因此子进程里 <code>exit</code> 会把父进程的清理函数全跑一遍(删锁文件、关共享资源、刷父进程的 stdio 缓冲),这是子进程必须 <code>_exit</code> 的另一半原因。</li>
+<li><strong>exec 清空</strong>——新程序从零开始。</li>
+</ul>
+<p>处理函数里再调 <code>exit</code> 或 <code>longjmp</code> 出去都是未定义行为。多线程程序还有一条隐含的规矩:<code>exit</code> 只在调用它的线程里跑清理函数,<strong>其他线程此刻仍在运行</strong>,直到 <code>_exit</code> 才被内核一起干掉——「程序退出时偶发段错误」多半是别的线程还在用被 atexit 处理函数(或 C++ 全局析构)释放掉的对象。要么先停线程再 <code>exit</code>,要么干脆 <code>_exit</code>。</p>
 <div class="deep"><h3 class="deep">进程的内存布局:五段、size 命令与 /proc/PID/maps</h3>
 <p>一个 C 程序运行起来后地址空间从低到高是:<strong>text</strong>(机器码,只读可执行,来自 ELF 的 <code>.text</code>)→ <strong>rodata</strong>(字符串字面量、<code>const</code> 数据)→ <strong>data</strong>(有初值的全局/静态变量,在 ELF 文件里占空间)→ <strong>bss</strong>(无初值或初值为 0 的全局/静态变量,文件里<strong>只记大小</strong>,加载时由内核清零)→ <strong>heap</strong>(<code>brk</code> 向上长,小块 <code>malloc</code> 从这里来)→ 很大一段空隙,中间是 <strong>mmap 区</strong>(共享库、大块 <code>malloc</code>、<code>mmap</code> 的文件,向下长)→ <strong>stack</strong>(向下长,上限 <code>RLIMIT_STACK</code>)→ <code>[vdso]</code>/<code>[vvar]</code>。开 ASLR(<code>/proc/sys/kernel/randomize_va_space</code> = 2,默认)且程序是 PIE 时,每一段的起点每次运行都不同,但相对顺序不变。</p>
 <table style="contain-intrinsic-size:auto 356px">
@@ -4673,7 +4685,13 @@ plain=1 <span class="kw">volatile</span>=2 <span class="kw">static</span>=2     
 <p>但掩码只是小问题。大问题是<strong>被打断的代码停在了哪里</strong>:信号可能在 <code>malloc</code> 持有内部锁、<code>printf</code> 写了半个缓冲区、或者你自己的链表改了一半时到来。处理函数里跳走,这些状态永远停在中间——下一次 <code>malloc</code> 死锁、下一次输出乱码。所以从处理函数里 <code>siglongjmp</code> 只在一种情况下安全:<strong>你能保证被打断的那段代码里只有 async-signal-safe 的操作</strong>(比如正阻塞在 <code>read</code>/<code>sleep</code> 上,而不是在库函数里)。保证不了,就别跳——在处理函数里设一个 <code>volatile sig_atomic_t</code> 标志,让主逻辑自己检查(配合不带 <code>SA_RESTART</code> 的 <code>EINTR</code>)。</p>
 <p>另外两条硬性限制:<strong>跳过的帧里若有 C++ 对象,析构函数不会运行</strong>——C++ 标准说这是未定义行为,C++ 代码里用异常而不是 <code>longjmp</code>;跳过的帧里持有的锁、打开的 fd、<code>malloc</code> 的内存没有任何人释放——<code>longjmp</code> 没有「栈展开」,只有「栈丢弃」。</p>
 <div class="deep"><h3 class="deep">实战:给阻塞调用加超时,以及为什么现代代码不这么做</h3>
-<p>经典用法:<code>alarm(n)</code> 定一个 SIGALRM,处理函数里 <code>siglongjmp</code> 回到调用前,<code>read</code>/<code>connect</code>/<code>gethostbyname</code> 就有了超时。它能工作,但有三个已知缺陷:① <code>alarm</code> 全进程只有一个,库里用它会和调用者的定时器打架;② 跳出来的那一刻被打断的代码必须是 async-signal-safe 的(上一条);③ 多线程程序里信号可能投递给任意线程,处理函数跳的却是某一条线程的 <code>env</code>。现代的替代品按场景选:fd 上的等待用 <code>poll</code>/<code>ppoll</code> 带超时,或 <code>SO_RCVTIMEO</code>/<code>SO_SNDTIMEO</code>;事件循环里用 <code>timerfd</code>;没有 fd 可等的库调用(老式 DNS 解析)用独立线程或换成带超时的接口(<code>getaddrinfo_a</code>、c-ares)。<code>setjmp</code> 方案只剩一个合理的位置:不得不调用一个<strong>既没有超时参数、又不能放进事件循环、也不能换</strong>的阻塞接口时的最后手段。</p></div>
+<p>经典用法:<code>alarm(n)</code> 定一个 SIGALRM,处理函数里 <code>siglongjmp</code> 回到调用前,<code>read</code>/<code>connect</code>/<code>gethostbyname</code> 就有了超时。它能工作,但有三个已知缺陷:</p>
+<ul>
+<li><code>alarm</code> 全进程只有一个,库里用它会和调用者的定时器打架。</li>
+<li>跳出来的那一刻被打断的代码必须是 async-signal-safe 的(上一条)。</li>
+<li>多线程程序里信号可能投递给任意线程,处理函数跳的却是某一条线程的 <code>env</code>。</li>
+</ul>
+<p>现代的替代品按场景选:fd 上的等待用 <code>poll</code>/<code>ppoll</code> 带超时,或 <code>SO_RCVTIMEO</code>/<code>SO_SNDTIMEO</code>;事件循环里用 <code>timerfd</code>;没有 fd 可等的库调用(老式 DNS 解析)用独立线程或换成带超时的接口(<code>getaddrinfo_a</code>、c-ares)。<code>setjmp</code> 方案只剩一个合理的位置:不得不调用一个<strong>既没有超时参数、又不能放进事件循环、也不能换</strong>的阻塞接口时的最后手段。</p></div>
 <div class="deep"><h3>完整示例:SIGALRM + siglongjmp 给 read 加 3 秒超时</h3>
 <p>这个程序等终端输入一行,3 秒没输入就通过 <code>siglongjmp</code> 跳回并退出。处理函数里用 <code>canjump</code> 标志防止在 <code>sigsetjmp</code> 之前就有信号到来;故意不设 <code>SA_RESTART</code>。编译:<code>gcc -Wall -O0 -o alarmread alarmread.c</code>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1093px"><code><span class="cm">// alarmread.c  —  gcc -Wall -O0 -o alarmread alarmread.c</span>
@@ -4776,7 +4794,7 @@ $ echo $?
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 54825px;--thin-h:31488px">
+<section class="chapter" style="contain-intrinsic-size:auto 55191px;--thin-h:31680px">
 <h1 id="l5"><span class="part">分类 5</span>信号</h1>
 <p>信号是内核给进程的<strong>异步通知</strong>:它会在任意一条指令之间打断进程正在做的事,跳去执行处理函数,然后回来。正因为「任意一条指令之间」这几个字,处理函数里能干的事极其有限——这是信号最反直觉、也最容易写出隐蔽 bug 的地方。这一章先讲清这个限制的来源,再给出现代 Linux 上绕开它的标准做法。</p>
 <h2 id="l5-overview">5.1 信号是什么:异步的代价</h2>
@@ -4911,7 +4929,13 @@ $ coredumpctl list --since today
 TIME                          PID  UID  GID SIG     COREFILE EXE
 Fri 2026-08-21 10:12:03 CST  4242 1000 1000 SIGSEGV present  /home/u/altstack
 $ coredumpctl gdb 4242             # 直接在 core 上起 gdb</code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 「程序段错误了但找不到 core」的排查顺序</span><p>①<code>ulimit -c</code> 是 0——shell 会话和 systemd 服务各有各的限制,服务要在单元文件里写 <code>LimitCORE=infinity</code>;②<code>core_pattern</code> 是管道——core 不在 cwd,去 <code>coredumpctl</code> 里找;③进程不可 dump——set-uid 程序、降权后的进程、或自己调过 <code>PR_SET_DUMPABLE</code>,<code>suid_dumpable</code> 为 0 时这类进程一律不 dump;④cwd 不可写——守护进程常见;⑤core 被截断——<code>RLIMIT_CORE</code> 是个有限值,gdb 打开时提示 "core file may not match"。</p></div></div>
+<div class="note dead" style="contain-intrinsic-size:auto 310px"><span class="t">🔴 「程序段错误了但找不到 core」的排查顺序</span><ul>
+<li><strong><code>ulimit -c</code> 是 0。</strong>shell 会话和 systemd 服务各有各的限制,服务要在单元文件里写 <code>LimitCORE=infinity</code>。</li>
+<li><strong><code>core_pattern</code> 是管道。</strong>core 不在 cwd,去 <code>coredumpctl</code> 里找。</li>
+<li><strong>进程不可 dump。</strong>set-uid 程序、降权后的进程、或自己调过 <code>PR_SET_DUMPABLE</code>;<code>suid_dumpable</code> 为 0 时这类进程一律不 dump。</li>
+<li><strong>cwd 不可写。</strong>守护进程常见。</li>
+<li><strong>core 被截断。</strong><code>RLIMIT_CORE</code> 是个有限值,gdb 打开时提示 "core file may not match"。</li>
+</ul></div></div>
 <h3>信号编号的三个区段</h3>
 <p>信号号不是随便排的。<strong>1–31 是标准信号</strong>(从 Unix 继承来的),<strong>32–33 被 glibc 的线程实现占用</strong>(你看不到也不能用),<strong>34–64 是实时信号</strong>(<code>SIGRTMIN</code> 到 <code>SIGRTMAX</code>)。两段的行为差别很大。</p>
 <table style="contain-intrinsic-size:auto 224px">
@@ -4958,7 +4982,12 @@ sigaction(SIGRTMIN, &amp;sa, <span class="kw">NULL</span>);</code></pre>
 <tr><td class="nw"><strong>投递</strong></td><td>三选一:默认动作 / 忽略 / 执行处理函数</td><td>时机是「从内核态返回用户态的边缘」——系统调用返回、时间片切回来的瞬间;<strong>不是「随时」</strong>,一条纯计算不进内核的死循环线程,信号也要等时钟中断切它时才投</td></tr>
 </tbody>
 </table>
-<p>由此校正三个常见误会。<strong>①信号不是中断</strong>:它不会在任意两条指令之间打断你——投递点在内核态→用户态的边界,这也是 EINTR 存在的原因(慢调用必须被弄醒才能到达那个边界)。<strong>②信号不可靠地「计数」</strong>:五次 SIGCHLD 可能只投递一次——所以 SIGCHLD 处理必须 while(waitpid) 收到空(见 4.3),用信号传递「发生了几次」必须换实时信号或别的通道。<strong>③忽略和屏蔽是两回事</strong>:忽略(SIG_IGN)是投递时扔掉,事件彻底消失;屏蔽(sigprocmask)是推迟,解除后照样投递——想「稍后处理」用屏蔽,想「彻底不管」才用忽略,而 SIGCHLD 的 SIG_IGN 还有特殊语义(子进程不留僵尸,见 4.3)。</p>
+<p>由此校正三个常见误会:</p>
+<ul>
+<li><strong>信号不是中断。</strong>它不会在任意两条指令之间打断你——投递点在内核态→用户态的边界,这也是 EINTR 存在的原因(慢调用必须被弄醒才能到达那个边界)。</li>
+<li><strong>信号不可靠地「计数」。</strong>五次 SIGCHLD 可能只投递一次,所以 SIGCHLD 处理必须 <code>while(waitpid)</code> 收到空(见 4.3);用信号传递「发生了几次」必须换实时信号或别的通道。</li>
+<li><strong>忽略和屏蔽是两回事。</strong>忽略(SIG_IGN)是投递时扔掉,事件彻底消失;屏蔽(sigprocmask)是推迟,解除后照样投递。想「稍后处理」用屏蔽,想「彻底不管」才用忽略;而 SIGCHLD 的 SIG_IGN 还有特殊语义(子进程不留僵尸,见 4.3)。</li>
+</ul>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 141px"><code><span class="cm">// 验证「投递发生在内核边界」:纯计算循环里信号会迟到吗?</span>
 <span class="cm">// 不会迟到太久 —— 时间片耗尽的时钟中断也算「进过内核」,</span>
 <span class="cm">// 但在禁抢占的实时线程(SCHED_FIFO 满 CPU 自旋)上,信号可以被拖住整秒 ——</span>
@@ -5218,7 +5247,15 @@ sigaction(SIGSEGV, &amp;sa, <span class="kw">NULL</span>);</code></pre>
 <tr><td class="nw">明确不安全</td><td><code>printf</code> 族、<code>malloc</code>/<code>free</code>、<code>exit</code>、<code>syslog</code>、<code>pthread_mutex_lock</code>、<code>strerror</code>、<code>localtime</code>/<code>strftime</code>、<code>getenv</code>、<code>dlopen</code>、任何 C++ 异常/容器;<strong><code>fork</code></strong> 在 POSIX.1-2024 被移出名单(glibc 的 fork 要跑 atfork 处理函数并加锁),安全版本是 glibc 2.34 的 <code>_Fork</code></td></tr>
 </tbody>
 </table>
-<p>处理函数的收尾只有五种合法形态:①正常返回(对硬件异常信号不可以,会重新执行出错指令);②<code>_exit</code>(不跑 atexit、不刷 stdio);③<code>abort</code>(带 core 死;SIGABRT 被屏蔽或忽略时 <code>abort</code> 会先恢复默认处置再发一次);④恢复默认处置后 <code>raise</code> 同一信号(进程以「被该信号杀死」的状态终止,保住 core 和退出状态,<code>on_crash</code> 那段就是);⑤<code>siglongjmp</code> 回到主流程(恢复屏蔽字;被跳过的代码若持有锁或在 <code>malloc</code> 中间,状态就坏了,只适合跳出纯计算)。除①以外的几种都意味着被打断的那个系统调用永远不会返回,它申请到一半的资源就是泄漏——崩溃处理器只做「写日志 + 退出」,这是另一重原因。</p>
+<p>处理函数的收尾只有五种合法形态:</p>
+<ul>
+<li><strong>正常返回</strong>(对硬件异常信号不可以,会重新执行出错指令)。</li>
+<li><strong><code>_exit</code></strong>(不跑 atexit、不刷 stdio)。</li>
+<li><strong><code>abort</code></strong>(带 core 死;SIGABRT 被屏蔽或忽略时 <code>abort</code> 会先恢复默认处置再发一次)。</li>
+<li><strong>恢复默认处置后 <code>raise</code> 同一信号</strong>——进程以「被该信号杀死」的状态终止,保住 core 和退出状态,<code>on_crash</code> 那段就是。</li>
+<li><strong><code>siglongjmp</code> 回到主流程</strong>(恢复屏蔽字)。被跳过的代码若持有锁或在 <code>malloc</code> 中间,状态就坏了,只适合跳出纯计算。</li>
+</ul>
+<p>除第一种以外的几种都意味着被打断的那个系统调用永远不会返回,它申请到一半的资源就是泄漏——崩溃处理器只做「写日志 + 退出」,这是另一重原因。</p>
 <div class="deep"><h3 class="deep">async-signal-safe 到底在防什么</h3>
 <p>手册说信号处理函数里「只能调 async-signal-safe 的函数」,并给了一张白名单。但不讲清<strong>违反了到底发生什么</strong>,这条规则就只能靠背。机制是:信号处理函数是<strong>同一条线程被就地打断</strong>后插进去执行的——它和被打断的代码<strong>共享所有状态,却又和它并发</strong>。这产生一种比多线程更阴险的并发:多线程里两个执行流可以靠锁互斥,而信号处理函数<strong>没法等锁</strong>——持锁的正是被它打断、且在它返回前永远不会继续跑的那段代码。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 196px"><code><span class="cm">// 经典自死锁：主流程正在 malloc（拿着堆锁）→ 信号来了 →</span>
@@ -5950,7 +5987,7 @@ read 1 record(s)                                   ← 三个 SIGCHLD 合并成�
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 65991px;--thin-h:37098px">
+<section class="chapter" style="contain-intrinsic-size:auto 66123px;--thin-h:37098px">
 <h1 id="l6"><span class="part">分类 6</span>进程间通信</h1>
 <p>进程有各自独立的地址空间,想交换数据就得借助内核。Linux 提供了七八种 IPC 机制,它们的差别集中在三个维度:<strong>是否需要亲缘关系</strong>、<strong>数据有没有边界</strong>、<strong>要不要经过内核拷贝</strong>。这一章按这三条来组织,而不是逐个罗列 API。</p>
 <h2 id="l6-overview">6.1 速览:七种机制怎么选</h2>
@@ -6294,7 +6331,11 @@ $ grep ERROR &lt; /tmp/myfifo                      # 读端
 <tr><td class="nw"><strong>所有读端关闭</strong>,write</td><td><strong>SIGPIPE</strong>(默认杀进程)/ 忽略后 EPIPE</td><td>读端计数归零 = 写了也没人看,内核直接叫停——<code>head</code> 让上游的 <code>cat</code> 提前退出,靠的就是这个</td></tr>
 </tbody>
 </table>
-<p>由此看清两类日常 bug 的根源。<strong>①「子进程读不到 EOF,卡死」</strong>:fork 后父进程忘了关自己那份写端——写端计数永远不归零,EOF 永远不来。规矩:<strong>pipe+fork 之后,每个进程立刻关掉自己不用的那一端</strong>,既为 EOF 语义,也防「自己读自己写」的自锁。<strong>②「命令在管道里就被 141 杀掉」</strong>:141 = 128+13(SIGPIPE)——下游(head、grep -m)提前收工,上游还在写。shell 里这常常是正常现象;服务代码里则要 <code>signal(SIGPIPE, SIG_IGN)</code> 把它降级成可处理的 EPIPE(网络 socket 同理,见网络一章)。</p>
+<p>由此看清两类日常 bug 的根源:</p>
+<ul>
+<li><strong>「子进程读不到 EOF,卡死」。</strong>fork 后父进程忘了关自己那份写端——写端计数永远不归零,EOF 永远不来。规矩是:<strong>pipe+fork 之后,每个进程立刻关掉自己不用的那一端</strong>,既为 EOF 语义,也防「自己读自己写」的自锁。</li>
+<li><strong>「命令在管道里就被 141 杀掉」。</strong>141 = 128+13(SIGPIPE)——下游(head、grep -m)提前收工,上游还在写。shell 里这常常是正常现象;服务代码里则要 <code>signal(SIGPIPE, SIG_IGN)</code> 把它降级成可处理的 EPIPE(网络 socket 同理,见网络一章)。</li>
+</ul>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 386px"><code><span class="cm">// pipe + fork 的完整卫生动作</span>
 <span class="kw">int</span> p[2];
 pipe2(p, O_CLOEXEC);
@@ -6308,7 +6349,13 @@ close(p[0]);                 <span class="cm">// ★ 父进程只写,关掉读�
 write_all(p[1], data, len);
 close(p[1]);                 <span class="cm">// 发 EOF</span>
 waitpid(pid, &amp;st, 0);</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 230px"><span class="t">🟢 popen 方便,但三件事它替你决定了</span><p><code>popen("cmd", "r")</code> 内部就是 pipe+fork+exec 经 <code>/bin/sh -c</code>——方便的代价:①命令经过 shell,拼接用户输入=命令注入,变量务必自己转义或改用 fork+exec 数组传参;②只给你一端,stderr 仍连着父进程的 stderr,「想连错误一起收」要自己搭管道;③退出状态要用 <code>pclose</code> 的返回值(waitpid 语义)取,而且 popen 打开的流<strong>没有 CLOEXEC 竞态防护的选项</strong>。快速脚本化任务用它没问题;长命服务里起子进程,老实用 pipe2+fork+execvp 或 posix_spawn。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 272px"><span class="t">🟢 popen 方便,但三件事它替你决定了</span><p><code>popen("cmd", "r")</code> 内部就是 pipe+fork+exec 经 <code>/bin/sh -c</code>。方便的代价有三条:</p>
+<ul>
+<li>命令经过 shell,拼接用户输入就是命令注入;变量务必自己转义,或改用 fork+exec 数组传参。</li>
+<li>只给你一端,stderr 仍连着父进程的 stderr;「想连错误一起收」要自己搭管道。</li>
+<li>退出状态要用 <code>pclose</code> 的返回值(waitpid 语义)取,而且 popen 打开的流<strong>没有 CLOEXEC 竞态防护的选项</strong>。</li>
+</ul>
+<p>快速脚本化任务用它没问题;长命服务里起子进程,老实用 pipe2+fork+execvp 或 posix_spawn。</p></div></div>
 <div class="deep"><h3>完整示例:FIFO 的四种 open 行为与管道容量查询</h3>
 <p>这个程序在一个进程里按表演练 FIFO 的非阻塞打开规则,再用父子进程演示阻塞打开的配对,最后用 <code>fcntl</code> 读写管道容量。编译:<code>gcc -Wall -O0 -o fifo_rules fifo_rules.c</code>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1691px"><code><span class="cm">// fifo_rules.c  —  gcc -Wall -O0 -o fifo_rules fifo_rules.c</span>
@@ -8741,7 +8788,7 @@ main   : busy joined, ret=PTHREAD_CANCELED                    ← 在 testcancel
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 68789px;--thin-h:34126px">
+<section class="chapter" style="contain-intrinsic-size:auto 68879px;--thin-h:34126px">
 <h1 id="l8"><span class="part">分类 8</span>套接字网络编程</h1>
 <p>套接字把网络通信也纳入了「一切皆文件」:<code>socket</code> 返回一个 fd,之后 <code>read</code>/<code>write</code> 照常可用。这一章讲清 TCP 服务端和客户端的骨架,以及四个必知的陷阱——它们每一个都能让程序在本机测试正常、上线后出问题。</p>
 <h2 id="l8-tcp">8.1 TCP 服务端与客户端骨架</h2>
@@ -9100,7 +9147,11 @@ setsockopt(fd, IPPROTO_TCP, TCP_CORK, &amp;off, <span class="kw">sizeof</span> o
 <p>排查时只需要盯三个:<strong>CLOSE_WAIT 多</strong>是本端代码没 close(对端已经关了,本端还攥着 fd);<strong>SYN_RECV 多</strong>是握手完不成(被攻击或全连接队列溢出);<strong>FIN_WAIT_2 多</strong>是对端没 close。现场命令:<code>ss -tan state close-wait</code>、<code>ss -tan &#124; awk '{print $1}' &#124; sort &#124; uniq -c</code>(按状态计数)。</p></div>
 <div class="deep"><h3 class="deep">TIME_WAIT 为什么非等两分钟,SO_REUSEADDR 又豁免了什么</h3>
 <p>重启服务报 <code>Address already in use</code>,人人都知道加 <code>SO_REUSEADDR</code>。但 TIME_WAIT 为什么存在、这个选项豁免的到底是什么,值得从协议层讲清——否则很容易顺手再加个 <code>SO_REUSEPORT</code> 或者去调内核参数,把真正的保护拆掉。</p>
-<p>TCP 规定<strong>主动关闭的一方</strong>在发完最后一个 ACK 后进入 TIME_WAIT,停留 2×MSL(Linux 写死 60 秒)。两个原因,缺一不可。<strong>①最后那个 ACK 可能丢</strong>:对端收不到就会重发 FIN,这边必须还「活着」才能再答一次;如果立刻消失,对端的重发 FIN 会收到 RST,对端以异常告终。<strong>②旧连接的迷路报文还在网上飘</strong>:同一组「源IP:源端口 → 目的IP:目的端口」如果立刻建新连接,上一条连接里延迟到达的旧数据段,序号恰好落进新连接接收窗口的概率不为零——数据就串台了。等 2×MSL 是让旧报文在网络里自然死绝。</p>
+<p>TCP 规定<strong>主动关闭的一方</strong>在发完最后一个 ACK 后进入 TIME_WAIT,停留 2×MSL(Linux 写死 60 秒)。两个原因,缺一不可:</p>
+<ul>
+<li><strong>最后那个 ACK 可能丢。</strong>对端收不到就会重发 FIN,这边必须还「活着」才能再答一次;如果立刻消失,对端的重发 FIN 会收到 RST,对端以异常告终。</li>
+<li><strong>旧连接的迷路报文还在网上飘。</strong>同一组「源IP:源端口 → 目的IP:目的端口」如果立刻建新连接,上一条连接里延迟到达的旧数据段,序号恰好落进新连接接收窗口的概率不为零——数据就串台了。等 2×MSL 是让旧报文在网络里自然死绝。</li>
+</ul>
 <table style="contain-intrinsic-size:auto 149px">
 <thead><tr><th class="nw"></th><th class="nw">保护什么</th><th>SO_REUSEADDR 动了它吗</th></tr></thead>
 <tbody>
@@ -10228,7 +10279,7 @@ active                                              ← 第一条连接把它拉
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 40046px;--thin-h:20756px">
+<section class="chapter" style="contain-intrinsic-size:auto 40152px;--thin-h:20756px">
 <h1 id="l9"><span class="part">分类 9</span>I/O 多路复用与事件驱动</h1>
 <p>一条线程同时看住成千上万个连接,靠的就是多路复用:<strong>把「等数据」这件事集中到一次调用里</strong>,哪个 fd 就绪了内核告诉你哪个。这是所有高性能网络服务的地基,也是 Linux 事件驱动架构的核心。</p>
 <h2 id="l9-compare">9.1 select / poll / epoll 的演进</h2>
@@ -10880,7 +10931,13 @@ io_uring_wait_cqe(&amp;ring, &amp;cqe);                       <span class="cm">/
 <span class="kw">int</span> res = cqe-&gt;res;                                   <span class="cm">//    结果=read 的返回值(负数即 -errno)</span>
 <span class="kw">void</span> *ctx = io_uring_cqe_get_data(cqe);
 io_uring_cqe_seen(&amp;ring, cqe);                        <span class="cm">// ⑤ 归还完成槽</span></code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 228px"><span class="t">🟢 什么时候值得从 epoll 迁过来</span><p>三种情形收益明确:①<strong>文件 I/O 密集</strong>(数据库、对象存储)——这是 epoll 根本做不了的地盘;②小包高频网络(每秒几十万次 read/write)——系统调用摊薄的收益直接可测;③想统一「网络+磁盘+定时」一个循环。反之,常规 Web 服务的瓶颈多在业务逻辑,epoll 换 uring 收益个位数百分比,还要承担新模型的复杂度与内核版本要求(5.10+ 才算成熟,生产建议 5.15+)。务实路径:直接用封装了 uring 后端的库(libuv 实验支持、axboe 的 liburing 示例、各语言 runtime),别裸写——环管理的边角(短读重提交、取消、超时链)琐碎且易错。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 334px"><span class="t">🟢 什么时候值得从 epoll 迁过来</span><p>三种情形收益明确:</p>
+<ul>
+<li><strong>文件 I/O 密集</strong>(数据库、对象存储)——这是 epoll 根本做不了的地盘。</li>
+<li><strong>小包高频网络</strong>(每秒几十万次 read/write)——系统调用摊薄的收益直接可测。</li>
+<li><strong>想统一「网络 + 磁盘 + 定时」一个循环。</strong></li>
+</ul>
+<p>反之,常规 Web 服务的瓶颈多在业务逻辑,epoll 换 uring 收益个位数百分比,还要承担新模型的复杂度与内核版本要求(5.10+ 才算成熟,生产建议 5.15+)。务实路径:直接用封装了 uring 后端的库(libuv 实验支持、axboe 的 liburing 示例、各语言 runtime),别裸写——环管理的边角(短读重提交、取消、超时链)琐碎且易错。</p></div></div>
 <h3>inotify:文件系统事件也是 fd(内核 2.6.13+)</h3>
 <p>「配置文件改了就热重载」「目录里出现新文件就处理」这类需求,轮询 stat 既慢又糙。inotify 把文件系统事件做成了<strong>又一个 fd 事件源</strong>:创建实例、登记要盯的路径与事件掩码,之后 read 这个 fd 就能逐条取出事件——天然挂进 epoll,与网络、定时器同一个循环。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 359px"><code><span class="kw">int</span> ifd = inotify_init1(IN_NONBLOCK | IN_CLOEXEC);
@@ -11873,7 +11930,7 @@ RSS after freeing last + trim     : 1788 kB                                 ← 
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 36177px;--thin-h:20649px">
+<section class="chapter" style="contain-intrinsic-size:auto 36178px;--thin-h:20649px">
 <h1 id="l11"><span class="part">分类 11</span>时间与定时器</h1>
 <p>时间在系统编程里有两个完全不同的用途:<strong>「现在几点」</strong>和<strong>「过了多久」</strong>。用错时钟是这一章最常见、也最难复现的 bug——因为它只在系统时间被调整的那一刻才发作。</p>
 <h2 id="l11-clock">11.1 时钟类型:选错就会出负数</h2>
@@ -12535,7 +12592,7 @@ tmv.tm_isdst = -1;                                <span class="cm">// 让 mktime
 <tr><td class="nw">mktime 只认本地时区</td><td>「UTC 的 tm → time_t」标准 C 没有对应函数</td><td>glibc 用 <code>timegm</code>;可移植方案是临时设 TZ=UTC 调 mktime(丑但标准)</td></tr>
 </tbody>
 </table>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 日志时间戳的规范形态:ISO 8601 + 明确时区,毫秒自己拼</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// 日志时间戳的规范形态:ISO 8601 + 明确时区,毫秒自己拼</span>
 <span class="kw">struct</span> timespec ts;
 clock_gettime(CLOCK_REALTIME, &amp;ts);
 <span class="kw">struct</span> tm tm;
@@ -12646,7 +12703,7 @@ timegm     : 1787322612                                               ← 把 14
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 50057px;--thin-h:27345px">
+<section class="chapter" style="contain-intrinsic-size:auto 50123px;--thin-h:27411px">
 <h1 id="l12"><span class="part">分类 12</span>权限、用户与容器基础</h1>
 <p>最后一章讲「谁能做什么」:传统的 uid/gid 权限模型、把 root 切碎的 capabilities,以及容器背后那套命名空间与 cgroup。理解了它们,「容器」就不再是黑魔法,而是几个系统调用的组合。</p>
 <h2 id="l12-cred">12.1 用户、组与权限位</h2>
@@ -12960,7 +13017,7 @@ $ readelf -d ./dropme | grep -E <span>'BIND_NOW|FLAGS'</span>
 $ readelf -l ./dropme | grep -A1 GNU_STACK      # Flags 里没有 E 才对</code></pre></div>
 <div class="deep"><h3>完整示例:以 root 启动、绑定端口、降权并验证</h3>
 <p>这个程序把清单里的几步串起来:以 root 运行时绑 127.0.0.1:80,查目标用户,按顺序降权,反向验证 <code>setuid(0)</code> 失败,设 <code>no_new_privs</code>,最后用干净的环境 exec <code>/usr/bin/id</code> 看最终身份。不用 root 运行时在 <code>bind</code> 那一步就停下。编译:<code>gcc -Wall -O0 -o dropme dropme.c</code>。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1625px"><code><span class="cm">// dropme.c  —  gcc -Wall -O0 -o dropme dropme.c</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1624px"><code><span class="cm">// dropme.c  —  gcc -Wall -O0 -o dropme dropme.c</span>
 <span class="kw">#define</span> _GNU_SOURCE
 <span class="kw">#include</span> &lt;stdio.h&gt;
 <span class="kw">#include</span> &lt;stdlib.h&gt;
@@ -13057,7 +13114,7 @@ uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)   ← exec 出去的 
 </tbody>
 </table>
 <h3>用户库、组库与 shadow 的原型</h3>
-<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 755px"><code><span class="kw">#include</span> &lt;pwd.h&gt;
+<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 754px"><code><span class="kw">#include</span> &lt;pwd.h&gt;
 <span class="kw">struct</span> passwd *getpwnam(<span class="kw">const</span> <span class="kw">char</span> *name);          <span class="cm">// 静态缓冲,线程不安全</span>
 <span class="kw">struct</span> passwd *getpwuid(<span class="kw">uid_t</span> uid);
 <span class="kw">int</span> getpwnam_r(<span class="kw">const</span> <span class="kw">char</span> *name, <span class="kw">struct</span> passwd *pwd, <span class="kw">char</span> *buf, <span class="kw">size_t</span> buflen, <span class="kw">struct</span> passwd **result);
@@ -13102,7 +13159,7 @@ uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)   ← exec 出去的 
 </table>
 <div class="deep"><h3 class="deep">登录记账:utmp、wtmp、lastlog 与 utmpx API</h3>
 <p>「谁登录了、从哪来、什么时候走的」由三个文件记:<code>/run/utmp</code>(<strong>当前</strong>登录会话,<code>who</code>/<code>w</code> 读它)、<code>/var/log/wtmp</code>(<strong>历史</strong>登录登出与重启,<code>last</code> 读它,只追加)、<code>/var/log/lastlog</code>(每个 uid 最近一次登录,按 uid 索引的稀疏文件,<code>lastlog</code> 读它)。记录的写入者是 login、sshd、getty、终端模拟器这类「开会话的程序」,普通程序只需要读。</p>
-<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">#include</span> &lt;utmpx.h&gt;
+<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">#include</span> &lt;utmpx.h&gt;
 <span class="kw">struct</span> utmpx *getutxent(<span class="kw">void</span>);       <span class="cm">// 顺序读下一条</span>
 <span class="kw">void</span> setutxent(<span class="kw">void</span>);                <span class="cm">// 回到开头</span>
 <span class="kw">void</span> endutxent(<span class="kw">void</span>);                <span class="cm">// 关文件</span>
@@ -13202,7 +13259,12 @@ alice:x:1000:1000:Alice Liddell,,,:/home/alice:/bin/bash</code></pre>
 setfacl -m u:alice:rwx -m u:bob:rwx shared/
 setfacl -d -m u:alice:rwx -m u:bob:rwx shared/   # 默认 ACL:新建的文件也自动给他俩权限
 getfacl shared/                                   # 查看;ls -ld shared 会显示 drwxrwx---+</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 231px"><span class="t">🟢 ACL 存在 system.posix_acl_* 扩展属性里——所以上一节的备份坑同样适用</span><p>ACL 的物理存储就是 <code>system.*</code> 命名空间的扩展属性(l3-xattr)。这直接推出两件事:①不支持 xattr 的文件系统(FAT、多数网络盘)<strong>就不支持 ACL</strong>;②不保留 xattr 的拷贝/备份会<strong>连 ACL 一起丢</strong>——<code>cp -a</code>、<code>rsync -AX</code>、<code>tar --acls</code> 才带得走。什么时候该用 ACL:三档权限表达不了「多个不同组的人各自不同权限」时。什么时候别用:能用「建一个组、把人加进去」解决的,优先用组——ACL 散落在各文件上,比集中的组管理更难审计,滥用会让「谁能访问什么」变成一团没人理得清的账。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 299px"><span class="t">🟢 ACL 存在 system.posix_acl_* 扩展属性里——所以上一节的备份坑同样适用</span><p>ACL 的物理存储就是 <code>system.*</code> 命名空间的扩展属性(l3-xattr)。这直接推出两件事:</p>
+<ul>
+<li>不支持 xattr 的文件系统(FAT、多数网络盘)<strong>就不支持 ACL</strong>。</li>
+<li>不保留 xattr 的拷贝/备份会<strong>连 ACL 一起丢</strong>——<code>cp -a</code>、<code>rsync -AX</code>、<code>tar --acls</code> 才带得走。</li>
+</ul>
+<p>什么时候该用 ACL:三档权限表达不了「多个不同组的人各自不同权限」时。什么时候别用:能用「建一个组、把人加进去」解决的,优先用组——ACL 散落在各文件上,比集中的组管理更难审计,滥用会让「谁能访问什么」变成一团没人理得清的账。</p></div>
 <h3>libacl 的原型与一个读 ACL 的完整示例</h3>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 510px"><code><span class="kw">#include</span> &lt;sys/types.h&gt;
 <span class="kw">#include</span> &lt;sys/acl.h&gt;           <span class="cm">// POSIX.1e 草案接口,链接 -lacl</span>
@@ -13561,7 +13623,7 @@ $ echo <span>"512M"</span>           &gt; /sys/fs/cgroup/myapp/memory.max   # �
 $ echo $PID             &gt; /sys/fs/cgroup/myapp/cgroup.procs # 把进程放进去</code></pre>
 <p>命名空间还有一个容易被忽略的性质:<strong>它们彼此独立,可以任意组合</strong>。你完全可以只用 <code>CLONE_NEWNET</code> 给进程一个独立的网络栈,而文件系统、进程号、主机名全部与宿主共用——这正是很多网络测试工具的做法(<code>ip netns</code> 就是纯网络命名空间)。「容器」只是把常用的几个打包在一起的<strong>约定</strong>,不是内核强制的组合。</p>
 <h3>命名空间三个系统调用的原型</h3>
-<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 320px"><code><span class="kw">#define</span> _GNU_SOURCE
+<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 319px"><code><span class="kw">#define</span> _GNU_SOURCE
 <span class="kw">#include</span> &lt;sched.h&gt;
 <span class="kw">int</span> unshare(<span class="kw">int</span> flags);                       <span class="cm">// 当前进程脱离并新建 flags 指定的命名空间;2.6.16</span>
 <span class="kw">int</span> setns(<span class="kw">int</span> fd, <span class="kw">int</span> nstype);                <span class="cm">// 加入 fd 指向的已有命名空间;3.0</span>
@@ -13769,7 +13831,7 @@ devbox                                                 ← 外面的主机名没
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45362px;--thin-h:23914px">
+<section class="chapter" style="contain-intrinsic-size:auto 45361px;--thin-h:23914px">
 <h1 id="l13"><span class="part">分类 13</span>文件锁与并发访问</h1>
 <p>多个进程同时读写一个文件,内核<strong>不会替你加任何锁</strong>。<code>write</code> 的原子性只覆盖到「单次调用不会与别人的单次调用穿插」,而「读出来、改一改、写回去」这种序列毫无保护。Linux 上有三套互不兼容的文件锁,选错一套就等于没锁。</p>
 <h2 id="l13-why">13.1 为什么 write 的原子性不够用</h2>
@@ -14622,7 +14684,7 @@ freeifaddrs(ifa);</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p><p><strong>netlink 是 <code>ioctl</code> 在网络子系统的正式继任者。</strong>它是一个 <code>AF_NETLINK</code> 的套接字,用<strong>结构化的消息</strong>而不是不透明的请求码来通信。好处是:消息格式自描述、能处理任意长度的数据(<code>ioctl</code> 的缓冲区大小要事先猜)、<strong>能订阅事件</strong>(网卡插拔、地址变化、路由更新会主动推给你)、而且 32/64 位兼容性天然没问题。<code>ip</code> 命令用的就是它,而老的 <code>ifconfig</code>/<code>route</code> 用 <code>ioctl</code>——这就是为什么 <code>ifconfig</code> 显示不全 IPv6 地址而 <code>ip addr</code> 可以。</p></div>
 <div class="deep"><h3 class="deep">为什么会存在一个「万能后门」:ioctl 的设计逻辑与现代替代</h3>
 <p>ioctl 的存在是文件抽象的必然代价。Unix 把一切设备统一成「能 read/write 的文件」,但设备操作远不止读写:网卡要设 IP、终端要改波特率、硬盘要查 SMART、KVM 要建虚拟机——这些动作塞不进 read/write 的语义。与其为每种设备发明一批系统调用,内核留了一个<strong>带类型化参数的通用通道</strong>:<code>ioctl(fd, 命令, 参数指针)</code>,命令编码里带着「哪个子系统、读还是写、参数多大」,由 fd 背后的驱动自行解释。它本质上是<strong>穿过 VFS 直达驱动的 RPC</strong>——这既是它的用处(什么都能表达),也是它的名声(类型不安全、可移植性差、文档分散在各驱动)。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// 感受一下它的形状：三个互不相干的领域，同一个入口</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 感受一下它的形状：三个互不相干的领域，同一个入口</span>
 <span class="kw">struct</span> winsize ws;
 ioctl(STDOUT_FILENO, TIOCGWINSZ, &amp;ws);        <span class="cm">// 终端:窗口几行几列</span>
 <span class="kw">struct</span> ifreq ifr = {0};
@@ -14720,7 +14782,7 @@ TIOCGWINSZ 普通文件失败: Inappropriate ioctl <span class="kw">for</span> d
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 40284px;--thin-h:22268px">
+<section class="chapter" style="contain-intrinsic-size:auto 40534px;--thin-h:22409px">
 <h1 id="l14"><span class="part">分类 14</span>终端、tty 与伪终端</h1>
 <p>终端是 Unix 里最古老也最反直觉的一层抽象。「为什么 <code>getchar</code> 要按回车才返回」「为什么 Ctrl+C 能杀进程」「为什么程序被管道接走之后输出就不刷新了」——答案全在<strong>行规程</strong>这一层。</p>
 <h2 id="l14-termios">14.1 行规程:回车才返回的原因</h2>
@@ -14918,7 +14980,14 @@ speed_t cfgetospeed(<span class="kw">const</span> <span class="kw">struct</span>
 <span class="kw">int</span> tcflow(<span class="kw">int</span> fd, <span class="kw">int</span> action);       <span class="cm">// TCOOFF 暂停输出 / TCOON 恢复 / TCIOFF 发 STOP 字符 / TCION 发 START 字符</span>
 <span class="kw">int</span> tcsendbreak(<span class="kw">int</span> fd, <span class="kw">int</span> duration);<span class="cm">// 发 break(连续 0 电平);duration 为 0 时 0.25~0.5 秒,非 0 的含义由实现定义</span></code></pre>
 <p><strong>返回值</strong></p><p><code>cf*speed</code> 成功返回 0(<code>cfget*</code> 返回速率常量),传入不认识的常量返回 -1 设 <code>EINVAL</code>;<code>tc*</code> 四个成功返回 0,失败返回 -1:fd 不是终端是 <code>ENOTTY</code>,后台进程组调用它们会先收到 <code>SIGTTOU</code>。标准:除 <code>cfsetspeed</code> 外都是 POSIX.1-2001。</p>
-<p>几条容易踩的细节:① 速率常量是枚举值不是数字,<code>B115200</code> 在 Linux 上是八进制 0010002,打印要自己对照;② Linux 上 glibc 把输出速率存进 <code>c_cflag</code> 的 <code>CBAUD</code> 位,所以 <code>cfsetospeed</code> 之后再粗暴地整体赋值 <code>c_cflag</code> 会把速率冲掉;③ 标准常量表里没有的速率(比如 250000)要走 Linux 特有的 <code>struct termios2</code> + <code>BOTHER</code>,通过 <code>ioctl(fd, TCSETS2, &amp;t2)</code> 设置(2.6.20 起);④ <code>tcsetattr</code> 对不支持的速率静默忽略,设完务必 <code>tcgetattr</code> 读回比对;⑤ <code>tcdrain</code> 在 USB 转串口上常常「立刻返回」,因为驱动只知道数据交给了 USB 栈,并不知道线上发完没有。</p>
+<p>几条容易踩的细节:</p>
+<ul>
+<li>速率常量是枚举值不是数字,<code>B115200</code> 在 Linux 上是八进制 0010002,打印要自己对照。</li>
+<li>Linux 上 glibc 把输出速率存进 <code>c_cflag</code> 的 <code>CBAUD</code> 位,所以 <code>cfsetospeed</code> 之后再粗暴地整体赋值 <code>c_cflag</code> 会把速率冲掉。</li>
+<li>标准常量表里没有的速率(比如 250000)要走 Linux 特有的 <code>struct termios2</code> + <code>BOTHER</code>,通过 <code>ioctl(fd, TCSETS2, &amp;t2)</code> 设置(2.6.20 起)。</li>
+<li><code>tcsetattr</code> 对不支持的速率静默忽略,设完务必 <code>tcgetattr</code> 读回比对。</li>
+<li><code>tcdrain</code> 在 USB 转串口上常常「立刻返回」,因为驱动只知道数据交给了 USB 栈,并不知道线上发完没有。</li>
+</ul>
 <h3>终端身份与尺寸:isatty、ttyname、ctermid 与 TIOCGWINSZ</h3>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 320px"><code><span class="kw">#include</span> &lt;unistd.h&gt;
 <span class="kw">int</span> isatty(<span class="kw">int</span> fd);                                 <span class="cm">// 是终端返回 1;否则返回 0 并设 errno(ENOTTY / EBADF)</span>
@@ -15095,7 +15164,12 @@ printf(<span>"%d 行 %d 列\n"</span>, ws.ws_row, ws.ws_col);
 <tr><td class="nw"><code>sshd</code>(远程登录)</td><td>每个连接 <code>fork</code>,子进程 <code>setsid</code>,打开伪终端从端(成为控制终端),<code>exec</code> shell</td><td>结构完全一样,只是终端换成了 pty,由 sshd 父进程扮演「硬件」</td></tr>
 </tbody>
 </table>
-<p>控制终端的取得规则只有两条:① <strong>会话首进程</strong>、<strong>还没有控制终端</strong>、打开一个<strong>还不是别的会话控制终端</strong>的终端设备、且 <code>open</code> 时没带 <code>O_NOCTTY</code>——内核自动把它设为控制终端(这是 POSIX 允许、Linux 实现的行为);② 会话首进程对已打开的终端 fd 调 <code>ioctl(fd, TIOCSCTTY, 0)</code> 显式获取。反过来,<code>setsid</code> 之后的新会话<strong>一定没有</strong>控制终端,守护进程靠这一点脱离终端,然后再 <code>fork</code> 一次让自己不再是会话首进程,从此即使误开终端设备也不会再沾上(第 16 章)。控制终端随 <code>fork</code> 继承、随 <code>exec</code> 保留,<code>/dev/tty</code> 永远指向它。</p></div>
+<p>控制终端的取得规则只有两条:</p>
+<ul>
+<li><strong>会话首进程</strong>、<strong>还没有控制终端</strong>、打开一个<strong>还不是别的会话控制终端</strong>的终端设备、且 <code>open</code> 时没带 <code>O_NOCTTY</code>——内核自动把它设为控制终端(这是 POSIX 允许、Linux 实现的行为)。</li>
+<li>会话首进程对已打开的终端 fd 调 <code>ioctl(fd, TIOCSCTTY, 0)</code> 显式获取。</li>
+</ul>
+<p>反过来,<code>setsid</code> 之后的新会话<strong>一定没有</strong>控制终端。守护进程靠这一点脱离终端,然后再 <code>fork</code> 一次让自己不再是会话首进程,从此即使误开终端设备也不会再沾上(第 16 章)。控制终端随 <code>fork</code> 继承、随 <code>exec</code> 保留,<code>/dev/tty</code> 永远指向它。</p></div>
 <div class="deep"><h3 class="deep">管道里的进程组:每个命令同一组,组长是第一个</h3>
 <p>shell 执行 <code>cat a | grep b | wc -l</code> 时,三个子进程被放进<strong>同一个进程组</strong>,进程组号取<strong>第一个命令</strong>的 pid(<code>setpgid(pid_cat, pid_cat)</code>,后面的 <code>setpgid(pid_grep, pid_cat)</code>);该组随即被 <code>tcsetpgrp</code> 设为前台。这就是 Ctrl+C 一次能杀掉整条管道、<code>kill -- -$!</code> 能杀掉后台管道里所有进程的根据。bash 的 <code>$!</code> 给出的是<strong>最后一个</strong>命令的 pid,但它的进程组号是第一个命令的,所以「<code>kill -$!</code>」对管道不一定等于「杀整组」——用 <code>ps -o pid,pgid,comm</code> 看一眼再动手。</p>
 <pre style="contain-intrinsic-size:auto 250px"><code>$ sleep 100 | sleep 100 | sleep 100 &amp;
@@ -15568,7 +15642,7 @@ $ echo $$; ps -o pid,pgid,sid,tty,comm -p $$^M$</code></pre>
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41210px;--thin-h:20610px">
+<section class="chapter" style="contain-intrinsic-size:auto 41325px;--thin-h:20610px">
 <h1 id="l15"><span class="part">分类 15</span>动态链接与库</h1>
 <p>「找不到 .so」「明明装了库还是链接不上」「换台机器就跑不起来」——这些日常问题的根都在链接器和动态加载器。这一章讲清楚编译期链接与运行期加载各自负责什么。</p>
 <h2 id="l15-link">15.1 静态库与动态库:两次完全不同的解析</h2>
@@ -15698,7 +15772,13 @@ $ LD_DEBUG=libs,bindings ./app 2&gt;&amp;1 | head -50   # 加载器的完整决�
 <tr><td class="nw">以后每次</td><td>PLT 查 GOT,一跳直达 —— 只比直接调用多一次间接跳转</td></tr>
 </tbody>
 </table>
-<p>这个「第一次才解析」叫<strong>惰性绑定</strong>。它解释了三件事。<strong>①启动快但首调慢</strong>:几千个符号的解析摊到了各自第一次调用时;设 <code>LD_BIND_NOW=1</code>(或链接时 <code>-Wl,-z,now</code>)改成启动时全解析——实时系统和安全加固(RELRO 要把 GOT 改成只读)都这么干。<strong>②<code>LD_PRELOAD</code> 为什么能劫持</strong>:解析器按「preload 的库 → 可执行文件 → 依赖库」的顺序找,<strong>谁先被找到谁赢</strong>——preload 的 malloc 先于 libc 的 malloc 被找到,GOT 里从此写的就是它。<strong>③同名符号的静默覆盖</strong>:两个 .so 里各有一个(非 static 的)<code>init()</code>,全进程只有先加载的那个会被用——另一个库内部调自己的 <code>init</code> 也会被劫走。这叫<strong>全局符号插入</strong>(interposition),是动态链接和静态链接语义差别最大的一处,也是无数「换了个链接顺序就崩」的根源。</p>
+<p>这个「第一次才解析」叫<strong>惰性绑定</strong>。它解释了三件事:</p>
+<ul>
+<li><strong>启动快但首调慢。</strong>几千个符号的解析摊到了各自第一次调用时。设 <code>LD_BIND_NOW=1</code>(或链接时 <code>-Wl,-z,now</code>)改成启动时全解析——实时系统和安全加固(RELRO 要把 GOT 改成只读)都这么干。</li>
+<li><strong><code>LD_PRELOAD</code> 为什么能劫持。</strong>解析器按「preload 的库 → 可执行文件 → 依赖库」的顺序找,<strong>谁先被找到谁赢</strong>——preload 的 malloc 先于 libc 的 malloc 被找到,GOT 里从此写的就是它。</li>
+<li><strong>同名符号的静默覆盖。</strong>两个 .so 里各有一个(非 static 的)<code>init()</code>,全进程只有先加载的那个会被用,另一个库内部调自己的 <code>init</code> 也会被劫走。</li>
+</ul>
+<p>这叫<strong>全局符号插入</strong>(interposition),是动态链接和静态链接语义差别最大的一处,也是无数「换了个链接顺序就崩」的根源。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 141px"><code># 排查符号问题的三板斧
 LD_DEBUG=bindings ./app 2&gt;&amp;1 | grep printf   # 看每个符号到底绑到了哪个库
 nm -D libfoo.so | grep <span>' T '</span>                 # 这个库导出了什么
@@ -16074,7 +16154,7 @@ __attribute__((destructor))  <span class="kw">static</span> <span class="kw">voi
 <span class="cm">//                  (.so 允许存在未定义符号,链接不报错;加 -Wl,-z,defs 才会)</span>
 <span class="kw">void</span> missing_fn(<span class="kw">void</span>);
 <span class="kw">int</span> plugin_entry(<span class="kw">const</span> <span class="kw">char</span> *arg) { missing_fn(); <span class="kw">return</span> 0; }</code></pre>
-<pre style="contain-intrinsic-size:auto 754px"><code>$ gcc -Wall -fPIC -shared -o plugin.so plugin.c
+<pre style="contain-intrinsic-size:auto 755px"><code>$ gcc -Wall -fPIC -shared -o plugin.so plugin.c
 $ gcc -Wall -fPIC -shared -o plugin_bad.so plugin_bad.c
 $ gcc -Wall -o host host.c -ldl
 $ ./host ./plugin.so plugin_entry
@@ -16541,7 +16621,7 @@ WantedBy=multi-user.target</code></pre>
 <tr><td class="nw"><code>WatchdogSec=</code></td><td class="nw">看门狗,超时没喂就重启</td><td>配 <code>Type=notify</code></td></tr>
 </tbody>
 </table>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code># 加固相关的字段：几乎零成本，值得默认开
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code># 加固相关的字段：几乎零成本，值得默认开
 [Service]
 NoNewPrivileges=yes            # 之后 exec 无法提权
 ProtectSystem=strict           # /usr /boot /etc 只读
@@ -16551,7 +16631,7 @@ PrivateDevices=yes             # 只有基本设备节点
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 SystemCallFilter=@system-service    # seccomp 白名单
 CapabilityBoundingSet=CAP_NET_BIND_SERVICE</code></pre>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// Type=notify：程序自己告诉 systemd「我准备好了」</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// Type=notify：程序自己告诉 systemd「我准备好了」</span>
 <span class="kw">#include</span> &lt;systemd/sd-daemon.h&gt;          <span class="cm">// 链接 -lsystemd</span>
 listen_and_bind();
 sd_notify(0, <span>"READY=1"</span>);                 <span class="cm">// 这之后 systemd 才认为启动成功</span>
@@ -17202,7 +17282,7 @@ drained, flushing and exiting</code></pre>
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 29906px;--thin-h:12632px">
+<section class="chapter" style="contain-intrinsic-size:auto 29905px;--thin-h:12632px">
 <h1 id="l17"><span class="part">分类 17</span>零拷贝与高级 I/O</h1>
 <p>「拷贝」是 I/O 密集型程序最大的隐性开销。一次普通的「读文件再发到网络」要经历<strong>四次拷贝和四次上下文切换</strong>。Linux 提供了一整套削减它的手段,理解每一个省掉了哪一次拷贝,才知道该用哪个。</p>
 <h2 id="l17-copy">17.1 数据到底拷贝了几次</h2>
@@ -17832,7 +17912,7 @@ posix_fadvise(fd, 0, 0, POSIX_FADV_SEQUENTIAL);      <span class="cm">// 明说�
     printf(<span>"再次 DONTNEED 后: %5ld/%ld 页在页缓存\n"</span>, resident_pages(map, st.st_size, pages), pages);
     <span class="kw">return</span> 0;
 }</code></pre>
-<pre style="contain-intrinsic-size:auto 305px"><code>$ dd <span class="kw">if</span>=/dev/zero of=./f64 bs=1M count=64 status=none &amp;&amp; sync
+<pre style="contain-intrinsic-size:auto 304px"><code>$ dd <span class="kw">if</span>=/dev/zero of=./f64 bs=1M count=64 status=none &amp;&amp; sync
 $ ./fadv_demo ./f64
 文件 67108864 字节 = 16384 页
 开始时          : 16384/16384 页在页缓存      ← dd 刚写过,sync 之后全是干净页
@@ -17877,7 +17957,7 @@ $ fincore ./f64                                 # util-linux 自带的工具,看
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 44566px;--thin-h:22143px">
+<section class="chapter" style="contain-intrinsic-size:auto 44567px;--thin-h:22143px">
 <h1 id="l18"><span class="part">分类 18</span>调度、资源与观测</h1>
 <p>最后一章讲「程序跑起来之后怎么看它、怎么控制它」:CPU 调度与亲和性、资源上限、以及一整套观测工具。这些是把程序从「能跑」推到「跑得可预期」的手段。</p>
 <h2 id="l18-sched">18.1 调度策略与 CPU 亲和</h2>
@@ -18410,7 +18490,7 @@ TasksMax=512               # cgroup:pids 控制器 —— fork 炸弹的真正�
 <div class="note ok" style="contain-intrinsic-size:auto 231px"><span class="t">🟢 内存限制的现代形态:memory.max 之外还有 memory.high</span><p>cgroup v2 给内存两道线:<code>memory.max</code> 是硬顶(顶到就 memcg OOM,见 10.1);<code>memory.high</code> 是软顶——超过后内核<strong>放慢这个组的分配并加压回收</strong>,但不杀。生产上「high 设在 max 的 90%」是常见形态:大部分超用被软压回去,雪崩才触发硬顶,比「一步到位 OOM kill」的行为体面得多。观测入口:<code>memory.stat</code>(anon/file 拆分——「是缓存顶的还是真用的」一眼可辨)、<code>memory.events</code> 的 high/oom 计数、<code>memory.pressure</code>(PSI:因内存而停顿的时间占比,比用量本身更接近「疼不疼」)。</p></div>
 <div class="deep"><h3>完整示例:软硬限制的升降规则与 EMFILE 现场</h3>
 <p>这个程序先打印 RLIMIT_NOFILE,把软限降到 8 后连续 open 直到 EMFILE,再把软限恢复到硬限,然后把硬限降到 64、再试着升回去——最后一步必然失败。编译:<code>gcc -Wall -O2 -o rlim_demo rlim_demo.c</code>。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1609px"><code><span class="cm">// rlim_demo.c  —  gcc -Wall -O2 -o rlim_demo rlim_demo.c</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1610px"><code><span class="cm">// rlim_demo.c  —  gcc -Wall -O2 -o rlim_demo rlim_demo.c</span>
 <span class="kw">#include</span> &lt;stdio.h&gt;
 <span class="kw">#include</span> &lt;stdlib.h&gt;
 <span class="kw">#include</span> &lt;string.h&gt;
@@ -18818,7 +18898,7 @@ $ strace -c /bin/<span class="kw">true</span> 2&gt;&amp;1 | tail -3
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 27754px;--thin-h:11093px">
+<section class="chapter" style="contain-intrinsic-size:auto 27925px;--thin-h:11093px">
 <h1 id="l19"><span class="part">分类 19</span>构建、静态链接与交叉编译</h1>
 <p>前面讲的是程序<strong>运行时</strong>怎么找到库。这一章讲另一半:代码怎么变成可执行文件、什么时候该静态链接、以及为什么「在我机器上能跑」的镜像换台机器就崩。</p>
 <h2 id="l19-pipeline">19.1 从源码到可执行文件的四步</h2>
@@ -18961,7 +19041,11 @@ gcc -E  a.c -o a.i     # 预处理产物:宏展开后到底是什么
 gcc -S  a.c -o a.s     # 编译产物:生成的汇编(配 -fverbose-asm 更可读)
 gcc -c  a.c -o a.o     # 汇编产物:nm a.o 看符号表 —— U 开头的就是「待兑现的承诺」
 gcc a.o -lm -o app     # 链接:-v 能看到真实调用的 collect2/ld 全命令行</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 编译快慢的大头在头文件,链接快慢的大头在重复符号</span><p>两个工程级推论:①C++ 一个 .cpp 动辄预处理出几十万行(头文件层层展开)——这就是 PCH、模块(C++20 modules)、以及「头文件里少 include、多前置声明」这些实践的全部动机;增量构建的本质也是「只重跑改动波及的翻译单元」,头文件改一行=包含它的全部单元重编,依赖面要靠工具(ninja 的 depfile)而不是人脑。②链接耗时与符号量成正比——模板重度的 C++ 每个 .o 里都实例化一份相同模板,链接器去重(COMDAT)的工作量巨大;lld/mold 快在并行化这段,大工程换链接器常有 5–10 倍收益,一行 <code>-fuse-ld=mold</code> 的事。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 298px"><span class="t">🟢 编译快慢的大头在头文件,链接快慢的大头在重复符号</span><p>两个工程级推论:</p>
+<ul>
+<li><strong>C++ 一个 .cpp 动辄预处理出几十万行</strong>(头文件层层展开)——这就是 PCH、模块(C++20 modules)、以及「头文件里少 include、多前置声明」这些实践的全部动机。增量构建的本质也是「只重跑改动波及的翻译单元」:头文件改一行,包含它的全部单元重编,依赖面要靠工具(ninja 的 depfile)而不是人脑。</li>
+<li><strong>链接耗时与符号量成正比。</strong>模板重度的 C++ 每个 .o 里都实例化一份相同模板,链接器去重(COMDAT)的工作量巨大;lld/mold 快在并行化这段,大工程换链接器常有 5–10 倍收益,一行 <code>-fuse-ld=mold</code> 的事。</li>
+</ul></div></div>
 <div class="deep"><h3>完整示例:同一份源码,四种编译命令各打开了哪些接口开关</h3>
 <p>这个程序不调用任何函数,只把 <code>&lt;features.h&gt;</code> 推导出来的开关打印出来。用不同的 <code>-std</code> 和 <code>-D</code> 各编一次,能直接看到「默认到底是什么」「-std=c11 关掉了什么」「_GNU_SOURCE 打开了什么」。编译命令见运行记录。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1745px"><code><span class="cm">// ftm.c  —  gcc -Wall -o ftm ftm.c   (再用不同的 -std / -D 选项各编一次)</span>
@@ -19321,7 +19405,11 @@ qemu-aarch64 -L /usr/aarch64-linux-gnu ./hello    # 不上真机,用户态模拟
 # 真实项目:sysroot 从目标系统整个拉下来,保证库版本一致
 rsync -a target:/usr/include target:/usr/lib sysroot/usr/
 aarch64-linux-gnu-gcc --sysroot=$PWD/sysroot ...</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 判断「能不能干脆不交叉」也是本事</span><p>交叉编译的复杂度全在依赖:纯 C 小工具几分钟完成,但依赖 OpenSSL、glib 的项目要把整棵依赖树都备成目标平台版本——这正是 Buildroot/Yocto 存在的理由(它们管理的就是「整个 sysroot 的构建」)。两条省事的旁路值得先考虑:①目标机不太弱、量不大 → qemu-user + binfmt 在 x86 上「原生」编 ARM(docker buildx 的多架构镜像正是这么跑的,慢 5~10 倍但零配置);②Go/Rust 这类自带交叉的语言,<code>GOARCH=arm64</code> 一个变量的事——它们把 libc 依赖也砍了(静态或自带),正好绕开了 C 世界最麻烦的部分。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 331px"><span class="t">🟢 判断「能不能干脆不交叉」也是本事</span><p>交叉编译的复杂度全在依赖:纯 C 小工具几分钟完成,但依赖 OpenSSL、glib 的项目要把整棵依赖树都备成目标平台版本——这正是 Buildroot/Yocto 存在的理由(它们管理的就是「整个 sysroot 的构建」)。两条省事的旁路值得先考虑:</p>
+<ul>
+<li><strong>目标机不太弱、量不大</strong> → qemu-user + binfmt 在 x86 上「原生」编 ARM。docker buildx 的多架构镜像正是这么跑的,慢 5~10 倍但零配置。</li>
+<li><strong>Go/Rust 这类自带交叉的语言</strong> → <code>GOARCH=arm64</code> 一个变量的事。它们把 libc 依赖也砍了(静态或自带),正好绕开了 C 世界最麻烦的部分。</li>
+</ul></div></div>
 <div class="deep"><h3>完整示例:在 x86-64 上交叉编出 aarch64 程序,验明正身再用 qemu 跑起来</h3>
 <p>这个程序打印编译期看到的架构宏、指针与 long 的大小、以及运行期 <code>uname</code> 报告的机器类型。先本机编译跑一次,再用 <code>aarch64-linux-gnu-gcc</code> 交叉编译,用 <code>file</code>/<code>readelf</code> 确认产物架构,最后用 qemu 用户态模拟跑起来。Debian/Ubuntu 上需要 <code>apt install gcc-aarch64-linux-gnu qemu-user</code>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 619px"><code><span class="cm">// archinfo.c  —  gcc -O2 -o archinfo-x86 archinfo.c ; aarch64-linux-gnu-gcc -O2 -o archinfo-arm64 archinfo.c</span>
