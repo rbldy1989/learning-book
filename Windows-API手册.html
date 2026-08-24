@@ -1754,7 +1754,7 @@ BOOL IsDebuggerPresent(<span class="kw">void</span>);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 54646px;--thin-h:50596px">
+<section class="chapter" style="contain-intrinsic-size:auto 54713px;--thin-h:50663px">
 <h1 id="a4"><span class="part">第 4 章</span>kernel32：进程、线程、同步与时间</h1>
 
 <p>kernel32.dll 是 Win32 的"发动机舱"：进程与线程的创建销毁、内核对象的等待与同步、系统计时，全部从这里出发。本章先用速查表把每类 API 摆开，再对最常用的函数逐一给出详解卡（函数原型、参数表、返回值、最小示例）。徽章含义：<span class="badge ok">推荐</span> 首选常用、<span class="badge old">已过时</span> 谨慎使用或有更好替代、<span class="badge dead">禁用</span> 应弃用、<span class="badge new">现代提示</span> 补充提示。本书统一使用 W（宽字符）版本。</p>
@@ -2623,7 +2623,7 @@ wprintf(L"%04d-%02d-%02d %02d:%02d:%02d\n",
         st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 233px"><span class="t">🔴 FILETIME 不能直接强转成 __int64*</span><p><code>FILETIME</code> 只保证 <strong>4 字节对齐</strong>，而 64 位整数在某些平台要求 8 字节对齐。写成 <code>*(__int64*)&amp;ft</code> 在 x86/x64 上碰巧能跑，在 ARM 上就是未对齐访问。<strong>规规矩矩用 <code>ULARGE_INTEGER</code> 中转</strong>，编译器会优化掉，不花钱。<br>另外两个易错点：<strong>①</strong> <code>FileTimeToLocalFileTime</code> 用的是<strong>当前</strong>的时区与夏令时规则去换算<strong>历史</strong>时间，跨夏令时边界会差一小时；要精确得用 <code>SystemTimeToTzSpecificLocalTime</code>。<strong>②</strong> 别拿这套时间测量耗时——系统时间可能被 NTP 校准而<strong>向后跳</strong>。测耗时一律用 <a class="fnlink" href="#fn-QueryPerformanceCounter"><code>QueryPerformanceCounter</code></a> 或 <a class="fnlink" href="#fn-GetTickCount64"><code>GetTickCount64</code></a>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 266px"><span class="t">🔴 FILETIME 不能直接强转成 __int64*</span><p><code>FILETIME</code> 只保证 <strong>4 字节对齐</strong>，而 64 位整数在某些平台要求 8 字节对齐。写成 <code>*(__int64*)&amp;ft</code> 在 x86/x64 上碰巧能跑，在 ARM 上就是未对齐访问。<strong>规规矩矩用 <code>ULARGE_INTEGER</code> 中转</strong>，编译器会把它优化掉，没有额外开销。<br>另外两个易错点：<strong>①</strong> <code>FileTimeToLocalFileTime</code> 用的是<strong>当前</strong>的时区与夏令时规则去换算<strong>历史</strong>时间，跨夏令时边界会差一小时；要精确得用 <code>SystemTimeToTzSpecificLocalTime</code>。<strong>②</strong> 别拿这套时间测量耗时——系统时间可能被 NTP 校准而<strong>向后跳</strong>。测耗时一律用 <a class="fnlink" href="#fn-QueryPerformanceCounter"><code>QueryPerformanceCounter</code></a> 或 <a class="fnlink" href="#fn-GetTickCount64"><code>GetTickCount64</code></a>。</p></div>
 
 <h2 id="a4-srw">4.8 现代同步原语</h2>
 
@@ -2777,10 +2777,10 @@ Config* GetConfig() {
 
 <h2 id="a4-pool">4.9 线程池</h2>
 
-<p>"来一个任务开一个线程"在任务多而短时是灾难：线程创建约需几十微秒、每个线程默认占 1 MB 栈保留地址空间，上下文切换还要钱。系统自带的线程池替你维持一组工作线程，并根据 CPU 数与阻塞情况自动伸缩。</p>
+<p>任务多而短时，"来一个任务开一个线程"的代价很高：线程创建约需几十微秒、每个线程默认占 1 MB 栈保留地址空间，上下文切换还要钱。系统自带的线程池替你维持一组工作线程，并根据 CPU 数与阻塞情况自动伸缩。</p>
 
 <table style="contain-intrinsic-size:auto 475px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
-<tr><td class="nw">TrySubmitThreadpoolCallback</td><td class="nw">最简单：丢一个函数进去让它跑</td><td>一行搞定；但拿不到句柄，无法等待或取消</td></tr>
+<tr><td class="nw">TrySubmitThreadpoolCallback</td><td class="nw">最简单：提交一个函数让线程池去跑</td><td>一行即可；但拿不到句柄，无法等待或取消</td></tr>
 <tr><td>CreateThreadpoolWork / SubmitThreadpoolWork</td><td class="nw">创建可复用的工作项并提交</td><td>同一个工作项可反复提交；可等待、可取消</td></tr>
 <tr><td>WaitForThreadpoolWorkCallbacks</td><td class="nw">等它跑完（或取消尚未开始的）</td><td>第二个参数 TRUE = 取消还排着队的</td></tr>
 <tr><td class="nw">CloseThreadpoolWork</td><td class="nw">释放工作项</td><td><strong>要先 Wait 再 Close</strong>，否则回调可能还在跑</td></tr>
@@ -2822,7 +2822,7 @@ WaitForThreadpoolWorkCallbacks(w, TRUE);   <span class="cm">// TRUE = 尚未开�
 CloseThreadpoolWork(w);                    <span class="cm">// ★ 必须 Wait 之后再 Close</span></code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 328px"><span class="t">🔴 线程池回调里的三条禁忌</span><p><strong>① 不要长时间阻塞。</strong>线程池会把线程视为"忙"，虽然它能自动增线程，但反应有延迟（约每秒一个），大量回调同时阻塞会让吞吐塌掉。真要做阻塞式等待，先调 <code>CallbackMayRunLong</code> 告诉线程池一声。<br><strong>② 不要修改线程状态还不还原。</strong>线程是复用的——你改了区域设置、COM 单元模式、线程优先级、TLS，下一个回调会继承这些。改了就必须在返回前复原。<br><strong>③ 不要在回调里 Close 自己。</strong><code>CloseThreadpoolWork</code> 要在确认回调不再运行之后调，在回调内部调就是自己拆自己。<br>另外，<strong>进程退出时线程池不保证跑完排队的任务</strong>。有收尾语义的活（写日志、存盘）必须显式 <code>WaitForThreadpoolWorkCallbacks</code>，别指望它自己跑完。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 328px"><span class="t">🔴 线程池回调里的三条禁忌</span><p><strong>① 不要长时间阻塞。</strong>线程池会把线程视为"忙"，虽然它能自动增线程，但反应有延迟（约每秒一个），大量回调同时阻塞会让吞吐塌掉。真要做阻塞式等待，先调 <code>CallbackMayRunLong</code> 告诉线程池一声。<br><strong>② 不要修改线程状态还不还原。</strong>线程是复用的——你改了区域设置、COM 单元模式、线程优先级、TLS，下一个回调会继承这些。改了就必须在返回前复原。<br><strong>③ 不要在回调里 Close 自己。</strong><code>CloseThreadpoolWork</code> 要在确认回调不再运行之后调，在回调内部调用，等于释放正在运行的自己。<br>另外，<strong>进程退出时线程池不保证跑完排队的任务</strong>。有收尾语义的活（写日志、存盘）必须显式 <code>WaitForThreadpoolWorkCallbacks</code>，别指望它自己跑完。</p></div>
 
 <h2 id="a4-iocp">4.10 重叠 I/O 与完成端口</h2>
 
@@ -3994,7 +3994,7 @@ LRESULT CALLBACK WndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 298px"><span class="t">🟡 三段消息号，别用混</span><p><code>WM_USER + n</code>（0x0400 起）归<strong>窗口类</strong>自己私有——你给自己写的窗口类定义可以，但发给别人的控件就是灾难：<code>WM_USER+1</code> 在 EDIT 那里是 <code>EM_SETSEL</code>。<br><code>WM_APP + n</code>（0x8000 起）归<strong>应用程序</strong>私有，同一个 EXE 内部跨窗口传信用它，安全。<br><strong>注册消息</strong>（0xC000 起）才是<strong>跨进程</strong>唯一安全的选择。<br>还有一点：<code>HWND_BROADCAST</code> 只到顶层窗口，且只有注册消息与部分系统消息才会被这样广播——用 <code>WM_USER</code> 系广播是无效的。跨进程还要传数据的话，消息只能带两个整数，真正的数据走 <code>WM_COPYDATA</code>、命名管道或共享内存。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 298px"><span class="t">🟡 三段消息号，别用混</span><p><code>WM_USER + n</code>（0x0400 起）归<strong>窗口类</strong>自己私有——你给自己写的窗口类定义可以，但发给别人的控件会出错：<code>WM_USER+1</code> 在 EDIT 那里是 <code>EM_SETSEL</code>。<br><code>WM_APP + n</code>（0x8000 起）归<strong>应用程序</strong>私有，同一个 EXE 内部跨窗口传信用它，安全。<br><strong>注册消息</strong>（0xC000 起）才是<strong>跨进程</strong>唯一安全的选择。<br>还有一点：<code>HWND_BROADCAST</code> 只到顶层窗口，且只有注册消息与部分系统消息才会被这样广播——用 <code>WM_USER</code> 系广播是无效的。跨进程还要传数据的话，消息只能带两个整数，真正的数据走 <code>WM_COPYDATA</code>、命名管道或共享内存。</p></div>
 
 
 <h3 id="fn-InSendMessage">InSendMessage / InSendMessageEx / ReplyMessage</h3>
@@ -4050,7 +4050,7 @@ BOOL  ReplyMessage(LRESULT lResult);</code></pre>
 </tbody></table>
 
 <p><strong>返回值</strong></p>
-<p>成功非零；<strong>超时或失败返回 0</strong>，此时用 <code>GetLastError()</code> 区分：<code>ERROR_TIMEOUT</code> 是超时，0 表示目标窗口过程自己返回了 0。注意"函数返回值"和"窗口过程返回值"是两码事，后者在 <code>lpdwResult</code> 里。</p>
+<p>成功非零；<strong>超时或失败返回 0</strong>，此时用 <code>GetLastError()</code> 区分：<code>ERROR_TIMEOUT</code> 是超时，0 表示目标窗口过程自己返回了 0。注意"函数返回值"与"窗口过程返回值"是两个不同的值，后者在 <code>lpdwResult</code> 里。</p>
 
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 196px"><code><span class="cm">// 探测某窗口是否还活着：500ms 不应答就当它卡死了</span>
@@ -4106,7 +4106,7 @@ DWORD_PTR r;
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 298px"><span class="t">🔴 醒来后必须把队列抽干，否则死循环</span><p>它是<strong>边沿触发</strong>的：只在"队列从空变为非空"时报信。醒来后若只处理一条就回去接着等，剩下的消息不会再次触发唤醒——但队列非空又让它立刻返回，于是变成不带阻塞的疯转。所以醒来后一定要用 <code>while (PeekMessageW(..., PM_REMOVE))</code> <strong>循环取到空为止</strong>。<br>另一个坑：<code>QS_ALLINPUT</code> 不含 <code>QS_ALLPOSTMESSAGE</code> 的全部语义差异，跨版本行为有细微出入；只想被"发送过来的消息"唤醒时用 <code>QS_SENDMESSAGE</code> 更准。<br>更根本的建议：<strong>能不在 UI 线程等就别等</strong>。让后台线程干完后 <code>PostMessageW</code> 通知 UI，是更省事也更不容易错的结构。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 298px"><span class="t">🔴 醒来后必须把队列抽干，否则死循环</span><p>它是<strong>边沿触发</strong>的：只在"队列从空变为非空"时报信。醒来后若只处理一条就回去接着等，剩下的消息不会再次触发唤醒——但队列非空又让它立刻返回，于是变成不阻塞的忙等循环。所以醒来后一定要用 <code>while (PeekMessageW(..., PM_REMOVE))</code> <strong>循环取到空为止</strong>。<br>另一个坑：<code>QS_ALLINPUT</code> 不含 <code>QS_ALLPOSTMESSAGE</code> 的全部语义差异，跨版本行为有细微出入；只想被"发送过来的消息"唤醒时用 <code>QS_SENDMESSAGE</code> 更准。<br>更根本的建议：<strong>能不在 UI 线程等就别等</strong>。让后台线程干完后 <code>PostMessageW</code> 通知 UI，是更省事也更不容易错的结构。</p></div>
 
 
 <h2 id="a5-timer">5.4 定时器</h2>
@@ -4183,7 +4183,7 @@ DWORD_PTR r;
 <tr><td class="nw">CallNextHookEx</td><td class="nw">把消息传给钩子链上的下一个</td><td><strong>不调就等于把别人的钩子全废了</strong>，包括输入法和辅助功能</td></tr>
 <tr><td class="nw">UnhookWindowsHookEx</td><td class="nw">卸载钩子</td><td>进程退出前必须卸；漏卸会把 DLL 一直钉在别人的进程里</td></tr>
 <tr><td class="nw">SetWinEventHook</td><td>监听<strong>无障碍事件</strong>（窗口创建、焦点变化、名称改变）</td><td>想"监视系统里发生了什么"时的首选：可以跨进程<strong>不注入</strong>，安全得多</td></tr>
-<tr><td class="nw">RegisterHotKey</td><td class="nw">注册全局热键</td><td>只为热键而装键盘钩子是杀鸡用牛刀，这个才是正规入口</td></tr>
+<tr><td class="nw">RegisterHotKey</td><td class="nw">注册全局热键</td><td>只为热键而安装键盘钩子代价过大，这个才是正规入口</td></tr>
 </tbody></table>
 
 <h3 id="fn-SetWindowsHookExW">SetWindowsHookExW</h3>
@@ -6191,7 +6191,7 @@ DrawContent(hdc);
 RestoreDC(hdc, -1);                            <span class="cm">// 连裁剪区一起还原</span></code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 330px"><span class="t">🔴 区域是 GDI 对象，泄漏起来悄无声息</span><p><strong>① 每个 <code>CreateXxxRgn</code> 都要配一个 <code>DeleteObject</code>。</strong>包括 <code>CombineRgn</code> 的那个目标区域——它是你自己建的。GDI 对象泄漏不会立刻出问题，但每个进程有 10000 个的配额，用完之后所有绘制 API 集体失败，界面变成一片空白，而且崩溃点离泄漏点十万八千里。<br><strong>② 选进 DC 的区域不能删。</strong>和画笔画刷一样，正在被 DC 使用的对象删不掉。先 <code>SelectClipRgn(hdc, NULL)</code> 再删。<br><strong>③ <code>SetWindowRgn</code> 是例外：句柄交出去就不归你了</strong>，再 <code>DeleteObject</code> 就是重复释放。<br><strong>④ <code>BeginPaint</code> 已经替你裁好了。</strong><code>WM_PAINT</code> 里拿到的 DC 自带"无效区"裁剪，你画到无效区之外是白费力气但不会出错——利用 <code>ps.rcPaint</code> 主动跳过不需要重画的内容，才是省时间的正道。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 330px"><span class="t">🔴 区域是 GDI 对象，泄漏起来悄无声息</span><p><strong>① 每个 <code>CreateXxxRgn</code> 都要配一个 <code>DeleteObject</code>。</strong>包括 <code>CombineRgn</code> 的那个目标区域——它是你自己建的。GDI 对象泄漏不会立刻出问题，但每个进程有 10000 个的配额，用完之后所有绘制 API 集体失败，界面变成一片空白，而且崩溃的位置与泄漏的位置相距很远。<br><strong>② 选进 DC 的区域不能删。</strong>和画笔画刷一样，正在被 DC 使用的对象删不掉。先 <code>SelectClipRgn(hdc, NULL)</code> 再删。<br><strong>③ <code>SetWindowRgn</code> 是例外：句柄交出去就不归你了</strong>，再 <code>DeleteObject</code> 就是重复释放。<br><strong>④ <code>BeginPaint</code> 已经替你裁好了。</strong><code>WM_PAINT</code> 里拿到的 DC 自带"无效区"裁剪，画到无效区之外不会出错，但也不会显示——利用 <code>ps.rcPaint</code> 主动跳过不需要重画的内容，才是省时间的正道。</p></div>
 
 <h2 id="a7-path">7.7 路径</h2>
 
@@ -6252,7 +6252,7 @@ SelectClipRgn(hdc, <span class="kw">nullptr</span>);
 DeleteObject(rgn);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 365px"><span class="t">🟡 路径是一次性的，而且不是所有绘图函数都能录进去</span><p><strong>① 用完即毁。</strong><code>StrokePath</code> / <code>FillPath</code> / <code>PathToRegion</code> 任意一个调用后，DC 里的路径就没了。既要填充又要单独描边一次的话，用 <code>StrokeAndFillPath</code>，或者把绘制过程录两遍。<br><strong>② 能录的只有"矢量"调用。</strong><code>MoveToEx</code>/<code>LineTo</code>/<code>PolyBezier</code>/<code>Arc</code>/<code>Rectangle</code>/<code>Ellipse</code>/<code>TextOut</code> 这些可以；<code>BitBlt</code>、<code>SetPixel</code>、<code>FillRect</code>（它走的是刷子填充而非路径）不行——它们在 BeginPath/EndPath 之间会被<strong>直接执行掉</strong>而不是录制，行为看起来很怪。<br><strong>③ 填充规则决定"洞"。</strong>五角星这类自交叉图形，<code>ALTERNATE</code>（默认）中间是空的，<code>WINDING</code> 是实的。用 <code>SetPolyFillMode</code> 选，这不是 bug 是两种标准规则。<br><strong>④ 想要抗锯齿？GDI 给不了。</strong>GDI 的路径描边是硬边的。要平滑曲线得用 GDI+（<code>Graphics::DrawPath</code>）或 Direct2D。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 365px"><span class="t">🟡 路径是一次性的，而且不是所有绘图函数都能录进去</span><p><strong>① 用完即毁。</strong><code>StrokePath</code> / <code>FillPath</code> / <code>PathToRegion</code> 任意一个调用后，DC 里的路径就没了。既要填充又要单独描边一次的话，用 <code>StrokeAndFillPath</code>，或者把绘制过程录两遍。<br><strong>② 能录的只有"矢量"调用。</strong><code>MoveToEx</code>/<code>LineTo</code>/<code>PolyBezier</code>/<code>Arc</code>/<code>Rectangle</code>/<code>Ellipse</code>/<code>TextOut</code> 这些可以；<code>BitBlt</code>、<code>SetPixel</code>、<code>FillRect</code>（它走的是刷子填充而非路径）不行——它们在 BeginPath/EndPath 之间会被<strong>直接执行掉</strong>而不是录制，行为与预期不符。<br><strong>③ 填充规则决定"洞"。</strong>五角星这类自交叉图形，<code>ALTERNATE</code>（默认）中间是空的，<code>WINDING</code> 是实的。用 <code>SetPolyFillMode</code> 选，这不是 bug 是两种标准规则。<br><strong>④ 想要抗锯齿？GDI 给不了。</strong>GDI 的路径描边是硬边的。要平滑曲线得用 GDI+（<code>Graphics::DrawPath</code>）或 Direct2D。</p></div>
 
 </section>
 
@@ -7058,7 +7058,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 </tbody></table>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 331px"><span class="t">🔴 三个真会咬人的坑</span><p><strong>① 通知码是"负数"，别把 code 当无符号数比大小。</strong><code>NMHDR.code</code> 类型是 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>NM_FIRST</code> 是 <code>0U</code>，往下减）。所以 <code>LVN_ITEMCHANGED</code> 的实际值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。用 <code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_FIRST &amp;&amp; code &lt; LVN_LAST)</code> 这类范围判断就会全乱——要比范围，两边一起转成 <code>int</code>。<br><strong>② 结构体强转必须先确认 code。</strong>处理 <code>LVN_*</code> 时转成 <code>LPNMTREEVIEW</code>，编译器一句话不说，运行时读到的是别人的内存。<strong>确认通知码 → 再强转</strong>，顺序不能反。<br><strong>③ 指针的生命周期只有这一次调用。</strong><code>lParam</code> 指向的结构体通常在控件的栈上，<strong>你返回之后就没了</strong>。要留着用必须自己拷贝一份，存指针就是悬垂。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 331px"><span class="t">🔴 三处最容易出错的地方</span><p><strong>① 通知码是"负数"，别把 code 当无符号数比大小。</strong><code>NMHDR.code</code> 类型是 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>NM_FIRST</code> 是 <code>0U</code>，往下减）。所以 <code>LVN_ITEMCHANGED</code> 的实际值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。用 <code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_FIRST &amp;&amp; code &lt; LVN_LAST)</code> 这类范围判断就会全乱——要比范围，两边一起转成 <code>int</code>。<br><strong>② 结构体强转必须先确认 code。</strong>处理 <code>LVN_*</code> 时转成 <code>LPNMTREEVIEW</code>，编译器不会报错，运行时读到的是别的内存。<strong>确认通知码 → 再强转</strong>，顺序不能反。<br><strong>③ 指针的生命周期只有这一次调用。</strong><code>lParam</code> 指向的结构体通常在控件的栈上，<strong>你返回之后就没了</strong>。要留着用必须自己拷贝一份，存指针就是悬垂。</p></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">🔵 返回值有时是有意义的</span><p>多数 <code>WM_NOTIFY</code> 返回 0 即可，但有一批通知是<strong>在征求你的同意</strong>，返回值决定控件接下来的行为：<code>TVN_SELCHANGING</code> 返回 TRUE 表示"不许换选中项"；<code>LVN_ENDLABELEDIT</code> 返回 FALSE 表示"拒绝这次改名"；<code>NM_CUSTOMDRAW</code> 更是要靠返回值（<code>CDRF_NOTIFYITEMDRAW</code> 等）告诉控件"下一阶段还要不要叫我"。<br>而对话框过程要格外小心：<strong>对话框的返回值要通过 <code>SetWindowLongPtrW(hDlg, DWLP_MSGRESULT, 结果)</code> 交付</strong>，直接 <code>return</code> 是无效的——这是对话框过程与窗口过程的一处根本差异。</p></div>
 
@@ -7269,9 +7269,9 @@ ofn.Flags       = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 229px"><span class="t">🟡 OFN_NOCHANGEDIR 几乎总该加上</span><p>不加这个标志，对话框会<strong>把进程的当前工作目录改成用户浏览到的那个目录</strong>。后果很隐蔽：你后面用相对路径打开配置文件时会读错位置；更糟的是当前目录一旦停在某个 U 盘或网络盘上，那个盘就<strong>无法弹出</strong>了（进程占着它）。<br>另一条相关建议：拿到路径后别急着 <code>CreateFileW</code>，用户可能在对话框和你的调用之间删掉了文件——失败分支照样要写。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 229px"><span class="t">🟡 OFN_NOCHANGEDIR 几乎总该加上</span><p>不加这个标志，对话框会<strong>把进程的当前工作目录改成用户浏览到的那个目录</strong>。后果很隐蔽：你后面用相对路径打开配置文件时会读错位置；更糟的是当前目录一旦停在某个 U 盘或网络盘上，那个盘就<strong>无法弹出</strong>了（进程占着它）。<br>另一条相关建议：拿到路径后不要立刻 <code>CreateFileW</code>，用户可能在对话框和你的调用之间删掉了文件——失败分支照样要写。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 232px"><span class="t">🔵 Vista 之后的正规做法是 IFileOpenDialog</span><p><code>GetOpenFileNameW</code> 至今可用、也不会被移除，但它是 Win95 时代的 C 接口：多选路径要手工解析双零串、加自定义控件要写钩子过程、没有"最近位置""收藏夹"的现代交互。<br>Vista 起微软给出的是 COM 接口 <strong><code>IFileOpenDialog</code> / <code>IFileSaveDialog</code></strong>（在 <code>shobjidl.h</code>）：多选直接给你一个 <code>IShellItemArray</code>，能设默认文件夹、能加自定义控件、能返回<strong>非文件系统对象</strong>（如"这台电脑"下的设备）。新写的程序建议直接用它，<code>GetOpenFileNameW</code> 留给"几行代码搞定"的小工具和维护老代码。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 232px"><span class="t">🔵 Vista 之后的正规做法是 IFileOpenDialog</span><p><code>GetOpenFileNameW</code> 至今可用、也不会被移除，但它是 Win95 时代的 C 接口：多选路径要手工解析双零串、加自定义控件要写钩子过程、没有"最近位置""收藏夹"的现代交互。<br>Vista 起微软给出的是 COM 接口 <strong><code>IFileOpenDialog</code> / <code>IFileSaveDialog</code></strong>（在 <code>shobjidl.h</code>）：多选直接给你一个 <code>IShellItemArray</code>，能设默认文件夹、能加自定义控件、能返回<strong>非文件系统对象</strong>（如"这台电脑"下的设备）。新写的程序建议直接用它，<code>GetOpenFileNameW</code> 留给几行代码即可完成的小工具，以及维护老代码。</p></div>
 
 <h3 id="fn-ChooseColorW">ChooseColorW / ChooseFontW</h3>
 

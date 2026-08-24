@@ -2993,7 +2993,7 @@ SetThreadpoolTimer(timer, &amp;due, 1000, 0);</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 本章要点回顾</span><p><code>SetTimer</code>/<code>KillTimer</code> 装拆闹钟，<code>WM_TIMER</code> 是一条低优先级、不堆积、有空才送的合成消息；它够用于秒级的界面更新，但不精确、会迟到。<strong>永远用真实时钟计时，把定时器当提醒而非计数器。</strong>需要高精度、后台并发或平滑动画时，转向等待定时器、线程池定时器与合成器，并记得跨线程更新界面要用 <code>PostMessage</code> 回到 UI 线程。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 60625px;--thin-h:60625px">
+<section class="chapter" style="contain-intrinsic-size:auto 60659px;--thin-h:60659px">
 <h1 id="w9"><span class="part">第 9 章</span>子窗口控件与通用控件</h1>
 
 <p>前面几章里，窗口上的每一个像素都是我们自己在 <code>WM_PAINT</code> 里画的，每一次鼠标点击都是我们自己解析坐标判断的。如果按钮、输入框、列表这些东西也要这样从零造，Windows 编程就没法干了。好消息是：<strong>系统早就替你把这些"零件"写好了</strong>。它们叫<strong>控件（Control）</strong>——本质上就是一批系统预先注册好窗口类、预先写好窗口过程的<strong>子窗口</strong>。你用 <code>CreateWindowExW</code> 把它们"生"在自己窗口里，它们就会自己绘制、自己响应键盘鼠标，只在"有事发生"时通知你。</p>
@@ -4432,20 +4432,20 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 
 <h2 id="w9-wmnotify">9.10 WM_NOTIFY：通用控件的汇报通道</h2>
 
-<p>上一节把通用控件请了出来。但你一上手就会撞到一件事：<strong>之前学会的那套 <code>WM_COMMAND</code> 处理法，在它们身上完全不管用</strong>。通知码是没见过的名字，<code>lParam</code> 也不再是一个老实的控件句柄。</p>
+<p>通用控件不使用 <code>WM_COMMAND</code> 汇报。它们的通知码属于另一套命名体系，<code>lParam</code> 也不再是控件句柄，而是一个结构体指针。</p>
 
-<p>这不是微软换口味，是 <code>WM_COMMAND</code> 真的装不下了。</p>
+<p>改换通道的原因是 <code>WM_COMMAND</code> 的两个参数已经没有空余位置。</p>
 
-<h3 id="w9-notify-why">WM_COMMAND 到底卡在哪</h3>
+<h3 id="w9-notify-why">WM_COMMAND 的限制在哪里</h3>
 
-<p>回想 9.2 那张图，Win32 下一条 <code>WM_COMMAND</code> 的两个参数是这样分配的：</p>
+<p>回看 9.2 那张图，Win32 下一条 <code>WM_COMMAND</code> 的两个参数是这样分配的：</p>
 
 <pre style="contain-intrinsic-size:auto 87px"><code>wParam = MAKEWPARAM(控件 ID, 通知码)    <span class="cm">// 低 16 位 ID，高 16 位通知码</span>
 lParam = (LPARAM)控件句柄               <span class="cm">// 整整 32/64 位，全被句柄占满</span></code></pre>
 
-<p>关键在第二行：<strong><code>lParam</code> 已经被句柄用光了，一个字节都不剩</strong>。于是控件能告诉你的全部信息，就只有"谁"和"发生了哪一类事"两件——通知码那 16 位里连个数字都塞不进去。</p>
+<p>关键在第二行：<strong><code>lParam</code> 已被控件句柄占满，没有剩余空间</strong>。于是控件能传达的信息只剩两项——"谁发的"和"属于哪一类事件"。通知码那 16 位是一个枚举值，本身也带不了数据。</p>
 
-<p>对按钮来说这够了：<code>BN_CLICKED</code> 说完就没别的可说。可是当用户在 ListView 的报表视图里双击了某一格，你至少想知道<strong>五件事</strong>：</p>
+<p>对按钮而言这已经足够，<code>BN_CLICKED</code> 不需要附加信息。但用户在 ListView 的报表视图中双击某一格时，父窗口至少需要知道<strong>五件事</strong>：</p>
 
 <table style="contain-intrinsic-size:auto 223px">
 <thead><tr><th class="nw">你想知道</th><th>WM_COMMAND 能不能给</th></tr></thead>
@@ -4454,13 +4454,13 @@ lParam = (LPARAM)控件句柄               <span class="cm">// 整整 32/64 位
 <tr><td class="nw">发生了什么事</td><td>✅ 能（16 位通知码）</td></tr>
 <tr><td class="nw">点中的是第几行</td><td>❌ 没地方放</td></tr>
 <tr><td class="nw">第几列（子项）</td><td>❌ 没地方放</td></tr>
-<tr><td class="nw">鼠标坐标、Ctrl/Shift 按没按</td><td>❌ 没地方放</td></tr>
+<tr><td class="nw">鼠标坐标、Ctrl/Shift 是否按下</td><td>❌ 没地方放</td></tr>
 </tbody>
 </table>
 
-<p>硬要在旧结构里挤，只有两条路：要么给每种信息再发一条消息（那父窗口就得自己把几条消息拼回一次事件，还得应付乱序），要么让控件先存起来、等父窗口反过来发消息查询（多一次往返，而且信息随时可能已经变了）。<strong>两条都难看。</strong></p>
+<p>在旧结构里补救只有两条路：一是每种信息各发一条消息，父窗口需要自己把几条消息拼回一次事件，还要处理乱序；二是控件先存着，等父窗口反过来发消息查询，多一次往返，而且期间信息可能已经变了。<strong>两条都不可取。</strong></p>
 
-<p>Windows 95 随通用控件一起给出的答案干脆得多：<strong>既然 <code>lParam</code> 装不下数据，那就让它装一个<em>指针</em>——指向一个想多大就多大的结构体。</strong></p>
+<p>Windows 95 随通用控件给出的方案是：<strong>让 <code>lParam</code> 不再存句柄，改存一个指针，指向一个可以按需扩展的结构体。</strong></p>
 
 <h3 id="w9-notify-nmhdr">NMHDR：用"共同前缀"模拟继承</h3>
 
@@ -4475,7 +4475,7 @@ lParam = (LPNMHDR)             <span class="cm">// ★ 全部信息都挂在这�
     UINT     code;       <span class="cm">// 发生了什么：32 位，管够</span>
 } NMHDR;</code></pre>
 
-<p>但只有三个字段的话，跟原来也没差多少。真正的机关在下一层：<strong>每一种带附加数据的通知，都定义一个"以 <code>NMHDR</code> 打头"的更大结构体。</strong></p>
+<p>仅有这三个字段，信息量与 <code>WM_COMMAND</code> 相当。扩展能力来自下一层约定：<strong>每一种带附加数据的通知，都定义一个"以 <code>NMHDR</code> 开头"的更大结构体。</strong></p>
 
 <pre style="contain-intrinsic-size:auto 277px"><code><span class="kw">typedef struct</span> tagNMITEMACTIVATE {
     NMHDR  hdr;          <span class="cm">// ★ 必须是第一个成员</span>
@@ -4487,9 +4487,9 @@ lParam = (LPNMHDR)             <span class="cm">// ★ 全部信息都挂在这�
     UINT   uKeyFlags;    <span class="cm">// Ctrl / Shift / Alt 状态</span>
 } NMITEMACTIVATE;</code></pre>
 
-<p>"第一个成员"这个要求不是格式洁癖，它是整套机制成立的前提：<strong>C 语言保证结构体第一个成员的地址就是结构体本身的地址</strong>。所以同一个 <code>lParam</code>，你按 <code>LPNMHDR</code> 读能拿到前三个字段，按 <code>LPNMITEMACTIVATE</code> 读就能拿到全部——两个指针指的是同一个地方，只是"你打算读多远"不同。</p>
+<p>"必须是第一个成员"不是排版约定，而是整套机制成立的前提：<strong>C 语言保证结构体第一个成员的地址就是结构体本身的地址</strong>。所以同一个 <code>lParam</code>，按 <code>LPNMHDR</code> 读得到前三个字段，按 <code>LPNMITEMACTIVATE</code> 读得到全部——两个指针指向同一处，区别只在于按哪种类型解释、读取多少字节。</p>
 
-<p>这就是 C 语言模拟继承的经典手法。父窗口因此可以<strong>先按 <code>LPNMHDR</code> 一律接住、读出 <code>code</code> 分派，确认是哪种通知之后再转成对应的大结构体</strong>——不必事先知道来的是什么。</p>
+<p>这是 C 语言模拟继承的经典手法。父窗口因此可以<strong>一律先按 <code>LPNMHDR</code> 接住，读出 <code>code</code> 分派，确认通知种类之后再转成对应的大结构体</strong>，不必事先知道来的是哪一种。</p>
 
 <figure style="contain-intrinsic-size:auto 269px">
 <svg viewBox="0 6 720 186" xmlns="http://www.w3.org/2000/svg" font-size="13" role="img" aria-label="WM_NOTIFY 的 lParam 指向的内存块，按通知码决定当成哪种结构体读取">
@@ -4523,15 +4523,15 @@ lParam = (LPNMHDR)             <span class="cm">// ★ 全部信息都挂在这�
 <rect x="10" y="128" width="700" height="20" rx="4" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
 <text class="svgtext" x="17" y="142" font-size="10.5">LPNMITEMACTIVATE —— 再多出鼠标位置 ptAction、Ctrl/Shift 状态 uKeyFlags</text>
 
-<text class="svgmuted" x="10" y="167" font-size="10.5">① 先读 code 判断是哪一种通知，确认之后才敢强转 —— 转错了读到的是别人的内存，编译器一声不吭。</text>
+<text class="svgmuted" x="10" y="167" font-size="10.5">① 先读 code 判断是哪一种通知，确认之后才敢强转 —— 转错了读到的是别的内存，编译器不会报错。</text>
 <text class="svgmuted" x="10" y="184" font-size="10.5">② 这个指针只在本次调用内有效：你返回之后结构体就没了，要留着用必须自己拷一份。</text>
 </svg>
 <figcaption>WM_NOTIFY 的「共同前缀」设计：同一个 lParam，读多远由通知码决定（原创绘制）</figcaption>
 </figure>
 
-<h3 id="w9-notify-handle">处理模板：先分谁，还是先分什么</h3>
+<h3 id="w9-notify-handle">处理模板：按控件分派，还是按通知码分派</h3>
 
-<p>两种分派顺序，用哪种取决于你的窗口上有几个控件：</p>
+<p>两种分派顺序，取决于窗口上有几个通用控件：</p>
 
 <pre style="contain-intrinsic-size:auto 957px"><code><span class="kw">case</span> WM_NOTIFY: {
     LPNMHDR nm = (LPNMHDR)lParam;
@@ -4568,9 +4568,9 @@ lParam = (LPNMHDR)             <span class="cm">// ★ 全部信息都挂在这�
     <span class="kw">break</span>;      <span class="cm">// 没接的一律落到 DefWindowProcW</span>
 }</code></pre>
 
-<h3 id="w9-notify-codes">通用通知码：任何通用控件都可能发的那一批</h3>
+<h3 id="w9-notify-codes">通用通知码：任何通用控件都可能发送</h3>
 
-<p>以 <code>NM_</code> 开头的这组不属于某个具体控件，谁都可能发。它们的价值在于"一套代码管所有控件"：</p>
+<p>以 <code>NM_</code> 开头的这一组不属于某个具体控件，任何通用控件都可能发送。它们的价值在于一套代码可以覆盖所有控件：</p>
 
 <table style="contain-intrinsic-size:auto 431px">
 <thead><tr><th class="nw">通知码</th><th class="nw">什么时候来</th><th>结构体与备注</th></tr></thead>
@@ -4585,9 +4585,9 @@ lParam = (LPNMHDR)             <span class="cm">// ★ 全部信息都挂在这�
 </tbody>
 </table>
 
-<h3 id="w9-notify-ret">返回值：有一批通知是在征求你的同意</h3>
+<h3 id="w9-notify-ret">返回值：部分通知在征求父窗口的同意</h3>
 
-<p>大多数 <code>WM_NOTIFY</code> 返回 0 就行。但有一类通知的名字带着<strong>进行时</strong>（<code>-ING</code>）或者叫 <code>BEGIN-</code>，它们是在事情发生<em>之前</em>问你一句，返回值决定控件接下来做不做：</p>
+<p>多数 <code>WM_NOTIFY</code> 返回 0 即可。但有一类通知的名字带<strong>进行时</strong>（<code>-ING</code>）或以 <code>BEGIN-</code> 开头，它们在动作发生<em>之前</em>发出，返回值决定控件是否继续：</p>
 
 <table style="contain-intrinsic-size:auto 265px">
 <thead><tr><th class="nw">通知</th><th>返回值的含义</th></tr></thead>
@@ -4603,12 +4603,12 @@ lParam = (LPNMHDR)             <span class="cm">// ★ 全部信息都挂在这�
 
 <div class="note dead" style="contain-intrinsic-size:auto 265px">
 <span class="t">🔴 对话框里返回值要另走一条路</span>
-<p>上面说的"返回 TRUE/FALSE"，指的是<strong>窗口过程</strong>直接 <code>return</code>。<br>但<strong>对话框过程不是窗口过程</strong>：它的返回值被系统征用了，用来表示"这条消息我处理了没有"，你写的 <code>return TRUE</code> 只会被理解成"已处理"，永远传不到控件那里。<br>对话框里必须改成：<code>SetWindowLongPtrW(hDlg, DWLP_MSGRESULT, 你的结果); return TRUE;</code>——把真正的返回值放进那个专用槽位。<br>这是"我照文档写了拒绝改名，可它照样改了"的标准成因，而且不会有任何报错。</p>
+<p>上面说的"返回 TRUE/FALSE"，指的是<strong>窗口过程</strong>直接 <code>return</code>。<br>但<strong>对话框过程不是窗口过程</strong>：它的返回值已被系统占用，用来表示"这条消息处理了没有"。你写的 <code>return TRUE</code> 只会被理解成"已处理"，传不到控件。<br>对话框里必须改成：<code>SetWindowLongPtrW(hDlg, DWLP_MSGRESULT, 你的结果); return TRUE;</code>，把真正的返回值放进这个专用槽位。<br>"按文档写了拒绝改名，控件却照样改了"就是这样来的，而且不会有任何报错。</p>
 </div>
 
-<h3 id="w9-notify-demo">动手：让状态栏认出你点了它哪一格</h3>
+<h3 id="w9-notify-demo">实例：让状态栏认出被点击的是哪一格</h3>
 
-<p>ListView、TreeView 要到后面几节才展开，但状态栏足够小、又实实在在走 <code>WM_NOTIFY</code>，正好拿来把上面的东西跑一遍：</p>
+<p>ListView、TreeView 要到后面几节才展开。状态栏结构简单，同样使用 <code>WM_NOTIFY</code>，适合先把整个流程跑通：</p>
 
 <pre style="contain-intrinsic-size:auto 1555px"><code>#include &lt;commctrl.h&gt;
 #pragma comment(lib, "comctl32.lib")
@@ -4667,9 +4667,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     <span class="kw">return</span> DefWindowProcW(hwnd, msg, wParam, lParam);
 }</code></pre>
 
-<p>三个值得留意的地方：<strong>①</strong> <code>NM_CLICK</code> 在状态栏这里配的是 <code>NMMOUSE</code> 而不是 <code>NMITEMACTIVATE</code>——<strong>同一个通知码，不同控件配的结构体不一样</strong>，查文档时要连控件一起查；<strong>②</strong> 状态栏必须收到 <code>WM_SIZE</code> 才会重新排布自己，父窗口得转发一下；<strong>③</strong> <code>SB_SETPARTS</code> 的最后一格给 <code>-1</code>，是"一直延伸到右边"的约定写法。</p>
+<p>三个值得留意的地方：<strong>①</strong> <code>NM_CLICK</code> 在状态栏这里配的是 <code>NMMOUSE</code> 而不是 <code>NMITEMACTIVATE</code>——<strong>同一个通知码，不同控件配的结构体不一样</strong>，查文档时要连控件一起查；<strong>②</strong> 状态栏必须收到 <code>WM_SIZE</code> 才会重新排布自己，需要父窗口转发；<strong>③</strong> <code>SB_SETPARTS</code> 的最后一格给 <code>-1</code>，是"一直延伸到右边"的约定写法。</p>
 
-<h3 id="w9-notify-vs">和 WM_COMMAND 摆在一起看</h3>
+<h3 id="w9-notify-vs">与 WM_COMMAND 对照</h3>
 
 <table style="contain-intrinsic-size:auto 361px">
 <thead><tr><th class="nw">维度</th><th><code>WM_COMMAND</code></th><th><code>WM_NOTIFY</code></th></tr></thead>
@@ -4686,18 +4686,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 </table>
 
 <div class="note ok" style="contain-intrinsic-size:auto 233px">
-<span class="t">🟢 不用背，判断规则只有一条</span>
-<p>两套机制会长期并存，<code>WM_NOTIFY</code> 没有取代 <code>WM_COMMAND</code>——按钮到今天还是发 <code>BN_CLICKED</code>。<br>该用哪套，不靠记忆，<strong>看通知码的前缀就知道</strong>：<code>xxN_</code> 形式（<code>BN_</code>、<code>EN_</code>、<code>LBN_</code>、<code>CBN_</code>、<code>STN_</code>）走 <code>WM_COMMAND</code>；<code>NM_</code> 和 <code>xxxN_</code> 形式（<code>LVN_</code>、<code>TVN_</code>…）走 <code>WM_NOTIFY</code>。<br>再简单一点：<strong>六个基础控件走 <code>WM_COMMAND</code>，ComCtl32 里的走 <code>WM_NOTIFY</code>。</strong>唯一的例外要留意：v6 按钮的分割箭头（<code>BS_SPLITBUTTON</code>）走的是 <code>WM_NOTIFY</code> 发 <code>BCN_DROPDOWN</code>——新加的功能都往新通道上走。</p>
+<span class="t">🟢 判断规则只有一条</span>
+<p>两套机制会长期并存，<code>WM_NOTIFY</code> 没有取代 <code>WM_COMMAND</code>——按钮到今天还是发 <code>BN_CLICKED</code>。<br>用哪一套不必记忆，<strong>看通知码的前缀即可判断</strong>：<code>xxN_</code> 形式（<code>BN_</code>、<code>EN_</code>、<code>LBN_</code>、<code>CBN_</code>、<code>STN_</code>）走 <code>WM_COMMAND</code>；<code>NM_</code> 和 <code>xxxN_</code> 形式（<code>LVN_</code>、<code>TVN_</code>…）走 <code>WM_NOTIFY</code>。<br>更简短的说法：<strong>六个基础控件走 <code>WM_COMMAND</code>，ComCtl32 提供的控件走 <code>WM_NOTIFY</code>。</strong>唯一需要留意的例外是 v6 按钮的分割箭头（<code>BS_SPLITBUTTON</code>），它走 <code>WM_NOTIFY</code> 发 <code>BCN_DROPDOWN</code>——后加的功能一律走新通道。</p>
 </div>
 
 <div class="note dead" style="contain-intrinsic-size:auto 331px">
-<span class="t">🔴 三个真会咬人的坑</span>
-<p><strong>① 通知码是"负数"，别拿 code 比范围。</strong><code>NMHDR.code</code> 声明成 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>LVN_FIRST</code> 是 <code>0U-100U</code>，往下递减）。所以 <code>LVN_ITEMCHANGED</code> 的真实值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。<code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_LAST &amp;&amp; code &lt; LVN_FIRST)</code> 这类范围判断就全乱了——要比范围，两边一起转 <code>int</code>。<br><strong>② 强转之前必须确认 code。</strong>处理 <code>LVN_*</code> 却转成 <code>LPNMTREEVIEW</code>，编译器一句话不说，运行时读的是别人的内存——而且往往不立刻崩，只是数据莫名其妙。<strong>确认通知码 → 再强转</strong>，顺序不能反。<br><strong>③ 指针的寿命只有这一次调用。</strong><code>WM_NOTIFY</code> 是 <code>Send</code> 出来的，结构体通常在控件的栈上，<strong>你 return 之后它就没了</strong>。想留着用必须整个拷一份，存指针就是悬垂指针。</p>
+<span class="t">🔴 三处最容易出错的地方</span>
+<p><strong>① 通知码是"负数"，不要用 code 做范围判断。</strong><code>NMHDR.code</code> 声明成 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>LVN_FIRST</code> 是 <code>0U-100U</code>，往下递减）。所以 <code>LVN_ITEMCHANGED</code> 的真实值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。<code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_LAST &amp;&amp; code &lt; LVN_FIRST)</code> 这类范围判断会失效——要比较范围，两边都先转成 <code>int</code>。<br><strong>② 强转之前必须确认 code。</strong>处理 <code>LVN_*</code> 却转成 <code>LPNMTREEVIEW</code>，编译器不会报错，运行时读到的是别的内存——而且往往不会立刻崩溃，只表现为数据不对。<strong>确认通知码 → 再强转</strong>，顺序不能反。<br><strong>③ 指针的有效期只有这一次调用。</strong><code>WM_NOTIFY</code> 是 <code>Send</code> 出来的，结构体通常位于控件的栈上，<strong>父窗口返回之后即失效</strong>。需要保留就整体复制一份；只存指针会得到悬垂指针。</p>
 </div>
 
 <div class="note new" style="contain-intrinsic-size:auto 298px">
 <span class="t">🔵 通知只发给"父窗口"，隔了一层就得自己转发</span>
-<p>控件是把 <code>WM_NOTIFY</code> <strong>发给自己的父窗口</strong>的，不会像有些框架那样一路往上冒泡。<br>于是常见的一个坑：你为了排版方便，给 ListView 套了一层容器面板，通知就落在<strong>面板</strong>手里，主窗口什么也收不到。解法是让面板把它转发上去：<code>case WM_NOTIFY: return SendMessageW(GetParent(hwnd), WM_NOTIFY, wParam, lParam);</code>。<br>顺带一个冷知识：控件在发第一条通知前会先问父窗口一句 <code>WM_NOTIFYFORMAT</code>——"你要 ANSI 还是 Unicode 的结构体"。用 <code>DefWindowProcW</code> 注册的窗口自动答 Unicode，所以你平时不用管；但若父窗口是 A 版而控件按 W 版填结构，字符串字段就会是乱码。这也是"不要 A 版 W 版混用"的又一条理由。</p>
+<p>控件把 <code>WM_NOTIFY</code> <strong>发给自己的父窗口</strong>，不会像有些框架那样逐层向上传递。<br>由此产生一个常见问题：为排版方便给 ListView 套了一层容器面板，通知就发给了<strong>面板</strong>，主窗口收不到。解决办法是让面板转发：<code>case WM_NOTIFY: return SendMessageW(GetParent(hwnd), WM_NOTIFY, wParam, lParam);</code>。<br>另有一处细节：控件在发第一条通知前，会先用 <code>WM_NOTIFYFORMAT</code> 询问父窗口需要 ANSI 还是 Unicode 的结构体。用 <code>DefWindowProcW</code> 注册的窗口自动回答 Unicode，通常不需要关心；但若父窗口是 A 版而控件按 W 版填写结构体，字符串字段就会成为乱码。这是"不要混用 A 版与 W 版"的又一条理由。</p>
 </div>
 
 <h2 id="w9-listview">9.11 列表视图 ListView：资源管理器的主角</h2>
