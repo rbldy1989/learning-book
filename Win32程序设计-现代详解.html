@@ -2993,7 +2993,7 @@ SetThreadpoolTimer(timer, &amp;due, 1000, 0);</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 本章要点回顾</span><p><code>SetTimer</code>/<code>KillTimer</code> 装拆闹钟，<code>WM_TIMER</code> 是一条低优先级、不堆积、有空才送的合成消息；它够用于秒级的界面更新，但不精确、会迟到。<strong>永远用真实时钟计时，把定时器当提醒而非计数器。</strong>需要高精度、后台并发或平滑动画时，转向等待定时器、线程池定时器与合成器，并记得跨线程更新界面要用 <code>PostMessage</code> 回到 UI 线程。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 60659px;--thin-h:60659px">
+<section class="chapter" style="contain-intrinsic-size:auto 60695px;--thin-h:60695px">
 <h1 id="w9"><span class="part">第 9 章</span>子窗口控件与通用控件</h1>
 
 <p>前面几章里，窗口上的每一个像素都是我们自己在 <code>WM_PAINT</code> 里画的，每一次鼠标点击都是我们自己解析坐标判断的。如果按钮、输入框、列表这些东西也要这样从零造，Windows 编程就没法干了。好消息是：<strong>系统早就替你把这些"零件"写好了</strong>。它们叫<strong>控件（Control）</strong>——本质上就是一批系统预先注册好窗口类、预先写好窗口过程的<strong>子窗口</strong>。你用 <code>CreateWindowExW</code> 把它们"生"在自己窗口里，它们就会自己绘制、自己响应键盘鼠标，只在"有事发生"时通知你。</p>
@@ -4690,9 +4690,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 <p>两套机制会长期并存，<code>WM_NOTIFY</code> 没有取代 <code>WM_COMMAND</code>——按钮到今天还是发 <code>BN_CLICKED</code>。<br>用哪一套不必记忆，<strong>看通知码的前缀即可判断</strong>：<code>xxN_</code> 形式（<code>BN_</code>、<code>EN_</code>、<code>LBN_</code>、<code>CBN_</code>、<code>STN_</code>）走 <code>WM_COMMAND</code>；<code>NM_</code> 和 <code>xxxN_</code> 形式（<code>LVN_</code>、<code>TVN_</code>…）走 <code>WM_NOTIFY</code>。<br>更简短的说法：<strong>六个基础控件走 <code>WM_COMMAND</code>，ComCtl32 提供的控件走 <code>WM_NOTIFY</code>。</strong>唯一需要留意的例外是 v6 按钮的分割箭头（<code>BS_SPLITBUTTON</code>），它走 <code>WM_NOTIFY</code> 发 <code>BCN_DROPDOWN</code>——后加的功能一律走新通道。</p>
 </div>
 
-<div class="note dead" style="contain-intrinsic-size:auto 331px">
+<div class="note dead" style="contain-intrinsic-size:auto 367px">
 <span class="t">🔴 三处最容易出错的地方</span>
-<p><strong>① 通知码是"负数"，不要用 code 做范围判断。</strong><code>NMHDR.code</code> 声明成 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>LVN_FIRST</code> 是 <code>0U-100U</code>，往下递减）。所以 <code>LVN_ITEMCHANGED</code> 的真实值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。<code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_LAST &amp;&amp; code &lt; LVN_FIRST)</code> 这类范围判断会失效——要比较范围，两边都先转成 <code>int</code>。<br><strong>② 强转之前必须确认 code。</strong>处理 <code>LVN_*</code> 却转成 <code>LPNMTREEVIEW</code>，编译器不会报错，运行时读到的是别的内存——而且往往不会立刻崩溃，只表现为数据不对。<strong>确认通知码 → 再强转</strong>，顺序不能反。<br><strong>③ 指针的有效期只有这一次调用。</strong><code>WM_NOTIFY</code> 是 <code>Send</code> 出来的，结构体通常位于控件的栈上，<strong>父窗口返回之后即失效</strong>。需要保留就整体复制一份；只存指针会得到悬垂指针。</p>
+<ul>
+<li><strong>通知码是"负数"，不要用 code 做范围判断。</strong><code>NMHDR.code</code> 声明成 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>LVN_FIRST</code> 是 <code>0U-100U</code>，往下递减）。所以 <code>LVN_ITEMCHANGED</code> 的真实值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。<code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_LAST &amp;&amp; code &lt; LVN_FIRST)</code> 这类范围判断会失效——要比较范围，两边都先转成 <code>int</code>。</li>
+<li><strong>强转之前必须确认 code。</strong>处理 <code>LVN_*</code> 却转成 <code>LPNMTREEVIEW</code>，编译器不会报错，运行时读到的是别的内存——而且往往不会立刻崩溃，只表现为数据不对。<strong>确认通知码 → 再强转</strong>，顺序不能反。</li>
+<li><strong>指针的有效期只有这一次调用。</strong><code>WM_NOTIFY</code> 是 <code>Send</code> 出来的，结构体通常位于控件的栈上，<strong>父窗口返回之后即失效</strong>。需要保留就整体复制一份；只存指针会得到悬垂指针。</li>
+</ul>
 </div>
 
 <div class="note new" style="contain-intrinsic-size:auto 298px">
@@ -9315,7 +9319,7 @@ MATHLIB_API <span class="kw">int</span> AddNumbers(<span class="kw">int</span> a
 <div class="note dead" style="contain-intrinsic-size:auto 131px"><span class="t">🔴 发布铁律</span><p>给别人 <strong>Debug 版</strong>是经典翻车点：Debug 版依赖的调试运行库(ucrtbased.dll 等)微软<strong>不允许再分发</strong>，对方大概率没有。<strong>发布一律用 Release 配置。</strong></p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 6530px;--thin-h:6530px">
+<section class="chapter" style="contain-intrinsic-size:auto 6633px;--thin-h:6633px">
 <h1 id="w16"><span class="part">第 15 章</span>文件、注册表与剪贴板</h1>
 <p>窗口画得再漂亮，程序总要落地干活：读写文件、记住配置、和别的程序交换数据。这一章把三样日常武器一次配齐。</p>
 
@@ -9391,7 +9395,12 @@ WriteFile(h, utf8, cb - 1, &amp;written, NULL);    <span class="cm">// -1 去掉
 <p>现代读写一对 API 就够(内部帮你打开/关闭键)：</p>
 <pre style="contain-intrinsic-size:auto 356px"><code><span class="cl"><span class="cm">// 写一个字符串值(键不存在会自动创建)</span></span><span class="cl"><span class="kw">const</span> wchar_t* v = L"D:\\work";</span><span class="cl">RegSetKeyValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath",</span><span class="cl"><span class="cc" style="min-width:73.0ch">                REG_SZ, v, (DWORD)((wcslen(v) + 1) * <span class="kw">sizeof</span>(wchar_t)));</span><span class="cm">// cb：字节数！</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 读回来</span></span><span class="cl">wchar_t buf[260];</span><span class="cl">DWORD cb = <span class="kw">sizeof</span>(buf);</span><span class="cl">LSTATUS s = RegGetValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath",</span><span class="cl">                         RRF_RT_REG_SZ, NULL, buf, &amp;cb);</span><span class="cl"><span class="cc" style="min-width:73.0ch"><span class="kw">if</span> (s == ERROR_SUCCESS) { <span class="cm">/* buf 可用 */</span> }</span><span class="cm">// 注意：错误码直返风格</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 删除</span></span><span class="cl">RegDeleteKeyValueW(HKEY_CURRENT_USER, L"Software\\MyTool", L"LastPath");</span></code></pre>
 <p>维护老代码会见到经典五步族：<code>RegOpenKeyExW → RegQueryValueExW / RegSetValueExW → RegCloseKey</code>，逻辑相同、更啰嗦而已。</p>
-<div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">🔵 要写 HKLM / 需要管理员权限怎么办</span><p>进程不能运行到一半「升权」——提权是<strong>启动那一刻</strong>决定的。两条路：① 整个程序要求管理员：项目属性 → 清单工具 → UAC 执行级别 = <code>requireAdministrator</code>；② 只在需要时提权：<code>ShellExecuteW(NULL, L"runas", 自己的exe路径, 参数, NULL, SW_SHOWNORMAL)</code> 以管理员身份再启动一个自己。另外，小工具存配置的另一条路是 INI 文件放 exe 旁边(<code>GetPrivateProfileStringW</code>/<code>WritePrivateProfileStringW</code>)，绿色免安装软件的常规做法。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 334px"><span class="t">🔵 要写 HKLM / 需要管理员权限怎么办</span><p>进程不能运行到一半「升权」——提权是<strong>启动那一刻</strong>决定的。两条路：</p>
+<ul>
+<li><strong>整个程序都要求管理员</strong>：项目属性 → 清单工具 → UAC 执行级别 = <code>requireAdministrator</code>。程序一启动就弹 UAC，非管理员无法运行。</li>
+<li><strong>只在需要时提权</strong>：<code>ShellExecuteW(NULL, L"runas", 自己的exe路径, 参数, NULL, SW_SHOWNORMAL)</code>，以管理员身份再启动一个自己，让新进程去干那件需要权限的事。</li>
+</ul>
+<p>另外，小工具存配置的另一条路是把 INI 文件放在 exe 旁边（<code>GetPrivateProfileStringW</code> / <code>WritePrivateProfileStringW</code>），这是绿色免安装软件的常规做法。</p></div>
 
 <h2 id="w16-sysinfo">15.8 常用系统信息拼盘</h2>
 <pre style="contain-intrinsic-size:auto 302px"><code><span class="cl"><span class="cc" style="min-width:59.0ch">GetTickCount64();</span><span class="cm">// 开机以来毫秒数(测耗时够用；高精度用 QueryPerformanceCounter)</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">Sleep(200);</span><span class="cm">// 当前线程睡 200ms(别在 UI 线程用！)</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">GetSystemMetrics(SM_CXSCREEN);</span><span class="cm">// 主屏宽度像素；SM_CYSCREEN 高度</span></span><span class="cl"><span class="cc" style="min-width:59.0ch">GetComputerNameW(buf, &amp;size);</span><span class="cm">// 计算机名；GetUserNameW 在 advapi32</span></span><span class="cl">GetEnvironmentVariableW(L"PATH", buf, n);<span class="cm">// 环境变量</span></span><span class="cl"> </span><span class="cl"><span class="cm">// 标准目录(别硬编码 C:\Users\...)：</span></span><span class="cl">#include &lt;shlobj.h&gt;</span><span class="cl">PWSTR docs = NULL;</span><span class="cl"><span class="cc" style="min-width:59.0ch">SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &amp;docs);</span><span class="cm">// 我的文档</span></span><span class="cl"><span class="cm">// 用完：CoTaskMemFree(docs);</span></span></code></pre>
