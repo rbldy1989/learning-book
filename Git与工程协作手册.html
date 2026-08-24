@@ -281,7 +281,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 40165px;--thin-h:12292px">
+<section class="chapter" style="contain-intrinsic-size:auto 40452px;--thin-h:12292px">
 <h1 id="g1"><span class="part">机制</span>Git 到底存了什么:对象库、引用与三棵树</h1>
 <p>只会 <code>add</code> / <code>commit</code> / <code>push</code> 的人不是不会用 Git,是脑子里没有 Git 的数据结构。命令背了一大堆,遇到没背过的组合就只能删掉重 clone。这一章把 Git 拆成三样东西——<strong>对象库</strong>(内容按哈希存的一堆不可变对象)、<strong>引用</strong>(一批只装着 40 位哈希的小文件)、<strong>索引</strong>(下一次提交的草稿)。所有命令都只是在动这三样里的一样或几样。知道这一点,<code>reset --soft</code> 和 <code>reset --hard</code> 的区别不必硬记,看它动了哪几棵树就够了。</p>
 <p>五节按「先有东西,再有指针,再有搬运,最后看一次完整过程」排:<a href="#g1-why">1.1</a> 先摆出三板斧用户的四个典型症状,说明为什么倒过来讲(先命令后机制)一定会忘;<a href="#g1-object">1.2</a> 用 <code>git cat-file</code> 把一次真实提交层层拆开,看到 commit → tree → blob 这条链和每个对象的真实哈希;<a href="#g1-ref">1.3</a> 说明分支、HEAD、标签、reflog 全是引用,「切换分支」本质是改一行文本;<a href="#g1-three-trees">1.4</a> 把工作区、索引、HEAD 三棵树摆成一排,四个日常动作各自在它们之间搬哪一段;<a href="#g1-inside">1.5</a> 最后用底层命令手工造出一个提交,把前面四节串成一条完整时序。这一章的每条输出都是在 git 2.54.0.windows.1 上真跑出来抄下来的,你照着敲能得到一模一样的哈希。学完这一章再去看 <a href="#g2-status">2.1</a> 的日常命令,会发现它们只是这三样东西的不同组合。</p>
@@ -466,7 +466,13 @@ $ git cat-file -p HEAD:src
 
 $ git cat-file -p HEAD:README.md
 hello git</code></pre>
-<p>四层拆完,四条结论落地:① commit 对象里<strong>没有文件</strong>,只有一个根 tree 的哈希——所以「提交是快照不是差异」这句话是字面意义的,commit 指向的是整棵目录树;② 首次提交没有 <code>parent</code> 行,后续提交才有;③ 文件名<strong>只存在于 tree 的条目里</strong>,blob 不知道自己叫什么——这就是为什么 Git 不需要记录「重命名」这个动作,重命名只是新 tree 里换了个名字指向同一个 blob;④ <code>100644</code> 是文件模式(普通文件),<code>100755</code> 是可执行,<code>040000</code> 是子目录,<code>120000</code> 是符号链接。Git 只记这四种,不记别的权限位。</p></div>
+<p>四层拆完,四条结论落地:</p>
+<ul>
+<li>commit 对象里<strong>没有文件</strong>,只有一个根 tree 的哈希——所以「提交是快照不是差异」这句话是字面意义的,commit 指向的是整棵目录树。</li>
+<li>首次提交没有 <code>parent</code> 行,后续提交才有。</li>
+<li>文件名<strong>只存在于 tree 的条目里</strong>,blob 不知道自己叫什么——这就是为什么 Git 不需要记录「重命名」这个动作,重命名只是新 tree 里换了个名字指向同一个 blob。</li>
+<li><code>100644</code> 是文件模式(普通文件),<code>100755</code> 是可执行,<code>040000</code> 是子目录,<code>120000</code> 是符号链接。Git 只记这四种,不记别的权限位。</li>
+</ul></div>
 <div class="deep"><h3>完整示例:哈希是怎么算出来的,以及为什么内容相同就只存一份</h3>
 <p>对象名不是随便发的编号,是可以手算的。<code>git hash-object</code> 给的结果,和自己按格式拼字节再算 SHA-1 完全一致:</p>
 <pre style="contain-intrinsic-size:auto 169px"><code>$ printf <span>'hello git\n'</span> | git hash-object --stdin
@@ -793,7 +799,13 @@ HEAD is now at d58d008 c2
                    HEAD=c2  索引=v2  工作区=v2   status: (干净)</code></pre>
 <p>三行结果连起来看就是一条规律:<strong>从右往左依次多推倒一棵树</strong>。<code>--soft</code> 停在引用,<code>--mixed</code> 推到索引,<code>--hard</code> 推到工作区。所以 <code>reset --soft HEAD~1</code> 是「把上一个提交拆开重做」的标准动作——改动原封不动留在索引里,直接 <code>git commit</code> 就能换个提交信息重来。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 reset --hard 是本书第一个真会丢东西的命令</span><p><strong>丢什么</strong>:工作区和索引里所有未提交的改动,包括你正编辑到一半的文件。<strong>能不能救</strong>:分两种——被 <code>reset</code> 掉的<strong>提交</strong>能救(<code>git reflog</code> 找到哈希,<code>git reset --hard &lt;哈希&gt;</code> 或 <code>git branch rescue &lt;哈希&gt;</code>);<code>git add</code> 过的内容也能救(blob 已经进对象库,<code>git fsck --lost-found</code> 能列出 <code>dangling blob</code>);<strong>从没 add 过</strong>的工作区改动<strong>救不回来</strong>,Git 从来没见过它。<strong>怎么救</strong>:动手前先 <code>git stash -u</code> 或者随便 <code>git add -A</code> 一下——只要内容进了对象库,后面总有办法。</p></div>
-<p>值得多问一句:<strong>为什么要有索引这一层?</strong>别的版本控制系统大多只有「工作区」和「已提交」两态,提交时把工作区整个交上去。Git 多插一层的代价是多一个概念、多一步 <code>add</code>,换来的是三件别处做不到的事。① <strong>部分提交</strong>:工作区里混着两件事时,可以只把其中一件放进索引再提交(<a href="#g2-commit">2.3</a> 的 <code>add -p</code>)。② <strong>逐步解决冲突</strong>:合并冲突时索引能同时存三个版本,解一个文件就 <code>add</code> 一个,进度是可持久化的(<a href="#g3-conflict">3.3</a>)。③ <strong>提交前的最后一道检查</strong>:<code>git diff --cached</code> 看到的就是即将成为历史的那份内容,而不是「我猜工作区现在是什么样」。这三件事都建立在「索引是一份可以独立编辑的提交草稿」之上,而不是「工作区的临时副本」。</p>
+<p>值得多问一句:<strong>为什么要有索引这一层?</strong>别的版本控制系统大多只有「工作区」和「已提交」两态,提交时把工作区整个交上去。Git 多插一层的代价是多一个概念、多一步 <code>add</code>,换来的是三件别处做不到的事:</p>
+<ul>
+<li><strong>部分提交</strong>:工作区里混着两件事时,可以只把其中一件放进索引再提交(<a href="#g2-commit">2.3</a> 的 <code>add -p</code>)。</li>
+<li><strong>逐步解决冲突</strong>:合并冲突时索引能同时存三个版本,解一个文件就 <code>add</code> 一个,进度是可持久化的(<a href="#g3-conflict">3.3</a>)。</li>
+<li><strong>提交前的最后一道检查</strong>:<code>git diff --cached</code> 看到的就是即将成为历史的那份内容,而不是「我猜工作区现在是什么样」。</li>
+</ul>
+<p>这三件事都建立在「索引是一份可以独立编辑的提交草稿」之上,而不是「工作区的临时副本」。</p>
 <p>索引的这层设计也解释了一个新手常见的困惑:<strong>为什么改完文件还要 <code>add</code> 一次才能提交</strong>。因为 <code>add</code> 不是「标记这个文件要提交」,而是「把这一刻的内容快照写进对象库并登记进索引」。所以先 <code>add</code> 再改再 <code>commit</code>,提交的是 <code>add</code> 那一刻的内容,不是最新的——这正是前面「三棵树三个值」那个例子里 <code>v2</code> 被提交而 <code>v3</code> 留在工作区的原因。理解这一点之后,<code>git commit -a</code> 就成了一个明确的取舍:它省掉 <code>add</code> 的代价是放弃了「精确选择提交内容」这个能力,而且它<strong>只处理已跟踪文件</strong>,新文件仍然要手动 <code>add</code>。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 分不清用哪个,就问「我要不要动分支指针」</span><p>要挪分支(撤销提交、回退到某个版本)用 <code>reset</code>;只想改某几个文件在索引或工作区里的内容,用 <code>restore</code>。<code>restore</code> 永远不碰引用,所以它不可能让你「丢提交」,只可能丢未提交的改动;<code>reset</code> 不带 <code>--hard</code> 时永远不碰工作区,所以它不可能丢你正在编辑的内容。两条边界记住,就不用记它们各自有几个模式。</p></div></div>
 <div class="deep"><h3 class="deep">机制:索引不只是「暂存区」</h3>
@@ -802,7 +814,11 @@ HEAD is now at d58d008 c2
 100644 8c1384d825dbbe41309b7dc18ee7991a9085c46e 0	file.txt
         ↑ 模式        ↑ blob 哈希                  ↑ 暂存位   ↑ 路径</code></pre>
 <p>第三列的「暂存位」(stage)平时永远是 0,只有<strong>合并冲突</strong>时才会出现 1 / 2 / 3——同一个路径在索引里同时存三份:1 是共同祖先,2 是当前分支(ours),3 是被合并进来的分支(theirs)。冲突时文件里那一堆标记,就是 Git 拿这三份现生成的文本。这条机制是 <a href="#g3-conflict">3.3</a> 的全部底牌。</p>
-<p>索引里还存着每个文件的 stat 信息(大小、mtime、inode 等)。<code>git status</code> 之所以能在几十万文件的仓库里秒回,是因为它先比 stat:stat 没变就认为文件没变,不去读内容算哈希。这也解释了两个现象:① 刚 clone 完或者切完分支的第一次 <code>git status</code> 特别慢(要重建 stat 缓存);② 在某些跨平台挂载或容器卷上 <code>git status</code> 会莫名其妙把所有文件报成 modified(mtime 语义不一致导致 stat 缓存永远失效),这时 <code>git status</code> 会自己刷新索引,而 <code>core.fsmonitor</code>、<code>core.untrackedCache</code> 这些配置就是为这类场景准备的。</p>
+<p>索引里还存着每个文件的 stat 信息(大小、mtime、inode 等)。<code>git status</code> 之所以能在几十万文件的仓库里秒回,是因为它先比 stat:stat 没变就认为文件没变,不去读内容算哈希。这也解释了两个现象:</p>
+<ul>
+<li>刚 clone 完或者切完分支的第一次 <code>git status</code> 特别慢(要重建 stat 缓存)。</li>
+<li>在某些跨平台挂载或容器卷上 <code>git status</code> 会莫名其妙把所有文件报成 modified(mtime 语义不一致导致 stat 缓存永远失效);这时 <code>git status</code> 会自己刷新索引,而 <code>core.fsmonitor</code>、<code>core.untrackedCache</code> 这些配置就是为这类场景准备的。</li>
+</ul>
 <p>「三棵树」这个说法本身有个边界要说清楚:<strong>它是一个操作模型,不是仓库的完整结构</strong>。真实的仓库里至少还有第四样东西会参与——<code>refs/remotes/origin/*</code> 那些远程跟踪分支。<code>git pull</code>、<code>git push</code>、<code>git status -sb</code> 的 <code>[ahead 2, behind 3]</code> 都是拿它当第四个参照点算出来的。之所以先只讲三棵,是因为它们能解释一台机器上的全部日常操作;等进入协作,第四棵会自然长出来。同理,合并冲突时索引里那三个暂存位,严格说也让「索引是一棵树」这个说法不完全成立——它在冲突期间是三棵树的叠加态。</p>
 <p>还有一个术语上的混乱值得提前免疫:<strong>staging area、index、cache 是同一个东西的三个名字</strong>。它们分别来自不同年代的文档:<code>index</code> 是数据结构名(<code>.git/index</code>),<code>cache</code> 是最早的底层命令名(<code>git update-index --cacheinfo</code>、<code>git diff --cached</code>),<code>staging area</code> 是《Pro Git》为了讲清楚而起的教学名。所以 <code>git diff --cached</code> 和 <code>git diff --staged</code> 是同义词,<code>git rm --cached</code> 说的也是「从索引里删」。看到这三个词,脑子里都指向同一个文件就行。</p>
 <p>最后一个常见误解:索引<strong>不是</strong>「工作区的副本」。它存的是 blob 哈希,内容在对象库里。所以 <code>git add</code> 的开销是「算哈希 + 写对象 + 更新索引条目」,而不是复制一份文件。这也是为什么 <code>git add</code> 一个大文件之后,即使你再 <code>reset</code>,那个 blob 也已经躺在 <code>.git/objects</code> 里了——这正是「add 过的能救回来」的原因,也是「不小心 add 了 200 MB 的文件,删掉重提交仓库还是那么大」的原因。</p></div>
@@ -908,7 +924,8 @@ $ cat .git/logs/HEAD                   # reflog 追加了一行
 b6ba8b64ec8b174aaf8eefcd25a82b5b646fc56d a133db6bc7f07a4eb27531f21e1cdf04a6d6a901 Lin Wei &lt;lin@example.com&gt; 1740795000 +0800	commit: docs: 加第二行</code></pre>
 <p>数字对得上:<code>add</code> 写 1 个 blob,<code>commit</code> 写 1 个 tree(根目录只有一层)+ 1 个 commit,再改写分支引用、追加两处 reflog。仓库越深,<code>commit</code> 写的 tree 越多——每一层被改动路径经过的目录各一个。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 只写对象不移引用,东西会「消失」</span><p>上面第 ④ 步之后、第 ⑤ 步之前,那个提交对象是完整存在的,但 <code>git log</code> 看不到它,<code>git gc --prune=now</code> 会把它当垃圾回收掉。这就是「悬空对象」(dangling object)的由来,也是所有「我的提交不见了」的统一解释:<strong>对象没丢,是没有引用指着它了</strong>。<code>git fsck --lost-found</code> 能把这些无主对象列出来,再用 <code>git branch rescue &lt;哈希&gt;</code> 给它接上一个引用就活了。</p></div>
-<p>五步的划分还解释了 <strong>hook 为什么插在那几个位置</strong>。<code>pre-commit</code> 在第 ② 步之前跑——那时索引已经定型,所以它能用 <code>git diff --cached</code> 精确拿到「将要提交的内容」,这也是所有 lint-staged 类工具的立足点;<code>prepare-commit-msg</code> 和 <code>commit-msg</code> 夹在第 ③ 步前后,负责生成与校验提交信息;<code>post-commit</code> 在第 ⑤ 步之后,只能通知不能阻止(它的退出码被忽略)。「能不能阻止这次提交」完全取决于它在第 ④ 步之前还是之后,这条判据对<a href="#g9-hooks">9.1</a> 那一节的所有 hook 都适用。</p>
+<p>五步的划分还解释了 <strong>hook 为什么插在那几个位置</strong>。<code>pre-commit</code> 在第 ② 步之前跑——那时索引已经定型,所以它能用 <code>git diff --cached</code> 精确拿到「将要提交的内容」,这也是所有 lint-staged 类工具的立足点;<code>prepare-commit-msg</code> 和 <code>commit-msg</code> 夹在第 ③ 步前后,负责生成与校验提交信息;<code>post-commit</code> 在第 ⑤ 步之后,只能通知不能阻止(它的退出码被忽略)。</p>
+<p>「能不能阻止这次提交」完全取决于它在第 ④ 步之前还是之后,这条判据对 <a href="#g9-hooks">9.1</a> 那一节的所有 hook 都适用。</p>
 <p>这不是推测,给四个 hook 各放一行 <code>echo</code> 就能看到顺序,以及它们各自看到的索引:</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 156px"><code><span class="kw">for</span> h in pre-commit prepare-commit-msg commit-msg post-commit; <span class="kw">do</span>
   printf <span>'#!/bin/sh\necho "[hook] %s  index: $(git diff --cached --name-only | tr "\\n" " ")"\n'</span> <span>"$h"</span> \
@@ -1011,7 +1028,7 @@ $ git cat-file -t HEAD^{tree} ; git cat-file -t :a.txt</code></pre>
 <p>接下来去 <a href="#g2-status">2.1</a>。第二章把这一章的机制换成一天里真正会敲的十个命令:怎么读 <code>status</code>、<code>diff</code> 的三种范围、<code>add -p</code> 拆提交、撤销决策树、<code>stash</code> 和 <code>.gitignore</code>。那一章几乎不引入新概念,全是本章三样东西的组合,读起来会很快。再往后 <a href="#g3-branch">3.1</a> 讲分支与合并,那时你会发现「分支就是一个 41 字节的文件」这句话不是修辞。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46116px;--thin-h:12150px">
+<section class="chapter" style="contain-intrinsic-size:auto 46821px;--thin-h:12212px">
 <h1 id="g2"><span class="part">日常</span>改、看、撤:一天里用得最多的十个命令</h1>
 <p>上一章把 Git 拆成对象库、引用、索引三样东西。这一章把它们换成一天里真正会敲的命令:看状态、看差异、挑着暂存、写提交、撤销、临时收起手头的活、让 Git 别管某些文件。这里几乎不引入新概念——每一条命令都能用三棵树的坐标读出来,所以这一章读起来应该比上一章快得多。目标是让你在遇到任何一个「这时候该敲什么」的岔口时,不用去搜,而是能自己推。</p>
 <p>六节按「先看清楚,再动手,再收拾」排。<a href="#g2-status">2.1</a> 和 <a href="#g2-diff">2.2</a> 是两只眼睛:<code>status</code> 告诉你每个文件在三棵树的哪一段之间不一致,<code>diff</code> 告诉你具体差在哪几行——两者的输出都直接对应 <a href="#g1-three-trees">1.4</a> 那三棵树,读法一样。<a href="#g2-commit">2.3</a> 讲怎么把工作区里混在一起的改动拆成几个干净的提交,以及 <code>--amend</code> 的确切语义。<a href="#g2-undo">2.4</a> 是这一章的核心:一张决策树把「我想撤销」这句话按「东西到了哪一棵树」分成五个岔口,每个岔口只有一条命令,危险的那几条都标了丢什么、能不能救。<a href="#g2-stash">2.5</a> 处理「手头活没干完又要切分支」,顺带给出比 stash 更适合长期并行的 <code>worktree</code>。<a href="#g2-ignore">2.6</a> 收尾:哪些文件根本不该进仓库、已经进去了怎么办、跨平台换行符怎么统一。本章全部输出实测于 git 2.54.0.windows.1。</p>
@@ -1123,7 +1140,12 @@ R  src/c.js -&gt; src/renamed.js
 <p>几条脚本里立刻能用的写法:判断工作区是否干净用 <code>test -z "$(git status --porcelain)"</code>;拿到所有冲突文件用 <code>git diff --name-only --diff-filter=U</code>;拿到本次将要提交的文件清单用 <code>git diff --cached --name-only --diff-filter=ACM</code>(过滤掉删除,否则 lint 会去读不存在的文件)。这三条覆盖了 pre-commit 钩子和 CI 脚本里九成的需求。</p></div>
 <div class="deep"><h3 class="deep">机制:status 为什么有时候很慢,以及它怎么判断「变了」</h3>
 <p><code>git status</code> 要回答的问题是「工作区里哪些文件和索引不一样」。逐个文件读内容算 SHA-1 在大仓库里是不可接受的,所以索引里除了 blob 哈希还缓存了每个文件的 <strong>stat 信息</strong>——设备号、inode、模式、uid/gid、大小、mtime/ctime。<code>status</code> 先比 stat,stat 完全一致就直接认定文件没变,根本不读内容。</p>
-<p>由此推出三条日常经验。① <strong>刚 clone 或刚切完大分支的第一次 <code>status</code> 特别慢</strong>:大量文件刚被写出来,stat 缓存要重建。② <strong>在某些网络文件系统、容器绑定挂载或跨平台共享目录上,<code>status</code> 会把所有文件报成 modified</strong>:那些文件系统的 inode 或时间精度语义和 Git 的假设不一致,stat 永远对不上,Git 只好去读内容;这时 <code>core.trustctime=false</code>、<code>core.checkStat=minimal</code> 这类配置能缓解。③ <strong>大仓库里 <code>status</code> 慢的最大来源往往是遍历未跟踪文件</strong>——Git 必须扫遍工作区才能知道有没有新文件;<code>core.untrackedCache=true</code> 用目录 mtime 做缓存,<code>core.fsmonitor=true</code>(2.37 起内置)让操作系统的文件系统事件来告诉 Git 哪些目录动过,两者叠加在几十万文件的仓库上能把 <code>status</code> 从几秒压到几十毫秒。</p>
+<p>由此推出三条日常经验:</p>
+<ul>
+<li><strong>刚 clone 或刚切完大分支的第一次 <code>status</code> 特别慢。</strong>大量文件刚被写出来,stat 缓存要重建。</li>
+<li><strong>在某些网络文件系统、容器绑定挂载或跨平台共享目录上,<code>status</code> 会把所有文件报成 modified。</strong>那些文件系统的 inode 或时间精度语义和 Git 的假设不一致,stat 永远对不上,Git 只好去读内容;这时 <code>core.trustctime=false</code>、<code>core.checkStat=minimal</code> 这类配置能缓解。</li>
+<li><strong>大仓库里 <code>status</code> 慢的最大来源往往是遍历未跟踪文件。</strong>Git 必须扫遍工作区才能知道有没有新文件。<code>core.untrackedCache=true</code> 用目录 mtime 做缓存,<code>core.fsmonitor=true</code>(2.37 起内置)让操作系统的文件系统事件来告诉 Git 哪些目录动过;两者叠加在几十万文件的仓库上能把 <code>status</code> 从几秒压到几十毫秒。</li>
+</ul>
 <p>还有一个高频困惑:<strong>Git 不跟踪空目录</strong>。索引里只有文件路径,没有目录条目,所以一个空目录既不会出现在 <code>status</code> 里,也不会被提交。约定的解法是在里面放一个 <code>.gitkeep</code>(名字是约定,不是 Git 的特殊文件)。反过来,删掉一个目录里最后一个被跟踪的文件后,那个目录会在检出时被 Git 自动清掉。</p></div>
 <h2 id="g2-diff">2.2 diff 的三种比较范围:工作区、索引、HEAD 与任意提交</h2>
 <p><code>git status</code> 说「哪些文件不一样」,<code>git diff</code> 说「具体哪几行不一样」。它唯一的难点是<strong>不带参数时到底在比哪两棵树</strong>——很多人 <code>git add</code> 之后跑 <code>git diff</code> 看到空输出,以为改动没了。记住一条:<code>git diff</code> 的默认两端是<strong>工作区和索引</strong>,加什么参数就把哪一端换掉。</p>
@@ -1233,7 +1255,14 @@ $ git diff --stat main...feature      # 从共同祖先起,只看 feature 做了
 $ git merge-base main feature
 edae83d2560692c52403e70239db905811be0646</code></pre>
 <p><code>main..feature</code> 里出现了 <code>main.txt | 1 -</code>——一个 <code>feature</code> 分支<strong>从来没碰过</strong>的文件被报成删除,因为 <code>feature</code> 那一端确实没有它。这就是评审时该用三个点的原因:<code>main...feature</code> 把起点换成共同祖先,输出里只剩这条分支自己的贡献。GitHub / GitLab 的 PR 页面显示的就是三点 diff。</p>
-<p>顺带把 diff 的<strong>逐段读法</strong>固定下来,后面每次看 diff 都按这个顺序:① <code>diff --git a/… b/…</code> 一行确认是哪个文件,重命名信息也在这一段;② <code>index 旧短哈希..新短哈希 模式</code>,这两个短哈希可以直接喂给 <code>git cat-file -p</code> 拿到完整的前后版本,排查「这一行到底从哪来的」时非常好用;③ 块头 <code>@@ -旧起始,旧行数 +新起始,新行数 @@</code>,后面往往跟着 Git <strong>猜</strong>出来的上下文函数名——它是启发式的,取的是这一块之前最近一个像函数定义的行,所以有时会指到相邻的函数上;<code>.gitattributes</code> 里写 <code>*.js diff=javascript</code> 之类可以让它换用 Git 内置的语言模式;④ 最后才是带 <code>+</code> / <code>-</code> / 空格前缀的正文行。绝大多数人只看第 ④ 段,而前三段恰恰是快速定位用的。</p>
+<p>顺带把 diff 的<strong>逐段读法</strong>固定下来,后面每次看 diff 都按这个顺序:</p>
+<ul>
+<li><code>diff --git a/… b/…</code> 一行确认是哪个文件,重命名信息也在这一段。</li>
+<li><code>index 旧短哈希..新短哈希 模式</code>。这两个短哈希可以直接喂给 <code>git cat-file -p</code> 拿到完整的前后版本,排查「这一行到底从哪来的」时非常好用。</li>
+<li>块头 <code>@@ -旧起始,旧行数 +新起始,新行数 @@</code>,后面往往跟着 Git <strong>猜</strong>出来的上下文函数名——它是启发式的,取的是这一块之前最近一个像函数定义的行,所以有时会指到相邻的函数上;<code>.gitattributes</code> 里写 <code>*.js diff=javascript</code> 之类可以让它换用 Git 内置的语言模式。</li>
+<li>最后才是带 <code>+</code> / <code>-</code> / 空格前缀的正文行。</li>
+</ul>
+<p>绝大多数人只看最后一段,而前三段恰恰是快速定位用的。</p>
 <pre style="contain-intrinsic-size:auto 386px"><code>$ git diff --cached
 diff --git a/app.js b/renamed.js
 similarity index 73%                     ← 相似度过阈值才判定为重命名
@@ -1584,7 +1613,12 @@ never-added-precious                          ← 但它还在
 $ git fsck --lost-found
 dangling commit 400dbbef19055eeaa18488f75bd75efdc7e6fb7b
 dangling blob 9bca67a763a9f7fb27bb8ef3716e31205e53b151</code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 git clean -f -d -x 是本书最危险的一条命令</span><p><strong>丢什么</strong>:<code>-f -d</code> 删掉所有未跟踪的文件和目录;加上 <code>-x</code> 连 <code>.gitignore</code> 挡住的一起删——那通常包括 <code>node_modules/</code>、<code>.env</code>、本地数据库、构建缓存、IDE 配置。<strong>能不能救</strong>:<strong>完全不能</strong>。这些文件从来没进过对象库,Git 里没有它们的任何痕迹,操作系统回收站也接不住(Git 是直接 unlink)。<strong>怎么救</strong>:只有事前——① 永远先 <code>git clean -n -d -x</code> 看一遍清单;② 把真正宝贵的本地文件(<code>.env</code>、密钥)放在仓库目录之外,用软链接或环境变量引进来;③ 需要「干净重来」时优先用 <code>git clean -f -d</code>(不带 <code>-x</code>),重装依赖比找回 <code>.env</code> 便宜得多。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 372px"><span class="t">🔴 git clean -f -d -x 是本书最危险的一条命令</span><p><strong>丢什么</strong>:<code>-f -d</code> 删掉所有未跟踪的文件和目录;加上 <code>-x</code> 连 <code>.gitignore</code> 挡住的一起删——那通常包括 <code>node_modules/</code>、<code>.env</code>、本地数据库、构建缓存、IDE 配置。<br><strong>能不能救</strong>:<strong>完全不能</strong>。这些文件从来没进过对象库,Git 里没有它们的任何痕迹,操作系统回收站也接不住(Git 是直接 unlink)。<br><strong>怎么救</strong>:只有事前三条——</p>
+<ul>
+<li>永远先 <code>git clean -n -d -x</code> 看一遍清单。</li>
+<li>把真正宝贵的本地文件(<code>.env</code>、密钥)放在仓库目录之外,用软链接或环境变量引进来。</li>
+<li>需要「干净重来」时优先用 <code>git clean -f -d</code>(不带 <code>-x</code>),重装依赖比找回 <code>.env</code> 便宜得多。</li>
+</ul></div>
 <p>中文里「撤销」一个词罩住了四种不同的操作,这是这一节最大的认知负担来源,值得把它们拆开叫:<strong>丢弃</strong>(把工作区或索引里的改动扔掉,内容消失)、<strong>取消暂存</strong>(改动从索引退回工作区,内容不动)、<strong>回退</strong>(把分支指针挪到更早的提交,历史被改写)、<strong>反做</strong>(新造一个把改动抵消掉的提交,历史不变)。前两个作用在三棵树上,后两个作用在引用与历史上。你嘴里说的「撤销」到底是哪一个,决定了该敲哪条命令——决策树上五个岔口,本质就是在问你这个问题。</p>
 <p>还有一个高频场景值得单列:<strong>只想撤销某一个提交里的某几个文件</strong>。既不想动分支,也不想 revert 整个提交。答案是 <code>git restore --source=&lt;提交&gt; --staged --worktree &lt;路径&gt;</code>——从那个提交的树里取出这几个文件,写进索引和工作区,然后正常提交。它是「按路径的时光机」,而且因为不碰引用,所以在任何情况下都安全。这条命令在实战里出现的频率远高于它的知名度。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 233px"><span class="t">🔴 reset --hard 之前先给自己上个保险</span><p><strong>丢什么</strong>:工作区和索引里所有未提交的改动。<strong>能不能救</strong>:被丢掉的<strong>提交</strong>能救——<code>git reflog</code> 找到哈希,<code>git reset --hard &lt;哈希&gt;</code> 或 <code>git branch rescue &lt;哈希&gt;</code>;<code>add</code> 过的内容能救——<code>git fsck --lost-found</code> 会列出 <code>dangling blob</code>,<code>git cat-file -p &lt;哈希&gt; &gt; 文件</code> 倒出来;<strong>没 add 过的编辑内容救不回来</strong>。<strong>怎么救</strong>:养成一个动作——任何 <code>--hard</code> / <code>rebase</code> / <code>merge</code> 之前先 <code>git stash -u</code>(见 <a href="#g2-stash">2.5</a>),它会把工作区和未跟踪文件全部存成对象;出事之后 <code>git stash pop</code> 即可。这个动作的成本是两秒钟。</p></div>
@@ -1625,7 +1659,12 @@ git worktree remove &lt;路径&gt;          删掉一个工作树</code></pre>
 <tr><td class="nw"><code>stash branch</code></td><td>从原基提交开分支再恢复</td><td>存了很久、主干已经跑远、pop 会冲突</td><td>—</td></tr>
 </tbody>
 </table>
-<p>先把 stash 的三个常见误用摆出来,因为它们造成的损失比命令本身的复杂度大得多。① <strong>当仓库用</strong>:stash 不出现在 <code>git branch</code>、<code>git log</code>、<code>git status</code> 里,它只在 <code>git stash list</code> 里,而没人会主动去跑那条命令;超过半天的活一律开分支提交。② <strong>忘了它不收未跟踪文件</strong>:新建的文件会跟着你切到别的分支去,然后被那边的 <code>git add .</code> 一起提交。③ <strong>在冲突或合并中途 stash</strong>:合并状态(<code>MERGE_HEAD</code> 这些)不会被 stash 带走,恢复回来时那半场合并已经没了,索引里的三个暂存位也塌成了一个,等于白解一遍冲突。</p>
+<p>先把 stash 的三个常见误用摆出来,因为它们造成的损失比命令本身的复杂度大得多。</p>
+<ul>
+<li><strong>当仓库用。</strong>stash 不出现在 <code>git branch</code>、<code>git log</code>、<code>git status</code> 里,它只在 <code>git stash list</code> 里,而没人会主动去跑那条命令;超过半天的活一律开分支提交。</li>
+<li><strong>忘了它不收未跟踪文件。</strong>新建的文件会跟着你切到别的分支去,然后被那边的 <code>git add .</code> 一起提交。</li>
+<li><strong>在冲突或合并中途 stash。</strong>合并状态(<code>MERGE_HEAD</code> 这些)不会被 stash 带走,恢复回来时那半场合并已经没了,索引里的三个暂存位也塌成了一个,等于白解一遍冲突。</li>
+</ul>
 <div class="deep"><h3>完整示例:收起来、切走、回来</h3>
 <p>手头在 <code>feature</code> 分支上改了 <code>a.txt</code>(已暂存)并新建了 <code>n.txt</code>(未跟踪):</p>
 <pre style="contain-intrinsic-size:auto 604px"><code>$ git status -s
@@ -1835,7 +1874,13 @@ $ git status -s --ignored
 D  secret.txt                  ← 索引里删了(磁盘上的文件还在)
 !! secret.txt                  ← 现在规则生效了</code></pre>
 <p><code>git rm --cached</code> 只从索引里删,磁盘上的文件留着。提交这次删除之后,该文件对 Git 就是「未跟踪 + 被忽略」,以后再也不会出现在 <code>status</code> 里。要一次处理一批:<code>git rm -r --cached .</code> 然后 <code>git add .</code>,相当于按当前忽略规则把索引重建一遍。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 266px"><span class="t">🔴 从索引里删掉密钥,不等于密钥从仓库里消失了</span><p><strong>丢什么</strong>:什么都不丢——这恰恰是问题所在。<code>git rm --cached</code> 之后,那份密钥仍然完整地躺在历史里的某个提交中,任何人 <code>git log -p</code> 或 <code>git show &lt;旧提交&gt;:secret.txt</code> 都能读到,已经推到远端就等于已经泄露。<strong>怎么处理</strong>:① 第一件事是<strong>作废那个凭据</strong>(轮换密钥、吊销 token),这一步比任何 Git 操作都重要,因为你无法保证没人拉过;② 才谈清理历史——需要用 <code>git filter-repo</code> 之类的工具重写全部历史并强推,所有协作者都要重新克隆,代价很大,细节在<a href="#g6-big">6.5</a>。<strong>预防</strong>:项目初始化时第一个提交就把 <code>.env</code>、<code>*.pem</code>、<code>*.key</code>、<code>id_rsa</code> 写进 <code>.gitignore</code>,并在 CI 上挂一个密钥扫描。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 407px"><span class="t">🔴 从索引里删掉密钥,不等于密钥从仓库里消失了</span><p><strong>丢什么</strong>:什么都不丢——这恰恰是问题所在。<code>git rm --cached</code> 之后,那份密钥仍然完整地躺在历史里的某个提交中,任何人 <code>git log -p</code> 或 <code>git show &lt;旧提交&gt;:secret.txt</code> 都能读到,已经推到远端就等于已经泄露。</p>
+<p><strong>怎么处理</strong>:</p>
+<ul>
+<li>第一件事是<strong>作废那个凭据</strong>(轮换密钥、吊销 token)。这一步比任何 Git 操作都重要,因为你无法保证没人拉过。</li>
+<li>然后才谈清理历史——需要用 <code>git filter-repo</code> 之类的工具重写全部历史并强推,所有协作者都要重新克隆,代价很大,细节在 <a href="#g6-big">6.5</a>。</li>
+</ul>
+<p><strong>预防</strong>:项目初始化时第一个提交就把 <code>.env</code>、<code>*.pem</code>、<code>*.key</code>、<code>id_rsa</code> 写进 <code>.gitignore</code>,并在 CI 上挂一个密钥扫描。</p></div>
 <div class="note ok" style="contain-intrinsic-size:auto 232px"><span class="t">🟢 三处忽略规则各有各的用途</span><p>项目公用的规则(<code>dist/</code>、<code>node_modules/</code>)写进仓库里的 <code>.gitignore</code>,提交给所有人;<strong>只跟你个人有关</strong>的(某个编辑器的临时文件、你自己的调试脚本)写进 <code>.git/info/exclude</code>,它不进版本库,不会强加给别人;<strong>跟你这台机器有关</strong>的(<code>.DS_Store</code>、<code>Thumbs.db</code>、编辑器全家桶)写进全局文件:<code>git config --global core.excludesFile ~/.gitignore_global</code>。把 <code>.DS_Store</code> 写进项目的 <code>.gitignore</code> 是很常见但不对的做法——那是你的操作系统的事,不是这个项目的事。</p></div></div>
 <div class="deep"><h3 class="deep">深入:.gitattributes 与换行符</h3>
 <p><code>.gitignore</code> 管「哪些文件不进仓库」,<code>.gitattributes</code> 管「进了仓库的文件怎么处理」。最常用的一项是换行符。Git 的模型是:<strong>对象库里永远存 LF</strong>,检出到工作区时按配置转换。控制这个转换的有两处——全局配置 <code>core.autocrlf</code>(Windows 版 Git 默认装成 <code>true</code>)和仓库里的 <code>.gitattributes</code>,后者优先且<strong>随仓库走</strong>,所以团队要统一必须用后者。</p>
@@ -1957,12 +2002,18 @@ $ cat ~/.gitconfig
 # 想知道某个值是从哪个文件来的(系统 / 全局 / 仓库),加 --show-origin
 $ git config --show-origin core.autocrlf
 file:C:/Program Files/Git/etc/gitconfig	<span class="kw">true</span></code></pre>
-<p>三个细节值得注意。① <code>--list</code> 输出里的键名<strong>全是小写</strong>,而配置文件里保留了你写的大小写——Git 的配置键不区分大小写,<code>core.excludesFile</code> 和 <code>core.excludesfile</code> 是同一个东西(只有小节名如 <code>remote.&lt;名&gt;</code> 里的那个名字才区分)。② 路径里的 <code>~</code> 是<strong>shell 展开</strong>的,存进配置文件的是绝对路径。③ 最后那条 <code>--show-origin</code> 显示 <code>core.autocrlf=true</code> 来自<strong>系统级</strong>配置——Windows 版 Git 装机就这么设,这是跨平台换行符问题的源头,项目级的 <code>.gitattributes</code> 优先级高于它。仓库级配置写在 <code>.git/config</code>,用不带 <code>--global</code> 的 <code>git config</code> 设置;它不会被 clone 带走,所以「团队统一的配置」只能靠 <code>.gitattributes</code> 加文档,指望不上 <code>.git/config</code>。</p>
+<p>三个细节值得注意:</p>
+<ul>
+<li><code>--list</code> 输出里的键名<strong>全是小写</strong>,而配置文件里保留了你写的大小写——Git 的配置键不区分大小写,<code>core.excludesFile</code> 和 <code>core.excludesfile</code> 是同一个东西(只有小节名如 <code>remote.&lt;名&gt;</code> 里的那个名字才区分)。</li>
+<li>路径里的 <code>~</code> 是 <strong>shell 展开</strong>的,存进配置文件的是绝对路径。</li>
+<li>最后那条 <code>--show-origin</code> 显示 <code>core.autocrlf=true</code> 来自<strong>系统级</strong>配置——Windows 版 Git 装机就这么设,这是跨平台换行符问题的源头;项目级的 <code>.gitattributes</code> 优先级高于它。</li>
+</ul>
+<p>仓库级配置写在 <code>.git/config</code>,用不带 <code>--global</code> 的 <code>git config</code> 设置;它不会被 clone 带走,所以「团队统一的配置」只能靠 <code>.gitattributes</code> 加文档,指望不上 <code>.git/config</code>。</p>
 <p>这一章学到什么程度算够:看到任意一行 <code>git status -s</code> 的输出,能说出这个文件在三棵树上分别是什么状态,以及要撤销它该敲哪一条;有人问「我改了半天的东西不见了」,你能用三个问题(add 过没有、commit 过没有、push 过没有)定位到该去 reflog 还是 <code>fsck --lost-found</code>,还是直接告诉他救不回来;能把一次混着两件事的改动用 <code>add -p</code> 拆成两个各自能跑的提交。做不到就把 <a href="#g2-undo">2.4</a> 那张决策树抄在便签上贴屏幕边,用两周就长在脑子里了。</p>
 <p>接下来去 <a href="#g3-branch">3.1</a>。前两章都在一条线上打转,第三章开始有分叉:分支怎么建、指针怎么动、什么时候产生合并提交、冲突时索引里到底存了什么。那一章会大量回用本章的 <code>status</code> 与 <code>diff</code> 读法——冲突时的 <code>UU</code> 和 <code>git diff</code> 的组合输出,都是本章那两只眼睛在新场景下的延伸。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 34951px;--thin-h:8962px">
+<section class="chapter" style="contain-intrinsic-size:auto 35195px;--thin-h:8962px">
 <h1 id="g3"><span class="part">分支</span>分支与合并:指针怎么动,冲突从哪来</h1>
 <p>前两章都在一条线上打转。这一章开始有分叉:两个人、两件事、两条线,最后要合到一起。Git 的分支之所以便宜到可以随手开一个,是因为它<strong>什么都没复制</strong>——建分支只是写一个 41 字节的文件。理解了这一点,「合并」也就不再神秘:它要么是把一个指针往前挪一格(快进),要么是造一个有两个父的提交(三方合并),没有第三种可能。</p>
 <p>四节是一条直线。<a href="#g3-branch">3.1</a> 先把分支这个对象讲干净:它是什么、切换时改了什么、在它上面提交时谁动了——这一节几乎全是 <a href="#g1-ref">1.3</a> 的落地。<a href="#g3-merge">3.2</a> 讲两种合并各自在什么条件下发生、<code>merge-base</code> 是怎么找的、为什么 <code>--ff-only</code> 值得设成默认。<a href="#g3-conflict">3.3</a> 是这一章的重头:冲突不是「文件坏了」,而是索引里同时存了 base / ours / theirs 三个版本,文件里那堆标记只是这三份的文本投影——看懂这个,冲突就从玄学变成填空题。<a href="#g3-strategy">3.4</a> 收尾,把 <code>--no-ff</code>、默认、squash 三种做法产生的历史形状并排比较,并给出 <code>rerere</code> 这个「同一个冲突只解一次」的开关。全部输出实测于 git 2.54.0.windows.1。</p>
@@ -2423,7 +2474,14 @@ $ git ls-files -u
 $ git add gone.js      # 决定保留 → git add;决定跟着删 → git rm gone.js
 $ git commit -q --no-edit</code></pre>
 <p>这类冲突<strong>文件里没有任何标记</strong>,只有 <code>status</code> 会告诉你。所以「解冲突 = 搜索 <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>」这个习惯会漏掉它们——正确的收尾判据是 <code>git status</code> 里 <code>Unmerged paths</code> 一节为空,不是文件里搜不到标记。</p>
-<p>把解冲突变成一套固定动作,比临场发挥可靠得多。推荐的顺序是:① <code>git status</code> 看清楚有几个文件、分别是哪一类冲突(内容 / 修改删除 / 双方新增),先在脑子里估个工作量;② 挑<strong>最小的文件先解</strong>,不是最重要的——早点把 <code>Unmerged paths</code> 的行数减下去,能持续确认自己在推进;③ 每解一个文件就 <code>git add</code> 一个,它是可持久化的进度标记,中途被打断也不会白干;④ 对拿不准的那一处,用 <code>git log --merge -p -- &lt;路径&gt;</code> 看两边各自在这个文件上做了什么提交、为什么改;⑤ 全部解完先跑测试再 <code>git commit</code>,别把「能编译」当成解完了。</p>
+<p>把解冲突变成一套固定动作,比临场发挥可靠得多。推荐的顺序是:</p>
+<ul>
+<li><code>git status</code> 看清楚有几个文件、分别是哪一类冲突(内容 / 修改删除 / 双方新增),先在脑子里估个工作量。</li>
+<li>挑<strong>最小的文件先解</strong>,不是最重要的——早点把 <code>Unmerged paths</code> 的行数减下去,能持续确认自己在推进。</li>
+<li>每解一个文件就 <code>git add</code> 一个,它是可持久化的进度标记,中途被打断也不会白干。</li>
+<li>对拿不准的那一处,用 <code>git log --merge -p -- &lt;路径&gt;</code> 看两边各自在这个文件上做了什么提交、为什么改。</li>
+<li>全部解完先跑测试再 <code>git commit</code>,别把「能编译」当成解完了。</li>
+</ul>
 <pre style="contain-intrinsic-size:auto 576px"><code>$ git log --merge --oneline                  ← 只列两边各自独有、且碰过冲突文件的提交
 7f218c6 fix: 漏乘数量
 fe23c28 feat: 加 13% 税
@@ -2445,7 +2503,11 @@ index dc23a54..785fe44 100644
 +  <span class="kw">return</span> items.reduce((s, i) =&gt; s + i.price * i.qty, 0);
  }</code></pre>
 <p>这条命令值得单独记住。它只在<strong>冲突期间</strong>可用(要靠 <code>MERGE_HEAD</code> 才知道「两边」是谁),输出里每个提交都带着作者写的提交信息——这比盯着冲突标记猜意图有效得多。解冲突的本质是<strong>重新做一次两边作者都做过的决策</strong>,而做决策需要的是意图,不是结果。冲突标记只给你结果,<code>git log --merge</code> 和 <code>zdiff3</code> 的 base 段给你意图。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 三个必须避开的解冲突陷阱</span><p>① <strong>把冲突标记提交上去</strong>:解到一半忘了一处,<code>git add .</code> 一把梭就带进去了。防线是提交前跑 <code>git diff --cached --check</code>——它会专门报出残留的冲突标记;更稳的是在 CI 上加一条 grep。② <strong>用 <code>git checkout --ours</code> 一把梭</strong>:它是<strong>整个文件</strong>取一边,不是「冲突处取一边」,对方在这个文件里做的所有不冲突的改动也会被一起丢掉,而且 Git 不会警告。真要按文件选边,先 <code>git diff :1:&lt;文件&gt; :3:&lt;文件&gt;</code> 看清对方总共改了什么。③ <strong>只看标记不看上下文</strong>:两边改的是相邻的不同行时 Git 会把它们并成一个冲突块,机械地「两段都留下」会产生语法正确但逻辑错误的代码。解完必须<strong>跑一遍测试</strong>,这是唯一可靠的验收。</p></div></div>
+<div class="note dead" style="contain-intrinsic-size:auto 332px"><span class="t">🔴 三个必须避开的解冲突陷阱</span><ul>
+<li><strong>把冲突标记提交上去。</strong>解到一半忘了一处,<code>git add .</code> 一把梭就带进去了。防线是提交前跑 <code>git diff --cached --check</code>——它会专门报出残留的冲突标记;更稳的是在 CI 上加一条 grep。</li>
+<li><strong>用 <code>git checkout --ours</code> 一把梭。</strong>它是<strong>整个文件</strong>取一边,不是「冲突处取一边」;对方在这个文件里做的所有不冲突的改动也会被一起丢掉,而且 Git 不会警告。真要按文件选边,先 <code>git diff :1:&lt;文件&gt; :3:&lt;文件&gt;</code> 看清对方总共改了什么。</li>
+<li><strong>只看标记不看上下文。</strong>两边改的是相邻的不同行时 Git 会把它们并成一个冲突块,机械地「两段都留下」会产生语法正确但逻辑错误的代码。解完必须<strong>跑一遍测试</strong>,这是唯一可靠的验收。</li>
+</ul></div></div>
 <div class="deep"><h3 class="deep">机制:为什么有些「该冲突」的地方没冲突</h3>
 <p>三方合并是<strong>按文本行</strong>做的,它不理解语法,也不理解语义。这带来两类反直觉的现象。</p>
 <p>第一类:<strong>该冲突却没冲突</strong>。A 在函数里加了一个参数,B 在另一个文件里调用了这个函数——两处改的是不同文件的不同行,三方合并顺利通过,代码却编译不过。或者 A 删了一个函数,B 在别处新增了对它的调用。Git 对此完全无能为力,<strong>合并成功不等于代码正确</strong>,这就是为什么合并之后必须跑构建和测试,以及为什么 CI 应该测的是「合并后的结果」而不是「你的分支本身」。</p>
@@ -2517,7 +2579,12 @@ $ git branch --no-merged
 $ git branch -d feat
 error: the branch <span>'feat'</span> is not fully merged
 hint: If you are sure you want to <span class="kw">delete</span> it, run <span>'git branch -D feat'</span></code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 262px"><span class="t">🔴 squash 之后必须用 -D 删分支,而且别再合并它</span><p><strong>丢什么</strong>:不丢东西,但埋了两个雷。① 分支删不掉,只能 <code>-D</code>——每次都要确认「我到底合过没有」,时间一长团队里会有一堆分不清死活的分支。② <strong>更危险的是再合一次</strong>:如果后来有人在这条 squash 过的分支上继续提交然后再合进主干,Git 会从<strong>原来的共同祖先</strong>开始三方合并,于是那些已经通过 squash 进过主干的改动会被当成「对方的新改动」重新合一遍,大面积冲突或者重复应用。<strong>怎么办</strong>:squash 合并之后立刻 <code>git branch -D</code> 并删掉远端分支,不给它继续存活的机会;GitHub / GitLab 的「squash and merge」按钮之后一律点「delete branch」就是这个道理。</p></div></div>
+<div class="note dead" style="contain-intrinsic-size:auto 332px"><span class="t">🔴 squash 之后必须用 -D 删分支,而且别再合并它</span><p><strong>丢什么</strong>:不丢东西,但埋了两个雷。</p>
+<ul>
+<li><strong>分支删不掉,只能 <code>-D</code></strong>——每次都要确认「我到底合过没有」,时间一长团队里会有一堆分不清死活的分支。</li>
+<li><strong>更危险的是再合一次。</strong>如果后来有人在这条 squash 过的分支上继续提交然后再合进主干,Git 会从<strong>原来的共同祖先</strong>开始三方合并,于是那些已经通过 squash 进过主干的改动会被当成「对方的新改动」重新合一遍,大面积冲突或者重复应用。</li>
+</ul>
+<p><strong>怎么办</strong>:squash 合并之后立刻 <code>git branch -D</code> 并删掉远端分支,不给它继续存活的机会;GitHub / GitLab 的「squash and merge」按钮之后一律点「delete branch」就是这个道理。</p></div></div>
 <div class="deep"><h3>完整示例:-X ours 与 -s ours 完全不是一回事</h3>
 <p><code>-X</code> 是<strong>给策略传的选项</strong>,只在<strong>冲突处</strong>偏向一边,其余部分照常合并;<code>-s ours</code> 是<strong>换策略</strong>,直接丢掉对方的全部内容,只保留一条合并线。</p>
 <pre style="contain-intrinsic-size:auto 332px"><code># 起点:两条线都改了 f.txt,b1 还新增了 n1.txt
@@ -7394,7 +7461,7 @@ git log --first-parent --oneline             # 定因:主干收敛成 PR 序列<
 <p>接下来是最后一章。<a href="#g11-mono">11.1</a> 处理仓库结构变复杂之后的问题——monorepo、submodule、subtree 各自适合什么;<a href="#g11-perf">11.2</a> 处理仓库变大之后 git 本身变慢的问题;<a href="#g11-rescue">11.3</a> 把全书所有「我把东西弄丢了」的情形收进一张按「你丢了什么」索引的地图,那张表是整本书最应该贴在显示器边上的一页。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 34722px;--thin-h:21754px">
+<section class="chapter" style="contain-intrinsic-size:auto 34931px;--thin-h:21754px">
 <h1 id="g11"><span class="part">疑难</span>大仓库、多仓库与误操作大全</h1>
 <p>前十章讲的都是一个正常大小的仓库、一条正常的协作流程。这一章收拾三件会在真实项目里迟早撞上的事:<strong>代码该放一个仓库还是几个仓库</strong>(<a href="#g11-mono">11.1</a>)、<strong>仓库大到 git 自己都变慢了怎么办</strong>(<a href="#g11-perf">11.2</a>)、<strong>东西弄丢了怎么按「丢了什么」查回来</strong>(<a href="#g11-rescue">11.3</a>)。前两节是结构与性能问题,最后一节是全书所有救命手段的总索引——它引用的机制散落在 <a href="#g1-object">1.2</a>、<a href="#g2-stash">2.5</a>、<a href="#g6-reflog">6.4</a> 等处,这里把它们按「症状」重新排一遍,因为出事的时候你知道的只有症状。</p>
 <p>这一章的表比图多,这是刻意的。仓库结构与恢复手段都是<strong>多路选择题</strong>:选项之间差别很细,靠散文说不清,靠一张摆开六个维度的对照表反而一眼看得懂。<a href="#g11-rescue">11.3</a> 里那张「丢了什么 → 现象 → 救法 → 能救回多少」是整本书最该打印出来贴在显示器边上的一页。所有命令仍然在 git 2.54.0.windows.1 上真跑过,性能数字标明了是实测还是量级估算,实测的部分同时给出测试仓库的规模,因为脱离规模的性能数字没有意义。终端记录的抄录规则与 <a href="#g10-lifecycle">10.1</a> 一致:超长绝对路径用 <code>…</code> 省掉中间目录,会被覆盖掉的进度行去掉,<code>time</code> 的输出只留 <code>real</code> 一行,其余原样。</p>
@@ -7484,7 +7551,11 @@ Submodule path <span>'vendor/ui-kit'</span>: checked out <span>'5d47a2254670b583
 $ git submodule status
  5d47a2254670b583097c16dbd58825c842566339 vendor/ui-kit (5d47a22)</code></pre>
 <p>初始化之后,前面的 <code>-</code> 变成空格,末尾括号里从 <code>(heads/main)</code> 变成了 <code>(5d47a22)</code>——<strong>括号里是纯哈希,意味着子模块处在 detached HEAD 状态</strong>。这是 submodule 的正常状态,不是故障:主仓库钉的是一个提交,不是一条分支。但它意味着<strong>直接在子模块目录里 <code>git commit</code> 会把提交挂在没有分支的地方</strong>,切一下就找不到了(能救,见 <a href="#g11-rescue">11.3</a>)。要在子模块里干活,先 <code>git switch main</code>。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 266px"><span class="t">🔴 子模块的三个必踩坑</span><p>① <strong>clone 完就构建</strong>:目录空的,报错五花八门(找不到模块、找不到头文件),但根因只有一个,先跑 <code>git submodule status</code> 看有没有 <code>-</code> 号。② <strong>切分支之后忘了同步子模块</strong>:不同分支钉的子模块版本可能不同,<code>git switch</code> 默认<strong>不</strong>更新子模块工作区,得配 <code>git config --global submodule.recurse true</code> 让 <code>switch</code> / <code>pull</code> 自动带上。③ <strong>在子模块里改了没推就推主仓库</strong>:主仓库的 gitlink 指向一个只存在于你机器上的提交,别人 clone 下来永远拉不到,报错是 <code>fatal: remote error: upload-pack: not our ref &lt;哈希&gt;</code>。推主仓库前用 <code>git push --recurse-submodules=check</code> 让 git 帮你拦一道。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 335px"><span class="t">🔴 子模块的三个必踩坑</span><ul>
+<li><strong>clone 完就构建。</strong>目录空的,报错五花八门(找不到模块、找不到头文件),但根因只有一个;先跑 <code>git submodule status</code> 看有没有 <code>-</code> 号。</li>
+<li><strong>切分支之后忘了同步子模块。</strong>不同分支钉的子模块版本可能不同,<code>git switch</code> 默认<strong>不</strong>更新子模块工作区;配 <code>git config --global submodule.recurse true</code> 让 <code>switch</code> / <code>pull</code> 自动带上。</li>
+<li><strong>在子模块里改了没推就推主仓库。</strong>主仓库的 gitlink 指向一个只存在于你机器上的提交,别人 clone 下来永远拉不到,报错是 <code>fatal: remote error: upload-pack: not our ref &lt;哈希&gt;</code>。推主仓库前用 <code>git push --recurse-submodules=check</code> 让 git 帮你拦一道。</li>
+</ul></div>
 <div class="note dead" style="contain-intrinsic-size:auto 266px"><span class="t">🔴 本地路径的子模块会被安全策略直接拒绝</span><p>用本地目录当子模块 URL 时会遇到 <code>fatal: transport 'file' not allowed</code> / <code>fatal: clone of '…' into submodule path '…' failed</code>。这不是 bug,是 CVE-2022-39253 的修复:恶意仓库可以借 <code>file://</code> 子模块让你在 clone 时读到本机任意路径,所以 git 默认禁掉了子模块场景下的 file 传输。解法是 <code>git -c protocol.file.allow=always submodule add …</code>。<strong>注意必须用 <code>-c</code> 传</strong>——写进仓库配置(<code>git config protocol.file.allow always</code>)不管用,因为真正发起 clone 的是子进程,<code>-c</code> 才会通过环境变量传下去。https 和 ssh 的子模块不受影响。</p></div></div>
 <h3>subtree:把对方的代码真的复制进来</h3>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 141px"><code>git subtree add  --prefix=&amp;lt;路径&amp;gt; &amp;lt;仓库&amp;gt; &amp;lt;分支&amp;gt; [--squash]
@@ -7935,7 +8006,13 @@ dangling blob 447d620f18a509a28f7b58266eeb5862ade5b851
 dangling commit 60dc147d185bf83f44f8e3e583abcadcf7ddb8ad
                                 ← 都是前面场景留下的,没有 d.txt</code></pre>
 <p><code>fsck</code> 列出的两个悬空对象都是前面的场景留下的,<strong><code>d.txt</code> 的内容一点痕迹都没有</strong>。理由和场景一完全一样:未跟踪文件从来没进过对象库。<code>git clean</code> 的第一条纪律是<strong>永远先 <code>-n</code> 预演一遍</strong>;第二条是别加 <code>-x</code>(它会连 <code>.gitignore</code> 里的东西一起删,<code>node_modules</code>、本地 <code>.env</code>、构建缓存全没)。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 三条真正不可逆的命令</span><p>① <code>git restore &lt;文件&gt;</code> / <code>git checkout -- &lt;文件&gt;</code> 覆盖<strong>从没 add 过</strong>的改动;② <code>git clean -fd</code> 删除未跟踪文件;③ <code>git gc --prune=now</code>(或 <code>git reflog expire --expire-unreachable=now --all</code> 之后再 gc)清掉不可达对象。前两条丢的是「git 从没见过的东西」,第三条丢的是「git 见过但已经没人指向的东西」。<strong>其余所有「弄丢了」的情形都能救</strong>——包括 <code>reset --hard</code>、<code>rebase</code>、<code>amend</code>、<code>branch -D</code>、<code>stash drop</code>、<code>push -f</code>。</p></div></div>
+<div class="note dead" style="contain-intrinsic-size:auto 339px"><span class="t">🔴 三条真正不可逆的命令</span><p>只有三类操作真的会造成不可恢复的损失:</p>
+<ul>
+<li><code>git restore &lt;文件&gt;</code> / <code>git checkout -- &lt;文件&gt;</code> 覆盖<strong>从没 add 过</strong>的改动。</li>
+<li><code>git clean -fd</code> 删除未跟踪文件。</li>
+<li><code>git gc --prune=now</code>(或 <code>git reflog expire --expire-unreachable=now --all</code> 之后再 gc)清掉不可达对象。</li>
+</ul>
+<p>前两条丢的是「git 从没见过的东西」,第三条丢的是「git 见过但已经没人指向的东西」。<strong>其余所有「弄丢了」的情形都能救</strong>——包括 <code>reset --hard</code>、<code>rebase</code>、<code>amend</code>、<code>branch -D</code>、<code>stash drop</code>、<code>push -f</code>。</p></div></div>
 <h3>时间窗:救援不是永久有效的</h3>
 <p>上面所有救法都建立在一个前提上:<strong>对象还没被回收</strong>。这个前提有明确的期限,由三个配置项决定(默认值取自 git 的官方文档,本节用的 git 2.54 与之一致):</p>
 <table style="contain-intrinsic-size:auto 292px">
