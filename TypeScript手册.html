@@ -256,7 +256,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 45132px;--thin-h:24949px">
+<section class="chapter" style="contain-intrinsic-size:auto 45254px;--thin-h:25071px">
 <h1 id="c1"><span class="part">入门</span>从 JavaScript 到 TypeScript</h1>
 <p>JavaScript 的类型只在运行时存在:变量此刻装着什么,要跑到那一行才知道;函数要什么参数,要么翻文档,要么读实现,要么等它抛 <code>TypeError</code>。TypeScript 只做一件事——把这些本来只在你脑子里的约定写成代码,让编译器在保存文件的那一刻替你查一遍;类型在构建时被整个抹掉,产物是普通 JavaScript,运行时的行为与性能一个字都不变。这一章是从「会写 JS」到「会写 TS」的第一段路:<a href="#f9-basics">1.1</a> 过一遍描述形状的语法——标注写在哪、<code>interface</code> 与 <code>type</code> 怎么选、可选与只读、索引签名的三个替代、字面量类型与 <code>as const</code>,以及 <code>enum</code> 为什么该让位给联合字面量;<a href="#f9-basics-fn">1.2</a> 接着讲行为的形状:四种签名写法、把类型一次性写在函数变量上,以及重载自上而下解析这条不知道就会踩的规则;<a href="#f9-basics-any">1.3</a> 把 <code>any</code>、<code>unknown</code>、<code>never</code>、<code>void</code> 这四个不描述任何具体形状的类型摆在一起对照,再拿一段有真实 bug 的 JS,从改后缀开始一条报错一条报错地加类型,直到全绿;<a href="#f9-basics-errors">1.4</a> 把「一条报错一条报错」这件事本身做成工具——十个最常撞见的编号、它们的报错模板与典型成因,外加 <code>@ts-expect-error</code> 三兄弟各自的代价;<a href="#f9-basics-lib">1.5</a> 收尾,讲清 TS 5.x 这几年放宽了哪些语法、标准库多了哪些方法,以及它们各自卡在哪个 <code>lib</code> 级别上。</p>
 <p>这个顺序不能反:先有「怎么把形状写出来」,才谈得上「形状之外还剩什么」。本章给的是语法和手感,不是原理——联合类型上为什么只能访问共有成员、对象字面量多写一个键为什么报错而先存进变量就不报,答案都在 <a href="#f9-mental">2.1</a> 的一句话里:类型是值的集合。拿到联合之后怎么把它拆开用见 <a href="#f9-narrow">3.1</a>,把类型本身变成参数见 <a href="#f9-generics">4.1</a>,本章反复出现的 <code>strict</code> 一族开关各自管什么见 <a href="#f9-config">8.1</a>。五节里前三节必读,后两节是查得多、读得少的那种——<a href="#f9-basics-errors">1.4</a> 建议在第一次被一条读不懂的报错卡住时回来翻,<a href="#f9-basics-lib">1.5</a> 建议在升级编译器或者发现某个标准库方法「类型上没有」时回来翻。</p>
@@ -389,7 +389,10 @@ h1.ts(10,3): error TS2540: Cannot assign to <span>'name'</span> because it is a 
 h1.ts(11,3): error TS2540: Cannot assign to <span>'opts'</span> because it is a read-only property.
 h1.ts(14,10): error TS2339: Property <span>'push'</span> does not exist on type <span>'readonly string[]'</span>.
 h1.ts(15,1): error TS2542: Index signature in type <span>'readonly string[]'</span> only permits reading.</code></pre>
-<p>七行里只有四行报错,③ ④ ⑦ 全部静默通过——这三行正是「以为锁住了」的地方。特别注意 ④ 和 ⑤ 的对照:同样是调 <code>push</code>,<code>string[]</code> 上合法、<code>readonly string[]</code> 上报 <code>TS2339</code>,因为 <code>readonly T[]</code> 这个类型上<strong>根本没有 push 这个成员</strong>,而不是它被标记成了只读。这个实现细节解释了另一件事:<code>readonly string[]</code> 赋给 <code>string[]</code> 报 <code>TS4104: The type 'readonly string[]' is 'readonly' and cannot be assigned to the mutable type 'string[]'.</code>,当作实参传则报 <code>TS2345</code> 并把同一句话缩进在下一行;反过来把 <code>string[]</code> 赋给 <code>readonly string[]</code> 完全合法,因为可变数组具备只读数组的全部成员。函数参数尽量写 <code>readonly T[]</code>,调用方两种数组都能传,自己也顺手拿到「这个函数不会改我的数组」这条保证。</p>
+<p>七行里只有四行报错,③ ④ ⑦ 全部静默通过——这三行正是「以为锁住了」的地方。</p>
+<p>特别注意 ④ 和 ⑤ 的对照:同样是调 <code>push</code>,<code>string[]</code> 上合法、<code>readonly string[]</code> 上报 <code>TS2339</code>。原因是 <code>readonly T[]</code> 这个类型上<strong>根本没有 push 这个成员</strong>,而不是它被标记成了只读。</p>
+<p>这个实现细节还解释了赋值方向:<code>readonly string[]</code> 赋给 <code>string[]</code> 报 <code>TS4104: The type 'readonly string[]' is 'readonly' and cannot be assigned to the mutable type 'string[]'.</code>,当作实参传则报 <code>TS2345</code> 并把同一句话缩进在下一行;反过来把 <code>string[]</code> 赋给 <code>readonly string[]</code> 完全合法,因为可变数组具备只读数组的全部成员。</p>
+<p>所以函数参数尽量写 <code>readonly T[]</code>:调用方两种数组都能传,自己也顺手拿到「这个函数不会改我的数组」这条保证。</p>
 <h3>字面量类型与 as const</h3>
 <p><code>"asc"</code> 不只是一个字符串值,也可以是一个类型——只包含这一个成员的类型。<code>type Order = "asc" | "desc"</code> 比 <code>string</code> 精确得多:传 <code>"ascending"</code> 会在编辑器里立刻标红,而且输入时有自动补全。数字、布尔值也有字面量类型。但推断规则有一个坑:<code>const o = { mode: "fast" }</code> 里 <code>mode</code> 被推成 <code>string</code> 而不是 <code>"fast"</code>,因为对象的属性默认可以被改写,TypeScript 会「放宽」(widen)到基础类型。<code>as const</code> 就是告诉它别放宽:整个字面量变成只读、每个成员保持字面量类型——<code>{ mode: "fast" } as const</code> 的 <code>mode</code> 类型是 <code>"fast"</code>,<code>[1, 2] as const</code> 是 <code>readonly [1, 2]</code>。配置对象、路由表、事件名数组,几乎都该加 <code>as const</code>,再用 <code>typeof arr[number]</code> 把元素类型「抽」出来当联合用。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 319px"><code><span class="kw">const</span> ORDERS = [<span>"asc"</span>, <span>"desc"</span>] as <span class="kw">const</span>;          <span class="cm">// readonly ["asc", "desc"]</span>
@@ -1063,7 +1066,7 @@ v.toString();                              <span class="cm">// 4. error TS18046:
 <p>接下来往两个方向走。想知道这些规则为什么长这样——为什么联合上只能访问共有成员、为什么 <code>never</code> 谁都能接、为什么多余属性检查只在字面量上生效——去 <a href="#f9-mental">2.1</a>,那里用「类型是值的集合」一条定义把本章所有规则重新推一遍,读完之后遇到没见过的报错也有下手的方向。想立刻把联合类型用起来,去 <a href="#f9-narrow">3.1</a>;想让类型跟着数据走而不是每个形状手写一遍,去 <a href="#f9-generics">4.1</a>。<code>strict</code> 这一族开关各自管什么、存量项目按什么顺序迁移,在 <a href="#f9-config">8.1</a> 与 <a href="#f9-decl-migrate">8.4</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 36579px;--thin-h:20027px">
+<section class="chapter" style="contain-intrinsic-size:auto 36653px;--thin-h:20027px">
 <h1 id="c2"><span class="part">类型系统</span>类型系统的心智模型</h1>
 <p>上一章教的是「怎么写」,这一章问的是「凭什么」。TypeScript 的规则单看是一堆互不相干的条款:联合类型上不能取单边属性,<code>never</code> 谁都能接,<code>unknown</code> 什么都不能干,对象字面量多写一个键会报错、同样的数据先存进变量再传就不报,<code>let x = "a"</code> 推成 <code>string</code> 而 <code>const x = "a"</code> 推成 <code>"a"</code>。背下来并不解决问题——换个场景就失效,遇到没见过的报错依然没有下手的方向。这一章只给一条能把它们全部推出来的定义:<strong>类型是值的集合,类型之间的关系就是集合之间的关系</strong>。</p>
 <p>三节按「定义、形状、来源」推进。<a href="#f9-mental">2.1</a> 建立模型:赋值兼容读成子集判断,<code>|</code> 是并集、<code>&amp;</code> 是交集、<code>never</code> 是空集、<code>unknown</code> 是全集,再从这几条推出一串平时靠死记的结论,顺便把顶类型/底类型/子类型这几个术语和它们的中文说法对上号,并解释「一个变量只该装一种东西」为什么是集合模型的直接推论。<a href="#f9-mental-struct">2.2</a> 回答「一个对象类型的集合里到底装着哪些值」——只看形状不看名字,由此解释多余属性检查为什么只对字面量生效、品牌类型怎么在结构类型里造出名义类型,以及同一个标识符为什么在两个空间里是两个东西。<a href="#f9-mental-infer">2.3</a> 补上最后一环:绝大多数类型不是你写的而是推出来的,宽化与上下文类型决定推断给你宽的还是窄的。有了这套模型,<a href="#f9-narrow">3.1</a> 的收窄、<a href="#f9-generics">4.1</a> 的约束都只是同一套集合运算的不同写法;而模型解释不了的那部分——类型系统明知不健全仍然放行的地方——留给 <a href="#f9-design-unsound">6.3</a>。</p>
@@ -1264,7 +1267,14 @@ m1.ts(15,21): error TS18048: <span>'u.name'</span> is possibly <span>'undefined'
 m1.ts(19,7): error TS2322: Type <span>'unknown'</span> is not assignable to type <span>'string'</span>.
 m1.ts(24,7): error TS2322: Type <span>'string'</span> is not assignable to type <span>'never'</span>.
 m1.ts(28,7): error TS2322: Type <span>'"x"'</span> is not assignable to type <span>'never'</span>.</code></pre>
-<p>七处刻意写坏的地方只报了六条——第 23 行 <code>const anything: string = nothing</code> 不报错,这正是「空集是一切集合的子集」在编译器里的样子。逐条翻译:① 「所有字符串」不是「{asc, desc}」的子集——修法是收窄或改用字面量类型,不是加 <code>as</code>;② 并集取成员只能取两边都有的,<code>string</code> 上没有 <code>toFixed</code>,报错第二行直接点名是哪一边缺;③ <code>name?: string</code> 的值域是 <code>{所有字符串} ∪ {undefined}</code>,而 <code>undefined</code> 上没有 <code>length</code>;④ 全集不是任何真子集的子集,所以 <code>unknown</code> 必须先收窄;⑥ <code>string &amp; number</code> 是两个不相交集合的交,化简成空集,于是<strong>任何值</strong>赋给它都报错——看到「is not assignable to type 'never'」时先怀疑上游某个交叉类型算空了,而不是怀疑这一行。</p></div>
+<p>七处刻意写坏的地方只报了六条——第 23 行 <code>const anything: string = nothing</code> 不报错,这正是「空集是一切集合的子集」在编译器里的样子。逐条翻译:</p>
+<ul>
+<li><strong>①</strong> 「所有字符串」不是「{asc, desc}」的子集——修法是收窄或改用字面量类型,不是加 <code>as</code>。</li>
+<li><strong>②</strong> 并集取成员只能取两边都有的,<code>string</code> 上没有 <code>toFixed</code>;报错第二行直接点名是哪一边缺。</li>
+<li><strong>③</strong> <code>name?: string</code> 的值域是 <code>{所有字符串} ∪ {undefined}</code>,而 <code>undefined</code> 上没有 <code>length</code>。</li>
+<li><strong>④</strong> 全集不是任何真子集的子集,所以 <code>unknown</code> 必须先收窄。</li>
+<li><strong>⑥</strong> <code>string &amp; number</code> 是两个不相交集合的交,化简成空集,于是<strong>任何值</strong>赋给它都报错。看到「is not assignable to type 'never'」时,先怀疑上游某个交叉类型算空了,而不是怀疑这一行。</li>
+</ul></div>
 <div class="deep"><h3 class="deep">顶类型、底类型与子类型:把术语对上号</h3>
 <p>中文资料里这几个词经常混着用,读英文文档和类型系统的书时会碰到它们的正式名字,先对上号。<strong>顶类型(top type)</strong>是包含所有值的那个类型,在 TypeScript 里是 <code>unknown</code>——一切都能赋给它,它自己赋不给任何真子集。<strong>底类型(bottom type)</strong>是一个值都不包含的类型,在 TypeScript 里是 <code>never</code>——它能赋给一切(空集是任何集合的子集),而任何类型都赋不进它。<code>any</code> 看起来像顶类型,但它不是:顶类型仍然遵守子集规则,<code>any</code> 是把规则关掉,它双向都能赋,所以它<strong>既不是</strong>顶类型也不在这个格里。</p>
 <p><strong>子类型(subtype)</strong>与<strong>超类型(supertype)</strong>是这套关系的方向词:A 是 B 的子类型,意思就是 A 的值集是 B 的值集的子集,写作 A &lt;: B。方向很容易记反,一句话钉住:<strong>子类型更具体、值更少;超类型更宽泛、值更多</strong>。<code>"asc"</code> 是 <code>string</code> 的子类型(一个值 vs 无穷多个值),<code>Dog</code> 是 <code>Animal</code> 的子类型(狗比动物少),<code>never</code> 是一切的子类型,一切都是 <code>unknown</code> 的子类型。TypeScript 的「可赋值(assignable)」在绝大多数情况下就是子类型关系,只在 <code>any</code>、枚举与数字、以及几处刻意的不健全性上偏离(见 <a href="#f9-design-unsound">6.3</a>)。</p>
@@ -5819,7 +5829,7 @@ console.log(loadSettings(<span>'{"theme":"neon"}'</span>));</code></pre>
 <p>接下来去 <a href="#f9-config">8.1</a>:这一章反复出现的开关——<code>erasableSyntaxOnly</code>、<code>isolatedModules</code>、<code>verbatimModuleSyntax</code>、<code>experimentalDecorators</code>——都要在 tsconfig 里安顿下来,而且它们和「tsc 只检查、打包器只转译」这两条流水线是绑在一起的。再往后 <a href="#f9-decl">8.3</a> 讲类型怎么跨包传递:你用 zod 或 openapi-typescript 生成出来的那些类型,发布出去之后别人怎么拿到,以及为什么有时候明明装了库却报 TS7016。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 63492px;--thin-h:36550px">
+<section class="chapter" style="contain-intrinsic-size:auto 63594px;--thin-h:36652px">
 <h1 id="c8"><span class="part">工程</span>配置、构建、声明文件与迁移</h1>
 <p>前面几章讲的是语言。这一章讲把语言接进工程的四件事:一个项目自己怎么配——<code>tsconfig.json</code> 里真正要紧的十来项,以及「检查」与「转译」为什么是两条互不等待的流水线;类型怎么从别的包里来、又怎么发给别的包用——<code>.d.ts</code>、<code>@types</code>、<code>exports</code> 里的 <code>types</code> 条件、双格式包;一堆存量 JS 怎么一档一档变成 <code>strict</code> 的 TS;以及项目大到 <code>tsc</code> 要跑四十秒、编辑器补全开始转圈时,怎么把慢的地方量出来再修。</p>
 <p>三节按「一个项目 → 一个包 → 一段时间」排。<a href="#f9-config">8.1</a> 管一个项目此刻的配置,主线是<strong>检查与产出是两条分开的流水线</strong>——想明白这条,「dev 页面能跑但 CI 挂了」就不再是玄学。<a href="#f9-decl">8.3</a> 管类型跨过包的边界:编译器按什么顺序找声明文件、你发布的包怎么让别人找得到类型,这里的每一条报错都能直接读出病因。<a href="#f9-decl-migrate">8.4</a> 管一段时间里的演进:存量 JS 一档一档收紧到 <code>strict</code>,以及项目长大之后怎么先量后改。三节的共同前提是同一句话:类型信息是一份独立于运行时代码的产物,有自己的来源、自己的解析规则、自己的成本。语言本身的部分见 <a href="#f9-basics">1.1</a> 到 <a href="#f9-runtime">7.1</a>;这一章要配的开关里有一半,是为了兜住 <a href="#f9-design-unsound">6.3</a> 列出的那些口子。</p>
@@ -6436,7 +6446,11 @@ $ npx tsc -p .
 src/aug.ts(8,23): error TS2345: Argument of type <span>'number'</span> is not assignable to parameter
   of type <span>'string'</span>.</code></pre>
 <p>解读:三份声明都生效了——<code>fmt</code>、<code>fmtPercent</code>、<code>slug</code>、<code>__APP_VERSION__</code> 全部有类型,唯一的报错来自我故意写的 <code>slug(42)</code>。把 <code>types/tiny-fmt-aug.d.ts</code> 的第一行 <code>import "tiny-fmt"</code> 删掉,这个文件就从「扩充 tiny-fmt」变成「重新声明一个叫 tiny-fmt 的模块」,原来的 <code>fmt</code> 会连同消失,报错立刻变成 <code>fmt</code> 不存在——这是模块扩充最常见的一次翻车。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 第三方类型不对时的三条路</span><p>① 首选给 DefinitelyTyped 或库仓库提 PR,一劳永逸;② 等不及就本地覆盖:模块扩充能<strong>加</strong>成员,要<strong>改</strong>已有成员的类型只能整包重写(把 <code>@types/lib</code> 从 <code>types</code> 里排除,自己写一份),或者在调用点用 <code>as</code> 加一行注释说明为什么;③ 只在一两处受影响时,用 <code>// @ts-expect-error 库 X 的声明把返回值写成了 string,实际是 number,见 issue #123</code>——它比 <code>@ts-ignore</code> 好在:库修好之后这行会因为「没有错误可以期待」而报 <code>TS2578</code>,提醒你删掉。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 301px"><span class="t">🟢 第三方类型不对时的三条路</span><ul>
+<li><strong>首选给 DefinitelyTyped 或库仓库提 PR</strong>,一劳永逸。</li>
+<li><strong>等不及就本地覆盖。</strong>模块扩充能<strong>加</strong>成员;要<strong>改</strong>已有成员的类型只能整包重写(把 <code>@types/lib</code> 从 <code>types</code> 里排除,自己写一份),或者在调用点用 <code>as</code> 加一行注释说明为什么。</li>
+<li><strong>只在一两处受影响时,用 <code>@ts-expect-error</code> 并写清原因</strong>,例如 <code>// @ts-expect-error 库 X 的声明把返回值写成了 string,实际是 number,见 issue #123</code>。它比 <code>@ts-ignore</code> 好在:库修好之后这行会因为「没有错误可以期待」而报 <code>TS2578</code>,提醒你删掉。</li>
+</ul></div>
 <h2 id="f9-decl-migrate">8.4 一档一档地收紧:存量 JS 的迁移路线</h2>
 <p><a href="#f9-decl">8.3</a> 解决的是「类型从哪来、发到哪去」。这一节解决时间维度上的问题:一堆存量 JS 怎么一档一档变成 <code>strict</code> 的 TS。路线是六步,<strong>顺序比力度重要</strong>——每一步都能合进主干、都能停下来、都不需要「大重构分支」;后面配一个完整项目从 <code>allowJs</code> 一路走到 <code>strict</code>,每一步给出真实的报错数,让你对「开这个开关会冒出多少活」有个量级概念。</p>
 <p>迁移期特有的两样东西也在这一节:一是 JSDoc 类型——不改文件后缀就能让 <code>.js</code> 接受检查,是「先把类型想清楚、再改后缀」的过渡手段;二是三个注释指令的正确用法(<a href="#f9-config-ref">8.2</a>),尤其是别用 <code>@ts-ignore</code>。迁移完成之后项目继续长大带来的检查性能与类型测试,见 <a href="#f9-decl-perf">8.5</a>。</p>
