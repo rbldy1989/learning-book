@@ -207,8 +207,8 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <button id="depthBtn" title="薄/厚阅读:点一下只看主干(薄),再点一下看全部(厚)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
 <button id="navBtn" title="显示/隐藏目录"></button>
 <nav id="sidebar">
-<div class="booktitle">Windows API 手册 · kernel32 / user32 / gdi32</div>
-<details><summary><a class="ch" href="#a1">第 1 章 总览：三大 DLL、windows.h 与命名约定</a></summary>
+<div class="booktitle">Windows API 手册 · kernel32 / user32 / gdi32 / comctl32 / comdlg32</div>
+<details><summary><a class="ch" href="#a1">第 1 章 总览：核心 DLL、windows.h 与命名约定</a></summary>
 <a class="sec" href="#a1-classics">1.0 相关经典书籍</a>
 <a class="sec" href="#a1-what-is-windows-h">1.1 windows.h 是什么</a>
 <a class="sec" href="#a1-subheaders">1.2 windows.h 拉进的子头文件</a>
@@ -233,6 +233,11 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#a3-file">3.2 文件与目录 I/O</a>
 <a class="sec" href="#a3-module">3.3 模块与 DLL</a>
 <a class="sec" href="#a3-err">3.4 错误处理</a>
+<a class="sec" href="#a3-charset">3.5 字符编码转换</a>
+<a class="sec" href="#a3-mmap">3.6 内存映射文件</a>
+<a class="sec" href="#a3-env">3.7 进程环境、命令行与路径</a>
+<a class="sec" href="#a3-pipe">3.8 管道与句柄</a>
+<a class="sec" href="#a3-debug">3.9 调试支持</a>
 </details>
 <details><summary><a class="ch" href="#a4">第 4 章 kernel32：进程、线程、同步与时间</a></summary>
 <a class="sec" href="#a4-process">4.1 进程管理</a>
@@ -242,12 +247,16 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#a4-cs">4.5 临界区</a>
 <a class="sec" href="#a4-atomic">4.6 原子操作</a>
 <a class="sec" href="#a4-time">4.7 时间与计时</a>
+<a class="sec" href="#a4-srw">4.8 现代同步原语</a>
+<a class="sec" href="#a4-pool">4.9 线程池</a>
+<a class="sec" href="#a4-iocp">4.10 重叠 I/O 与完成端口</a>
 </details>
 <details><summary><a class="ch" href="#a5">第 5 章 user32：窗口与消息</a></summary>
 <a class="sec" href="#a5-class">5.1 窗口类</a>
 <a class="sec" href="#a5-window">5.2 窗口创建与操作</a>
 <a class="sec" href="#a5-msg">5.3 消息收发</a>
 <a class="sec" href="#a5-timer">5.4 定时器</a>
+<a class="sec" href="#a5-hook">5.5 钩子（Hook）</a>
 </details>
 <details><summary><a class="ch" href="#a6">第 6 章 user32：输入、绘制、菜单与对话框</a></summary>
 <a class="sec" href="#a6-paint">6.1 绘制入口</a>
@@ -255,6 +264,10 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#a6-menu">6.3 菜单</a>
 <a class="sec" href="#a6-dialog">6.4 对话框</a>
 <a class="sec" href="#a6-common">6.5 通用资源与系统信息</a>
+<a class="sec" href="#a6-caret">6.6 插入符（文本光标）</a>
+<a class="sec" href="#a6-scroll">6.7 滚动条</a>
+<a class="sec" href="#a6-clipboard">6.8 剪贴板</a>
+<a class="sec" href="#a6-dpi">6.9 高 DPI 与多显示器</a>
 </details>
 <details><summary><a class="ch" href="#a7">第 7 章 gdi32：设备上下文、绘图与画笔画刷字体</a></summary>
 <a class="sec" href="#a7-dc">7.1 DC 与 GDI 对象管理</a>
@@ -262,28 +275,37 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#a7-pen">7.3 画笔与画刷</a>
 <a class="sec" href="#a7-font">7.4 字体</a>
 <a class="sec" href="#a7-mode">7.5 绘图模式与设备能力</a>
+<a class="sec" href="#a7-region">7.6 区域与裁剪</a>
+<a class="sec" href="#a7-path">7.7 路径</a>
 </details>
 <details><summary><a class="ch" href="#a8">第 8 章 gdi32：位图、文本与坐标</a></summary>
 <a class="sec" href="#a8-bitmap">8.1 位图与块传输</a>
 <a class="sec" href="#a8-text">8.2 文本输出与测量</a>
 <a class="sec" href="#a8-coord">8.3 坐标系与映射模式</a>
+<a class="sec" href="#a8-print">8.4 打印</a>
 </details>
-<details><summary><a class="ch" href="#a9">第 9 章 速查表：常用消息 WM_ / 窗口风格 WS_ / 类样式 CS_</a></summary>
-<a class="sec" href="#a9-msg-life">9.1 消息 · 生命周期与创建</a>
-<a class="sec" href="#a9-msg-paint">9.2 消息 · 绘制 / 尺寸 / 移动</a>
-<a class="sec" href="#a9-msg-mouse">9.3 消息 · 鼠标输入</a>
-<a class="sec" href="#a9-msg-key">9.4 消息 · 键盘与焦点</a>
-<a class="sec" href="#a9-msg-ctl">9.5 消息 · 命令/通知/定时/滚动/菜单/DPI</a>
-<a class="sec" href="#a9-ws">9.6 窗口风格 WS_</a>
-<a class="sec" href="#a9-wsex">9.7 扩展风格 WS_EX_</a>
-<a class="sec" href="#a9-cs">9.8 窗口类样式 CS_</a>
+<details><summary><a class="ch" href="#a9">第 9 章 comctl32 与 comdlg32：通用控件、子类化与通用对话框</a></summary>
+<a class="sec" href="#a9-comctl">9.1 通用控件：初始化与 WM_NOTIFY</a>
+<a class="sec" href="#a9-subclass">9.2 窗口子类化</a>
+<a class="sec" href="#a9-imagelist">9.3 图像列表 ImageList</a>
+<a class="sec" href="#a9-dlg">9.4 通用对话框</a>
+</details>
+<details><summary><a class="ch" href="#a10">第 10 章 速查表：常用消息 WM_ / 窗口风格 WS_ / 类样式 CS_</a></summary>
+<a class="sec" href="#a10-msg-life">10.1 消息 · 生命周期与创建</a>
+<a class="sec" href="#a10-msg-paint">10.2 消息 · 绘制 / 尺寸 / 移动</a>
+<a class="sec" href="#a10-msg-mouse">10.3 消息 · 鼠标输入</a>
+<a class="sec" href="#a10-msg-key">10.4 消息 · 键盘与焦点</a>
+<a class="sec" href="#a10-msg-ctl">10.5 消息 · 命令/通知/定时/滚动/菜单/DPI</a>
+<a class="sec" href="#a10-ws">10.6 窗口风格 WS_</a>
+<a class="sec" href="#a10-wsex">10.7 扩展风格 WS_EX_</a>
+<a class="sec" href="#a10-cs">10.8 窗口类样式 CS_</a>
 </details>
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 10189px;--thin-h:10189px"><h1 id="a1"><span class="part">第 1 章</span>总览：三大 DLL、windows.h 与命名约定</h1>
+<section class="chapter" style="contain-intrinsic-size:auto 10622px;--thin-h:10622px"><h1 id="a1"><span class="part">第 1 章</span>总览：核心 DLL、windows.h 与命名约定</h1>
 <h2 id="a1-classics">1.0 相关经典书籍</h2>
-<p>本手册按三大 DLL 分类速查每个 API;要理解 API 背后的机制,下面几本是顶级读物。</p>
+<p>本手册按 DLL 分类速查每个 API;要理解 API 背后的机制,下面几本是顶级读物。</p>
 <table style="contain-intrinsic-size:auto 225px">
 <thead><tr><th>书</th><th class="nw">定位</th><th>特点(含局限)</th></tr></thead>
 <tbody>
@@ -333,15 +355,16 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw"><strong><code>user32.dll</code></strong></td><td><strong>用户界面</strong>：窗口与窗口类、消息队列、菜单、对话框、键鼠输入、剪贴板</td><td><a class="fnlink" href="#fn-CreateWindowExW"><code>CreateWindowEx</code></a> <a class="fnlink" href="#fn-SendMessageW"><code>SendMessage</code></a> <a class="fnlink" href="#fn-MessageBoxW"><code>MessageBox</code></a> <a class="fnlink" href="#fn-GetMessageW"><code>GetMessage</code></a>；<code>WM_</code>/<code>WS_</code> 常量归属于此</td></tr>
 <tr><td class="nw"><strong><code>gdi32.dll</code></strong></td><td><strong>图形设备接口</strong>：设备上下文(DC)、绘图对象(笔/刷/字体/位图)、绘制文字与图元、坐标映射</td><td><a class="fnlink" href="#fn-BeginPaint"><code>BeginPaint</code></a> <a class="fnlink" href="#fn-TextOutW"><code>TextOut</code></a> <a class="fnlink" href="#fn-CreatePen"><code>CreatePen</code></a> <a class="fnlink" href="#fn-BitBlt"><code>BitBlt</code></a>；与 user32 协作绘制窗口内容</td></tr>
 </tbody></table>
-<p>再看常见配角 DLL：</p>
-<table style="contain-intrinsic-size:auto 265px"><thead><tr><th class="nw">常见配角 DLL</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<p>三大 DLL 之外，还有一批同样随系统发布、同样有官方文档的 DLL。<strong>它们一样是 Windows API</strong>，只是不像前三个那样被项目模板默认链接，用之前要自己加头文件和 <code>.lib</code>。其中<strong>本手册另外覆盖了两个</strong>（见第 9 章），其余列在这里备查：</p>
+<table style="contain-intrinsic-size:auto 289px"><thead><tr><th class="nw">常见配角 DLL</th><th>作用</th><th>备注</th></tr></thead><tbody>
 <tr><td class="nw"><code>ntdll.dll</code></td><td>NT 原生系统调用层，kernel32 的底座</td><td>一般不直接编程调用</td></tr>
 <tr><td class="nw"><code>advapi32.dll</code></td><td>注册表、服务、安全/ACL、加密旧接口</td><td><code>RegOpenKeyEx</code> <code>CryptAcquireContext</code></td></tr>
 <tr><td class="nw"><code>gdi32full.dll</code></td><td>现代 Windows 中 gdi32 的实际实现载体</td><td>gdi32 多为转发壳，透明无感</td></tr>
-<tr><td class="nw"><code>comctl32.dll</code></td><td>通用控件（列表视图、树视图、工具栏等）</td><td>需 manifest 指定 v6 才启用视觉样式</td></tr>
-<tr><td class="nw"><code>comdlg32.dll</code></td><td>通用对话框（打开/保存/颜色/字体）</td><td><code>GetOpenFileName</code></td></tr>
+<tr><td class="nw"><strong><code>comctl32.dll</code></strong></td><td><strong>通用控件</strong>（列表视图、树视图、工具栏），以及<strong>窗口子类化三件套</strong></td><td><strong>✅ 本手册 <a href="#a9-comctl">9.1</a>–<a href="#a9-imagelist">9.3</a></strong>；需 manifest 指定 v6 才启用视觉样式与 v6 独有函数</td></tr>
+<tr><td class="nw"><strong><code>comdlg32.dll</code></strong></td><td><strong>通用对话框</strong>（打开/保存/颜色/字体/打印）</td><td><strong>✅ 本手册 <a href="#a9-dlg">9.4</a></strong>；<code>GetOpenFileNameW</code> 等</td></tr>
 <tr><td class="nw"><code>shell32.dll</code></td><td>Shell 集成、<code>ShellExecute</code>、托盘</td><td> 新代码优先 <code>IFileOpenDialog</code> 等 COM 接口</td></tr>
 </tbody></table>
+<div class="note ok" style="contain-intrinsic-size:auto 295px"><span class="t">🟢 本手册的覆盖边界</span><p><strong>收进来的</strong>：kernel32、user32、gdi32（第 3–8 章），comctl32、comdlg32（第 9 章）。判断标准是"写一个普通的 Windows 桌面程序，你迟早会用到它"。<br><strong>没收的</strong>，以及为什么：<code>advapi32</code> 的注册表与服务、<code>ws2_32</code> 的 Winsock、<code>ole32</code>/COM、<code>shell32</code> 的 Shell 集成——这几块每一块都自成体系，塞进速查手册只能给出半吊子的条目，反而误事。用到时请查官方文档或专门的资料。<br><strong>另有一类是"故意不收"的</strong>：已被官方标记为过时、且有明确现代替代的接口（如 <code>GetVersionEx</code>）。这类会在相关条目的"其他说明"里点名并给出替代，而不单独立卡。</p></div>
 <div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p><code>user32</code>/<code>gdi32</code> 属于 GDI 时代的经典栈；追求高 DPI、动画与硬件加速时，现代路线是 <strong>Direct2D / DirectWrite / DirectComposition</strong>（<code>d2d1.dll</code>、<code>dwrite.dll</code>）。GDI 依然是"最省事、随处可用"的选择，本手册以其为主线。</p></div>
 
 <h2 id="a1-linking">1.4 隐式链接与导入库 .lib</h2>
@@ -453,7 +476,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 6855px;--thin-h:6855px">
+<section class="chapter" style="contain-intrinsic-size:auto 6852px;--thin-h:6852px">
 <h1 id="a2"><span class="part">第 2 章</span>常用数据类型与句柄速查</h1>
 
 <p>Win32 头文件里几乎不用裸的 C 类型，而是用一层 <code>typedef</code> 和 <code>#define</code> 把 <code>int</code>、<code>unsigned long</code>、<code>void*</code> 等重新命名成 <code>DWORD</code>、<code>LPCWSTR</code>、<code>HWND</code> 这样自带语义与位宽承诺的名字。看懂这套命名，等于拿到了阅读所有 Win32 函数原型的钥匙。本章把常用类型、句柄与结构体分组列全，配上位宽、语义与现代提示。</p>
@@ -605,7 +628,7 @@ typedef struct tagMSG {
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示</span><p>三点通则：①许多结构体首字段是 <code>cbSize</code> 或版本号，用前应 <code>ZeroMemory</code>(或 <code>{}</code>)清零并正确填写，系统据此判断版本；②带 <code>W</code>/<code>A</code> 后缀的结构体(如 <code>WNDCLASSEXW</code> vs <code>WNDCLASSEXA</code>)其字符串成员类型随之变宽窄，需与所调用的 <code>W</code>/<code>A</code> 函数一致；③<code>RECT</code> 的右/下边界是开区间，计算宽高、命中判定时切记不要多算或少算一像素。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 43759px;--thin-h:40102px">
+<section class="chapter" style="contain-intrinsic-size:auto 58101px;--thin-h:54445px">
 <h1 id="a3"><span class="part">第 3 章</span>kernel32：内存、文件、模块与 DLL</h1>
 
 <p>kernel32.dll 是 Win32 世界的地基：几乎所有进程都会加载它，几乎所有其他 API 最终都踩在它提供的句柄、内存和错误码机制上。本章按四大主题组织——内存、文件 I/O、模块/DLL、错误处理。每个主题先给一张速查表建立全景，再对最常用的函数逐一展开详解卡：完整签名、逐参数拆解、返回值约定和一段能直接抄走的最小示例。</p>
@@ -1396,9 +1419,342 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 <p>编译开关决定两套机制怎么相处:<code>/EHsc</code>(默认)下 catch 接不到 SEH 异常;<code>/EHa</code> 让 <code>catch(...)</code> 也能逮住访问违例——看似方便,实则把「程序已损坏」当普通错误吞掉,除隔离型宿主外不要开。进程顶层兜底走 <code>SetUnhandledExceptionFilter</code>:崩溃前最后一站,标准动作是用 <code>MiniDumpWriteDump</code> 落一个 dump 再放行退出——生产软件的崩溃报告全长这样。</p>
 <div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示</span><p>还有一条登记途径 <code>AddVectoredExceptionHandler</code>(向量化处理,先于帧式 SEH 链执行,Windows XP+):调试器、反作弊、APM 探针用它做全局监听。普通应用别注册——它连「会被正常处理的异常」也全部先过你一手,极易把好异常搅坏。</p></div>
 
+
+<h2 id="a3-charset">3.5 字符编码转换</h2>
+
+<p>Windows 内核里的字符串是 <strong>UTF-16</strong>（<code>wchar_t</code>，2 字节一个码元）。而磁盘上的文本、网络协议、大量第三方 C 库用的是<strong>多字节编码</strong>（UTF-8，或中文系统上的 GBK）。这两个世界之间只有一座桥，就是下面这两个互为逆运算的函数——第 1.5 节讲的 A 版 / W 版之别，落到代码上就是它们。</p>
+
+<table style="contain-intrinsic-size:auto 452px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">MultiByteToWideChar</td><td class="nw">多字节 → UTF-16</td><td>读文件、收网络数据后的第一步；两趟调用法见详解卡</td></tr>
+<tr><td class="nw">WideCharToMultiByte</td><td class="nw">UTF-16 → 多字节</td><td>写文件、发网络前的最后一步；多两个"无法转换时怎么办"的参数</td></tr>
+<tr><td class="nw">GetACP / GetOEMCP / GetConsoleOutputCP</td><td class="nw">取当前的 ANSI / OEM / 控制台代码页</td><td>诊断乱码时先看这三个数；简体中文系统上 GetACP 通常是 936</td></tr>
+<tr><td class="nw">IsTextUnicode</td><td class="nw">猜一段字节是不是 UTF-16</td><td>🔴 靠不住（著名的"联通"乱码就出自这类猜测），别用来判定编码</td></tr>
+<tr><td class="nw">CompareStringEx / CompareStringOrdinal</td><td class="nw">按区域规则 / 按码点比较字符串</td><td>比大小用前者，判相等用后者；<code>wcscmp</code> 对用户可见文本是错的</td></tr>
+</tbody></table>
+
+<h3 id="fn-MultiByteToWideChar">MultiByteToWideChar</h3>
+
+<p class="fsum">把多字节字节流转成 UTF-16。它<strong>不管缓冲区分配</strong>，所以标准用法是调两趟：第一趟问长度，第二趟真转换。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 250px"><code><span class="kw">int</span> MultiByteToWideChar(
+    UINT   CodePage,
+    DWORD  dwFlags,
+    LPCCH  lpMultiByteStr,
+    <span class="kw">int</span>    cbMultiByte,
+    LPWSTR lpWideCharStr,
+    <span class="kw">int</span>    cchWideChar
+);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 398px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">CodePage</td><td class="nw">UINT</td><td>源字节流是什么编码。<strong><code>CP_UTF8</code>（65001）几乎总是你要的那个</strong>；<code>CP_ACP</code> 是"系统当前 ANSI 代码页"——它随用户的区域设置变化，把 UTF-8 数据按 <code>CP_ACP</code> 解读正是最常见的乱码来源。</td></tr>
+<tr><td class="nw">dwFlags</td><td class="nw">DWORD</td><td>通常传 0。<strong><code>MB_ERR_INVALID_CHARS</code> 建议加上</strong>：遇到非法字节序列时让函数失败，而不是默默替换成 U+FFFD。注意 <code>CP_UTF8</code> 下只允许 0 或这一个标志。</td></tr>
+<tr><td class="nw">cbMultiByte</td><td class="nw">int</td><td>源数据的<strong>字节数</strong>。<strong>传 −1 表示"以 <code>\0</code> 结尾，长度自己算"，此时结果里会包含那个结尾的 <code>\0</code></strong>；传实际字节数（如从文件读到的长度）则结果<em>不含</em>结尾符——这个差异是长度算错的头号原因。</td></tr>
+<tr><td class="nw">lpWideCharStr / cchWideChar</td><td class="nw">LPWSTR / int</td><td>输出缓冲区与它能装多少个 <code>wchar_t</code>（<strong>字符数，不是字节数</strong>）。<strong><code>cchWideChar</code> 传 0 时表示"只算需要多大，不写入"</strong>，此时 <code>lpWideCharStr</code> 可传 NULL。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>成功返回写入（或所需）的 <code>wchar_t</code> <strong>个数</strong>；失败返回 0，用 <code>GetLastError()</code> 查：<code>ERROR_INSUFFICIENT_BUFFER</code> 缓冲不够、<code>ERROR_NO_UNICODE_TRANSLATION</code> 源数据不是合法的该编码、<code>ERROR_INVALID_PARAMETER</code> 参数组合非法。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 386px"><code><span class="cm">// 标准两趟法：UTF-8 → std::wstring（不含结尾 \0）</span>
+std::wstring Utf8ToWide(std::string_view u8) {
+    <span class="kw">if</span> (u8.empty()) <span class="kw">return</span> {};
+
+    <span class="kw">int</span> n = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+                                u8.data(), (<span class="kw">int</span>)u8.size(), <span class="kw">nullptr</span>, 0);
+    <span class="kw">if</span> (n &lt;= 0) <span class="kw">return</span> {};                 <span class="cm">// 非法 UTF-8，别静默吞掉</span>
+
+    std::wstring w(n, L'\0');
+    MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+                        u8.data(), (<span class="kw">int</span>)u8.size(), w.data(), n);
+    <span class="kw">return</span> w;
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 263px"><span class="t">🔴 三个具体的坑</span><p><strong>① 不能按块转换。</strong>一个 UTF-8 字符占 1–4 字节，读文件按 4 KB 分块时，块边界很可能切在一个字符中间。分块处理必须自己保留尾部不完整的那几个字节，拼到下一块前面。<br><strong>② 长度单位到处不同。</strong>入参是<strong>字节数</strong>，出参是 <strong><code>wchar_t</code> 个数</strong>，而 <code>malloc</code> 要的是<strong>字节数</strong>——分配时别忘了 <code>n * sizeof(wchar_t)</code>。<br><strong>③ 代理对让"字符数"变得暧昧。</strong>emoji、部分生僻字在 UTF-16 里占<strong>两个</strong> <code>wchar_t</code>。函数返回的是码元个数，不是用户眼里的"字数"——做截断显示时按它切，会把一个字劈成两半变成乱码。</p></div>
+
+<div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">🔵 现代建议：内部一律 UTF-8，边界处才转</span><p>把 <code>std::string</code> 当作 UTF-8 贯穿整个业务代码，只在<strong>调 Win32 API 的那一层</strong>转成 <code>wstring</code>，是今天跨平台项目的主流做法。<br>Windows 10 1903 起还多了一条路：在应用 manifest 里声明 <code>&lt;activeCodePage&gt;UTF-8&lt;/activeCodePage&gt;</code>，进程的 <code>CP_ACP</code> 就变成 UTF-8，于是那些 A 版 API（<code>CreateFileA</code> 等）可以直接吃 UTF-8 路径。这条对移植 POSIX 代码特别省事，但要求 Win10 1903 及以上，且不改变 W 版 API 仍是 UTF-16 这个事实。</p></div>
+
+<h3 id="fn-WideCharToMultiByte">WideCharToMultiByte</h3>
+
+<p class="fsum">反方向：UTF-16 转多字节。比正向多两个参数，用来回答"目标编码里表示不出来的字符怎么办"。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">int</span> WideCharToMultiByte(
+    UINT   CodePage,
+    DWORD  dwFlags,
+    LPCWCH lpWideCharStr,
+    <span class="kw">int</span>    cchWideChar,
+    LPSTR  lpMultiByteStr,
+    <span class="kw">int</span>    cbMultiByte,
+    LPCCH  lpDefaultChar,      <span class="cm">// ← 正向没有</span>
+    LPBOOL lpUsedDefaultChar   <span class="cm">// ← 正向没有</span>
+);</code></pre>
+
+<p><strong>参数（只列与正向不同的）</strong></p>
+<table style="contain-intrinsic-size:auto 201px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">lpDefaultChar</td><td class="nw">LPCCH</td><td>目标编码表示不了某个字符时，用什么顶替（默认是 <code>?</code>）。<strong>目标为 <code>CP_UTF8</code> 时必须传 NULL</strong>，否则函数直接失败——UTF-8 能表示一切，本来就不需要替代字符。</td></tr>
+<tr><td class="nw">lpUsedDefaultChar</td><td class="nw">LPBOOL</td><td>出参：是否发生过替代。<strong>这是"转换有没有丢信息"的唯一信号</strong>——转 GBK 时若为 TRUE，说明有字被换成了问号，数据已经损坏。同样，<code>CP_UTF8</code> 时必须传 NULL。</td></tr>
+<tr><td class="nw">cbMultiByte</td><td class="nw">int</td><td>输出缓冲区<strong>字节数</strong>；传 0 表示只问所需长度。</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 468px"><code><span class="cm">// UTF-16 → UTF-8：后两个参数必须为 NULL</span>
+std::string WideToUtf8(std::wstring_view w) {
+    <span class="kw">if</span> (w.empty()) <span class="kw">return</span> {};
+    <span class="kw">int</span> n = WideCharToMultiByte(CP_UTF8, 0, w.data(), (<span class="kw">int</span>)w.size(),
+                                <span class="kw">nullptr</span>, 0, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>);
+    std::string u8(n, '\0');
+    WideCharToMultiByte(CP_UTF8, 0, w.data(), (<span class="kw">int</span>)w.size(),
+                        u8.data(), n, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>);
+    <span class="kw">return</span> u8;
+}
+
+<span class="cm">// 转 GBK 存老格式文件时，一定要检查有没有丢字</span>
+BOOL lost = FALSE;
+<span class="kw">int</span> n = WideCharToMultiByte(936, 0, w.data(), (<span class="kw">int</span>)w.size(),
+                            buf, cb, <span class="kw">nullptr</span>, &amp;lost);
+<span class="kw">if</span> (lost) WarnUser(L"部分字符在 GBK 中无法表示，已用 ? 代替");</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 转窄编码是有损操作，别当成格式转换</span><p>UTF-16 → GBK 会丢字（emoji、生僻字、多语言混排的文本一律丢），而且<strong>丢了就找不回来</strong>。除非是为了兼容一个只认 GBK 的老系统，否则不要往窄编码转。<br>顺带一提：转出来的字节流<strong>不自带 <code>\0</code> 结尾</strong>（当 <code>cchWideChar</code> 不是 −1 时），当 C 字符串用之前得自己补。</p></div>
+
+<h2 id="a3-mmap">3.6 内存映射文件</h2>
+
+<p>把文件"贴"到进程的地址空间里，之后<strong>像访问数组一样访问文件内容</strong>——不用 ReadFile，不用自己管缓冲区，页面按需由系统换入。它有三个不可替代的场景：<strong>①</strong> 随机访问大文件（数据库、索引）；<strong>②</strong> 进程间共享内存（用 <code>INVALID_HANDLE_VALUE</code> 建的映射由页面文件支撑，不落地）；<strong>③</strong> 读大文件时省掉一次内核到用户态的拷贝。</p>
+
+<table style="contain-intrinsic-size:auto 274px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">CreateFileMappingW</td><td class="nw">为文件（或页面文件）创建映射对象</td><td>这一步还没占地址空间；给名字就成了跨进程共享内存</td></tr>
+<tr><td class="nw">MapViewOfFile</td><td class="nw">把映射对象的一段映射进本进程地址空间</td><td>返回可直接读写的指针；偏移必须按分配粒度（通常 64 KB）对齐</td></tr>
+<tr><td class="nw">UnmapViewOfFile</td><td class="nw">解除映射</td><td>与 MapViewOfFile 成对；解除后指针立即失效</td></tr>
+<tr><td class="nw">FlushViewOfFile</td><td class="nw">把脏页刷回磁盘</td><td>只保证交给系统；要落盘还需 <code>FlushFileBuffers</code></td></tr>
+<tr><td class="nw">OpenFileMappingW</td><td class="nw">按名字打开已存在的映射对象</td><td>共享内存的"接收端"用它</td></tr>
+</tbody></table>
+
+<h3 id="fn-CreateFileMappingW">CreateFileMappingW / MapViewOfFile / UnmapViewOfFile</h3>
+
+<p class="fsum">三步走：建映射对象 → 映射出一段视图 → 用完解除。指针一拿到手，读写文件就变成了读写内存。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 468px"><code>HANDLE CreateFileMappingW(
+    HANDLE hFile,                          <span class="cm">// INVALID_HANDLE_VALUE = 用页面文件（纯共享内存）</span>
+    LPSECURITY_ATTRIBUTES lpAttributes,
+    DWORD  flProtect,                      <span class="cm">// PAGE_READONLY / PAGE_READWRITE …</span>
+    DWORD  dwMaximumSizeHigh,
+    DWORD  dwMaximumSizeLow,               <span class="cm">// 都传 0 = 用文件当前大小</span>
+    LPCWSTR lpName);                       <span class="cm">// 命名后可跨进程共享</span>
+
+LPVOID MapViewOfFile(
+    HANDLE hFileMappingObject,
+    DWORD  dwDesiredAccess,                <span class="cm">// FILE_MAP_READ / FILE_MAP_WRITE …</span>
+    DWORD  dwFileOffsetHigh,
+    DWORD  dwFileOffsetLow,                <span class="cm">// ★ 必须按分配粒度对齐</span>
+    SIZE_T dwNumberOfBytesToMap);          <span class="cm">// 0 = 一直映到末尾</span>
+
+BOOL UnmapViewOfFile(LPCVOID lpBaseAddress);</code></pre>
+
+<p><strong>关键参数</strong></p>
+<table style="contain-intrinsic-size:auto 291px"><thead><tr><th>参数</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">hFile</td><td>已打开的文件句柄，权限要与 <code>flProtect</code> 匹配（想写就得以 <code>GENERIC_READ|GENERIC_WRITE</code> 打开）。传 <code>INVALID_HANDLE_VALUE</code> 则由<strong>页面文件</strong>支撑，这就是标准的共享内存做法。</td></tr>
+<tr><td class="nw">dwMaximumSize*</td><td>映射对象的大小。<strong>对文件映射传 0 表示"就用文件当前大小"</strong>——所以映射一个 0 字节的文件会失败。用页面文件时<strong>必须</strong>给出非零大小。<strong>给的大小超过文件当前大小，文件会被自动扩展</strong>。</td></tr>
+<tr><td class="nw">dwFileOffset*</td><td><strong>必须是"分配粒度"的整数倍</strong>，不是页大小。用 <code>GetSystemInfo</code> 取 <code>dwAllocationGranularity</code>，x86/x64 上是 <strong>64 KB</strong>。想读文件第 100 字节，得从偏移 0 映射再自己加 100。</td></tr>
+<tr><td class="nw">lpName</td><td>命名后其他进程可用同名 <code>CreateFileMappingW</code> 或 <code>OpenFileMappingW</code> 接上。跨会话要加 <code>Global\</code> 前缀（需权限）。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p><code>CreateFileMappingW</code> 失败返回 <strong>NULL</strong>（<em>不是</em> <code>INVALID_HANDLE_VALUE</code>，这点与 <code>CreateFileW</code> 不同）。成功时若 <code>GetLastError()</code> 为 <code>ERROR_ALREADY_EXISTS</code>，说明是接上了别人建的同名对象——共享内存里靠这个判断"我是不是第一个"。<code>MapViewOfFile</code> 失败返回 NULL。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 468px"><code><span class="cm">// ① 只读映射一个大文件，当字节数组用</span>
+HANDLE hFile = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, <span class="kw">nullptr</span>,
+                           OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, <span class="kw">nullptr</span>);
+HANDLE hMap  = CreateFileMappingW(hFile, <span class="kw">nullptr</span>, PAGE_READONLY, 0, 0, <span class="kw">nullptr</span>);
+<span class="kw">auto</span>* p = (<span class="kw">const</span> BYTE*)MapViewOfFile(hMap, FILE_MAP_READ, 0, 0, 0);
+
+LARGE_INTEGER size; GetFileSizeEx(hFile, &amp;size);
+<span class="kw">for</span> (LONGLONG i = 0; i &lt; size.QuadPart; ++i) { <span class="cm">/* 直接读 p[i] */</span> }
+
+UnmapViewOfFile(p); CloseHandle(hMap); CloseHandle(hFile);   <span class="cm">// 顺序：视图 → 映射 → 文件</span>
+
+<span class="cm">// ② 纯共享内存：两个进程用同一个名字</span>
+HANDLE hShm = CreateFileMappingW(INVALID_HANDLE_VALUE, <span class="kw">nullptr</span>,
+                                 PAGE_READWRITE, 0, 4096, L"Local\\Acme.Shm");
+BOOL isFirst = (GetLastError() != ERROR_ALREADY_EXISTS);
+<span class="kw">auto</span>* buf = (BYTE*)MapViewOfFile(hShm, FILE_MAP_ALL_ACCESS, 0, 0, 0);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 296px"><span class="t">🔴 映射内存的读写会抛"结构化异常"，不是返回错误码</span><p>访问映射区触发的是<strong>缺页</strong>，由系统去读磁盘。若此时磁盘出错、网络盘断线、或<strong>文件被别人截短了</strong>，你得到的不是一个错误返回值，而是 <code>EXCEPTION_IN_PAGE_ERROR</code> 异常——进程当场崩溃。<br>要健壮就得用结构化异常处理把访问包起来：<code>__try { 读 p[i] } __except (GetExceptionCode() == EXCEPTION_IN_PAGE_ERROR ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH) { ... }</code>。这也是"内存映射不适合网络盘"的根本原因。<br>另外两点：<strong>①</strong> 映射期间文件<strong>不能被截短</strong>，你自己也不能（句柄被映射对象占着）；<strong>②</strong> 32 位进程的地址空间只有 2 GB，映射大文件必须<strong>分段滚动</strong>映射，64 位下才可以整个文件一次映完。</p></div>
+
+<h2 id="a3-env">3.7 进程环境、命令行与路径</h2>
+
+<p>进程启动时从系统那里继承来的一整套"上下文"：命令行、环境变量、当前目录、临时目录。它们看着琐碎，但每一个都有一个容易踩的点。</p>
+
+<table style="contain-intrinsic-size:auto 589px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">GetCommandLineW</td><td class="nw">取<strong>整条</strong>命令行字符串</td><td>返回进程内部的静态缓冲，<strong>不要修改也不要释放</strong></td></tr>
+<tr><td class="nw">CommandLineToArgvW</td><td class="nw">把命令行按 Windows 规则拆成 argv</td><td>返回的数组要用 <code>LocalFree</code> 释放；自己写解析几乎一定会错</td></tr>
+<tr><td class="nw">GetEnvironmentVariableW</td><td class="nw">读环境变量</td><td>返回值语义分三种情况，见详解卡</td></tr>
+<tr><td class="nw">SetEnvironmentVariableW</td><td class="nw">改环境变量</td><td><strong>只影响本进程及此后创建的子进程</strong>，不写注册表、不影响别人</td></tr>
+<tr><td class="nw">ExpandEnvironmentStringsW</td><td>把 <code>%TEMP%\x</code> 这类展开成实际路径</td><td>配置文件里存变量路径时用</td></tr>
+<tr><td class="nw">GetCurrentDirectoryW / SetCurrentDirectoryW</td><td class="nw">读写进程当前目录</td><td>🔴 <strong>进程级全局状态</strong>，多线程程序里改它是常见 bug 源</td></tr>
+<tr><td class="nw">GetTempPathW / GetTempFileNameW</td><td class="nw">取临时目录 / 造一个临时文件</td><td>GetTempFileNameW 会<strong>真的创建</strong>一个空文件，用完记得删</td></tr>
+<tr><td class="nw">GetFullPathNameW / PathCchCanonicalizeEx</td><td class="nw">相对路径转绝对 / 规范化路径</td><td>前者<strong>依赖当前目录</strong>且不检查文件是否存在</td></tr>
+</tbody></table>
+
+<h3 id="fn-GetCommandLineW">GetCommandLineW / CommandLineToArgvW</h3>
+
+<p class="fsum">取命令行并拆成参数数组。Windows 传给进程的是<strong>一整条未拆分的字符串</strong>——拆分规则由每个程序自己实现，这正是各种"路径带空格就出错"的来源。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 87px"><code>LPWSTR  GetCommandLineW(<span class="kw">void</span>);
+LPWSTR* CommandLineToArgvW(LPCWSTR lpCmdLine, <span class="kw">int</span> *pNumArgs);   <span class="cm">// shell32.dll</span></code></pre>
+
+<p><strong>返回值</strong></p>
+<p><code>GetCommandLineW</code> 返回<strong>进程内部的静态缓冲区</strong>，永远不为 NULL，<strong>不可修改、不可释放</strong>。<br><code>CommandLineToArgvW</code> 返回 <code>argv</code> 数组（<code>argv[0]</code> 是程序自身路径），失败返回 NULL。<strong>返回的整块内存必须用 <code>LocalFree</code> 释放</strong>，且只需释放数组本身一次（字符串跟数组在同一块内存里）。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 277px"><code>#include &lt;shellapi.h&gt;
+#pragma comment(lib, "shell32.lib")
+
+<span class="kw">int</span> argc = 0;
+LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &amp;argc);
+<span class="kw">if</span> (argv) {
+    <span class="kw">for</span> (<span class="kw">int</span> i = 1; i &lt; argc; ++i) HandleArg(argv[i]);
+    LocalFree(argv);          <span class="cm">// ★ 整块一起释放，只此一次</span>
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 265px"><span class="t">🟡 wWinMain 的 lpCmdLine 和这里的 argv 不一样</span><p><code>wWinMain</code> 收到的 <code>lpCmdLine</code> <strong>不含程序名</strong>，而 <code>GetCommandLineW</code> 返回的<strong>包含</strong>程序名（<code>argv[0]</code>）。混着用会导致参数错位一格。<br>另外 Windows 的引号规则相当刁钻：<code>\"</code> 是转义的引号，<code>\\"</code> 是一个反斜杠加引号结束，而单独的 <code>\</code> 在非引号前不转义。<strong>自己写命令行解析基本必错，一律交给 <code>CommandLineToArgvW</code>。</strong><br>反过来，你要<em>构造</em>命令行去启动子进程时同样得按这套规则加引号——路径里有空格却不加引号，是 <code>CreateProcessW</code> 最常见的失败原因。</p></div>
+
+<h3 id="fn-GetEnvironmentVariableW">GetEnvironmentVariableW / SetEnvironmentVariableW</h3>
+
+<p class="fsum">读写环境变量。读的那个返回值有三种含义，是这一对里唯一需要留神的地方。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 87px"><code>DWORD GetEnvironmentVariableW(LPCWSTR lpName, LPWSTR lpBuffer, DWORD nSize);
+BOOL  SetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue);   <span class="cm">// lpValue = NULL 表示删除</span></code></pre>
+
+<p><strong>返回值（读）</strong></p>
+<table style="contain-intrinsic-size:auto 151px"><thead><tr><th class="nw">返回值</th><th>含义</th></tr></thead><tbody>
+<tr><td class="nw">0</td><td><strong>变量不存在</strong>（<code>GetLastError()</code> 为 <code>ERROR_ENVVAR_NOT_FOUND</code>），或值就是空串</td></tr>
+<tr><td>0 &lt; 返回值 &lt; nSize</td><td>成功，返回值是<strong>不含结尾 <code>\0</code></strong> 的字符数</td></tr>
+<tr><td class="nw">返回值 ≥ nSize</td><td>缓冲区太小，返回值是<strong>需要的大小（含结尾 <code>\0</code>）</strong>——注意这时单位含义变了</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 250px"><code>std::wstring GetEnv(<span class="kw">const</span> wchar_t* name) {
+    DWORD n = GetEnvironmentVariableW(name, <span class="kw">nullptr</span>, 0);   <span class="cm">// 先问长度（含 \0）</span>
+    <span class="kw">if</span> (n == 0) <span class="kw">return</span> {};                                <span class="cm">// 不存在</span>
+    std::wstring v(n, L'\0');
+    DWORD w = GetEnvironmentVariableW(name, v.data(), n);
+    v.resize(w);                                          <span class="cm">// 这次的 w 不含 \0</span>
+    <span class="kw">return</span> v;
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note new" style="contain-intrinsic-size:auto 266px"><span class="t">🔵 环境变量的作用域比很多人以为的小</span><p><code>SetEnvironmentVariableW</code> <strong>只改本进程的环境块</strong>。它影响两件事：本进程之后的 <code>GetEnvironmentVariableW</code>，以及<strong>此后</strong>用 <code>CreateProcessW</code> 创建的子进程（继承的是调用时刻的快照）。<br>它<strong>不</strong>影响：已经在跑的子进程、别的进程、系统全局设置。要改系统级的得写注册表再广播 <code>WM_SETTINGCHANGE</code>，而且那只对<em>之后</em>启动的程序有效。<br>还有一个 C 运行时的坑：<code>getenv</code> / <code>_wgetenv</code> 读的是 <strong>CRT 自己维护的一份副本</strong>，与 Win32 环境块不是同一份。混用 <code>SetEnvironmentVariableW</code> 和 <code>getenv</code> 会读到过期的值——同一个程序里只用一套。</p></div>
+
+<h2 id="a3-pipe">3.8 管道与句柄</h2>
+
+<p>"启动一个命令行程序，把它的输出抓回来"——这个需求的标准答案就是匿名管道加句柄继承。麻烦之处不在函数本身，而在<strong>句柄继承的细节</strong>：多留一个写端没关，读端就永远等不到文件结束。</p>
+
+<table style="contain-intrinsic-size:auto 298px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">CreatePipe</td><td class="nw">创建一对匿名管道句柄</td><td>只能单向、只能在有亲缘关系的进程间用</td></tr>
+<tr><td class="nw">SetHandleInformation</td><td class="nw">设置某个句柄可否被继承</td><td>关键一步：<strong>只让该继承的那一端继承</strong></td></tr>
+<tr><td class="nw">DuplicateHandle</td><td class="nw">复制句柄，可跨进程</td><td>把句柄"送"给另一个进程，或复制出一份权限更小的</td></tr>
+<tr><td class="nw">PeekNamedPipe</td><td class="nw">看看管道里有没有数据，不取走</td><td>避免 ReadFile 阻塞；匿名管道也能用（名字有误导）</td></tr>
+<tr><td class="nw">CreateNamedPipeW / ConnectNamedPipe</td><td class="nw">命名管道（可跨机器、可双向）</td><td>无亲缘关系的进程间通信用它</td></tr>
+</tbody></table>
+
+<h3 id="fn-CreatePipe">CreatePipe</h3>
+
+<p class="fsum">创建一对匿名管道句柄：一端写、一端读。抓取子进程输出的标准做法，坑全在句柄的继承与关闭上。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code>BOOL CreatePipe(
+    PHANDLE hReadPipe,
+    PHANDLE hWritePipe,
+    LPSECURITY_ATTRIBUTES lpPipeAttributes,
+    DWORD   nSize                     <span class="cm">// 缓冲区建议大小，0 = 用默认</span>
+);</code></pre>
+
+<p><strong>示例（完整可用的抓输出骨架）</strong></p>
+<pre style="contain-intrinsic-size:auto 767px"><code>SECURITY_ATTRIBUTES sa = { <span class="kw">sizeof</span>(sa), <span class="kw">nullptr</span>, TRUE };   <span class="cm">// bInheritHandle = TRUE</span>
+HANDLE hRead, hWrite;
+CreatePipe(&amp;hRead, &amp;hWrite, &amp;sa, 0);
+
+<span class="cm">// ★ 读端不能让子进程继承，否则子进程退出后写端引用计数不归零</span>
+SetHandleInformation(hRead, HANDLE_FLAG_INHERIT, 0);
+
+STARTUPINFOW si = { <span class="kw">sizeof</span>(si) };
+si.dwFlags    = STARTF_USESTDHANDLES;
+si.hStdOutput = hWrite;
+si.hStdError  = hWrite;
+si.hStdInput  = GetStdHandle(STD_INPUT_HANDLE);
+
+PROCESS_INFORMATION pi = {};
+CreateProcessW(<span class="kw">nullptr</span>, cmdline, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>,
+               TRUE,          <span class="cm">// ★ bInheritHandles 必须为 TRUE</span>
+               CREATE_NO_WINDOW, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>, &amp;si, &amp;pi);
+
+CloseHandle(hWrite);          <span class="cm">// ★★ 父进程这一端必须立刻关！否则 ReadFile 永不返回</span>
+
+<span class="kw">char</span> buf[4096]; DWORD n;
+<span class="kw">while</span> (ReadFile(hRead, buf, <span class="kw">sizeof</span>(buf), &amp;n, <span class="kw">nullptr</span>) &amp;&amp; n &gt; 0)
+    Append(buf, n);           <span class="cm">// 子进程全部退出后这里会返回 FALSE/ERROR_BROKEN_PIPE</span>
+
+CloseHandle(hRead);
+WaitForSingleObject(pi.hProcess, INFINITE);
+CloseHandle(pi.hThread); CloseHandle(pi.hProcess);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 327px"><span class="t">🔴 两个必挂的坑</span><p><strong>① 父进程忘关自己那一份写端 → ReadFile 永远阻塞。</strong>管道的"写完了"是靠<strong>所有写端句柄都关闭</strong>来判定的。子进程退出关掉了它继承的那份，但父进程手里还有一份，引用计数不为零，读端就一直以为"还会有数据"，程序卡死在 <code>ReadFile</code> 上。<strong>CreateProcessW 一返回就 CloseHandle(hWrite)。</strong><br><strong>② 边写边读，不能等子进程结束再读。</strong>管道缓冲区默认只有几 KB，装满后子进程的写操作就<strong>阻塞</strong>了。若你先 <code>WaitForSingleObject</code> 等它退出、再来读——子进程在等你读走，你在等它退出，标准死锁。输出量大的程序必须<strong>一边读一边等</strong>。<br>顺带：同时抓 stdout 和 stderr 且要分开时，需要<strong>两对管道 + 两个线程</strong>（或重叠 I/O），单线程轮流读同样会死锁。</p></div>
+
+<h2 id="a3-debug">3.9 调试支持</h2>
+
+<p>不需要挂调试器就能用的几个"自省"接口。它们在排查"只在客户机器上出现"的问题时特别有用。</p>
+
+<table style="contain-intrinsic-size:auto 325px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">OutputDebugStringW</td><td class="nw">把一行文本送给调试器</td><td>没挂调试器时可用 <strong>DebugView</strong> 抓；比 printf 省事，但慢且全局串行</td></tr>
+<tr><td class="nw">IsDebuggerPresent</td><td class="nw">当前是否挂着调试器</td><td>只查本进程；查别的进程用 <code>CheckRemoteDebuggerPresent</code></td></tr>
+<tr><td class="nw">DebugBreak / __debugbreak()</td><td class="nw">主动断下来</td><td>没挂调试器时会触发崩溃处理；断言实现的常用手段</td></tr>
+<tr><td class="nw">SetUnhandledExceptionFilter</td><td class="nw">接管"没人处理的异常"，通常用来写 dump</td><td>是<strong>最后一道防线</strong>，不是常规错误处理</td></tr>
+<tr><td class="nw">MiniDumpWriteDump</td><td class="nw">写崩溃转储文件（dbghelp.dll）</td><td>与上一条配套；理想做法是交给一个独立的看门狗进程去写</td></tr>
+</tbody></table>
+
+<h3 id="fn-OutputDebugStringW">OutputDebugStringW / IsDebuggerPresent</h3>
+
+<p class="fsum">往调试器输出一行字。发布版里忘了摘掉不会出错，但它比你以为的贵——每次调用都要跨进程同步一次。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 87px"><code><span class="kw">void</span> OutputDebugStringW(LPCWSTR lpOutputString);
+BOOL IsDebuggerPresent(<span class="kw">void</span>);</code></pre>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 468px"><code><span class="cm">// 带格式化的调试输出（发布版编译成空语句）</span>
+<span class="kw">void</span> DbgPrintf(<span class="kw">const</span> wchar_t* fmt, ...) {
+#ifdef _DEBUG
+    wchar_t buf[1024];
+    va_list ap; va_start(ap, fmt);
+    _vsnwprintf_s(buf, _TRUNCATE, fmt, ap);
+    va_end(ap);
+    OutputDebugStringW(buf);
+#endif
+}
+
+<span class="cm">// 只在挂着调试器时才断下来，否则正常走错误处理</span>
+<span class="kw">if</span> (badState) {
+    <span class="kw">if</span> (IsDebuggerPresent()) __debugbreak();
+    <span class="kw">else</span> ReportAndRecover();
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 263px"><span class="t">🟡 它是全局串行的，别在热路径上调</span><p><code>OutputDebugStringW</code> 的实现要抢一个<strong>全系统唯一</strong>的互斥量，再通过共享内存把字符串交给调试器。这意味着：<strong>①</strong> 系统里所有程序的调试输出<strong>互相排队</strong>；<strong>②</strong> 在每帧渲染、每条消息里调它，会实实在在拖慢程序，甚至改变时序把竞态问题掩盖掉（"加了日志就不复现"的经典成因）。<br>没挂调试器时开销小得多但不为零。发布版建议用宏整个编译掉，或改用 <strong>ETW</strong>（<code>TraceLogging</code>）——那才是 Windows 上为生产环境设计的高性能日志通道。<br>还有一点：它<strong>不换行</strong>，字符串末尾要自己带 <code>\n</code>。</p></div>
+
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41566px;--thin-h:37516px">
+<section class="chapter" style="contain-intrinsic-size:auto 54646px;--thin-h:50596px">
 <h1 id="a4"><span class="part">第 4 章</span>kernel32：进程、线程、同步与时间</h1>
 
 <p>kernel32.dll 是 Win32 的"发动机舱"：进程与线程的创建销毁、内核对象的等待与同步、系统计时，全部从这里出发。本章先用速查表把每类 API 摆开，再对最常用的函数逐一给出详解卡（函数原型、参数表、返回值、最小示例）。徽章含义：<span class="badge ok">推荐</span> 首选常用、<span class="badge old">已过时</span> 谨慎使用或有更好替代、<span class="badge dead">禁用</span> 应弃用、<span class="badge new">现代提示</span> 补充提示。本书统一使用 W（宽字符）版本。</p>
@@ -2227,9 +2583,321 @@ QueryPerformanceCounter(&amp;t1);
 <span class="kw">double</span> ms = (t1.QuadPart - t0.QuadPart) * 1000.0 / freq.QuadPart;</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>与 QueryPerformanceCounter 搭配使用：两次计数之差除以频率得秒，再乘 1000 即毫秒，精度可达微秒级，是性能测量的标准做法。</p></div>
+
+<h3 id="fn-GetSystemTime">GetSystemTime / GetLocalTime / FileTimeToSystemTime</h3>
+
+<p class="fsum">Windows 里"时间"有两种表示：给人看的 <code>SYSTEMTIME</code>（年月日时分秒）和给机器算的 <code>FILETIME</code>（自 1601 年起的 100 纳秒计数）。<strong>所有比较、加减一律在 FILETIME 上做</strong>，SYSTEMTIME 只用于最后的显示与解析。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 277px"><code><span class="kw">void</span> GetSystemTime(LPSYSTEMTIME lpSystemTime);        <span class="cm">// UTC</span>
+<span class="kw">void</span> GetLocalTime (LPSYSTEMTIME lpSystemTime);        <span class="cm">// 本地时区</span>
+<span class="kw">void</span> GetSystemTimeAsFileTime(LPFILETIME lpSystemTimeAsFileTime);   <span class="cm">// UTC，直接给 FILETIME</span>
+
+BOOL SystemTimeToFileTime(<span class="kw">const</span> SYSTEMTIME *lpSystemTime, LPFILETIME lpFileTime);
+BOOL FileTimeToSystemTime(<span class="kw">const</span> FILETIME *lpFileTime, LPSYSTEMTIME lpSystemTime);
+BOOL FileTimeToLocalFileTime(<span class="kw">const</span> FILETIME *lpFileTime, LPFILETIME lpLocalFileTime);
+BOOL SystemTimeToTzSpecificLocalTime(<span class="kw">const</span> TIME_ZONE_INFORMATION *tz,
+                                     <span class="kw">const</span> SYSTEMTIME *utc, LPSYSTEMTIME local);</code></pre>
+
+<p><strong>两种表示的分工</strong></p>
+<table style="contain-intrinsic-size:auto 163px"><thead><tr><th class="nw">类型</th><th>内容</th><th>适合做什么</th></tr></thead><tbody>
+<tr><td class="nw"><code>SYSTEMTIME</code></td><td>年/月/日/星期/时/分/秒/毫秒，各一个 <code>WORD</code></td><td><strong>只适合显示和解析</strong>。直接比较两个 SYSTEMTIME 结构、或给"秒"加 1 都是错的</td></tr>
+<tr><td class="nw"><code>FILETIME</code></td><td>64 位整数（拆成高低两个 DWORD），单位 <strong>100 纳秒</strong>，起点 1601-01-01 UTC</td><td><strong>比较、排序、加减、算时长</strong>。先转成 <code>ULARGE_INTEGER</code> 再当整数用</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 440px"><code><span class="cm">// 取当前 UTC 时间并加一小时</span>
+FILETIME ft;
+GetSystemTimeAsFileTime(&amp;ft);
+
+ULARGE_INTEGER u;
+u.LowPart = ft.dwLowDateTime; u.HighPart = ft.dwHighDateTime;
+u.QuadPart += 3600ULL * 10'000'000ULL;      <span class="cm">// 1 秒 = 一千万个 100ns</span>
+ft.dwLowDateTime = u.LowPart; ft.dwHighDateTime = u.HighPart;
+
+<span class="cm">// 要显示了，才转成本地时间的 SYSTEMTIME</span>
+FILETIME lft; SYSTEMTIME st;
+FileTimeToLocalFileTime(&amp;ft, &amp;lft);
+FileTimeToSystemTime(&amp;lft, &amp;st);
+wprintf(L"%04d-%02d-%02d %02d:%02d:%02d\n",
+        st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 233px"><span class="t">🔴 FILETIME 不能直接强转成 __int64*</span><p><code>FILETIME</code> 只保证 <strong>4 字节对齐</strong>，而 64 位整数在某些平台要求 8 字节对齐。写成 <code>*(__int64*)&amp;ft</code> 在 x86/x64 上碰巧能跑，在 ARM 上就是未对齐访问。<strong>规规矩矩用 <code>ULARGE_INTEGER</code> 中转</strong>，编译器会优化掉，不花钱。<br>另外两个易错点：<strong>①</strong> <code>FileTimeToLocalFileTime</code> 用的是<strong>当前</strong>的时区与夏令时规则去换算<strong>历史</strong>时间，跨夏令时边界会差一小时；要精确得用 <code>SystemTimeToTzSpecificLocalTime</code>。<strong>②</strong> 别拿这套时间测量耗时——系统时间可能被 NTP 校准而<strong>向后跳</strong>。测耗时一律用 <a class="fnlink" href="#fn-QueryPerformanceCounter"><code>QueryPerformanceCounter</code></a> 或 <a class="fnlink" href="#fn-GetTickCount64"><code>GetTickCount64</code></a>。</p></div>
+
+<h2 id="a4-srw">4.8 现代同步原语</h2>
+
+<p>4.4 的互斥量、事件、信号量都是<strong>内核对象</strong>：能跨进程、能被 <code>WaitForMultipleObjects</code> 一起等，但每次加解锁都要陷入内核，代价在几微秒量级。4.5 的临界区快得多，可它占 40 字节、需要初始化与销毁、也没有读写之分。</p>
+<p>Vista 起补上的这一批是<strong>用户态轻量原语</strong>：结构体只有一个指针大小，<strong>零初始化即可用、无需销毁</strong>，无竞争时完全不进内核。代价是它们<strong>不能跨进程</strong>，也不能放进 <code>WaitForMultipleObjects</code>。进程内同步，今天应当默认选它们。</p>
+
+<table style="contain-intrinsic-size:auto 588px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">InitializeSRWLock</td><td class="nw">初始化读写锁（也可直接 <code>= SRWLOCK_INIT</code>）</td><td>只有一个指针大小；<strong>没有对应的 Delete 函数</strong></td></tr>
+<tr><td>AcquireSRWLockExclusive / Shared</td><td class="nw">加写锁 / 加读锁</td><td>读锁可多个线程同时持有；<strong>不可重入</strong>，同线程再加一次就死锁</td></tr>
+<tr><td>ReleaseSRWLockExclusive / Shared</td><td class="nw">解锁</td><td><strong>必须与加锁类型配对</strong>，用错了是未定义行为而非报错</td></tr>
+<tr><td>TryAcquireSRWLockExclusive / Shared</td><td class="nw">尝试加锁，失败立即返回</td><td>Win7+</td></tr>
+<tr><td>InitializeConditionVariable / SleepConditionVariableSRW</td><td class="nw">条件变量：等待某个条件成立</td><td>"生产者-消费者"的标准零件；必须配 while 循环判断，见详解卡</td></tr>
+<tr><td>WakeConditionVariable / WakeAllConditionVariable</td><td class="nw">唤醒一个 / 全部等待者</td><td>—</td></tr>
+<tr><td class="nw">InitOnceExecuteOnce</td><td class="nw">保证某段初始化在全进程只跑一次</td><td>比双重检查锁定正确、比全局静态灵活；C++11 起也可直接用函数内 <code>static</code></td></tr>
+<tr><td>WaitOnAddress / WakeByAddressSingle</td><td>盯着<strong>一个变量的地址</strong>睡，值变了就醒</td><td>Win8+；实现自定义无锁结构时的等待原语</td></tr>
+</tbody></table>
+
+<h3 id="fn-InitializeSRWLock">SRWLOCK（读写锁）</h3>
+
+<p class="fsum">读多写少的场景里，它让所有读线程真正并行起来。用法极简：一个 <code>SRWLOCK</code> 变量，零初始化，加锁解锁，没有销毁。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 277px"><code><span class="kw">void</span> InitializeSRWLock(PSRWLOCK SRWLock);              <span class="cm">// 或 SRWLOCK lk = SRWLOCK_INIT;</span>
+
+<span class="kw">void</span> AcquireSRWLockExclusive(PSRWLOCK SRWLock);        <span class="cm">// 写锁：独占</span>
+<span class="kw">void</span> ReleaseSRWLockExclusive(PSRWLOCK SRWLock);
+<span class="kw">void</span> AcquireSRWLockShared   (PSRWLOCK SRWLock);        <span class="cm">// 读锁：可并存</span>
+<span class="kw">void</span> ReleaseSRWLockShared   (PSRWLOCK SRWLock);
+
+BOOLEAN TryAcquireSRWLockExclusive(PSRWLOCK SRWLock);  <span class="cm">// Win7+</span>
+BOOLEAN TryAcquireSRWLockShared   (PSRWLOCK SRWLock);</code></pre>
+
+<p><strong>与临界区、互斥量的取舍</strong></p>
+<table style="contain-intrinsic-size:auto 151px"><thead><tr><th class="nw">选项</th><th>大小 / 开销</th><th>能跨进程</th><th>可重入</th><th>读写分离</th></tr></thead><tbody>
+<tr><td class="nw"><code>SRWLOCK</code></td><td>1 个指针，最快</td><td>❌</td><td><strong>❌ 会死锁</strong></td><td>✅</td></tr>
+<tr><td class="nw"><code>CRITICAL_SECTION</code></td><td>约 40 字节，很快</td><td>❌</td><td>✅ 同线程可重复进入</td><td>❌</td></tr>
+<tr><td class="nw">互斥量 <code>HANDLE</code></td><td>内核对象，最慢</td><td><strong>✅</strong></td><td>✅</td><td>❌</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 631px"><code>SRWLOCK g_lock = SRWLOCK_INIT;        <span class="cm">// 零初始化即可，不用 Initialize</span>
+std::map&lt;std::wstring, Item&gt; g_cache;
+
+Item Lookup(<span class="kw">const</span> std::wstring&amp; k) {          <span class="cm">// 读多：共享锁，多线程可同时进</span>
+    AcquireSRWLockShared(&amp;g_lock);
+    Item v = g_cache.count(k) ? g_cache[k] : Item{};   <span class="cm">// 注意 operator[] 会插入！见下</span>
+    ReleaseSRWLockShared(&amp;g_lock);
+    <span class="kw">return</span> v;
+}
+
+<span class="kw">void</span> Insert(<span class="kw">const</span> std::wstring&amp; k, Item v) {   <span class="cm">// 写少：独占锁</span>
+    AcquireSRWLockExclusive(&amp;g_lock);
+    g_cache[k] = std::move(v);
+    ReleaseSRWLockExclusive(&amp;g_lock);
+}
+
+<span class="cm">// C++ 里请用 RAII 包一层，异常路径上才不会漏解锁</span>
+<span class="kw">struct</span> SharedLock {
+    PSRWLOCK p;
+    <span class="kw">explicit</span> SharedLock(PSRWLOCK l) : p(l) { AcquireSRWLockShared(p); }
+    ~SharedLock() { ReleaseSRWLockShared(p); }
+};</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 328px"><span class="t">🔴 不可重入，而且"升级"是不存在的</span><p><strong>① 同一线程重复加锁 = 立刻死锁。</strong>临界区允许同线程重复进入，SRWLOCK 不允许。持锁期间调用的函数里若又加了同一把锁（很容易在重构后无意造成），程序就停在那儿了。<br><strong>② 没有"读锁升级为写锁"。</strong>持着共享锁再去申请独占锁必然死锁。正确做法是<strong>先释放读锁，再申请写锁，然后重新检查条件</strong>——因为中间的空隙里状态可能已经被别人改了。<br><strong>③ 用错释放函数不会报错。</strong>加了 <code>Shared</code> 却调 <code>ReleaseSRWLockExclusive</code> 是未定义行为，症状通常是很久之后的一次莫名崩溃或卡死。RAII 包装能从根子上避免。<br>另外注意上例的 <code>g_cache[k]</code>：<code>std::map::operator[]</code> 在键不存在时<strong>会插入</strong>，那是写操作——在共享锁下这么写是真实的数据竞争，应改用 <code>find</code>。</p></div>
+
+<h3 id="fn-SleepConditionVariableSRW">条件变量 SleepConditionVariableSRW</h3>
+
+<p class="fsum">"等到队列里有东西再干活"——不是自旋轮询，而是真正睡下去、被唤醒才醒。它必须与一把锁配合使用，这不是麻烦，而是它能正确工作的前提。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">void</span> InitializeConditionVariable(PCONDITION_VARIABLE cv);   <span class="cm">// 或 = CONDITION_VARIABLE_INIT</span>
+
+BOOL SleepConditionVariableSRW(
+    PCONDITION_VARIABLE ConditionVariable,
+    PSRWLOCK  SRWLock,
+    DWORD     dwMilliseconds,        <span class="cm">// INFINITE 或超时毫秒</span>
+    ULONG     Flags);                <span class="cm">// 0 = 配独占锁；CONDITION_VARIABLE_LOCKMODE_SHARED = 配共享锁</span>
+
+<span class="kw">void</span> WakeConditionVariable   (PCONDITION_VARIABLE cv);      <span class="cm">// 唤醒一个</span>
+<span class="kw">void</span> WakeAllConditionVariable(PCONDITION_VARIABLE cv);      <span class="cm">// 唤醒全部</span></code></pre>
+
+<p><strong>它做的三件事（原子完成）</strong></p>
+<p><code>SleepConditionVariableSRW</code> 在一次调用里完成：<strong>①</strong> 释放你持有的锁；<strong>②</strong> 把本线程挂起；<strong>③</strong> 被唤醒后重新获取那把锁再返回。这三步必须原子，否则在"释放锁"和"挂起"之间，别人恰好发出的唤醒信号就丢了——线程会永远睡下去。这就是它必须和锁绑定的原因。</p>
+
+<p><strong>返回值</strong></p>
+<p>被唤醒返回非零；超时返回 0 且 <code>GetLastError()</code> 为 <code>ERROR_TIMEOUT</code>。<strong>返回非零不代表条件真的成立</strong>——见下方红条。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 767px"><code>SRWLOCK            g_lk = SRWLOCK_INIT;
+CONDITION_VARIABLE g_cv = CONDITION_VARIABLE_INIT;
+std::deque&lt;Job&gt;    g_q;
+<span class="kw">bool</span>               g_quit = <span class="kw">false</span>;
+
+<span class="cm">// 消费者</span>
+<span class="kw">void</span> Worker() {
+    <span class="kw">for</span> (;;) {
+        AcquireSRWLockExclusive(&amp;g_lk);
+        <span class="kw">while</span> (g_q.empty() &amp;&amp; !g_quit)              <span class="cm">// ★ 必须是 while，不是 if</span>
+            SleepConditionVariableSRW(&amp;g_cv, &amp;g_lk, INFINITE, 0);
+
+        <span class="kw">if</span> (g_quit &amp;&amp; g_q.empty()) { ReleaseSRWLockExclusive(&amp;g_lk); <span class="kw">return</span>; }
+        Job j = std::move(g_q.front()); g_q.pop_front();
+        ReleaseSRWLockExclusive(&amp;g_lk);
+
+        Run(j);                                     <span class="cm">// 干活时不持锁</span>
+    }
+}
+
+<span class="cm">// 生产者</span>
+<span class="kw">void</span> Post(Job j) {
+    AcquireSRWLockExclusive(&amp;g_lk);
+    g_q.push_back(std::move(j));
+    ReleaseSRWLockExclusive(&amp;g_lk);
+    WakeConditionVariable(&amp;g_cv);                   <span class="cm">// 锁外唤醒，少一次无谓的争用</span>
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 360px"><span class="t">🔴 判断条件必须用 while，绝不能用 if</span><p>两个原因让"醒来"不等于"条件成立"：<br><strong>① 虚假唤醒（spurious wakeup）。</strong>系统允许在没有人唤醒的情况下让你醒来，这是各平台条件变量的通行约定。<br><strong>② 被抢先。</strong>你被唤醒到重新拿到锁之间有一个窗口，另一个消费者可能抢先把队列里唯一那个任务取走了。<br>所以正确写法永远是 <code>while (条件不成立) Sleep...;</code>——醒来后重新检查，不成立就接着睡。写成 <code>if</code> 的代码在低负载下跑得好好的，一上压力就崩在"队列空却 pop_front"上。<br>另一个选择题：<code>WakeConditionVariable</code>（唤醒一个）省事但要求所有等待者<strong>等的是同一个条件</strong>；等待条件不一致时必须用 <code>WakeAllConditionVariable</code>，否则可能唤醒了一个"条件仍不满足"的线程，它接着睡，而真正该醒的那个错过了信号。</p></div>
+
+<h3 id="fn-InitOnceExecuteOnce">InitOnceExecuteOnce</h3>
+
+<p class="fsum">"这段初始化，全进程只许跑一次，且所有线程都要等它跑完"。它替代的是那个人人写错的双重检查锁定。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 250px"><code>BOOL InitOnceExecuteOnce(
+    PINIT_ONCE      InitOnce,       <span class="cm">// 静态变量，= INIT_ONCE_STATIC_INIT</span>
+    PINIT_ONCE_FN   InitFn,
+    PVOID           Parameter,
+    LPVOID         *Context);
+
+<span class="cm">// 回调签名；返回 FALSE 表示初始化失败，下次还会再试</span>
+BOOL CALLBACK InitFn(PINIT_ONCE io, PVOID param, PVOID *ctx);</code></pre>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 359px"><code>INIT_ONCE g_once = INIT_ONCE_STATIC_INIT;
+Config*   g_cfg  = <span class="kw">nullptr</span>;
+
+BOOL CALLBACK InitCfg(PINIT_ONCE, PVOID, PVOID*) {
+    g_cfg = LoadConfigFromDisk();
+    <span class="kw">return</span> g_cfg != <span class="kw">nullptr</span>;      <span class="cm">// 返回 FALSE 则下次调用会重新尝试</span>
+}
+
+Config* GetConfig() {
+    InitOnceExecuteOnce(&amp;g_once, InitCfg, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>);
+    <span class="kw">return</span> g_cfg;
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note new" style="contain-intrinsic-size:auto 363px"><span class="t">🔵 C++ 里通常有更简单的写法</span><p>C++11 起，<strong>函数内的静态局部变量初始化本身就是线程安全的</strong>（俗称 magic static），编译器生成的代码和 <code>InitOnceExecuteOnce</code> 做的是一回事：<br><code>Config&amp; GetConfig() { <span class="kw">static</span> Config c = LoadConfigFromDisk(); <span class="kw">return</span> c; }</code><br>还有 <code>std::call_once</code> + <code>std::once_flag</code>，跨平台。<br>那什么时候还需要 <code>InitOnceExecuteOnce</code>？<strong>①</strong> 纯 C 代码；<strong>②</strong> 需要"初始化失败后下次重试"的语义（magic static 抛异常后会重试，但返回 FALSE 这种非异常失败它管不了）；<strong>③</strong> 需要异步模式（<code>InitOnceBeginInitialize</code> / <code>InitOnceComplete</code>，允许多个线程各自尝试、第一个完成的胜出，不阻塞其他线程）。<br><strong>千万别自己写双重检查锁定</strong>——没有正确的内存屏障，它在弱内存序架构上是错的，而这类 bug 极难复现。</p></div>
+
+<h2 id="a4-pool">4.9 线程池</h2>
+
+<p>"来一个任务开一个线程"在任务多而短时是灾难：线程创建约需几十微秒、每个线程默认占 1 MB 栈保留地址空间，上下文切换还要钱。系统自带的线程池替你维持一组工作线程，并根据 CPU 数与阻塞情况自动伸缩。</p>
+
+<table style="contain-intrinsic-size:auto 475px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">TrySubmitThreadpoolCallback</td><td class="nw">最简单：丢一个函数进去让它跑</td><td>一行搞定；但拿不到句柄，无法等待或取消</td></tr>
+<tr><td>CreateThreadpoolWork / SubmitThreadpoolWork</td><td class="nw">创建可复用的工作项并提交</td><td>同一个工作项可反复提交；可等待、可取消</td></tr>
+<tr><td>WaitForThreadpoolWorkCallbacks</td><td class="nw">等它跑完（或取消尚未开始的）</td><td>第二个参数 TRUE = 取消还排着队的</td></tr>
+<tr><td class="nw">CloseThreadpoolWork</td><td class="nw">释放工作项</td><td><strong>要先 Wait 再 Close</strong>，否则回调可能还在跑</td></tr>
+<tr><td>CreateThreadpoolTimer / SetThreadpoolTimer</td><td class="nw">线程池定时器</td><td>比 <code>SetTimer</code> 精度高，且不需要消息循环</td></tr>
+<tr><td>CreateThreadpoolWait / SetThreadpoolWait</td><td class="nw">等一个内核对象有信号时回调</td><td>替代"开一个线程专门 Wait"这种浪费</td></tr>
+<tr><td>CreateThreadpoolIo / StartThreadpoolIo</td><td class="nw">重叠 I/O 完成时回调</td><td>与 4.10 配合，是高并发 I/O 的现代写法</td></tr>
+</tbody></table>
+
+<h3 id="fn-TrySubmitThreadpoolCallback">TrySubmitThreadpoolCallback / CreateThreadpoolWork</h3>
+
+<p class="fsum">前者一行就能把活丢出去，后者多几行但换来"能等、能取消"。日常够用的是前者，写库或需要收尾的用后者。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 250px"><code>BOOL TrySubmitThreadpoolCallback(
+    PTP_SIMPLE_CALLBACK pfns, PVOID pv, PTP_CALLBACK_ENVIRON pcbe);
+
+PTP_WORK CreateThreadpoolWork(PTP_WORK_CALLBACK pfnwk, PVOID pv,
+                              PTP_CALLBACK_ENVIRON pcbe);
+<span class="kw">void</span> SubmitThreadpoolWork(PTP_WORK pwk);
+<span class="kw">void</span> WaitForThreadpoolWorkCallbacks(PTP_WORK pwk, BOOL fCancelPendingCallbacks);
+<span class="kw">void</span> CloseThreadpoolWork(PTP_WORK pwk);</code></pre>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 468px"><code><span class="cm">// ① 最简：丢一个活出去，不管结果</span>
+<span class="kw">void</span> CALLBACK DoWork(PTP_CALLBACK_INSTANCE, PVOID ctx) {
+    <span class="kw">auto</span>* job = (Job*)ctx;
+    Run(*job);
+    <span class="kw">delete</span> job;                          <span class="cm">// 谁 new 谁负责，通常在回调里收</span>
+}
+TrySubmitThreadpoolCallback(DoWork, <span class="kw">new</span> Job{...}, <span class="kw">nullptr</span>);
+
+<span class="cm">// ② 需要等它结束（比如程序退出前）</span>
+<span class="kw">void</span> CALLBACK OnWork(PTP_CALLBACK_INSTANCE, PVOID ctx, PTP_WORK) { Run((Job*)ctx); }
+
+PTP_WORK w = CreateThreadpoolWork(OnWork, &amp;job, <span class="kw">nullptr</span>);
+SubmitThreadpoolWork(w);
+<span class="cm">// …退出前…</span>
+WaitForThreadpoolWorkCallbacks(w, TRUE);   <span class="cm">// TRUE = 尚未开始的直接取消</span>
+CloseThreadpoolWork(w);                    <span class="cm">// ★ 必须 Wait 之后再 Close</span></code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 328px"><span class="t">🔴 线程池回调里的三条禁忌</span><p><strong>① 不要长时间阻塞。</strong>线程池会把线程视为"忙"，虽然它能自动增线程，但反应有延迟（约每秒一个），大量回调同时阻塞会让吞吐塌掉。真要做阻塞式等待，先调 <code>CallbackMayRunLong</code> 告诉线程池一声。<br><strong>② 不要修改线程状态还不还原。</strong>线程是复用的——你改了区域设置、COM 单元模式、线程优先级、TLS，下一个回调会继承这些。改了就必须在返回前复原。<br><strong>③ 不要在回调里 Close 自己。</strong><code>CloseThreadpoolWork</code> 要在确认回调不再运行之后调，在回调内部调就是自己拆自己。<br>另外，<strong>进程退出时线程池不保证跑完排队的任务</strong>。有收尾语义的活（写日志、存盘）必须显式 <code>WaitForThreadpoolWorkCallbacks</code>，别指望它自己跑完。</p></div>
+
+<h2 id="a4-iocp">4.10 重叠 I/O 与完成端口</h2>
+
+<p>普通 <code>ReadFile</code> 是同步的：函数返回时数据已经在缓冲区里，代价是这段时间线程什么都干不了。<strong>重叠 I/O</strong>（overlapped，即异步 I/O）让 <code>ReadFile</code> 立刻返回，数据什么时候好了再通知你。<strong>完成端口（IOCP）</strong>则是接收这些通知的最高效方式——它是 Windows 上写高并发服务端的基石。</p>
+
+<table style="contain-intrinsic-size:auto 336px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">CreateFileW + FILE_FLAG_OVERLAPPED</td><td class="nw">以异步方式打开文件/管道</td><td>没有这个标志，后面一切异步都无从谈起</td></tr>
+<tr><td class="nw">GetOverlappedResult</td><td class="nw">取一次异步操作的结果</td><td>第四个参数 TRUE 表示"没好就等着"</td></tr>
+<tr><td class="nw">CreateIoCompletionPort</td><td class="nw">创建完成端口 / 把句柄关联到端口</td><td>一个函数干两件事，靠参数区分</td></tr>
+<tr><td class="nw">GetQueuedCompletionStatus</td><td class="nw">从端口取一个已完成的操作</td><td>工作线程就在这里循环；<strong>返回 FALSE 也可能带着有效数据</strong></td></tr>
+<tr><td class="nw">PostQueuedCompletionStatus</td><td class="nw">手工往端口塞一个"完成"事件</td><td>唤醒工作线程退出的标准手法</td></tr>
+<tr><td class="nw">CancelIoEx</td><td class="nw">取消未完成的 I/O</td><td>可取消<strong>别的线程</strong>发起的，老的 <code>CancelIo</code> 不行</td></tr>
+</tbody></table>
+
+<h3 id="fn-CreateIoCompletionPort">CreateIoCompletionPort / GetQueuedCompletionStatus</h3>
+
+<p class="fsum">完成端口就是一个"已完成 I/O 的队列"，加上一套让系统<strong>只唤醒该唤醒的那个线程</strong>的调度逻辑——这是它比"一个连接一个线程"快一个数量级的原因。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 359px"><code>HANDLE CreateIoCompletionPort(
+    HANDLE      FileHandle,              <span class="cm">// INVALID_HANDLE_VALUE = 只创建端口</span>
+    HANDLE      ExistingCompletionPort,  <span class="cm">// NULL = 创建新端口；否则 = 关联到它</span>
+    ULONG_PTR   CompletionKey,           <span class="cm">// 你自定的"这是哪个连接"标识</span>
+    DWORD       NumberOfConcurrentThreads);  <span class="cm">// 0 = 取 CPU 核心数</span>
+
+BOOL GetQueuedCompletionStatus(
+    HANDLE       CompletionPort,
+    LPDWORD      lpNumberOfBytesTransferred,
+    PULONG_PTR   lpCompletionKey,
+    LPOVERLAPPED *lpOverlapped,
+    DWORD        dwMilliseconds);</code></pre>
+
+<p><strong>返回值（这是最容易写错的地方）</strong></p>
+<table style="contain-intrinsic-size:auto 200px"><thead><tr><th class="nw">返回</th><th>lpOverlapped</th><th>含义</th></tr></thead><tbody>
+<tr><td class="nw">非零</td><td>非 NULL</td><td>操作成功完成，正常处理</td></tr>
+<tr><td class="nw"><strong>0</strong></td><td><strong>非 NULL</strong></td><td><strong>操作失败了，但确实有一个完成包被取出来</strong>——比如连接被对方断开。必须处理这个包（释放你的 per-I/O 结构），否则内存泄漏</td></tr>
+<tr><td class="nw">0</td><td>NULL</td><td>连一个包都没取到：端口超时（<code>WAIT_TIMEOUT</code>）或端口被关闭</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 739px"><code><span class="cm">// ① 建端口，线程数交给系统按核心数定</span>
+HANDLE iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, <span class="kw">nullptr</span>, 0, 0);
+
+<span class="cm">// ② 把一个异步打开的文件/套接字关联进来，Key 用来认出"这是谁"</span>
+CreateIoCompletionPort(hFile, iocp, (ULONG_PTR)pConnection, 0);
+
+<span class="cm">// ③ 工作线程（开 CPU 核心数个即可）</span>
+<span class="kw">for</span> (;;) {
+    DWORD       bytes = 0;
+    ULONG_PTR   key   = 0;
+    OVERLAPPED* ov    = <span class="kw">nullptr</span>;
+
+    BOOL ok = GetQueuedCompletionStatus(iocp, &amp;bytes, &amp;key, &amp;ov, INFINITE);
+
+    <span class="kw">if</span> (!ok &amp;&amp; ov == <span class="kw">nullptr</span>) <span class="kw">break</span>;             <span class="cm">// 端口关了或超时，退出</span>
+    <span class="kw">if</span> (key == KEY_SHUTDOWN)     <span class="kw">break</span>;             <span class="cm">// 我们自己投的退出信号</span>
+
+    <span class="kw">auto</span>* io = CONTAINING_RECORD(ov, MyIoContext, ov);
+    <span class="kw">if</span> (!ok || bytes == 0) { CloseConn(io); <span class="kw">continue</span>; }  <span class="cm">// 失败/对端关闭也要收尾</span>
+
+    OnData(io, bytes);
+}
+
+<span class="cm">// ④ 让所有工作线程退出：有几个线程就投几个包</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = 0; i &lt; nThreads; ++i)
+    PostQueuedCompletionStatus(iocp, 0, KEY_SHUTDOWN, <span class="kw">nullptr</span>);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 331px"><span class="t">🔴 OVERLAPPED 的生命周期是全部难点</span><p><strong>① 它必须活到 I/O 完成为止。</strong>把 <code>OVERLAPPED</code> 放在栈上、函数一返回就销毁，是这套 API 的头号崩溃原因——内核还握着那个地址准备往里写。标准做法是<strong>每个 I/O 分配一个结构</strong>（把 <code>OVERLAPPED</code> 作为第一个成员，用 <code>CONTAINING_RECORD</code> 反查回来），在完成包处理完之后才释放。<br><strong>② 缓冲区同理。</strong>投出去的读写缓冲区在完成之前不能改、不能释放。<br><strong>③ 失败的完成包也要收尾。</strong>见上面返回值表的第二行——<code>GetQueuedCompletionStatus</code> 返回 FALSE 但 <code>lpOverlapped</code> 非空时，那个 I/O 结构是你的，必须释放。漏了就是随连接数增长的稳定泄漏。<br><strong>④ 关闭句柄不会立刻取消 I/O。</strong>要先 <code>CancelIoEx</code>，再等所有完成包都取出来，最后才关句柄和端口。顺序反了就会在退出路径上偶发崩溃。</p></div>
+
+<div class="note new" style="contain-intrinsic-size:auto 230px"><span class="t">🔵 现在通常不必自己写 IOCP 循环了</span><p>线程池的 <code>CreateThreadpoolIo</code> / <code>StartThreadpoolIo</code> 内部就用完成端口实现，但把线程管理、伸缩、退出全替你做了——你只写"数据到了怎么处理"这一个回调。除非要精确控制线程数与亲和性，否则<strong>新代码优先用线程池的 I/O 对象</strong>。<br>网络方向还有更上层的选择：<code>RIO</code>（注册 I/O，超低延迟场景）、以及 C++20 起各类基于协程的封装。IOCP 的价值在于理解<strong>底下发生了什么</strong>——上面这些全都建在它之上。</p></div>
+
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 35279px;--thin-h:31897px">
+<section class="chapter" style="contain-intrinsic-size:auto 61703px;--thin-h:58322px">
 <h1 id="a5"><span class="part">第 5 章</span>user32：窗口与消息</h1>
 
 <p>user32.dll 是 Win32 图形程序的地基：注册窗口类、创建窗口、跑消息循环，三步缺一不可。本章按"窗口类 → 窗口 → 消息 → 定时器"四块组织，每块先给速查表总览，再对最常用的函数逐一展开详解卡。全部函数以 W（宽字符）版本为准——A 版本仅为兼容遗留代码存在，新代码一律用 W 版并以 <code>L"…"</code> 字面量传字符串。</p>
@@ -2306,7 +2974,7 @@ QueryPerformanceCounter(&amp;t1);
 
 <h2 id="a5-window">5.2 窗口创建与操作</h2>
 
-<table style="contain-intrinsic-size:auto 1120px"><thead><tr><th>名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<table style="contain-intrinsic-size:auto 2567px"><thead><tr><th>名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
 <tr><td class="nw">CreateWindowExW</td><td class="nw">创建窗口或控件</td><td>失败返回 NULL；WM_CREATE 在它返回<em>之前</em>就已送达窗口过程</td></tr>
 <tr><td class="nw">DestroyWindow</td><td class="nw">销毁窗口及其全部子窗口</td><td>只能在创建线程调用；依次触发 WM_DESTROY、WM_NCDESTROY</td></tr>
 <tr><td class="nw">DefWindowProcW</td><td class="nw">消息的默认处理</td><td>窗口过程里不处理的消息必须转交给它，漏转会出各种怪病</td></tr>
@@ -2326,6 +2994,17 @@ QueryPerformanceCounter(&amp;t1);
 <tr><td class="nw">SetWindowLongPtrW</td><td>改窗口风格/窗口过程/用户数据</td><td>32/64 位通用写法；改 GWL_STYLE 后要配 SetWindowPos+SWP_FRAMECHANGED</td></tr>
 <tr><td class="nw">GetWindowLongPtrW</td><td class="nw">读窗口属性</td><td>GWLP_USERDATA 惯用来存 C++ 对象的 this 指针</td></tr>
 <tr><td>SetWindowLongW / GetWindowLongW</td><td class="nw">旧版 32 位属性读写</td><td>64 位下存取指针会被截断，一律改用 …LongPtrW 系列</td></tr>
+<tr><td class="nw">EnableWindow</td><td class="nw">启用 / 禁用窗口（灰化，不再接受输入）</td><td>返回值是"调用前是否<em>已被禁用</em>"，不是成功与否——最容易读反的一个</td></tr>
+<tr><td class="nw">IsWindow</td><td class="nw">句柄是否仍指向一个存在的窗口</td><td>句柄会被回收复用，返回 TRUE 也不保证还是<em>原来那个</em>窗口</td></tr>
+<tr><td>IsWindowVisible / IsIconic / IsZoomed</td><td class="nw">是否可见 / 已最小化 / 已最大化</td><td>IsWindowVisible 检查整条父链：父窗口隐藏时子窗口也算不可见</td></tr>
+<tr><td class="nw">AdjustWindowRectEx</td><td>由想要的客户区矩形，反算出该传给 CreateWindowExW 的窗口矩形</td><td>不计滚动条与菜单换行；高 DPI 程序改用 AdjustWindowRectExForDpi</td></tr>
+<tr><td class="nw">SetForegroundWindow</td><td class="nw">把窗口提到前台并交给它输入焦点</td><td>系统设有抢占限制，后台进程调用通常只会闪任务栏按钮</td></tr>
+<tr><td>GetWindowPlacement / SetWindowPlacement</td><td>读写"位置 + 最大化/最小化状态"一整套</td><td>保存窗口布局的正确入口：最小化时 GetWindowRect 给的是无意义坐标</td></tr>
+<tr><td class="nw">RedrawWindow</td><td class="nw">比 InvalidateRect 更精细的重绘控制</td><td>唯一能"连子窗口一起刷"或"立刻画完再返回"的入口</td></tr>
+<tr><td>SetPropW / GetPropW / RemovePropW</td><td class="nw">按字符串名往任意窗口挂私有数据</td><td>子类化<em>别人的</em>窗口时的存储手段（GWLP_USERDATA 是人家的地盘）</td></tr>
+<tr><td class="nw">SetLayeredWindowAttributes</td><td class="nw">整窗半透明与颜色抠像</td><td>先给窗口加 WS_EX_LAYERED；要逐像素 alpha 用 UpdateLayeredWindow</td></tr>
+<tr><td class="nw">FlashWindowEx</td><td class="nw">闪烁标题栏与任务栏按钮</td><td>SetForegroundWindow 被系统拒绝时的正规替代：提醒而不抢焦点</td></tr>
+<tr><td class="nw">AnimateWindow</td><td class="nw">显示/隐藏时播放滑入、淡出动画</td><td>与分层窗口、DWM 合成偶有冲突；现代 UI 多改用合成层动画</td></tr>
 </tbody></table>
 
 <h3 id="fn-CreateWindowExW">CreateWindowExW</h3>
@@ -2778,11 +3457,298 @@ AppState* s = (AppState*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>旧版的 <code>GetWindowLongW / SetWindowLongW</code> 只处理 32 位值，64 位下存取指针会被截断，一律改用 <code>…LongPtrW</code> 系列。</p></div>
 
+
+<h3 id="fn-EnableWindow">EnableWindow</h3>
+
+<p class="fsum">禁用一个窗口：它从此不接受键盘与鼠标输入，控件还会画成灰色。返回值不是成功与否，而是"你调用之前它是不是已经被禁用了"。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 141px"><code>BOOL EnableWindow(
+    HWND hWnd,
+    BOOL bEnable
+);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 138px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">hWnd</td><td class="nw">HWND</td><td>目标窗口。可以是顶层窗口，也可以是控件——禁用一个对话框会连同它上面的所有控件一起变灰。</td></tr>
+<tr><td class="nw">bEnable</td><td class="nw">BOOL</td><td>TRUE 启用，FALSE 禁用。禁用状态实际存在窗口风格位 <code>WS_DISABLED</code> 里。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p><strong>返回"之前的禁用状态"，不是成败</strong>：调用前窗口就已被禁用返回非零，之前是启用的返回 0。所以 <code>if (!EnableWindow(h, FALSE)) { 报错 }</code> 是错的——这段代码在一切正常时反而会报错。真要判断成败得靠 <code>GetLastError()</code>，但这个函数几乎不会失败，实践中直接忽略返回值即可。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 长任务期间禁用"开始"按钮，结束再启用</span>
+HWND hBtn = GetDlgItem(hDlg, IDC_START);
+EnableWindow(hBtn, FALSE);
+DoLongJob();
+EnableWindow(hBtn, TRUE);
+
+<span class="cm">// 想临时改状态又原样恢复，就接住返回值——它记的是"之前禁没禁"</span>
+BOOL wasDisabled = EnableWindow(hBtn, FALSE);
+<span class="cm">// ……</span>
+EnableWindow(hBtn, !wasDisabled);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 261px"><span class="t">🔴 禁用当前有焦点的窗口，焦点会凭空消失</span><p>禁用的若正是持有焦点的控件，系统会把焦点收走且<strong>不会自动转给别人</strong>——键盘从此谁都不响应，用户只能用鼠标。规矩是：<strong>先把焦点挪走，再禁用</strong>。<br>另一个连带效应：窗口被禁用时收到 <code>WM_ENABLE</code>（<code>wParam</code> 为新状态），需要跟着改画法的自绘控件在这里处理。<br>还有一点常被忽略：<strong>禁用父窗口会一并挡住所有子窗口的输入</strong>——模态对话框正是靠这条实现的，它禁用属主窗口，而不是真的"独占"了什么。</p></div>
+
+
+<h3 id="fn-AdjustWindowRectEx">AdjustWindowRectEx</h3>
+
+<p class="fsum">回答"我想要 800×600 的<em>客户区</em>，窗口该建多大"。CreateWindowExW 收的是整窗尺寸（含边框和标题栏），直接传 800×600 你得到的画布一定偏小。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code>BOOL AdjustWindowRectEx(
+    LPRECT lpRect,
+    DWORD  dwStyle,
+    BOOL   bMenu,
+    DWORD  dwExStyle
+);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 266px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">lpRect</td><td class="nw">LPRECT</td><td><strong>入参兼出参</strong>：进去时填你想要的客户区矩形，出来时被改写成对应的窗口矩形。注意 left/top 会变成负数（边框在客户区左上方之外），所以宽高要用 <code>right-left</code> 算，不能直接读 right。</td></tr>
+<tr><td class="nw">dwStyle</td><td class="nw">DWORD</td><td>准备用的窗口风格。<strong>不能包含 <code>WS_OVERLAPPED</code></strong>（该位为 0，会被忽略），也不该带 <code>WS_HSCROLL</code>/<code>WS_VSCROLL</code>——滚动条厚度它不算。</td></tr>
+<tr><td class="nw">bMenu</td><td class="nw">BOOL</td><td>窗口是否带菜单栏。<strong>只按一行菜单计算</strong>：窗口太窄导致菜单折成两行时，算出来的高度就不够了。</td></tr>
+<tr><td class="nw">dwExStyle</td><td class="nw">DWORD</td><td>扩展风格，影响边框粗细（如 <code>WS_EX_CLIENTEDGE</code>）。没有就传 0。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>成功非零，失败 0。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 332px"><code><span class="cm">// 想要正好 800×600 的客户区</span>
+DWORD style = WS_OVERLAPPEDWINDOW;
+RECT rc = { 0, 0, 800, 600 };
+AdjustWindowRectEx(&amp;rc, style, FALSE, 0);
+<span class="cm">// 此刻 rc 可能是 { -8, -31, 808, 608 }</span>
+
+HWND hwnd = CreateWindowExW(0, CLASS_NAME, L"标题", style,
+    CW_USEDEFAULT, CW_USEDEFAULT,
+    rc.right - rc.left,          <span class="cm">// 用差值，别用 rc.right</span>
+    rc.bottom - rc.top,
+    NULL, NULL, hInst, NULL);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 高 DPI 程序要用 …ForDpi 版</span><p>边框和标题栏的像素厚度随 DPI 变化。<code>AdjustWindowRectEx</code> 永远按<strong>主显示器</strong>的 DPI 算，程序拖到 150% 缩放的副屏上就偏了。Win10 1607 起改用 <code>AdjustWindowRectExForDpi(&amp;rc, style, bMenu, exStyle, GetDpiForWindow(hwnd))</code>；建窗口之前还没有 hwnd，就用 <code>GetDpiForMonitor</code> 或 <code>GetDpiForSystem</code> 顶上。</p></div>
+
+
+<h3 id="fn-IsWindow">IsWindow / IsWindowVisible / IsIconic / IsZoomed</h3>
+
+<p class="fsum">四个一行就能问完的状态查询。真正需要留神的只有一件事：<code>IsWindow</code> 给的安全感是假的。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 169px"><code>BOOL IsWindow(HWND hWnd);           <span class="cm">// 句柄是否还指向一个存在的窗口</span>
+BOOL IsWindowVisible(HWND hWnd);    <span class="cm">// 是否可见（含整条父链）</span>
+BOOL IsIconic(HWND hWnd);           <span class="cm">// 是否已最小化</span>
+BOOL IsZoomed(HWND hWnd);           <span class="cm">// 是否已最大化</span>
+BOOL IsWindowEnabled(HWND hWnd);    <span class="cm">// 是否处于启用状态</span></code></pre>
+
+<p><strong>返回值与要点</strong></p>
+<table style="contain-intrinsic-size:auto 303px"><thead><tr><th class="nw">函数</th><th>返回非零的条件</th><th>要点</th></tr></thead><tbody>
+<tr><td class="nw">IsWindow</td><td>句柄指向一个存在的窗口</td><td><strong>不能当作"这个句柄还是我那个窗口"用</strong>，理由见下方红条</td></tr>
+<tr><td class="nw">IsWindowVisible</td><td>自己和<strong>所有祖先</strong>都带 <code>WS_VISIBLE</code></td><td>与"用户真能看见"仍不等价：可能被别的窗口完全遮住，或被挪到屏幕外</td></tr>
+<tr><td class="nw">IsIconic</td><td>窗口已最小化</td><td>最小化时 <code>GetWindowRect</code> 返回的坐标无意义，保存布局要改用 <code>GetWindowPlacement</code></td></tr>
+<tr><td class="nw">IsZoomed</td><td>窗口已最大化</td><td>—</td></tr>
+<tr><td class="nw">IsWindowEnabled</td><td>未被 <code>EnableWindow(h, FALSE)</code> 禁用</td><td>只看自己这一层，不看父窗口是否被禁用</td></tr>
+</tbody></table>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 IsWindow 不能用来"验证句柄有效性"</span><p>窗口句柄的数值<strong>会被系统回收再分配</strong>。你存了一份 hwnd，窗口销毁后另一个窗口恰好拿到同一个数值——<code>IsWindow</code> 照样返回 TRUE，而你接着发过去的消息就落到了陌生窗口上。<br>更麻烦的是这里天生有竞态：<code>if (IsWindow(h)) SendMessageW(h, ...);</code> 在两句之间窗口就可能被别的线程销毁。<br>正确做法是<strong>不要缓存别人的 hwnd 再事后校验</strong>：自己的窗口在 <code>WM_NCDESTROY</code> 里把记录置空；对别人的窗口，用 <code>SendMessageTimeoutW</code> 之类"失败就算了"的调用，把失败当正常分支处理。</p></div>
+
+
+<h3 id="fn-SetForegroundWindow">SetForegroundWindow</h3>
+
+<p class="fsum">把窗口提到最前面并给它输入焦点。它是<strong>会被系统拒绝</strong>的少数 API 之一——这不是 bug，是防"窗口抢焦点"的设计。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 60px"><code>BOOL SetForegroundWindow(HWND hWnd);</code></pre>
+
+<p><strong>返回值</strong></p>
+<p>提到前台成功返回非零；<strong>被系统拒绝时返回 0，而且 <code>GetLastError()</code> 通常没有有用的信息</strong>。被拒时系统一般改为闪烁该窗口的任务栏按钮。</p>
+
+<p><strong>什么时候会被允许</strong></p>
+<table style="contain-intrinsic-size:auto 223px"><thead><tr><th>情形</th><th>能否成功</th></tr></thead><tbody>
+<tr><td>调用进程<strong>本身就是前台进程</strong></td><td>✅ 可以</td></tr>
+<tr><td>调用进程刚收到用户输入（最近一次输入是发给它的）</td><td>✅ 可以</td></tr>
+<tr><td>由前台进程调用 <code>AllowSetForegroundWindow</code> 显式授权</td><td>✅ 可以</td></tr>
+<tr><td>当前没有任何前台窗口，或前台进程正在被调试</td><td>✅ 可以</td></tr>
+<tr><td>纯后台进程"自己想弹到前面"</td><td>❌ 拒绝，只闪任务栏</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 332px"><code><span class="cm">// 单实例程序：发现已有实例，把老窗口叫到前台</span>
+HWND old = FindWindowW(CLASS_NAME, NULL);
+<span class="kw">if</span> (old) {
+    <span class="kw">if</span> (IsIconic(old)) ShowWindow(old, SW_RESTORE);
+    <span class="kw">if</span> (!SetForegroundWindow(old)) {
+        <span class="cm">// 被拒是常态，退而求其次：闪一下提醒用户</span>
+        FLASHWINFO fi = { <span class="kw">sizeof</span>(fi), old, FLASHW_ALL | FLASHW_TIMERNOFG, 0, 0 };
+        FlashWindowEx(&amp;fi);
+    }
+    <span class="kw">return</span> 0;   <span class="cm">// 本实例退出</span>
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">🟡 网上流传的"绕过"手法都别用</span><p><code>AttachThreadInput</code> 附到前台线程再抢、把 <code>SPI_SETFOREGROUNDLOCKTIMEOUT</code> 改成 0、先 <code>SetWindowPos(HWND_TOPMOST)</code> 再取消……这些偏方在新版 Windows 上时灵时不灵，还会改坏全局系统设置。正规做法只有两条：<strong>让前台进程调 <code>AllowSetForegroundWindow(dwProcessId)</code> 主动授权</strong>（跨进程唤起的标准姿势），或者<strong>接受被拒，改用 <code>FlashWindowEx</code> 或托盘气泡提示</strong>。抢焦点本来就是坏体验。</p></div>
+
+
+<h3 id="fn-GetWindowPlacement">GetWindowPlacement / SetWindowPlacement</h3>
+
+<p class="fsum">"退出时记住窗口位置、下次原样打开"的正确做法。用 GetWindowRect 存坐标的写法，在窗口处于最大化或最小化时一定会出错。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 332px"><code>BOOL GetWindowPlacement(HWND hWnd, WINDOWPLACEMENT *lpwndpl);
+BOOL SetWindowPlacement(HWND hWnd, <span class="kw">const</span> WINDOWPLACEMENT *lpwndpl);
+
+<span class="kw">typedef struct</span> tagWINDOWPLACEMENT {
+    UINT  length;                    <span class="cm">// 必须先填 sizeof(WINDOWPLACEMENT)</span>
+    UINT  flags;                     <span class="cm">// WPF_SETMINPOSITION / WPF_ASYNCWINDOWPLACEMENT</span>
+    UINT  showCmd;                   <span class="cm">// SW_SHOWNORMAL / SW_SHOWMINIMIZED / SW_SHOWMAXIMIZED</span>
+    POINT ptMinPosition;             <span class="cm">// 最小化时的位置</span>
+    POINT ptMaxPosition;             <span class="cm">// 最大化时的位置</span>
+    RECT  rcNormalPosition;          <span class="cm">// ★ 还原态的矩形——即使当前最大化，这里也是准的</span>
+} WINDOWPLACEMENT;</code></pre>
+
+<p><strong>返回值</strong></p>
+<p>成功非零，失败 0。<strong>调用前必须把 <code>length</code> 填成 <code>sizeof(WINDOWPLACEMENT)</code></strong>，忘了填就会失败——这是最常见的错。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 退出时保存：一次拿到"位置 + 是不是最大化"</span>
+WINDOWPLACEMENT wp = { <span class="kw">sizeof</span>(wp) };
+GetWindowPlacement(hwnd, &amp;wp);
+SaveToRegistry(wp.rcNormalPosition, wp.showCmd == SW_SHOWMAXIMIZED);
+
+<span class="cm">// 启动时恢复</span>
+WINDOWPLACEMENT wp2 = { <span class="kw">sizeof</span>(wp2) };
+wp2.rcNormalPosition = LoadRectFromRegistry();
+wp2.showCmd = wasMaximized ? SW_SHOWMAXIMIZED : SW_SHOWNORMAL;
+SetWindowPlacement(hwnd, &amp;wp2);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note ok" style="contain-intrinsic-size:auto 231px"><span class="t">🟢 它替你解决了三个坑</span><p><strong>①</strong> 最大化/最小化时 <code>rcNormalPosition</code> 仍是"还原后应该在哪"，而 <code>GetWindowRect</code> 这时给的是最大化后的整屏矩形，甚至 <code>{-32000,-32000}</code> 这种最小化专用坐标。<br><strong>②</strong> <code>SetWindowPlacement</code> 会把窗口<strong>拉回可见的显示器</strong>——上次在副屏，这次副屏没了也不会跑到屏幕外面去。<br><strong>③</strong> 位置与"是否最大化"一起存取，不用自己再加一个布尔量。<br>坐标是<strong>工作区坐标</strong>（不含任务栏）而非屏幕坐标，跨版本存取一致。</p></div>
+
+
+<h3 id="fn-RedrawWindow">RedrawWindow</h3>
+
+<p class="fsum">InvalidateRect / UpdateWindow / ValidateRect 三者的超集。需要"连子窗口一起刷"或"现在就画完再返回"时，只有它做得到。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code>BOOL RedrawWindow(
+    HWND       hWnd,
+    <span class="kw">const</span> RECT *lprcUpdate,
+    HRGN       hrgnUpdate,
+    UINT       flags
+);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 174px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">hWnd</td><td class="nw">HWND</td><td>目标窗口。传 NULL 表示整个桌面（谨慎，等于全屏重画）。</td></tr>
+<tr><td>lprcUpdate / hrgnUpdate</td><td class="nw">RECT* / HRGN</td><td>要处理的矩形或区域，<strong>二选一</strong>，另一个传 NULL；都传 NULL 表示整个客户区。</td></tr>
+<tr><td class="nw">flags</td><td class="nw">UINT</td><td>动作标志，见下表，可组合。</td></tr>
+</tbody></table>
+
+<table style="contain-intrinsic-size:auto 341px"><thead><tr><th class="nw">标志</th><th>作用</th></tr></thead><tbody>
+<tr><td class="nw"><code>RDW_INVALIDATE</code></td><td>把指定区域标记为无效（等价于 InvalidateRect）</td></tr>
+<tr><td class="nw"><code>RDW_ERASE</code></td><td>重画前发 <code>WM_ERASEBKGND</code> 擦背景；须与 INVALIDATE 同用</td></tr>
+<tr><td class="nw"><code>RDW_UPDATENOW</code></td><td><strong>立刻</strong>发 <code>WM_PAINT</code>，画完才返回（等价于 UpdateWindow）</td></tr>
+<tr><td class="nw"><code>RDW_ERASENOW</code></td><td>立刻发擦背景消息，但 WM_PAINT 仍走队列</td></tr>
+<tr><td class="nw"><code>RDW_ALLCHILDREN</code></td><td><strong>把子窗口一并纳入</strong>——这是它最不可替代的能力</td></tr>
+<tr><td class="nw"><code>RDW_NOCHILDREN</code></td><td>明确排除子窗口</td></tr>
+<tr><td class="nw"><code>RDW_VALIDATE</code></td><td>反过来，把区域标记为有效（等价于 ValidateRect）</td></tr>
+<tr><td class="nw"><code>RDW_NOERASE</code> / <code>RDW_NOINTERNALPAINT</code></td><td>抑制擦背景 / 抑制内部重画消息</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code><span class="cm">// 换肤/切换深色模式后，把整棵窗口树立刻重画一遍</span>
+RedrawWindow(hwnd, NULL, NULL,
+    RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN | RDW_UPDATENOW);
+
+<span class="cm">// 只刷一小块，且不擦背景（自绘控件避免闪烁的常用组合）</span>
+RedrawWindow(hwnd, &amp;rcItem, NULL, RDW_INVALIDATE | RDW_NOERASE);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 197px"><span class="t">🟡 RDW_UPDATENOW 是同步的，别放在高频路径上</span><p>它会<strong>在调用点直接执行窗口过程的 WM_PAINT</strong>，画完才返回——于是你的绘制代码会在一个意想不到的调用栈里跑起来（比如某个数据更新函数中间）。若此时正持着锁，就有重入死锁的风险。<br>日常刷新一律只标脏（<code>RDW_INVALIDATE</code> 或 <code>InvalidateRect</code>），让系统在空闲时统一合并成一次 WM_PAINT——这才是 Win32 绘制模型省力的关键。只有"截图前必须确保已画完"这类场景才用 UPDATENOW。</p></div>
+
+
+<h3 id="fn-SetPropW">SetPropW / GetPropW / RemovePropW</h3>
+
+<p class="fsum">按字符串名字往<strong>任意</strong>窗口上挂一个指针。当窗口不是你创建的（子类化第三方控件时），GWLP_USERDATA 是人家的地盘，这套接口才是你能用的储物柜。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 114px"><code>BOOL   SetPropW   (HWND hWnd, LPCWSTR lpString, HANDLE hData);
+HANDLE GetPropW   (HWND hWnd, LPCWSTR lpString);
+HANDLE RemovePropW(HWND hWnd, LPCWSTR lpString);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 164px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">lpString</td><td class="nw">LPCWSTR</td><td>属性名。<strong>建议带上你的公司/模块前缀</strong>，例如 <code>L"Acme.Editor.State"</code>——这是全局命名空间，撞名就互相覆盖。也可传 <code>GlobalAddAtom</code> 得到的原子值（用 <code>MAKEINTATOM</code> 包装）以省去每次字符串比较。</td></tr>
+<tr><td class="nw">hData</td><td class="nw">HANDLE</td><td>随便什么指针大小的值，系统只负责替你存着，不解释也不释放。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p><code>SetPropW</code> 成功非零。<code>GetPropW</code> 找不到返回 NULL——<strong>NULL 与"存进去的就是 NULL"无法区分</strong>，所以别存 NULL。<code>RemovePropW</code> 返回被摘掉的那个值，摘不到返回 NULL。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 386px"><code><span class="cm">// 子类化第三方 EDIT，把自己的状态对象挂上去</span>
+<span class="kw">auto</span>* st = <span class="kw">new</span> EditState{};
+SetPropW(hEdit, L"Acme.EditState", (HANDLE)st);
+
+<span class="cm">// 子类过程里随时取回</span>
+<span class="kw">auto</span>* st2 = (EditState*)GetPropW(hEdit, L"Acme.EditState");
+
+<span class="cm">// 收尾：窗口的最后一条消息里摘干净并释放</span>
+<span class="kw">case</span> WM_NCDESTROY: {
+    <span class="kw">auto</span>* p = (EditState*)RemovePropW(hEdit, L"Acme.EditState");
+    <span class="kw">delete</span> p;
+    <span class="kw">break</span>;
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 不 Remove 就是泄漏，而且泄的是内核端资源</span><p>属性表挂在窗口对象上，窗口销毁时表本身会消失，<strong>但你存进去的那个指针没人替你 delete</strong>。必须在 <code>WM_NCDESTROY</code> 里 <code>RemovePropW</code> 并自行释放。<br>另外这套接口比 <code>GWLP_USERDATA</code> 慢得多（要按名字查表），高频路径上别每条消息都调一次——取一次缓存到局部变量即可。<br><strong>选型</strong>：窗口是你自己创建的 → 用 <code>GWLP_USERDATA</code>（最快）；子类化别人的窗口 → 优先用 <code>SetWindowSubclass</code> 的 <code>dwRefData</code>（见 <a href="#a9-subclass">9.2</a>），它天生按 (过程, ID) 隔离；两者都不适用时才用属性表。</p></div>
+
+
+<h3 id="fn-SetLayeredWindowAttributes">SetLayeredWindowAttributes</h3>
+
+<p class="fsum">让整个窗口半透明，或者把某一种颜色变成"透明洞"。做启动画面、浮动提示、异形窗口的最省事入口。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code>BOOL SetLayeredWindowAttributes(
+    HWND     hwnd,
+    COLORREF crKey,
+    BYTE     bAlpha,
+    DWORD    dwFlags
+);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 216px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">hwnd</td><td class="nw">HWND</td><td><strong>必须先带上 <code>WS_EX_LAYERED</code> 扩展风格</strong>，否则函数失败。可在 CreateWindowExW 时给，也可事后 <code>SetWindowLongPtrW(h, GWL_EXSTYLE, ... | WS_EX_LAYERED)</code>。</td></tr>
+<tr><td class="nw">crKey</td><td class="nw">COLORREF</td><td>抠像色：窗口上凡是这个颜色的像素<strong>完全透明且鼠标穿透</strong>。配合 <code>LWA_COLORKEY</code> 使用。</td></tr>
+<tr><td class="nw">bAlpha</td><td class="nw">BYTE</td><td>整窗不透明度，0 全透明、255 完全不透明。配合 <code>LWA_ALPHA</code> 使用。</td></tr>
+<tr><td class="nw">dwFlags</td><td class="nw">DWORD</td><td><code>LWA_ALPHA</code> / <code>LWA_COLORKEY</code>，可同时给（先抠色再整体半透）。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>成功非零；窗口没有 <code>WS_EX_LAYERED</code> 时失败。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 223px"><code><span class="cm">// 80% 不透明的浮动提示窗</span>
+SetWindowLongPtrW(hwnd, GWL_EXSTYLE,
+    GetWindowLongPtrW(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+SetLayeredWindowAttributes(hwnd, 0, (BYTE)(255 * 0.8), LWA_ALPHA);
+
+<span class="cm">// 把洋红当透明色抠掉，做异形启动画面</span>
+SetLayeredWindowAttributes(hwnd, RGB(255, 0, 255), 0, LWA_COLORKEY);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 230px"><span class="t">🟡 抠像法有锯齿，逐像素 alpha 要用 UpdateLayeredWindow</span><p><code>LWA_COLORKEY</code> 是"这个颜色全透、其余全不透"的二值判定，边缘一定是硬锯齿，而且图片里恰好有同色像素时会被挖出洞来。<br>要真正的<strong>逐像素半透明</strong>（圆角阴影、渐隐边缘），得改用 <code>UpdateLayeredWindow</code>：自己准备一张 32 位带 alpha 通道的 DIB 整幅提交。代价是这种窗口<strong>不再走 WM_PAINT</strong>，内容全靠你主动推送。<br>顺带一提，子窗口不能是分层窗口（Win8 起放宽了一部分限制），控件想半透明请走自绘或合成层。</p></div>
+
+
 <h2 id="a5-msg">5.3 消息收发</h2>
 
 <p>消息循环是 GUI 线程的心脏：取消息、翻译按键、派发给窗口过程，周而复始。发消息则分两派——同步的 Send 与异步的 Post，选错一派轻则卡顿、重则死锁。</p>
 
-<table style="contain-intrinsic-size:auto 522px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<table style="contain-intrinsic-size:auto 1122px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
 <tr><td class="nw">GetMessageW</td><td class="nw">从队列取消息，无消息则阻塞</td><td>返回值是三态而非 BOOL，写错判断会死循环，见详解卡</td></tr>
 <tr><td class="nw">PeekMessageW</td><td class="nw">查看/取出消息，永不阻塞</td><td>游戏与渲染循环的标配；PM_REMOVE 才真正取走</td></tr>
 <tr><td class="nw">TranslateMessage</td><td>把 WM_KEYDOWN 翻译出配套的 WM_CHAR</td><td>放在 DispatchMessageW 之前；不调就收不到字符消息</td></tr>
@@ -2792,6 +3758,14 @@ AppState* s = (AppState*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);</code></pre>
 <tr><td class="nw">PostMessageW</td><td class="nw">投递进队列，立即返回</td><td>不能传栈上指针——处理时栈早没了；队列上限约 1 万条</td></tr>
 <tr><td class="nw">PostThreadMessageW</td><td class="nw">向线程消息队列投递（无窗口）</td><td>工作线程通信用；目标线程必须已有消息队列</td></tr>
 <tr><td class="nw">PostQuitMessage</td><td>投出 WM_QUIT，让 GetMessageW 返回 0</td><td>惯例写在主窗口的 WM_DESTROY 里；参数成为进程退出码</td></tr>
+<tr><td class="nw">CallWindowProcW</td><td>调用一个窗口过程——子类化时用它把消息交回原过程</td><td><strong>不能用普通函数指针直接调</strong>，窗口过程可能是"句柄式"的，见详解卡</td></tr>
+<tr><td class="nw">RegisterWindowMessageW</td><td>按字符串申请一个全系统唯一的消息号</td><td>跨进程自定义消息的唯一正确做法；同名字符串在任何进程都得到同一个号</td></tr>
+<tr><td>InSendMessage / InSendMessageEx</td><td>当前处理的消息是不是别的线程 Send 过来的</td><td>决定此刻能不能安全地做耗时活——对方正阻塞着等你</td></tr>
+<tr><td class="nw">ReplyMessage</td><td>先放发送方走，自己再慢慢处理</td><td>与上一条配套，是"跨线程 Send 拖垮界面"的解药</td></tr>
+<tr><td class="nw">SendNotifyMessageW</td><td>同线程当同步、跨线程当异步</td><td>不需要返回值的通知用它，天然避开跨线程 Send 死锁</td></tr>
+<tr><td class="nw">SendMessageCallbackW</td><td>异步发送，对方处理完回调通知你</td><td>既要结果又不想阻塞时用</td></tr>
+<tr><td class="nw">MsgWaitForMultipleObjects</td><td class="nw">既等内核对象、又等消息到达</td><td>GUI 线程等后台任务的唯一正确姿势；直接 Wait 会让界面假死</td></tr>
+<tr><td class="nw">GetMessagePos / GetMessageTime</td><td>取<em>当前正在处理的</em>那条消息的鼠标位置与时间戳</td><td>处理消息时鼠标可能已经移开了，别用 GetCursorPos 顶替</td></tr>
 </tbody></table>
 
 <h3 id="fn-GetMessageW">GetMessageW</h3>
@@ -2943,6 +3917,198 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>它不关窗口也不杀线程，只是往<strong>当前线程</strong>的消息队列里标记一条 WM_QUIT。GetMessage 取到 WM_QUIT 时返回 0，消息循环于是自然退出——退出动作是循环自己做的，不是这个函数做的。惯例在 WM_DESTROY 里调用。</p></div>
 
+
+<h3 id="fn-CallWindowProcW">CallWindowProcW</h3>
+
+<p class="fsum">调用一个窗口过程。子类化时"把这条消息交回给原来的处理者"，靠的就是它——而且<strong>只能</strong>靠它，不能把那个指针当普通函数调。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 223px"><code>LRESULT CallWindowProcW(
+    WNDPROC lpPrevWndFunc,
+    HWND    hWnd,
+    UINT    Msg,
+    WPARAM  wParam,
+    LPARAM  lParam
+);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 164px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">lpPrevWndFunc</td><td class="nw">WNDPROC</td><td>要调用的窗口过程，通常是 <code>SetWindowLongPtrW(h, GWLP_WNDPROC, ...)</code> 换过来的<strong>旧值</strong>。它<em>未必是真的函数地址</em>——见下文。</td></tr>
+<tr><td>hWnd / Msg / wParam / lParam</td><td class="nw">—</td><td>原样转发你收到的那四个参数。中途想改写消息（比如把 <code>WM_CHAR</code> 的字符换掉）就改了再传。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>即被调用窗口过程的返回值。<strong>必须原样返回给系统</strong>——很多消息的返回值有确切含义（<code>WM_NCHITTEST</code> 返回命中区域、<code>WM_GETDLGCODE</code> 返回按键归属），随手 <code>return 0</code> 会引出一堆莫名其妙的毛病。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 413px"><code><span class="cm">// 经典子类化：让一个 EDIT 只收数字</span>
+WNDPROC g_oldEditProc;
+
+LRESULT CALLBACK NumOnlyProc(HWND h, UINT m, WPARAM w, LPARAM l) {
+    <span class="kw">if</span> (m == WM_CHAR &amp;&amp; !iswdigit((wchar_t)w) &amp;&amp; w != VK_BACK)
+        <span class="kw">return</span> 0;                                  <span class="cm">// 吃掉：不往下传</span>
+    <span class="kw">return</span> CallWindowProcW(g_oldEditProc, h, m, w, l);  <span class="cm">// 其余交回原过程</span>
+}
+
+<span class="cm">// 装上（返回值就是"原来的那个过程"）</span>
+g_oldEditProc = (WNDPROC)SetWindowLongPtrW(hEdit, GWLP_WNDPROC, (LONG_PTR)NumOnlyProc);
+
+<span class="cm">// 拆除时务必写回去，否则窗口指向一个可能已被卸载的函数</span>
+SetWindowLongPtrW(hEdit, GWLP_WNDPROC, (LONG_PTR)g_oldEditProc);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 296px"><span class="t">🔴 为什么不能写成 lpPrevWndFunc(h, m, w, l)</span><p><code>SetWindowLongPtrW(GWLP_WNDPROC)</code> 返回的<strong>未必是一个真正的代码地址</strong>。两种情况下它是系统内部的一个<em>句柄式标记</em>：<br><strong>①</strong> 窗口过程属于<strong>另一个进程</strong>（它的代码根本不在你的地址空间里）；<br><strong>②</strong> 窗口类注册的是 <strong>A 版</strong>过程而你用 <strong>W 版</strong>接口取出（或反过来）——系统必须在中间插一层字符集转换。<br><code>CallWindowProcW</code> 认得这些标记：该跨进程转发就转发，该把 <code>WM_CHAR</code> 的 Unicode 码点转成 ANSI 字节就转。直接当函数指针一调，轻则字符变乱码，重则跳进非法地址崩溃。<br><strong>结论</strong>：拿到的旧窗口过程，一律只交给 <code>CallWindowProcW</code>。</p></div>
+
+<div class="note new" style="contain-intrinsic-size:auto 295px"><span class="t">🔵 新代码请改用 SetWindowSubclass 三件套</span><p>这套"存旧指针 + CallWindowProc"的老办法有个躲不开的缺陷：窗口上只存一个指针，两个模块先后子类化同一窗口后，<strong>只要不是严格后进先出地拆除，链条就会断</strong>——先拆的那个会把窗口过程直接写回更早的一层，把后来者整条踢出去；而后来者拆除时又会把一个已经失效的函数装回窗口，下一条消息即崩。<br>ComCtl32 的 <code>SetWindowSubclass</code> / <code>DefSubclassProc</code> / <code>RemoveWindowSubclass</code> 把链表收归系统统一保管，任意顺序拆除都安全，还能给每份子类挂 ID 和私有数据。详见 <a href="#a9-subclass">9.2 窗口子类化</a>。<br><code>CallWindowProcW</code> 今天仍需掌握：读老代码要用，而且 <code>DefSubclassProc</code> 走到链尾时，内部做的正是它这件事。</p></div>
+
+
+<h3 id="fn-RegisterWindowMessageW">RegisterWindowMessageW</h3>
+
+<p class="fsum">申请一个全系统唯一的消息号。跨进程自定义消息只能这样发——<code>WM_USER + n</code> 在别人的窗口上是什么含义，你根本不知道。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 60px"><code>UINT RegisterWindowMessageW(LPCWSTR lpString);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 101px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">lpString</td><td class="nw">LPCWSTR</td><td>消息名。<strong>同一个字符串，在系统里任何进程调用都会拿到同一个号</strong>——这就是它跨进程可用的原因。取名带上你的唯一前缀，例如 <code>L"Acme.App.RefreshAll"</code>。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>成功返回 <code>0xC000</code>–<code>0xFFFF</code> 区间内的一个消息号（这段是系统给注册消息保留的）；失败返回 0。<strong>返回值必须存到变量里</strong>——它不是编译期常量，所以不能写在 <code>switch</code> 的 <code>case</code> 标签上。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 413px"><code><span class="cm">// 两个进程各自注册同名消息，拿到的号相同</span>
+<span class="kw">static</span> UINT WM_APP_REFRESH = RegisterWindowMessageW(L"Acme.App.RefreshAll");
+
+<span class="cm">// 发送方：广播给所有顶层窗口（务必用带超时的版本，否则一个卡死的程序能拖垮你）</span>
+DWORD_PTR res;
+SendMessageTimeoutW(HWND_BROADCAST, WM_APP_REFRESH, 0, 0,
+                    SMTO_ABORTIFHUNG, 1000, &amp;res);
+
+<span class="cm">// 接收方：注册消息号不是常量，只能用 if 而非 case</span>
+LRESULT CALLBACK WndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
+    <span class="kw">if</span> (m == WM_APP_REFRESH) { ReloadConfig(); <span class="kw">return</span> 0; }
+    <span class="kw">switch</span> (m) { <span class="cm">/* …常规消息… */</span> }
+    <span class="kw">return</span> DefWindowProcW(h, m, w, l);
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 298px"><span class="t">🟡 三段消息号，别用混</span><p><code>WM_USER + n</code>（0x0400 起）归<strong>窗口类</strong>自己私有——你给自己写的窗口类定义可以，但发给别人的控件就是灾难：<code>WM_USER+1</code> 在 EDIT 那里是 <code>EM_SETSEL</code>。<br><code>WM_APP + n</code>（0x8000 起）归<strong>应用程序</strong>私有，同一个 EXE 内部跨窗口传信用它，安全。<br><strong>注册消息</strong>（0xC000 起）才是<strong>跨进程</strong>唯一安全的选择。<br>还有一点：<code>HWND_BROADCAST</code> 只到顶层窗口，且只有注册消息与部分系统消息才会被这样广播——用 <code>WM_USER</code> 系广播是无效的。跨进程还要传数据的话，消息只能带两个整数，真正的数据走 <code>WM_COPYDATA</code>、命名管道或共享内存。</p></div>
+
+
+<h3 id="fn-InSendMessage">InSendMessage / InSendMessageEx / ReplyMessage</h3>
+
+<p class="fsum">"我现在处理的这条消息，是别的线程 Send 过来、正阻塞着等我的吗？"——如果是，你多花的每一毫秒都是对方的卡顿。ReplyMessage 让你先放对方走。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 114px"><code>BOOL  InSendMessage(<span class="kw">void</span>);
+DWORD InSendMessageEx(LPVOID lpReserved);   <span class="cm">// 传 NULL</span>
+BOOL  ReplyMessage(LRESULT lResult);</code></pre>
+
+<p><strong>参数与返回值</strong></p>
+<table style="contain-intrinsic-size:auto 229px"><thead><tr><th class="nw">函数</th><th>返回值含义</th></tr></thead><tbody>
+<tr><td class="nw">InSendMessage</td><td>非零表示当前正在处理的消息来自<strong>别的线程</strong>的 Send 类调用</td></tr>
+<tr><td class="nw">InSendMessageEx</td><td>细分标志：<code>ISMEX_SEND</code>（对方真在阻塞等）、<code>ISMEX_NOTIFY</code>（SendNotifyMessage，不等）、<code>ISMEX_CALLBACK</code>（SendMessageCallback）、<code>ISMEX_REPLIED</code>（已经 ReplyMessage 过了）。<strong>只有 <code>ISMEX_SEND</code> 且未 <code>ISMEX_REPLIED</code> 才真需要抢时间</strong></td></tr>
+<tr><td class="nw">ReplyMessage</td><td>立刻把 <code>lResult</code> 作为返回值交给发送方、放它继续跑，自己则接着处理。非 Send 场景下调用返回 0，无副作用</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 250px"><code><span class="kw">case</span> WM_APP_RECALC: {
+    <span class="cm">// 只有"对方真的在阻塞等"时才需要先放行</span>
+    <span class="kw">if</span> ((InSendMessageEx(NULL) &amp; (ISMEX_SEND | ISMEX_REPLIED)) == ISMEX_SEND)
+        ReplyMessage(0);        <span class="cm">// 发送方从这一刻起就恢复运行了</span>
+
+    RecalcEverything();          <span class="cm">// 慢活留给自己干</span>
+    <span class="kw">return</span> 0;                    <span class="cm">// 这个返回值发送方已经收不到了</span>
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note new" style="contain-intrinsic-size:auto 266px"><span class="t">🔵 它解释了一类"莫名其妙的卡顿"</span><p><code>SendMessageW</code> 跨线程时，发送方会一直阻塞到接收线程<strong>处理完</strong>为止。于是接收方窗口过程里一次磁盘读取、一次网络请求，就把另一个线程按住了几百毫秒——而那个线程可能正是 UI 线程。<br>三条处理原则：<strong>①</strong> 窗口过程里不做慢活，这是根本；<strong>②</strong> 做不到就用 <code>ReplyMessage</code> 先放行；<strong>③</strong> 发送方能改的话，改用 <code>PostMessageW</code> 或 <code>SendNotifyMessageW</code>，从源头上不阻塞。<br>还有一个隐蔽陷阱：处理跨线程 Send 期间调用 <code>SendMessageW</code> 回发给对方线程，两边就直接死锁——这正是 <code>InSendMessage</code> 存在的初衷。</p></div>
+
+
+<h3 id="fn-SendMessageTimeoutW">SendMessageTimeoutW</h3>
+
+<p class="fsum">带超时的 SendMessage。给不受你控制的窗口（别的进程、HWND_BROADCAST）发消息时，它是唯一不会把自己搭进去的选择。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 277px"><code>LRESULT SendMessageTimeoutW(
+    HWND       hWnd,
+    UINT       Msg,
+    WPARAM     wParam,
+    LPARAM     lParam,
+    UINT       fuFlags,
+    UINT       uTimeout,
+    PDWORD_PTR lpdwResult
+);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 202px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">fuFlags</td><td class="nw">UINT</td><td><code>SMTO_NORMAL</code>（0）；<code>SMTO_BLOCK</code> 等待期间不处理自己的消息；<strong><code>SMTO_ABORTIFHUNG</code></strong> 目标一看就是无响应就立刻放弃（广播时必加）；<code>SMTO_ERRORONEXIT</code> 目标进程退出时返回 0。</td></tr>
+<tr><td class="nw">uTimeout</td><td class="nw">UINT</td><td>超时毫秒数。广播给 <code>HWND_BROADCAST</code> 时，这是<strong>给每个窗口各自的</strong>超时，不是总时长。</td></tr>
+<tr><td class="nw">lpdwResult</td><td class="nw">PDWORD_PTR</td><td>出参，接收窗口过程的返回值。不关心可传 NULL。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>成功非零；<strong>超时或失败返回 0</strong>，此时用 <code>GetLastError()</code> 区分：<code>ERROR_TIMEOUT</code> 是超时，0 表示目标窗口过程自己返回了 0。注意"函数返回值"和"窗口过程返回值"是两码事，后者在 <code>lpdwResult</code> 里。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code><span class="cm">// 探测某窗口是否还活着：500ms 不应答就当它卡死了</span>
+DWORD_PTR r;
+<span class="kw">if</span> (!SendMessageTimeoutW(hTarget, WM_NULL, 0, 0,
+                         SMTO_ABORTIFHUNG, 500, &amp;r)) {
+    <span class="cm">// 无响应——注意这不代表进程崩了，可能只是在忙</span>
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 三种"发给陌生窗口"的安全写法</span><p><strong>探活</strong>用 <code>WM_NULL</code> + 短超时（如上）；<code>IsHungAppWindow</code> 也可以，但语义更粗。<br><strong>广播</strong>务必 <code>SMTO_ABORTIFHUNG</code> + 1000ms 上限——不加的话，系统里任何一个卡死的程序都能把你也拖住。<br><strong>取窗口文本</strong>用 <code>SendMessageTimeoutW(h, WM_GETTEXT, ...)</code> 而不是 <code>GetWindowTextW</code>：后者对<em>别的进程</em>的窗口不发消息，只读缓存的标题，拿不到编辑框里的实时内容。</p></div>
+
+
+<h3 id="fn-MsgWaitForMultipleObjects">MsgWaitForMultipleObjects</h3>
+
+<p class="fsum">在 GUI 线程里等后台任务的唯一正确姿势：既等内核对象，又能被"消息到了"唤醒。用 WaitForSingleObject 顶替，界面立刻变成"未响应"。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 223px"><code>DWORD MsgWaitForMultipleObjects(
+    DWORD        nCount,
+    <span class="kw">const</span> HANDLE *pHandles,
+    BOOL         bWaitAll,
+    DWORD        dwMilliseconds,
+    DWORD        dwWakeMask
+);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 266px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td>nCount / pHandles</td><td class="nw">DWORD / HANDLE*</td><td>要等的内核对象数组，最多 <code>MAXIMUM_WAIT_OBJECTS - 1</code> = 63 个（留一个名额给消息）。</td></tr>
+<tr><td class="nw">bWaitAll</td><td class="nw">BOOL</td><td>通常传 FALSE。<strong>传 TRUE 时语义是"全部对象都有信号<em>并且</em>有新消息"</strong>，几乎不是你想要的。</td></tr>
+<tr><td class="nw">dwMilliseconds</td><td class="nw">DWORD</td><td>超时，<code>INFINITE</code> 表示一直等。</td></tr>
+<tr><td class="nw">dwWakeMask</td><td class="nw">DWORD</td><td>哪类消息算"该醒了"：<code>QS_ALLINPUT</code> 最常用（任何消息）；<code>QS_SENDMESSAGE</code> 只管别人 Send 过来的；<code>QS_PAINT</code>、<code>QS_TIMER</code> 等可按需组合。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p><code>WAIT_OBJECT_0 + i</code>：第 i 个对象有信号；<strong><code>WAIT_OBJECT_0 + nCount</code>：有消息到了</strong>（这是关键分支）；<code>WAIT_TIMEOUT</code> 超时；<code>WAIT_FAILED</code> 出错。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 440px"><code><span class="cm">// 等后台线程结束，同时保持界面可响应（模态进度框的骨架）</span>
+<span class="kw">for</span> (;;) {
+    DWORD r = MsgWaitForMultipleObjects(1, &amp;hThread, FALSE,
+                                        INFINITE, QS_ALLINPUT);
+    <span class="kw">if</span> (r == WAIT_OBJECT_0) <span class="kw">break</span>;              <span class="cm">// 线程干完了</span>
+
+    <span class="kw">if</span> (r == WAIT_OBJECT_0 + 1) {                  <span class="cm">// 有消息，必须抽干</span>
+        MSG msg;
+        <span class="kw">while</span> (PeekMessageW(&amp;msg, NULL, 0, 0, PM_REMOVE)) {
+            <span class="kw">if</span> (msg.message == WM_QUIT) { PostQuitMessage((<span class="kw">int</span>)msg.wParam); <span class="kw">return</span>; }
+            TranslateMessage(&amp;msg);
+            DispatchMessageW(&amp;msg);
+        }
+    }
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 298px"><span class="t">🔴 醒来后必须把队列抽干，否则死循环</span><p>它是<strong>边沿触发</strong>的：只在"队列从空变为非空"时报信。醒来后若只处理一条就回去接着等，剩下的消息不会再次触发唤醒——但队列非空又让它立刻返回，于是变成不带阻塞的疯转。所以醒来后一定要用 <code>while (PeekMessageW(..., PM_REMOVE))</code> <strong>循环取到空为止</strong>。<br>另一个坑：<code>QS_ALLINPUT</code> 不含 <code>QS_ALLPOSTMESSAGE</code> 的全部语义差异，跨版本行为有细微出入；只想被"发送过来的消息"唤醒时用 <code>QS_SENDMESSAGE</code> 更准。<br>更根本的建议：<strong>能不在 UI 线程等就别等</strong>。让后台线程干完后 <code>PostMessageW</code> 通知 UI，是更省事也更不容易错的结构。</p></div>
+
+
 <h2 id="a5-timer">5.4 定时器</h2>
 
 <table style="contain-intrinsic-size:auto 199px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
@@ -3007,9 +4173,105 @@ LRESULT DispatchMessageW(<span class="kw">const</span> MSG *lpMsg);</code></pre>
 
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>hWnd 与 uIDEvent 必须和 SetTimer 时配对一致才销得掉。注意：已经排进队列的 WM_TIMER 不会被撤回，销毁之后仍可能再收到一条，处理代码要经得起这种"回光返照"。</p></div>
+
+<h2 id="a5-hook">5.5 钩子（Hook）</h2>
+
+<p>钩子是在<strong>消息到达窗口过程之前</strong>就把它截下来的机制。它的能力和危险性成正比：既是全局热键、输入法、自动化测试、屏幕录制的实现基础，也是键盘记录器的实现基础。分两大类——<strong>线程钩子</strong>只管自己进程的一个线程，代码可以放在 EXE 里；<strong>全局钩子</strong>要监视所有进程，除少数几种外<strong>回调函数必须放在 DLL 里</strong>，因为系统需要把这个 DLL 注入到每个被监视的进程中。</p>
+
+<table style="contain-intrinsic-size:auto 349px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">SetWindowsHookExW</td><td class="nw">安装一个钩子</td><td>全局钩子的 DLL 位数必须与目标进程一致：64 位程序装不上 32 位钩子</td></tr>
+<tr><td class="nw">CallNextHookEx</td><td class="nw">把消息传给钩子链上的下一个</td><td><strong>不调就等于把别人的钩子全废了</strong>，包括输入法和辅助功能</td></tr>
+<tr><td class="nw">UnhookWindowsHookEx</td><td class="nw">卸载钩子</td><td>进程退出前必须卸；漏卸会把 DLL 一直钉在别人的进程里</td></tr>
+<tr><td class="nw">SetWinEventHook</td><td>监听<strong>无障碍事件</strong>（窗口创建、焦点变化、名称改变）</td><td>想"监视系统里发生了什么"时的首选：可以跨进程<strong>不注入</strong>，安全得多</td></tr>
+<tr><td class="nw">RegisterHotKey</td><td class="nw">注册全局热键</td><td>只为热键而装键盘钩子是杀鸡用牛刀，这个才是正规入口</td></tr>
+</tbody></table>
+
+<h3 id="fn-SetWindowsHookExW">SetWindowsHookExW</h3>
+
+<p class="fsum">安装钩子。选对钩子类型是全部难点——绝大多数需求都不该用 <code>WH_KEYBOARD</code>，而该用 <code>WH_KEYBOARD_LL</code>、<code>SetWinEventHook</code> 或 <code>RegisterHotKey</code>。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code>HHOOK SetWindowsHookExW(
+    <span class="kw">int</span>       idHook,
+    HOOKPROC  lpfn,
+    HINSTANCE hmod,
+    DWORD     dwThreadId
+);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 212px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">idHook</td><td class="nw">int</td><td>钩子类型，见下表。</td></tr>
+<tr><td class="nw">lpfn</td><td class="nw">HOOKPROC</td><td>回调函数。全局钩子（除两个 LL 型外）<strong>必须位于 DLL 中</strong>。</td></tr>
+<tr><td class="nw">hmod</td><td class="nw">HINSTANCE</td><td>含回调的 DLL 模块句柄。<strong>线程钩子（本进程内）传 NULL</strong>。</td></tr>
+<tr><td class="nw">dwThreadId</td><td class="nw">DWORD</td><td><strong>0 表示全局钩子</strong>（所有桌面线程）；给具体线程 ID 就只钩那个线程；给 <code>GetCurrentThreadId()</code> 就只钩自己。</td></tr>
+</tbody></table>
+
+<table style="contain-intrinsic-size:auto 352px"><thead><tr><th class="nw">常用类型</th><th>截获什么</th><th>能否不用 DLL 做全局</th></tr></thead><tbody>
+<tr><td class="nw"><code>WH_KEYBOARD_LL</code></td><td>底层键盘事件（在输入队列之前）</td><td><strong>✅ 可以</strong>，回调留在 EXE 即可</td></tr>
+<tr><td class="nw"><code>WH_MOUSE_LL</code></td><td>底层鼠标事件</td><td><strong>✅ 可以</strong></td></tr>
+<tr><td class="nw"><code>WH_KEYBOARD</code> / <code>WH_MOUSE</code></td><td>已进入某线程队列的键鼠消息</td><td>❌ 全局需 DLL 注入</td></tr>
+<tr><td class="nw"><code>WH_GETMESSAGE</code></td><td>GetMessage/PeekMessage 取出的消息</td><td>❌ 需 DLL</td></tr>
+<tr><td class="nw"><code>WH_CALLWNDPROC</code> / <code>WH_CALLWNDPROCRET</code></td><td>送进窗口过程<em>之前 / 之后</em>的消息</td><td>❌ 需 DLL</td></tr>
+<tr><td class="nw"><code>WH_CBT</code></td><td>窗口创建/销毁/激活/最小化等"基于计算机的训练"事件</td><td>❌ 需 DLL</td></tr>
+<tr><td class="nw"><code>WH_SHELL</code></td><td>Shell 级事件（顶层窗口出现/消失）</td><td>❌ 需 DLL</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>成功返回钩子句柄 <code>HHOOK</code>，失败返回 NULL（查 <code>GetLastError()</code>）。<strong>句柄必须留着</strong>，卸载和 <code>CallNextHookEx</code> 都要用。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 522px"><code><span class="cm">// 全局低级键盘钩子：拦截 Win+L 之外的组合，无需 DLL</span>
+HHOOK g_hHook;
+
+LRESULT CALLBACK LowLevelKbProc(<span class="kw">int</span> code, WPARAM w, LPARAM l) {
+    <span class="kw">if</span> (code == HC_ACTION &amp;&amp; w == WM_KEYDOWN) {
+        KBDLLHOOKSTRUCT* k = (KBDLLHOOKSTRUCT*)l;
+        <span class="kw">if</span> (k-&gt;vkCode == VK_F12) {
+            OnHotkey();
+            <span class="kw">return</span> 1;              <span class="cm">// 返回非 0 = 吃掉这次按键</span>
+        }
+    }
+    <span class="kw">return</span> CallNextHookEx(NULL, code, w, l);   <span class="cm">// 其余一律放行</span>
+}
+
+g_hHook = SetWindowsHookExW(WH_KEYBOARD_LL, LowLevelKbProc,
+                            GetModuleHandleW(NULL), 0);
+<span class="cm">// …退出前…</span>
+UnhookWindowsHookEx(g_hHook);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 263px"><span class="t">🔴 低级钩子有超时，回调里干慢活会被系统摘掉</span><p><code>WH_KEYBOARD_LL</code> / <code>WH_MOUSE_LL</code> 的回调运行在<strong>安装钩子的那个线程</strong>上，而且它挡在<strong>全系统</strong>的输入路径上——你在里面耗一毫秒，全系统的每次按键就慢一毫秒。<br>系统对此设了超时（注册表 <code>LowLevelHooksTimeout</code>，默认约 300ms）：<strong>超时的钩子会被系统直接卸掉，还不通知你</strong>，表现就是"运行一阵子后热键突然失效"。<br>三条纪律：<strong>①</strong> 回调里只做判断和 <code>PostMessage</code>，真正的活交给别的线程；<strong>②</strong> 安装钩子的线程<strong>必须有消息循环</strong>，否则回调根本不会被调用；<strong>③</strong> 别在回调里弹对话框、读文件、等锁。</p></div>
+
+<div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">🔵 先问自己：真的需要钩子吗</span><p>钩子是重武器，代价是性能、兼容性和被杀毒软件盯上。多数需求有更好的正规入口：<br><strong>全局热键</strong> → <code>RegisterHotKey</code>，系统直接给你发 <code>WM_HOTKEY</code>，零开销。<br><strong>监视窗口创建/焦点变化</strong> → <code>SetWinEventHook</code>，可以选 <code>WINEVENT_OUTOFCONTEXT</code> 模式<strong>不注入</strong>任何进程。<br><strong>自动化 / 读别的程序的界面</strong> → UI Automation（<code>IUIAutomation</code>），微软为此专门设计的接口。<br><strong>只想钩自己的窗口</strong> → 子类化（见 <a href="#a9-subclass">9.2</a>），比钩子简单一个数量级。</p></div>
+
+
+<h3 id="fn-CallNextHookEx">CallNextHookEx / UnhookWindowsHookEx</h3>
+
+<p class="fsum">把事件传给链上的下一个钩子，以及卸载。前者不调，你就悄悄弄坏了系统里所有别人的钩子——包括输入法和读屏软件。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 87px"><code>LRESULT CallNextHookEx(HHOOK hhk, <span class="kw">int</span> nCode, WPARAM wParam, LPARAM lParam);
+BOOL    UnhookWindowsHookEx(HHOOK hhk);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 162px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">hhk</td><td class="nw">HHOOK</td><td>自己的钩子句柄。<strong>现代 Windows 上此参数被忽略，传 NULL 即可</strong>——系统自己知道你在链上的位置。老代码传句柄也没错。</td></tr>
+<tr><td>nCode / wParam / lParam</td><td class="nw">—</td><td>把回调收到的三个参数<strong>原样</strong>转发。</td></tr>
+</tbody></table>
+
+<p><strong>返回值与铁律</strong></p>
+<table style="contain-intrinsic-size:auto 151px"><thead><tr><th class="nw">情形</th><th>你该怎么做</th></tr></thead><tbody>
+<tr><td class="nw"><code>nCode &lt; 0</code></td><td><strong>必须</strong>立即 <code>return CallNextHookEx(...)</code>，不得做任何处理——这是系统保留的内部编码</td></tr>
+<tr><td class="nw">不想拦截这个事件</td><td><code>return CallNextHookEx(...)</code>，把它的返回值原样返回</td></tr>
+<tr><td class="nw">想吃掉这个事件</td><td>直接 <code>return 1</code>（部分钩子类型语义不同，查该类型文档），<strong>不</strong>调 CallNextHookEx</td></tr>
+</tbody></table>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 229px"><span class="t">🔴 忘了 Unhook 的后果比想象中重</span><p>全局钩子的 DLL 被注入进了系统里<strong>每一个</strong>有界面的进程。不卸载，这些进程就一直加载着你的 DLL：升级时文件被占用删不掉，DLL 里有 bug 就到处崩别人的程序。<br>正确收尾：在 <code>WM_DESTROY</code> 或程序退出路径上 <code>UnhookWindowsHookEx</code>。注意<strong>只有安装钩子的那个线程能卸它</strong>。<br>还有个隐蔽点：卸载返回成功，不代表 DLL 立刻从各进程卸载干净——系统要等各进程下一次处理消息时才收尾。所以刚 Unhook 就去删 DLL 文件，仍可能提示"文件正在使用"。</p></div>
+
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45602px;--thin-h:39854px">
+<section class="chapter" style="contain-intrinsic-size:auto 56952px;--thin-h:51205px">
 <h1 id="a6"><span class="part">第 6 章</span>user32：输入、绘制、菜单与对话框</h1>
 <p>user32.dll 是 Win32 图形程序的门面：窗口消息从这里进来，绘制请求从这里排队，菜单与对话框也由它统一调度。本章按五个功能族整理速查表，每族速查表之后紧跟该族高频函数的详解卡——函数原型、逐参数说明、返回值约定、可直接套用的最小示例。已被官方标记为"有更好替代"的接口在"其他说明"里给出现代替代方案。</p>
 
@@ -3942,9 +5204,276 @@ HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
                                   IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p><span class="badge ok">推荐</span>比 LoadIconW / LoadBitmap 灵活在两点：一是能指定尺寸——LoadIconW 只给固定的默认大图标，而窗口类的 16×16 小图标（hIconSm）就必须靠它；二是加 LR_LOADFROMFILE 能直接从磁盘的 .ico / .bmp / .cur 文件加载，不必事先编译进资源。未加 LR_SHARED 时用完要释放：图标 / 光标用 DestroyIcon / DestroyCursor，位图用 DeleteObject。</p></div>
+
+<h2 id="a6-caret">6.6 插入符（文本光标）</h2>
+
+<p>插入符就是文本编辑区里那根闪烁的竖线。它有个和直觉相反的设计：<strong>整个系统只有一个插入符</strong>——它是"当前有键盘焦点的那个窗口"的共享资源，不是每个窗口各有一根。所以它的用法必然和焦点绑在一起：得到焦点时创建，失去焦点时销毁。</p>
+
+<table style="contain-intrinsic-size:auto 273px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">CreateCaret</td><td class="nw">为当前窗口创建插入符（默认不可见）</td><td>建完必须 ShowCaret 才看得见</td></tr>
+<tr><td class="nw">SetCaretPos / GetCaretPos</td><td class="nw">移动 / 查询位置（客户区坐标）</td><td>光标随打字移动就靠它</td></tr>
+<tr><td class="nw">ShowCaret / HideCaret</td><td class="nw">显示 / 隐藏</td><td><strong>隐藏是可叠加计数的</strong>，Hide 两次要 Show 两次</td></tr>
+<tr><td class="nw">DestroyCaret</td><td class="nw">销毁</td><td>只能销毁自己窗口的；失去焦点时必须调</td></tr>
+<tr><td class="nw">GetCaretBlinkTime / SetCaretBlinkTime</td><td class="nw">读写闪烁间隔</td><td>读可以，<strong>写是全系统设置，别改</strong></td></tr>
+</tbody></table>
+
+<h3 id="fn-CreateCaret">CreateCaret / ShowCaret / SetCaretPos / DestroyCaret</h3>
+
+<p class="fsum">自绘文本编辑器时必须自己管这根线。四个函数的调用时机全部由 <code>WM_SETFOCUS</code> / <code>WM_KILLFOCUS</code> 决定。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 169px"><code>BOOL CreateCaret(HWND hWnd, HBITMAP hBitmap, <span class="kw">int</span> nWidth, <span class="kw">int</span> nHeight);
+BOOL SetCaretPos(<span class="kw">int</span> X, <span class="kw">int</span> Y);      <span class="cm">// 客户区坐标，指的是左上角</span>
+BOOL ShowCaret(HWND hWnd);
+BOOL HideCaret(HWND hWnd);
+BOOL DestroyCaret(<span class="kw">void</span>);              <span class="cm">// 无参数——因为全系统只有一个</span></code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 164px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">hBitmap</td><td class="nw">HBITMAP</td><td>用位图当插入符的形状。<strong>传 NULL 表示纯黑实心块</strong>，传 <code>(HBITMAP)1</code> 表示灰色块。日常传 NULL。</td></tr>
+<tr><td class="nw">nWidth / nHeight</td><td class="nw">int</td><td>宽高（像素）。<strong>宽度传 0 表示用系统默认的边框宽度</strong>——这是正确做法，用户在"辅助功能"里把光标调粗时能跟着变。高度通常取字体的 <code>tmHeight</code>。</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 549px"><code><span class="kw">case</span> WM_SETFOCUS:
+    CreateCaret(hwnd, <span class="kw">nullptr</span>, 0, g_lineHeight);   <span class="cm">// 宽度 0 = 跟随系统设置</span>
+    SetCaretPos(g_caretX, g_caretY);
+    ShowCaret(hwnd);
+    <span class="kw">return</span> 0;
+
+<span class="kw">case</span> WM_KILLFOCUS:
+    DestroyCaret();                                 <span class="cm">// ★ 必须销毁，它是共享资源</span>
+    <span class="kw">return</span> 0;
+
+<span class="kw">case</span> WM_PAINT: {
+    PAINTSTRUCT ps;
+    HDC hdc = BeginPaint(hwnd, &amp;ps);
+    HideCaret(hwnd);              <span class="cm">// ★ 画之前藏起来，否则会被画花</span>
+    DrawText_(hdc);
+    ShowCaret(hwnd);              <span class="cm">// 画完再放出来（Hide/Show 必须配对）</span>
+    EndPaint(hwnd, &amp;ps);
+    <span class="kw">return</span> 0;
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 329px"><span class="t">🔴 全系统只有一根，所以规矩格外硬</span><p><strong>① 失去焦点必须 DestroyCaret。</strong>不销毁，下一个获得焦点的窗口 <code>CreateCaret</code> 时就把你的顶掉了；更糟的情况是你的插入符留在别人的窗口上一直闪。<br><strong>② 绘制前后要 Hide / Show。</strong>插入符是系统直接画在窗口上的，你在它上面绘制会留下残影或把它抹掉。规矩是 <code>HideCaret</code> → 绘制 → <code>ShowCaret</code>。<br><strong>③ Hide 是计数的。</strong>连调两次 <code>HideCaret</code>，就得两次 <code>ShowCaret</code> 才看得见。写在递归或多分支里很容易漏配对，症状是"光标不见了"。<br><strong>④ 只有拥有焦点的窗口才能操作它。</strong>没焦点时 <code>CreateCaret</code> 会成功但看不见，容易误判为"我的代码没生效"。</p></div>
+
+<h2 id="a6-scroll">6.7 滚动条</h2>
+
+<p>Win32 的滚动条有两种身份：作为<strong>窗口的一部分</strong>（加 <code>WS_HSCROLL</code>/<code>WS_VSCROLL</code> 风格，附在窗口边上）或作为<strong>独立控件</strong>（<code>SCROLLBAR</code> 类）。API 是同一套，靠 <code>fnBar</code> 参数区分。<strong>关键是要知道：滚动条自己不会滚动任何内容</strong>——它只是一个"用户想看第几行"的输入装置，真正的滚动是你在 <code>WM_PAINT</code> 里按新位置重画。</p>
+
+<table style="contain-intrinsic-size:auto 273px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">SetScrollInfo / GetScrollInfo</td><td class="nw">读写范围、当前位置与"滑块占比"</td><td><strong>现代写法</strong>；位置是 32 位</td></tr>
+<tr><td class="nw">SetScrollPos / SetScrollRange</td><td class="nw">只设位置 / 只设范围</td><td>🟡 老接口，位置只有 16 位，长文档会溢出；且无法设置滑块比例</td></tr>
+<tr><td class="nw">ShowScrollBar / EnableScrollBar</td><td class="nw">显示隐藏 / 启用禁用</td><td>内容装得下时禁用比隐藏好——隐藏会让客户区尺寸跳变</td></tr>
+<tr><td class="nw">ScrollWindowEx</td><td class="nw">把窗口内容整体平移，只重画新露出的部分</td><td>比整窗 Invalidate 快得多</td></tr>
+<tr><td class="nw">GetScrollBarInfo</td><td class="nw">取滚动条各部件的位置与状态</td><td>自绘或做自动化测试时用</td></tr>
+</tbody></table>
+
+<h3 id="fn-SetScrollInfo">SetScrollInfo / GetScrollInfo</h3>
+
+<p class="fsum">用一个结构体一次性描述滚动条的全部状态。<code>nPage</code> 是新老接口的分水岭——正是它让滑块的<strong>长短</strong>能反映"一屏占全文的比例"。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 332px"><code><span class="kw">int</span>  SetScrollInfo(HWND hwnd, <span class="kw">int</span> nBar, LPCSCROLLINFO lpsi, BOOL redraw);
+BOOL GetScrollInfo(HWND hwnd, <span class="kw">int</span> nBar, LPSCROLLINFO  lpsi);
+
+<span class="kw">typedef struct</span> tagSCROLLINFO {
+    UINT cbSize;      <span class="cm">// = sizeof(SCROLLINFO)</span>
+    UINT fMask;       <span class="cm">// 这次操作哪些字段：SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS</span>
+    <span class="kw">int</span>  nMin, nMax;  <span class="cm">// 范围</span>
+    UINT nPage;       <span class="cm">// ★ 一屏能显示多少（决定滑块长度）</span>
+    <span class="kw">int</span>  nPos;        <span class="cm">// 当前位置</span>
+    <span class="kw">int</span>  nTrackPos;   <span class="cm">// 只读：用户正拖动时的实时位置</span>
+} SCROLLINFO;</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 230px"><thead><tr><th>参数</th><th class="nw">值</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">nBar</td><td class="nw">int</td><td><code>SB_HORZ</code> / <code>SB_VERT</code>：窗口自带的水平/垂直滚动条；<code>SB_CTL</code>：hwnd 本身就是一个滚动条控件；<code>SB_BOTH</code>：两者（仅 Show/Enable 类函数可用）。</td></tr>
+<tr><td class="nw">fMask</td><td class="nw">UINT</td><td>声明本次读写哪些字段。<strong>没在 fMask 里点名的字段会被忽略</strong>，不是"设成 0"。设置时还可加 <code>SIF_DISABLENOSCROLL</code>：内容装得下时把滚动条禁用而不是隐藏。</td></tr>
+<tr><td class="nw">nPage</td><td class="nw">UINT</td><td>一屏能显示的量。滑块长度 ≈ <code>nPage / (nMax - nMin + 1)</code>。<strong>它还有一个副作用</strong>：设了 nPage 后，<code>nPos</code> 的有效上限自动变成 <code>nMax - nPage + 1</code>——这正是"滚到底时最后一屏刚好填满"的原因。</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 1011px"><code><span class="cm">// 内容变化时更新滚动条：共 nLines 行，一屏 nVisible 行</span>
+SCROLLINFO si = { <span class="kw">sizeof</span>(si) };
+si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
+si.nMin  = 0;
+si.nMax  = nLines - 1;
+si.nPage = nVisible;                 <span class="cm">// ← 老接口没有这个，滑块永远一样长</span>
+si.nPos  = g_topLine;
+SetScrollInfo(hwnd, SB_VERT, &amp;si, TRUE);
+
+<span class="cm">// 处理滚动消息</span>
+<span class="kw">case</span> WM_VSCROLL: {
+    SCROLLINFO si = { <span class="kw">sizeof</span>(si) };
+    si.fMask = SIF_ALL;
+    GetScrollInfo(hwnd, SB_VERT, &amp;si);
+    <span class="kw">int</span> old = si.nPos;
+
+    <span class="kw">switch</span> (LOWORD(wParam)) {
+    <span class="kw">case</span> SB_LINEUP:   si.nPos -= 1;           <span class="kw">break</span>;
+    <span class="kw">case</span> SB_LINEDOWN: si.nPos += 1;           <span class="kw">break</span>;
+    <span class="kw">case</span> SB_PAGEUP:   si.nPos -= si.nPage;    <span class="kw">break</span>;
+    <span class="kw">case</span> SB_PAGEDOWN: si.nPos += si.nPage;    <span class="kw">break</span>;
+    <span class="kw">case</span> SB_THUMBTRACK: si.nPos = si.nTrackPos; <span class="kw">break</span>;   <span class="cm">// ★ 用 32 位的 nTrackPos</span>
+    }
+
+    si.fMask = SIF_POS;
+    SetScrollInfo(hwnd, SB_VERT, &amp;si, TRUE);   <span class="cm">// 系统会把 nPos 夹到合法范围</span>
+    GetScrollInfo(hwnd, SB_VERT, &amp;si);         <span class="cm">// 再读回来，拿到夹过的值</span>
+
+    <span class="kw">if</span> (si.nPos != old) {
+        ScrollWindowEx(hwnd, 0, (old - si.nPos) * g_lineHeight,
+                       <span class="kw">nullptr</span>, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>, SW_INVALIDATE);
+        g_topLine = si.nPos;
+        UpdateWindow(hwnd);
+    }
+    <span class="kw">return</span> 0;
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 267px"><span class="t">🟡 拖动滑块时，wParam 高 16 位是不够用的</span><p><code>WM_VSCROLL</code> 的 <code>HIWORD(wParam)</code> 也带着一个位置值，但它只有 <strong>16 位</strong>——文档超过 65535 行时就废了。<strong>处理 <code>SB_THUMBTRACK</code> / <code>SB_THUMBPOSITION</code> 一律改用 <code>GetScrollInfo</code> 取 32 位的 <code>nTrackPos</code>。</strong>这正是整套老接口（<code>SetScrollPos</code> / <code>SetScrollRange</code>）该被淘汰的原因。<br>另外两点：<strong>①</strong> <code>SetScrollInfo</code> 会自动把 <code>nPos</code> 夹进合法区间，所以设完再 <code>GetScrollInfo</code> 读回来，比自己写夹取逻辑可靠；<strong>②</strong> 鼠标滚轮走的是 <strong><code>WM_MOUSEWHEEL</code></strong>，不是 <code>WM_VSCROLL</code>，得单独处理（滚动行数要读 <code>SPI_GETWHEELSCROLLLINES</code>，用户可能设成了"一屏"）。</p></div>
+
+<h2 id="a6-clipboard">6.8 剪贴板</h2>
+
+<p>剪贴板是<strong>全系统共享的一块地方</strong>，同一时刻只有一个程序能打开它。所以这套 API 的每一条规矩，都是围绕"尽快用完还回去"和"数据的所有权交给谁"展开的。</p>
+
+<table style="contain-intrinsic-size:auto 475px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">OpenClipboard / CloseClipboard</td><td class="nw">打开 / 关闭</td><td><strong>严格成对，中间别弹对话框、别做慢活</strong></td></tr>
+<tr><td class="nw">EmptyClipboard</td><td class="nw">清空并取得所有权</td><td>写入之前<strong>必须</strong>先调，否则 SetClipboardData 失败</td></tr>
+<tr><td class="nw">SetClipboardData</td><td class="nw">放入一种格式的数据</td><td><strong>句柄所有权转移给系统，之后不许再碰</strong></td></tr>
+<tr><td class="nw">GetClipboardData</td><td class="nw">取出某种格式的数据</td><td>返回的句柄<strong>不归你</strong>，Close 之后即失效，必须先拷走</td></tr>
+<tr><td class="nw">IsClipboardFormatAvailable</td><td class="nw">先问有没有这种格式</td><td>不用打开剪贴板就能问，用来决定"粘贴"菜单是否可用</td></tr>
+<tr><td class="nw">RegisterClipboardFormatW</td><td class="nw">注册自定义格式</td><td>同名字符串全系统同一个格式号，跨进程可用</td></tr>
+<tr><td>AddClipboardFormatListener</td><td class="nw">剪贴板内容变化时收到 <code>WM_CLIPBOARDUPDATE</code></td><td>Vista+；取代了老的 <code>SetClipboardViewer</code> 链</td></tr>
+</tbody></table>
+
+<h3 id="fn-SetClipboardData">OpenClipboard / SetClipboardData / GetClipboardData</h3>
+
+<p class="fsum">复制与粘贴的完整流程。两处所有权转移是全部难点：写进去的句柄从此归系统，读出来的句柄从来不归你。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code>BOOL   OpenClipboard(HWND hWndNewOwner);
+BOOL   EmptyClipboard(<span class="kw">void</span>);
+HANDLE SetClipboardData(UINT uFormat, HANDLE hMem);
+HANDLE GetClipboardData(UINT uFormat);
+BOOL   CloseClipboard(<span class="kw">void</span>);
+BOOL   IsClipboardFormatAvailable(UINT format);</code></pre>
+
+<p><strong>常用格式</strong></p>
+<table style="contain-intrinsic-size:auto 227px"><thead><tr><th class="nw">格式</th><th>数据形式</th></tr></thead><tbody>
+<tr><td class="nw"><code>CF_UNICODETEXT</code></td><td>以 <code>\0</code> 结尾的 UTF-16 字符串，<strong>文本一律用这个</strong></td></tr>
+<tr><td class="nw"><code>CF_TEXT</code></td><td>ANSI 文本。系统会在两者间自动转换，但转换有损，别主动用</td></tr>
+<tr><td class="nw"><code>CF_BITMAP</code> / <code>CF_DIB</code></td><td><code>HBITMAP</code> / 设备无关位图数据块</td></tr>
+<tr><td class="nw"><code>CF_HDROP</code></td><td>文件列表（资源管理器复制文件时用），配 <code>DragQueryFileW</code> 读取</td></tr>
+<tr><td class="nw">自定义</td><td><code>RegisterClipboardFormatW(L"Acme.MyFormat")</code> 得到的格式号</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 957px"><code><span class="cm">// ── 复制文本 ──</span>
+<span class="kw">bool</span> CopyText(HWND hwnd, <span class="kw">const</span> std::wstring&amp; text) {
+    <span class="kw">size_t</span> cb = (text.size() + 1) * <span class="kw">sizeof</span>(wchar_t);
+    HGLOBAL h = GlobalAlloc(GMEM_MOVEABLE, cb);      <span class="cm">// ★ 必须 GMEM_MOVEABLE</span>
+    <span class="kw">if</span> (!h) <span class="kw">return</span> <span class="kw">false</span>;
+
+    memcpy(GlobalLock(h), text.c_str(), cb);
+    GlobalUnlock(h);
+
+    <span class="kw">if</span> (!OpenClipboard(hwnd)) { GlobalFree(h); <span class="kw">return</span> <span class="kw">false</span>; }
+    EmptyClipboard();                                <span class="cm">// ★ 不清空就没有所有权，Set 会失败</span>
+    <span class="kw">if</span> (!SetClipboardData(CF_UNICODETEXT, h)) {
+        CloseClipboard(); GlobalFree(h); <span class="kw">return</span> <span class="kw">false</span>;   <span class="cm">// 失败了才由你释放</span>
+    }
+    CloseClipboard();
+    <span class="cm">// ★ 成功之后 h 归系统所有，绝不能再 GlobalFree(h)</span>
+    <span class="kw">return</span> <span class="kw">true</span>;
+}
+
+<span class="cm">// ── 粘贴文本 ──</span>
+std::wstring PasteText(HWND hwnd) {
+    <span class="kw">if</span> (!IsClipboardFormatAvailable(CF_UNICODETEXT)) <span class="kw">return</span> {};
+    <span class="kw">if</span> (!OpenClipboard(hwnd)) <span class="kw">return</span> {};
+
+    std::wstring out;
+    <span class="kw">if</span> (HANDLE h = GetClipboardData(CF_UNICODETEXT)) {   <span class="cm">// h 不归你</span>
+        <span class="kw">if</span> (<span class="kw">auto</span>* p = (<span class="kw">const</span> wchar_t*)GlobalLock(h)) {
+            out = p;                                     <span class="cm">// ★ 趁 Close 之前拷走</span>
+            GlobalUnlock(h);
+        }
+    }
+    CloseClipboard();
+    <span class="kw">return</span> out;
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 298px"><span class="t">🔴 所有权：两个方向都容易搞反</span><p><strong>写入：<code>SetClipboardData</code> 成功后，句柄归系统。</strong>再 <code>GlobalFree</code> 就是重复释放，通常表现为别的程序粘贴时崩溃——而且崩的是别人，极难联想到自己。只有 <code>SetClipboardData</code> <em>失败</em>时才该由你释放。<br><strong>读取：<code>GetClipboardData</code> 返回的句柄不归你。</strong>它在 <code>CloseClipboard</code> 之后就可能失效，更别提被下一次复制顶掉。必须在 Open/Close 之间<strong>拷贝一份</strong>，绝不能存着句柄事后用，更不能 <code>GlobalFree</code> 它。<br><strong>另外三条：</strong>① 内存必须用 <code>GlobalAlloc(GMEM_MOVEABLE, ...)</code> 分配，用 <code>malloc</code> 或 <code>GMEM_FIXED</code> 会出问题；② 打开失败是<strong>常态</strong>（别的程序正开着），要重试或直接放弃，不能当异常；③ <strong>打开期间别弹对话框、别做耗时操作</strong>——整个系统的复制粘贴都被你卡着。</p></div>
+
+<div class="note new" style="contain-intrinsic-size:auto 297px"><span class="t">🔵 大数据用"延迟渲染"</span><p>复制一张 100 MB 的图，用户却可能根本不粘贴——立刻把数据准备好是浪费。<strong>延迟渲染</strong>的做法是：<code>SetClipboardData(format, NULL)</code> 只声明"我能提供这种格式"，等真有人来取时，你的窗口会收到 <code>WM_RENDERFORMAT</code>，那时再生成数据。<br>代价是你的窗口必须一直活着；程序退出前若剪贴板上还挂着未渲染的格式，系统会发 <code>WM_RENDERALLFORMATS</code> 让你最后补齐。<br>还有一个现代路径：拖放与剪贴板的 COM 接口 <code>IDataObject</code>（配 <code>OleSetClipboard</code>），支持多格式协商、延迟渲染和异步传输，是复杂数据交换的正规方案。</p></div>
+
+<h2 id="a6-dpi">6.9 高 DPI 与多显示器</h2>
+
+<p>今天一台机器上常常同时接着 100% 缩放的外接屏和 200% 缩放的笔记本屏，用户还会把窗口在两块屏之间拖来拖去。程序若不声明自己"看得懂 DPI"，系统就会把它按 96 DPI 渲染再<strong>整体拉伸</strong>——结果就是那种糊掉的界面。声明之后，所有像素尺寸都得由你自己按当前 DPI 换算，包括窗口边框、字体、图标、控件间距。</p>
+
+<table style="contain-intrinsic-size:auto 781px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">SetProcessDpiAwarenessContext</td><td class="nw">声明本进程的 DPI 感知模式</td><td>Win10 1703+；更推荐写在 manifest 里，见下</td></tr>
+<tr><td class="nw">GetDpiForWindow</td><td class="nw">取某窗口<strong>当前所在显示器</strong>的 DPI</td><td>Win10 1607+；一切换算的起点</td></tr>
+<tr><td class="nw">GetDpiForSystem</td><td class="nw">取系统 DPI（主显示器的）</td><td>还没有窗口时的退路</td></tr>
+<tr><td class="nw">GetSystemMetricsForDpi</td><td class="nw">按指定 DPI 取系统度量（边框宽度、图标尺寸…）</td><td>替代 <code>GetSystemMetrics</code>，后者永远给系统 DPI 的值</td></tr>
+<tr><td class="nw">AdjustWindowRectExForDpi</td><td class="nw">按指定 DPI 反算窗口矩形</td><td>替代 <a class="fnlink" href="#fn-AdjustWindowRectEx"><code>AdjustWindowRectEx</code></a></td></tr>
+<tr><td class="nw">WM_DPICHANGED</td><td>窗口被拖到不同 DPI 的显示器上时收到</td><td>不是函数；<code>lParam</code> 给的是建议的新矩形，<strong>照着 SetWindowPos 即可</strong></td></tr>
+<tr><td class="nw">MonitorFromWindow / MonitorFromPoint</td><td class="nw">找出窗口/点所在的显示器</td><td>配 <code>GetMonitorInfoW</code> 取该屏的工作区</td></tr>
+<tr><td class="nw">GetMonitorInfoW</td><td class="nw">取显示器的完整矩形与工作区矩形</td><td>把窗口摆在"当前这块屏"的中间就靠它</td></tr>
+<tr><td class="nw">EnumDisplayMonitors</td><td class="nw">枚举所有显示器</td><td>多屏布局计算</td></tr>
+</tbody></table>
+
+<h3 id="fn-GetDpiForWindow">GetDpiForWindow / GetSystemMetricsForDpi</h3>
+
+<p class="fsum">高 DPI 编程只有一条主线：<strong>所有写死的像素值，都要乘以 <code>当前DPI / 96</code></strong>。这两个函数提供那个"当前 DPI"和已经换算好的系统度量。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 169px"><code>UINT GetDpiForWindow(HWND hwnd);                       <span class="cm">// Win10 1607+</span>
+UINT GetDpiForSystem(<span class="kw">void</span>);
+<span class="kw">int</span>  GetSystemMetricsForDpi(<span class="kw">int</span> nIndex, UINT dpi);
+BOOL AdjustWindowRectExForDpi(LPRECT lpRect, DWORD dwStyle,
+                              BOOL bMenu, DWORD dwExStyle, UINT dpi);</code></pre>
+
+<p><strong>返回值</strong></p>
+<p>DPI 值：<strong>96 = 100% 缩放</strong>，120 = 125%，144 = 150%，192 = 200%。窗口句柄无效或系统太老时 <code>GetDpiForWindow</code> 返回 0，此时退回 <code>GetDpiForSystem()</code>。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 658px"><code><span class="cm">// 换算宏：把 96 DPI 下设计的尺寸转成当前 DPI 下的像素</span>
+#define SCALE(px, dpi)  MulDiv((px), (dpi), 96)
+
+<span class="kw">void</span> Layout(HWND hwnd) {
+    UINT dpi = GetDpiForWindow(hwnd);
+    <span class="kw">if</span> (!dpi) dpi = GetDpiForSystem();
+
+    <span class="kw">int</span> margin  = SCALE(8,  dpi);          <span class="cm">// 设计稿上的 8px</span>
+    <span class="kw">int</span> btnH    = SCALE(28, dpi);
+    <span class="kw">int</span> iconCx  = GetSystemMetricsForDpi(SM_CXSMICON, dpi);   <span class="cm">// 系统度量也要按 DPI 取</span>
+    <span class="cm">// …按这些值摆控件…</span>
+}
+
+<span class="cm">// 窗口被拖到另一块屏：系统已经算好新矩形，照做就行</span>
+<span class="kw">case</span> WM_DPICHANGED: {
+    RECT* r = (RECT*)lParam;                <span class="cm">// wParam 的高低 16 位分别是新的 X/Y DPI</span>
+    SetWindowPos(hwnd, <span class="kw">nullptr</span>, r-&gt;left, r-&gt;top,
+                 r-&gt;right - r-&gt;left, r-&gt;bottom - r-&gt;top,
+                 SWP_NOZORDER | SWP_NOACTIVATE);
+    RecreateFonts(HIWORD(wParam));          <span class="cm">// 字体要按新 DPI 重建</span>
+    Layout(hwnd);
+    <span class="kw">return</span> 0;
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note new" style="contain-intrinsic-size:auto 426px"><span class="t">🔵 感知模式该选哪一档，以及为什么写在 manifest 里</span><p>四档，从旧到新：<br><strong>Unaware</strong> —— 不声明就是它，系统拉伸，界面糊。<br><strong>System</strong> —— 只认<em>登录时</em>主屏的 DPI；拖到别的屏仍然糊。<br><strong>Per-Monitor</strong>（V1）—— 会收到 <code>WM_DPICHANGED</code>，但窗口边框、菜单、对话框这些非客户区仍由系统按老 DPI 画。<br><strong><code>PerMonitorV2</code></strong> —— <strong>今天的正确选择</strong>：非客户区、通用控件、对话框都会自动跟着缩放，你只需管自己画的内容。<br><strong>为什么优先写 manifest 而不是调函数</strong>：DPI 感知模式必须在<strong>任何窗口创建之前</strong>确定。写在 manifest 里由加载器在进程启动时设好，一定来得及；用 <code>SetProcessDpiAwarenessContext</code> 则要保证它跑在 <code>main</code> 的第一行之前——而某些静态初始化、第三方库的 DllMain 可能已经建过窗口了。<br><code>&lt;dpiAwareness&gt;PerMonitorV2&lt;/dpiAwareness&gt;</code> 加在 manifest 的 <code>windowsSettings</code> 节里即可。</p></div>
+
+<div class="note dead" style="contain-intrinsic-size:auto 297px"><span class="t">🔴 三个位置最容易漏掉换算</span><p><strong>① 字体。</strong><code>CreateFontW</code> 的 <code>lfHeight</code> 要用 <code>-MulDiv(点数, dpi, 72)</code> 算，DPI 变了必须<strong>重建字体对象</strong>，不能只重画。<br><strong>② 位图与图标。</strong><code>LoadImageW</code> 加载的固定尺寸图在高 DPI 下会被拉糊。要么准备多套尺寸（16/24/32/48）按 DPI 挑，要么改用矢量绘制。<br><strong>③ <code>GetSystemMetrics</code>。</strong>它<strong>永远返回系统 DPI 下的值</strong>，在 PerMonitorV2 进程里拿它算边框宽度必然错。凡是 <code>SM_CX*</code> / <code>SM_CY*</code>，一律换成 <code>GetSystemMetricsForDpi</code>。<br>顺带一个调试技巧：把两块 DPI 不同的屏排在一起，<strong>把窗口拖来拖去</strong>——所有漏算的地方都会当场现形。</p></div>
+
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 34423px;--thin-h:33334px">
+<section class="chapter" style="contain-intrinsic-size:auto 39478px;--thin-h:38390px">
 <h1 id="a7"><span class="part">第 7 章</span>gdi32：设备上下文、绘图与画笔画刷字体</h1>
 
 <p>gdi32.dll 承载着 Windows 最经典的二维绘图体系。它的一切都围绕<strong>设备上下文（DC，Device Context）</strong>展开：DC 相当于一块"自带全套画具状态"的画板——当前选用的画笔、画刷、字体、混合模式、当前位置，全都记在 DC 身上。绘图函数从不直接接收"用什么笔"这种参数，而是先把画具<strong>选入</strong> DC，再调用绘图函数。因此本章的主线只有一句话：<em>创建对象 → 选入 DC → 绘图 → 换回旧对象 → 删除自己创建的对象</em>。</p>
@@ -4601,9 +6130,133 @@ DeleteObject(hFont);</code></pre>
 <tr><td class="nw">RASTERCAPS</td><td class="nw">光栅能力位标志</td><td>用 RC_BITBLT、RC_STRETCHBLT 等位测试</td></tr>
 </tbody></table>
 <p>打印排版全靠它：用 LOGPIXELSX/Y 把磅、毫米换算成设备像素，同一段代码即可适配屏幕与打印机。注意：未声明 DPI 感知的进程在高缩放下会被系统虚拟化，屏幕 DC 一律报 96；要按窗口取真实 DPI，应改用 GetDpiForWindow <span class="badge new">现代提示</span>。</p>
+
+<h2 id="a7-region">7.6 区域与裁剪</h2>
+
+<p><strong>区域（region）</strong>是一块任意形状的面积——矩形、椭圆、多边形，还能把它们做并/交/差运算拼出复杂形状。它有两个完全不同的用途：<strong>①</strong> 当图形画（填充、描边）；<strong>②</strong> 当<strong>裁剪范围</strong>用——选进 DC 之后，一切绘制都被限制在区域之内，超出的部分自动被丢掉。第二种用途更重要：它是"只重画脏区""异形窗口""控件不许画出自己的地盘"这些效果的底层机制。</p>
+
+<table style="contain-intrinsic-size:auto 460px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td>CreateRectRgn / CreateRectRgnIndirect</td><td class="nw">建矩形区域</td><td>最常用；区域是 <strong>GDI 对象，用完必须 DeleteObject</strong></td></tr>
+<tr><td>CreateRoundRectRgn / CreateEllipticRgn / CreatePolygonRgn</td><td class="nw">建圆角矩形 / 椭圆 / 多边形区域</td><td>圆角窗口、异形按钮</td></tr>
+<tr><td class="nw">CombineRgn</td><td class="nw">两个区域做并/交/差/异或，结果存进第三个</td><td>目标区域<strong>必须已经存在</strong>，函数不会替你创建</td></tr>
+<tr><td class="nw">SelectClipRgn</td><td class="nw">把区域设为 DC 的裁剪区</td><td>传 NULL 表示取消裁剪</td></tr>
+<tr><td>IntersectClipRect / ExcludeClipRect</td><td class="nw">在现有裁剪区上再交 / 再挖一个矩形</td><td>比建区域再 Select 省事</td></tr>
+<tr><td>FillRgn / FrameRgn / InvertRgn / PaintRgn</td><td class="nw">填充 / 描边 / 反色 / 用当前刷子填</td><td>把区域当图形画</td></tr>
+<tr><td>PtInRegion / RectInRegion / GetRgnBox</td><td class="nw">命中测试 / 相交测试 / 取外接矩形</td><td>自绘控件判断"点到哪儿了"</td></tr>
+<tr><td class="nw">SetWindowRgn</td><td class="nw">把窗口本身裁成某个形状</td><td>异形窗口；<strong>句柄交给系统后不要再 Delete</strong></td></tr>
+</tbody></table>
+
+<h3 id="fn-CreateRectRgn">CreateRectRgn / CombineRgn / SelectClipRgn</h3>
+
+<p class="fsum">建区域、拼形状、当裁剪范围用。要点有两个：区域是需要手工删除的 GDI 对象；<code>CombineRgn</code> 的目标区域必须自己先建好。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 223px"><code>HRGN CreateRectRgn(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2);
+HRGN CreateEllipticRgn(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2);
+HRGN CreateRoundRectRgn(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2, <span class="kw">int</span> w, <span class="kw">int</span> h);
+
+<span class="kw">int</span>  CombineRgn(HRGN hrgnDst, HRGN hrgnSrc1, HRGN hrgnSrc2, <span class="kw">int</span> iMode);
+<span class="kw">int</span>  SelectClipRgn(HDC hdc, HRGN hrgn);       <span class="cm">// hrgn = NULL 取消裁剪</span>
+<span class="kw">int</span>  IntersectClipRect(HDC hdc, <span class="kw">int</span> l, <span class="kw">int</span> t, <span class="kw">int</span> r, <span class="kw">int</span> b);</code></pre>
+
+<p><strong>CombineRgn 的模式</strong></p>
+<table style="contain-intrinsic-size:auto 227px"><thead><tr><th class="nw">iMode</th><th>结果</th></tr></thead><tbody>
+<tr><td class="nw"><code>RGN_OR</code></td><td>并集——两块合起来</td></tr>
+<tr><td class="nw"><code>RGN_AND</code></td><td>交集——重叠的部分</td></tr>
+<tr><td class="nw"><code>RGN_DIFF</code></td><td>差集——Src1 里挖掉 Src2（<strong>顺序有意义</strong>）</td></tr>
+<tr><td class="nw"><code>RGN_XOR</code></td><td>异或——只属于其中一个的部分</td></tr>
+<tr><td class="nw"><code>RGN_COPY</code></td><td>只拷贝 Src1，忽略 Src2</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>创建类失败返回 NULL。<code>CombineRgn</code> / <code>SelectClipRgn</code> 返回区域的复杂度：<code>NULLREGION</code>（空）、<code>SIMPLEREGION</code>（一个矩形）、<code>COMPLEXREGION</code>（多个矩形拼成）、<code>ERROR</code>。<strong>返回 <code>NULLREGION</code> 是很有用的信号</strong>——说明裁剪后什么都画不出来，可以直接跳过后面的绘制。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 495px"><code><span class="cm">// 在一块矩形里挖一个洞，然后只在剩下的部分绘制</span>
+HRGN outer = CreateRectRgn(0, 0, 400, 300);
+HRGN hole  = CreateEllipticRgn(150, 100, 250, 200);
+HRGN dst   = CreateRectRgn(0, 0, 0, 0);        <span class="cm">// ★ 目标必须先建出来</span>
+CombineRgn(dst, outer, hole, RGN_DIFF);
+
+SelectClipRgn(hdc, dst);
+FillRect(hdc, &amp;rcAll, hbrBlue);                <span class="cm">// 洞里不会被填到</span>
+SelectClipRgn(hdc, <span class="kw">nullptr</span>);                  <span class="cm">// 用完取消裁剪</span>
+
+DeleteObject(outer); DeleteObject(hole); DeleteObject(dst);   <span class="cm">// 三个都要删</span>
+
+<span class="cm">// 更省事的写法：不建区域，直接在 DC 的裁剪区上取交集</span>
+SaveDC(hdc);
+IntersectClipRect(hdc, rc.left, rc.top, rc.right, rc.bottom);
+DrawContent(hdc);
+RestoreDC(hdc, -1);                            <span class="cm">// 连裁剪区一起还原</span></code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 330px"><span class="t">🔴 区域是 GDI 对象，泄漏起来悄无声息</span><p><strong>① 每个 <code>CreateXxxRgn</code> 都要配一个 <code>DeleteObject</code>。</strong>包括 <code>CombineRgn</code> 的那个目标区域——它是你自己建的。GDI 对象泄漏不会立刻出问题，但每个进程有 10000 个的配额，用完之后所有绘制 API 集体失败，界面变成一片空白，而且崩溃点离泄漏点十万八千里。<br><strong>② 选进 DC 的区域不能删。</strong>和画笔画刷一样，正在被 DC 使用的对象删不掉。先 <code>SelectClipRgn(hdc, NULL)</code> 再删。<br><strong>③ <code>SetWindowRgn</code> 是例外：句柄交出去就不归你了</strong>，再 <code>DeleteObject</code> 就是重复释放。<br><strong>④ <code>BeginPaint</code> 已经替你裁好了。</strong><code>WM_PAINT</code> 里拿到的 DC 自带"无效区"裁剪，你画到无效区之外是白费力气但不会出错——利用 <code>ps.rcPaint</code> 主动跳过不需要重画的内容，才是省时间的正道。</p></div>
+
+<h2 id="a7-path">7.7 路径</h2>
+
+<p>路径把"一串绘图调用"录制下来，变成一个可以整体操作的形状。用途有三个：<strong>①</strong> 描边和填充<strong>同一个</strong>复杂轮廓（否则你得把图元画两遍）；<strong>②</strong> 把文字轮廓变成图形（做描边字、渐变字）；<strong>③</strong> 生成区域用于裁剪。</p>
+
+<table style="contain-intrinsic-size:auto 373px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">BeginPath / EndPath</td><td class="nw">开始 / 结束录制</td><td>两者之间的绘图调用不出图，只被记录下来</td></tr>
+<tr><td>StrokePath / FillPath / StrokeAndFillPath</td><td class="nw">用当前笔描边 / 当前刷填充 / 两者</td><td><strong>调用后路径就没了</strong>，要重用得先 <code>PathToRegion</code> 或重新录</td></tr>
+<tr><td class="nw">PathToRegion</td><td class="nw">把路径转成区域</td><td>做异形窗口、复杂裁剪的常规路线</td></tr>
+<tr><td class="nw">WidenPath</td><td class="nw">把路径按当前笔宽"加粗"成一个新轮廓</td><td>要得到"描边本身的形状"时用</td></tr>
+<tr><td class="nw">FlattenPath</td><td class="nw">把曲线段拍成折线段</td><td>需要逐点处理时先拍平</td></tr>
+<tr><td class="nw">SetPolyFillMode</td><td class="nw">填充规则：<code>ALTERNATE</code> 或 <code>WINDING</code></td><td>自交叉图形里"洞"的判定方式，结果差别很大</td></tr>
+<tr><td class="nw">PolyBezier / PolyBezierTo</td><td class="nw">画三次贝塞尔曲线</td><td>每段要 3 个控制点；圆角、平滑曲线</td></tr>
+</tbody></table>
+
+<h3 id="fn-BeginPath">BeginPath / EndPath / StrokeAndFillPath</h3>
+
+<p class="fsum">"录制—回放"模型：<code>BeginPath</code> 之后的绘图调用不会真的出图，而是被记进路径里，<code>EndPath</code> 收尾，最后用一个动作把整个轮廓描边或填充。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code>BOOL BeginPath(HDC hdc);
+BOOL EndPath(HDC hdc);
+BOOL StrokePath(HDC hdc);          <span class="cm">// 只描边（用当前笔）</span>
+BOOL FillPath(HDC hdc);            <span class="cm">// 只填充（用当前刷），自动闭合未闭合的子路径</span>
+BOOL StrokeAndFillPath(HDC hdc);   <span class="cm">// 两者一起</span>
+HRGN PathToRegion(HDC hdc);        <span class="cm">// 转成区域（同样会消耗掉路径）</span></code></pre>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 848px"><code><span class="cm">// ① 复杂轮廓：描边和填充只写一遍</span>
+BeginPath(hdc);
+    MoveToEx(hdc, 10, 10, <span class="kw">nullptr</span>);
+    LineTo(hdc, 100, 10);
+    <span class="cm">// 一段贝塞尔曲线：3 个控制点</span>
+    POINT bez[3] = { {160, 10}, {160, 70}, {100, 90} };
+    PolyBezierTo(hdc, bez, 3);
+    LineTo(hdc, 10, 90);
+    CloseFigure(hdc);                       <span class="cm">// 闭合当前子路径</span>
+EndPath(hdc);
+
+SelectObject(hdc, hPenThick);
+SelectObject(hdc, hBrushFill);
+StrokeAndFillPath(hdc);                     <span class="cm">// ★ 路径到这里就被消耗掉了</span>
+
+<span class="cm">// ② 文字轮廓变图形：做空心字 / 渐变填充字</span>
+BeginPath(hdc);
+    TextOutW(hdc, 20, 20, L"轮廓字", 3);    <span class="cm">// 文字也能录进路径</span>
+EndPath(hdc);
+StrokePath(hdc);                            <span class="cm">// 只描边 = 空心字</span>
+
+<span class="cm">// ③ 路径转区域，做异形裁剪</span>
+BeginPath(hdc);
+    Ellipse(hdc, 0, 0, 200, 200);
+EndPath(hdc);
+HRGN rgn = PathToRegion(hdc);
+SelectClipRgn(hdc, rgn);
+<span class="cm">// …绘制被裁进圆里…</span>
+SelectClipRgn(hdc, <span class="kw">nullptr</span>);
+DeleteObject(rgn);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 365px"><span class="t">🟡 路径是一次性的，而且不是所有绘图函数都能录进去</span><p><strong>① 用完即毁。</strong><code>StrokePath</code> / <code>FillPath</code> / <code>PathToRegion</code> 任意一个调用后，DC 里的路径就没了。既要填充又要单独描边一次的话，用 <code>StrokeAndFillPath</code>，或者把绘制过程录两遍。<br><strong>② 能录的只有"矢量"调用。</strong><code>MoveToEx</code>/<code>LineTo</code>/<code>PolyBezier</code>/<code>Arc</code>/<code>Rectangle</code>/<code>Ellipse</code>/<code>TextOut</code> 这些可以；<code>BitBlt</code>、<code>SetPixel</code>、<code>FillRect</code>（它走的是刷子填充而非路径）不行——它们在 BeginPath/EndPath 之间会被<strong>直接执行掉</strong>而不是录制，行为看起来很怪。<br><strong>③ 填充规则决定"洞"。</strong>五角星这类自交叉图形，<code>ALTERNATE</code>（默认）中间是空的，<code>WINDING</code> 是实的。用 <code>SetPolyFillMode</code> 选，这不是 bug 是两种标准规则。<br><strong>④ 想要抗锯齿？GDI 给不了。</strong>GDI 的路径描边是硬边的。要平滑曲线得用 GDI+（<code>Graphics::DrawPath</code>）或 Direct2D。</p></div>
+
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 30358px;--thin-h:28404px">
+<section class="chapter" style="contain-intrinsic-size:auto 33438px;--thin-h:31485px">
 <h1 id="a8"><span class="part">第 8 章</span>gdi32：位图、文本与坐标</h1>
 
 <p>gdi32.dll 是 Windows 最古老的绘图引擎：所有绘制都围绕设备上下文（DC）展开，位图要先"选入"内存 DC 才能参与传输，文字颜色与背景是 DC 的状态而不是函数参数，坐标则先经过逻辑→设备的映射再落到像素上。本章按"位图 → 文本 → 坐标"三条线整理速查表，并为最常用的 10 个函数配详解卡。读本章时抓住一个心智模型即可：<strong>DC 是一台带状态的绘图机，你先调状态（颜色、模式、映射、选入的位图），再下指令（Blt、TextOut）。</strong></p>
@@ -5196,14 +6849,481 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 <pre style="contain-intrinsic-size:auto 171px"><code><span class="cl"><span class="cm">// WM_LBUTTONDOWN：鼠标给的是客户区像素，图形数据存的是逻辑坐标</span></span><span class="cl">POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };</span><span class="cl">HDC hdc = GetDC(hwnd);</span><span class="cl"><span class="cc" style="min-width:32.0ch">SetMapMode(hdc, MM_LOENGLISH);</span><span class="cm">// 先恢复与 WM_PAINT 完全相同的映射设置</span></span><span class="cl"><span class="cc" style="min-width:32.0ch">DPtoLP(hdc, &amp;pt, 1);</span><span class="cm">// pt 变为逻辑坐标，可直接做命中测试</span></span><span class="cl">ReleaseDC(hwnd, hdc);</span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>两者互为逆运算：DPtoLP 用于把鼠标等设备坐标带进逻辑世界，LPtoDP 用于计算无效区域、或把逻辑坐标交给非 GDI 代码（如自绘控件的命中矩形）。</p></div>
+
+<h2 id="a8-print">8.4 打印</h2>
+
+<p>Win32 的打印模型有一个很省事的性质：<strong>打印机就是一个 DC</strong>。拿到打印机 DC 之后，<code>TextOutW</code>、<code>LineTo</code>、<code>BitBlt</code> 这些函数原样能用——你为屏幕写的绘制代码，理论上可以不改一行地打到纸上。真正要额外学的只有两件事：<strong>怎么拿到那个 DC</strong>，以及<strong>怎么划分文档与页</strong>。</p>
+
+<table style="contain-intrinsic-size:auto 361px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">PrintDlgW / PrintDlgExW</td><td class="nw">打印对话框，并<strong>直接产出打印机 DC</strong></td><td>属 comdlg32；给 <code>PD_RETURNDC</code> 标志才返回 DC</td></tr>
+<tr><td class="nw">CreateDCW</td><td class="nw">不弹对话框，按打印机名直接建 DC</td><td>后台打印、静默打印用；名字从 <code>EnumPrinters</code> 取</td></tr>
+<tr><td class="nw">StartDocW</td><td class="nw">开始一个打印作业</td><td>作业名会显示在打印队列里，取个有意义的</td></tr>
+<tr><td class="nw">StartPage / EndPage</td><td class="nw">开始 / 结束一页</td><td><strong>严格成对</strong>；<code>EndPage</code> 才是"这页送出去"的时刻</td></tr>
+<tr><td class="nw">EndDoc</td><td class="nw">结束作业，交给打印队列</td><td>不调的话什么都不会打出来</td></tr>
+<tr><td class="nw">AbortDoc</td><td class="nw">中止作业，已排队的页面作废</td><td>用户点"取消"时调</td></tr>
+<tr><td class="nw">SetAbortProc</td><td class="nw">注册回调，让打印期间界面保持响应</td><td>回调返回 FALSE 即中止</td></tr>
+<tr><td class="nw">GetDeviceCaps(hdcPrn, ...)</td><td class="nw">取纸张尺寸、DPI、可打印区域</td><td>打印排版全靠它，见下方红条</td></tr>
+</tbody></table>
+
+<h3 id="fn-StartDocW">StartDocW / StartPage / EndPage / EndDoc</h3>
+
+<p class="fsum">打印作业的四层结构：文档 → 页 → 绘制 → 结束页 → 结束文档。四个函数必须严格配对，漏掉任何一个，纸上什么都不会出现。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 386px"><code><span class="kw">int</span> StartDocW(HDC hdc, <span class="kw">const</span> DOCINFOW *lpdi);
+<span class="kw">int</span> StartPage(HDC hdc);
+<span class="kw">int</span> EndPage(HDC hdc);
+<span class="kw">int</span> EndDoc(HDC hdc);
+<span class="kw">int</span> AbortDoc(HDC hdc);
+
+<span class="kw">typedef struct</span> {
+    <span class="kw">int</span>     cbSize;         <span class="cm">// = sizeof(DOCINFOW)</span>
+    LPCWSTR lpszDocName;    <span class="cm">// 打印队列里显示的作业名</span>
+    LPCWSTR lpszOutput;     <span class="cm">// NULL = 送打印机；给文件名则输出到文件</span>
+    LPCWSTR lpszDatatype;   <span class="cm">// 通常 NULL</span>
+    DWORD   fwType;         <span class="cm">// 通常 0</span>
+} DOCINFOW;</code></pre>
+
+<p><strong>返回值</strong></p>
+<p><code>StartDocW</code> 成功返回作业 ID（正数），失败返回 ≤ 0；用户在对话框里点了取消是 <code>SP_USERABORT</code>。其余三个成功返回正数，失败返回负数（<code>SP_ERROR</code>、<code>SP_OUTOFDISK</code>、<code>SP_OUTOFMEMORY</code>）。<strong>每一步都要检查</strong>——打印失败在中途是常态（缺纸、断线、磁盘满）。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 821px"><code><span class="cm">// ① 弹对话框拿 DC</span>
+PRINTDLGW pd = { <span class="kw">sizeof</span>(pd) };
+pd.hwndOwner = hwnd;
+pd.Flags     = PD_RETURNDC | PD_NOSELECTION;    <span class="cm">// ★ 要 DC 就得给这个标志</span>
+pd.nCopies   = 1;
+<span class="kw">if</span> (!PrintDlgW(&amp;pd)) <span class="kw">return</span>;                    <span class="cm">// 用户取消</span>
+HDC hdcPrn = pd.hDC;
+
+<span class="cm">// ② 按打印机自己的分辨率与可打印区排版</span>
+<span class="kw">int</span> dpiX     = GetDeviceCaps(hdcPrn, LOGPIXELSX);      <span class="cm">// 常见 300~1200</span>
+<span class="kw">int</span> pageW    = GetDeviceCaps(hdcPrn, HORZRES);         <span class="cm">// 可打印区宽（像素）</span>
+<span class="kw">int</span> pageH    = GetDeviceCaps(hdcPrn, VERTRES);
+<span class="kw">int</span> marginL  = GetDeviceCaps(hdcPrn, PHYSICALOFFSETX); <span class="cm">// 物理边距</span>
+
+<span class="cm">// ③ 打印</span>
+DOCINFOW di = { <span class="kw">sizeof</span>(di), L"我的报表", <span class="kw">nullptr</span> };
+<span class="kw">if</span> (StartDocW(hdcPrn, &amp;di) &gt; 0) {
+    <span class="kw">for</span> (<span class="kw">int</span> page = 0; page &lt; nPages; ++page) {
+        <span class="kw">if</span> (StartPage(hdcPrn) &lt;= 0) <span class="kw">break</span>;
+
+        DrawPage(hdcPrn, page, dpiX, pageW, pageH);   <span class="cm">// 和画到屏幕上一样</span>
+
+        <span class="kw">if</span> (EndPage(hdcPrn) &lt;= 0) { AbortDoc(hdcPrn); <span class="kw">break</span>; }
+    }
+    EndDoc(hdcPrn);          <span class="cm">// ★ 不调就什么都不会打出来</span>
+}
+DeleteDC(hdcPrn);            <span class="cm">// 打印机 DC 用 DeleteDC，不是 ReleaseDC</span>
+<span class="kw">if</span> (pd.hDevMode)  GlobalFree(pd.hDevMode);        <span class="cm">// PrintDlgW 分配的，你负责释放</span>
+<span class="kw">if</span> (pd.hDevNames) GlobalFree(pd.hDevNames);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 330px"><span class="t">🔴 屏幕代码直接拿去打印，一定会出问题的三处</span><p><strong>① 分辨率差一个数量级。</strong>屏幕 96 DPI，打印机 300–1200 DPI。写死像素的排版打出来只有指甲盖大。<strong>一切尺寸都要按 <code>GetDeviceCaps(hdc, LOGPIXELSX)</code> 换算</strong>，或者干脆用 <code>SetMapMode(MM_LOMETRIC)</code> 之类的物理单位映射模式，让 GDI 替你换算。<br><strong>② 纸有打不到的边。</strong><code>HORZRES</code>/<code>VERTRES</code> 给的是<strong>可打印区</strong>而非整张纸，坐标原点也在可打印区的左上角。要按整张纸定位（比如"距纸边 2cm"），得用 <code>PHYSICALWIDTH</code>、<code>PHYSICALOFFSETX</code> 自己算。<br><strong>③ 颜色与背景。</strong>屏幕上的深色背景打出来是一整页黑，既费墨又难看。打印路径通常应强制白底黑字。<br>还有一个纪律问题：<strong>DC 的归还方式不同</strong>——打印机 DC 是 <code>CreateDC</code> 类的，要用 <code>DeleteDC</code>；窗口 DC 才用 <code>ReleaseDC</code>。用错不报错，直接泄漏。</p></div>
+
+<div class="note new" style="contain-intrinsic-size:auto 329px"><span class="t">🔵 打印期间别让界面卡死</span><p>大文档打印可能持续几十秒。<code>EndPage</code> 是同步的、会阻塞。两种正规解法：<br><strong>①</strong> <code>SetAbortProc</code> 注册一个中止回调——GDI 会在打印过程中<strong>反复调用它</strong>，你在里面跑一小段消息循环（<code>PeekMessage</code> + <code>Dispatch</code>）让界面保持响应，同时检查用户有没有点"取消"，是就返回 FALSE。这是 Win32 打印的经典写法。<br><strong>②</strong> 整个打印过程放到工作线程去。注意打印机 DC 与 GDI 对象有线程亲和性上的讲究，DC 应当在使用它的那个线程里创建和销毁。<br>另外，<code>DOCINFOW.lpszOutput</code> 填一个文件名就能<strong>把输出重定向到文件</strong>——调试打印排版时非常有用，不用真的浪费纸。</p></div>
+
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 12122px;--thin-h:12122px">
-<h1 id="a9"><span class="part">第 9 章</span>速查表：常用消息 WM_ / 窗口风格 WS_ / 类样式 CS_</h1>
+<section class="chapter" style="contain-intrinsic-size:auto 17094px;--thin-h:17094px">
+<h1 id="a9"><span class="part">第 9 章</span>comctl32 与 comdlg32：通用控件、子类化与通用对话框</h1>
+
+<p>前面八章围着 kernel32 / user32 / gdi32 这三个"元老"转。但 Windows API 从来不只有它们三个——<strong>凡是随系统一起发布、有官方文档、可以直接链接调用的接口，都是 Windows API 的一部分</strong>。<code>comctl32.dll</code>（通用控件）与 <code>comdlg32.dll</code>（通用对话框）是其中最不该缺席的两个：一个提供了列表视图、树视图、工具栏，以及<strong>今天唯一正确的窗口子类化接口</strong>；另一个提供了"打开文件""选择颜色""打印设置"这些每个程序都要用的对话框。</p>
+
+<p>它们与三大 DLL 有两点不同，值得先说清楚：</p>
+
+<table style="contain-intrinsic-size:auto 226px"><thead><tr><th class="nw">差异</th><th>三大核心 DLL</th><th>comctl32 / comdlg32</th></tr></thead><tbody>
+<tr><td class="nw">链接</td><td>项目模板默认就链上了</td><td>要自己加 <code>#pragma comment(lib, "comctl32.lib")</code>（comdlg32 同理）与对应头文件</td></tr>
+<tr><td class="nw">版本</td><td>只有一份</td><td><strong>comctl32 系统里同时住着 v5 与 v6 两份</strong>，用哪份取决于你的 manifest；v6 独有的函数不配 manifest 就用不了</td></tr>
+<tr><td class="nw">通知方式</td><td>控件用 <code>WM_COMMAND</code> 汇报</td><td>通用控件改用 <code>WM_NOTIFY</code>，信息量大得多</td></tr>
+</tbody></table>
+
+<h2 id="a9-comctl">9.1 通用控件：初始化与 WM_NOTIFY</h2>
+
+<p>通用控件不像 BUTTON、EDIT 那样开机就注册好——<strong>用之前必须先注册窗口类</strong>，否则 <code>CreateWindowExW</code> 会直接返回 NULL。而它们向父窗口汇报的方式也换了一套：不再是 <code>WM_COMMAND</code> 里塞一个 16 位通知码，而是 <code>WM_NOTIFY</code> 携带一个结构体指针。</p>
+
+<table style="contain-intrinsic-size:auto 315px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">InitCommonControlsEx</td><td class="nw">按需注册通用控件窗口类</td><td>建窗口之前调一次；老的 <code>InitCommonControls()</code> 无参数、无法报错，别再用</td></tr>
+<tr><td class="nw">WM_NOTIFY</td><td><code>lParam</code> 指向 <code>NMHDR</code>（或以它开头的扩展结构）</td><td>不是函数而是消息，但它是用通用控件绕不开的一关，见下方专条</td></tr>
+<tr><td class="nw">SetWindowTheme</td><td class="nw">给单个控件指定/关闭视觉样式</td><td>属 <code>uxtheme.dll</code>；传 <code>L"", L""</code> 可让某个控件退回经典外观</td></tr>
+<tr><td class="nw">TaskDialogIndirect</td><td class="nw">现代版消息框（Vista+）</td><td>比 MessageBox 强得多：命令链接、进度条、可展开详情、自定义按钮</td></tr>
+</tbody></table>
+
+<h3 id="fn-InitCommonControlsEx">InitCommonControlsEx</h3>
+
+<p class="fsum">注册你要用的那几类通用控件的窗口类。漏调的症状很有迷惑性：CreateWindowExW 返回 NULL，而 GetLastError 给的是 <code>ERROR_CANNOT_FIND_WND_CLASS</code>（1407）——找不到窗口类。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code>BOOL InitCommonControlsEx(<span class="kw">const</span> INITCOMMONCONTROLSEX *picce);
+
+<span class="kw">typedef struct</span> tagINITCOMMONCONTROLSEX {
+    DWORD dwSize;    <span class="cm">// 必须填 sizeof(INITCOMMONCONTROLSEX)</span>
+    DWORD dwICC;     <span class="cm">// 要注册哪些类，ICC_ 标志位或运算</span>
+} INITCOMMONCONTROLSEX;</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 379px"><thead><tr><th class="nw">ICC_ 标志</th><th>注册的窗口类</th></tr></thead><tbody>
+<tr><td class="nw"><code>ICC_STANDARD_CLASSES</code></td><td>六个基础控件的 v6 版本（配了 v6 manifest 就顺手加上）</td></tr>
+<tr><td class="nw"><code>ICC_LISTVIEW_CLASSES</code></td><td>列表视图、Header（报表列头）</td></tr>
+<tr><td class="nw"><code>ICC_TREEVIEW_CLASSES</code></td><td>树视图、Tooltip</td></tr>
+<tr><td class="nw"><code>ICC_BAR_CLASSES</code></td><td>工具栏、状态栏、滑块、Tooltip</td></tr>
+<tr><td class="nw"><code>ICC_TAB_CLASSES</code></td><td class="nw">Tab、Tooltip</td></tr>
+<tr><td class="nw"><code>ICC_PROGRESS_CLASS</code> / <code>ICC_UPDOWN_CLASS</code></td><td class="nw">进度条 / UpDown 微调按钮</td></tr>
+<tr><td class="nw"><code>ICC_DATE_CLASSES</code></td><td class="nw">日期时间选择器、月历</td></tr>
+<tr><td class="nw"><code>ICC_LINK_CLASS</code></td><td class="nw">SysLink 超链接控件</td></tr>
+<tr><td class="nw"><code>ICC_COOL_CLASSES</code></td><td>Rebar（可拖动的工具条容器）</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>成功非零。失败通常只有两个原因：<code>dwSize</code> 没填对，或者 comctl32 根本没加载起来。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 277px"><code>#include &lt;commctrl.h&gt;
+#pragma comment(lib, "comctl32.lib")
+
+<span class="cm">// wWinMain 里、创建任何窗口之前调一次</span>
+INITCOMMONCONTROLSEX icc = { <span class="kw">sizeof</span>(icc) };
+icc.dwICC = ICC_LISTVIEW_CLASSES | ICC_TREEVIEW_CLASSES
+          | ICC_BAR_CLASSES      | ICC_TAB_CLASSES
+          | ICC_STANDARD_CLASSES;
+InitCommonControlsEx(&amp;icc);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 266px"><span class="t">🟡 三件手续缺一不可，而且失败方式各不相同</span><p><strong>①</strong> <code>#include &lt;commctrl.h&gt;</code> —— 缺了是编译错，最容易发现。<br><strong>②</strong> 链接 <code>comctl32.lib</code> —— 缺了是链接错。<br><strong>③</strong> 调 <code>InitCommonControlsEx</code> —— 缺了<strong>编译链接全过，运行时控件创建返回 NULL</strong>，最难查。<br>还有隐形的第四件：<strong>v6 manifest</strong>。它决定加载 5.x 还是 6.x。不配 manifest 时，<code>SetWindowSubclass</code> 一族、<code>EM_SETCUEBANNER</code>、<code>BCM_</code> 系列按钮消息、分割按钮、命令链接这些 <strong>v6 独有的东西全都用不了</strong>——函数导不出来（链接期就报错），消息发过去石沉大海（运行期毫无反应）。清单写法见下方 🔵。</p></div>
+
+<div class="note new" style="contain-intrinsic-size:auto 369px"><span class="t">🔵 启用 v6 的 manifest，两种写法任选</span><p>最省事的是在源文件里塞一条链接器指令：</p>
+<pre style="contain-intrinsic-size:auto 109px"><code>#pragma comment(linker, "\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</code></pre>
+<p>或者在项目的 <code>app.manifest</code> 里声明同样的 <code>&lt;dependentAssembly&gt;</code>。<br>另外，v6 独有的<strong>函数</strong>（如 <code>SetWindowSubclass</code>）还需要编译期把版本门槛抬上去：在 <code>#include &lt;commctrl.h&gt;</code> 之前定义 <code>_WIN32_WINNT</code> / <code>NTDDI_VERSION</code> 到 Windows XP 及以上，否则头文件里那几个声明会被条件编译掉。</p></div>
+
+<h3 id="fn-WM_NOTIFY">WM_NOTIFY 与 NMHDR</h3>
+
+<p class="fsum">通用控件的汇报通道。<code>WM_COMMAND</code> 只能带一个 16 位通知码加一个句柄；<code>WM_NOTIFY</code> 的 <code>lParam</code> 指向一个结构体，想带多少上下文都行——点了第几行第几列、鼠标在哪、Ctrl 有没有按着。</p>
+
+<p><strong>消息形式</strong></p>
+<pre style="contain-intrinsic-size:auto 277px"><code>WM_NOTIFY
+    wParam = 控件 ID（<span class="kw">int</span>）        <span class="cm">// 冗余信息，结构体里也有，通常不用</span>
+    lParam = (LPNMHDR)             <span class="cm">// ★ 全部信息都在这里</span>
+
+<span class="kw">typedef struct</span> tagNMHDR {
+    HWND     hwndFrom;   <span class="cm">// 谁发的（控件句柄）</span>
+    UINT_PTR idFrom;     <span class="cm">// 谁发的（控件 ID）</span>
+    UINT     code;       <span class="cm">// 发生了什么（NM_ / LVN_ / TVN_ / TCN_ …）</span>
+} NMHDR;</code></pre>
+
+<p><strong>怎么读</strong></p>
+<p>约定是：<strong>所有通知结构体的第一个成员都是 <code>NMHDR</code></strong>。于是你可以先按 <code>LPNMHDR</code> 接住，读出 <code>code</code> 判断是哪种通知，<em>确认之后</em>再强转成对应的扩展结构。C 语言没有继承，这就是它模拟继承的办法——结构体首地址相同，所以两个指针指向同一个位置。</p>
+
+<pre style="contain-intrinsic-size:auto 604px"><code><span class="kw">case</span> WM_NOTIFY: {
+    LPNMHDR nm = (LPNMHDR)lParam;
+
+    <span class="kw">if</span> (nm-&gt;idFrom == IDC_LIST) {
+        <span class="kw">switch</span> (nm-&gt;code) {
+        <span class="kw">case</span> LVN_ITEMCHANGED: {
+            <span class="kw">auto</span>* p = (LPNMLISTVIEW)lParam;      <span class="cm">// 确认过 code 才敢转</span>
+            <span class="kw">if</span> ((p-&gt;uNewState &amp; LVIS_SELECTED) &amp;&amp;
+                !(p-&gt;uOldState &amp; LVIS_SELECTED))
+                OnSelect(p-&gt;iItem);
+            <span class="kw">return</span> 0;
+        }
+        <span class="kw">case</span> NM_DBLCLK: {
+            <span class="kw">auto</span>* p = (LPNMITEMACTIVATE)lParam;
+            OnOpen(p-&gt;iItem, p-&gt;iSubItem);
+            <span class="kw">return</span> 0;
+        }
+        }
+    }
+    <span class="kw">break</span>;    <span class="cm">// 没处理的交给 DefWindowProcW</span>
+}</code></pre>
+
+<p><strong>通用通知码（任何通用控件都可能发）</strong></p>
+<table style="contain-intrinsic-size:auto 315px"><thead><tr><th class="nw">通知码</th><th>含义</th><th>常配的结构体</th></tr></thead><tbody>
+<tr><td class="nw"><code>NM_CLICK</code> / <code>NM_DBLCLK</code></td><td class="nw">左键单击 / 双击</td><td><code>NMITEMACTIVATE</code>（ListView）、<code>NMMOUSE</code>（状态栏等）</td></tr>
+<tr><td class="nw"><code>NM_RCLICK</code> / <code>NM_RDBLCLK</code></td><td class="nw">右键单击 / 双击</td><td>同上；弹上下文菜单的入口</td></tr>
+<tr><td class="nw"><code>NM_RETURN</code></td><td class="nw">控件上按了回车</td><td><code>NMHDR</code></td></tr>
+<tr><td class="nw"><code>NM_SETFOCUS</code> / <code>NM_KILLFOCUS</code></td><td class="nw">获得 / 失去焦点</td><td><code>NMHDR</code></td></tr>
+<tr><td class="nw"><code>NM_CUSTOMDRAW</code></td><td>自绘请求——通用控件<strong>定制外观的唯一正规通道</strong></td><td><code>NMCUSTOMDRAW</code> 及各控件的扩展版</td></tr>
+<tr><td class="nw"><code>NM_HOVER</code></td><td class="nw">鼠标悬停（需控件样式支持）</td><td><code>NMHDR</code></td></tr>
+</tbody></table>
+
+<p><strong>与 WM_COMMAND 的分工</strong></p>
+<table style="contain-intrinsic-size:auto 288px"><thead><tr><th class="nw">维度</th><th><code>WM_COMMAND</code></th><th><code>WM_NOTIFY</code></th></tr></thead><tbody>
+<tr><td class="nw">出身</td><td>Windows 1.0，16 位时代</td><td>Windows 95，随 comctl32 4.0 一起来</td></tr>
+<tr><td class="nw">wParam</td><td>低 16 位 = 控件 ID，高 16 位 = 通知码</td><td>控件 ID（冗余，一般不读）</td></tr>
+<tr><td class="nw">lParam</td><td>控件句柄，仅此而已</td><td>指向 <code>NMHDR</code> 或其扩展结构的<strong>指针</strong></td></tr>
+<tr><td class="nw">通知码宽度</td><td>16 位，且要和菜单/快捷键共用编码空间</td><td>32 位 <code>UINT</code>，各控件各占一段</td></tr>
+<tr><td class="nw">谁在用</td><td>按钮、编辑框、列表框、组合框、静态控件；菜单与快捷键</td><td>列表视图、树视图、Tab、工具栏、状态栏、日期选择器…</td></tr>
+<tr><td class="nw">通知码前缀</td><td><code>BN_</code> <code>EN_</code> <code>LBN_</code> <code>CBN_</code> <code>STN_</code></td><td><code>NM_</code> <code>LVN_</code> <code>TVN_</code> <code>TCN_</code> <code>HDN_</code> <code>TBN_</code> <code>DTN_</code>…</td></tr>
+</tbody></table>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 331px"><span class="t">🔴 三个真会咬人的坑</span><p><strong>① 通知码是"负数"，别把 code 当无符号数比大小。</strong><code>NMHDR.code</code> 类型是 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>NM_FIRST</code> 是 <code>0U</code>，往下减）。所以 <code>LVN_ITEMCHANGED</code> 的实际值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。用 <code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_FIRST &amp;&amp; code &lt; LVN_LAST)</code> 这类范围判断就会全乱——要比范围，两边一起转成 <code>int</code>。<br><strong>② 结构体强转必须先确认 code。</strong>处理 <code>LVN_*</code> 时转成 <code>LPNMTREEVIEW</code>，编译器一句话不说，运行时读到的是别人的内存。<strong>确认通知码 → 再强转</strong>，顺序不能反。<br><strong>③ 指针的生命周期只有这一次调用。</strong><code>lParam</code> 指向的结构体通常在控件的栈上，<strong>你返回之后就没了</strong>。要留着用必须自己拷贝一份，存指针就是悬垂。</p></div>
+
+<div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">🔵 返回值有时是有意义的</span><p>多数 <code>WM_NOTIFY</code> 返回 0 即可，但有一批通知是<strong>在征求你的同意</strong>，返回值决定控件接下来的行为：<code>TVN_SELCHANGING</code> 返回 TRUE 表示"不许换选中项"；<code>LVN_ENDLABELEDIT</code> 返回 FALSE 表示"拒绝这次改名"；<code>NM_CUSTOMDRAW</code> 更是要靠返回值（<code>CDRF_NOTIFYITEMDRAW</code> 等）告诉控件"下一阶段还要不要叫我"。<br>而对话框过程要格外小心：<strong>对话框的返回值要通过 <code>SetWindowLongPtrW(hDlg, DWLP_MSGRESULT, 结果)</code> 交付</strong>，直接 <code>return</code> 是无效的——这是对话框过程与窗口过程的一处根本差异。</p></div>
+
+<h2 id="a9-subclass">9.2 窗口子类化</h2>
+
+<p>子类化就是"把控件的消息先截到自己手里"。用它可以给系统控件加上原本没有的行为：只许输入数字的编辑框、按回车就跳到下一格的表格、支持拖放的列表。老办法是 <code>SetWindowLongPtrW(GWLP_WNDPROC)</code> 换掉窗口过程再用 <a class="fnlink" href="#fn-CallWindowProcW"><code>CallWindowProcW</code></a> 转发（见 5.3），但它有一个无法回避的缺陷：<strong>窗口上只存一个指针</strong>，两方先后子类化同一个窗口后，只要拆除顺序不是严格的后进先出，链条就会被撕断。</p>
+
+<p>ComCtl32 v6 提供的这一组把链表收归系统统一保管，任意顺序拆除都安全，还顺手解决了"回调函数没有 this"的问题。<strong>新代码没有理由不用它。</strong></p>
+
+<table style="contain-intrinsic-size:auto 288px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">SetWindowSubclass</td><td class="nw">往窗口的子类链表里加一项</td><td>主键是 <code>(子类过程, ID)</code>；同一对再调一次不会加出第二项，而是更新 dwRefData</td></tr>
+<tr><td class="nw">DefSubclassProc</td><td class="nw">把消息交给链表的下一项</td><td>走到链尾自动交给控件原过程；<strong>不是</strong>你自己存的指针</td></tr>
+<tr><td class="nw">RemoveWindowSubclass</td><td class="nw">按 (过程, ID) 从链表中精确摘掉一项</td><td>中间的也能摘，前后自动接上——这就是"任意顺序都安全"的含义</td></tr>
+<tr><td class="nw">GetWindowSubclass</td><td class="nw">查询某一项是否还在，并取回它的 dwRefData</td><td>判断"我是不是已经装过了"</td></tr>
+</tbody></table>
+
+<h3 id="fn-SetWindowSubclass">SetWindowSubclass</h3>
+
+<p class="fsum">给窗口挂一个子类过程。两个额外参数不是装饰：<code>uIdSubclass</code> 让同一个函数能安全地装在多处，<code>dwRefData</code> 补上了 C 回调缺失的 this 指针。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 359px"><code>BOOL SetWindowSubclass(
+    HWND        hWnd,
+    SUBCLASSPROC pfnSubclass,
+    UINT_PTR    uIdSubclass,
+    DWORD_PTR   dwRefData
+);
+
+<span class="cm">// 子类过程比窗口过程多了最后两个参数</span>
+LRESULT CALLBACK SubclassProc(
+    HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
+    UINT_PTR uIdSubclass,     <span class="cm">// 你注册时给的 ID，原样送回</span>
+    DWORD_PTR dwRefData);     <span class="cm">// 你挂的私有数据，原样送回</span></code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 342px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">hWnd</td><td class="nw">HWND</td><td>要子类化的窗口，<strong>必须属于当前进程</strong>。跨进程子类化要靠注入，不是这个函数的活。</td></tr>
+<tr><td class="nw">pfnSubclass</td><td class="nw">SUBCLASSPROC</td><td>子类过程。签名比窗口过程多两个参数。</td></tr>
+<tr><td class="nw">uIdSubclass</td><td class="nw">UINT_PTR</td><td>你自定的 ID。<strong>存在的理由</strong>：同一个函数可能在同一个窗口上装两份（比如两套独立逻辑），摘链时光凭函数地址分不清是哪一份，所以主键是 <code>(过程, ID)</code>。只装一份时给 <code>0</code> 或 <code>1</code> 均可，<strong>但拆的时候必须给回同一个值</strong>。</td></tr>
+<tr><td class="nw">dwRefData</td><td class="nw">DWORD_PTR</td><td>"每窗口每子类各一份"的私有数据，通常存 <code>this</code> 或一个结构体地址。<strong>存在的理由</strong>：子类过程是普通 C 函数，<strong>没有 this</strong>——十个 EDIT 共用一个子类过程时，每个 EDIT 各自的状态没地方放，全局变量只能存一份。这是 C 接口给回调带上下文的标准手法，同 <code>CreateThread</code> 的 <code>lpParameter</code>、<code>EnumWindows</code> 的 <code>lParam</code>。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>成功非零，失败 0。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 631px"><code><span class="kw">struct</span> EditState { <span class="kw">int</span> maxValue; HWND hStatusBar; };
+
+LRESULT CALLBACK NumOnlyProc(HWND h, UINT m, WPARAM w, LPARAM l,
+                             UINT_PTR id, DWORD_PTR ref) {
+    <span class="kw">auto</span>* st = (EditState*)ref;           <span class="cm">// ← 这就是"this"</span>
+
+    <span class="kw">switch</span> (m) {
+    <span class="kw">case</span> WM_CHAR:
+        <span class="kw">if</span> (!iswdigit((wchar_t)w) &amp;&amp; w != VK_BACK)
+            <span class="kw">return</span> 0;                     <span class="cm">// 吃掉非数字</span>
+        <span class="kw">break</span>;
+
+    <span class="kw">case</span> WM_NCDESTROY:                    <span class="cm">// ★ 窗口的最后一条消息</span>
+        RemoveWindowSubclass(h, NumOnlyProc, id);
+        <span class="kw">delete</span> st;                        <span class="cm">// 自己的东西自己收</span>
+        <span class="kw">break</span>;
+    }
+    <span class="kw">return</span> DefSubclassProc(h, m, w, l);   <span class="cm">// 其余交给下一层</span>
+}
+
+<span class="cm">// 装上：每个 EDIT 各带一份自己的状态</span>
+SetWindowSubclass(hEdit, NumOnlyProc, 1, (DWORD_PTR)<span class="kw">new</span> EditState{ 9999, hBar });</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note new" style="contain-intrinsic-size:auto 265px"><span class="t">🔵 拆除为什么必须写在 WM_NCDESTROY 里</span><p><code>WM_NCDESTROY</code> 是一个窗口收到的<strong>最后一条消息</strong>（在 <code>WM_DESTROY</code> 之后，子窗口都已销毁、句柄即将失效）。把 <code>RemoveWindowSubclass</code> 放在这里，等于<strong>让子类过程自己给自己收尾</strong>——不管窗口是被谁、在什么时候销毁的，这条路一定会走到，外面那段代码不必记得来拆。<br>放在 <code>WM_DESTROY</code> 则太早：那之后仍有消息流过这个窗口。<br>不拆会怎样？链表随窗口一起消失，不会泄漏内核对象；<strong>漏掉的是你自己的东西</strong>——<code>dwRefData</code> 指向的堆对象没人释放；而且若子类过程来自一个可卸载的 DLL，你就失去了"窗口还活着时把自己摘干净"的最后机会。</p></div>
+
+<h3 id="fn-DefSubclassProc">DefSubclassProc / RemoveWindowSubclass / GetWindowSubclass</h3>
+
+<p class="fsum">转发、摘链、查询。理解它们的关键只有一句：<strong>链表是系统替你保管的，你手里从来没有"下一层"的指针。</strong></p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 196px"><code>LRESULT DefSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+BOOL RemoveWindowSubclass(HWND hWnd, SUBCLASSPROC pfnSubclass, UINT_PTR uIdSubclass);
+
+BOOL GetWindowSubclass(HWND hWnd, SUBCLASSPROC pfnSubclass,
+                       UINT_PTR uIdSubclass, DWORD_PTR *pdwRefData);</code></pre>
+
+<p><strong>各自做的事</strong></p>
+<table style="contain-intrinsic-size:auto 254px"><thead><tr><th class="nw">函数</th><th>它实际做的事</th></tr></thead><tbody>
+<tr><td class="nw"><code>DefSubclassProc</code></td><td>"交给下一层"。走的是<strong>链表里的下一项</strong>，而不是某个你自己存着的指针；走到链尾才交给控件的原过程。子类过程中<strong>凡是不打算吃掉的消息，都必须用它转发</strong>——用 <code>DefWindowProcW</code> 顶替会跳过链上后面所有人，等于把别人的子类废掉。</td></tr>
+<tr><td class="nw"><code>RemoveWindowSubclass</code></td><td>按 <code>(过程, ID)</code> 从链表中<strong>精确摘掉那一项</strong>，中间的也能摘，前后两项自动接上。<strong>能在子类过程内部调用</strong>（正是 <code>WM_NCDESTROY</code> 里的用法）——摘完这条消息仍会正常走完。</td></tr>
+<tr><td class="nw"><code>GetWindowSubclass</code></td><td>查这一项还在不在，顺便把 <code>dwRefData</code> 取出来。用途：避免重复安装；或在窗口外部拿到那份私有数据。</td></tr>
+</tbody></table>
+
+<p><strong>老办法到底坏在哪</strong></p>
+<p>假设 A、B 两个模块先后子类化了同一个 EDIT。老办法下窗口只存链头指针，"B 的下一层是 A、A 的下一层是 EDIT"这两条信息分别躺在 A、B 各自的变量里，<strong>窗口一无所知</strong>：</p>
+<table style="contain-intrinsic-size:auto 138px"><thead><tr><th class="nw">拆除顺序</th><th>结果</th></tr></thead><tbody>
+<tr><td class="nw">B 先拆（后进先出）</td><td>写回 <code>B.next</code> 即 A，链变成 A → EDIT。正确。</td></tr>
+<tr><td class="nw"><strong>A 先拆</strong>（对象先析构，一样常见）</td><td>A 只会写回自己记的 EDIT，窗口过程一步跳回 EDIT，<strong>B 被整条踢出且毫不知情</strong>；更糟的是 B 稍后拆除时会把<strong>已经失效的 A 装回窗口</strong>，下一条消息到达即崩。</td></tr>
+</tbody></table>
+<p>而真实程序里拆除顺序由<strong>对象生命周期</strong>决定，不由子类化先后决定——尤其 A、B 分属两个互不知情的模块时，你根本管不住。三件套把链表交给系统统一保管，从机制上消除了这个问题。</p>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">🟡 SendMessage 重入：子类过程里给自己发消息要当心</span><p>在子类过程里对<strong>同一个窗口</strong>调 <code>SendMessageW</code>，消息会立刻从链头重新走一遍——包括你自己。若这条路径又触发同样的发送，就是无限递归直到栈溢出。<br>典型场景：拦 <code>EN_CHANGE</code> 时调 <code>SetWindowTextW</code> 修正内容，而 <code>SetWindowTextW</code> 又触发 <code>EN_CHANGE</code>。解法是加一个"正在程序内更新"的标志位，进处理函数先判断它。</p></div>
+
+<h2 id="a9-imagelist">9.3 图像列表 ImageList</h2>
+
+<p>图像列表是"一排等尺寸小图"的容器，列表视图的图标、树视图的节点图标、工具栏的按钮图都由它供图。控件只记<strong>索引</strong>，不记图片本身——所以同一个图像列表可以被多个控件共享，也因此<strong>销毁顺序很讲究</strong>。</p>
+
+<table style="contain-intrinsic-size:auto 351px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">ImageList_Create</td><td class="nw">建一个空的图像列表</td><td>尺寸一旦定死，之后加进来的图会被拉伸到这个尺寸</td></tr>
+<tr><td class="nw">ImageList_Add / ImageList_AddMasked</td><td class="nw">加图（可带掩码位图或抠像色）</td><td>返回新图的索引；失败返回 -1</td></tr>
+<tr><td class="nw">ImageList_ReplaceIcon / ImageList_AddIcon</td><td class="nw">从 HICON 加图</td><td>图标自带 alpha，比抠像干净，首选</td></tr>
+<tr><td class="nw">ImageList_Draw / ImageList_DrawEx</td><td class="nw">把第 n 张画到 DC 上</td><td>自绘时用；<code>ILD_TRANSPARENT</code> 保持透明</td></tr>
+<tr><td class="nw">ImageList_Destroy</td><td class="nw">销毁</td><td>控件<strong>不会</strong>替你销毁——除非建控件时给了 <code>LVS_SHAREIMAGELISTS</code> 的反面情形，见下方红条</td></tr>
+</tbody></table>
+
+<h3 id="fn-ImageList_Create">ImageList_Create / ImageList_ReplaceIcon / ImageList_Draw</h3>
+
+<p class="fsum">建列表、塞图标、（自绘时）画出来。绝大多数情况你只需要前两个，第三个交给控件自己去调。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 223px"><code>HIMAGELIST ImageList_Create(<span class="kw">int</span> cx, <span class="kw">int</span> cy, UINT flags,
+                            <span class="kw">int</span> cInitial, <span class="kw">int</span> cGrow);
+
+<span class="kw">int</span>  ImageList_ReplaceIcon(HIMAGELIST himl, <span class="kw">int</span> i, HICON hicon);  <span class="cm">// i = -1 表示追加</span>
+BOOL ImageList_Draw(HIMAGELIST himl, <span class="kw">int</span> i, HDC hdcDst,
+                    <span class="kw">int</span> x, <span class="kw">int</span> y, UINT fStyle);
+BOOL ImageList_Destroy(HIMAGELIST himl);</code></pre>
+
+<p><strong>参数</strong></p>
+<table style="contain-intrinsic-size:auto 267px"><thead><tr><th>参数</th><th class="nw">类型</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">cx / cy</td><td class="nw">int</td><td>每张图的像素尺寸，<strong>整个列表统一</strong>。常见 16×16（小图标）、32×32（大图标）。高 DPI 下应按 <code>GetDpiForWindow</code> 换算，否则图标发虚。</td></tr>
+<tr><td class="nw">flags</td><td class="nw">UINT</td><td>色深与掩码方式。现代一律用 <code><strong>ILC_COLOR32 | ILC_MASK</strong></code>——32 位带 alpha，边缘平滑。<code>ILC_COLOR8</code> 之类只在维护老代码时才会见到。</td></tr>
+<tr><td class="nw">cInitial / cGrow</td><td class="nw">int</td><td>初始容量与每次增长量。只影响内部重分配次数，给个大致值即可。</td></tr>
+<tr><td class="nw">fStyle</td><td class="nw">UINT</td><td>绘制方式：<code>ILD_NORMAL</code>（用列表的背景色）、<code>ILD_TRANSPARENT</code>（保持透明，最常用）、<code>ILD_BLEND25</code>/<code>ILD_SELECTED</code>（半透明混高亮色，画"选中态"）。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p><code>ImageList_Create</code> 失败返回 NULL；<code>ImageList_ReplaceIcon</code> 返回新图索引，<strong>失败返回 −1</strong>（不是 0，0 是合法索引）。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 359px"><code><span class="cm">// 建一个 16×16 的小图标列表，塞两个图标，交给 ListView</span>
+HIMAGELIST himl = ImageList_Create(16, 16, ILC_COLOR32 | ILC_MASK, 8, 8);
+
+HICON hFolder = (HICON)LoadImageW(hInst, MAKEINTRESOURCEW(IDI_FOLDER),
+                                  IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+<span class="kw">int</span> idxFolder = ImageList_ReplaceIcon(himl, -1, hFolder);   <span class="cm">// -1 = 追加</span>
+DestroyIcon(hFolder);                                       <span class="cm">// 列表已拷走，原图标可释放</span>
+
+ListView_SetImageList(hList, himl, LVSIL_SMALL);
+
+<span class="cm">// …程序退出时…（ListView 不会替你销毁）</span>
+ImageList_Destroy(himl);</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note dead" style="contain-intrinsic-size:auto 298px"><span class="t">🔴 谁销毁图像列表，是个真会出事的问题</span><p><code>ListView_SetImageList</code> 只是<strong>把句柄交给控件用</strong>，控件不接管所有权。所以：<br><strong>①</strong> 你必须自己 <code>ImageList_Destroy</code>——但<strong>要在控件销毁之后</strong>，否则控件重绘时会用一个已经无效的句柄。稳妥做法是放在主窗口的 <code>WM_NCDESTROY</code>，或干脆交给一个 RAII 包装。<br><strong>②</strong> 同一个图像列表<strong>共享给多个控件</strong>时，只能销毁一次——建控件时加 <code>LVS_SHAREIMAGELISTS</code> 风格可以明确表达"我不管销毁"，避免某些路径下的重复释放。<br><strong>③</strong> <code>ImageList_ReplaceIcon</code> 会<strong>拷贝</strong>图标位图，所以原 <code>HICON</code> 加完就该 <code>DestroyIcon</code>；忘了就是稳定泄漏 GDI 对象。</p></div>
+
+<h2 id="a9-dlg">9.4 通用对话框</h2>
+
+<p><code>comdlg32.dll</code> 提供了那几个"每个程序都要有、但没人愿意自己写"的对话框：打开、另存为、颜色、字体、打印、查找替换。用它们不只是省事——用户对这些界面的操作习惯是跨程序共通的，自己造一个只会让人不适应。</p>
+
+<table style="contain-intrinsic-size:auto 313px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
+<tr><td class="nw">GetOpenFileNameW</td><td class="nw">"打开"对话框</td><td>结构体成员多但必填的只有几个；返回的是<strong>路径字符串</strong>，不是句柄</td></tr>
+<tr><td class="nw">GetSaveFileNameW</td><td class="nw">"另存为"对话框</td><td>与上一个共用 <code>OPENFILENAME</code> 结构，只是标志位不同</td></tr>
+<tr><td class="nw">ChooseColorW</td><td class="nw">颜色选择器</td><td>必须自备 16 个 COLORREF 的自定义色数组，否则崩溃</td></tr>
+<tr><td class="nw">ChooseFontW</td><td class="nw">字体选择器</td><td>吐出一个填好的 <code>LOGFONT</code>，直接喂给 <code>CreateFontIndirectW</code></td></tr>
+<tr><td class="nw">PrintDlgW / PrintDlgExW</td><td class="nw">打印设置，并<strong>产出打印机 DC</strong></td><td>拿到 DC 之后的流程见 <a href="#a8-print">8.4 打印</a></td></tr>
+<tr><td class="nw">CommDlgExtendedError</td><td class="nw">取通用对话框的失败原因</td><td>这几个函数返回 FALSE 时<strong>不能用 GetLastError</strong>，必须用它</td></tr>
+</tbody></table>
+
+<h3 id="fn-GetOpenFileNameW">GetOpenFileNameW / GetSaveFileNameW</h3>
+
+<p class="fsum">弹出"打开 / 另存为"对话框。<code>OPENFILENAME</code> 有二十来个成员，但真正必填的只有五个——其余清零即可。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 87px"><code>BOOL GetOpenFileNameW(LPOPENFILENAMEW lpofn);
+BOOL GetSaveFileNameW(LPOPENFILENAMEW lpofn);</code></pre>
+
+<p><strong>关键成员</strong></p>
+<table style="contain-intrinsic-size:auto 406px"><thead><tr><th class="nw">成员</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">lStructSize</td><td><strong>必填</strong> <code>sizeof(OPENFILENAMEW)</code>。忘了填是最常见的失败原因。</td></tr>
+<tr><td class="nw">hwndOwner</td><td>属主窗口，决定对话框在哪居中、模态挡谁。传 NULL 也能跑，但体验差。</td></tr>
+<tr><td class="nw">lpstrFilter</td><td>过滤器：<strong>用 <code>\0</code> 分隔、<code>\0\0</code> 结尾的"双零终止串"</strong>，不是普通字符串。格式为「显示名\0通配符\0显示名\0通配符\0\0」。写成 <code>L"文本\0*.txt\0全部\0*.*\0"</code>（C++ 字符串字面量末尾自带一个 <code>\0</code>，正好凑够两个）。</td></tr>
+<tr><td class="nw">lpstrFile</td><td><strong>入参兼出参</strong>：进去时是默认文件名（不要就把首字符置 <code>\0</code>），出来时是用户选的完整路径。<strong>缓冲区必须自己准备</strong>，至少 <code>MAX_PATH</code>；允许多选时要大得多。</td></tr>
+<tr><td class="nw">nMaxFile</td><td><code>lpstrFile</code> 缓冲区的<strong>字符数</strong>（不是字节数）。填错就是缓冲区溢出。</td></tr>
+<tr><td class="nw">Flags</td><td><code>OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST</code>（打开时必加）、<code>OFN_OVERWRITEPROMPT</code>（保存时必加）、<code>OFN_ALLOWMULTISELECT | OFN_EXPLORER</code>（多选）、<code>OFN_NOCHANGEDIR</code>（<strong>强烈建议</strong>，见下）。</td></tr>
+<tr><td class="nw">lpstrDefExt</td><td>用户没打扩展名时自动补上的，如 <code>L"txt"</code>。保存对话框几乎必设。</td></tr>
+</tbody></table>
+
+<p><strong>返回值</strong></p>
+<p>用户点了"打开/保存"返回非零；<strong>点取消也返回 0</strong>。要区分"取消"和"出错"，得调 <code>CommDlgExtendedError()</code>：返回 0 表示用户取消，非 0 才是真错（如 <code>FNERR_BUFFERTOOSMALL</code>）。</p>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 495px"><code>#include &lt;commdlg.h&gt;
+#pragma comment(lib, "comdlg32.lib")
+
+wchar_t path[MAX_PATH] = L"";
+OPENFILENAMEW ofn = { <span class="kw">sizeof</span>(ofn) };
+ofn.hwndOwner   = hwnd;
+ofn.lpstrFilter = L"文本文件\0*.txt\0所有文件\0*.*\0";   <span class="cm">// 双零终止</span>
+ofn.lpstrFile   = path;
+ofn.nMaxFile    = ARRAYSIZE(path);                       <span class="cm">// 字符数</span>
+ofn.lpstrDefExt = L"txt";
+ofn.Flags       = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
+
+<span class="kw">if</span> (GetOpenFileNameW(&amp;ofn)) {
+    OpenDocument(path);
+} <span class="kw">else if</span> (CommDlgExtendedError() != 0) {
+    <span class="cm">// 真出错了；返回 0 只是用户点了取消</span>
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note old" style="contain-intrinsic-size:auto 229px"><span class="t">🟡 OFN_NOCHANGEDIR 几乎总该加上</span><p>不加这个标志，对话框会<strong>把进程的当前工作目录改成用户浏览到的那个目录</strong>。后果很隐蔽：你后面用相对路径打开配置文件时会读错位置；更糟的是当前目录一旦停在某个 U 盘或网络盘上，那个盘就<strong>无法弹出</strong>了（进程占着它）。<br>另一条相关建议：拿到路径后别急着 <code>CreateFileW</code>，用户可能在对话框和你的调用之间删掉了文件——失败分支照样要写。</p></div>
+
+<div class="note new" style="contain-intrinsic-size:auto 232px"><span class="t">🔵 Vista 之后的正规做法是 IFileOpenDialog</span><p><code>GetOpenFileNameW</code> 至今可用、也不会被移除，但它是 Win95 时代的 C 接口：多选路径要手工解析双零串、加自定义控件要写钩子过程、没有"最近位置""收藏夹"的现代交互。<br>Vista 起微软给出的是 COM 接口 <strong><code>IFileOpenDialog</code> / <code>IFileSaveDialog</code></strong>（在 <code>shobjidl.h</code>）：多选直接给你一个 <code>IShellItemArray</code>，能设默认文件夹、能加自定义控件、能返回<strong>非文件系统对象</strong>（如"这台电脑"下的设备）。新写的程序建议直接用它，<code>GetOpenFileNameW</code> 留给"几行代码搞定"的小工具和维护老代码。</p></div>
+
+<h3 id="fn-ChooseColorW">ChooseColorW / ChooseFontW</h3>
+
+<p class="fsum">颜色选择器与字体选择器。两个都是"填结构体 → 调一次 → 读结果"，但各有一个不填就崩的成员。</p>
+
+<p><strong>函数原型</strong></p>
+<pre style="contain-intrinsic-size:auto 87px"><code>BOOL ChooseColorW(LPCHOOSECOLORW lpcc);
+BOOL ChooseFontW (LPCHOOSEFONTW  lpcf);</code></pre>
+
+<p><strong>关键成员</strong></p>
+<table style="contain-intrinsic-size:auto 396px"><thead><tr><th class="nw">结构体 / 成员</th><th>说明</th></tr></thead><tbody>
+<tr><td class="nw">CHOOSECOLOR.lpCustColors</td><td><strong>必填</strong>：指向一个 <code>COLORREF[16]</code> 数组，用来存"自定义颜色"格子。<strong>传 NULL 会崩</strong>。想让用户下次还看到自己调的颜色，就把这个数组做成 <code>static</code> 或存进配置。</td></tr>
+<tr><td class="nw">CHOOSECOLOR.rgbResult</td><td>入参是初始选中色（需配 <code>CC_RGBINIT</code> 标志），出参是用户选的颜色。</td></tr>
+<tr><td class="nw">CHOOSECOLOR.Flags</td><td><code>CC_RGBINIT</code>（用 rgbResult 作初值）、<code>CC_FULLOPEN</code>（一上来就展开自定义面板）、<code>CC_ANYCOLOR</code>。</td></tr>
+<tr><td class="nw">CHOOSEFONT.lpLogFont</td><td><strong>必填</strong>：指向你的 <code>LOGFONTW</code>。入参是初始字体（配 <code>CF_INITTOLOGFONTSTRUCT</code>），出参被填成用户选的字体，可直接喂 <a class="fnlink" href="#fn-CreateFontIndirectW"><code>CreateFontIndirectW</code></a>。</td></tr>
+<tr><td class="nw">CHOOSEFONT.Flags</td><td><code>CF_SCREENFONTS</code>（几乎必加，否则列表是空的）、<code>CF_EFFECTS</code>（显示颜色/删除线/下划线）、<code>CF_INITTOLOGFONTSTRUCT</code>。</td></tr>
+<tr><td class="nw">CHOOSEFONT.iPointSize</td><td>出参：字号的<strong>十分之一磅</strong>值（120 表示 12 磅）。<code>lpLogFont-&gt;lfHeight</code> 则是<strong>负数逻辑单位</strong>，两者不要混用。</td></tr>
+</tbody></table>
+
+<p><strong>示例</strong></p>
+<pre style="contain-intrinsic-size:auto 576px"><code><span class="cm">// 颜色：自定义色数组必须存在，且最好活得比这次调用长</span>
+<span class="kw">static</span> COLORREF customs[16] = { 0 };
+CHOOSECOLORW cc = { <span class="kw">sizeof</span>(cc) };
+cc.hwndOwner    = hwnd;
+cc.lpCustColors = customs;          <span class="cm">// ← 传 NULL 会崩</span>
+cc.rgbResult    = g_color;
+cc.Flags        = CC_RGBINIT | CC_FULLOPEN;
+<span class="kw">if</span> (ChooseColorW(&amp;cc)) g_color = cc.rgbResult;
+
+<span class="cm">// 字体：出来的 LOGFONT 直接能造字体</span>
+LOGFONTW lf = g_logfont;
+CHOOSEFONTW cf = { <span class="kw">sizeof</span>(cf) };
+cf.hwndOwner  = hwnd;
+cf.lpLogFont  = &amp;lf;                <span class="cm">// ← 同样不可为 NULL</span>
+cf.Flags      = CF_SCREENFONTS | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT;
+<span class="kw">if</span> (ChooseFontW(&amp;cf)) {
+    DeleteObject(g_hFont);
+    g_hFont = CreateFontIndirectW(&amp;lf);
+    g_logfont = lf;
+}</code></pre>
+
+<p><strong>其他说明</strong></p>
+<div class="note new" style="contain-intrinsic-size:auto 232px"><span class="t">🔵 字号那两个数不是一回事</span><p><code>iPointSize</code> 是<strong>十分之一磅</strong>的整数（12 磅 = 120），适合显示给用户看、存进配置文件。<br><code>lfHeight</code> 是<strong>逻辑单位</strong>，而且惯例为负数——负值表示"字符高度"（不含内部行距），正值表示"单元格高度"。两者的换算要经过 DC 的 DPI：<code>lfHeight = -MulDiv(点数, GetDeviceCaps(hdc, LOGPIXELSY), 72)</code>。<br>存配置存 <code>iPointSize</code>，画图用 <code>lfHeight</code>，跨 DPI 时按上式重算——这样窗口从 100% 缩放屏拖到 150% 屏上，字才不会忽大忽小。</p></div>
+
+</section>
+
+<section class="chapter" style="contain-intrinsic-size:auto 12119px;--thin-h:12119px">
+<h1 id="a10"><span class="part">第 10 章</span>速查表：常用消息 WM_ / 窗口风格 WS_ / 类样式 CS_</h1>
 
 <p>本章把窗口过程里最常打交道的三类"常量"整理成速查表：<strong>WM_ 消息</strong>（发生了什么）、<strong>WS_/WS_EX_ 风格</strong>（窗口长什么样、有什么能力）、<strong>CS_ 类样式</strong>（整个窗口类的绘制/输入策略）。消息表额外给出<strong>触发时机</strong>与 <code>wParam</code>/<code>lParam</code> 的含义要点——它们是解读消息的钥匙。带 🟢 者为高频必备项，🟡/🔴 为已过时或不推荐项（备注给现代替代），🔵 为现代实践提示。</p>
 
-<h2 id="a9-msg-life">9.1 消息速查（一）：生命周期与创建</h2>
+<h2 id="a10-msg-life">10.1 消息速查（一）：生命周期与创建</h2>
 <p>窗口从"非客户区建立"到"彻底销毁"的顺序大致为：<code>WM_NCCREATE</code> → <code>WM_CREATE</code> → …运行… → <code>WM_CLOSE</code> → <code>WM_DESTROY</code> → <code>WM_NCDESTROY</code>。</p>
 <table style="contain-intrinsic-size:auto 964px">
 <thead><tr><th class="nw">消息</th><th>触发时机</th><th>wParam / lParam</th><th>备注</th></tr></thead>
@@ -5222,7 +7342,7 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 </tbody>
 </table>
 
-<h2 id="a9-msg-paint">9.2 消息速查（二）：绘制、尺寸与移动</h2>
+<h2 id="a10-msg-paint">10.2 消息速查（二）：绘制、尺寸与移动</h2>
 <p>绘制围绕 <code>WM_PAINT</code> 与 <code>WM_ERASEBKGND</code>；尺寸/移动围绕 <code>WM_SIZE</code> / <code>WM_MOVE</code>，配合几个限制类消息。</p>
 <table style="contain-intrinsic-size:auto 443px">
 <thead><tr><th class="nw">消息</th><th>触发时机</th><th>wParam / lParam</th><th>备注</th></tr></thead>
@@ -5252,7 +7372,7 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 </table>
 <div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p>闪烁的根源多在 <code>WM_ERASEBKGND</code> 擦白与 <code>WM_PAINT</code> 逐块绘制之间的间隙。首选做法：类样式背景刷设为 NULL（或在 <code>WM_ERASEBKGND</code> 返回 1），把所有绘制放进 <code>WM_PAINT</code>，先画到内存 DC 再一次性 <code>BitBlt</code> 上屏；或直接改用 Direct2D 渲染。</p></div>
 
-<h2 id="a9-msg-mouse">9.3 消息速查（三）：鼠标输入</h2>
+<h2 id="a10-msg-mouse">10.3 消息速查（三）：鼠标输入</h2>
 <p>除滚轮外，鼠标消息的 <code>lParam</code> 都是<strong>客户区坐标</strong>，<code>wParam</code> 带修饰键位（MK_LBUTTON / MK_CONTROL / MK_SHIFT…）。用 <code>GET_X_LPARAM</code>/<code>GET_Y_LPARAM</code> 拆坐标最安全。</p>
 <table style="contain-intrinsic-size:auto 1289px">
 <thead><tr><th>消息</th><th>触发时机</th><th>wParam / lParam</th><th>备注</th></tr></thead>
@@ -5278,7 +7398,7 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 </table>
 <div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p>两个高频坑：① <code>WM_MOUSEWHEEL</code> 的 lParam 是屏幕坐标，与其他鼠标消息（客户区坐标）不同；② 想收到 <code>WM_MOUSELEAVE</code> 必须每次进入时调用 <code>TrackMouseEvent</code>，它不是持续状态。高精度/游戏输入改用 Raw Input（<code>WM_INPUT</code>）。</p></div>
 
-<h2 id="a9-msg-key">9.4 消息速查（四）：键盘与焦点</h2>
+<h2 id="a10-msg-key">10.4 消息速查（四）：键盘与焦点</h2>
 <p><code>WM_KEYDOWN</code> 给的是<strong>虚拟键码</strong>（物理按键），<code>WM_CHAR</code> 给的是<strong>字符码</strong>（经 <code>TranslateMessage</code> 结合键盘布局翻译而来）——文本输入用后者，快捷键/方向键用前者。</p>
 <table style="contain-intrinsic-size:auto 671px">
 <thead><tr><th class="nw">消息</th><th>触发时机</th><th>wParam / lParam</th><th>备注</th></tr></thead>
@@ -5305,7 +7425,7 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 </tbody>
 </table>
 
-<h2 id="a9-msg-ctl">9.5 消息速查（五）：命令 / 通知 / 定时器 / 滚动 / 菜单 / DPI</h2>
+<h2 id="a10-msg-ctl">10.5 消息速查（五）：命令 / 通知 / 定时器 / 滚动 / 菜单 / DPI</h2>
 <p>这一组是"控件与系统交互"的枢纽：老式控件用 <code>WM_COMMAND</code>、通用控件用 <code>WM_NOTIFY</code>；再加定时器、滚动条、菜单初始化与高 DPI。</p>
 <table style="contain-intrinsic-size:auto 1381px">
 <thead><tr><th>消息</th><th>触发时机</th><th>wParam / lParam</th><th>备注</th></tr></thead>
@@ -5328,7 +7448,7 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 </table>
 <div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p>高 DPI 请在清单里声明 <strong>Per-Monitor v2</strong> 感知，并成对处理 <code>WM_DPICHANGED</code>（采纳建议矩形）+ <code>GetDpiForWindow</code>（按当前 DPI 计算像素）。不要再硬编码 96 DPI 或用全局 <code>GetDeviceCaps(LOGPIXELSX)</code>，否则副屏会模糊或错位。</p></div>
 
-<h2 id="a9-ws">9.6 窗口风格 WS_</h2>
+<h2 id="a10-ws">10.6 窗口风格 WS_</h2>
 <p>在 <code>CreateWindowEx</code> 的 <code>dwStyle</code> 参数（或 <code>SetWindowLongPtr(GWL_STYLE)</code>）中按位或组合。注意几个位在"顶层窗口"与"控件"两种语境下含义不同（同值复用）。</p>
 <table style="contain-intrinsic-size:auto 1456px">
 <thead><tr><th>名称</th><th>作用</th><th>备注</th></tr></thead>
@@ -5359,7 +7479,7 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 </table>
 <div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p>做"自定义标题栏 / 无边框但可缩放"的窗口时，保留 <code>WS_THICKFRAME</code>（拿到缩放能力）和 <code>WS_CAPTION</code>（拿到系统吸附/最大化动画），再在 <code>WM_NCCALCSIZE</code> 里去掉非客户区、在 <code>WM_NCHITTEST</code> 里自绘热区，即可兼顾外观与系统行为，比纯 <code>WS_POPUP</code> 手搓体验好得多。</p></div>
 
-<h2 id="a9-wsex">9.7 扩展窗口风格 WS_EX_</h2>
+<h2 id="a10-wsex">10.7 扩展窗口风格 WS_EX_</h2>
 <p>对应 <code>CreateWindowEx</code> 的第一个参数 <code>dwExStyle</code>，控制置顶、透明、任务栏可见性、DPI/合成等能力。</p>
 <table style="contain-intrinsic-size:auto 1232px">
 <thead><tr><th>名称</th><th>作用</th><th>备注</th></tr></thead>
@@ -5385,7 +7505,7 @@ BOOL LPtoDP(HDC hdc, LPPOINT lppt, <span class="kw">int</span> c);</code></pre>
 </tbody>
 </table>
 
-<h2 id="a9-cs">9.8 窗口类样式 CS_</h2>
+<h2 id="a10-cs">10.8 窗口类样式 CS_</h2>
 <p>填入 <code>WNDCLASSEX.style</code>，作用于<strong>整个窗口类</strong>（不是单个窗口），决定重绘触发、DC 分配、双击、阴影等策略。</p>
 <table style="contain-intrinsic-size:auto 797px">
 <thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead>

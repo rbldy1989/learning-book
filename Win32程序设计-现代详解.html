@@ -311,11 +311,12 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#w9-combobox">9.7 组合框 COMBOBOX</a>
 <a class="sec" href="#w9-scrollbar">9.8 滚动条 SCROLLBAR</a>
 <a class="sec" href="#w9-comctl">9.9 通用控件库 ComCtl32</a>
-<a class="sec" href="#w9-listview">9.10 列表视图 ListView</a>
-<a class="sec" href="#w9-treeview">9.11 树视图 TreeView</a>
-<a class="sec" href="#w9-moretools">9.12 Tab·进度条·滑块·UpDown</a>
-<a class="sec" href="#w9-barctl">9.13 日期时间·状态栏·工具栏·Tooltip</a>
-<a class="sec" href="#w9-subclass">9.14 子类化与所有者绘制</a>
+<a class="sec" href="#w9-wmnotify">9.10 WM_NOTIFY 汇报通道</a>
+<a class="sec" href="#w9-listview">9.11 列表视图 ListView</a>
+<a class="sec" href="#w9-treeview">9.12 树视图 TreeView</a>
+<a class="sec" href="#w9-moretools">9.13 Tab·进度条·滑块·UpDown</a>
+<a class="sec" href="#w9-barctl">9.14 日期时间·状态栏·工具栏·Tooltip</a>
+<a class="sec" href="#w9-subclass">9.15 子类化与所有者绘制</a>
 </details>
 <details><summary><a class="ch" href="#w10">第 10 章 菜单、图标与资源</a></summary>
 <a class="sec" href="#w10-why">10.1 为什么要有「资源」：把界面从代码里搬出去</a>
@@ -2992,7 +2993,7 @@ SetThreadpoolTimer(timer, &amp;due, 1000, 0);</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 本章要点回顾</span><p><code>SetTimer</code>/<code>KillTimer</code> 装拆闹钟，<code>WM_TIMER</code> 是一条低优先级、不堆积、有空才送的合成消息；它够用于秒级的界面更新，但不精确、会迟到。<strong>永远用真实时钟计时，把定时器当提醒而非计数器。</strong>需要高精度、后台并发或平滑动画时，转向等待定时器、线程池定时器与合成器，并记得跨线程更新界面要用 <code>PostMessage</code> 回到 UI 线程。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 52445px;--thin-h:52445px">
+<section class="chapter" style="contain-intrinsic-size:auto 60625px;--thin-h:60625px">
 <h1 id="w9"><span class="part">第 9 章</span>子窗口控件与通用控件</h1>
 
 <p>前面几章里，窗口上的每一个像素都是我们自己在 <code>WM_PAINT</code> 里画的，每一次鼠标点击都是我们自己解析坐标判断的。如果按钮、输入框、列表这些东西也要这样从零造，Windows 编程就没法干了。好消息是：<strong>系统早就替你把这些"零件"写好了</strong>。它们叫<strong>控件（Control）</strong>——本质上就是一批系统预先注册好窗口类、预先写好窗口过程的<strong>子窗口</strong>。你用 <code>CreateWindowExW</code> 把它们"生"在自己窗口里，它们就会自己绘制、自己响应键盘鼠标，只在"有事发生"时通知你。</p>
@@ -3141,7 +3142,7 @@ SetWaitableTimer(hTimer, &amp;due, 1, NULL, NULL, FALSE);</code></pre>
 <tr><td class="nw">子 → 父</td><td class="nw"><code>WM_COMMAND</code></td><td>六类经典控件的通知。<code>LOWORD(wParam)</code>=控件 ID，<code>HIWORD(wParam)</code>=通知码（<code>BN_CLICKED</code>、<code>EN_CHANGE</code>…），<code>lParam</code>=控件句柄。菜单项的 <code>lParam</code> 为 NULL、通知码为 0，加速键为 1——靠这个区分消息来源</td></tr>
 <tr><td class="nw">子 → 父</td><td class="nw"><code>WM_NOTIFY</code></td><td>ComCtl32 通用控件的通知。<code>lParam</code> 指向 <code>NMHDR</code> 结构（或以它开头的扩展结构），能携带远比 16 位通知码丰富的信息</td></tr>
 <tr><td class="nw">子 → 父</td><td><code>WM_HSCROLL</code> / <code>WM_VSCROLL</code></td><td>滚动条与滑块的特例：不走 WM_COMMAND，<code>lParam</code> 为控件句柄</td></tr>
-<tr><td class="nw">子 → 父</td><td><code>WM_CTLCOLOR*</code>、<code>WM_DRAWITEM</code>、<code>WM_MEASUREITEM</code></td><td>"征询类"消息：控件画自己之前，先问父窗口要颜色画刷，或干脆请父窗口代画（见 9.14）</td></tr>
+<tr><td class="nw">子 → 父</td><td><code>WM_CTLCOLOR*</code>、<code>WM_DRAWITEM</code>、<code>WM_MEASUREITEM</code></td><td>"征询类"消息：控件画自己之前，先问父窗口要颜色画刷，或干脆请父窗口代画（见 9.15）</td></tr>
 <tr><td class="nw">父 → 子</td><td class="nw">控件专属消息</td><td><code>SendMessageW</code> 发 <code>BM_</code>/<code>EM_</code>/<code>LB_</code>/<code>CB_</code>/<code>LVM_</code>/<code>TVM_</code>… 前缀的消息，命令控件干活或查询状态。这是本章大量表格的主角</td></tr>
 <tr><td class="nw">父 → 子</td><td class="nw">通用窗口消息</td><td>控件也是普通 HWND：<code>WM_SETTEXT</code>/<code>WM_GETTEXT</code>（即 <code>SetWindowTextW</code>/<code>GetWindowTextW</code>）、<code>WM_SETFONT</code>、<code>EnableWindow</code>、<code>MoveWindow</code>、<code>ShowWindow</code> 全部照常有效</td></tr>
 </tbody></table>
@@ -3322,7 +3323,7 @@ SetWaitableTimer(hTimer, &amp;due, 1, NULL, NULL, FALSE);</code></pre>
 
 <div class="note new" style="contain-intrinsic-size:auto 198px">
 <span class="t">新式控件走的是另一条路：WM_NOTIFY</span>
-<p><code>WM_COMMAND</code> 是 16 位时代的产物——通知码只有 16 位、除了控件 ID 之外几乎带不了别的信息。后来的通用控件（ListView、TreeView、Tab 等）改用 <code>WM_NOTIFY</code>：<code>lParam</code> 指向一个 <code>NMHDR</code> 结构（或以它开头的扩展结构），可以携带任意多的上下文——点中了哪一行哪一列、拖动到了什么位置、正在编辑哪个单元格。本章第 9 节讲 ListView 时会详细展开，那里你会看到同一个「控件汇报」的思路是如何被扩展的。</p>
+<p><code>WM_COMMAND</code> 是 16 位时代的产物——通知码只有 16 位、除了控件 ID 之外几乎带不了别的信息。后来的通用控件（ListView、TreeView、Tab 等）改用 <code>WM_NOTIFY</code>：<code>lParam</code> 指向一个 <code>NMHDR</code> 结构（或以它开头的扩展结构），可以携带任意多的上下文——点中了哪一行哪一列、拖动到了什么位置、正在编辑哪个单元格。<a href="#w9-wmnotify">9.10</a> 专门讲这套机制：它凭什么装得下这么多信息、结构体怎么强转才安全、返回值什么时候有意义。</p>
 </div>
 
 <h2 id="w9-button">9.3 按钮 BUTTON：一个类名，八副面孔</h2>
@@ -3344,7 +3345,7 @@ SetWaitableTimer(hTimer, &amp;due, 1, NULL, NULL, FALSE);</code></pre>
 <tr><td class="nw"><code>BS_MULTILINE</code></td><td class="nw">按钮文本允许换行</td></tr>
 <tr><td class="nw"><code>BS_NOTIFY</code></td><td>额外发送 <code>BN_SETFOCUS</code>/<code>BN_KILLFOCUS</code>/<code>BN_DBLCLK</code> 通知</td></tr>
 <tr><td class="nw"><code>BS_FLAT</code></td><td>平面外观（启用视觉样式后差别不大）</td></tr>
-<tr><td class="nw"><code>BS_OWNERDRAW</code></td><td>所有者绘制：外观全部由父窗口在 <code>WM_DRAWITEM</code> 里画（见 9.14）</td></tr>
+<tr><td class="nw"><code>BS_OWNERDRAW</code></td><td>所有者绘制：外观全部由父窗口在 <code>WM_DRAWITEM</code> 里画（见 9.15）</td></tr>
 <tr><td><code>BS_SPLITBUTTON</code> / <code>BS_DEFSPLITBUTTON</code></td><td>分割按钮：右侧带下拉箭头（Vista+，箭头点击发 <code>BCN_DROPDOWN</code>）</td></tr>
 <tr><td><code>BS_COMMANDLINK</code> / <code>BS_DEFCOMMANDLINK</code></td><td>命令链接按钮：大字标题+小字说明（Vista+，说明文字用 <code>BCM_SETNOTE</code> 设置）</td></tr>
 </tbody></table>
@@ -4067,7 +4068,7 @@ SendMessageW(hCombo, CB_SETCURSEL, 1, 0);        <span class="cm">// 默认选"�
 
 <h2 id="w9-scrollbar">9.8 滚动条 SCROLLBAR：控件版与窗口版</h2>
 
-<p>先分清两个东西：给窗口加 <code>WS_HSCROLL</code>/<code>WS_VSCROLL</code> 得到的滚动条是<strong>窗口的非客户区部件</strong>，不是窗口；而 <code>"SCROLLBAR"</code> 类创建的是一个<strong>独立的滚动条控件</strong>，可以摆在任何位置当数值选择器用（虽然这个角色如今多半让位给了 9.11 的滑块）。两者共用同一套 <code>SCROLLINFO</code> API，只是第二个参数不同：窗口版传 <code>SB_HORZ</code>/<code>SB_VERT</code>，控件版传 <code>SB_CTL</code>。</p>
+<p>先分清两个东西：给窗口加 <code>WS_HSCROLL</code>/<code>WS_VSCROLL</code> 得到的滚动条是<strong>窗口的非客户区部件</strong>，不是窗口；而 <code>"SCROLLBAR"</code> 类创建的是一个<strong>独立的滚动条控件</strong>，可以摆在任何位置当数值选择器用（虽然这个角色如今多半让位给了 9.12 的滑块）。两者共用同一套 <code>SCROLLINFO</code> API，只是第二个参数不同：窗口版传 <code>SB_HORZ</code>/<code>SB_VERT</code>，控件版传 <code>SB_CTL</code>。</p>
 
 <table style="contain-intrinsic-size:auto 227px"><thead><tr><th>风格</th><th>说明</th></tr></thead><tbody>
 <tr><td class="nw"><code>SBS_HORZ</code> / <code>SBS_VERT</code></td><td class="nw">横向 / 纵向</td></tr>
@@ -4214,20 +4215,20 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 
 <div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">🔵 v6 不只是好看</span><p>不少功能<strong>只存在于</strong> v6：<code>EM_SETCUEBANNER</code> 占位提示、<code>BCM_</code> 系列按钮消息、分割按钮、命令链接、进度条的错误/暂停配色……清单没配对，这些消息发过去就是石沉大海。排查"消息不生效"之前，先确认清单。</p></div>
 
-<p>通用控件的通知统一走 <code>WM_NOTIFY</code>（9.1 已见过 <code>NMHDR</code>）。本章后半覆盖的控件与类名速查如下，外观见图：</p>
+<p>通用控件的通知统一走 <code>WM_NOTIFY</code>——它和基础控件的 <code>WM_COMMAND</code> 是两套东西，<a href="#w9-wmnotify">下一节</a>专门讲。本章后半覆盖的控件与类名速查如下，外观见图：</p>
 
 <table style="contain-intrinsic-size:auto 454px"><thead><tr><th class="nw">控件</th><th>窗口类名</th><th>头文件常量</th><th>小节</th></tr></thead><tbody>
-<tr><td class="nw">列表视图</td><td><code>"SysListView32"</code></td><td><code>WC_LISTVIEW</code></td><td>9.9</td></tr>
-<tr><td class="nw">树视图</td><td><code>"SysTreeView32"</code></td><td><code>WC_TREEVIEW</code></td><td>9.10</td></tr>
-<tr><td class="nw">Tab 选项卡</td><td><code>"SysTabControl32"</code></td><td><code>WC_TABCONTROL</code></td><td>9.11</td></tr>
-<tr><td class="nw">进度条</td><td><code>"msctls_progress32"</code></td><td><code>PROGRESS_CLASS</code></td><td>9.11</td></tr>
-<tr><td class="nw">滑块</td><td><code>"msctls_trackbar32"</code></td><td><code>TRACKBAR_CLASS</code></td><td>9.11</td></tr>
-<tr><td class="nw">UpDown 微调</td><td><code>"msctls_updown32"</code></td><td><code>UPDOWN_CLASS</code></td><td>9.11</td></tr>
-<tr><td class="nw">日期时间选择器</td><td><code>"SysDateTimePick32"</code></td><td><code>DATETIMEPICK_CLASS</code></td><td>9.12</td></tr>
-<tr><td class="nw">月历</td><td><code>"SysMonthCal32"</code></td><td><code>MONTHCAL_CLASS</code></td><td>9.12</td></tr>
-<tr><td class="nw">状态栏</td><td><code>"msctls_statusbar32"</code></td><td><code>STATUSCLASSNAME</code></td><td>9.12</td></tr>
-<tr><td class="nw">工具栏</td><td><code>"ToolbarWindow32"</code></td><td><code>TOOLBARCLASSNAME</code></td><td>9.12</td></tr>
-<tr><td class="nw">Tooltip 提示</td><td><code>"tooltips_class32"</code></td><td><code>TOOLTIPS_CLASS</code></td><td>9.12</td></tr>
+<tr><td class="nw">列表视图</td><td><code>"SysListView32"</code></td><td><code>WC_LISTVIEW</code></td><td>9.11</td></tr>
+<tr><td class="nw">树视图</td><td><code>"SysTreeView32"</code></td><td><code>WC_TREEVIEW</code></td><td>9.12</td></tr>
+<tr><td class="nw">Tab 选项卡</td><td><code>"SysTabControl32"</code></td><td><code>WC_TABCONTROL</code></td><td>9.13</td></tr>
+<tr><td class="nw">进度条</td><td><code>"msctls_progress32"</code></td><td><code>PROGRESS_CLASS</code></td><td>9.13</td></tr>
+<tr><td class="nw">滑块</td><td><code>"msctls_trackbar32"</code></td><td><code>TRACKBAR_CLASS</code></td><td>9.13</td></tr>
+<tr><td class="nw">UpDown 微调</td><td><code>"msctls_updown32"</code></td><td><code>UPDOWN_CLASS</code></td><td>9.13</td></tr>
+<tr><td class="nw">日期时间选择器</td><td><code>"SysDateTimePick32"</code></td><td><code>DATETIMEPICK_CLASS</code></td><td>9.14</td></tr>
+<tr><td class="nw">月历</td><td><code>"SysMonthCal32"</code></td><td><code>MONTHCAL_CLASS</code></td><td>9.14</td></tr>
+<tr><td class="nw">状态栏</td><td><code>"msctls_statusbar32"</code></td><td><code>STATUSCLASSNAME</code></td><td>9.14</td></tr>
+<tr><td class="nw">工具栏</td><td><code>"ToolbarWindow32"</code></td><td><code>TOOLBARCLASSNAME</code></td><td>9.14</td></tr>
+<tr><td class="nw">Tooltip 提示</td><td><code>"tooltips_class32"</code></td><td><code>TOOLTIPS_CLASS</code></td><td>9.14</td></tr>
 </tbody></table>
 
 <figure style="contain-intrinsic-size:auto 215px"><svg viewBox="0 0 720 138" font-family="system-ui,'Segoe UI','Microsoft YaHei',sans-serif" role="img" aria-label="通用控件外观示意（一）">
@@ -4429,7 +4430,277 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 </figure>
 
 
-<h2 id="w9-listview">9.10 列表视图 ListView：资源管理器的主角</h2>
+<h2 id="w9-wmnotify">9.10 WM_NOTIFY：通用控件的汇报通道</h2>
+
+<p>上一节把通用控件请了出来。但你一上手就会撞到一件事：<strong>之前学会的那套 <code>WM_COMMAND</code> 处理法，在它们身上完全不管用</strong>。通知码是没见过的名字，<code>lParam</code> 也不再是一个老实的控件句柄。</p>
+
+<p>这不是微软换口味，是 <code>WM_COMMAND</code> 真的装不下了。</p>
+
+<h3 id="w9-notify-why">WM_COMMAND 到底卡在哪</h3>
+
+<p>回想 9.2 那张图，Win32 下一条 <code>WM_COMMAND</code> 的两个参数是这样分配的：</p>
+
+<pre style="contain-intrinsic-size:auto 87px"><code>wParam = MAKEWPARAM(控件 ID, 通知码)    <span class="cm">// 低 16 位 ID，高 16 位通知码</span>
+lParam = (LPARAM)控件句柄               <span class="cm">// 整整 32/64 位，全被句柄占满</span></code></pre>
+
+<p>关键在第二行：<strong><code>lParam</code> 已经被句柄用光了，一个字节都不剩</strong>。于是控件能告诉你的全部信息，就只有"谁"和"发生了哪一类事"两件——通知码那 16 位里连个数字都塞不进去。</p>
+
+<p>对按钮来说这够了：<code>BN_CLICKED</code> 说完就没别的可说。可是当用户在 ListView 的报表视图里双击了某一格，你至少想知道<strong>五件事</strong>：</p>
+
+<table style="contain-intrinsic-size:auto 223px">
+<thead><tr><th class="nw">你想知道</th><th>WM_COMMAND 能不能给</th></tr></thead>
+<tbody>
+<tr><td class="nw">哪个控件发的</td><td>✅ 能（<code>lParam</code> 就是句柄）</td></tr>
+<tr><td class="nw">发生了什么事</td><td>✅ 能（16 位通知码）</td></tr>
+<tr><td class="nw">点中的是第几行</td><td>❌ 没地方放</td></tr>
+<tr><td class="nw">第几列（子项）</td><td>❌ 没地方放</td></tr>
+<tr><td class="nw">鼠标坐标、Ctrl/Shift 按没按</td><td>❌ 没地方放</td></tr>
+</tbody>
+</table>
+
+<p>硬要在旧结构里挤，只有两条路：要么给每种信息再发一条消息（那父窗口就得自己把几条消息拼回一次事件，还得应付乱序），要么让控件先存起来、等父窗口反过来发消息查询（多一次往返，而且信息随时可能已经变了）。<strong>两条都难看。</strong></p>
+
+<p>Windows 95 随通用控件一起给出的答案干脆得多：<strong>既然 <code>lParam</code> 装不下数据，那就让它装一个<em>指针</em>——指向一个想多大就多大的结构体。</strong></p>
+
+<h3 id="w9-notify-nmhdr">NMHDR：用"共同前缀"模拟继承</h3>
+
+<p>新消息叫 <code>WM_NOTIFY</code>，参数分配是：</p>
+
+<pre style="contain-intrinsic-size:auto 250px"><code>wParam = 控件 ID                <span class="cm">// 冗余信息，结构体里也有，通常不读它</span>
+lParam = (LPNMHDR)             <span class="cm">// ★ 全部信息都挂在这个指针后面</span>
+
+<span class="kw">typedef struct</span> tagNMHDR {
+    HWND     hwndFrom;   <span class="cm">// 谁发的：控件句柄</span>
+    UINT_PTR idFrom;     <span class="cm">// 谁发的：控件 ID</span>
+    UINT     code;       <span class="cm">// 发生了什么：32 位，管够</span>
+} NMHDR;</code></pre>
+
+<p>但只有三个字段的话，跟原来也没差多少。真正的机关在下一层：<strong>每一种带附加数据的通知，都定义一个"以 <code>NMHDR</code> 打头"的更大结构体。</strong></p>
+
+<pre style="contain-intrinsic-size:auto 277px"><code><span class="kw">typedef struct</span> tagNMITEMACTIVATE {
+    NMHDR  hdr;          <span class="cm">// ★ 必须是第一个成员</span>
+    <span class="kw">int</span>    iItem;        <span class="cm">// 第几项</span>
+    <span class="kw">int</span>    iSubItem;     <span class="cm">// 第几列</span>
+    UINT   uNewState, uOldState, uChanged;
+    POINT  ptAction;     <span class="cm">// 鼠标位置</span>
+    LPARAM lParam;       <span class="cm">// 你自己挂在这一项上的数据</span>
+    UINT   uKeyFlags;    <span class="cm">// Ctrl / Shift / Alt 状态</span>
+} NMITEMACTIVATE;</code></pre>
+
+<p>"第一个成员"这个要求不是格式洁癖，它是整套机制成立的前提：<strong>C 语言保证结构体第一个成员的地址就是结构体本身的地址</strong>。所以同一个 <code>lParam</code>，你按 <code>LPNMHDR</code> 读能拿到前三个字段，按 <code>LPNMITEMACTIVATE</code> 读就能拿到全部——两个指针指的是同一个地方，只是"你打算读多远"不同。</p>
+
+<p>这就是 C 语言模拟继承的经典手法。父窗口因此可以<strong>先按 <code>LPNMHDR</code> 一律接住、读出 <code>code</code> 分派，确认是哪种通知之后再转成对应的大结构体</strong>——不必事先知道来的是什么。</p>
+
+<figure style="contain-intrinsic-size:auto 269px">
+<svg viewBox="0 6 720 186" xmlns="http://www.w3.org/2000/svg" font-size="13" role="img" aria-label="WM_NOTIFY 的 lParam 指向的内存块，按通知码决定当成哪种结构体读取">
+<defs><marker id="nty2-ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs>
+<text class="svgmuted" x="10" y="22" font-size="11.5">lParam 指向的这一块内存，按 <tspan font-weight="600">code</tspan> 决定当成哪种结构体来读：</text>
+
+<rect x="10" y="32" width="84" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text class="svgtext" x="52" y="53" text-anchor="middle" font-size="10.5">hwndFrom</text>
+<rect x="98" y="32" width="84" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text class="svgtext" x="140" y="53" text-anchor="middle" font-size="10.5">idFrom</text>
+<rect x="186" y="32" width="84" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text class="svgtext" x="228" y="53" text-anchor="middle" font-size="10.5">code</text>
+<rect x="274" y="32" width="84" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="316" y="53" text-anchor="middle" font-size="10.5">iItem</text>
+<rect x="362" y="32" width="84" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="404" y="53" text-anchor="middle" font-size="10.5">iSubItem</text>
+<rect x="450" y="32" width="84" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="492" y="53" text-anchor="middle" font-size="10.5">uNewState</text>
+<rect x="538" y="32" width="84" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="580" y="53" text-anchor="middle" font-size="10.5">ptAction</text>
+<rect x="626" y="32" width="84" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+<text class="svgtext" x="668" y="53" text-anchor="middle" font-size="10.5">uKeyFlags</text>
+
+<line x1="10" y1="70" x2="10" y2="78" stroke="var(--accent)" marker-end="url(#nty2-ar)"/>
+<rect x="10" y="80" width="260" height="20" rx="4" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
+<text class="svgtext" x="17" y="94" font-size="10.5">LPNMHDR —— 三个字段，够用来分派</text>
+
+<rect x="10" y="104" width="524" height="20" rx="4" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
+<text class="svgtext" x="17" y="118" font-size="10.5">LPNMLISTVIEW —— 多出 iItem / iSubItem 与状态变化</text>
+
+<rect x="10" y="128" width="700" height="20" rx="4" fill="var(--svg-soft2)" stroke="var(--old-fg)"/>
+<text class="svgtext" x="17" y="142" font-size="10.5">LPNMITEMACTIVATE —— 再多出鼠标位置 ptAction、Ctrl/Shift 状态 uKeyFlags</text>
+
+<text class="svgmuted" x="10" y="167" font-size="10.5">① 先读 code 判断是哪一种通知，确认之后才敢强转 —— 转错了读到的是别人的内存，编译器一声不吭。</text>
+<text class="svgmuted" x="10" y="184" font-size="10.5">② 这个指针只在本次调用内有效：你返回之后结构体就没了，要留着用必须自己拷一份。</text>
+</svg>
+<figcaption>WM_NOTIFY 的「共同前缀」设计：同一个 lParam，读多远由通知码决定（原创绘制）</figcaption>
+</figure>
+
+<h3 id="w9-notify-handle">处理模板：先分谁，还是先分什么</h3>
+
+<p>两种分派顺序，用哪种取决于你的窗口上有几个控件：</p>
+
+<pre style="contain-intrinsic-size:auto 957px"><code><span class="kw">case</span> WM_NOTIFY: {
+    LPNMHDR nm = (LPNMHDR)lParam;
+
+    <span class="cm">// 写法一：先按控件分（窗口上有多个通用控件时用这个）</span>
+    <span class="kw">if</span> (nm-&gt;idFrom == IDC_FILELIST) {
+        <span class="kw">switch</span> (nm-&gt;code) {
+        <span class="kw">case</span> LVN_ITEMCHANGED: {
+            <span class="kw">auto</span>* p = (LPNMLISTVIEW)lParam;          <span class="cm">// 确认过 code 才敢转</span>
+            <span class="cm">// 选中/取消选中都会来，要判断"状态是从无到有"</span>
+            <span class="kw">if</span> ((p-&gt;uNewState &amp; LVIS_SELECTED) &amp;&amp;
+               !(p-&gt;uOldState &amp; LVIS_SELECTED))
+                ShowDetail(p-&gt;iItem);
+            <span class="kw">return</span> 0;
+        }
+        <span class="kw">case</span> NM_DBLCLK: {
+            <span class="kw">auto</span>* p = (LPNMITEMACTIVATE)lParam;
+            OpenFile(p-&gt;iItem, p-&gt;iSubItem);
+            <span class="kw">return</span> 0;
+        }
+        <span class="kw">case</span> LVN_COLUMNCLICK: {
+            <span class="kw">auto</span>* p = (LPNMLISTVIEW)lParam;
+            SortByColumn(p-&gt;iSubItem);               <span class="cm">// 点列头排序</span>
+            <span class="kw">return</span> 0;
+        }
+        }
+    }
+
+    <span class="cm">// 写法二：不管谁发的，按通知码统一处理（做全局行为时用）</span>
+    <span class="kw">if</span> (nm-&gt;code == NM_RCLICK) {
+        ShowContextMenu(nm-&gt;hwndFrom);
+        <span class="kw">return</span> 0;
+    }
+    <span class="kw">break</span>;      <span class="cm">// 没接的一律落到 DefWindowProcW</span>
+}</code></pre>
+
+<h3 id="w9-notify-codes">通用通知码：任何通用控件都可能发的那一批</h3>
+
+<p>以 <code>NM_</code> 开头的这组不属于某个具体控件，谁都可能发。它们的价值在于"一套代码管所有控件"：</p>
+
+<table style="contain-intrinsic-size:auto 431px">
+<thead><tr><th class="nw">通知码</th><th class="nw">什么时候来</th><th>结构体与备注</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>NM_CLICK</code> / <code>NM_DBLCLK</code></td><td class="nw">左键单击 / 双击</td><td>ListView 给 <code>NMITEMACTIVATE</code>（含行列与坐标），状态栏、工具栏给 <code>NMMOUSE</code></td></tr>
+<tr><td class="nw"><code>NM_RCLICK</code> / <code>NM_RDBLCLK</code></td><td class="nw">右键单击 / 双击</td><td>弹上下文菜单的标准入口。<strong>注意它要求返回 TRUE 才算"我处理了"</strong></td></tr>
+<tr><td class="nw"><code>NM_RETURN</code></td><td class="nw">控件上按了回车</td><td>典型用法：回车等同于"打开选中项"</td></tr>
+<tr><td><code>NM_SETFOCUS</code> / <code>NM_KILLFOCUS</code></td><td class="nw">获得 / 失去焦点</td><td>只有 <code>NMHDR</code>，没有附加信息</td></tr>
+<tr><td class="nw"><code>NM_CUSTOMDRAW</code></td><td class="nw">控件要画自己了，问你要不要插手</td><td><strong>通用控件定制外观的唯一正规通道</strong>——它们没有"所有者绘制"风格，详见 <a href="#w9-subclass">9.15</a></td></tr>
+<tr><td class="nw"><code>NM_HOVER</code></td><td class="nw">鼠标悬停</td><td>需控件带相应样式才发</td></tr>
+<tr><td class="nw"><code>NM_KILLFOCUS</code> 之外的各控件专属码</td><td class="nw">—</td><td>按控件分段：<code>LVN_</code> 列表视图、<code>TVN_</code> 树视图、<code>TCN_</code> Tab、<code>HDN_</code> 列头、<code>TBN_</code> 工具栏、<code>UDN_</code> UpDown、<code>DTN_</code> 日期选择器</td></tr>
+</tbody>
+</table>
+
+<h3 id="w9-notify-ret">返回值：有一批通知是在征求你的同意</h3>
+
+<p>大多数 <code>WM_NOTIFY</code> 返回 0 就行。但有一类通知的名字带着<strong>进行时</strong>（<code>-ING</code>）或者叫 <code>BEGIN-</code>，它们是在事情发生<em>之前</em>问你一句，返回值决定控件接下来做不做：</p>
+
+<table style="contain-intrinsic-size:auto 265px">
+<thead><tr><th class="nw">通知</th><th>返回值的含义</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>TVN_SELCHANGING</code></td><td>返回 <strong>TRUE 阻止</strong>选中项改变（"当前编辑未保存，不许切换"）</td></tr>
+<tr><td class="nw"><code>TVN_ITEMEXPANDING</code></td><td>返回 TRUE 阻止展开／折叠</td></tr>
+<tr><td><code>LVN_ENDLABELEDIT</code> / <code>TVN_ENDLABELEDIT</code></td><td>返回 <strong>FALSE 拒绝</strong>这次改名（校验不通过时用）</td></tr>
+<tr><td class="nw"><code>LVN_BEGINLABELEDIT</code></td><td>返回 TRUE 不许进入编辑</td></tr>
+<tr><td class="nw"><code>NM_CUSTOMDRAW</code></td><td>返回 <code>CDRF_</code> 系列标志，告诉控件"下一阶段还要不要叫我"</td></tr>
+<tr><td class="nw"><code>NM_RCLICK</code> 等</td><td>返回 TRUE 表示"我处理了，控件别再管"</td></tr>
+</tbody>
+</table>
+
+<div class="note dead" style="contain-intrinsic-size:auto 265px">
+<span class="t">🔴 对话框里返回值要另走一条路</span>
+<p>上面说的"返回 TRUE/FALSE"，指的是<strong>窗口过程</strong>直接 <code>return</code>。<br>但<strong>对话框过程不是窗口过程</strong>：它的返回值被系统征用了，用来表示"这条消息我处理了没有"，你写的 <code>return TRUE</code> 只会被理解成"已处理"，永远传不到控件那里。<br>对话框里必须改成：<code>SetWindowLongPtrW(hDlg, DWLP_MSGRESULT, 你的结果); return TRUE;</code>——把真正的返回值放进那个专用槽位。<br>这是"我照文档写了拒绝改名，可它照样改了"的标准成因，而且不会有任何报错。</p>
+</div>
+
+<h3 id="w9-notify-demo">动手：让状态栏认出你点了它哪一格</h3>
+
+<p>ListView、TreeView 要到后面几节才展开，但状态栏足够小、又实实在在走 <code>WM_NOTIFY</code>，正好拿来把上面的东西跑一遍：</p>
+
+<pre style="contain-intrinsic-size:auto 1555px"><code>#include &lt;commctrl.h&gt;
+#pragma comment(lib, "comctl32.lib")
+
+#define IDC_STATUS 1001
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    <span class="kw">static</span> HWND s_status;
+
+    <span class="kw">switch</span> (msg) {
+    <span class="kw">case</span> WM_CREATE: {
+        INITCOMMONCONTROLSEX icc = { <span class="kw">sizeof</span>(icc), ICC_BAR_CLASSES };
+        InitCommonControlsEx(&amp;icc);                <span class="cm">// 不调这句，下面必然返回 NULL</span>
+
+        s_status = CreateWindowExW(0, STATUSCLASSNAMEW, <span class="kw">nullptr</span>,
+            WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP,
+            0, 0, 0, 0, hwnd, (HMENU)IDC_STATUS,
+            ((LPCREATESTRUCT)lParam)-&gt;hInstance, <span class="kw">nullptr</span>);
+
+        <span class="cm">// 分成三格：前两格固定宽，最后一格 -1 表示"吃掉剩下的"</span>
+        <span class="kw">int</span> parts[3] = { 120, 260, -1 };
+        SendMessageW(s_status, SB_SETPARTS, 3, (LPARAM)parts);
+        SendMessageW(s_status, SB_SETTEXTW, 0, (LPARAM)L"就绪");
+        <span class="kw">return</span> 0;
+    }
+
+    <span class="kw">case</span> WM_NOTIFY: {
+        LPNMHDR nm = (LPNMHDR)lParam;
+        <span class="kw">if</span> (nm-&gt;idFrom == IDC_STATUS) {
+            <span class="kw">switch</span> (nm-&gt;code) {
+            <span class="kw">case</span> NM_CLICK: {
+                <span class="cm">// 状态栏的点击通知带的是 NMMOUSE，dwItemSpec 就是第几格</span>
+                <span class="kw">auto</span>* p = (LPNMMOUSE)lParam;
+                wchar_t buf[64];
+                swprintf_s(buf, L"你点了第 %d 格", (<span class="kw">int</span>)p-&gt;dwItemSpec);
+                SendMessageW(s_status, SB_SETTEXTW, 0, (LPARAM)buf);
+                <span class="kw">return</span> TRUE;                <span class="cm">// 告诉控件：这条我处理了</span>
+            }
+            <span class="kw">case</span> NM_DBLCLK:
+                SendMessageW(s_status, SB_SETTEXTW, 0, (LPARAM)L"双击");
+                <span class="kw">return</span> TRUE;
+            }
+        }
+        <span class="kw">break</span>;
+    }
+
+    <span class="kw">case</span> WM_SIZE:
+        <span class="cm">// 状态栏自己会算位置，但你得转告它"窗口变了"</span>
+        SendMessageW(s_status, WM_SIZE, 0, 0);
+        <span class="kw">return</span> 0;
+
+    <span class="kw">case</span> WM_DESTROY:
+        PostQuitMessage(0);
+        <span class="kw">return</span> 0;
+    }
+    <span class="kw">return</span> DefWindowProcW(hwnd, msg, wParam, lParam);
+}</code></pre>
+
+<p>三个值得留意的地方：<strong>①</strong> <code>NM_CLICK</code> 在状态栏这里配的是 <code>NMMOUSE</code> 而不是 <code>NMITEMACTIVATE</code>——<strong>同一个通知码，不同控件配的结构体不一样</strong>，查文档时要连控件一起查；<strong>②</strong> 状态栏必须收到 <code>WM_SIZE</code> 才会重新排布自己，父窗口得转发一下；<strong>③</strong> <code>SB_SETPARTS</code> 的最后一格给 <code>-1</code>，是"一直延伸到右边"的约定写法。</p>
+
+<h3 id="w9-notify-vs">和 WM_COMMAND 摆在一起看</h3>
+
+<table style="contain-intrinsic-size:auto 361px">
+<thead><tr><th class="nw">维度</th><th><code>WM_COMMAND</code></th><th><code>WM_NOTIFY</code></th></tr></thead>
+<tbody>
+<tr><td class="nw">出身</td><td>Windows 1.0，16 位时代</td><td>Windows 95，随 ComCtl32 4.0 一起</td></tr>
+<tr><td class="nw">wParam</td><td>低 16 位控件 ID，高 16 位通知码</td><td>控件 ID（结构体里也有，一般不读）</td></tr>
+<tr><td class="nw">lParam</td><td>控件句柄，占满，没余量</td><td><strong>指向 <code>NMHDR</code> 或其扩展结构的指针</strong></td></tr>
+<tr><td class="nw">通知码宽度</td><td>16 位，还要和菜单、快捷键挤同一个编码空间</td><td>32 位，各控件各占一段号码</td></tr>
+<tr><td class="nw">能带多少上下文</td><td>零</td><td>结构体多大就能带多少</td></tr>
+<tr><td class="nw">谁在用</td><td>按钮、编辑框、列表框、组合框、静态控件；菜单与快捷键</td><td>列表视图、树视图、Tab、工具栏、状态栏、日期选择器、列头…</td></tr>
+<tr><td class="nw">通知码前缀</td><td><code>BN_</code> <code>EN_</code> <code>LBN_</code> <code>CBN_</code> <code>STN_</code></td><td><code>NM_</code> <code>LVN_</code> <code>TVN_</code> <code>TCN_</code> <code>HDN_</code> <code>TBN_</code> <code>UDN_</code> <code>DTN_</code></td></tr>
+<tr><td class="nw">返回值</td><td>基本无意义，返回 0 即可</td><td>一批通知靠它否决操作，见上文</td></tr>
+</tbody>
+</table>
+
+<div class="note ok" style="contain-intrinsic-size:auto 233px">
+<span class="t">🟢 不用背，判断规则只有一条</span>
+<p>两套机制会长期并存，<code>WM_NOTIFY</code> 没有取代 <code>WM_COMMAND</code>——按钮到今天还是发 <code>BN_CLICKED</code>。<br>该用哪套，不靠记忆，<strong>看通知码的前缀就知道</strong>：<code>xxN_</code> 形式（<code>BN_</code>、<code>EN_</code>、<code>LBN_</code>、<code>CBN_</code>、<code>STN_</code>）走 <code>WM_COMMAND</code>；<code>NM_</code> 和 <code>xxxN_</code> 形式（<code>LVN_</code>、<code>TVN_</code>…）走 <code>WM_NOTIFY</code>。<br>再简单一点：<strong>六个基础控件走 <code>WM_COMMAND</code>，ComCtl32 里的走 <code>WM_NOTIFY</code>。</strong>唯一的例外要留意：v6 按钮的分割箭头（<code>BS_SPLITBUTTON</code>）走的是 <code>WM_NOTIFY</code> 发 <code>BCN_DROPDOWN</code>——新加的功能都往新通道上走。</p>
+</div>
+
+<div class="note dead" style="contain-intrinsic-size:auto 331px">
+<span class="t">🔴 三个真会咬人的坑</span>
+<p><strong>① 通知码是"负数"，别拿 code 比范围。</strong><code>NMHDR.code</code> 声明成 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>LVN_FIRST</code> 是 <code>0U-100U</code>，往下递减）。所以 <code>LVN_ITEMCHANGED</code> 的真实值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。<code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_LAST &amp;&amp; code &lt; LVN_FIRST)</code> 这类范围判断就全乱了——要比范围，两边一起转 <code>int</code>。<br><strong>② 强转之前必须确认 code。</strong>处理 <code>LVN_*</code> 却转成 <code>LPNMTREEVIEW</code>，编译器一句话不说，运行时读的是别人的内存——而且往往不立刻崩，只是数据莫名其妙。<strong>确认通知码 → 再强转</strong>，顺序不能反。<br><strong>③ 指针的寿命只有这一次调用。</strong><code>WM_NOTIFY</code> 是 <code>Send</code> 出来的，结构体通常在控件的栈上，<strong>你 return 之后它就没了</strong>。想留着用必须整个拷一份，存指针就是悬垂指针。</p>
+</div>
+
+<div class="note new" style="contain-intrinsic-size:auto 298px">
+<span class="t">🔵 通知只发给"父窗口"，隔了一层就得自己转发</span>
+<p>控件是把 <code>WM_NOTIFY</code> <strong>发给自己的父窗口</strong>的，不会像有些框架那样一路往上冒泡。<br>于是常见的一个坑：你为了排版方便，给 ListView 套了一层容器面板，通知就落在<strong>面板</strong>手里，主窗口什么也收不到。解法是让面板把它转发上去：<code>case WM_NOTIFY: return SendMessageW(GetParent(hwnd), WM_NOTIFY, wParam, lParam);</code>。<br>顺带一个冷知识：控件在发第一条通知前会先问父窗口一句 <code>WM_NOTIFYFORMAT</code>——"你要 ANSI 还是 Unicode 的结构体"。用 <code>DefWindowProcW</code> 注册的窗口自动答 Unicode，所以你平时不用管；但若父窗口是 A 版而控件按 W 版填结构，字符串字段就会是乱码。这也是"不要 A 版 W 版混用"的又一条理由。</p>
+</div>
+
+<h2 id="w9-listview">9.11 列表视图 ListView：资源管理器的主角</h2>
 
 <p>ListView 是通用控件里的旗舰：资源管理器的文件区、任务管理器的进程列表都是它。同一份数据可以在四种视图间切换——大图标（<code>LVS_ICON</code>）、小图标（<code>LVS_SMALLICON</code>）、列表（<code>LVS_LIST</code>）、<strong>报表</strong>（<code>LVS_REPORT</code>，带列头的多列表格，最常用）。报表模式下每行是一个<strong>项（item）</strong>，第 0 列之外的格子叫<strong>子项（subitem）</strong>。</p>
 
@@ -4484,7 +4755,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 <tr><td><code>LVN_BEGINLABELEDIT</code> / <code>LVN_ENDLABELEDIT</code></td><td>就地重命名开始/结束（返回 FALSE 可拒绝改名）</td></tr>
 <tr><td class="nw"><code>LVN_KEYDOWN</code></td><td>键盘按下（做 Del 删除、F2 重命名）</td></tr>
 <tr><td><code>NM_CLICK</code> / <code>NM_DBLCLK</code> / <code>NM_RCLICK</code></td><td>通用点击族，<code>NMITEMACTIVATE.iItem</code> 告诉你点了哪项</td></tr>
-<tr><td class="nw"><code>NM_CUSTOMDRAW</code></td><td>自绘微调：改某行颜色、某格字体（见 9.14）</td></tr>
+<tr><td class="nw"><code>NM_CUSTOMDRAW</code></td><td>自绘微调：改某行颜色、某格字体（见 9.15）</td></tr>
 </tbody></table>
 
 <pre style="contain-intrinsic-size:auto 449px"><code><span class="cl">HWND hLV = CreateWindowExW(0, WC_LISTVIEW, L"",</span><span class="cl">    WS_CHILD | WS_VISIBLE | WS_TABSTOP | LVS_REPORT | LVS_SINGLESEL,</span><span class="cl">    0, 0, 420, 260, hwnd, (HMENU)(INT_PTR)IDC_LV, hInst, NULL);</span><span class="cl">ListView_SetExtendedListViewStyle(hLV,</span><span class="cl">    LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);</span><span class="cl"> </span><span class="cl">LVCOLUMNW col = {};</span><span class="cl">col.mask = LVCF_TEXT | LVCF_WIDTH;</span><span class="cl">col.pszText = (LPWSTR)L"文件名"; col.cx = 220;</span><span class="cl">ListView_InsertColumn(hLV, 0, &amp;col);</span><span class="cl">col.pszText = (LPWSTR)L"大小";   col.cx = 100;</span><span class="cl">ListView_InsertColumn(hLV, 1, &amp;col);</span><span class="cl"> </span><span class="cl">LVITEMW it = {};</span><span class="cl">it.mask = LVIF_TEXT;</span><span class="cl">it.iItem = 0; it.pszText = (LPWSTR)L"readme.txt";</span><span class="cl"><span class="cc" style="min-width:58.2ch">ListView_InsertItem(hLV, &amp;it);</span><span class="cm">// 第 0 列</span></span><span class="cl"><span class="cc" style="min-width:58.2ch">ListView_SetItemText(hLV, 0, 1, (LPWSTR)L"1,024 字节");</span><span class="cm">// 第 1 列（子项）</span></span></code></pre>
@@ -4553,7 +4824,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 
 <div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 十万行数据？用虚拟列表</span><p>一条条 <code>LVM_INSERTITEM</code> 灌十万行，插入慢、内存翻倍。加 <code>LVS_OWNERDATA</code> 变身虚拟列表：数据留在你自己的数组/数据库里，只需 <code>LVM_SETITEMCOUNT</code> 报个总数，控件滚到哪儿就发 <code>LVN_GETDISPINFO</code> 向你要哪几行。显示百万行照样丝滑——任务管理器就是这么干的。</p></div>
 
-<h2 id="w9-treeview">9.11 树视图 TreeView：层级数据之王</h2>
+<h2 id="w9-treeview">9.12 树视图 TreeView：层级数据之王</h2>
 
 <p>资源管理器左侧的文件夹树、注册表编辑器的键树，都是 TreeView。与 ListView 用整数索引不同，树的节点用不透明句柄 <code>HTREEITEM</code> 标识；插入时用三个伪句柄定位：<code>TVI_ROOT</code>（作顶层节点）、<code>TVI_FIRST</code>/<code>TVI_LAST</code>（兄弟中的位置）、<code>TVI_SORT</code>（按序插入）。</p>
 
@@ -4703,7 +4974,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 </figure>
 
 
-<h2 id="w9-moretools">9.12 Tab、进度条、滑块与 UpDown</h2>
+<h2 id="w9-moretools">9.13 Tab、进度条、滑块与 UpDown</h2>
 
 <p>这一节是四个"小而常用"的零件。它们创建套路完全一致（<code>InitCommonControlsEx</code> 对应标志 → <code>CreateWindowExW</code> 对应类名），差别只在消息表。</p>
 
@@ -4843,7 +5114,7 @@ ShowWindow(hPageAdvanced, cur == 1 ? SW_SHOW : SW_HIDE);</code></pre>
 <tr><td class="nw"><code>UDN_DELTAPOS</code></td><td>值将改变（<code>NMUPDOWN</code>：改 <code>iDelta</code> 可变步长，返回非零可否决）</td></tr>
 </tbody></table>
 
-<h2 id="w9-barctl">9.13 日期时间、状态栏、工具栏与 Tooltip</h2>
+<h2 id="w9-barctl">9.14 日期时间、状态栏、工具栏与 Tooltip</h2>
 
 <h3 id="w9-datetime">日期时间选择器（DATETIMEPICK_CLASS）与月历</h3>
 
@@ -5124,7 +5395,7 @@ SendMessageW(hTip, TTM_ADDTOOLW, 0, (LPARAM)&amp;ti);</code></pre>
 </figure>
 
 
-<h2 id="w9-subclass">9.14 子类化与所有者绘制：改造控件的两把刀</h2>
+<h2 id="w9-subclass">9.15 子类化与所有者绘制：改造控件的两把刀</h2>
 
 <p>标准控件覆盖了九成需求，剩下一成分两种情况：<strong>行为</strong>差一点——用子类化补；<strong>长相</strong>不满意——用所有者绘制换。</p>
 
