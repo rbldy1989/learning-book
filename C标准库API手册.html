@@ -347,7 +347,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 23109px;--thin-h:21437px">
+<section class="chapter" style="contain-intrinsic-size:auto 23094px;--thin-h:21422px">
 <h1 id="s1"><span class="part">分类 1</span>stdio.h 输入输出</h1>
 <h2 id="s1-classics">1.0 相关经典书籍</h2>
 <p>本手册按头文件分类速查标准库函数。C 语言与标准库的经典,首推这几本:</p>
@@ -786,7 +786,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 19668px;--thin-h:18351px">
+<section class="chapter" style="contain-intrinsic-size:auto 19654px;--thin-h:18337px">
 <h1 id="s2"><span class="part">分类 2</span>stdlib.h 通用工具</h1>
 <p>&lt;stdlib.h&gt; 是 C 标准库的“杂物间”:动态内存、字符串转数值、伪随机数、排序查找、进程控制与环境变量都住在这里。本章按使用频率与危险程度逐一拆解——尤其是内存四件套(malloc/calloc/realloc/free)和转换函数的新旧两套接口,几乎每一条都藏着经典事故现场。</p>
 
@@ -1121,7 +1121,7 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 16862px;--thin-h:15499px">
+<section class="chapter" style="contain-intrinsic-size:auto 16854px;--thin-h:15491px">
 <h1 id="s3"><span class="part">分类 3</span>string.h 字符串与内存</h1>
 <p>C 语言没有内建字符串类型,一切都建立在"以 <code>'\0'</code> 结尾的字符数组"这一约定之上。<code>&lt;string.h&gt;</code> 提供两族函数:<code>str*</code> 系列依赖结尾符工作,<code>mem*</code> 系列按字节数操作任意内存。本章逐一说明常用函数,并特别标注缓冲区溢出、未写结尾符、不可重入等经典陷阱。MSVC 下多数传统函数会触发 C4996 弃用警告,建议改用带边界检查的 <code>_s</code> 安全版本;在 C++ 项目里,能用 <code>std::string</code> / <code>std::string_view</code> 就不要手工摆弄裸字符数组。</p>
 
@@ -1400,7 +1400,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><code>strerror</code> 返回的指针可能指向内部静态缓冲区,下一次调用会覆盖其内容,多线程下不安全(MSVC 触发 C4996);<code>strerror_s</code> 写入调用方缓冲区,无此问题。C++ 中可用 <code>std::system_error</code> / <code>std::generic_category().message(errnum)</code> 获得等价信息。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 16588px;--thin-h:15451px">
+<section class="chapter" style="contain-intrinsic-size:auto 16725px;--thin-h:15441px">
 <h1 id="s4"><span class="part">分类 4</span>wchar.h 宽字符(Windows 开发重点)</h1>
 <p>Windows 内核与 Win32 API 原生使用 UTF-16,<code>wchar_t</code> 在 MSVC 下固定为 16 位;而 Linux/macOS 上 <code>wchar_t</code> 是 32 位(通常存 UTF-32)。因此宽字符 API 在 Windows 开发中地位远高于其他平台:凡涉及中文路径、注册表、窗口标题,几乎都绕不开 <code>wchar_t</code> 与 <code>L"..."</code> 字面量。本章函数与 string.h/stdio.h 的窄字符版本一一对应,记住"str→wcs、printf→wprintf"的映射规律即可。MSVC 下不安全版本(如 <code>wcscpy</code>)同样触发 C4996 警告,应优先使用 <code>_s</code> 后缀版本。</p>
 
@@ -1553,7 +1553,13 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
     <span class="cm">// 缓冲区不够,swprintf_s 不会截断,msg 已成空串</span>
 }</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
-<p><strong>与 snprintf 的关键差异:</strong>① <code>snprintf</code> 空间不足时安全截断,并返回"假如空间够会写多少"的长度,可据此二次分配;而 <code>swprintf_s</code> 空间不足视为运行期约束违规——触发无效参数处理程序、缓冲区置空串、返回负值,<em>不截断也不告诉你需要多大</em>。② 长度单位是宽字符数而非字节。③ MSVC 特有陷阱:宽字符格式化函数里 <code>%s</code> 默认按 <code>wchar_t*</code> 解释(与 C 标准相反),跨平台代码应显式写 <code>%ls</code>(宽)/<code>%hs</code>(窄)。需要"截断也算成功"的语义时,用 <code>_snwprintf_s(buf, size, _TRUNCATE, ...)</code>。</p></div>
+<p><strong>与 snprintf 的关键差异:</strong></p>
+<ul>
+<li><strong>空间不足时的行为完全不同。</strong><code>snprintf</code> 安全截断,并返回"假如空间够会写多少"的长度,可据此二次分配;而 <code>swprintf_s</code> 把空间不足视为<strong>运行期约束违规</strong>——触发无效参数处理程序、缓冲区置空串、返回负值,<em>不截断也不告诉你需要多大</em>。</li>
+<li><strong>长度单位是宽字符数,不是字节数。</strong></li>
+<li><strong>MSVC 特有陷阱:</strong>宽字符格式化函数里 <code>%s</code> 默认按 <code>wchar_t*</code> 解释(与 C 标准相反),跨平台代码应显式写 <code>%ls</code>(宽)/<code>%hs</code>(窄)。</li>
+</ul>
+<p>需要"截断也算成功"的语义时,用 <code>_snwprintf_s(buf, size, _TRUNCATE, ...)</code>。</p></div>
 
 <h2 id="s4-swscanf_s" class="fntarget">4.8 swscanf_s</h2>
 <p class="fsum">从一个宽字符串里按格式抠出数字和文本,是宽字符版的反向格式化,专用于解析</p>
@@ -1717,7 +1723,7 @@ fclose(fp);</code></pre>
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示</span><p>窄字符 <code>fopen("中文.txt", ...)</code> 在 Windows 上要经过 ANSI 代码页,遇到代码页外的字符(如简中系统上的日文文件名)会直接打不开;<code>_wfopen_s</code> 走 UTF-16 原生路径,是 Windows 打开任意 Unicode 路径的正解。它是 MSVC 扩展而非标准 C,跨平台代码需自行封装。C++17 可用 <code>std::filesystem::path</code> 配合 <code>std::fstream</code>,在 Windows 上同样走宽字符路径。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 13476px;--thin-h:12164px">
+<section class="chapter" style="contain-intrinsic-size:auto 13470px;--thin-h:12158px">
 <h1 id="s5"><span class="part">分类 5</span>ctype.h 与 wctype.h 字符分类</h1>
 <p>&lt;ctype.h&gt; 提供一组字符分类与大小写转换函数,是解析器、词法分析、输入校验代码的基石。所有 is*/to* 函数的参数类型都是 <code>int</code>,但合法取值只有两类:<strong>能表示为 unsigned char 的值(0~255)或宏 EOF</strong>——传入其他值(典型是负值的 char)是未定义行为,本章用单独一条讲透这个坑。&lt;wctype.h&gt; 则是对应的宽字符版本。这些函数的结果部分受当前 locale 影响(默认 "C" locale 下只按 ASCII 规则判定)。</p>
 
@@ -1953,7 +1959,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p>这三个函数声明于 <code>&lt;wctype.h&gt;</code>,使用前需包含该头文件。其余窄字符函数几乎都有 isw*/tow* 对应版本(iswspace、iswpunct、towlower 等),规则同理。Windows 上 wchar_t 是 16 位(UTF-16 码元),对 BMP 之外的字符(如 emoji)按代理对处理会失真;Linux 上是 32 位没有此问题。需要严肃的 Unicode 分类(如判定汉字、按 Unicode 规则大小写折叠)时,标准库能力有限,<span class="badge ok">推荐</span> 用 ICU 或 utf8proc;C++ 项目也可考虑 std::wstring 之外直接以 UTF-8 存储、仅在边界转换。MSVC 的 <code>_istalpha</code> 系 tchar 宏 <span class="badge old">已过时</span> 是私有扩展,新代码不必使用。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 15848px;--thin-h:15092px">
+<section class="chapter" style="contain-intrinsic-size:auto 15828px;--thin-h:15072px">
 <h1 id="s6"><span class="part">分类 6</span>math.h 数学</h1>
 <p>math.h 提供以 <code>double</code> 为中心的数学函数族:幂与开方、指数对数、三角反三角、取整与浮点余数,以及 C99 引入的 <code>hypot</code>、<code>cbrt</code>、<code>log2</code> 和 NaN/无穷判定宏。约定:三角函数一律使用<strong>弧度</strong>;定义域错误(如对负数开平方)通常返回 NaN 并可能设置 <code>errno = EDOM</code>。在 Linux/gcc 下需要链接 <code>-lm</code>;MSVC 则默认可用,但 <code>M_PI</code> 等常量宏需先定义 <code>_USE_MATH_DEFINES</code> 再包含头文件。C++ 中请改用 <code>&lt;cmath&gt;</code>,它按参数类型提供重载,无需记后缀。</p>
 
@@ -2218,7 +2224,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p>对 float 变量调用 <code>sqrt</code> 会先提升为 double、算完再截回,既浪费时间又无精度收益;图形、音频、嵌入式等 float 密集场景应坚持用 f 版。C++ 中直接用 <code>&lt;cmath&gt;</code> 的 <code>std::sqrt</code>,重载会按参数类型自动选择,后缀就此退休。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 11431px;--thin-h:10193px">
+<section class="chapter" style="contain-intrinsic-size:auto 11426px;--thin-h:10188px">
 <h1 id="s7"><span class="part">分类 7</span>time.h 时间日期</h1>
 <p>&lt;time.h&gt; 提供两套时间表示:一是 <code>time_t</code> 表示的“日历时间”(通常是自 1970-01-01 00:00:00 UTC 起的秒数),二是 <code>struct tm</code> 表示的“拆分时间”(年月日时分秒各一个字段)。两者之间用 <code>mktime</code>/<code>localtime_s</code>/<code>gmtime_s</code> 互相转换,格式化输出交给 <code>strftime</code>。此外还有测 CPU 耗时的 <code>clock</code> 和 C11 引入的高精度 <code>timespec_get</code>。本章的两大经典陷阱——<code>tm_year</code> 要加 1900、<code>tm_mon</code> 从 0 起——请务必先看 <a href="#s7-struct-tm">struct tm</a> 一节。</p>
 <div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">现代提示</span><p>C++ 项目请优先使用 <code>std::chrono</code>(C++11 起):类型安全的时长与时间点运算,C++20 还内建了日历与时区库,能从编译期杜绝“秒当毫秒用”这类单位错误。&lt;time.h&gt; 主要用于 C 代码和与旧接口交互。</p></div>
@@ -2420,7 +2426,7 @@ printf("%.2f ms\n", ms);</code></pre>
 <p><code>time()</code> 只有秒级精度,<code>timespec_get</code>(C11)把分辨率提升到纳秒字段(实际精度取决于系统,通常微秒到百纳秒级),适合给日志打时间戳、测墙钟耗时。它测的是可能被对时调整的“真实时间”,做精密基准测试仍应选单调时钟(POSIX <code>clock_gettime(CLOCK_MONOTONIC)</code>,或 C++ 的 <code>std::chrono::steady_clock</code>)。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 14261px;--thin-h:13021px">
+<section class="chapter" style="contain-intrinsic-size:auto 14247px;--thin-h:13007px">
 <h1 id="s8"><span class="part">分类 8</span>其他常用头文件</h1>
 <p>除了字符串、输入输出、内存这些"大部头"之外,C 标准库还有一批短小精悍的头文件:断言、错误码、可变参数、固定宽度整数、各类极限常量。它们代码量不大,却是写出可移植、可调试 C 程序的基础设施。本章把这些零散但高频的设施集中讲清楚。</p>
 
@@ -2711,7 +2717,7 @@ static_assert(CHAR_BIT == 8, "本代码假定 8 位字节");</code></pre>
 <p>典型用途:锁定结构体大小与偏移(常与 <code>offsetof</code> 配合)、校验平台假设、检查数组长度与枚举个数同步。C11 的原生拼写是 <code>_Static_assert</code>,C23 与 C++11 起 <code>static_assert</code> 本身就是关键字,无需包含任何头文件。凡是编译期能验证的条件,都应从运行期 <code>assert</code> 前移到 <code>static_assert</code>——错误暴露得越早越便宜。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 11149px;--thin-h:10694px">
+<section class="chapter" style="contain-intrinsic-size:auto 11138px;--thin-h:10683px">
 <h1 id="s9"><span class="part">分类 9</span>预处理指令 #pragma</h1>
 <p>这一章讲的东西严格说来<strong>不属于标准库</strong>。C 标准分成两大块:语言(§6)与库(§7),<code>#include</code>、<code>#define</code>、<code>#pragma</code> 这些预处理指令住在<strong>语言</strong>那一半,所以在任何"标准库手册"里都查不到它们——这不是手册漏了,是分类使然。但 <code>#pragma</code> 在真实工程里的出现频率不亚于任何一个库函数:关警告、控制结构体对齐、指定链接库、防重复包含,全靠它。更麻烦的是,标准只规定了这个<strong>关键字</strong>,后面跟什么几乎全是各家编译器的私货。本章把标准规定的部分和 MSVC / GCC / Clang 的常用私有 pragma 一并收齐。</p>
 
