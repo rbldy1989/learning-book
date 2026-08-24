@@ -505,7 +505,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </section>
 
 <!-- ===================== 第 1 章 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 13708px;--thin-h:13708px">
+<section class="chapter" style="contain-intrinsic-size:auto 13849px;--thin-h:13849px">
 <h1 id="ch1"><span class="part">第一篇 · 第 1 章</span>Win32 基本程序观念</h1>
 <p>有个话我得先说在前头，说重一点：<strong>不懂 Win32，就不要急于碰 MFC。</strong>这不是吓唬你。MFC 从来没有另起炉灶发明一套新东西，它做的只是把 Win32 那套原生 API 用 C++ 包了一层——「注册窗口类 → 造窗口 → 消息循环 → 窗口函数」这条底层筋络,一根都没换，只是被 C++ 类和一堆宏<strong>盖住了</strong>。你要是没见过被盖住的原貌，日后看 MFC 就处处是黑箱；见过了，MFC 在你眼里就是「哦，这不就是那谁谁包了一下嘛」。</p>
 <p>所以这一章，是全书最该沉下心啃、也最保值的地基。<strong>它讲的东西二十年、三十年都不会过时</strong>——因为直到今天，Windows 桌面程序的最底层，跑的还是这套。<span class="badge ok">仍适用</span></p>
@@ -765,7 +765,13 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <h3>「死」的次序比「生」更值得背</h3>
 <p>生的次序(注册→创建→显示→循环)人人熟,死的次序才是 bug 高发地。用户点 × 之后,精确的链条是:</p>
 <pre style="contain-intrinsic-size:auto 148px"><code><span class="cl"><span class="cc" style="min-width:30.0ch">WM_CLOSE</span><span class="cm">// 「请求关闭」—— 唯一能拦的点:弹「未保存」询问,不想关就直接 return</span></span><span class="cl"><span class="cc" style="min-width:30.0ch">  └ DestroyWindow()</span><span class="cm">// 缺省处理这么做;窗口从此进入死亡流程</span></span><span class="cl"><span class="cc" style="min-width:30.0ch">WM_DESTROY</span><span class="cm">// 窗口正在拆:子窗口还活着,做清理;主窗口在此 PostQuitMessage(0)</span></span><span class="cl"><span class="cc" style="min-width:30.0ch">WM_NCDESTROY</span><span class="cm">// 最后一条消息:子窗口也没了 —— MFC 在此做 delete this(2.3)</span></span><span class="cl"><span class="cc" style="min-width:30.0ch">WM_QUIT</span><span class="cm">// GetMessage 读到它返回 0,消息循环退出,WinMain 收尾</span></span></code></pre>
-<p>三个由此立刻明白的老问题:<strong>①「为什么点 × 程序还在任务管理器里」</strong>——某处理函数拦了 WM_CLOSE 却忘了放行,或者主窗口的 WM_DESTROY 里没 PostQuitMessage,窗口没了循环还在空转;<strong>②「为什么对话框关了程序不退」</strong>——对话框不是主窗口,它的销毁根本不该发 WM_QUIT;<strong>③拦截关闭要拦 WM_CLOSE 而不是 WM_DESTROY</strong>——到 DESTROY 时已在拆迁中,拦不住了。MFC 里这条链原样存在,只是各站换成了 <code>OnClose/OnDestroy/PostNcDestroy</code> 这些可覆写点。</p>
+<p>三个由此立刻明白的老问题:</p>
+<ul>
+<li><strong>「为什么点 × 程序还在任务管理器里」</strong>——某处理函数拦了 WM_CLOSE 却忘了放行,或者主窗口的 WM_DESTROY 里没 PostQuitMessage,窗口没了循环还在空转。</li>
+<li><strong>「为什么对话框关了程序不退」</strong>——对话框不是主窗口,它的销毁根本不该发 WM_QUIT。</li>
+<li><strong>拦截关闭要拦 WM_CLOSE 而不是 WM_DESTROY</strong>——到 DESTROY 时已在拆迁中,拦不住了。</li>
+</ul>
+<p>MFC 里这条链原样存在,只是各站换成了 <code>OnClose</code> / <code>OnDestroy</code> / <code>PostNcDestroy</code> 这些可覆写点。</p>
 
 <h2 id="ch1-onidle">1.13 闲置时间的处理：OnIdle</h2>
 <p>问题：消息循环大部分时间在 <code>GetMessage</code> 那里阻塞等消息。如果我想利用「没有消息的空闲时间」做点后台小活（比如更新工具栏按钮状态），怎么办？答案是把消息循环改造一下——用 <code>PeekMessage</code>（非阻塞）代替 <code>GetMessage</code>，队列空时不阻塞，转而去做「闲置处理」。</p>
@@ -795,7 +801,12 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </div>
 
 <h3>Console 程序对 Windows 程序员的三个用处</h3>
-<p>本节的实际价值不是「还有另一种程序」,而是三件工程日常:<strong>①它是验证与试验的最短路径</strong>——试一个 API、复现一个字符串处理 bug,main+printf 十行即可,不用起窗口骨架;本书大量概念(2 章的 C++ 性质全部)都适合先在 Console 里做实验。<strong>②GUI 程序可以随时开一个控制台当调试口</strong>——<code>AllocConsole()</code> + freopen 把 stdout 接过去,printf 大法在 GUI 程序里复活(比 TRACE 不挑调试器)。<strong>③子系统的差别要会认</strong>:链接器的 <code>/SUBSYSTEM:CONSOLE|WINDOWS</code> 决定两件事——入口约定(main 还是 WinMain)和「启动时系统给不给配控制台窗口」。「双击 GUI 程序闪一个黑窗」「Console 程序找不到 main」这类链接错误,病根都是子系统设置和入口函数不配套。</p>
+<p>本节的实际价值不是「还有另一种程序」,而是三件工程日常:</p>
+<ul>
+<li><strong>它是验证与试验的最短路径。</strong>试一个 API、复现一个字符串处理 bug,main 加 printf 十行即可,不用起窗口骨架;本书大量概念(2 章的 C++ 性质全部)都适合先在 Console 里做实验。</li>
+<li><strong>GUI 程序可以随时开一个控制台当调试口。</strong><code>AllocConsole()</code> 加 freopen 把 stdout 接过去,printf 大法在 GUI 程序里复活(比 TRACE 不挑调试器)。</li>
+<li><strong>子系统的差别要会认。</strong>链接器的 <code>/SUBSYSTEM:CONSOLE|WINDOWS</code> 决定两件事:入口约定(main 还是 WinMain),以及启动时系统给不给配控制台窗口。「双击 GUI 程序闪一个黑窗」「Console 程序找不到 main」这类链接错误,病根都是子系统设置和入口函数不配套。</li>
+</ul>
 
 <h2 id="ch1-thread">1.15 行程与执行绪（Process and Thread）</h2>
 <p>本章末尾补充多任务基础，全部<span class="badge ok">仍适用</span>：</p>
@@ -1043,7 +1054,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </section>
 
 <!-- ===================== 第 3 章 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 12559px;--thin-h:12559px">
+<section class="chapter" style="contain-intrinsic-size:auto 12611px;--thin-h:12611px">
 <h1 id="ch3"><span class="part">第一篇 · 第 3 章 ★ 全书招牌</span>MFC 六大关键技术之模拟</h1>
 <p>大多数 MFC 教程一上来就教你「这个宏怎么写、那个函数怎么调」，你照抄能跑，但心里一直有个疙瘩——<strong>这堆宏底下到底藏了什么？</strong>本章要做的，就是把这块黑布掀开。</p>
 <p>掀法很硬核：<strong>不用 MFC，我们自己从零造一个「迷你 MFC」出来。</strong>就叫它 <code>Frame1</code>、<code>Frame2</code>、<code>Frame3</code>……每造一版，就往里加一项本事——先让它「不写 <code>WinMain</code> 也能跑」，再给它装上「认得出自己是谁」的能力，接着是「凭类名就能造对象」「存进磁盘再读回来」「消息自动找到处理函数」。造到最后，你会惊讶地发现：<strong>你亲手搭出来的这个小东西，骨架和真正的 MFC 一模一样。</strong></p>
@@ -1325,7 +1336,8 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <h3>Serialize 协议的全貌:双向一个函数,对象图也能存</h3>
 <p>Persistence 的核心决定是:<strong>存和读共用一个 <code>Serialize(CArchive&amp;)</code></strong>,方向问 <code>ar.IsStoring()</code>。好处不止省一个函数——存读代码<strong>逐行对仗</strong>,字段顺序天然一致,「存了 a,b,c 读却按 a,c,b」这类版本错乱在源头上就难发生。</p>
 <pre style="contain-intrinsic-size:auto 171px"><code><span class="cl">void CMyDoc::Serialize(CArchive&amp; ar) {</span><span class="cl">    if (ar.IsStoring())</span><span class="cl"><span class="cc" style="min-width:34.0ch">        ar &lt;&lt; m_name &lt;&lt; m_count &lt;&lt; m_pShape;</span><span class="cm">// 存:值直接写,对象指针走 WriteObject</span></span><span class="cl">    else</span><span class="cl"><span class="cc" style="min-width:34.0ch">        ar &gt;&gt; m_name &gt;&gt; m_count &gt;&gt; m_pShape;</span><span class="cm">// 读:按同样顺序;对象是被「造出来」的</span></span><span class="cl">}</span></code></pre>
-<p><strong>对象指针怎么存?</strong>这是协议最精彩的一段:<code>ar &lt;&lt; m_pShape</code> 内部先写下这个对象的<strong>类名(其实是身份证信息)与版本号</strong>,再调它的 <code>Serialize</code> 写内容;读回时按类名走 3.6 的动态创建造出空对象,再让它读自己的内容——<strong>技术③和④在这里咬合成一台机器</strong>。同一个对象被多个指针引用时,CArchive 还会编号去重,读回后引用关系原样恢复——它存的是<strong>对象图</strong>,不是字节堆。<code>DECLARE_SERIAL</code>(宏三级里的第③档,见 2.9)要求版本号,正是给这套协议用的:读到旧版本文件,你能在 Serialize 里按版本分支兼容。</p>
+<p><strong>对象指针怎么存?</strong>这是协议最精彩的一段:<code>ar &lt;&lt; m_pShape</code> 内部先写下这个对象的<strong>类名(其实是身份证信息)与版本号</strong>,再调它的 <code>Serialize</code> 写内容;读回时按类名走 3.6 的动态创建造出空对象,再让它读自己的内容——<strong>技术③和④在这里咬合成一台机器</strong>。</p>
+<p>同一个对象被多个指针引用时,CArchive 还会编号去重,读回后引用关系原样恢复——它存的是<strong>对象图</strong>,不是字节堆。<code>DECLARE_SERIAL</code>(宏三级里的第③档,见 2.9)要求版本号,正是给这套协议用的:读到旧版本文件,你能在 Serialize 里按版本分支兼容。</p>
 <div class="note new" style="contain-intrinsic-size:auto 195px">
 <span class="t">🔵 现代视角:二进制序列化的墓志铭与遗产</span>
 <p>MFC 这套二进制格式的死穴是<strong>脆弱</strong>:字段顺序即格式,改一行代码旧文件就读不回,调试时肉眼不可读。今天的选择是 JSON/protobuf 这类带字段名或字段号的格式。但它的两个设计遗产活得很好:「存读同一份代码」(protobuf 的 message 定义即两向)和「类型信息随数据走」(多态反序列化的 type 字段)。理解了 CArchive,这些现代工具的设计动机一眼就透。</p>
@@ -2020,7 +2032,7 @@ m_pMainWnd-&gt;DragAcceptFiles();
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 7729px;--thin-h:7729px">
+<section class="chapter" style="contain-intrinsic-size:auto 7785px;--thin-h:7785px">
 <h1 id="ch8"><span class="part">第四篇 · 第 8 章</span>Document-View 深入探讨</h1>
 <p>第 7 章你已经把 Doc/View 跑起来了。这一章往深里挖：<strong>为什么非得这么分？三个对象到底是怎么被牵到一起的？存盘读盘那一下，台面下究竟发生了什么？</strong>把这些想透，你对 MFC 的骨架就算真正握住了。</p>
 
@@ -2151,7 +2163,11 @@ m_pMainWnd-&gt;DragAcceptFiles();
 
 <h3>选型判据与两个机制细节</h3>
 <p>MFC 集合类三族(数组/链表/映射)怎么选,判据和标准库时代完全一致:<strong>按访问模式选</strong>——随机下标访问/尾部追加 → <code>CArray</code>;两端或中间频繁插删且不需要下标 → <code>CList</code>;按键找值 → <code>CMap</code>。真正 MFC 特有的、必须知道的是两个机制细节:</p>
-<p><strong>①<code>CArray</code> 的增长要自己调教。</strong>默认策略保守,频繁 <code>Add</code> 会反复重分配+整块拷贝;<code>SetSize(0, 1024)</code> 的第二参数(growBy)就是一次预留多少——大批量装数据前先设好,数量级的差别。<strong>②模板集合对元素的要求走 <code>SerializeElements/CopyElements</code> 这组全局函数</strong>——存自定义结构时若要随文档序列化,得为你的元素类型特化 <code>SerializeElements</code>,否则默认按位拷贝字节流,里面有指针就埋雷(对照 2.6 的切割:<code>CArray&lt;CObject 派生类&gt;</code> 还会踩切割,多态元素永远存指针)。</p>
+<p>用 MFC 集合类有两处要自己留心:</p>
+<ul>
+<li><strong><code>CArray</code> 的增长要自己调教。</strong>默认策略保守,频繁 <code>Add</code> 会反复重分配加整块拷贝;<code>SetSize(0, 1024)</code> 的第二个参数(growBy)就是一次预留多少——大批量装数据前先设好,差别是数量级的。</li>
+<li><strong>模板集合对元素的要求走 <code>SerializeElements</code> / <code>CopyElements</code> 这组全局函数。</strong>存自定义结构时若要随文档序列化,得为你的元素类型特化 <code>SerializeElements</code>,否则默认按位拷贝字节流,里面有指针就埋雷。对照 2.6 的切割:<code>CArray&lt;CObject 派生类&gt;</code> 还会踩切割,多态元素永远存指针。</li>
+</ul>
 <div class="note new" style="contain-intrinsic-size:auto 165px">
 <span class="t">🔵 现代视角:文档里直接用标准库,零障碍</span>
 <p>新写的 MFC 代码,文档成员用 <code>std::vector/std::map</code> 完全没有障碍——序列化自己写几行循环(先存 size 再逐个存),换来标准算法、范围 for、移动语义的全部现代便利。MFC 集合类今天的存在价值主要是<strong>和老接口对话</strong>(既有代码、以及个别要求 <code>CObList</code> 的框架函数)。判据:新代码默认标准库,触碰老接口时就地转换。</p>
@@ -2434,7 +2450,7 @@ m_pMainWnd-&gt;DragAcceptFiles();
 </div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 11425px;--thin-h:11425px">
+<section class="chapter" style="contain-intrinsic-size:auto 11547px;--thin-h:11547px">
 <h1 id="ch10"><span class="part">第四篇 · 第 10 章</span>MFC 与对话盒</h1>
 
 <p>前面几章你已经和「窗口」打过交道：一个从 CFrameWnd 派生的框架窗口，里面自己动手画东西、自己接消息。可真正让程序「和人对话」的，往往不是那块空白画布，而是一堆排好队的输入框、按钮、勾选框——也就是<strong>对话盒（dialog box）</strong>。这一章要把对话盒从头拆到尾：它的长相从哪来、它的行为归谁管、你在框里填的字又是怎么变成程序里一个变量的。其中最值得你花时间的，是 MFC 那套叫 DDX/DDV 的机制——它是三十年前的「双向数据绑定」，理解了它，你再看 WPF、WinUI 的 Binding 会有一种「原来祖师爷长这样」的通透感。</p>
@@ -2522,11 +2538,13 @@ m_pMainWnd-&gt;DragAcceptFiles();
 <pre style="contain-intrinsic-size:auto 356px"><code><span class="cl"><span class="kw">class</span> CLoginDlg : <span class="kw">public</span> CDialogEx</span><span class="cl">{</span><span class="cl"><span class="kw">public</span>:</span><span class="cl"><span class="cc" style="min-width:63.0ch">    <span class="kw">enum</span> { IDD = IDD_LOGIN };</span><span class="cm">// 我认领 IDD_LOGIN 这张模板</span></span><span class="cl">    CLoginDlg(CWnd* pParent = <span class="kw">nullptr</span>);</span><span class="cl"> </span><span class="cl"><span class="kw">protected</span>:</span><span class="cl"><span class="cc" style="min-width:63.0ch">    <span class="kw">virtual</span> <span class="kw">void</span> DoDataExchange(CDataExchange* pDX) <span class="kw">override</span>;</span><span class="cm">// 数据搬运岗</span></span><span class="cl"><span class="cc" style="min-width:63.0ch">    DECLARE_MESSAGE_MAP()</span><span class="cm">// 行为岗</span></span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:63.0ch">    CString m_strUser;</span><span class="cm">// 和 IDC_EDIT_USER 挂钩的成员</span></span><span class="cl"><span class="cc" style="min-width:63.0ch">    <span class="kw">int</span>     m_nAge;</span><span class="cm">// 和 IDC_EDIT_AGE 挂钩的成员</span></span><span class="cl"><span class="cc" style="min-width:63.0ch">    BOOL    m_bRemember;</span><span class="cm">// 和 IDC_CHK_REMEMBER 挂钩的成员</span></span><span class="cl">};</span></code></pre>
 <p>那么这些「挂钩」是谁帮你连起来的？在很久以前，靠的是一个叫 <strong>ClassWizard</strong> 的工具，它把类与资源、控件与变量的对应关系记在一个 .clw 文件里，你在它的对话框里点几下，它替你生成代码。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 已废弃 · 老 ClassWizard 与 .clw 文件</span><p>VC6 时代那个独立的 ClassWizard 面板、以及维护对应关系的 .clw 数据库文件，<strong>早已不存在</strong>。别再去找「ClassWizard 菜单」，也别指望 .clw 文件——现代 MFC 项目根本不生成它。凡是老教程让你「打开 ClassWizard，切到 Member Variables 页」，那套 UI 已经没有了。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 358px"><span class="t">🔵 现代更新 · 在 VS2022 里怎么做（照这个来）</span><p>三件事对应三个入口：<br>
-① <strong>为模板建类</strong>：在「资源视图」里右键对话框资源 → <em>Add Class…</em>（添加类），向导直接生成 CDialogEx 派生类并写好 <code>IDD</code>。<br>
-② <strong>把控件绑成变量</strong>（这就是配 DDX/DDV）：右键某个控件 → <em>Add Variable…</em>（添加变量），在向导里选「Value（值）」类别、填变量名、选类型，还能顺手填最大长度/最小最大值——它就替你在 DoDataExchange 里补上一行 DDX_ 和可能的一行 DDV_。<br>
-③ <strong>为控件加消息处理</strong>：双击控件生成默认处理函数，或右键 → <em>Add Event Handler…</em>。<br>
-VS2022 仍保留一个叫「Class Wizard」的对话框（菜单 Project → Class Wizard，或 Ctrl+Shift+X），但它是<strong>重写过的现代版</strong>，直接读写你的源文件，不再依赖 .clw。功能还在，名字还在，只是内脏换了。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 400px"><span class="t">🔵 现代更新 · 在 VS2022 里怎么做（照这个来）</span><p>三件事对应三个入口：</p>
+<ul>
+<li><strong>为模板建类</strong>：在「资源视图」里右键对话框资源 → <em>Add Class…</em>（添加类），向导直接生成 CDialogEx 派生类并写好 <code>IDD</code>。</li>
+<li><strong>把控件绑成变量</strong>（这就是配 DDX/DDV）：右键某个控件 → <em>Add Variable…</em>（添加变量），在向导里选「Value（值）」类别、填变量名、选类型，还能顺手填最大长度/最小最大值——它就替你在 DoDataExchange 里补上一行 DDX_ 和可能的一行 DDV_。</li>
+<li><strong>为控件加消息处理</strong>：双击控件生成默认处理函数，或右键 → <em>Add Event Handler…</em>。</li>
+</ul>
+<p>VS2022 仍保留一个叫「Class Wizard」的对话框（菜单 Project → Class Wizard，或 Ctrl+Shift+X），但它是<strong>重写过的现代版</strong>，直接读写你的源文件，不再依赖 .clw。功能还在，名字还在，只是内脏换了。</p></div>
 
 <h2 id="ch10-msgmap">10.4 对话框的行为岗：消息处理与 MFC 的各式 MAP</h2>
 <p>界面立起来了，用户开始动手：点按钮、改文字、拉下拉框。这些动作都以 Windows 消息的形式飞过来（WM_COMMAND、WM_NOTIFY……），谁来接？在 SDK 里是一个巨大的 switch。MFC 换了个思路：<strong>用一张表把「消息」映射到「成员函数」</strong>，这张表就是<strong>消息映射表（message map）</strong>。</p>
@@ -2560,7 +2578,13 @@ VS2022 仍保留一个叫「Class Wizard」的对话框（菜单 Project → Cla
 <h2 id="ch10-ddv">10.6 DDV：搬运途中的关卡，负责数据查核</h2>
 <p>光把「30」搬进 m_nAge 还不够——万一用户填了「999」或者「-5」呢？年龄不该是这些值。<strong>DDV（Dialog Data Validation，对话框数据查核）</strong>就是加在搬运路线上的关卡。它总是紧跟在对应的 DDX_ 之后写，且<strong>只在保存方向（m_bSaveAndValidate 为真）时才生效</strong>——初始化时不校验，因为那是你自己的初值，理应合法。</p>
 <pre style="contain-intrinsic-size:auto 310px"><code><span class="cl"><span class="kw">void</span> CLoginDlg::DoDataExchange(CDataExchange* pDX)</span><span class="cl">{</span><span class="cl">    CDialogEx::DoDataExchange(pDX);</span><span class="cl"> </span><span class="cl">    DDX_Text(pDX, IDC_EDIT_USER, m_strUser);</span><span class="cl"><span class="cc" style="min-width:41.0ch">    DDV_MaxChars(pDX, m_strUser, 20);</span><span class="cm">// 用户名最多 20 字</span></span><span class="cl"> </span><span class="cl">    DDX_Text(pDX, IDC_EDIT_AGE, m_nAge);</span><span class="cl"><span class="cc" style="min-width:41.0ch">    DDV_MinMaxInt(pDX, m_nAge, 1, 150);</span><span class="cm">// 年龄限定 1~150</span></span><span class="cl"> </span><span class="cl">    DDX_Check(pDX, IDC_CHK_REMEMBER, m_bRemember);</span><span class="cl">}</span></code></pre>
-<p>校验没过时会发生什么？DDV_ 内部会调 <code>pDX-&gt;Fail()</code>，这个函数干三件事，环环相扣：<strong>①弹一个提示框告诉用户哪里不对；②把输入焦点拨回那个出错的控件（靠前面 DDX 里 PrepareEditCtrl 记下的控件句柄）；③抛出一个 CUserException 异常。</strong>这个异常一路冒到 UpdateData 的 try-catch 被接住，UpdateData 返回 FALSE。而 OnOK 一看 UpdateData 返回 FALSE，就<strong>不调用关闭动作</strong>——对话框稳稳留在原地，光标就停在错误的框里等用户改。整套「拦截—提示—定位—阻止关闭」不用你写一行，靠的就是「Fail 抛异常 + UpdateData 接异常」这条链路。</p>
+<p>校验没过时会发生什么？DDV_ 内部会调 <code>pDX-&gt;Fail()</code>，这个函数干三件事，环环相扣：</p>
+<ul>
+<li>弹一个提示框告诉用户哪里不对；</li>
+<li>把输入焦点拨回那个出错的控件（靠前面 DDX 里 PrepareEditCtrl 记下的控件句柄）；</li>
+<li>抛出一个 <code>CUserException</code> 异常。</li>
+</ul>
+<p>这个异常一路冒到 UpdateData 的 try-catch 被接住，UpdateData 返回 FALSE。而 OnOK 一看 UpdateData 返回 FALSE，就<strong>不调用关闭动作</strong>——对话框稳稳留在原地，光标就停在错误的框里等用户改。整套「拦截—提示—定位—阻止关闭」不用你写一行，靠的就是「Fail 抛异常 + UpdateData 接异常」这条链路。</p>
 <pre style="contain-intrinsic-size:auto 277px"><code><span class="cm">// DDV_MinMaxInt 的示意实现</span>
 <span class="kw">void</span> AFXAPI DDV_MinMaxInt(CDataExchange* pDX, <span class="kw">int</span> value, <span class="kw">int</span> lo, <span class="kw">int</span> hi)
 {
@@ -3741,7 +3765,7 @@ $$ENDIF</code></pre>
 </section>
 
 <!-- ===================== 附录 E：现代评估 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 3381px;--thin-h:3381px">
+<section class="chapter" style="contain-intrinsic-size:auto 3537px;--thin-h:3537px">
 <h1 id="appE"><span class="part">第五篇 · 附录 E（本导读补）</span>现代评估：MFC 在 2026</h1>
 <p>这一篇是为「2026 年的读者」补的收尾：MFC 现在到底处在什么位置、要另起炉灶有哪些替代品、以及学完这套机制真正该「带走」的是什么。</p>
 
@@ -3754,7 +3778,12 @@ $$ENDIF</code></pre>
 </ul>
 
 <h3>「维护模式」的准确含义</h3>
-<p>说 MFC「还活着但在维护模式」,拆开是三个可核实的事实:<strong>①微软仍随 Visual Studio 发布并修 bug</strong>——每代 VS 都带新版 MFC 运行库,安全补丁不断;<strong>②不再有能力级的新特性</strong>——最后一次大投入是 2008 年前后的 Feature Pack(Ribbon、停靠窗格),此后十几年只有适配性更新(高 DPI、暗色标题栏这类跟进);<strong>③官方对新项目的推荐早已换人</strong>——桌面新项目微软自己导向 WinUI 3 / .NET(WPF/WinForms),Web 技术栈则是 Electron/WebView2 的天下。</p>
+<p>说 MFC「还活着但在维护模式」,拆开是三个可核实的事实:</p>
+<ul>
+<li><strong>微软仍随 Visual Studio 发布并修 bug。</strong>每代 VS 都带新版 MFC 运行库,安全补丁不断。</li>
+<li><strong>不再有能力级的新特性。</strong>最后一次大投入是 2008 年前后的 Feature Pack(Ribbon、停靠窗格),此后十几年只有适配性更新(高 DPI、暗色标题栏这类跟进)。</li>
+<li><strong>官方对新项目的推荐早已换人。</strong>桌面新项目微软自己导向 WinUI 3 / .NET(WPF/WinForms),Web 技术栈则是 Electron/WebView2 的天下。</li>
+</ul>
 <table style="contain-intrinsic-size:auto 225px">
 <thead><tr><th class="nw">判断</th><th>依据</th></tr></thead>
 <tbody>
@@ -3784,7 +3813,12 @@ $$ENDIF</code></pre>
 
 <h3>选型的三个硬问题</h3>
 <p>对照表列了谁是谁,真拍板时起决定作用的往往是三个工程问题,按顺序问:</p>
-<p><strong>①团队和存量在哪?</strong>有 50 万行 MFC 和一支熟手团队,「继续 MFC + 新模块上 WebView2」几乎总是优于推倒重来——重写的隐性成本(业务规则考古、回归测试、双轨维护期)通常是估算的三倍起。<strong>②交付形态是什么?</strong>要单文件绿色 EXE、几 MB 体积、XP 老机器也能跑——MFC/Win32 仍是最硬的选项;能接受几十上百 MB 和自带浏览器内核,Electron/Tauri 的开发效率碾压;要全平台(含 Mac/Linux),Qt 或 Web 技术栈,MFC 直接出局。<strong>③界面的复杂度长在哪?</strong>重数据表格、停靠面板、老派工具窗——MFC 的既有件够用;要现代动效、自适应布局、设计师深度参与——声明式 UI(WPF/WinUI/Web)的优势是代差级的。</p>
+<p>三个问题决定选型:</p>
+<ul>
+<li><strong>团队和存量在哪?</strong>有 50 万行 MFC 和一支熟手团队,「继续 MFC + 新模块上 WebView2」几乎总是优于推倒重来——重写的隐性成本(业务规则考古、回归测试、双轨维护期)通常是估算的三倍起。</li>
+<li><strong>交付形态是什么?</strong>要单文件绿色 EXE、几 MB 体积、XP 老机器也能跑,MFC/Win32 仍是最硬的选项;能接受几十上百 MB 和自带浏览器内核,Electron/Tauri 的开发效率碾压;要全平台(含 Mac/Linux),用 Qt 或 Web 技术栈,MFC 直接出局。</li>
+<li><strong>界面的复杂度长在哪?</strong>重数据表格、停靠面板、老派工具窗,MFC 的既有件够用;要现代动效、自适应布局、设计师深度参与,声明式 UI(WPF/WinUI/Web)的优势是代差级的。</li>
+</ul>
 <div class="note ok" style="contain-intrinsic-size:auto 163px">
 <span class="t">🟢 一条常被忽略的中间道路</span>
 <p>存量 MFC 程序的现代化,最常见的赢法不是重写,而是<strong>宿主化</strong>:外壳、菜单、文件管理留在 MFC,新界面区域嵌一块 WebView2(或把核心逻辑抽成 DLL 供新 UI 调用)。渐进、可回退、双技能团队各干各的——大量工业软件近年就是这么过渡的。第 16 章「站上众人的肩膀」的思路,在 2026 年的形态就是它。</p>
