@@ -628,7 +628,7 @@ typedef struct tagMSG {
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示</span><p>三点通则：①许多结构体首字段是 <code>cbSize</code> 或版本号，用前应 <code>ZeroMemory</code>(或 <code>{}</code>)清零并正确填写，系统据此判断版本；②带 <code>W</code>/<code>A</code> 后缀的结构体(如 <code>WNDCLASSEXW</code> vs <code>WNDCLASSEXA</code>)其字符串成员类型随之变宽窄，需与所调用的 <code>W</code>/<code>A</code> 函数一致；③<code>RECT</code> 的右/下边界是开区间，计算宽高、命中判定时切记不要多算或少算一像素。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 58101px;--thin-h:54445px">
+<section class="chapter" style="contain-intrinsic-size:auto 58245px;--thin-h:54589px">
 <h1 id="a3"><span class="part">第 3 章</span>kernel32：内存、文件、模块与 DLL</h1>
 
 <p>kernel32.dll 是 Win32 世界的地基：几乎所有进程都会加载它，几乎所有其他 API 最终都踩在它提供的句柄、内存和错误码机制上。本章按四大主题组织——内存、文件 I/O、模块/DLL、错误处理。每个主题先给一张速查表建立全景，再对最常用的函数逐一展开详解卡：完整签名、逐参数拆解、返回值约定和一段能直接抄走的最小示例。</p>
@@ -1473,7 +1473,11 @@ std::wstring Utf8ToWide(std::string_view u8) {
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 263px"><span class="t">🔴 三个具体的坑</span><p><strong>① 不能按块转换。</strong>一个 UTF-8 字符占 1–4 字节，读文件按 4 KB 分块时，块边界很可能切在一个字符中间。分块处理必须自己保留尾部不完整的那几个字节，拼到下一块前面。<br><strong>② 长度单位到处不同。</strong>入参是<strong>字节数</strong>，出参是 <strong><code>wchar_t</code> 个数</strong>，而 <code>malloc</code> 要的是<strong>字节数</strong>——分配时别忘了 <code>n * sizeof(wchar_t)</code>。<br><strong>③ 代理对让"字符数"变得暧昧。</strong>emoji、部分生僻字在 UTF-16 里占<strong>两个</strong> <code>wchar_t</code>。函数返回的是码元个数，不是用户眼里的"字数"——做截断显示时按它切，会把一个字劈成两半变成乱码。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 299px"><span class="t">🔴 三个具体的坑</span><ul>
+<li><strong>不能按块转换。</strong>一个 UTF-8 字符占 1–4 字节，读文件按 4 KB 分块时，块边界很可能切在一个字符中间。分块处理必须自己保留尾部不完整的那几个字节，拼到下一块前面。</li>
+<li><strong>长度单位到处不同。</strong>入参是<strong>字节数</strong>，出参是 <strong><code>wchar_t</code> 个数</strong>，而 <code>malloc</code> 要的是<strong>字节数</strong>——分配时别忘了 <code>n * sizeof(wchar_t)</code>。</li>
+<li><strong>代理对让"字符数"变得暧昧。</strong>emoji、部分生僻字在 UTF-16 里占<strong>两个</strong> <code>wchar_t</code>。函数返回的是码元个数，不是用户眼里的"字数"——做截断显示时按它切，会把一个字劈成两半变成乱码。</li>
+</ul></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">🔵 现代建议：内部一律 UTF-8，边界处才转</span><p>把 <code>std::string</code> 当作 UTF-8 贯穿整个业务代码，只在<strong>调 Win32 API 的那一层</strong>转成 <code>wstring</code>，是今天跨平台项目的主流做法。<br>Windows 10 1903 起还多了一条路：在应用 manifest 里声明 <code>&lt;activeCodePage&gt;UTF-8&lt;/activeCodePage&gt;</code>，进程的 <code>CP_ACP</code> 就变成 UTF-8，于是那些 A 版 API（<code>CreateFileA</code> 等）可以直接吃 UTF-8 路径。这条对移植 POSIX 代码特别省事，但要求 Win10 1903 及以上，且不改变 W 版 API 仍是 UTF-16 这个事实。</p></div>
 
@@ -1585,7 +1589,12 @@ BOOL isFirst = (GetLastError() != ERROR_ALREADY_EXISTS);
 <span class="kw">auto</span>* buf = (BYTE*)MapViewOfFile(hShm, FILE_MAP_ALL_ACCESS, 0, 0, 0);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 296px"><span class="t">🔴 映射内存的读写会抛"结构化异常"，不是返回错误码</span><p>访问映射区触发的是<strong>缺页</strong>，由系统去读磁盘。若此时磁盘出错、网络盘断线、或<strong>文件被别人截短了</strong>，你得到的不是一个错误返回值，而是 <code>EXCEPTION_IN_PAGE_ERROR</code> 异常——进程当场崩溃。<br>要健壮就得用结构化异常处理把访问包起来：<code>__try { 读 p[i] } __except (GetExceptionCode() == EXCEPTION_IN_PAGE_ERROR ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH) { ... }</code>。这也是"内存映射不适合网络盘"的根本原因。<br>另外两点：<strong>①</strong> 映射期间文件<strong>不能被截短</strong>，你自己也不能（句柄被映射对象占着）；<strong>②</strong> 32 位进程的地址空间只有 2 GB，映射大文件必须<strong>分段滚动</strong>映射，64 位下才可以整个文件一次映完。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 373px"><span class="t">🔴 映射内存的读写会抛"结构化异常"，不是返回错误码</span><p>访问映射区触发的是<strong>缺页</strong>，由系统去读磁盘。若此时磁盘出错、网络盘断线、或<strong>文件被别人截短了</strong>，你得到的不是一个错误返回值，而是 <code>EXCEPTION_IN_PAGE_ERROR</code> 异常——进程当场崩溃。<br>要健壮就得用结构化异常处理把访问包起来：<code>__try { 读 p[i] } __except (GetExceptionCode() == EXCEPTION_IN_PAGE_ERROR ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH) { ... }</code>。这也是"内存映射不适合网络盘"的根本原因。</p>
+<p>另外两点：</p>
+<ul>
+<li>映射期间文件<strong>不能被截短</strong>，你自己也不能（句柄被映射对象占着）。</li>
+<li>32 位进程的地址空间只有 2 GB，映射大文件必须<strong>分段滚动</strong>映射，64 位下才可以整个文件一次映完。</li>
+</ul></div>
 
 <h2 id="a3-env">3.7 进程环境、命令行与路径</h2>
 
@@ -1709,7 +1718,11 @@ WaitForSingleObject(pi.hProcess, INFINITE);
 CloseHandle(pi.hThread); CloseHandle(pi.hProcess);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 327px"><span class="t">🔴 两个必挂的坑</span><p><strong>① 父进程忘关自己那一份写端 → ReadFile 永远阻塞。</strong>管道的"写完了"是靠<strong>所有写端句柄都关闭</strong>来判定的。子进程退出关掉了它继承的那份，但父进程手里还有一份，引用计数不为零，读端就一直以为"还会有数据"，程序卡死在 <code>ReadFile</code> 上。<strong>CreateProcessW 一返回就 CloseHandle(hWrite)。</strong><br><strong>② 边写边读，不能等子进程结束再读。</strong>管道缓冲区默认只有几 KB，装满后子进程的写操作就<strong>阻塞</strong>了。若你先 <code>WaitForSingleObject</code> 等它退出、再来读——子进程在等你读走，你在等它退出，标准死锁。输出量大的程序必须<strong>一边读一边等</strong>。<br>顺带：同时抓 stdout 和 stderr 且要分开时，需要<strong>两对管道 + 两个线程</strong>（或重叠 I/O），单线程轮流读同样会死锁。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 358px"><span class="t">🔴 两个必挂的坑</span><ul>
+<li><strong>父进程忘关自己那一份写端 → ReadFile 永远阻塞。</strong>管道的"写完了"是靠<strong>所有写端句柄都关闭</strong>来判定的。子进程退出关掉了它继承的那份，但父进程手里还有一份，引用计数不为零，读端就一直以为"还会有数据"，程序卡死在 <code>ReadFile</code> 上。<strong>CreateProcessW 一返回就 CloseHandle(hWrite)。</strong></li>
+<li><strong>边写边读，不能等子进程结束再读。</strong>管道缓冲区默认只有几 KB，装满后子进程的写操作就<strong>阻塞</strong>了。若你先 <code>WaitForSingleObject</code> 等它退出、再来读——子进程在等你读走，你在等它退出，标准死锁。输出量大的程序必须<strong>一边读一边等</strong>。</li>
+</ul>
+<p>顺带：同时抓 stdout 和 stderr 且要分开时，需要<strong>两对管道 + 两个线程</strong>（或重叠 I/O），单线程轮流读同样会死锁。</p></div>
 
 <h2 id="a3-debug">3.9 调试支持</h2>
 
@@ -1754,7 +1767,7 @@ BOOL IsDebuggerPresent(<span class="kw">void</span>);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 54713px;--thin-h:50663px">
+<section class="chapter" style="contain-intrinsic-size:auto 55089px;--thin-h:51039px">
 <h1 id="a4"><span class="part">第 4 章</span>kernel32：进程、线程、同步与时间</h1>
 
 <p>kernel32.dll 是 Win32 的"发动机舱"：进程与线程的创建销毁、内核对象的等待与同步、系统计时，全部从这里出发。本章先用速查表把每类 API 摆开，再对最常用的函数逐一给出详解卡（函数原型、参数表、返回值、最小示例）。徽章含义：<span class="badge ok">推荐</span> 首选常用、<span class="badge old">已过时</span> 谨慎使用或有更好替代、<span class="badge dead">禁用</span> 应弃用、<span class="badge new">现代提示</span> 补充提示。本书统一使用 W（宽字符）版本。</p>
@@ -2623,7 +2636,12 @@ wprintf(L"%04d-%02d-%02d %02d:%02d:%02d\n",
         st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 266px"><span class="t">🔴 FILETIME 不能直接强转成 __int64*</span><p><code>FILETIME</code> 只保证 <strong>4 字节对齐</strong>，而 64 位整数在某些平台要求 8 字节对齐。写成 <code>*(__int64*)&amp;ft</code> 在 x86/x64 上碰巧能跑，在 ARM 上就是未对齐访问。<strong>规规矩矩用 <code>ULARGE_INTEGER</code> 中转</strong>，编译器会把它优化掉，没有额外开销。<br>另外两个易错点：<strong>①</strong> <code>FileTimeToLocalFileTime</code> 用的是<strong>当前</strong>的时区与夏令时规则去换算<strong>历史</strong>时间，跨夏令时边界会差一小时；要精确得用 <code>SystemTimeToTzSpecificLocalTime</code>。<strong>②</strong> 别拿这套时间测量耗时——系统时间可能被 NTP 校准而<strong>向后跳</strong>。测耗时一律用 <a class="fnlink" href="#fn-QueryPerformanceCounter"><code>QueryPerformanceCounter</code></a> 或 <a class="fnlink" href="#fn-GetTickCount64"><code>GetTickCount64</code></a>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 377px"><span class="t">🔴 FILETIME 不能直接强转成 __int64*</span><p><code>FILETIME</code> 只保证 <strong>4 字节对齐</strong>，而 64 位整数在某些平台要求 8 字节对齐。写成 <code>*(__int64*)&amp;ft</code> 在 x86/x64 上碰巧能跑，在 ARM 上就是未对齐访问。<strong>规规矩矩用 <code>ULARGE_INTEGER</code> 中转</strong>，编译器会把它优化掉，没有额外开销。</p>
+<p>另外两个易错点：</p>
+<ul>
+<li><code>FileTimeToLocalFileTime</code> 用的是<strong>当前</strong>的时区与夏令时规则去换算<strong>历史</strong>时间，跨夏令时边界会差一小时；要精确得用 <code>SystemTimeToTzSpecificLocalTime</code>。</li>
+<li>别拿这套时间测量耗时——系统时间可能被 NTP 校准而<strong>向后跳</strong>。测耗时一律用 <a class="fnlink" href="#fn-QueryPerformanceCounter"><code>QueryPerformanceCounter</code></a> 或 <a class="fnlink" href="#fn-GetTickCount64"><code>GetTickCount64</code></a>。</li>
+</ul></div>
 
 <h2 id="a4-srw">4.8 现代同步原语</h2>
 
@@ -2688,7 +2706,12 @@ Item Lookup(<span class="kw">const</span> std::wstring&amp; k) {          <span 
 };</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 328px"><span class="t">🔴 不可重入，而且"升级"是不存在的</span><p><strong>① 同一线程重复加锁 = 立刻死锁。</strong>临界区允许同线程重复进入，SRWLOCK 不允许。持锁期间调用的函数里若又加了同一把锁（很容易在重构后无意造成），程序就停在那儿了。<br><strong>② 没有"读锁升级为写锁"。</strong>持着共享锁再去申请独占锁必然死锁。正确做法是<strong>先释放读锁，再申请写锁，然后重新检查条件</strong>——因为中间的空隙里状态可能已经被别人改了。<br><strong>③ 用错释放函数不会报错。</strong>加了 <code>Shared</code> 却调 <code>ReleaseSRWLockExclusive</code> 是未定义行为，症状通常是很久之后的一次莫名崩溃或卡死。RAII 包装能从根子上避免。<br>另外注意上例的 <code>g_cache[k]</code>：<code>std::map::operator[]</code> 在键不存在时<strong>会插入</strong>，那是写操作——在共享锁下这么写是真实的数据竞争，应改用 <code>find</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 364px"><span class="t">🔴 不可重入，而且"升级"是不存在的</span><ul>
+<li><strong>同一线程重复加锁 = 立刻死锁。</strong>临界区允许同线程重复进入，SRWLOCK 不允许。持锁期间调用的函数里若又加了同一把锁（很容易在重构后无意造成），程序就停在那儿了。</li>
+<li><strong>没有"读锁升级为写锁"。</strong>持着共享锁再去申请独占锁必然死锁。正确做法是<strong>先释放读锁，再申请写锁，然后重新检查条件</strong>——因为中间的空隙里状态可能已经被别人改了。</li>
+<li><strong>用错释放函数不会报错。</strong>加了 <code>Shared</code> 却调 <code>ReleaseSRWLockExclusive</code> 是未定义行为，症状通常是很久之后的一次莫名崩溃或卡死。RAII 包装能从根子上避免。</li>
+</ul>
+<p>另外注意上例的 <code>g_cache[k]</code>：<code>std::map::operator[]</code> 在键不存在时<strong>会插入</strong>，那是写操作——在共享锁下这么写是真实的数据竞争，应改用 <code>find</code>。</p></div>
 
 <h3 id="fn-SleepConditionVariableSRW">条件变量 SleepConditionVariableSRW</h3>
 
@@ -2742,7 +2765,12 @@ std::deque&lt;Job&gt;    g_q;
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 360px"><span class="t">🔴 判断条件必须用 while，绝不能用 if</span><p>两个原因让"醒来"不等于"条件成立"：<br><strong>① 虚假唤醒（spurious wakeup）。</strong>系统允许在没有人唤醒的情况下让你醒来，这是各平台条件变量的通行约定。<br><strong>② 被抢先。</strong>你被唤醒到重新拿到锁之间有一个窗口，另一个消费者可能抢先把队列里唯一那个任务取走了。<br>所以正确写法永远是 <code>while (条件不成立) Sleep...;</code>——醒来后重新检查，不成立就接着睡。写成 <code>if</code> 的代码在低负载下跑得好好的，一上压力就崩在"队列空却 pop_front"上。<br>另一个选择题：<code>WakeConditionVariable</code>（唤醒一个）省事但要求所有等待者<strong>等的是同一个条件</strong>；等待条件不一致时必须用 <code>WakeAllConditionVariable</code>，否则可能唤醒了一个"条件仍不满足"的线程，它接着睡，而真正该醒的那个错过了信号。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 398px"><span class="t">🔴 判断条件必须用 while，绝不能用 if</span><p>两个原因让"醒来"不等于"条件成立"：</p>
+<ul>
+<li><strong>虚假唤醒（spurious wakeup）。</strong>系统允许在没有人唤醒的情况下让你醒来，这是各平台条件变量的通行约定。</li>
+<li><strong>被抢先。</strong>你被唤醒到重新拿到锁之间有一个窗口，另一个消费者可能抢先把队列里唯一那个任务取走了。</li>
+</ul>
+<p>所以正确写法永远是 <code>while (条件不成立) Sleep...;</code>——醒来后重新检查，不成立就接着睡。写成 <code>if</code> 的代码在低负载下跑得好好的，一上压力就崩在"队列空却 pop_front"上。<br>另一个选择题：<code>WakeConditionVariable</code>（唤醒一个）省事但要求所有等待者<strong>等的是同一个条件</strong>；等待条件不一致时必须用 <code>WakeAllConditionVariable</code>，否则可能唤醒了一个"条件仍不满足"的线程，它接着睡，而真正该醒的那个错过了信号。</p></div>
 
 <h3 id="fn-InitOnceExecuteOnce">InitOnceExecuteOnce</h3>
 
@@ -2773,7 +2801,14 @@ Config* GetConfig() {
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 363px"><span class="t">🔵 C++ 里通常有更简单的写法</span><p>C++11 起，<strong>函数内的静态局部变量初始化本身就是线程安全的</strong>（俗称 magic static），编译器生成的代码和 <code>InitOnceExecuteOnce</code> 做的是一回事：<br><code>Config&amp; GetConfig() { <span class="kw">static</span> Config c = LoadConfigFromDisk(); <span class="kw">return</span> c; }</code><br>还有 <code>std::call_once</code> + <code>std::once_flag</code>，跨平台。<br>那什么时候还需要 <code>InitOnceExecuteOnce</code>？<strong>①</strong> 纯 C 代码；<strong>②</strong> 需要"初始化失败后下次重试"的语义（magic static 抛异常后会重试，但返回 FALSE 这种非异常失败它管不了）；<strong>③</strong> 需要异步模式（<code>InitOnceBeginInitialize</code> / <code>InitOnceComplete</code>，允许多个线程各自尝试、第一个完成的胜出，不阻塞其他线程）。<br><strong>千万别自己写双重检查锁定</strong>——没有正确的内存屏障，它在弱内存序架构上是错的，而这类 bug 极难复现。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 477px"><span class="t">🔵 C++ 里通常有更简单的写法</span><p>C++11 起，<strong>函数内的静态局部变量初始化本身就是线程安全的</strong>（俗称 magic static），编译器生成的代码和 <code>InitOnceExecuteOnce</code> 做的是一回事：<br><code>Config&amp; GetConfig() { <span class="kw">static</span> Config c = LoadConfigFromDisk(); <span class="kw">return</span> c; }</code><br>还有 <code>std::call_once</code> + <code>std::once_flag</code>，跨平台。</p>
+<p>那什么时候还需要 <code>InitOnceExecuteOnce</code>？</p>
+<ul>
+<li>纯 C 代码。</li>
+<li>需要"初始化失败后下次重试"的语义（magic static 抛异常后会重试，但返回 FALSE 这种非异常失败它管不了）。</li>
+<li>需要异步模式（<code>InitOnceBeginInitialize</code> / <code>InitOnceComplete</code>，允许多个线程各自尝试、第一个完成的胜出，不阻塞其他线程）。</li>
+</ul>
+<p><strong>千万别自己写双重检查锁定</strong>——没有正确的内存屏障，它在弱内存序架构上是错的，而这类 bug 极难复现。</p></div>
 
 <h2 id="a4-pool">4.9 线程池</h2>
 
@@ -2822,7 +2857,12 @@ WaitForThreadpoolWorkCallbacks(w, TRUE);   <span class="cm">// TRUE = 尚未开�
 CloseThreadpoolWork(w);                    <span class="cm">// ★ 必须 Wait 之后再 Close</span></code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 328px"><span class="t">🔴 线程池回调里的三条禁忌</span><p><strong>① 不要长时间阻塞。</strong>线程池会把线程视为"忙"，虽然它能自动增线程，但反应有延迟（约每秒一个），大量回调同时阻塞会让吞吐塌掉。真要做阻塞式等待，先调 <code>CallbackMayRunLong</code> 告诉线程池一声。<br><strong>② 不要修改线程状态还不还原。</strong>线程是复用的——你改了区域设置、COM 单元模式、线程优先级、TLS，下一个回调会继承这些。改了就必须在返回前复原。<br><strong>③ 不要在回调里 Close 自己。</strong><code>CloseThreadpoolWork</code> 要在确认回调不再运行之后调，在回调内部调用，等于释放正在运行的自己。<br>另外，<strong>进程退出时线程池不保证跑完排队的任务</strong>。有收尾语义的活（写日志、存盘）必须显式 <code>WaitForThreadpoolWorkCallbacks</code>，别指望它自己跑完。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 364px"><span class="t">🔴 线程池回调里的三条禁忌</span><ul>
+<li><strong>不要长时间阻塞。</strong>线程池会把线程视为"忙"，虽然它能自动增线程，但反应有延迟（约每秒一个），大量回调同时阻塞会让吞吐塌掉。真要做阻塞式等待，先调 <code>CallbackMayRunLong</code> 告诉线程池一声。</li>
+<li><strong>不要修改线程状态还不还原。</strong>线程是复用的——你改了区域设置、COM 单元模式、线程优先级、TLS，下一个回调会继承这些。改了就必须在返回前复原。</li>
+<li><strong>不要在回调里 Close 自己。</strong><code>CloseThreadpoolWork</code> 要在确认回调不再运行之后调，在回调内部调用，等于释放正在运行的自己。</li>
+</ul>
+<p>另外，<strong>进程退出时线程池不保证跑完排队的任务</strong>。有收尾语义的活（写日志、存盘）必须显式 <code>WaitForThreadpoolWorkCallbacks</code>，别指望它自己跑完。</p></div>
 
 <h2 id="a4-iocp">4.10 重叠 I/O 与完成端口</h2>
 
@@ -2891,13 +2931,18 @@ CreateIoCompletionPort(hFile, iocp, (ULONG_PTR)pConnection, 0);
     PostQueuedCompletionStatus(iocp, 0, KEY_SHUTDOWN, <span class="kw">nullptr</span>);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 331px"><span class="t">🔴 OVERLAPPED 的生命周期是全部难点</span><p><strong>① 它必须活到 I/O 完成为止。</strong>把 <code>OVERLAPPED</code> 放在栈上、函数一返回就销毁，是这套 API 的头号崩溃原因——内核还握着那个地址准备往里写。标准做法是<strong>每个 I/O 分配一个结构</strong>（把 <code>OVERLAPPED</code> 作为第一个成员，用 <code>CONTAINING_RECORD</code> 反查回来），在完成包处理完之后才释放。<br><strong>② 缓冲区同理。</strong>投出去的读写缓冲区在完成之前不能改、不能释放。<br><strong>③ 失败的完成包也要收尾。</strong>见上面返回值表的第二行——<code>GetQueuedCompletionStatus</code> 返回 FALSE 但 <code>lpOverlapped</code> 非空时，那个 I/O 结构是你的，必须释放。漏了就是随连接数增长的稳定泄漏。<br><strong>④ 关闭句柄不会立刻取消 I/O。</strong>要先 <code>CancelIoEx</code>，再等所有完成包都取出来，最后才关句柄和端口。顺序反了就会在退出路径上偶发崩溃。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 372px"><span class="t">🔴 OVERLAPPED 的生命周期是全部难点</span><ul>
+<li><strong>它必须活到 I/O 完成为止。</strong>把 <code>OVERLAPPED</code> 放在栈上、函数一返回就销毁，是这套 API 的头号崩溃原因——内核还握着那个地址准备往里写。标准做法是<strong>每个 I/O 分配一个结构</strong>（把 <code>OVERLAPPED</code> 作为第一个成员，用 <code>CONTAINING_RECORD</code> 反查回来），在完成包处理完之后才释放。</li>
+<li><strong>缓冲区同理。</strong>投出去的读写缓冲区在完成之前不能改、不能释放。</li>
+<li><strong>失败的完成包也要收尾。</strong>见上面返回值表的第二行——<code>GetQueuedCompletionStatus</code> 返回 FALSE 但 <code>lpOverlapped</code> 非空时，那个 I/O 结构是你的，必须释放。漏了就是随连接数增长的稳定泄漏。</li>
+<li><strong>关闭句柄不会立刻取消 I/O。</strong>要先 <code>CancelIoEx</code>，再等所有完成包都取出来，最后才关句柄和端口。顺序反了就会在退出路径上偶发崩溃。</li>
+</ul></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 230px"><span class="t">🔵 现在通常不必自己写 IOCP 循环了</span><p>线程池的 <code>CreateThreadpoolIo</code> / <code>StartThreadpoolIo</code> 内部就用完成端口实现，但把线程管理、伸缩、退出全替你做了——你只写"数据到了怎么处理"这一个回调。除非要精确控制线程数与亲和性，否则<strong>新代码优先用线程池的 I/O 对象</strong>。<br>网络方向还有更上层的选择：<code>RIO</code>（注册 I/O，超低延迟场景）、以及 C++20 起各类基于协程的封装。IOCP 的价值在于理解<strong>底下发生了什么</strong>——上面这些全都建在它之上。</p></div>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 61703px;--thin-h:58322px">
+<section class="chapter" style="contain-intrinsic-size:auto 61814px;--thin-h:58433px">
 <h1 id="a5"><span class="part">第 5 章</span>user32：窗口与消息</h1>
 
 <p>user32.dll 是 Win32 图形程序的地基：注册窗口类、创建窗口、跑消息循环，三步缺一不可。本章按"窗口类 → 窗口 → 消息 → 定时器"四块组织，每块先给速查表总览，再对最常用的函数逐一展开详解卡。全部函数以 W（宽字符）版本为准——A 版本仅为兼容遗留代码存在，新代码一律用 W 版并以 <code>L"…"</code> 字面量传字符串。</p>
@@ -3957,7 +4002,12 @@ g_oldEditProc = (WNDPROC)SetWindowLongPtrW(hEdit, GWLP_WNDPROC, (LONG_PTR)NumOnl
 SetWindowLongPtrW(hEdit, GWLP_WNDPROC, (LONG_PTR)g_oldEditProc);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 296px"><span class="t">🔴 为什么不能写成 lpPrevWndFunc(h, m, w, l)</span><p><code>SetWindowLongPtrW(GWLP_WNDPROC)</code> 返回的<strong>未必是一个真正的代码地址</strong>。两种情况下它是系统内部的一个<em>句柄式标记</em>：<br><strong>①</strong> 窗口过程属于<strong>另一个进程</strong>（它的代码根本不在你的地址空间里）；<br><strong>②</strong> 窗口类注册的是 <strong>A 版</strong>过程而你用 <strong>W 版</strong>接口取出（或反过来）——系统必须在中间插一层字符集转换。<br><code>CallWindowProcW</code> 认得这些标记：该跨进程转发就转发，该把 <code>WM_CHAR</code> 的 Unicode 码点转成 ANSI 字节就转。直接当函数指针一调，轻则字符变乱码，重则跳进非法地址崩溃。<br><strong>结论</strong>：拿到的旧窗口过程，一律只交给 <code>CallWindowProcW</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 333px"><span class="t">🔴 为什么不能写成 lpPrevWndFunc(h, m, w, l)</span><p><code>SetWindowLongPtrW(GWLP_WNDPROC)</code> 返回的<strong>未必是一个真正的代码地址</strong>。两种情况下它是系统内部的一个<em>句柄式标记</em>：</p>
+<ul>
+<li>窗口过程属于<strong>另一个进程</strong>（它的代码根本不在你的地址空间里）。</li>
+<li>窗口类注册的是 <strong>A 版</strong>过程而你用 <strong>W 版</strong>接口取出（或反过来）——系统必须在中间插一层字符集转换。</li>
+</ul>
+<p><code>CallWindowProcW</code> 认得这些标记：该跨进程转发就转发，该把 <code>WM_CHAR</code> 的 Unicode 码点转成 ANSI 字节就转。直接当函数指针一调，轻则字符变乱码，重则跳进非法地址崩溃。<br><strong>结论</strong>：拿到的旧窗口过程，一律只交给 <code>CallWindowProcW</code>。</p></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 295px"><span class="t">🔵 新代码请改用 SetWindowSubclass 三件套</span><p>这套"存旧指针 + CallWindowProc"的老办法有个躲不开的缺陷：窗口上只存一个指针，两个模块先后子类化同一窗口后，<strong>只要不是严格后进先出地拆除，链条就会断</strong>——先拆的那个会把窗口过程直接写回更早的一层，把后来者整条踢出去；而后来者拆除时又会把一个已经失效的函数装回窗口，下一条消息即崩。<br>ComCtl32 的 <code>SetWindowSubclass</code> / <code>DefSubclassProc</code> / <code>RemoveWindowSubclass</code> 把链表收归系统统一保管，任意顺序拆除都安全，还能给每份子类挂 ID 和私有数据。详见 <a href="#a9-subclass">9.2 窗口子类化</a>。<br><code>CallWindowProcW</code> 今天仍需掌握：读老代码要用，而且 <code>DefSubclassProc</code> 走到链尾时，内部做的正是它这件事。</p></div>
 
@@ -4024,7 +4074,13 @@ BOOL  ReplyMessage(LRESULT lResult);</code></pre>
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 266px"><span class="t">🔵 它解释了一类"莫名其妙的卡顿"</span><p><code>SendMessageW</code> 跨线程时，发送方会一直阻塞到接收线程<strong>处理完</strong>为止。于是接收方窗口过程里一次磁盘读取、一次网络请求，就把另一个线程按住了几百毫秒——而那个线程可能正是 UI 线程。<br>三条处理原则：<strong>①</strong> 窗口过程里不做慢活，这是根本；<strong>②</strong> 做不到就用 <code>ReplyMessage</code> 先放行；<strong>③</strong> 发送方能改的话，改用 <code>PostMessageW</code> 或 <code>SendNotifyMessageW</code>，从源头上不阻塞。<br>还有一个隐蔽陷阱：处理跨线程 Send 期间调用 <code>SendMessageW</code> 回发给对方线程，两边就直接死锁——这正是 <code>InSendMessage</code> 存在的初衷。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 340px"><span class="t">🔵 它解释了一类"莫名其妙的卡顿"</span><p><code>SendMessageW</code> 跨线程时，发送方会一直阻塞到接收线程<strong>处理完</strong>为止。于是接收方窗口过程里一次磁盘读取、一次网络请求，就把另一个线程按住了几百毫秒——而那个线程可能正是 UI 线程。三条处理原则：</p>
+<ul>
+<li>窗口过程里不做慢活，这是根本。</li>
+<li>做不到就用 <code>ReplyMessage</code> 先放行。</li>
+<li>发送方能改的话，改用 <code>PostMessageW</code> 或 <code>SendNotifyMessageW</code>，从源头上不阻塞。</li>
+</ul>
+<p>还有一个隐蔽陷阱：处理跨线程 Send 期间调用 <code>SendMessageW</code> 回发给对方线程，两边就直接死锁——这正是 <code>InSendMessage</code> 存在的初衷。</p></div>
 
 
 <h3 id="fn-SendMessageTimeoutW">SendMessageTimeoutW</h3>
@@ -4271,7 +4327,7 @@ BOOL    UnhookWindowsHookEx(HHOOK hhk);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 56952px;--thin-h:51205px">
+<section class="chapter" style="contain-intrinsic-size:auto 57183px;--thin-h:51436px">
 <h1 id="a6"><span class="part">第 6 章</span>user32：输入、绘制、菜单与对话框</h1>
 <p>user32.dll 是 Win32 图形程序的门面：窗口消息从这里进来，绘制请求从这里排队，菜单与对话框也由它统一调度。本章按五个功能族整理速查表，每族速查表之后紧跟该族高频函数的详解卡——函数原型、逐参数说明、返回值约定、可直接套用的最小示例。已被官方标记为"有更好替代"的接口在"其他说明"里给出现代替代方案。</p>
 
@@ -5256,7 +5312,12 @@ BOOL DestroyCaret(<span class="kw">void</span>);              <span class="cm">/
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 329px"><span class="t">🔴 全系统只有一根，所以规矩格外硬</span><p><strong>① 失去焦点必须 DestroyCaret。</strong>不销毁，下一个获得焦点的窗口 <code>CreateCaret</code> 时就把你的顶掉了；更糟的情况是你的插入符留在别人的窗口上一直闪。<br><strong>② 绘制前后要 Hide / Show。</strong>插入符是系统直接画在窗口上的，你在它上面绘制会留下残影或把它抹掉。规矩是 <code>HideCaret</code> → 绘制 → <code>ShowCaret</code>。<br><strong>③ Hide 是计数的。</strong>连调两次 <code>HideCaret</code>，就得两次 <code>ShowCaret</code> 才看得见。写在递归或多分支里很容易漏配对，症状是"光标不见了"。<br><strong>④ 只有拥有焦点的窗口才能操作它。</strong>没焦点时 <code>CreateCaret</code> 会成功但看不见，容易误判为"我的代码没生效"。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 370px"><span class="t">🔴 全系统只有一根，所以规矩格外硬</span><ul>
+<li><strong>失去焦点必须 DestroyCaret。</strong>不销毁，下一个获得焦点的窗口 <code>CreateCaret</code> 时就把你的顶掉了；更糟的情况是你的插入符留在别人的窗口上一直闪。</li>
+<li><strong>绘制前后要 Hide / Show。</strong>插入符是系统直接画在窗口上的，你在它上面绘制会留下残影或把它抹掉。规矩是 <code>HideCaret</code> → 绘制 → <code>ShowCaret</code>。</li>
+<li><strong>Hide 是计数的。</strong>连调两次 <code>HideCaret</code>，就得两次 <code>ShowCaret</code> 才看得见。写在递归或多分支里很容易漏配对，症状是"光标不见了"。</li>
+<li><strong>只有拥有焦点的窗口才能操作它。</strong>没焦点时 <code>CreateCaret</code> 会成功但看不见，容易误判为"我的代码没生效"。</li>
+</ul></div>
 
 <h2 id="a6-scroll">6.7 滚动条</h2>
 
@@ -5333,7 +5394,12 @@ SetScrollInfo(hwnd, SB_VERT, &amp;si, TRUE);
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 267px"><span class="t">🟡 拖动滑块时，wParam 高 16 位是不够用的</span><p><code>WM_VSCROLL</code> 的 <code>HIWORD(wParam)</code> 也带着一个位置值，但它只有 <strong>16 位</strong>——文档超过 65535 行时就废了。<strong>处理 <code>SB_THUMBTRACK</code> / <code>SB_THUMBPOSITION</code> 一律改用 <code>GetScrollInfo</code> 取 32 位的 <code>nTrackPos</code>。</strong>这正是整套老接口（<code>SetScrollPos</code> / <code>SetScrollRange</code>）该被淘汰的原因。<br>另外两点：<strong>①</strong> <code>SetScrollInfo</code> 会自动把 <code>nPos</code> 夹进合法区间，所以设完再 <code>GetScrollInfo</code> 读回来，比自己写夹取逻辑可靠；<strong>②</strong> 鼠标滚轮走的是 <strong><code>WM_MOUSEWHEEL</code></strong>，不是 <code>WM_VSCROLL</code>，得单独处理（滚动行数要读 <code>SPI_GETWHEELSCROLLLINES</code>，用户可能设成了"一屏"）。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 377px"><span class="t">🟡 拖动滑块时，wParam 高 16 位是不够用的</span><p><code>WM_VSCROLL</code> 的 <code>HIWORD(wParam)</code> 也带着一个位置值，但它只有 <strong>16 位</strong>——文档超过 65535 行时就废了。<strong>处理 <code>SB_THUMBTRACK</code> / <code>SB_THUMBPOSITION</code> 一律改用 <code>GetScrollInfo</code> 取 32 位的 <code>nTrackPos</code>。</strong>这正是整套老接口（<code>SetScrollPos</code> / <code>SetScrollRange</code>）该被淘汰的原因。</p>
+<p>另外两点：</p>
+<ul>
+<li><code>SetScrollInfo</code> 会自动把 <code>nPos</code> 夹进合法区间，所以设完再 <code>GetScrollInfo</code> 读回来，比自己写夹取逻辑可靠。</li>
+<li>鼠标滚轮走的是 <strong><code>WM_MOUSEWHEEL</code></strong>，不是 <code>WM_VSCROLL</code>，得单独处理（滚动行数要读 <code>SPI_GETWHEELSCROLLLINES</code>，用户可能设成了"一屏"）。</li>
+</ul></div>
 
 <h2 id="a6-clipboard">6.8 剪贴板</h2>
 
@@ -5407,7 +5473,13 @@ std::wstring PasteText(HWND hwnd) {
 }</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 298px"><span class="t">🔴 所有权：两个方向都容易搞反</span><p><strong>写入：<code>SetClipboardData</code> 成功后，句柄归系统。</strong>再 <code>GlobalFree</code> 就是重复释放，通常表现为别的程序粘贴时崩溃——而且崩的是别人，极难联想到自己。只有 <code>SetClipboardData</code> <em>失败</em>时才该由你释放。<br><strong>读取：<code>GetClipboardData</code> 返回的句柄不归你。</strong>它在 <code>CloseClipboard</code> 之后就可能失效，更别提被下一次复制顶掉。必须在 Open/Close 之间<strong>拷贝一份</strong>，绝不能存着句柄事后用，更不能 <code>GlobalFree</code> 它。<br><strong>另外三条：</strong>① 内存必须用 <code>GlobalAlloc(GMEM_MOVEABLE, ...)</code> 分配，用 <code>malloc</code> 或 <code>GMEM_FIXED</code> 会出问题；② 打开失败是<strong>常态</strong>（别的程序正开着），要重试或直接放弃，不能当异常；③ <strong>打开期间别弹对话框、别做耗时操作</strong>——整个系统的复制粘贴都被你卡着。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 343px"><span class="t">🔴 所有权：两个方向都容易搞反</span><ul>
+<li><strong>写入：<code>SetClipboardData</code> 成功后，句柄归系统。</strong>再 <code>GlobalFree</code> 就是重复释放，通常表现为别的程序粘贴时崩溃——而且崩的是别人，极难联想到自己。只有 <code>SetClipboardData</code> <em>失败</em>时才该由你释放。</li>
+<li><strong>读取：<code>GetClipboardData</code> 返回的句柄不归你。</strong>它在 <code>CloseClipboard</code> 之后就可能失效，更别提被下一次复制顶掉。必须在 Open/Close 之间<strong>拷贝一份</strong>，绝不能存着句柄事后用，更不能 <code>GlobalFree</code> 它。</li>
+<li>内存必须用 <code>GlobalAlloc(GMEM_MOVEABLE, ...)</code> 分配，用 <code>malloc</code> 或 <code>GMEM_FIXED</code> 会出问题。</li>
+<li>打开失败是<strong>常态</strong>（别的程序正开着），要重试或直接放弃，不能当异常。</li>
+<li><strong>打开期间别弹对话框、别做耗时操作</strong>——整个系统的复制粘贴都被你卡着。</li>
+</ul></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 297px"><span class="t">🔵 大数据用"延迟渲染"</span><p>复制一张 100 MB 的图，用户却可能根本不粘贴——立刻把数据准备好是浪费。<strong>延迟渲染</strong>的做法是：<code>SetClipboardData(format, NULL)</code> 只声明"我能提供这种格式"，等真有人来取时，你的窗口会收到 <code>WM_RENDERFORMAT</code>，那时再生成数据。<br>代价是你的窗口必须一直活着；程序退出前若剪贴板上还挂着未渲染的格式，系统会发 <code>WM_RENDERALLFORMATS</code> 让你最后补齐。<br>还有一个现代路径：拖放与剪贴板的 COM 接口 <code>IDataObject</code>（配 <code>OleSetClipboard</code>），支持多格式协商、延迟渲染和异步传输，是复杂数据交换的正规方案。</p></div>
 
@@ -5469,11 +5541,16 @@ BOOL AdjustWindowRectExForDpi(LPRECT lpRect, DWORD dwStyle,
 <p><strong>其他说明</strong></p>
 <div class="note new" style="contain-intrinsic-size:auto 426px"><span class="t">🔵 感知模式该选哪一档，以及为什么写在 manifest 里</span><p>四档，从旧到新：<br><strong>Unaware</strong> —— 不声明就是它，系统拉伸，界面糊。<br><strong>System</strong> —— 只认<em>登录时</em>主屏的 DPI；拖到别的屏仍然糊。<br><strong>Per-Monitor</strong>（V1）—— 会收到 <code>WM_DPICHANGED</code>，但窗口边框、菜单、对话框这些非客户区仍由系统按老 DPI 画。<br><strong><code>PerMonitorV2</code></strong> —— <strong>今天的正确选择</strong>：非客户区、通用控件、对话框都会自动跟着缩放，你只需管自己画的内容。<br><strong>为什么优先写 manifest 而不是调函数</strong>：DPI 感知模式必须在<strong>任何窗口创建之前</strong>确定。写在 manifest 里由加载器在进程启动时设好，一定来得及；用 <code>SetProcessDpiAwarenessContext</code> 则要保证它跑在 <code>main</code> 的第一行之前——而某些静态初始化、第三方库的 DllMain 可能已经建过窗口了。<br><code>&lt;dpiAwareness&gt;PerMonitorV2&lt;/dpiAwareness&gt;</code> 加在 manifest 的 <code>windowsSettings</code> 节里即可。</p></div>
 
-<div class="note dead" style="contain-intrinsic-size:auto 297px"><span class="t">🔴 三个位置最容易漏掉换算</span><p><strong>① 字体。</strong><code>CreateFontW</code> 的 <code>lfHeight</code> 要用 <code>-MulDiv(点数, dpi, 72)</code> 算，DPI 变了必须<strong>重建字体对象</strong>，不能只重画。<br><strong>② 位图与图标。</strong><code>LoadImageW</code> 加载的固定尺寸图在高 DPI 下会被拉糊。要么准备多套尺寸（16/24/32/48）按 DPI 挑，要么改用矢量绘制。<br><strong>③ <code>GetSystemMetrics</code>。</strong>它<strong>永远返回系统 DPI 下的值</strong>，在 PerMonitorV2 进程里拿它算边框宽度必然错。凡是 <code>SM_CX*</code> / <code>SM_CY*</code>，一律换成 <code>GetSystemMetricsForDpi</code>。<br>顺带一个调试技巧：把两块 DPI 不同的屏排在一起，<strong>把窗口拖来拖去</strong>——所有漏算的地方都会当场现形。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 332px"><span class="t">🔴 三个位置最容易漏掉换算</span><ul>
+<li><strong>字体。</strong><code>CreateFontW</code> 的 <code>lfHeight</code> 要用 <code>-MulDiv(点数, dpi, 72)</code> 算，DPI 变了必须<strong>重建字体对象</strong>，不能只重画。</li>
+<li><strong>位图与图标。</strong><code>LoadImageW</code> 加载的固定尺寸图在高 DPI 下会被拉糊。要么准备多套尺寸（16/24/32/48）按 DPI 挑，要么改用矢量绘制。</li>
+<li><strong><code>GetSystemMetrics</code>。</strong>它<strong>永远返回系统 DPI 下的值</strong>，在 PerMonitorV2 进程里拿它算边框宽度必然错。凡是 <code>SM_CX*</code> / <code>SM_CY*</code>，一律换成 <code>GetSystemMetricsForDpi</code>。</li>
+</ul>
+<p>顺带一个调试技巧：把两块 DPI 不同的屏排在一起，<strong>把窗口拖来拖去</strong>——所有漏算的地方都会当场现形。</p></div>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 39478px;--thin-h:38390px">
+<section class="chapter" style="contain-intrinsic-size:auto 39559px;--thin-h:38471px">
 <h1 id="a7"><span class="part">第 7 章</span>gdi32：设备上下文、绘图与画笔画刷字体</h1>
 
 <p>gdi32.dll 承载着 Windows 最经典的二维绘图体系。它的一切都围绕<strong>设备上下文（DC，Device Context）</strong>展开：DC 相当于一块"自带全套画具状态"的画板——当前选用的画笔、画刷、字体、混合模式、当前位置，全都记在 DC 身上。绘图函数从不直接接收"用什么笔"这种参数，而是先把画具<strong>选入</strong> DC，再调用绘图函数。因此本章的主线只有一句话：<em>创建对象 → 选入 DC → 绘图 → 换回旧对象 → 删除自己创建的对象</em>。</p>
@@ -6191,7 +6268,12 @@ DrawContent(hdc);
 RestoreDC(hdc, -1);                            <span class="cm">// 连裁剪区一起还原</span></code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 330px"><span class="t">🔴 区域是 GDI 对象，泄漏起来悄无声息</span><p><strong>① 每个 <code>CreateXxxRgn</code> 都要配一个 <code>DeleteObject</code>。</strong>包括 <code>CombineRgn</code> 的那个目标区域——它是你自己建的。GDI 对象泄漏不会立刻出问题，但每个进程有 10000 个的配额，用完之后所有绘制 API 集体失败，界面变成一片空白，而且崩溃的位置与泄漏的位置相距很远。<br><strong>② 选进 DC 的区域不能删。</strong>和画笔画刷一样，正在被 DC 使用的对象删不掉。先 <code>SelectClipRgn(hdc, NULL)</code> 再删。<br><strong>③ <code>SetWindowRgn</code> 是例外：句柄交出去就不归你了</strong>，再 <code>DeleteObject</code> 就是重复释放。<br><strong>④ <code>BeginPaint</code> 已经替你裁好了。</strong><code>WM_PAINT</code> 里拿到的 DC 自带"无效区"裁剪，画到无效区之外不会出错，但也不会显示——利用 <code>ps.rcPaint</code> 主动跳过不需要重画的内容，才是省时间的正道。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 371px"><span class="t">🔴 区域是 GDI 对象，泄漏起来悄无声息</span><ul>
+<li><strong>每个 <code>CreateXxxRgn</code> 都要配一个 <code>DeleteObject</code>。</strong>包括 <code>CombineRgn</code> 的那个目标区域——它是你自己建的。GDI 对象泄漏不会立刻出问题，但每个进程有 10000 个的配额，用完之后所有绘制 API 集体失败，界面变成一片空白，而且崩溃的位置与泄漏的位置相距很远。</li>
+<li><strong>选进 DC 的区域不能删。</strong>和画笔画刷一样，正在被 DC 使用的对象删不掉。先 <code>SelectClipRgn(hdc, NULL)</code> 再删。</li>
+<li><strong><code>SetWindowRgn</code> 是例外：句柄交出去就不归你了</strong>，再 <code>DeleteObject</code> 就是重复释放。</li>
+<li><strong><code>BeginPaint</code> 已经替你裁好了。</strong><code>WM_PAINT</code> 里拿到的 DC 自带"无效区"裁剪，画到无效区之外不会出错，但也不会显示——利用 <code>ps.rcPaint</code> 主动跳过不需要重画的内容，才是省时间的正道。</li>
+</ul></div>
 
 <h2 id="a7-path">7.7 路径</h2>
 
@@ -6252,11 +6334,16 @@ SelectClipRgn(hdc, <span class="kw">nullptr</span>);
 DeleteObject(rgn);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 365px"><span class="t">🟡 路径是一次性的，而且不是所有绘图函数都能录进去</span><p><strong>① 用完即毁。</strong><code>StrokePath</code> / <code>FillPath</code> / <code>PathToRegion</code> 任意一个调用后，DC 里的路径就没了。既要填充又要单独描边一次的话，用 <code>StrokeAndFillPath</code>，或者把绘制过程录两遍。<br><strong>② 能录的只有"矢量"调用。</strong><code>MoveToEx</code>/<code>LineTo</code>/<code>PolyBezier</code>/<code>Arc</code>/<code>Rectangle</code>/<code>Ellipse</code>/<code>TextOut</code> 这些可以；<code>BitBlt</code>、<code>SetPixel</code>、<code>FillRect</code>（它走的是刷子填充而非路径）不行——它们在 BeginPath/EndPath 之间会被<strong>直接执行掉</strong>而不是录制，行为与预期不符。<br><strong>③ 填充规则决定"洞"。</strong>五角星这类自交叉图形，<code>ALTERNATE</code>（默认）中间是空的，<code>WINDING</code> 是实的。用 <code>SetPolyFillMode</code> 选，这不是 bug 是两种标准规则。<br><strong>④ 想要抗锯齿？GDI 给不了。</strong>GDI 的路径描边是硬边的。要平滑曲线得用 GDI+（<code>Graphics::DrawPath</code>）或 Direct2D。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 405px"><span class="t">🟡 路径是一次性的，而且不是所有绘图函数都能录进去</span><ul>
+<li><strong>用完即毁。</strong><code>StrokePath</code> / <code>FillPath</code> / <code>PathToRegion</code> 任意一个调用后，DC 里的路径就没了。既要填充又要单独描边一次的话，用 <code>StrokeAndFillPath</code>，或者把绘制过程录两遍。</li>
+<li><strong>能录的只有"矢量"调用。</strong><code>MoveToEx</code>/<code>LineTo</code>/<code>PolyBezier</code>/<code>Arc</code>/<code>Rectangle</code>/<code>Ellipse</code>/<code>TextOut</code> 这些可以；<code>BitBlt</code>、<code>SetPixel</code>、<code>FillRect</code>（它走的是刷子填充而非路径）不行——它们在 BeginPath/EndPath 之间会被<strong>直接执行掉</strong>而不是录制，行为与预期不符。</li>
+<li><strong>填充规则决定"洞"。</strong>五角星这类自交叉图形，<code>ALTERNATE</code>（默认）中间是空的，<code>WINDING</code> 是实的。用 <code>SetPolyFillMode</code> 选，这不是 bug 是两种标准规则。</li>
+<li><strong>想要抗锯齿？GDI 给不了。</strong>GDI 的路径描边是硬边的。要平滑曲线得用 GDI+（<code>Graphics::DrawPath</code>）或 Direct2D。</li>
+</ul></div>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 33438px;--thin-h:31485px">
+<section class="chapter" style="contain-intrinsic-size:auto 33511px;--thin-h:31558px">
 <h1 id="a8"><span class="part">第 8 章</span>gdi32：位图、文本与坐标</h1>
 
 <p>gdi32.dll 是 Windows 最古老的绘图引擎：所有绘制都围绕设备上下文（DC）展开，位图要先"选入"内存 DC 才能参与传输，文字颜色与背景是 DC 的状态而不是函数参数，坐标则先经过逻辑→设备的映射再落到像素上。本章按"位图 → 文本 → 坐标"三条线整理速查表，并为最常用的 10 个函数配详解卡。读本章时抓住一个心智模型即可：<strong>DC 是一台带状态的绘图机，你先调状态（颜色、模式、映射、选入的位图），再下指令（Blt、TextOut）。</strong></p>
@@ -6919,13 +7006,23 @@ DeleteDC(hdcPrn);            <span class="cm">// 打印机 DC 用 DeleteDC，不
 <span class="kw">if</span> (pd.hDevNames) GlobalFree(pd.hDevNames);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 330px"><span class="t">🔴 屏幕代码直接拿去打印，一定会出问题的三处</span><p><strong>① 分辨率差一个数量级。</strong>屏幕 96 DPI，打印机 300–1200 DPI。写死像素的排版打出来只有指甲盖大。<strong>一切尺寸都要按 <code>GetDeviceCaps(hdc, LOGPIXELSX)</code> 换算</strong>，或者干脆用 <code>SetMapMode(MM_LOMETRIC)</code> 之类的物理单位映射模式，让 GDI 替你换算。<br><strong>② 纸有打不到的边。</strong><code>HORZRES</code>/<code>VERTRES</code> 给的是<strong>可打印区</strong>而非整张纸，坐标原点也在可打印区的左上角。要按整张纸定位（比如"距纸边 2cm"），得用 <code>PHYSICALWIDTH</code>、<code>PHYSICALOFFSETX</code> 自己算。<br><strong>③ 颜色与背景。</strong>屏幕上的深色背景打出来是一整页黑，既费墨又难看。打印路径通常应强制白底黑字。<br>还有一个纪律问题：<strong>DC 的归还方式不同</strong>——打印机 DC 是 <code>CreateDC</code> 类的，要用 <code>DeleteDC</code>；窗口 DC 才用 <code>ReleaseDC</code>。用错不报错，直接泄漏。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 366px"><span class="t">🔴 屏幕代码直接拿去打印，一定会出问题的三处</span><ul>
+<li><strong>分辨率差一个数量级。</strong>屏幕 96 DPI，打印机 300–1200 DPI。写死像素的排版打出来只有指甲盖大。<strong>一切尺寸都要按 <code>GetDeviceCaps(hdc, LOGPIXELSX)</code> 换算</strong>，或者干脆用 <code>SetMapMode(MM_LOMETRIC)</code> 之类的物理单位映射模式，让 GDI 替你换算。</li>
+<li><strong>纸有打不到的边。</strong><code>HORZRES</code>/<code>VERTRES</code> 给的是<strong>可打印区</strong>而非整张纸，坐标原点也在可打印区的左上角。要按整张纸定位（比如"距纸边 2cm"），得用 <code>PHYSICALWIDTH</code>、<code>PHYSICALOFFSETX</code> 自己算。</li>
+<li><strong>颜色与背景。</strong>屏幕上的深色背景打出来是一整页黑，既费墨又难看。打印路径通常应强制白底黑字。</li>
+</ul>
+<p>还有一个纪律问题：<strong>DC 的归还方式不同</strong>——打印机 DC 是 <code>CreateDC</code> 类的，要用 <code>DeleteDC</code>；窗口 DC 才用 <code>ReleaseDC</code>。用错不报错，直接泄漏。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 329px"><span class="t">🔵 打印期间别让界面卡死</span><p>大文档打印可能持续几十秒。<code>EndPage</code> 是同步的、会阻塞。两种正规解法：<br><strong>①</strong> <code>SetAbortProc</code> 注册一个中止回调——GDI 会在打印过程中<strong>反复调用它</strong>，你在里面跑一小段消息循环（<code>PeekMessage</code> + <code>Dispatch</code>）让界面保持响应，同时检查用户有没有点"取消"，是就返回 FALSE。这是 Win32 打印的经典写法。<br><strong>②</strong> 整个打印过程放到工作线程去。注意打印机 DC 与 GDI 对象有线程亲和性上的讲究，DC 应当在使用它的那个线程里创建和销毁。<br>另外，<code>DOCINFOW.lpszOutput</code> 填一个文件名就能<strong>把输出重定向到文件</strong>——调试打印排版时非常有用，不用真的浪费纸。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 366px"><span class="t">🔵 打印期间别让界面卡死</span><p>大文档打印可能持续几十秒。<code>EndPage</code> 是同步的、会阻塞。两种正规解法：</p>
+<ul>
+<li><code>SetAbortProc</code> 注册一个中止回调——GDI 会在打印过程中<strong>反复调用它</strong>，你在里面跑一小段消息循环（<code>PeekMessage</code> + <code>Dispatch</code>）让界面保持响应，同时检查用户有没有点"取消"，是就返回 FALSE。这是 Win32 打印的经典写法。</li>
+<li>整个打印过程放到工作线程去。注意打印机 DC 与 GDI 对象有线程亲和性上的讲究，DC 应当在使用它的那个线程里创建和销毁。</li>
+</ul>
+<p>另外，<code>DOCINFOW.lpszOutput</code> 填一个文件名就能<strong>把输出重定向到文件</strong>——调试打印排版时非常有用，不用真的浪费纸。</p></div>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 17094px;--thin-h:17094px">
+<section class="chapter" style="contain-intrinsic-size:auto 17207px;--thin-h:17207px">
 <h1 id="a9"><span class="part">第 9 章</span>comctl32 与 comdlg32：通用控件、子类化与通用对话框</h1>
 
 <p>前面八章围着 kernel32 / user32 / gdi32 这三个"元老"转。但 Windows API 从来不只有它们三个——<strong>凡是随系统一起发布、有官方文档、可以直接链接调用的接口，都是 Windows API 的一部分</strong>。<code>comctl32.dll</code>（通用控件）与 <code>comdlg32.dll</code>（通用对话框）是其中最不该缺席的两个：一个提供了列表视图、树视图、工具栏，以及<strong>今天唯一正确的窗口子类化接口</strong>；另一个提供了"打开文件""选择颜色""打印设置"这些每个程序都要用的对话框。</p>
@@ -6989,7 +7086,12 @@ icc.dwICC = ICC_LISTVIEW_CLASSES | ICC_TREEVIEW_CLASSES
 InitCommonControlsEx(&amp;icc);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 266px"><span class="t">🟡 三件手续缺一不可，而且失败方式各不相同</span><p><strong>①</strong> <code>#include &lt;commctrl.h&gt;</code> —— 缺了是编译错，最容易发现。<br><strong>②</strong> 链接 <code>comctl32.lib</code> —— 缺了是链接错。<br><strong>③</strong> 调 <code>InitCommonControlsEx</code> —— 缺了<strong>编译链接全过，运行时控件创建返回 NULL</strong>，最难查。<br>还有隐形的第四件：<strong>v6 manifest</strong>。它决定加载 5.x 还是 6.x。不配 manifest 时，<code>SetWindowSubclass</code> 一族、<code>EM_SETCUEBANNER</code>、<code>BCM_</code> 系列按钮消息、分割按钮、命令链接这些 <strong>v6 独有的东西全都用不了</strong>——函数导不出来（链接期就报错），消息发过去石沉大海（运行期毫无反应）。清单写法见下方 🔵。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 301px"><span class="t">🟡 三件手续缺一不可，而且失败方式各不相同</span><ul>
+<li><code>#include &lt;commctrl.h&gt;</code> —— 缺了是编译错，最容易发现。</li>
+<li>链接 <code>comctl32.lib</code> —— 缺了是链接错。</li>
+<li>调 <code>InitCommonControlsEx</code> —— 缺了<strong>编译链接全过，运行时控件创建返回 NULL</strong>，最难查。</li>
+</ul>
+<p>还有隐形的第四件：<strong>v6 manifest</strong>。它决定加载 5.x 还是 6.x。不配 manifest 时，<code>SetWindowSubclass</code> 一族、<code>EM_SETCUEBANNER</code>、<code>BCM_</code> 系列按钮消息、分割按钮、命令链接这些 <strong>v6 独有的东西全都用不了</strong>——函数导不出来（链接期就报错），消息发过去石沉大海（运行期毫无反应）。清单写法见下方 🔵。</p></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 369px"><span class="t">🔵 启用 v6 的 manifest，两种写法任选</span><p>最省事的是在源文件里塞一条链接器指令：</p>
 <pre style="contain-intrinsic-size:auto 109px"><code>#pragma comment(linker, "\"/manifestdependency:type='win32' \
@@ -7058,7 +7160,11 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")</co
 </tbody></table>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 331px"><span class="t">🔴 三处最容易出错的地方</span><p><strong>① 通知码是"负数"，别把 code 当无符号数比大小。</strong><code>NMHDR.code</code> 类型是 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>NM_FIRST</code> 是 <code>0U</code>，往下减）。所以 <code>LVN_ITEMCHANGED</code> 的实际值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。用 <code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_FIRST &amp;&amp; code &lt; LVN_LAST)</code> 这类范围判断就会全乱——要比范围，两边一起转成 <code>int</code>。<br><strong>② 结构体强转必须先确认 code。</strong>处理 <code>LVN_*</code> 时转成 <code>LPNMTREEVIEW</code>，编译器不会报错，运行时读到的是别的内存。<strong>确认通知码 → 再强转</strong>，顺序不能反。<br><strong>③ 指针的生命周期只有这一次调用。</strong><code>lParam</code> 指向的结构体通常在控件的栈上，<strong>你返回之后就没了</strong>。要留着用必须自己拷贝一份，存指针就是悬垂。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 367px"><span class="t">🔴 三处最容易出错的地方</span><ul>
+<li><strong>通知码是"负数"，别把 code 当无符号数比大小。</strong><code>NMHDR.code</code> 类型是 <code>UINT</code>，而通知码全是 <code>(0U - 100U)</code> 这种形式定义的（<code>NM_FIRST</code> 是 <code>0U</code>，往下减）。所以 <code>LVN_ITEMCHANGED</code> 的实际值是 <code>0xFFFFFF9B</code> 这样的巨大无符号数。用 <code>switch</code> 逐个比相等没问题，但写成 <code>if (code &gt; LVN_FIRST &amp;&amp; code &lt; LVN_LAST)</code> 这类范围判断就会全乱——要比范围，两边一起转成 <code>int</code>。</li>
+<li><strong>结构体强转必须先确认 code。</strong>处理 <code>LVN_*</code> 时转成 <code>LPNMTREEVIEW</code>，编译器不会报错，运行时读到的是别的内存。<strong>确认通知码 → 再强转</strong>，顺序不能反。</li>
+<li><strong>指针的生命周期只有这一次调用。</strong><code>lParam</code> 指向的结构体通常在控件的栈上，<strong>你返回之后就没了</strong>。要留着用必须自己拷贝一份，存指针就是悬垂。</li>
+</ul></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">🔵 返回值有时是有意义的</span><p>多数 <code>WM_NOTIFY</code> 返回 0 即可，但有一批通知是<strong>在征求你的同意</strong>，返回值决定控件接下来的行为：<code>TVN_SELCHANGING</code> 返回 TRUE 表示"不许换选中项"；<code>LVN_ENDLABELEDIT</code> 返回 FALSE 表示"拒绝这次改名"；<code>NM_CUSTOMDRAW</code> 更是要靠返回值（<code>CDRF_NOTIFYITEMDRAW</code> 等）告诉控件"下一阶段还要不要叫我"。<br>而对话框过程要格外小心：<strong>对话框的返回值要通过 <code>SetWindowLongPtrW(hDlg, DWLP_MSGRESULT, 结果)</code> 交付</strong>，直接 <code>return</code> 是无效的——这是对话框过程与窗口过程的一处根本差异。</p></div>
 
@@ -7212,7 +7318,12 @@ ListView_SetImageList(hList, himl, LVSIL_SMALL);
 ImageList_Destroy(himl);</code></pre>
 
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 298px"><span class="t">🔴 谁销毁图像列表，是个真会出事的问题</span><p><code>ListView_SetImageList</code> 只是<strong>把句柄交给控件用</strong>，控件不接管所有权。所以：<br><strong>①</strong> 你必须自己 <code>ImageList_Destroy</code>——但<strong>要在控件销毁之后</strong>，否则控件重绘时会用一个已经无效的句柄。稳妥做法是放在主窗口的 <code>WM_NCDESTROY</code>，或干脆交给一个 RAII 包装。<br><strong>②</strong> 同一个图像列表<strong>共享给多个控件</strong>时，只能销毁一次——建控件时加 <code>LVS_SHAREIMAGELISTS</code> 风格可以明确表达"我不管销毁"，避免某些路径下的重复释放。<br><strong>③</strong> <code>ImageList_ReplaceIcon</code> 会<strong>拷贝</strong>图标位图，所以原 <code>HICON</code> 加完就该 <code>DestroyIcon</code>；忘了就是稳定泄漏 GDI 对象。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 340px"><span class="t">🔴 谁销毁图像列表，是个真会出事的问题</span><p><code>ListView_SetImageList</code> 只是<strong>把句柄交给控件用</strong>，控件不接管所有权。所以：</p>
+<ul>
+<li>你必须自己 <code>ImageList_Destroy</code>——但<strong>要在控件销毁之后</strong>，否则控件重绘时会用一个已经无效的句柄。稳妥做法是放在主窗口的 <code>WM_NCDESTROY</code>，或干脆交给一个 RAII 包装。</li>
+<li>同一个图像列表<strong>共享给多个控件</strong>时，只能销毁一次。建控件时加 <code>LVS_SHAREIMAGELISTS</code> 风格可以明确表达"我不管销毁"，避免某些路径下的重复释放。</li>
+<li><code>ImageList_ReplaceIcon</code> 会<strong>拷贝</strong>图标位图，所以原 <code>HICON</code> 加完就该 <code>DestroyIcon</code>；忘了就是稳定泄漏 GDI 对象。</li>
+</ul></div>
 
 <h2 id="a9-dlg">9.4 通用对话框</h2>
 
@@ -7236,7 +7347,7 @@ ImageList_Destroy(himl);</code></pre>
 BOOL GetSaveFileNameW(LPOPENFILENAMEW lpofn);</code></pre>
 
 <p><strong>关键成员</strong></p>
-<table style="contain-intrinsic-size:auto 406px"><thead><tr><th class="nw">成员</th><th>说明</th></tr></thead><tbody>
+<table style="contain-intrinsic-size:auto 407px"><thead><tr><th class="nw">成员</th><th>说明</th></tr></thead><tbody>
 <tr><td class="nw">lStructSize</td><td><strong>必填</strong> <code>sizeof(OPENFILENAMEW)</code>。忘了填是最常见的失败原因。</td></tr>
 <tr><td class="nw">hwndOwner</td><td>属主窗口，决定对话框在哪居中、模态挡谁。传 NULL 也能跑，但体验差。</td></tr>
 <tr><td class="nw">lpstrFilter</td><td>过滤器：<strong>用 <code>\0</code> 分隔、<code>\0\0</code> 结尾的"双零终止串"</strong>，不是普通字符串。格式为「显示名\0通配符\0显示名\0通配符\0\0」。写成 <code>L"文本\0*.txt\0全部\0*.*\0"</code>（C++ 字符串字面量末尾自带一个 <code>\0</code>，正好凑够两个）。</td></tr>
