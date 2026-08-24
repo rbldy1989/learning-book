@@ -260,7 +260,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 48178px;--thin-h:25378px">
+<section class="chapter" style="contain-intrinsic-size:auto 48568px;--thin-h:25453px">
 <h1 id="b1"><span class="part">语言</span>类型、值与作用域</h1>
 <p>对写过 C/C++/Java/Go 的人来说,JavaScript 的语法几分钟就能看懂,真正花时间的是底下两套和静态语言不一样的机制:<strong>类型属于值,不属于变量</strong>——运算符按规范里的三个抽象操作悄悄转换操作数,于是 <code>'5' - 2</code> 得 3 而 <code>'1' + 2</code> 得 <code>"12"</code>;<strong>名字属于它被写下的那个块</strong>——函数对象带着出生地的环境记录到处跑,于是有了闭包。这一章按「先给出一个反直觉的输出 → 拆开引擎在做什么 → 推出能记住的规则」把这两套机制讲到能推导。</p>
 <p>四节的顺序不能反。<a href="#f5-types">1.1</a> 先把值这一层盘清:8 种类型、ToPrimitive/ToNumber/ToString、<code>==</code> 与 <code>&lt;</code> 两套彼此独立的算法、7 个假值。<a href="#f5-lexical">1.2</a> 退回解析层,回答「这段源码被切成了什么形状」:标识符与保留字、三种声明的四个维度、优先级与结合性、自动分号插入——这一层的坑与转换规则无关,却和转换规则的坑长得一模一样,分不开就永远排查不清。<a href="#f5-scope">1.3</a> 建立作用域链与环境记录,把「读未声明抛 <code>ReferenceError</code>、写未声明创建全局、TDZ 为什么也是 <code>ReferenceError</code>」串成一条线。<a href="#f5-closure">1.4</a> 收尾:函数带着出生地的环境记录活下来,于是有了工厂、模块模式与循环里的三个 <code>i</code>。</p>
@@ -373,7 +373,13 @@ string number
 <p>用这张表推几个经典题:<code>'0' == false</code> → 步骤 5,<code>false → 0</code>,变成 <code>'0' == 0</code> → 步骤 3,<code>'0' → 0</code>,<code>0 == 0</code> 为 true。<code>[] == false</code> → <code>[] == 0</code> → 步骤 6,<code>[] → ""</code> → 步骤 3,<code>"" → 0</code>,true。<code>[] == ![]</code>:<code>![]</code> 先算,<code>[]</code> 是真值,所以是 <code>[] == false</code>,同上为 true。<code>null == 0</code> → 步骤 2 说 <code>null</code> 只和 <code>undefined</code> 相等,false;但 <code>null &gt;= 0</code> 为 true,因为关系比较走的是另一条路(两边都 ToNumber,<code>null → 0</code>)——<code>==</code> 与 <code>&lt;</code>/<code>&gt;=</code> 对 <code>null</code> 的处理不一致,是这套规则里最反直觉的一条,也是「不要用 <code>==</code> 比 <code>null</code> 以外的东西」的来源。</p>
 <p>推出来的使用规矩只有两条:<strong>默认用 <code>===</code></strong>;<strong>唯一值得用 <code>==</code> 的地方是 <code>x == null</code></strong>,它恰好等价于 <code>x === null || x === undefined</code>,比写两遍短。</p></div>
 <div class="deep"><h3 class="deep">关系比较 &lt; 的算法:和 == 不是一套</h3>
-<p><code>null == 0</code> 为 false 但 <code>null &gt;= 0</code> 为 true;<code>'10' &lt; '9'</code> 为 true;<code>undefined &gt;= 0</code> 和 <code>undefined &lt;= 0</code> 都是 false。这三组只要知道 <code>&lt;</code> 的算法(规范 7.2.13 抽象关系比较)就能推出来,它和 <code>==</code> 是<strong>两套独立的规则</strong>:① 两边先 ToPrimitive(hint number);② <strong>两边都是字符串</strong>时,按 UTF-16 码元逐位比较(字典序,不是数值,大写字母排在小写前面,<code>'10' &lt; '9'</code> 因为 <code>'1' &lt; '9'</code>);③ 否则两边 ToNumeric(Number 或 BigInt),按数学值比较;任一边是 <code>NaN</code> 结果是「未定义」,规范把它当 <strong>false</strong>;④ <code>a &gt; b</code> 就是 <code>b &lt; a</code>;<code>a &lt;= b</code> 是 <code>!(b &lt; a)</code>,<code>a &gt;= b</code> 是 <code>!(a &lt; b)</code>——但如果 <code>&lt;</code> 的结果是「未定义」(出现了 NaN),<code>&lt;=</code>/<code>&gt;=</code> 也直接 false,不取反。</p>
+<p><code>null == 0</code> 为 false 但 <code>null &gt;= 0</code> 为 true;<code>'10' &lt; '9'</code> 为 true;<code>undefined &gt;= 0</code> 和 <code>undefined &lt;= 0</code> 都是 false。这三组只要知道 <code>&lt;</code> 的算法(规范 7.2.13 抽象关系比较)就能推出来,它和 <code>==</code> 是<strong>两套独立的规则</strong>:</p>
+<ul>
+<li>两边先 ToPrimitive(hint number)。</li>
+<li><strong>两边都是字符串</strong>时,按 UTF-16 码元逐位比较(字典序,不是数值,大写字母排在小写前面,<code>'10' &lt; '9'</code> 因为 <code>'1' &lt; '9'</code>)。</li>
+<li>否则两边 ToNumeric(Number 或 BigInt),按数学值比较;任一边是 <code>NaN</code> 结果是「未定义」,规范把它当 <strong>false</strong>。</li>
+<li><code>a &gt; b</code> 就是 <code>b &lt; a</code>;<code>a &lt;= b</code> 是 <code>!(b &lt; a)</code>,<code>a &gt;= b</code> 是 <code>!(a &lt; b)</code>——但如果 <code>&lt;</code> 的结果是「未定义」(出现了 NaN),<code>&lt;=</code>/<code>&gt;=</code> 也直接 false,不取反。</li>
+</ul>
 <p>于是:<code>null &gt;= 0</code> → 两边不都是字符串 → ToNumber:<code>null → 0</code>,<code>0 &lt; 0</code> 为 false,取反得 true;<code>null == 0</code> 走的是 <code>==</code> 表的第 2 步「null 只等于 undefined」,false——两套算法对 <code>null</code> 的处理不一样,所以 <code>null &gt;= 0 &amp;&amp; null &lt;= 0</code> 为 true 而 <code>null == 0</code> 为 false。<code>undefined → NaN</code>,所有比较全 false。<code>[2] &gt; 1</code>:数组 ToPrimitive 得 <code>"2"</code>,不是「两边都是字符串」,转数字 2 &gt; 1 为 true;<code>[2] &gt; [10]</code>:两边都变成字符串 <code>"2"</code> 和 <code>"10"</code>,字典序 <code>"2" &gt; "10"</code> 为 true。<code>Date</code> 对象 ToPrimitive(hint number) 得到时间戳,所以日期可以直接用 <code>&lt;</code> 比(但不能用 <code>==</code>:那是 hint default,得到字符串,且两个对象永远不 <code>==</code>)。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 549px"><code><span class="cm">// relational.js — node relational.js</span>
 <span class="kw">const</span> show = (label, v) =&gt; console.log(label.padEnd(26), <span>'-&gt;'</span>, String(v));
@@ -643,7 +649,14 @@ console.log(<span>'4. 后缀 ++ 前不能换行,于是成了前缀:i ='</span>, 
 <tr><td class="nw">5 能接上就不插</td><td>下一行以 <code>(</code> <code>[</code> <code>`</code> <code>+</code> <code>-</code> <code>/</code> 开头时,它<strong>可以</strong>作为上一行表达式的延续(调用、下标、标签模板、加减、除法/正则),语法没有「违规」,于是不插</td><td><code>const s = 'x'\n['a'].forEach()</code> 被读成 <code>'x'['a'].forEach()</code>;<code>const b = a\n(function(){})()</code> 被读成 <code>a(function(){})()</code></td></tr>
 </tbody>
 </table>
-<p>第 4 条和第 5 条就是「两个陷阱」:<strong>① <code>return</code> 后面不能换行写返回值</strong>——对象字面量要把 <code>{</code> 放在 <code>return</code> 同一行;<strong>② 一行不能以 <code>(</code>、<code>[</code>、反引号、<code>+</code>/<code>-</code>、<code>/</code> 开头</strong>,除非你确定它就是上一行的延续。第二个陷阱的症状很有辨识度:报错不在出问题的那一行,而是前一行的东西「is not a function」或「Cannot read properties of undefined」,因为两行被粘成了一条语句。顺带一条规范里的特例:<code>do … while (cond)</code> 后面的分号可以省略(ES2015 起),而 <code>for (;;)</code> 头部的分号永远不会被自动插入——<code>for (let i = 0\n i &lt; 3\n i++)</code> 是 SyntaxError。</p>
+<p>第 4 条和第 5 条就是「两个陷阱」:</p>
+<ul>
+<li><strong><code>return</code> 后面不能换行写返回值</strong>——对象字面量要把 <code>{</code> 放在 <code>return</code> 同一行。</li>
+<li><strong>一行不能以 <code>(</code>、<code>[</code>、反引号、<code>+</code>/<code>-</code>、<code>/</code> 开头</strong>,除非你确定它就是上一行的延续。</li>
+</ul>
+<p>第二个陷阱的症状很有辨识度:报错不在出问题的那一行,而是前一行的东西「is not a function」或「Cannot read properties of undefined」,因为两行被粘成了一条语句。顺带一条规范里的特例:<code>do … while (cond)</code> 后面的分号可以省略(ES2015 起),而 <code>for (;;)</code> 头部的分号永远不会被自动插入——<code>for (let i = 0
+ i &lt; 3
+ i++)</code> 是 SyntaxError。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 两种风格,各守一条纪律</span><p>写分号(Prettier 默认 <code>semi: true</code>):守第 4 条,<code>return</code>/<code>throw</code> 的值不换行。不写分号(standard 风格):额外守第 5 条,行首是 <code>( [ `</code> 时在前面加一个分号 <code>;(…)()</code>、<code>;[…]</code>。两种风格下都打开 ESLint 的 <code>no-unexpected-multiline</code>(Prettier 的 <code>semi: false</code> 模式会自动补前导分号),压缩器(terser/esbuild)输出时会重新插入全部必要分号,所以这只影响源码可读性,不影响产物。</p></div>
 <div class="deep"><h3 class="deep">语句也有值:完成值与 {} 的两副面孔</h3>
 <p>JS 把代码分成<strong>表达式</strong>(有值,可以嵌进别的表达式)和<strong>语句</strong>(做事,构成程序的骨架)。但规范里语句也有值,叫<strong>完成值</strong>(completion value):<code>if (true) { 42 }</code> 的完成值是 42,<code>var a = 42</code> 的完成值是 <code>undefined</code>(声明不产生值),循环的完成值是最后一次产生值的那轮循环体的值。日常写代码完全用不上它,因为语言里<strong>唯一能观察到完成值的入口是 <code>eval</code></strong>——<code>eval(src)</code> 的返回值就是 <code>src</code> 的完成值。</p>
@@ -720,7 +733,13 @@ console.log(<span>'  行首是 ( -&gt;'</span>, kind(<span>'const a = 1\nconst b
   <span class="kw">return</span> 后换行 -&gt; undefined
   i 换行 ++i 的完成值 -&gt; 1
   行首是 ( -&gt; TypeError</code></pre>
-<p>四组各有一条值得记住的分界。① <code>var let = 1</code> 能跑而 <code>let let = 1</code> 不能:<code>let</code> 是严格模式保留字,非严格脚本里当变量名合法,只有在它自己作为声明关键字的位置才冲突——这类「同一个词在两种语法位置含义不同」的名字就是上下文关键字。② <code>const</code> 再赋值抛的是 <code>TypeError</code> 而不是 <code>SyntaxError</code>,因为它要到运行到那一行才知道;重复 <code>let</code> 声明抛 <code>SyntaxError</code>,解析时就拦下。同一个「不许改」的直觉,两种报错时机。③ <code>1 & 1 === 1</code> 得 1 而不是布尔:位运算优先级低于 <code>===</code>,所以先算 <code>1 === 1</code> 得 <code>true</code>,再 <code>1 & true</code> 得 1;而 <code>null ?? 0 || 5</code> 是规范有意设的护栏,不许裸混用。④ <code>return</code> 后换行返回 <code>undefined</code>,以及行首 <code>(</code> 把两行粘成一条语句——后者的症状最有辨识度:报错落在<strong>上一行</strong>的东西「is not a function」。</p></div>
+<p>四组各有一条值得记住的分界:</p>
+<ul>
+<li><code>var let = 1</code> 能跑而 <code>let let = 1</code> 不能:<code>let</code> 是严格模式保留字,非严格脚本里当变量名合法,只有在它自己作为声明关键字的位置才冲突——这类「同一个词在两种语法位置含义不同」的名字就是上下文关键字。</li>
+<li><code>const</code> 再赋值抛的是 <code>TypeError</code> 而不是 <code>SyntaxError</code>,因为它要到运行到那一行才知道;重复 <code>let</code> 声明抛 <code>SyntaxError</code>,解析时就拦下。同一个「不许改」的直觉,两种报错时机。</li>
+<li><code>1 &amp; 1 === 1</code> 得 1 而不是布尔:位运算优先级低于 <code>===</code>,所以先算 <code>1 === 1</code> 得 <code>true</code>,再 <code>1 &amp; true</code> 得 1;而 <code>null ?? 0 || 5</code> 是规范有意设的护栏,不许裸混用。</li>
+<li><code>return</code> 后换行返回 <code>undefined</code>,以及行首 <code>(</code> 把两行粘成一条语句——后者的症状最有辨识度:报错落在<strong>上一行</strong>的东西「is not a function」。</li>
+</ul></div>
 <h2 id="f5-scope">1.3 作用域链、提升与暂时性死区</h2>
 <p>作用域回答的问题是:「代码里写的一个名字,引擎去哪里找它对应的变量?」JavaScript 的答案是<strong>词法作用域</strong>(lexical scope):<strong>名字在哪个函数/块里被声明,由源码的嵌套结构在写代码时就决定了,和函数在哪里被调用无关</strong>。这和 C 的块作用域是同一种模型,区别有两个:JS 的函数可以在定义它的作用域结束之后继续存在并继续访问那个作用域里的变量(闭包,留给 <a href="#f5-closure">1.4</a>),以及 <code>var</code> 和函数声明会「提升」。</p>
 <p>这一节只讲名字怎么被找到:作用域的两种粒度、提升的三种形态、以及一条把「你看到哪种报错」和「查找方向」串起来的线——读一个不存在的名字抛 <code>ReferenceError</code>,写一个不存在的名字在非严格模式下悄悄造一个全局变量,而 TDZ 里的 <code>let</code> 读写都抛 <code>ReferenceError</code>。最后收两处「作用域被弄脏」的地方:浏览器遗留语义(Annex B)与动态代码(<code>eval</code> / <code>new Function</code>)。</p>
@@ -844,7 +863,11 @@ console.log(<span>'调用一个 undefined:'</span>, t(() =&gt; { var fn; <span c
 <div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 隐式全局变量是最难查的一类 bug</span><p>循环里写 <code>for (i = 0; …)</code> 少了 <code>let</code>,函数里写 <code>result = []</code> 少了 <code>const</code>——非严格模式下它们变成全局变量,于是两个互相调用的函数共用同一个 <code>i</code>,递归或嵌套循环时结果莫名其妙。ESM 天生严格,所以现代工程里这条基本绝迹;但 <code>&lt;script&gt;</code> 直接内联的代码、老项目里的 CommonJS 文件仍然是非严格的。补救有三层:文件顶部 <code>'use strict'</code>、改用 ESM、打开 ESLint 的 <code>no-undef</code>(它在<strong>写</strong>的位置也会报,这正是它比运行时更早的价值)。</p></div></div>
 <div class="deep"><h3 class="deep">Annex B:宿主对象与浏览器遗留语义(document.all、__proto__、块级函数)</h3>
 <p>ECMAScript 规范有一个附录 B,标题是「Web 浏览器的附加 ECMAScript 特性」:一批<strong>规范本来不想要、但网上已有太多代码依赖、浏览器不得不实现</strong>的行为,它们对浏览器是强制的,对 Node 这类非浏览器宿主是可选的(V8 全部实现了,所以 Node 里也能看到)。另一类「例外」来自<strong>宿主对象</strong>(host object):由宿主环境(DOM、BOM)提供、不受 ECMAScript 对普通对象的全部约束的对象。下面三条是前端代码里真会碰到的,后面是一张全表。</p>
-<p><strong>① 非严格模式下的块级函数声明。</strong>规范正文说函数声明在块里是块作用域的(ES2015 起),但附录 B.3.2 给非严格模式加了一层「Web 遗留语义」:进入外层函数时,块内函数名被当作 <code>var</code> 提升(初值 <code>undefined</code>),执行到块内的函数声明那一行时再把函数对象<strong>同时</strong>赋给块内绑定和外层那个 <code>var</code>。于是在块外能调到它,但只能在块执行之后;严格模式和 ESM 里没有这层,块外看不到。<strong>② <code>__proto__</code>。</strong><code>Object.prototype.__proto__</code> 是附录 B 规定的访问器(<a href="#f5-proto">3.1</a> 讲过),另一条是对象字面量里的 <code>{ __proto__: p }</code> 会设置 <code>[[Prototype]]</code>(而 <code>JSON.parse</code> 和计算属性名 <code>{ ['__proto__']: p }</code> 不会,它们造的是普通自有属性)——这是「原型污染」攻击能否得逞的分界线:对用户输入做 <code>target[key] = value</code> 式的深合并,<code>key</code> 是 <code>"__proto__"</code> 时走的是 setter,污染了 <code>Object.prototype</code>;用 <code>Object.create(null)</code> 或 <code>Map</code> 当字典,或先 <code>Object.hasOwn</code> 过滤,就切断了这条路。<strong>③ <code>document.all</code>。</strong>它是 HTMLAllCollection,规范明文规定它是唯一一个<strong>假值对象</strong>:<code>typeof document.all</code> 是 <code>"undefined"</code>、<code>if (document.all)</code> 为 false、<code>document.all == null</code> 为 true——为的是让 1990 年代 <code>if (document.all) { /* IE 专用代码 */ }</code> 这种检测在现代浏览器里走到非 IE 分支。它是 ToBoolean「所有对象都是真值」规则的唯一例外,只在浏览器里存在。</p>
+<ul>
+<li><strong>非严格模式下的块级函数声明。</strong>规范正文说函数声明在块里是块作用域的(ES2015 起),但附录 B.3.2 给非严格模式加了一层「Web 遗留语义」:进入外层函数时,块内函数名被当作 <code>var</code> 提升(初值 <code>undefined</code>),执行到块内的函数声明那一行时再把函数对象<strong>同时</strong>赋给块内绑定和外层那个 <code>var</code>。于是在块外能调到它,但只能在块执行之后;严格模式和 ESM 里没有这层,块外看不到。</li>
+<li><strong><code>__proto__</code>。</strong><code>Object.prototype.__proto__</code> 是附录 B 规定的访问器(<a href="#f5-proto">3.1</a> 讲过),另一条是对象字面量里的 <code>{ __proto__: p }</code> 会设置 <code>[[Prototype]]</code>(而 <code>JSON.parse</code> 和计算属性名 <code>{ ['__proto__']: p }</code> 不会,它们造的是普通自有属性)——这是「原型污染」攻击能否得逞的分界线:对用户输入做 <code>target[key] = value</code> 式的深合并,<code>key</code> 是 <code>"__proto__"</code> 时走的是 setter,污染了 <code>Object.prototype</code>;用 <code>Object.create(null)</code> 或 <code>Map</code> 当字典,或先 <code>Object.hasOwn</code> 过滤,就切断了这条路。</li>
+<li><strong><code>document.all</code>。</strong>它是 HTMLAllCollection,规范明文规定它是唯一一个<strong>假值对象</strong>:<code>typeof document.all</code> 是 <code>"undefined"</code>、<code>if (document.all)</code> 为 false、<code>document.all == null</code> 为 true——为的是让 1990 年代 <code>if (document.all) { /* IE 专用代码 */ }</code> 这种检测在现代浏览器里走到非 IE 分支。它是 ToBoolean「所有对象都是真值」规则的唯一例外,只在浏览器里存在。</li>
+</ul>
 <table style="contain-intrinsic-size:auto 893px">
 <thead><tr><th>附录 B / 宿主特性</th><th>行为</th><th>今天怎么办</th></tr></thead>
 <tbody>
@@ -1625,7 +1648,7 @@ h2();                         <span class="cm">// arrow field: OK</span></code><
 <p>接下来 <a href="#f5-class">3.2</a> 讲 <code>new</code> 到底做了哪四步、class 的方法为什么在原型上,正好接上本章「<code>new</code> 绑定优先级最高」这一条;<a href="#f5-array">3.4</a> 把「改原值还是返回新值」的数组方法表补齐;异步那一章(<a href="#f6-promise">8.2</a>、<a href="#f6-async">8.3</a>)会看到 Promise 如何把这一章交出去的控制权收回来。真正把这一章学到位的标志是:读别人代码时,看到一个函数被传进另一个函数,你会下意识问一句「它会被怎么调用」。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 47930px;--thin-h:28595px">
+<section class="chapter" style="contain-intrinsic-size:auto 48587px;--thin-h:29004px">
 <h1 id="b3"><span class="part">语言</span>对象、数组、原型与类</h1>
 <p>JavaScript 里没有「类」这种编译期的东西,只有对象,以及对象之间的一条 <code>[[Prototype]]</code> 链接;<code>class</code> 是这套机制之上的语法,不是另一套机制。这一章先讲机制再讲数据,四节各占一层。<a href="#f5-proto">3.1</a> 把三件最容易混成一团的东西分开——对象内部的 <code>[[Prototype]]</code>、遗留访问器 <code>__proto__</code>、函数身上那个「将来实例的原型」<code>prototype</code>——然后讲属性的读、写、删各走哪条路,<code>new</code> 的四步,<code>instanceof</code> 到底在问什么,以及不用 <code>class</code> 也能把这套机制用好的行为委托风格。<a href="#f5-class">3.2</a> 才谈 <code>class</code>:六条硬规则各自对应哪条机制、私有字段与静态成员、<code>extends</code> 接的两条链、以及 Stage 3 的装饰器。</p>
 <p>后两节转向每天搬运的数据。<a href="#f5-objarr">3.3</a> 讲对象这一面:属性描述符与 getter/setter、<code>Object</code> 的静态方法与可选链/空值合并、<code>.</code> 与 <code>[]</code> 的差别、<code>JSON</code> 的边界,以及引擎给对象建的隐藏类。<a href="#f5-array">3.4</a> 讲数组这一面:按「改不改原数组」分成的两组方法、类数组与 <code>Array.from</code>,最后落到框架真正依赖的那项技能——不可变更新。</p>
@@ -1648,7 +1671,13 @@ Object.hasOwn(obj, key)                 <span class="cm">// 自有属性判断(E
 <tr><td class="nw"><code>descriptors</code></td><td class="nw">object</td><td>可选。形如 <code>{ 键: 属性描述符 }</code>,语义与 <code>Object.defineProperties</code> 完全一致——注意这里每个值是<strong>描述符</strong>而不是属性值,写成 <code>{ x: 1 }</code> 会得到一个没有 <code>value</code> 的描述符,属性值是 <code>undefined</code>(<a href="#f5-objarr">3.3</a>)</td></tr>
 </tbody>
 </table>
-<p>三件事要分开:<strong>① <code>[[Prototype]]</code></strong> 是对象内部的链接,每个对象都有(值可能是 <code>null</code>);<strong>② <code>__proto__</code></strong> 是 <code>Object.prototype</code> 上的一个 getter/setter,读写的就是 ①,存在只为兼容,<code>Object.create(null)</code> 造出来的对象连它都没有;<strong>③ 函数的 <code>prototype</code> 属性</strong>是另一个东西——它是函数对象上一个普通属性,指向「用这个函数 <code>new</code> 出来的对象将要拥有的原型」。<code>F.prototype</code> 不是 F 的原型,F 的原型是 <code>Function.prototype</code>。初学者九成的混乱来自把 ② 和 ③ 当成一回事。</p>
+<p>三件事要分开:</p>
+<ul>
+<li><strong>① <code>[[Prototype]]</code></strong> 是对象内部的链接,每个对象都有(值可能是 <code>null</code>)。</li>
+<li><strong>② <code>__proto__</code></strong> 是 <code>Object.prototype</code> 上的一个 getter/setter,读写的就是 ①,存在只为兼容;<code>Object.create(null)</code> 造出来的对象连它都没有。</li>
+<li><strong>③ 函数的 <code>prototype</code> 属性</strong>是另一个东西——它是函数对象上一个普通属性,指向「用这个函数 <code>new</code> 出来的对象将要拥有的原型」。<code>F.prototype</code> 不是 F 的原型,F 的原型是 <code>Function.prototype</code>。</li>
+</ul>
+<p>初学者九成的混乱来自把 ② 和 ③ 当成一回事。</p>
 <table style="contain-intrinsic-size:auto 370px">
 <thead><tr><th>表达式</th><th>含义</th><th>结果示例</th></tr></thead>
 <tbody>
@@ -1677,7 +1706,14 @@ console.log(typeof bare.toString, <span>'toString'</span> in bare);   <span clas
 <figcaption>原型链:实例、构造函数、prototype 对象与 Object.prototype 之间的链接（原创绘制）</figcaption>
 </figure>
 <h3>构造函数、prototype 属性与 new 的四步</h3>
-<p>ES2015 之前「造一批同类对象」的标准写法:一个普通函数当构造函数(约定首字母大写),方法挂到它的 <code>prototype</code> 上,用 <code>new</code> 调用。<code>new F(args)</code> 做四步:<strong>① 创建一个空对象;② 把它的 <code>[[Prototype]]</code> 设为 <code>F.prototype</code>;③ 以它为 <code>this</code> 执行 F 的函数体;④ 如果 F 返回了一个对象就用那个对象,否则用 ① 造的对象</strong>。<code>F.prototype</code> 在函数创建时自动生成,上面预置了一个指回 F 的 <code>constructor</code> 属性——所以 <code>p.constructor === Person</code> 成立,但它是沿链查到的,不是实例自有的,整体替换 <code>F.prototype = {...}</code> 会把它弄丢。</p>
+<p>ES2015 之前「造一批同类对象」的标准写法:一个普通函数当构造函数(约定首字母大写),方法挂到它的 <code>prototype</code> 上,用 <code>new</code> 调用。<code>new F(args)</code> 做四步:</p>
+<ul>
+<li><strong>①</strong> 创建一个空对象。</li>
+<li><strong>②</strong> 把它的 <code>[[Prototype]]</code> 设为 <code>F.prototype</code>。</li>
+<li><strong>③</strong> 以它为 <code>this</code> 执行 F 的函数体。</li>
+<li><strong>④</strong> 如果 F 返回了一个对象就用那个对象,否则用 ① 造的对象。</li>
+</ul>
+<p><code>F.prototype</code> 在函数创建时自动生成,上面预置了一个指回 F 的 <code>constructor</code> 属性——所以 <code>p.constructor === Person</code> 成立,但它是沿链查到的,不是实例自有的,整体替换 <code>F.prototype = {...}</code> 会把它弄丢。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 238px"><code>function Person(name) { <span class="kw">this</span>.name = name; }            <span class="cm">// 构造函数:只负责往 this 上放数据</span>
 Person.prototype.hello = function () { <span class="kw">return</span> <span>'hi, I am '</span> + <span class="kw">this</span>.name; };   <span class="cm">// 方法放原型,所有实例共享一份</span>
 <span class="kw">const</span> p = <span class="kw">new</span> Person(<span>'Ann'</span>);
@@ -1730,7 +1766,12 @@ Widget2.isPrototypeOf(b2): <span class="kw">true</span> | 没有构造函数可�
 <span class="kw">class</span> 版的链形状一样: <span class="kw">true</span>
 自有属性: [ <span>'w'</span>, <span>'h'</span>, <span>'label'</span> ] [ <span>'w'</span>, <span>'h'</span>, <span>'label'</span> ]
 patched [OK] | patched [OK]</code></pre>
-<p>两段代码造出的对象链<strong>形状完全一样</strong>:<code>b → Button → Widget → Object.prototype</code>,自有属性也一样;最后一行证明两者都是「运行时委托」——改提供者上的方法,已经造出来的对象立刻看到新行为,class 没有把方法「复制」进实例,它只是把 <code>Button.prototype</code> 当提供者。OLOO 暴露了三件被 class 语法盖住的事实:① 所谓「继承」是两个<strong>对象</strong>之间的链接,<code>extends</code> 只是 <code>Object.create</code> 加一条静态链;② <code>super.render()</code> 只是 <code>Widget2.render.call(this)</code> 的简写——OLOO 里习惯给不同层的方法起不同名字(<code>setup</code> 调 <code>init</code>),避开屏蔽,也就不需要 <code>super</code>;③ <code>instanceof</code> 问的是「链上有没有 <code>F.prototype</code>」,没有构造函数时用 <code>Widget2.isPrototypeOf(b2)</code> 问同一个问题更直接。</p>
+<p>两段代码造出的对象链<strong>形状完全一样</strong>:<code>b → Button → Widget → Object.prototype</code>,自有属性也一样;最后一行证明两者都是「运行时委托」——改提供者上的方法,已经造出来的对象立刻看到新行为,class 没有把方法「复制」进实例,它只是把 <code>Button.prototype</code> 当提供者。OLOO 暴露了三件被 class 语法盖住的事实:</p>
+<ul>
+<li>所谓「继承」是两个<strong>对象</strong>之间的链接,<code>extends</code> 只是 <code>Object.create</code> 加一条静态链。</li>
+<li><code>super.render()</code> 只是 <code>Widget2.render.call(this)</code> 的简写——OLOO 里习惯给不同层的方法起不同名字(<code>setup</code> 调 <code>init</code>),避开屏蔽,也就不需要 <code>super</code>。</li>
+<li><code>instanceof</code> 问的是「链上有没有 <code>F.prototype</code>」,没有构造函数时用 <code>Widget2.isPrototypeOf(b2)</code> 问同一个问题更直接。</li>
+</ul>
 <p>今天的代码里 class 是主流写法,TypeScript 对它的类型支持也最好,没必要把项目改写成 OLOO。但 OLOO 的思路每天都在用:<code>Object.create(proto)</code> 造「带默认行为的配置对象」、<code>Object.setPrototypeOf</code> 给已有对象挂行为、mixin 把多个行为对象合进一条链,以及读任何一段 <code>prototype</code> 代码时,脑子里画的应该是「对象 → 对象」的链接图(本节的图),而不是「类 → 子类 → 实例」的树。</p></div>
 <div class="deep"><h3 class="deep">constructor 属性有多可靠</h3>
 <p><code>p.constructor === Person</code> 看起来像「这个对象是 Person 造的」的证明,其实它只是一条<strong>普通的、可写的、沿链查到的</strong>属性:函数创建时引擎在 <code>F.prototype</code> 上放了一个 <code>constructor: F</code>(不可枚举、可写、可配置),仅此而已。它不是实例自有的,不是只读的,也没有任何内部槽与它关联——<code>new</code> 的四步里根本不看它。于是它在下面几种很常见的情形下都会「说谎」:</p>
@@ -1896,7 +1937,14 @@ console.log(<span>'⑤ super 先行:'</span>, t(() =&gt; <span class="kw">new</s
 ④ 必须 <span class="kw">new</span>: TypeError: Class constructor Point cannot be invoked without <span>'new'</span>
 ⑥ 方法不能 <span class="kw">new</span>: TypeError: p.norm is not a constructor
 ⑤ super 先行: ReferenceError: Must call super constructor in derived <span class="kw">class</span> before accessing <span>'this'</span> or returning from derived constructor</code></pre>
-<p>逐条对应到机制:① 严格模式是规范直接规定的,写 <code>'use sloppy'</code> 也关不掉,所以 class 里的 <code>this</code> 在丢失接收者时是 <code>undefined</code> 而不是全局对象——<a href="#f5-this">2.2</a> 里「丢失 this」的现场在 class 里报的是 <code>Cannot read properties of undefined</code>,原因就在这。② 类绑定和 <code>let</code> 一样进 TDZ(<a href="#f5-scope">1.3</a>),所以 <code>class</code> 不能像函数声明那样随便放文件末尾。③ 不可枚举意味着 <code>Object.assign(target, SomeClass.prototype)</code> 一个方法都拷不到,mixin 要用 <code>Object.getOwnPropertyNames</code> + <code>Object.defineProperty</code> 才行。④⑤ 都是 <code>new</code> 四步(<a href="#f5-proto">3.1</a>)的直接后果:对象由最底层的 <code>new.target</code> 决定原型、由基类构造函数创建,所以派生类在 <code>super()</code> 返回前拿不到 <code>this</code>。⑥ 是因为规范只给「方法定义」语法产生的函数装了 <code>[[Call]]</code> 没装 <code>[[Construct]]</code>,箭头函数、生成器方法同理。</p>
+<p>逐条对应到机制:</p>
+<ul>
+<li><strong>①</strong> 严格模式是规范直接规定的,写 <code>'use sloppy'</code> 也关不掉,所以 class 里的 <code>this</code> 在丢失接收者时是 <code>undefined</code> 而不是全局对象——<a href="#f5-this">2.2</a> 里「丢失 this」的现场在 class 里报的是 <code>Cannot read properties of undefined</code>,原因就在这。</li>
+<li><strong>②</strong> 类绑定和 <code>let</code> 一样进 TDZ(<a href="#f5-scope">1.3</a>),所以 <code>class</code> 不能像函数声明那样随便放文件末尾。</li>
+<li><strong>③</strong> 不可枚举意味着 <code>Object.assign(target, SomeClass.prototype)</code> 一个方法都拷不到,mixin 要用 <code>Object.getOwnPropertyNames</code> + <code>Object.defineProperty</code> 才行。</li>
+<li><strong>④⑤</strong> 都是 <code>new</code> 四步(<a href="#f5-proto">3.1</a>)的直接后果:对象由最底层的 <code>new.target</code> 决定原型、由基类构造函数创建,所以派生类在 <code>super()</code> 返回前拿不到 <code>this</code>。</li>
+<li><strong>⑥</strong> 是因为规范只给「方法定义」语法产生的函数装了 <code>[[Call]]</code> 没装 <code>[[Construct]]</code>,箭头函数、生成器方法同理。</li>
+</ul>
 <div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 ⑤ 的报错常被误诊成「构造函数写错了」</span><p><code>Must call super constructor in derived class before accessing 'this'</code> 还有一种触发方式很隐蔽:派生类的 constructor 里有一条<strong>提前 return</strong>的分支(比如 <code>if (!opts) return;</code>),那条路径上没调 <code>super()</code>,同样报这句话——报错信息里 "or returning from derived constructor" 说的就是它。派生类的 constructor 要么调 <code>super()</code>,要么 <code>return</code> 一个对象,不能什么都不做就返回。</p></div>
 <h3>私有字段、静态成员与抽象基类</h3>
 <p>ES2022 一次补齐了 class 的三块语法:<code>#</code> 私有成员、类字段与静态字段、静态初始化块。它们不是「更好看的写法」,而是各自解决一个用别的办法解决不了的问题。</p>
@@ -1956,7 +2004,14 @@ C <span class="kw">class</span>      | hi: hi x | instanceof Parent: <span class
 A 原型上的 items 被共享: [ 1 ]
 ES5 继承 Array: 2 <span class="kw">false</span> [ <span>'0'</span>, <span>'1'</span>, <span>'length'</span> ]
 <span class="kw">class</span> extends Array: 2 <span class="kw">true</span> <span class="kw">true</span></code></pre>
-<p>三种写法对比出 <code>class</code> 修掉的四件事:① 写法 A 把 <code>name</code>/<code>items</code> 留在了原型上(第一行的「多余自有属性」),所有通过 <code>Object.create(ChildA.prototype)</code> 造出的对象共享那个 <code>items</code>——这是 <a href="#f5-proto">3.1</a> 那条「原型上的引用类型数据被共享」的事故在继承场景里的版本;② 写法 A 的 <code>constructor</code> 指向 <code>Parent</code>(原型是父实例,沿链查到的是 <code>Parent.prototype.constructor</code>),写法 B 手工补了回来,但用赋值补回来的是<strong>可枚举</strong>属性(第二行的 <code>['constructor']</code>),严格的做法是 <code>Object.defineProperty(ChildB.prototype, 'constructor', { value: ChildB, enumerable: false })</code>,class 替你做了;③ 只有 class 接上了<strong>静态链</strong>(<code>Object.getPrototypeOf(ChildC) === Parent</code>),ES5 两种写法都没有,所以 <code>Parent.create()</code> 这类静态方法子类拿不到;④ 内建类型:<code>Array.apply(this)</code> 不会把 <code>this</code> 变成真数组(<code>length</code> 只是个普通属性,所以 <code>Object.keys</code> 里有它,<code>Array.isArray</code> 为 false),而 <code>class extends Array</code> 得到真数组——因为 class 的构造顺序是先由<strong>基类</strong>创建对象再交给子类(<a href="#f5-proto">3.1</a> 的 <code>new.target</code> 传递),ES5 的「先造普通对象再 <code>Parent.call</code>」在内建构造函数上走不通。读老代码或老库(Backbone 的 <code>extend</code>、早期 Vue 组件选项的 <code>Vue.extend</code>)时,看到 <code>Object.create(Parent.prototype)</code> + <code>constructor = Child</code> 这两行,就知道它是在手工实现 <code>extends</code>。</p></div>
+<p>三种写法对比出 <code>class</code> 修掉的四件事:</p>
+<ul>
+<li>写法 A 把 <code>name</code>/<code>items</code> 留在了原型上(第一行的「多余自有属性」),所有通过 <code>Object.create(ChildA.prototype)</code> 造出的对象共享那个 <code>items</code>——这是 <a href="#f5-proto">3.1</a> 那条「原型上的引用类型数据被共享」的事故在继承场景里的版本。</li>
+<li>写法 A 的 <code>constructor</code> 指向 <code>Parent</code>(原型是父实例,沿链查到的是 <code>Parent.prototype.constructor</code>);写法 B 手工补了回来,但用赋值补回来的是<strong>可枚举</strong>属性(第二行的 <code>['constructor']</code>),严格的做法是 <code>Object.defineProperty(ChildB.prototype, 'constructor', { value: ChildB, enumerable: false })</code>,class 替你做了。</li>
+<li>只有 class 接上了<strong>静态链</strong>(<code>Object.getPrototypeOf(ChildC) === Parent</code>),ES5 两种写法都没有,所以 <code>Parent.create()</code> 这类静态方法子类拿不到。</li>
+<li>内建类型:<code>Array.apply(this)</code> 不会把 <code>this</code> 变成真数组(<code>length</code> 只是个普通属性,所以 <code>Object.keys</code> 里有它,<code>Array.isArray</code> 为 false),而 <code>class extends Array</code> 得到真数组——因为 class 的构造顺序是先由<strong>基类</strong>创建对象再交给子类(<a href="#f5-proto">3.1</a> 的 <code>new.target</code> 传递),ES5 的「先造普通对象再 <code>Parent.call</code>」在内建构造函数上走不通。</li>
+</ul>
+<p>读老代码或老库(Backbone 的 <code>extend</code>、早期 Vue 组件选项的 <code>Vue.extend</code>)时,看到 <code>Object.create(Parent.prototype)</code> + <code>constructor = Child</code> 这两行,就知道它是在手工实现 <code>extends</code>。</p></div>
 <div class="deep"><h3 class="deep">装饰器:Stage 3 的类元编程</h3>
 <p>TC39 的装饰器提案(现行版本,Stage 3)把「在类定义时改写类的某个部分」变成语言特性。它和 2015 年那版旧提案<strong>语义完全不同</strong>——旧版给方法装饰器传的是属性描述符,新版传的是「被装饰的那个值 + 一个上下文对象」。TypeScript 5.0 起默认实现的是新版,老的 <code>experimentalDecorators: true</code> 走的仍是旧版,两者不能混用;Angular、旧版 NestJS 与 MobX 的代码基本都建立在旧版上。</p>
 <table style="contain-intrinsic-size:auto 305px">
@@ -2501,7 +2556,7 @@ shallow.user === state.user            <span class="cm">// true ← 没改的子
 <p>这一章学到位的标志有三条:能手写一遍 <code>new</code> 的四步并解释每一步;能在纸上画出 <code>class B extends A</code> 的两条链;拿到一段状态更新代码,能指出它是可变的还是不可变的、以及框架会不会检测到变化。接下来 <a href="#f5-iter">4.1</a> 讲迭代协议与解构展开的完整规则(本章用到的 <code>[...arr]</code> 与 <code>{ ...o }</code> 走的其实是两套不同的机制),<a href="#fstd-coll">6.3</a> 把 <code>Map</code>/<code>Set</code>/<code>WeakMap</code> 讲全,<a href="#fstd-proxy">7.4</a> 则会展示 <code>Proxy</code> 怎么在这条属性查找链上再插一层,那正是 Vue 3 响应式的实现方式。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45722px;--thin-h:29664px">
+<section class="chapter" style="contain-intrinsic-size:auto 46304px;--thin-h:29927px">
 <h1 id="b4"><span class="part">语言</span>迭代、错误与模块</h1>
 <p>这一章讲三套<strong>协议</strong>:遍历一个东西的协议、报告失败的协议、把代码拆成文件的协议。三者都不是「某个 API 怎么用」,而是「按约定长成这个形状,语言里所有相关的机制就都认你」。<a href="#f5-iter">4.1</a> 讲可迭代协议与迭代器协议的消费端——一个对象只要有 <code>[Symbol.iterator]()</code>,<code>for…of</code>、展开、解构、<code>Array.from</code>、<code>Promise.all</code>、<code>new Map</code> 就全能消费它,顺带把五种循环语句的边界排清。<a href="#f5-gen">4.2</a> 讲生产端:<code>function*</code> 是写这套协议的语法糖,<code>yield</code> 的双向性给出暂停/恢复的能力,<code>yield*</code> 的递归形态让「惰性遍历一棵树」缩到八行。<a href="#f5-error">4.3</a> 讲 <code>Error</code> 家族、<code>try/catch/finally</code> 的准确语义、<code>cause</code> 链与自定义错误类,以及一条工程判断:什么该抛,什么该返回。<a href="#f5-modules">4.4</a> 讲 ESM 的静态结构与实时绑定、动态 <code>import()</code>、CJS 互操作、循环依赖的执行顺序,以及裸说明符为什么必须过一遍打包器。</p>
 <p>按这个顺序讲是因为它们层层递进:迭代协议是「一个对象怎么对外交出值」,生成器是「怎么一边算一边交」,错误处理是「一次调用怎么对外交出失败」,模块是「一个文件怎么对外交出名字」。三节都要用到 <a href="#f5-scope">1.3</a> 的环境记录(<a href="#f5-modules">4.4</a> 的实时绑定就是两个模块共享同一个槽)和 <a href="#f5-objarr">3.3</a> 的展开与解构。往后,生成器的暂停恢复加上 Promise 就是 <a href="#f6-async">8.3</a> 的 <code>async</code>/<code>await</code>,<code>try/catch</code> 在异步里的形态变化在 <a href="#f6-promise">8.2</a>,全局兜底事件的上报接在 <a href="浏览器API与工作原理手册.html#f12-monitor">《浏览器 API 与工作原理手册》12.5</a>,模块的构建与代码分割在 <a href="前端框架与工程化手册.html#f11-vite-build">《前端框架与工程化手册》5.2</a>。</p>
@@ -2709,7 +2764,11 @@ console.log([...it], [...it]);                 <span class="cm">// 但它只能�
 <pre style="contain-intrinsic-size:auto 114px"><code>[ 1, 2, 3, 4, 5 ] [ 1, 2, 3, 4, 5 ]
 <span class="kw">true</span>
 [ 1, 2, 3, 4, 5 ] []</code></pre>
-<p>和手写版的差别正好两条,都很实用。<strong>① 生成器版白送一个 <code>return()</code></strong>:<code>break</code> 时引擎会在暂停的 <code>yield</code> 处执行 <code>return</code>,函数体里的 <code>finally</code> 会跑——手写版必须自己实现 <code>return()</code> 才能做清理(<a href="#f5-gen">4.2</a> 的完整示例把这条用到底)。<strong>② 「可迭代对象」和「迭代器」是两个概念,生成器对象同时是两者</strong>:<code>g[Symbol.iterator]() === g</code>,所以它<strong>只能被遍历一次</strong>,第二次展开得到空数组。<code>Range2</code> 能反复遍历是因为每次调用 <code>[Symbol.iterator]()</code> 都造一个新生成器。「把一个生成器传给两个消费者,第二个什么都没拿到」这个事故,原因就在这一行。</p></div>
+<p>和手写版的差别正好两条,都很实用:</p>
+<ul>
+<li><strong>生成器版白送一个 <code>return()</code>。</strong><code>break</code> 时引擎会在暂停的 <code>yield</code> 处执行 <code>return</code>,函数体里的 <code>finally</code> 会跑——手写版必须自己实现 <code>return()</code> 才能做清理(<a href="#f5-gen">4.2</a> 的完整示例把这条用到底)。</li>
+<li><strong>「可迭代对象」和「迭代器」是两个概念,生成器对象同时是两者。</strong><code>g[Symbol.iterator]() === g</code>,所以它<strong>只能被遍历一次</strong>,第二次展开得到空数组。<code>Range2</code> 能反复遍历是因为每次调用 <code>[Symbol.iterator]()</code> 都造一个新生成器。「把一个生成器传给两个消费者,第二个什么都没拿到」这个事故,原因就在这一行。</li>
+</ul></div>
 <h2 id="f5-gen">4.2 生成器:function*、yield 与递归委托</h2>
 <p>生成器函数 <code>function*</code> 是「写迭代器」的语法糖:用 <code>yield</code> 把「下一个值」一个个交出去,引擎替你维护那台状态机。<a href="#f5-gen">4.2</a> 已经把消费端讲完了,这一节讲生产端,重点有两个:一个是 <code>yield</code> 的<strong>双向</strong>性——它既能把值送出去,也能把 <code>next(v)</code> 送进来的值当作自己的求值结果,这是「可暂停的函数」这件事的全部内容;另一个是 <code>yield*</code> 的<strong>递归</strong>形态,遍历一棵树只要八行,而且是惰性的。</p>
 <p>生成器还是 <code>async</code>/<code>await</code> 的前身:<code>async</code> 函数约等于「一个自动调用 <code>next()</code> 的生成器 + Promise」,<a href="#f6-async">8.3</a> 会用十几行运行器把这层糖拆开。今天手写生成器主要剩三类用途:自定义迭代器、惰性/无限序列、以及需要「外部驱动」的流程(Redux-Saga 这类库)。</p>
@@ -2847,9 +2906,20 @@ let r = it.next();
   清理目录句柄: /src
    /README.md
   清理目录句柄: /</code></pre>
-<p>三段各验证一条。① 里 <code>清理目录句柄: /src</code> 出现在 <code>/src/util.js</code> 之后、<code>/README.md</code> 之前——<code>finally</code> 在那一层的子节点全部交完、函数体正常结束时跑。② 里 <code>break</code> 让 <code>for…of</code> 调用最外层生成器的 <code>return()</code>,它<strong>沿委托链一路传下去</strong>,于是每一层的 <code>finally</code> 都跑了,顺序是从内到外;这就是「生成器版迭代器白送一个 <code>return()</code>」(<a href="#f5-gen">4.2</a>)的实际价值——资源清理不用消费者操心。③ 里 <code>it.next('skip')</code> 送进去的值,落到的是<strong>当时正暂停着的那一层</strong>(<code>walk(src)</code>)的 <code>yield</code> 上,于是那一层不再递归子节点,直接走 <code>finally</code> 收尾。三种控制——拉、停、回话——合起来就是协程,<a href="#f6-async">8.3</a> 会用同一套机制把 <code>await</code> 手写出来。</p></div>
+<p>三段各验证一条:</p>
+<ul>
+<li><strong>①</strong> 里 <code>清理目录句柄: /src</code> 出现在 <code>/src/util.js</code> 之后、<code>/README.md</code> 之前——<code>finally</code> 在那一层的子节点全部交完、函数体正常结束时跑。</li>
+<li><strong>②</strong> 里 <code>break</code> 让 <code>for…of</code> 调用最外层生成器的 <code>return()</code>,它<strong>沿委托链一路传下去</strong>,于是每一层的 <code>finally</code> 都跑了,顺序是从内到外;这就是「生成器版迭代器白送一个 <code>return()</code>」(<a href="#f5-gen">4.2</a>)的实际价值——资源清理不用消费者操心。</li>
+<li><strong>③</strong> 里 <code>it.next('skip')</code> 送进去的值,落到的是<strong>当时正暂停着的那一层</strong>(<code>walk(src)</code>)的 <code>yield</code> 上,于是那一层不再递归子节点,直接走 <code>finally</code> 收尾。</li>
+</ul>
+<p>三种控制——拉、停、回话——合起来就是协程,<a href="#f6-async">8.3</a> 会用同一套机制把 <code>await</code> 手写出来。</p></div>
 <h2 id="f5-error">4.3 错误处理</h2>
-<p>JS 的错误处理是经典的异常模型:<code>throw</code> 抛出任意值,沿调用栈向上找最近的 <code>try/catch</code>,找不到就到达宿主环境的「未捕获异常」处理器(浏览器打印到控制台并触发 <code>window</code> 的 <code>error</code> 事件,Node 默认退出进程)。和 Java/C++ 的差别有三处:<strong>① 抛的可以是任何值</strong>,不限于 <code>Error</code> 实例(但应该只抛 <code>Error</code>);<strong>② 没有受检异常</strong>,函数签名上看不出会抛什么,全靠文档和类型(TS 也不标 throws);<strong>③ 异步边界会切断栈</strong>:<code>setTimeout</code> 回调里抛的错 <code>try</code> 不到,Promise 里的错走 <code>reject</code> 那条路(见 <a href="#f6-promise">8.2</a>),有单独的全局事件。</p>
+<p>JS 的错误处理是经典的异常模型:<code>throw</code> 抛出任意值,沿调用栈向上找最近的 <code>try/catch</code>,找不到就到达宿主环境的「未捕获异常」处理器(浏览器打印到控制台并触发 <code>window</code> 的 <code>error</code> 事件,Node 默认退出进程)。和 Java/C++ 的差别有三处:</p>
+<ul>
+<li><strong>抛的可以是任何值</strong>,不限于 <code>Error</code> 实例(但应该只抛 <code>Error</code>)。</li>
+<li><strong>没有受检异常</strong>,函数签名上看不出会抛什么,全靠文档和类型(TS 也不标 throws)。</li>
+<li><strong>异步边界会切断栈</strong>:<code>setTimeout</code> 回调里抛的错 <code>try</code> 不到,Promise 里的错走 <code>reject</code> 那条路(见 <a href="#f6-promise">8.2</a>),有单独的全局事件。</li>
+</ul>
 <p>这一节把 <code>Error</code> 家族、<code>try/catch/finally</code> 的语义、<code>cause</code> 链、自定义错误类、两个全局兜底事件讲完,最后是一条工程判断:什么情况该 <code>throw</code>,什么情况该返回一个表示失败的值。</p>
 <h3>Error 类型表</h3>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 211px"><code><span class="kw">new</span> Error(message?, { cause }?)      <span class="cm">// 也可以不带 new 调用,效果相同</span>
@@ -2924,7 +2994,13 @@ console.log(<span>'Error.isError  :'</span>, Error.isError(foreign), Error.isErr
 <pre style="contain-intrinsic-size:auto 114px"><code>instanceof     : <span class="kw">false</span> <span class="kw">false</span>
 toString.call  : [object Error] [object Error]
 Error.isError  : <span class="kw">true</span> <span class="kw">false</span></code></pre>
-<p>三行输出把三种写法的边界摆清楚了:<code>instanceof</code> 漏判了真错误,<code>toString.call</code> 误判了假错误,只有 <code>Error.isError</code> 两边都对。什么时候真会撞上?① 主线程接住 Worker 传回来的错误(<a href="#f6-worker">9.3</a>);② 在 iframe 或沙箱里跑第三方代码,错误要跨边界上报;③ 写错误上报库,输入是任何人扔过来的任何值。日常业务代码里 <code>instanceof</code> 够用,这三类场景就得换。<code>AggregateError</code>(<a href="#f6-promise">8.2</a>)在 <code>Error.isError</code> 下同样返回 <code>true</code>,它也是带 <code>[[ErrorData]]</code> 的正经错误。</p>
+<p>三行输出把三种写法的边界摆清楚了:<code>instanceof</code> 漏判了真错误,<code>toString.call</code> 误判了假错误,只有 <code>Error.isError</code> 两边都对。什么时候真会撞上?</p>
+<ul>
+<li>主线程接住 Worker 传回来的错误(<a href="#f6-worker">9.3</a>)。</li>
+<li>在 iframe 或沙箱里跑第三方代码,错误要跨边界上报。</li>
+<li>写错误上报库,输入是任何人扔过来的任何值。</li>
+</ul>
+<p>日常业务代码里 <code>instanceof</code> 够用,这三类场景就得换。<code>AggregateError</code>(<a href="#f6-promise">8.2</a>)在 <code>Error.isError</code> 下同样返回 <code>true</code>,它也是带 <code>[[ErrorData]]</code> 的正经错误。</p>
 <h3>全局兜底:error 与 unhandledrejection</h3>
 <p>没被任何 <code>catch</code> 接住的同步错误,最终触发 <code>window</code> 上的 <code>error</code> 事件(Node 是 <code>process.on('uncaughtException')</code>);没被 <code>.catch</code> 的 Promise 拒绝,触发 <code>unhandledrejection</code> 事件(Node 是 <code>process.on('unhandledRejection')</code>,Node 15+ 默认会让进程退出)。这两个事件是错误上报 SDK 的挂载点(见 <a href="浏览器API与工作原理手册.html#f12-monitor">《浏览器 API 与工作原理手册》12.5</a>):在这里把 <code>event.error</code> / <code>event.reason</code> 收集、序列化、发走。它们是<strong>兜底</strong>而不是处理——到这里的错误已经让当前那条执行路径失败了,能做的只有记录和提示用户。</p>
 <table style="contain-intrinsic-size:auto 424px">
@@ -2966,7 +3042,13 @@ Promise.reject(<span class="kw">new</span> Error(<span>'nobody catches me'</span
 <p>DevTools 里点行号下的断点,存在浏览器的本地状态里,换台机器就没了,而且有三个地方点不到行号。<code>debugger</code> 语句把断点写进源码本身:调试器打开时执行到这一行就暂停,没打开时它是一条<strong>空语句</strong>,既不报错也不影响性能。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 87px"><code>debugger;                    <span class="cm">// 调试器打开 → 在此暂停;没打开 → 什么也不做</span>
 <span class="kw">if</span> (item.id === 42) debugger;  <span class="cm">// 条件断点:比 DevTools 的条件断点更精确,而且能进版本控制</span></code></pre>
-<p>它不可替代的三个场景,恰好都是本书讲到的:<strong>① Worker 里的代码</strong>(<a href="#f6-worker">9.3</a>)——Worker 脚本在 Sources 面板里另开一棵树,想在第一行就停下来,只能靠 <code>debugger</code>;<strong>② 动态 <code>import()</code> 进来的模块</strong>(<a href="#f5-modules">4.4</a>)——文件在 Sources 里要等加载完才出现,来不及提前打点;<strong>③ <code>eval</code> / <code>new Function</code> 生成的代码</strong>(<a href="#f5-scope">1.3</a>)——它根本没有文件,除非源码里带 <code>//# sourceURL=</code>。Node 那边对应的是 <code>node inspect file.js</code>(命令行调试器)或 <code>node --inspect-brk file.js</code> 再去 <code>chrome://inspect</code> 连。</p>
+<p>它不可替代的三个场景,恰好都是本书讲到的:</p>
+<ul>
+<li><strong>Worker 里的代码</strong>(<a href="#f6-worker">9.3</a>)——Worker 脚本在 Sources 面板里另开一棵树,想在第一行就停下来,只能靠 <code>debugger</code>。</li>
+<li><strong>动态 <code>import()</code> 进来的模块</strong>(<a href="#f5-modules">4.4</a>)——文件在 Sources 里要等加载完才出现,来不及提前打点。</li>
+<li><strong><code>eval</code> / <code>new Function</code> 生成的代码</strong>(<a href="#f5-scope">1.3</a>)——它根本没有文件,除非源码里带 <code>//# sourceURL=</code>。</li>
+</ul>
+<p>Node 那边对应的是 <code>node inspect file.js</code>(命令行调试器)或 <code>node --inspect-brk file.js</code> 再去 <code>chrome://inspect</code> 连。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 别让它进生产</span><p>生产包里留一条 <code>debugger</code>,任何打开了 DevTools 的用户都会被卡在那一行。两道闸:构建期删掉(esbuild 的 <code>drop: ['debugger']</code>、terser 的 <code>compress.drop_debugger</code>),提交期拦住(ESLint 的 <code>no-debugger</code>,它在 <code>eslint:recommended</code> 里)。两道都要有——只靠构建配置的话,某个不走压缩的构建目标就会漏。</p></div></div>
 <div class="deep"><h3 class="deep"><code>using</code> 与 <code>await using</code>:把清理交给作用域(Stage 3)</h3>
 <p><code>try/finally</code> 做资源清理有个老毛病:资源一多就变成金字塔,而且「谁申请谁释放」这条纪律全靠人记。TC39 的显式资源管理提案(Stage 3)把它变成声明:<code>using x = 取资源()</code> 声明的变量,在<strong>离开所在块时</strong>自动调用 <code>x[Symbol.dispose]()</code>;<code>await using x = …</code> 调用的是 <code>x[Symbol.asyncDispose]()</code> 并等它完成。释放顺序和声明顺序相反(后申请的先释放),和 C++ 的析构、Python 的 <code>with</code> 是同一个思路。</p>
@@ -3102,7 +3184,11 @@ import json from <span>'./data.json'</span> with { type: <span>'json'</span> }; 
 <tr><td class="nw">副作用导入</td><td class="nw">只为执行</td><td>顺序仍按 import 出现顺序</td></tr>
 </tbody>
 </table>
-<p>两条关键语义:<strong>① 静态结构</strong>。<code>import</code>/<code>export</code> 必须写在模块顶层、说明符必须是字符串字面量,不能放在 <code>if</code> 里、不能拼接路径——这样引擎在<strong>执行任何代码之前</strong>就能解析出整张依赖图,打包器据此做 tree-shaking(没被 import 的导出不打进包),也是「循环依赖能工作」的前提。<strong>② 实时绑定</strong>(live binding)。<code>import { count }</code> 拿到的不是值的拷贝,而是对导出模块里那个变量的<strong>只读视图</strong>:导出方 <code>count++</code> 之后导入方读到新值;导入方给它赋值抛 <code>TypeError: Assignment to constant variable</code>。CommonJS 的 <code>const { count } = require()</code> 则是拷贝值,之后不再联动。</p>
+<p>两条关键语义:</p>
+<ul>
+<li><strong>静态结构。</strong><code>import</code>/<code>export</code> 必须写在模块顶层、说明符必须是字符串字面量,不能放在 <code>if</code> 里、不能拼接路径——这样引擎在<strong>执行任何代码之前</strong>就能解析出整张依赖图,打包器据此做 tree-shaking(没被 import 的导出不打进包),也是「循环依赖能工作」的前提。</li>
+<li><strong>实时绑定</strong>(live binding)。<code>import { count }</code> 拿到的不是值的拷贝,而是对导出模块里那个变量的<strong>只读视图</strong>:导出方 <code>count++</code> 之后导入方读到新值;导入方给它赋值抛 <code>TypeError: Assignment to constant variable</code>。CommonJS 的 <code>const { count } = require()</code> 则是拷贝值,之后不再联动。</li>
+</ul>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 277px"><code><span class="cm">// counter.mjs</span>
 export let count = 0;
 export function inc() { count++; }
@@ -3762,7 +3848,7 @@ g.test(<span>'aa'</span>), g.test(<span>'aa'</span>), g.test(<span>'aa'</span>) 
 <p>学到什么程度算够:拿到一个「字符串处理不对」的问题,能立刻判断它出在码元、码点还是字素这一层,并选对 API;读一段正则能说出它的回溯路径,并指出哪个输入会让它跑很久。接下来 <a href="#fstd-number">6.1</a> 与 <a href="#fstd-date">6.2</a> 用同样的方式处理另外两类「看起来简单其实有底层模型」的值——双精度浮点与时间戳加时区投影,并把这一章开了头的 <code>Intl</code> 讲完整;<a href="#fstd-binary">7.1</a> 则会把字符串一路拆到字节,回答「一个 emoji 到底占几个字节」这个本章没答的问题。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 33688px;--thin-h:24682px">
+<section class="chapter" style="contain-intrinsic-size:auto 34028px;--thin-h:24909px">
 <h1 id="b6"><span class="part">标准库</span>数字、日期与集合</h1>
 <p>这一章讲三类「看起来简单、底下另有模型」的值。数字只有一种——IEEE 754 双精度,53 位有效精度推出了 <code>0.1 + 0.2</code> 不等于 <code>0.3</code>、安全整数到 9007199254740991 为止、<code>toFixed</code> 按二进制真实值舍入,也推出了「金额用整数分、64 位 id 用字符串」这两条硬规矩(<a href="#fstd-number">6.1</a>)。日期只有一个数——1970 年以来的毫秒数,所有 <code>getXxx</code> 都是它在某个时区下的投影,于是月份从 0 起、只有 ISO 格式的解析可靠、跨时区显示只能交给 <code>Intl.DateTimeFormat</code> 的 <code>timeZone</code>(<a href="#fstd-date">6.2</a>)。集合是 ES2015 才补上的正式哈希表与哈希集合:任意值做键、按插入序迭代、增删查 O(1),弱引用版本让你给对象挂数据而不阻止它被回收(<a href="#fstd-coll">6.3</a>)。</p>
 <p>三节共用一条线:<strong>存储用什么、计算用什么、显示用什么,是三个分开的问题</strong>。钱存整数分、算整数、显示交给 <code>Intl.NumberFormat</code>;时间存 UTC 时间戳、算用时间戳或日历库、显示交给 <code>Intl.DateTimeFormat</code> 并显式传时区;键在运行时才知道的字典存 <code>Map</code> 而不是对象,因为对象会把键 ToString、还带着一条原型链。往前它接着 <a href="#fstd-string">5.1</a> 起的头,<code>Intl</code> 家族的其余成员在这里讲完;往后 <a href="#fstd-json">7.2</a> 说这三类值在序列化时各自会丢什么,<a href="#fstd-binary">7.1</a> 讲数字与字节之间怎么互转,<a href="#fstd-reactive">7.5</a> 会用到本章的 WeakMap 去实现响应式系统的依赖表。</p>
@@ -3770,7 +3856,13 @@ g.test(<span>'aa'</span>), g.test(<span>'aa'</span>), g.test(<span>'aa'</span>) 
 <p>JS 的 Number 是 IEEE 754 双精度浮点数,和 C 的 <code>double</code>、Java 的 <code>double</code> 是同一个东西——这意味着「没有整数类型」这件事在 JS 里是字面意义的:<code>1</code> 和 <code>1.0</code> 是同一个值,整数运算只是「恰好没有小数部分的浮点运算」,超过 2⁵³ 就开始丢位。<a href="#f5-types">1.1</a> 已经讲过类型层面的事实(<code>0.1 + 0.2</code>、安全整数、<code>NaN</code>);这一节往下走一层:二进制小数到底是怎么丢精度的、<code>toFixed</code> 为什么有时四舍五不入、<code>parseInt</code> 与 <code>Number()</code> 的转换规则差在哪、<code>Math</code> 里有什么、<code>BigInt</code> 怎么用、以及给用户看的数字该怎么交给 <code>Intl.NumberFormat</code>。</p>
 <p>痛点切入:订单页 <code>19.99 * 3</code> 显示成 <code>59.97</code> 没问题,打九折之后 <code>58.482000000000006</code> 直接出现在界面上;后端传回的 64 位订单号 <code>9007199254740993</code> 在前端变成了 <code>…992</code>;<code>(1.005).toFixed(2)</code> 得到 <code>"1.00"</code> 而财务说应该是 1.01。这三件事的根源是同一个:十进制小数和二进制浮点数之间没有一一对应。</p>
 <h3>双精度的结构与它推出的规则</h3>
-<p>64 位里 1 位符号、11 位指数、52 位尾数(加上隐含的首位 1,有效精度 53 位)。由此直接推出三条规则:<strong>①</strong> 只有分母是 2 的幂的小数能精确表示——0.5、0.25、0.375 精确,0.1、0.2、0.3 都不精确(0.1 在二进制里是无限循环小数 0.0001100110011…),<code>0.1 + 0.2</code> 的两个操作数各自已经带误差,相加后再舍入,结果 <code>0.30000000000000004</code> 比 0.3 的最近双精度表示还大一个最低位;<strong>②</strong> 连续整数能被精确表示的上限是 2⁵³ = 9007199254740992,<code>Number.MAX_SAFE_INTEGER</code> 是它减 1,再往上相邻可表示的数之间间隔变成 2、4、8……,<code>2 ** 53 + 1</code> 舍入回 <code>2 ** 53</code>;<strong>③</strong> 指数 11 位给出约 ±1.8e308 的范围,超出得 <code>Infinity</code>,最小正数 <code>Number.MIN_VALUE</code> 是 5e-324(非规格化数)。<code>NaN</code> 是指数全 1 且尾数非 0 的一族位模式,规范规定它和任何值比较(包括自己)都为 false,所以判断要用 <code>Number.isNaN</code> 或 <code>Object.is</code>。</p>
+<p>64 位里 1 位符号、11 位指数、52 位尾数(加上隐含的首位 1,有效精度 53 位)。由此直接推出三条规则:</p>
+<ul>
+<li><strong>只有分母是 2 的幂的小数能精确表示。</strong>0.5、0.25、0.375 精确,0.1、0.2、0.3 都不精确(0.1 在二进制里是无限循环小数 0.0001100110011…)。<code>0.1 + 0.2</code> 的两个操作数各自已经带误差,相加后再舍入,结果 <code>0.30000000000000004</code> 比 0.3 的最近双精度表示还大一个最低位。</li>
+<li><strong>连续整数能被精确表示的上限是 2⁵³ = 9007199254740992。</strong><code>Number.MAX_SAFE_INTEGER</code> 是它减 1;再往上相邻可表示的数之间间隔变成 2、4、8……,<code>2 ** 53 + 1</code> 舍入回 <code>2 ** 53</code>。</li>
+<li><strong>指数 11 位给出约 ±1.8e308 的范围</strong>,超出得 <code>Infinity</code>;最小正数 <code>Number.MIN_VALUE</code> 是 5e-324(非规格化数)。</li>
+</ul>
+<p><code>NaN</code> 是指数全 1 且尾数非 0 的一族位模式,规范规定它和任何值比较(包括自己)都为 false,所以判断要用 <code>Number.isNaN</code> 或 <code>Object.is</code>。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 292px"><code>Number(value): number            <span class="cm">// ToNumber:'' → 0,'  42 ' → 42,'12px' → NaN,null → 0,undefined → NaN,[] → 0,[5] → 5,true → 1</span>
 +value                           <span class="cm">// 同 Number(value)</span>
 parseInt(str, radix): number     <span class="cm">// 跳过前导空白,读到第一个非法字符为止;radix 2–36;'0x' 前缀在无 radix 时按 16;其余无 radix 按 10</span>
@@ -4229,7 +4321,13 @@ Set(4) { 1, 2, 3, 4 } Set(2) { 2, 3 } Set(1) { 1 } Set(2) { 1, 4 }
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 129px"><code><span class="kw">new</span> WeakMap(iterable?)    wm.set(objKey, v)    wm.get(objKey)    wm.has(objKey)    wm.<span class="kw">delete</span>(objKey)   <span class="cm">// 没有 size / keys / clear</span>
 <span class="kw">new</span> WeakSet(iterable?)    ws.add(obj)    ws.has(obj)    ws.<span class="kw">delete</span>(obj)
 <span class="cm">// 键为原始值(字符串、数字、Symbol.for() 注册符号)时抛 TypeError: Invalid value used as weak map key</span></code></pre>
-<p>三个正当用途:<strong>① 私有数据</strong>——class 私有字段 <code>#x</code> 出现之前,「用模块级 WeakMap 以实例为键存私密状态」是标准做法,至今仍用于给不能改类定义的第三方对象挂状态;<strong>② 缓存</strong>——以对象为键缓存计算结果(布局尺寸、解析后的 AST),对象没了缓存自动没了,不需要手动失效;<strong>③ DOM 元数据</strong>——给 DOM 元素关联数据(事件绑定记录、组件实例、观察者状态)而不污染元素属性,元素被移除并失去引用后条目自动释放。React 的 Fiber 到 DOM 的映射、Vue 3 的响应式系统里 <code>targetMap: WeakMap&lt;target, Map&lt;key, Dep&gt;&gt;</code>(见 <a href="#fstd-meta">7.3</a>)都是用途 ③ 和 ② 的实例。反过来,<strong>用普通 Map 以 DOM 元素为键</strong>是前端内存泄漏的经典来源:元素从页面移除了,Map 还引用着它,连同它的子树、事件处理器、闭包一起留在内存里——DevTools Memory 面板的堆快照里会看到大量 Detached HTMLDivElement。</p>
+<p>三个正当用途:</p>
+<ul>
+<li><strong>私有数据</strong>——class 私有字段 <code>#x</code> 出现之前,「用模块级 WeakMap 以实例为键存私密状态」是标准做法,至今仍用于给不能改类定义的第三方对象挂状态。</li>
+<li><strong>缓存</strong>——以对象为键缓存计算结果(布局尺寸、解析后的 AST),对象没了缓存自动没了,不需要手动失效。</li>
+<li><strong>DOM 元数据</strong>——给 DOM 元素关联数据(事件绑定记录、组件实例、观察者状态)而不污染元素属性,元素被移除并失去引用后条目自动释放。</li>
+</ul>
+<p>React 的 Fiber 到 DOM 的映射、Vue 3 的响应式系统里 <code>targetMap: WeakMap&lt;target, Map&lt;key, Dep&gt;&gt;</code>(见 <a href="#fstd-meta">7.3</a>)都是后两种用途的实例。反过来,<strong>用普通 Map 以 DOM 元素为键</strong>是前端内存泄漏的经典来源:元素从页面移除了,Map 还引用着它,连同它的子树、事件处理器、闭包一起留在内存里——DevTools Memory 面板的堆快照里会看到大量 Detached HTMLDivElement。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 292px"><code>let k1 = { name: <span>'a'</span> };
 <span class="kw">const</span> wm = <span class="kw">new</span> WeakMap(); wm.set(k1, { secret: 42 });
 console.log(wm.get(k1), wm.has(k1), typeof wm.size, wm[Symbol.iterator]);      <span class="cm">// 没有 size,不可迭代</span>
@@ -4246,7 +4344,13 @@ TypeError: Invalid value used as weak map key
 <span class="kw">true</span> <span class="kw">false</span></code></pre>
 <p><code>Symbol.for('x')</code> 被拒绝而 <code>Symbol('x')</code> 可以:注册符号在全局注册表里永远可达,永远不会被回收,作弱键没有意义,规范因此禁止。<code>Counter</code> 的 <code>n</code> 既不在实例上也不在原型上,<code>Object.keys</code>、<code>JSON.stringify</code>、DevTools 展开都看不见,实例被回收时 WeakMap 条目一起消失——这就是 <code>#n</code> 私有字段出现前的实现方式,两者语义几乎等价。</p>
 <div class="deep"><h3 class="deep">WeakRef 与 FinalizationRegistry:能用,但几乎总有更好的办法</h3>
-<p><code>WeakRef</code>(ES2021)直接持有一个对象的弱引用,<code>deref()</code> 返回对象或 <code>undefined</code>(已被回收);<code>FinalizationRegistry</code> 在注册的对象被回收后<strong>某个时刻</strong>调用回调。规范刻意把它们设计得「不可靠」:<strong>①</strong> 同一个事件循环任务内 <code>deref()</code> 一旦返回对象,这个任务结束前它都不会被回收(保证同步代码里的一致性);<strong>②</strong> 回收发生的时间不确定,可能很久以后,也可能程序退出前都不发生;<strong>③</strong> 不同引擎、同一引擎不同内存压力下行为不同。所以它们<strong>不能用来释放外部资源</strong>(文件句柄、WebSocket、定时器——这些要显式 close,ES2026 的 <code>using</code> 声明是为此设计的),也不能用来实现「缓存满了自动清」(那是 LRU 的事)。正当用途非常窄:大对象(大数组、解码后的图片)的「有就用、没了重建」缓存;或者调试时观察某类对象是否真被回收了。</p>
+<p><code>WeakRef</code>(ES2021)直接持有一个对象的弱引用,<code>deref()</code> 返回对象或 <code>undefined</code>(已被回收);<code>FinalizationRegistry</code> 在注册的对象被回收后<strong>某个时刻</strong>调用回调。规范刻意把它们设计得「不可靠」:</p>
+<ul>
+<li>同一个事件循环任务内 <code>deref()</code> 一旦返回对象,这个任务结束前它都不会被回收(保证同步代码里的一致性)。</li>
+<li>回收发生的时间不确定,可能很久以后,也可能程序退出前都不发生。</li>
+<li>不同引擎、同一引擎不同内存压力下行为不同。</li>
+</ul>
+<p>所以它们<strong>不能用来释放外部资源</strong>(文件句柄、WebSocket、定时器——这些要显式 close,ES2026 的 <code>using</code> 声明是为此设计的),也不能用来实现「缓存满了自动清」(那是 LRU 的事)。正当用途非常窄:大对象(大数组、解码后的图片)的「有就用、没了重建」缓存;或者调试时观察某类对象是否真被回收了。</p>
 <div class="deep">
 <p>为什么 <code>deref()</code> 在同一任务内要稳定:否则 <code>if (ref.deref()) use(ref.deref())</code> 两次调用之间对象可能被回收,每个弱引用的使用点都要先存到局部变量——规范用「KeepDuringJob」机制把 deref 过的对象加入一个本任务存活集合,任务结束清空。这也意味着在一个长任务里大量 deref 会推迟回收。在 Node 里可以用 <code>node --expose-gc</code> 后调用 <code>globalThis.gc()</code> 强制回收来观察 FinalizationRegistry 回调,浏览器里只能靠 DevTools Memory 面板的「Collect garbage」按钮。</p>
 </div>
@@ -4380,7 +4484,7 @@ JSON.stringify(<span class="kw">new</span> Map([[<span>'a'</span>, 1]]))        
 <p>学到什么程度算够:拿到金额、大整数、时间这三类数据,能说清它们在传输、存储、计算、显示四个环节各自该用什么表示;需要一个键值容器时,能按键类型、是否要顺序、是否频繁增删、生命周期四个判据在对象、Map、WeakMap 之间选。接下来 <a href="#fstd-binary">7.1</a> 把值一路拆到字节,<a href="#fstd-json">7.2</a> 说清这三类值在序列化往返中各自会变成什么(Date 变字符串、Map 变 <code>{}</code>、BigInt 直接抛错),<a href="#fstd-reactive">7.5</a> 则用本章的 WeakMap 搭出一个最小响应式系统。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 70368px;--thin-h:46373px">
+<section class="chapter" style="contain-intrinsic-size:auto 70641px;--thin-h:46373px">
 <h1 id="b7"><span class="part">标准库</span>二进制、JSON、元编程与全局对象</h1>
 <p>这一章收的是标准库里剩下的四块,它们的共同点是<strong>都在处理「值的另一种形态」</strong>:<a href="#fstd-binary">7.1</a> 把值拆成字节——<code>ArrayBuffer</code> 是一段裸内存,类型化数组和 <code>DataView</code> 是看这段内存的两种视图,文件、协议帧、图片像素、WebAssembly 内存都从这里进出;<a href="#fstd-json">7.2</a> 讲值变成文本再变回来的那条路,以及这条路上会丢什么、会抛什么;<a href="#fstd-meta">7.3</a> 与 <a href="#fstd-proxy">7.4</a>、<a href="#fstd-reactive">7.5</a> 三节讲元编程——先是 <code>Symbol</code>、内置符号与对象的三道锁,再是 <code>Proxy</code> 的十三种捕获器与 <code>Reflect</code>,最后用它们搭出一个能跑的响应式系统,Vue 3 的骨架就是这个;<a href="#fstd-misc">7.6</a> 与 <a href="#fstd-console">7.7</a> 收拢每天都用却很少读全的一批全局对象:<code>URL</code>、三个编码函数、定时器、<code>console</code>、<code>Intl</code> 的其余成员。</p>
 <p>顺序是从「最具体」走到「最抽象」再落回「最日常」:先看字节这种最实在的形态,再看序列化这种日常的形态转换,然后是元编程这种改写语言行为的能力,最后是一组随手就用的工具。它接着 <a href="#fstd-string">5.1</a> 与 <a href="#fstd-number">6.1</a> 往下走一层——字符串到字节要过 <code>TextEncoder</code>,数字到字节要选对视图类型;<code>Proxy</code> 则是 <a href="#f5-proto">3.1</a> 那条属性查找链上再插的一层。往后,<a href="#f6-fetch">9.2</a> 的响应体、<a href="#f6-worker">9.3</a> 的结构化克隆、<a href="浏览器API与工作原理手册.html#fapi-file">《浏览器 API 与工作原理手册》6.1</a> 的文件读取、<a href="浏览器API与工作原理手册.html#fapi-canvas-pixel">《浏览器 API 与工作原理手册》5.2</a> 的像素数据都要用到本章的二进制三层,<a href="前端框架与工程化手册.html#f10-eco">《前端框架与工程化手册》3.2</a> 里响应式框架的实现原理则要用到 <code>Proxy</code>。</p>
@@ -5048,7 +5152,13 @@ child1 1
 1 <span class="kw">true</span> <span class="kw">true</span>
 [ <span>'a'</span>, Symbol(s) ] 5</code></pre>
 <p><code>child2.v</code> 返回 1 而不是 <code>'child2'</code>,就是丢 receiver 的后果:getter 里的 <code>this</code> 被绑到了 <code>base</code>。这条规则也解释了本节最后那个响应式系统里为什么每个捕获器都原样转发 <code>recv</code>——Vue 3 的源码里同样如此,而且它还要靠「receiver 是不是这个 target 对应的那个代理」这类判断来识别原型链上的读取,避免同一次访问被记两遍。<code>Reflect.construct(F, args, G)</code> 的第三参数是 <code>new.target</code>,能把「执行哪段构造逻辑」和「用谁的原型」拆开,这是 ES6 之前只能靠寄生组合继承模拟的能力(见 <a href="#f5-proto">3.1</a>)。<code>Reflect.set</code>/<code>Reflect.deleteProperty</code> 对冻结对象返回 <code>false</code> 而不抛错,在写「尽力而为」的批量赋值时比 try/catch 干净。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 266px"><span class="t">🔴 最常被触发的三条不变式</span><p>代理不能撒谎到自相矛盾,规范会在运行时检查并抛 <code>TypeError</code>。① 目标上有一个 <code>configurable: false, writable: false</code> 的数据属性,<code>get</code> 捕获器就<strong>必须</strong>返回和它 <code>===</code> 的值,想伪造直接抛错;② 目标不可扩展(<code>Object.preventExtensions</code> 过)时,<code>ownKeys</code> 捕获器返回的键集合必须和目标的自有键<strong>完全一致</strong>,多一个少一个都抛;③ 目标上不可配置的属性,<code>deleteProperty</code> 不能报告删除成功,<code>has</code> 也不能报告不存在。这三条撞上的典型场景是「代理一个被 <code>Object.freeze</code> 过的对象」——冻结让所有属性都变成不可配置不可写(<a href="#fstd-meta">7.3</a>),于是代理几乎什么都改不了。排查方法很直接:报错信息里会点名是哪个捕获器、哪个属性、期望什么值。</p></div></div>
+<div class="note dead" style="contain-intrinsic-size:auto 405px"><span class="t">🔴 最常被触发的三条不变式</span><p>代理不能撒谎到自相矛盾,规范会在运行时检查并抛 <code>TypeError</code>:</p>
+<ul>
+<li>目标上有一个 <code>configurable: false, writable: false</code> 的数据属性,<code>get</code> 捕获器就<strong>必须</strong>返回和它 <code>===</code> 的值,想伪造直接抛错。</li>
+<li>目标不可扩展(<code>Object.preventExtensions</code> 过)时,<code>ownKeys</code> 捕获器返回的键集合必须和目标的自有键<strong>完全一致</strong>,多一个少一个都抛。</li>
+<li>目标上不可配置的属性,<code>deleteProperty</code> 不能报告删除成功,<code>has</code> 也不能报告不存在。</li>
+</ul>
+<p>这三条撞上的典型场景是「代理一个被 <code>Object.freeze</code> 过的对象」——冻结让所有属性都变成不可配置不可写(<a href="#fstd-meta">7.3</a>),于是代理几乎什么都改不了。排查方法很直接:报错信息里会点名是哪个捕获器、哪个属性、期望什么值。</p></div></div>
 <div class="deep"><h3>完整示例:一个把所有操作打出来的观察代理</h3>
 <p>十三种捕获器里最常用的五个,配上 <code>Reflect</code> 的同名方法,就能写出一个「什么都不改,只把每一次操作记下来」的代理。它本身就是调试工具(想知道某段代码到底读了哪些字段时很好用),也是理解「哪些语法触发哪个捕获器」的最快方式。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 591px"><code><span class="cm">// spy.js — node spy.js</span>
@@ -5448,7 +5558,13 @@ hash    : #top
 相对解析: https:<span class="cm">//shop.example.com/a/cart</span>
 三个编码: a%20b%26c | https:<span class="cm">//x.com/a%20b?q=1&amp;r=2 | https%3A%2F%2Fa.com%2Fx%3Fy%3D1</span>
 无 base : TypeError</code></pre>
-<p>四处值得停一下。<strong>① 默认端口被吃掉了</strong>:<code>:443</code> 对 https 是默认端口,<code>origin</code> 和 <code>href</code> 都不带它——这正是「同一个资源两种写法」的规范化价值。<strong>② 读出来的值是解码后的</strong>:<code>q</code> 是 <code>红 茶</code>、<code>redirect</code> 是完整的 <code>https://a.com/x?y=1</code>,解析器按 <code>&amp;</code> 和第一个 <code>=</code> 切分,所以值里的 <code>?</code>、<code>=</code>、<code>/</code> 都不会把参数拆散——手写字符串拼接踩的坑在这里根本不存在。<strong>③ 空格在两种编码里长得不一样</strong>:原地址的查询串里空格是 <code>%20</code>(URL 解析器的规则),而经过 <code>searchParams.append</code> 重新序列化之后变成了 <code>+</code>(<code>application/x-www-form-urlencoded</code> 的规则),同时 <code>redirect</code> 的值被完整转义成 <code>https%3A%2F%2F…</code>。两种写法服务端都能解,但字节不同,<strong>所以拿 URL 当缓存键时一定要先规范化再比较</strong>。<strong>④ 三个编码函数的分工</strong>:<code>encodeURIComponent</code> 编码一个<strong>片段</strong>(<code>/</code>、<code>?</code>、<code>&amp;</code> 都要转义),<code>encodeURI</code> 编码<strong>一整条地址</strong>(保留结构分隔符,只补空格这类非法字符),日常几乎只用前者,而且用了 <code>searchParams</code> 之后连它也不用手动调。</p></div>
+<p>四处值得停一下:</p>
+<ul>
+<li><strong>默认端口被吃掉了。</strong><code>:443</code> 对 https 是默认端口,<code>origin</code> 和 <code>href</code> 都不带它——这正是「同一个资源两种写法」的规范化价值。</li>
+<li><strong>读出来的值是解码后的。</strong><code>q</code> 是 <code>红 茶</code>、<code>redirect</code> 是完整的 <code>https://a.com/x?y=1</code>。解析器按 <code>&amp;</code> 和第一个 <code>=</code> 切分,所以值里的 <code>?</code>、<code>=</code>、<code>/</code> 都不会把参数拆散——手写字符串拼接踩的坑在这里根本不存在。</li>
+<li><strong>空格在两种编码里长得不一样。</strong>原地址的查询串里空格是 <code>%20</code>(URL 解析器的规则),而经过 <code>searchParams.append</code> 重新序列化之后变成了 <code>+</code>(<code>application/x-www-form-urlencoded</code> 的规则),同时 <code>redirect</code> 的值被完整转义成 <code>https%3A%2F%2F…</code>。两种写法服务端都能解,但字节不同,<strong>所以拿 URL 当缓存键时一定要先规范化再比较</strong>。</li>
+<li><strong>三个编码函数的分工。</strong><code>encodeURIComponent</code> 编码一个<strong>片段</strong>(<code>/</code>、<code>?</code>、<code>&amp;</code> 都要转义),<code>encodeURI</code> 编码<strong>一整条地址</strong>(保留结构分隔符,只补空格这类非法字符)。日常几乎只用前者,而且用了 <code>searchParams</code> 之后连它也不用手动调。</li>
+</ul></div>
 <h2 id="fstd-console">7.7 定时器、console 与 Intl 的其余成员</h2>
 <p><a href="#fstd-console">7.7</a> 讲的是地址,这一节讲运行时塞给你的另外三样全局:<strong>定时器</strong>(<code>setTimeout</code>/<code>setInterval</code> 的返回值、传参与 <code>this</code>,以及它们和事件循环的关系)、<strong><code>console</code></strong>(除了 <code>log</code> 还有十几个方法,用对了能省掉大半调试时间)、以及 <code>Intl</code> 家族里在 <a href="#fstd-date">6.2</a> 没讲到的成员——分词器 <code>Segmenter</code> 与显示名 <code>DisplayNames</code>。</p>
 <p>三样东西的共同点是「每天都在用、但很少有人系统读过文档」。定时器的坑在于它的 <code>delay</code> 是下限不是精确值、回调里的 <code>this</code> 和你想的不一样、以及忘了清理会泄漏(<a href="#f6-timers">9.1</a> 讲它们和帧、和空闲时间的关系);<code>console</code> 的价值在于 <code>table</code>/<code>group</code>/<code>count</code>/<code>time</code> 这些方法能把「打十行 log 再肉眼比对」变成一眼看清;<code>Intl</code> 这两位则是「按用户语言正确切词、正确显示语言与地区名」的标准答案,自己写永远写不对。</p>
@@ -5779,7 +5895,7 @@ https:<span class="cm">//api.example.com/v2/search?q=%E6%89%8B+%E5%86%8C&amp;tag
 <p>学完这一章应该能做到:拿到一段二进制数据,能写出正确的视图与字节序把它解析出来;看到一个序列化往返的结果不对,能指出是 <code>stringify</code> 的哪条规则丢的;需要在运行时统一拦截属性访问时,知道 <code>Proxy</code> 能做什么、代价是什么、以及它在 Vue 3 响应式里是怎么用的;写任何一个地址时都不再拼字符串。接下来 <a href="#f6-loop">8.1</a> 开始进入异步:本章的 <code>setTimeout</code> 与 <code>queueMicrotask</code> 会在那里被放回事件循环的时间线上讲清楚,<code>fetch</code> 的响应体(<a href="#f6-fetch">9.2</a>)与 Worker 的消息(<a href="#f6-worker">9.3</a>)则会直接用到本章的 <code>ArrayBuffer</code> 与结构化克隆。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 40999px;--thin-h:16009px">
+<section class="chapter" style="contain-intrinsic-size:auto 41286px;--thin-h:16127px">
 <h1 id="b8"><span class="part">异步</span>事件循环、Promise 与 async/await</h1>
 <p>写过服务端的人进入前端,最先撞上的不是语法,而是「代码明明写在后面,却先跑了」:一个 <code>setTimeout(fn, 0)</code> 排在 <code>Promise.then</code> 后面执行,一个 <code>await</code> 让函数「停」在中间而按钮仍然能点,一个 <code>then</code> 里忘了 <code>return</code> 就让错误绕过了 <code>catch</code>。这些现象背后是同一套机制:JavaScript 在浏览器里只有一条线程跑你的代码,所有「等待」都不能阻塞它,于是一切 I/O、定时、用户交互都以回调的形式排队,由事件循环按固定规则取出来执行。这一章把这套机制讲到能推导任何顺序题——<a href="#f6-loop">8.1</a> 讲一条线程、两种队列、一轮循环的四个步骤,以及渲染发生在哪一步;<a href="#f6-promise">8.2</a> 讲组织回调的第一层抽象:三态不可逆、<code>then</code> 总返回新 Promise、错误沿链穿透,外加四个并发组合子;<a href="#f6-async">8.3</a> 讲第二层:<code>async</code>/<code>await</code> 只是 Promise 加事件循环的语法糖,但 <code>await</code> 写在哪一行决定了代码是串行还是并发。</p>
 <p>三节层层相搭,顺序不能反:不知道微任务检查点,就解释不了「<code>then</code> 的回调为什么一定异步」;不知道 <code>then</code> 返回的是新 Promise,就解释不了 <code>await</code> 到底在等什么。往前它用到 <a href="#f5-closure">1.4</a> 的闭包(每个回调都记着自己出生时的词法环境)、<a href="#f5-func">2.1</a> 讲的控制反转,以及 <a href="#f5-error">4.3</a> 的错误模型(<code>reject</code> 就是异步版的 <code>throw</code>)。往后 <a href="#f6-timers">9.1</a>、<a href="#f6-fetch">9.2</a>、<a href="#f6-worker">9.3</a> 是三类具体的异步来源,<a href="浏览器API与工作原理手册.html#f8-render">《浏览器 API 与工作原理手册》9.2</a> 的渲染管线、<a href="前端框架与工程化手册.html#f10-concurrent">《前端框架与工程化手册》4.1</a> 的并发渲染都建立在本章这条时间线上。</p>
@@ -5796,7 +5912,14 @@ https:<span class="cm">//api.example.com/v2/search?q=%E6%89%8B+%E5%86%8C&amp;tag
 <tr><td class="nw">渲染步骤</td><td><code>requestAnimationFrame</code> 回调、样式计算、布局、绘制</td><td>不是队列,是循环里的一个<strong>可选步骤</strong>:到了屏幕刷新的时机(通常每 16.7 ms)才做一次,且只在微任务清空之后</td></tr>
 </tbody>
 </table>
-<p>把三者放进一轮循环里,步骤是固定的:① 从宏任务队列取<strong>一个</strong>任务,把它跑到调用栈清空;② 进入<strong>微任务检查点</strong>,把微任务队列全部跑空(包括跑的过程中新加进来的);③ 如果到了该刷新屏幕的时机,执行渲染步骤:先跑 <code>requestAnimationFrame</code> 回调,再算样式、布局、绘制;④ 回到 ①,队列空则挂起等待。其中 ② 是理解一切的关键:微任务不是「下一轮」才跑,而是<strong>本轮宏任务一结束就跑,而且跑光为止</strong>;宏任务则一轮一个。<code>setTimeout(fn, 0)</code> 注册的是一个新宏任务,<code>Promise.resolve().then(fn)</code> 注册的是一个微任务,所以后者永远先于前者——这不是约定,是从「取一个宏任务 → 清空微任务」的顺序直接推出来的。</p>
+<p>把三者放进一轮循环里,步骤是固定的:</p>
+<ul>
+<li><strong>①</strong> 从宏任务队列取<strong>一个</strong>任务,把它跑到调用栈清空。</li>
+<li><strong>②</strong> 进入<strong>微任务检查点</strong>,把微任务队列全部跑空(包括跑的过程中新加进来的)。</li>
+<li><strong>③</strong> 如果到了该刷新屏幕的时机,执行渲染步骤:先跑 <code>requestAnimationFrame</code> 回调,再算样式、布局、绘制。</li>
+<li><strong>④</strong> 回到 ①,队列空则挂起等待。</li>
+</ul>
+<p>其中 ② 是理解一切的关键:微任务不是「下一轮」才跑,而是<strong>本轮宏任务一结束就跑,而且跑光为止</strong>;宏任务则一轮一个。<code>setTimeout(fn, 0)</code> 注册的是一个新宏任务,<code>Promise.resolve().then(fn)</code> 注册的是一个微任务,所以后者永远先于前者——这不是约定,是从「取一个宏任务 → 清空微任务」的顺序直接推出来的。</p>
 <figure style="contain-intrinsic-size:auto 318px">
 <svg viewBox="0 10 720 230" xmlns="http://www.w3.org/2000/svg" font-size="13"><defs><marker id="ar-f6-a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs><rect x="20" y="20" width="200" height="50" rx="8" fill="var(--svg-soft2)" stroke="var(--muted)"/><text class="svgtext" x="120" y="40" text-anchor="middle" font-size="12">宏任务队列</text><text class="svgmuted" x="120" y="58" text-anchor="middle" font-size="11">script / setTimeout / 事件 / IO</text><rect x="260" y="20" width="200" height="50" rx="8" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="360" y="40" text-anchor="middle" font-size="12">微任务队列</text><text class="svgmuted" x="360" y="58" text-anchor="middle" font-size="11">Promise.then / queueMicrotask</text><rect x="500" y="20" width="200" height="50" rx="8" fill="var(--svg-soft2)" stroke="var(--muted)"/><text class="svgtext" x="600" y="40" text-anchor="middle" font-size="12">渲染回调</text><text class="svgmuted" x="600" y="58" text-anchor="middle" font-size="11">requestAnimationFrame 回调</text><rect x="20" y="110" width="155" height="60" rx="8" fill="var(--svg-fill)" stroke="var(--accent)"/><text class="svgtext" x="97" y="134" text-anchor="middle" font-size="12">1 取一个宏任务</text><text class="svgmuted" x="97" y="154" text-anchor="middle" font-size="11">跑到调用栈清空</text><rect x="190" y="110" width="155" height="60" rx="8" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="267" y="134" text-anchor="middle" font-size="12">2 清空微任务队列</text><text class="svgmuted" x="267" y="154" text-anchor="middle" font-size="11">执行中新增的也跑完</text><rect x="360" y="110" width="155" height="60" rx="8" fill="var(--svg-fill)" stroke="var(--accent)"/><text class="svgtext" x="437" y="134" text-anchor="middle" font-size="12">3 到帧时机才渲染</text><text class="svgmuted" x="437" y="154" text-anchor="middle" font-size="11">rAF → 样式 → 布局 → 绘制</text><rect x="530" y="110" width="155" height="60" rx="8" fill="var(--svg-fill)" stroke="var(--accent)"/><text class="svgtext" x="607" y="134" text-anchor="middle" font-size="12">4 回到 1</text><text class="svgmuted" x="607" y="154" text-anchor="middle" font-size="11">队列空则像 epoll_wait 挂起</text><path d="M120,72 L97,106" stroke="var(--accent)" fill="none" marker-end="url(#ar-f6-a)"/><path d="M360,72 L275,106" stroke="var(--accent)" fill="none" marker-end="url(#ar-f6-a)"/><path d="M600,72 L445,106" stroke="var(--accent)" fill="none" marker-end="url(#ar-f6-a)"/><path d="M176,140 L186,140" stroke="var(--accent)" fill="none" marker-end="url(#ar-f6-a)"/><path d="M346,140 L356,140" stroke="var(--accent)" fill="none" marker-end="url(#ar-f6-a)"/><path d="M516,140 L526,140" stroke="var(--accent)" fill="none" marker-end="url(#ar-f6-a)"/><path d="M607,172 L607,200 L97,200 L97,176" stroke="var(--accent)" fill="none" marker-end="url(#ar-f6-a)"/><text class="svgmuted" x="360" y="226" text-anchor="middle" font-size="11">一轮循环:微任务在两个宏任务之间、渲染之前全部清空;渲染不是每轮都有</text></svg>
 <figcaption>事件循环的一轮:取一个宏任务,清空微任务,到帧时机才渲染（原创绘制）</figcaption>
@@ -6321,7 +6444,13 @@ got page 3</code></pre>
 <div class="deep"><h3 class="deep">手写 async:生成器 + Promise 的运行器,与 thunk 的史前形态</h3>
 <p><code>await</code> 的语义——「把函数暂停在这里,结果来了再从这里继续」——在 ES2017 之前就已经能写出来,靠的是 ES2015 的生成器(<code>function*</code>/<code>yield</code>,见 <a href="#f5-gen">4.2</a>)加一个十几行的<strong>运行器</strong>。理解这个组合有两个用处:一是 async/await 的每条行为(为什么返回 Promise、为什么拒绝能被 <code>try/catch</code> 接住、为什么同步跑到第一个 await)都能从运行器的代码里<strong>读</strong>出来而不是背下来;二是老项目(koa 1.x)和至今仍用生成器的 redux-saga 里满屏的 <code>yield</code> 就是这个模式,读得懂才改得动。</p>
 <p>机制分两半。<strong>生成器那一半</strong>:<code>yield</code> 让函数在中间暂停并把一个值交出去,外部调 <code>it.next(v)</code> 让它从暂停处继续、<code>v</code> 成为那个 <code>yield</code> 表达式的值,调 <code>it.throw(e)</code> 则让 <code>e</code> 在暂停处被抛出——于是生成器体内的 <code>try/catch</code> 能接住外部送回来的错误。<strong>运行器那一半</strong>:拿到生成器交出来的值,如果是 Promise 就等它,兑现了用 <code>next(value)</code> 送回去,拒绝了用 <code>throw(reason)</code> 送回去,直到 <code>done</code> 为 true,把最终返回值作为整体 Promise 的结果。这两半拼起来就是 async/await:<code>yield</code> 对应 <code>await</code>,运行器被引擎内置了。在 Promise 普及之前,生成器交出去的常常是 <strong>thunk</strong>——一个只差回调参数的函数:<code>fs.readFile</code> 被包成 <code>path =&gt; cb =&gt; fs.readFile(path, cb)</code>,运行器拿到 thunk 就传一个回调进去,回调被调时再 <code>next</code>;co 库最初同时支持 thunk 与 Promise,后来的版本只认 Promise。</p>
-<p>这十来行的 <code>run</code> 值得亲手看一遍,因为它把 <code>await</code> 的三条规则从「要背」变成「必然」,而且三条规则各对应运行器里的一行。<strong>① <code>it.next(v)</code> 把 <code>v</code> 送回给上一个 <code>yield</code></strong>——这就是 <code>const a = await p</code> 里 <code>a</code> 的来历。<strong>② <code>it.throw(e)</code> 在暂停的那个 <code>yield</code> 处重新抛出</strong>——这就是 <code>try { await p } catch {}</code> 能接住拒绝的原因:错误不是从外面「传」进去的,是引擎在暂停点抛的。<strong>③ 恢复动作挂在 <code>.then</code> 里</strong>,而 <code>.then</code> 的回调跑在微任务队列上(<a href="#f6-loop">8.1</a>)——所以「<code>await</code> 恢复在微任务里」不是一条需要记的规则,它就是这一行的直接后果。三条连起来,「<code>await</code> 到底暂停了什么」也有了答案:暂停的是<strong>这一个函数的续体</strong>,不是线程,也不是调用栈上别的帧。</p>
+<p>这十来行的 <code>run</code> 值得亲手看一遍,因为它把 <code>await</code> 的三条规则从「要背」变成「必然」,而且三条规则各对应运行器里的一行:</p>
+<ul>
+<li><strong><code>it.next(v)</code> 把 <code>v</code> 送回给上一个 <code>yield</code></strong>——这就是 <code>const a = await p</code> 里 <code>a</code> 的来历。</li>
+<li><strong><code>it.throw(e)</code> 在暂停的那个 <code>yield</code> 处重新抛出</strong>——这就是 <code>try { await p } catch {}</code> 能接住拒绝的原因:错误不是从外面「传」进去的,是引擎在暂停点抛的。</li>
+<li><strong>恢复动作挂在 <code>.then</code> 里</strong>,而 <code>.then</code> 的回调跑在微任务队列上(<a href="#f6-loop">8.1</a>)——所以「<code>await</code> 恢复在微任务里」不是一条需要记的规则,它就是这一行的直接后果。</li>
+</ul>
+<p>三条连起来,「<code>await</code> 到底暂停了什么」也有了答案:暂停的是<strong>这一个函数的续体</strong>,不是线程,也不是调用栈上别的帧。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1244px"><code><span class="cm">// gen.mjs  —  node gen.mjs</span>
 <span class="kw">const</span> sleep = (ms, v) =&gt; <span class="kw">new</span> Promise(r =&gt; setTimeout(() =&gt; r(v), ms));
 <span class="kw">const</span> fetchUser = id =&gt; sleep(30, { id, name: <span>'user'</span> + id });
@@ -6492,7 +6621,11 @@ console.log(Array.from([delay(10, <span>'a'</span>)]));                         
 [ 10, 20, 30 ]
 [ <span>'a'</span>, <span>'b'</span> ]
 [ Promise { &lt;pending&gt; } ]</code></pre>
-<p><strong>① 它是顺序消费的,不是并发的。</strong><code>Array.fromAsync(gen())</code> 一项一项地 <code>await</code>,上一项没到手就不去要下一项——异步生成器逐页拉数据时这正是想要的,但如果每一项背后是一次新请求,总耗时就是所有请求之和。想并发得用 <code>Promise.all</code>(<a href="#f6-promise">8.2</a>)。<strong>② 它会 <code>await</code> 同步可迭代对象里的 Promise,而 <code>Array.from</code> 不会</strong>——最后两行就是这个差别。所以 <code>await Array.fromAsync(promises)</code> 和 <code>Promise.all(promises)</code> 结果常常一样,但语义不同:前者按顺序逐个等待、遇到第一个拒绝就停止继续取值,后者并发等待、以最先发生的拒绝整体失败。名字很像,别混用。</p></div>
+<ul>
+<li><strong>它是顺序消费的,不是并发的。</strong><code>Array.fromAsync(gen())</code> 一项一项地 <code>await</code>,上一项没到手就不去要下一项——异步生成器逐页拉数据时这正是想要的,但如果每一项背后是一次新请求,总耗时就是所有请求之和。想并发得用 <code>Promise.all</code>(<a href="#f6-promise">8.2</a>)。</li>
+<li><strong>它会 <code>await</code> 同步可迭代对象里的 Promise,而 <code>Array.from</code> 不会</strong>——最后两行就是这个差别。</li>
+</ul>
+<p>所以 <code>await Array.fromAsync(promises)</code> 和 <code>Promise.all(promises)</code> 结果常常一样,但语义不同:前者按顺序逐个等待、遇到第一个拒绝就停止继续取值,后者并发等待、以最先发生的拒绝整体失败。名字很像,别混用。</p></div>
 <h2 id="b8-sum">8.4 小结:本章要点与易错清单</h2>
 <p>这一章的三节是同一条时间线的三层视角。最底下是 <a href="#f6-loop">8.1</a> 的机器:一条线程、一个调用栈、两种队列、一轮固定的步骤——取一个宏任务跑到栈空,清空全部微任务,到帧时机才渲染。中间是 <a href="#f6-promise">8.2</a> 的抽象:把「将来才有的结果」做成一个值,回调必须异步(排进微任务)、只敲定一次、错误沿链传递,于是回调时代交出去的那四项控制权(时机、次数、参数、错误归属)全被收了回来。最上面是 <a href="#f6-async">8.3</a> 的语法:<code>await</code> 把「在这个 Promise 上挂续体然后返回」写成一行,让 <code>try/catch</code> 和 <code>for</code> 循环重新可用。</p>
 <p>一句话记住整章:<strong>顺序由「清空微任务 → 取一个宏任务」决定,耗时由「Promise 在哪一行被创建」决定</strong>。前半句能推出任何顺序题——把每一行归到同步、微任务、宏任务三类,再按节拍走一遍;后半句能解释几乎所有「为什么这么慢」——<code>await</code> 只是等,发出请求的是函数调用本身,先创建再统一等就是并发。</p>
