@@ -418,7 +418,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </section>
 
 <!-- ===================== 第 0 章 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 2722px;--thin-h:2722px">
+<section class="chapter" style="contain-intrinsic-size:auto 2718px;--thin-h:2718px">
 <h1 id="ch0"><span class="part">第 0 章</span>你一定要知道（导读）</h1>
 <h2 id="ch0-classics">0.0 相关经典书籍</h2>
 <p>本书对标侯捷原典。围绕 MFC 与其背后的 Win32,下面是这条线上的经典。</p>
@@ -505,9 +505,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </section>
 
 <!-- ===================== 第 1 章 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 13719px;--thin-h:13719px">
+<section class="chapter" style="contain-intrinsic-size:auto 13708px;--thin-h:13708px">
 <h1 id="ch1"><span class="part">第一篇 · 第 1 章</span>Win32 基本程序观念</h1>
-<p>有个话我得先说在前头，说重一点：<strong>不懂 Win32，就别急着碰 MFC。</strong>这不是吓唬你。MFC 从来没有另起炉灶发明一套新东西，它做的只是把 Win32 那套原生 API 用 C++ 包了一层——「注册窗口类 → 造窗口 → 消息循环 → 窗口函数」这条底层筋络,一根都没换，只是被 C++ 类和一堆宏<strong>盖住了</strong>。你要是没见过被盖住的原貌，日后看 MFC 就处处是黑箱；见过了，MFC 在你眼里就是「哦，这不就是那谁谁包了一下嘛」。</p>
+<p>有个话我得先说在前头，说重一点：<strong>不懂 Win32，就不要急于碰 MFC。</strong>这不是吓唬你。MFC 从来没有另起炉灶发明一套新东西，它做的只是把 Win32 那套原生 API 用 C++ 包了一层——「注册窗口类 → 造窗口 → 消息循环 → 窗口函数」这条底层筋络,一根都没换，只是被 C++ 类和一堆宏<strong>盖住了</strong>。你要是没见过被盖住的原貌，日后看 MFC 就处处是黑箱；见过了，MFC 在你眼里就是「哦，这不就是那谁谁包了一下嘛」。</p>
 <p>所以这一章，是全书最该沉下心啃、也最保值的地基。<strong>它讲的东西二十年、三十年都不会过时</strong>——因为直到今天，Windows 桌面程序的最底层，跑的还是这套。<span class="badge ok">仍适用</span></p>
 
 <h2 id="ch1-flow">1.1 开发流程 · 需要哪些 .LIB 和 .H</h2>
@@ -772,7 +772,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <p>MFC 把这个思路封装成了虚函数 <code>CWinApp::OnIdle()</code>，框架在空闲时自动回调它，MFC 用它来做菜单/工具栏的自动启用禁用等。 概念仍在，但现代 UI 框架多用独立线程 / 异步任务 / 定时器做后台工作，很少再依赖这种「消息循环夹缝」模式。</p>
 
 <h3>空闲处理的机制与纪律</h3>
-<p>「空闲」的定义很精确:<strong>消息队列空了</strong>。MFC 的 Run 循环在 <code>PeekMessage</code> 发现没消息时,不是傻等,而是反复调 <code>OnIdle(lCount)</code>——lCount 从 0 递增,直到你返回 FALSE(「我没事了」),这才真正睡进 <code>GetMessage</code> 等下一条消息。所以 OnIdle 是「见缝插针」:<strong>用户一动鼠标,缝就没了</strong>,下一轮空闲重新从 lCount=0 开始。</p>
+<p>「空闲」的定义很精确:<strong>消息队列空了</strong>。MFC 的 Run 循环在 <code>PeekMessage</code> 发现没消息时,不是空等,而是反复调 <code>OnIdle(lCount)</code>——lCount 从 0 递增,直到你返回 FALSE(「我没事了」),这才真正睡进 <code>GetMessage</code> 等下一条消息。所以 OnIdle 是「见缝插针」:<strong>用户一动鼠标,缝就没了</strong>,下一轮空闲重新从 lCount=0 开始。</p>
 <table style="contain-intrinsic-size:auto 200px">
 <thead><tr><th class="nw">规则</th><th>原因</th></tr></thead>
 <tbody>
@@ -795,7 +795,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </div>
 
 <h3>Console 程序对 Windows 程序员的三个用处</h3>
-<p>本节的实际价值不是「还有另一种程序」,而是三件工程日常:<strong>①它是验证与试验的最短路径</strong>——试一个 API、复现一个字符串处理 bug,main+printf 十行搞定,不用起窗口骨架;本书大量概念(2 章的 C++ 性质全部)都适合先在 Console 里做实验。<strong>②GUI 程序可以随时开一个控制台当调试口</strong>——<code>AllocConsole()</code> + freopen 把 stdout 接过去,printf 大法在 GUI 程序里复活(比 TRACE 不挑调试器)。<strong>③子系统的差别要会认</strong>:链接器的 <code>/SUBSYSTEM:CONSOLE|WINDOWS</code> 决定两件事——入口约定(main 还是 WinMain)和「启动时系统给不给配控制台窗口」。「双击 GUI 程序闪一个黑窗」「Console 程序找不到 main」这类链接错误,病根都是子系统设置和入口函数不配套。</p>
+<p>本节的实际价值不是「还有另一种程序」,而是三件工程日常:<strong>①它是验证与试验的最短路径</strong>——试一个 API、复现一个字符串处理 bug,main+printf 十行即可,不用起窗口骨架;本书大量概念(2 章的 C++ 性质全部)都适合先在 Console 里做实验。<strong>②GUI 程序可以随时开一个控制台当调试口</strong>——<code>AllocConsole()</code> + freopen 把 stdout 接过去,printf 大法在 GUI 程序里复活(比 TRACE 不挑调试器)。<strong>③子系统的差别要会认</strong>:链接器的 <code>/SUBSYSTEM:CONSOLE|WINDOWS</code> 决定两件事——入口约定(main 还是 WinMain)和「启动时系统给不给配控制台窗口」。「双击 GUI 程序闪一个黑窗」「Console 程序找不到 main」这类链接错误,病根都是子系统设置和入口函数不配套。</p>
 
 <h2 id="ch1-thread">1.15 行程与执行绪（Process and Thread）</h2>
 <p>本章末尾补充多任务基础，全部<span class="badge ok">仍适用</span>：</p>
@@ -816,7 +816,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </section>
 
 <!-- ===================== 第 2 章 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 12518px;--thin-h:12518px">
+<section class="chapter" style="contain-intrinsic-size:auto 12506px;--thin-h:12506px">
 <h1 id="ch2"><span class="part">第一篇 · 第 2 章</span>C++ 的重要性质</h1>
 <p>MFC 是一套庞大的 C++ 类库，用到了 C++ 的几乎全部核心特性。这一章帮你补齐「读懂 MFC 源码所必需的 C++」。概念本身<span class="badge ok">全部仍适用</span>；但书里的<strong>写法</strong>是 1998 年前标准时代的，要用现代眼光校正。</p>
 
@@ -1043,7 +1043,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </section>
 
 <!-- ===================== 第 3 章 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 12572px;--thin-h:12572px">
+<section class="chapter" style="contain-intrinsic-size:auto 12559px;--thin-h:12559px">
 <h1 id="ch3"><span class="part">第一篇 · 第 3 章 ★ 全书招牌</span>MFC 六大关键技术之模拟</h1>
 <p>大多数 MFC 教程一上来就教你「这个宏怎么写、那个函数怎么调」，你照抄能跑，但心里一直有个疙瘩——<strong>这堆宏底下到底藏了什么？</strong>本章要做的，就是把这块黑布掀开。</p>
 <p>掀法很硬核：<strong>不用 MFC，我们自己从零造一个「迷你 MFC」出来。</strong>就叫它 <code>Frame1</code>、<code>Frame2</code>、<code>Frame3</code>……每造一版，就往里加一项本事——先让它「不写 <code>WinMain</code> 也能跑」，再给它装上「认得出自己是谁」的能力，接着是「凭类名就能造对象」「存进磁盘再读回来」「消息自动找到处理函数」。造到最后，你会惊讶地发现：<strong>你亲手搭出来的这个小东西，骨架和真正的 MFC 一模一样。</strong></p>
@@ -1459,7 +1459,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </section>
 
 <!-- ===================== 第 4-16 章 脚手架 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 9811px;--thin-h:9811px">
+<section class="chapter" style="contain-intrinsic-size:auto 9804px;--thin-h:9804px">
 <h1 id="ch4"><span class="part">第二篇 · 第 4 章</span>Visual C++ 开发环境</h1>
 
 <p>这一章要讲的是「工具」，而不是语言或框架本身。你可能会想：工具有什么好讲的，会用不就行了？但请先接受一个事实——你对开发环境理解得越深，你对程序「构建成什么样、运行时发生了什么」就看得越透。这一章讲的具体界面（VC++ 5.0 的 Developer Studio）今天几乎全都作废了，可它背后要解决的问题一个都没消失：怎么统一管理构建、怎么在庞大的 API 里导航、怎么观察一个事件驱动程序的运行时状态、怎么把重复的套路代码自动生成掉、怎么把界面从逻辑里分离出来。这些问题，2026 年的 VS2022、CMake、语言服务器、WinUI3 仍然在用另一套皮肤回答。我们就顺着这条主线，一样一样拆开看。</p>
@@ -1490,7 +1490,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 
 <h2 id="ch4-project">4.3 Project 与工作区：把构建收进一个盒子</h2>
 <p>上一节结尾你已经隐约看到问题了：makefile 要手写，而且真实项目远比三行复杂——几十个源文件、Debug 和 Release 两套不同的编译开关、一堆链接库、预处理宏定义……全靠手敲和记忆，迟早出错。这就是 <b>Project（项目）</b> 要解决的事：它是一份结构化的「构建说明书」，把「这个程序由哪些文件组成、用什么开关编译、链接哪些库、生成什么」全部记下来，让 IDE 替你翻译成底层的构建命令。</p>
-<p>在 VC++ 5.0 里，这份说明书是 <code>.dsp</code>（单个项目）和 <code>.dsw</code>（工作区，Workspace，可以装多个项目）。<span class="badge dead">已废弃</span> 你在 <b>Project Settings</b> 对话框里点点选选——C/C++ 标签页设优化级别和预处理宏，Link 标签页设要链接的库和子系统——IDE 就把这些选择存进 .dsp。所谓「工具设定」，说白了就是给底层那几个命令行工具配参数的图形界面。你在对话框里勾一个「Enable RTTI」，落到实处不过是给 <code>cl</code> 添了个 <code>/GR</code> 开关而已。</p>
+<p>在 VC++ 5.0 里，这份说明书是 <code>.dsp</code>（单个项目）和 <code>.dsw</code>（工作区，Workspace，可以装多个项目）。<span class="badge dead">已废弃</span> 你在 <b>Project Settings</b> 对话框里点点选选——C/C++ 标签页设优化级别和预处理宏，Link 标签页设要链接的库和子系统——IDE 就把这些选择存进 .dsp。所谓「工具设定」，本质上就是给底层那几个命令行工具配参数的图形界面。你在对话框里勾一个「Enable RTTI」，落到实处不过是给 <code>cl</code> 添了个 <code>/GR</code> 开关而已。</p>
 <pre style="contain-intrinsic-size:auto 196px"><code><span class="cm"># 手写 makefile 的片段：依赖关系全靠你自己声明，极易漏</span>
 hello.exe: hello.obj hello.res
 	link hello.obj hello.res user32.lib gdi32.lib
@@ -1536,7 +1536,7 @@ hello.obj: hello.cpp hello.h
 <div class="note new" style="contain-intrinsic-size:auto 229px"><span class="t">🔵 现代更新</span><p>AppWizard 这套 MFC 骨架生成器<span class="badge dead">已废弃</span>。今天的对应物分两层。轻量层是<b>项目模板</b>：VS2022 的 "Create a new project" 和命令行 <code>dotnet new</code>，本质就是参数化的脚手架。但更深的变化是理念本身反转了——现代 UI 框架（<b>WinUI 3</b> / <b>WPF</b> 走 XAML，或者 <b>Qt</b>、Web 前端）刻意做到<b>几乎不需要那种巨型生成骨架</b>：界面用标记语言声明、逻辑用数据绑定接上，样板被框架内化掉了，而不是生成给你去维护。换句话说，最好的「消灭套路代码」不是用向导把套路生成得更快，而是把套路从根上设计没。</p></div>
 
 <h2 id="ch4-resource-editor">4.7 资源编辑器：把界面从代码里剥出来</h2>
-<p>想象你要把一个软件翻译成日文。如果所有菜单文字、按钮标题、提示语都是硬编码在 C++ 源码里的字符串字面量，那本地化就意味着改源码、重新编译——每翻一种语言编一遍，灾难。再想象你要让美工调整一个对话框的布局：难道让他去改 C++ 里一串 <code>CreateWindow</code> 的坐标数字吗？这两个场景指向同一个设计原则：<b>界面（表现）应该和逻辑分离</b>。资源编辑器就是把这个原则落地的工具。</p>
+<p>想象你要把一个软件翻译成日文。如果所有菜单文字、按钮标题、提示语都是硬编码在 C++ 源码里的字符串字面量，那本地化就意味着改源码、重新编译——每翻一种语言编一遍，完全不可行。再想象你要让美工调整一个对话框的布局：难道让他去改 C++ 里一串 <code>CreateWindow</code> 的坐标数字吗？这两个场景指向同一个设计原则：<b>界面（表现）应该和逻辑分离</b>。资源编辑器就是把这个原则落地的工具。</p>
 <p>机制是这样的：图标、光标、位图、菜单、对话框、字符串、快捷键这些界面元素，统统不写进 C++，而是描述在一份叫 <b>资源脚本（.rc）</b>的文本文件里，每个元素配一个整数 <b>ID</b>（ID 的名字定义在 <code>resource.h</code> 里）。构建时由上文说过的 <code>rc</code> 编译成二进制、塞进 .exe 的资源节。运行时，代码只通过 ID 去取用它，比如 <code>LoadIcon(hInst, MAKEINTRESOURCE(IDI_APP))</code>、<code>LoadString(hInst, IDS_READY, ...)</code>。代码里出现的永远是 <code>IDS_READY</code> 这个符号，而不是 "就绪" 这两个字——这一步间接，就是分离的关键。</p>
 <pre style="contain-intrinsic-size:auto 440px"><code><span class="cm">// hello.rc —— 资源脚本，纯文本，和 C++ 逻辑彻底分开</span>
 STRINGTABLE
@@ -1572,7 +1572,7 @@ END
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 10946px;--thin-h:10946px">
+<section class="chapter" style="contain-intrinsic-size:auto 10937px;--thin-h:10937px">
 <h1 id="ch5"><span class="part">第三篇 · 第 5 章</span>总观 Application Framework</h1>
 
 <p>到这一章为止，你手里已经攒了两样东西：一是 C++ 的语法和面向对象的思路，二是从第一篇、第二篇里学来的 Windows 编程原理——句柄、消息、窗口过程、GDI。第 3 章你甚至亲手搭了一个「山寨版」的应用程序框架，用来体会那种「程序骨架先立好、你往里填肉」的感觉。现在问题来了：真正的 MFC 到底是个什么东西？它凭什么值得你再花一整本书去啃？这一章不写代码细节，只做一件事——站在高处，把 MFC 这套庞然大物的<strong>轮廓</strong>看清楚：它是什么、为什么这么设计、内部按什么逻辑分块。看清了地图，后面每一章的钻探你才知道自己身处哪里。</p>
@@ -1614,7 +1614,7 @@ END
 <tr><td class="nw">非类成员</td><td>不是类，但是库的一部分</td><td><code>Afx</code> 全局函数、宏、MFC 数据类型</td><td>不适用</td></tr>
 </tbody>
 </table>
-<p>这张表就是你脑子里该装的那张地图。往下的四节，我们按「离 Windows 由远及近」的顺序，逐个家族走一遍：先是压根不碰 Windows 的<strong>通用类</strong>，再是薄薄包住 API 的<strong>封装类</strong>，然后是撑起整个程序的<strong>应用框架类</strong>，最后是那些不算类却处处都在的<strong>黏合层</strong>。</p>
+<p>这张表就是你脑子里该装的那张地图。往下的四节，我们按「离 Windows 由远及近」的顺序，逐个家族走一遍：先是根本不碰 Windows 的<strong>通用类</strong>，再是薄薄包住 API 的<strong>封装类</strong>，然后是撑起整个程序的<strong>应用框架类</strong>，最后是那些不算类却处处都在的<strong>黏合层</strong>。</p>
 
 <h2 id="ch5-general">5.5 通用类：一批和 Windows 无关的工具</h2>
 <p>先从最外围、最好懂的一圈说起。<strong>通用类</strong>（General Purpose Classes）解决的是那些和「窗口」「消息」毫无关系的通用编程问题——字符串怎么处理、一堆数据怎么装、时间怎么算、文件怎么读写。它们的一个鲜明特征是：<em>你在一个纯控制台程序里也能用</em>，因为它们根本不依赖图形界面。</p>
@@ -1632,7 +1632,7 @@ s += suffix;            <span class="cm">// 该扩容它自己扩，不会溢出
 <div class="note new" style="contain-intrinsic-size:auto 266px"><span class="t">🔵 现代更新：这一圈几乎全被标准库取代</span><p>通用类是 MFC 里最该、也最容易被替换掉的一圈，因为 C++ 标准库把这些事做得更好：<code>CString</code> → <code>std::string</code> / <code>std::wstring</code> <span class="badge new">现代更新</span>；<code>CArray</code>/<code>CList</code>/<code>CMap</code> → <code>std::vector</code> / <code>std::list</code> / <code>std::unordered_map</code>，类型安全、跨平台、性能通常更好；那批非模板的 <code>CObArray</code>/<code>CStringList</code> 更是 <span class="badge dead">已废弃</span> 级别，新代码完全没有理由碰；<code>CFile</code> → <code>std::fstream</code> 或 <code>std::filesystem</code>。尤其提醒一点：<code>CTime</code> 早期实现基于 32 位 <code>time_t</code>，撞上过 <strong>2038 年问题</strong> <span class="badge old">已过时</span>，现代请直接用 <code>std::chrono</code>。<code>CString</code> 今天仍活在海量遗留代码里，读得懂即可，新代码别再写它。</p></div>
 
 <h2 id="ch5-wrapper">5.6 API 封装类：给句柄穿上 C++ 外衣</h2>
-<p>往里走一圈，就碰到了 MFC 和 Windows 直接接壤的地带——<strong>API 封装类</strong>。要理解这一圈，先得回忆一个 Win32 的核心事实：在 Windows 里，一个窗口、一块画布、一支画笔，本质上都只是一个<strong>句柄</strong>（handle）——<code>HWND</code>、<code>HDC</code>、<code>HPEN</code> 这些说白了就是操作系统内部某张表的编号。而所有操作它们的 API，几乎都长成同一个模样：<em>第一个参数是句柄，后面跟具体参数</em>，比如 <code>::SetWindowText(hWnd, text)</code>、<code>::TextOut(hdc, x, y, text)</code>。</p>
+<p>往里走一圈，就碰到了 MFC 和 Windows 直接接壤的地带——<strong>API 封装类</strong>。要理解这一圈，先得回忆一个 Win32 的核心事实：在 Windows 里，一个窗口、一块画布、一支画笔，本质上都只是一个<strong>句柄</strong>（handle）——<code>HWND</code>、<code>HDC</code>、<code>HPEN</code> 这些本质上就是操作系统内部某张表的编号。而所有操作它们的 API，几乎都长成同一个模样：<em>第一个参数是句柄，后面跟具体参数</em>，比如 <code>::SetWindowText(hWnd, text)</code>、<code>::TextOut(hdc, x, y, text)</code>。</p>
 <p>MFC 封装这一层的思路简单到优雅：<strong>把句柄藏进一个 C++ 对象的成员变量里，再把那些「第一参数是句柄」的 API 变成这个对象的成员函数。</strong>于是 <code>CWnd</code> 里有个 <code>m_hWnd</code> 存着窗口句柄，它的成员函数 <code>SetWindowText</code> 就是转手去调同名的全局 API，只不过句柄不用你再传了——它自己知道。</p>
 <pre style="contain-intrinsic-size:auto 333px"><code><span class="cl"><span class="cm">// Win32：一切围绕句柄，API 第一个参数就是句柄</span></span><span class="cl">HWND hWnd = <span class="cm">/* ... */</span>;</span><span class="cl">::SetWindowText(hWnd, L<span class="cm">"Hello"</span>);</span><span class="cl"> </span><span class="cl"><span class="cm">// MFC：句柄被包进对象，藏在 m_hWnd 里</span></span><span class="cl"><span class="kw">class</span> CWnd {</span><span class="cl"><span class="kw">public</span>:</span><span class="cl"><span class="cc" style="min-width:37.0ch">    HWND m_hWnd;</span><span class="cm">// 被封装的句柄</span></span><span class="cl">    <span class="kw">void</span> SetWindowText(LPCTSTR s) {</span><span class="cl"><span class="cc" style="min-width:37.0ch">        ::SetWindowText(m_hWnd, s);</span><span class="cm">// 转调同名 API，句柄它自己带</span></span><span class="cl">    }</span><span class="cl">};</span><span class="cl"><span class="cc" style="min-width:37.0ch">pWnd-&gt;SetWindowText(L<span class="cm">"Hello"</span>);</span><span class="cm">// 用起来更像面向对象</span></span></code></pre>
 <p>顺着这个思路，一整个家族就铺开了：<code>CWnd</code> 是所有窗口的基类，各种控件窗口（按钮、编辑框、列表框）都从它派生；<code>CDC</code> 封装设备上下文（Device Context），把画线、写字、填色那套绘图 API 变成成员函数；<code>CGdiObject</code> 封装各种 GDI 绘图工具，派生出 <code>CPen</code>（画笔）、<code>CBrush</code>（画刷）、<code>CFont</code>（字体）、<code>CBitmap</code>（位图）；还有 <code>CMenu</code> 封装菜单，等等。为了让「句柄」和「C++ 对象」两个世界能来回换算，MFC 内部还维护了一张<strong>句柄映射表</strong>，你随时能用 <code>CWnd::FromHandle(hWnd)</code> 从一个句柄找回对应的 C++ 对象。</p>
@@ -1672,7 +1672,7 @@ s += suffix;            <span class="cm">// 该扩容它自己扩，不会溢出
 <div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 这一章你该带走的三句话</span><p>其一，<strong>框架 ≠ 类库</strong>，分水岭是「谁调用谁」，MFC 两者兼具。其二，<strong>控制反转（好莱坞原则）</strong>是框架的灵魂，框架管时序、你填逻辑，这套思想 <span class="badge ok">仍适用</span> 于今天几乎所有开发栈。其三，MFC 两百多个类可以塞进<strong>几个职责清晰的抽屉</strong>——通用类、API 封装类、应用框架类、加上黏合用的 Afx 函数和宏。地图画好了，接下来我们就深入每一格去钻探。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 15132px;--thin-h:15132px">
+<section class="chapter" style="contain-intrinsic-size:auto 15116px;--thin-h:15116px">
 <h1 id="ch6"><span class="part">第三篇 · 第 6 章</span>MFC 程序的生死因果</h1>
 
 <p>你在第 3 章已经用一个「简化模型」预演过 MFC 程序是怎么活起来的。那时候为了讲清骨架，我把很多真实细节抹平了。这一章不留情面：我们要打开真正的 MFC，一路追下去——从一个全局对象在 <code>main</code> 之前被悄悄构造，到藏在库里的 <code>WinMain</code> 被自动执行，再到消息泵日夜不停地抽水，最后 <code>WM_QUIT</code> 让整台机器停摆、全局对象析构收尾。一个 MFC 程序的「生」与「死」，都在这条链上。看懂它，你就不再是「照着向导点按钮」的人，而是知道每一颗齿轮为什么转的人。</p>
@@ -1780,7 +1780,7 @@ Afx:00400000:8:00010003:00000000:00000000
 <pre style="contain-intrinsic-size:auto 310px"><code><span class="cl"><span class="cm">// 头文件：声明这个类有一张消息映射表</span></span><span class="cl"><span class="kw">class</span> CMyWnd : <span class="kw">public</span> CFrameWnd {</span><span class="cl">    afx_msg <span class="kw">void</span> OnPaint();</span><span class="cl">    afx_msg <span class="kw">void</span> OnLButtonDown(UINT nFlags, CPoint pt);</span><span class="cl"><span class="cc" style="min-width:38.0ch">    DECLARE_MESSAGE_MAP()</span><span class="cm">// 声明：本类维护一张静态映射表</span></span><span class="cl">};</span><span class="cl"> </span><span class="cl"><span class="cm">// 源文件：填这张表——哪条消息，交给哪个函数</span></span><span class="cl"><span class="cc" style="min-width:38.0ch">BEGIN_MESSAGE_MAP(CMyWnd, CFrameWnd)</span><span class="cm">// 第二参数＝父类，用来把表「链」上去</span></span><span class="cl"><span class="cc" style="min-width:38.0ch">    ON_WM_PAINT()</span><span class="cm">// WM_PAINT   → OnPaint</span></span><span class="cl"><span class="cc" style="min-width:38.0ch">    ON_WM_LBUTTONDOWN()</span><span class="cm">// WM_LBUTTONDOWN → OnLButtonDown</span></span><span class="cl">END_MESSAGE_MAP()</span></code></pre>
 <p>这些宏展开后，会在类里生成一张<strong>静态数组</strong>（每个元素记着「消息号、控件 ID、通知码 → 函数指针」），外加一个指向<em>父类那张表</em>的链接。于是所有类的消息映射表串成一条沿着继承树向上的链。当一条消息进来，<code>OnWndMsg</code> 先在本类的表里查；查不到，顺着链接跳到父类的表继续查，一路找到 <code>CWnd</code>。找到匹配就调对应函数，没找到就交给默认处理 <code>DefWindowProc</code>。</p>
 <h3>为什么用「查表」而不用虚函数？</h3>
-<p>这是 MFC 一个深思熟虑的取舍，务必理解。Windows 消息有几百种。如果把「每种消息对应一个处理函数」都做成 <code>CWnd</code> 的虚函数，那 <code>CWnd</code> 的虚函数表（vtable）会膨胀到几百项，而且<strong>每一个</strong>派生类、每一个窗口对象都要背上这张巨表的开销——哪怕它只想处理其中两三条消息。消息映射用「一张紧凑的静态表 + 一次运行期查找」换掉了这份内存浪费：你处理几条消息，表里就几项；不处理的消息压根不占位。用一点点查表的时间，省下大把 vtable 空间，在当年内存以 MB 计的机器上，这笔账非常划算。</p>
+<p>这是 MFC 一个深思熟虑的取舍，务必理解。Windows 消息有几百种。如果把「每种消息对应一个处理函数」都做成 <code>CWnd</code> 的虚函数，那 <code>CWnd</code> 的虚函数表（vtable）会膨胀到几百项，而且<strong>每一个</strong>派生类、每一个窗口对象都要背上这张巨表的开销——哪怕它只想处理其中两三条消息。消息映射用「一张紧凑的静态表 + 一次运行期查找」换掉了这份内存浪费：你处理几条消息，表里就几项；不处理的消息根本不占位。用一点点查表的时间，省下大把 vtable 空间，在当年内存以 MB 计的机器上，这笔账非常划算。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 这就是 afx_msg 记号的归宿</span><p>还记得那个「展开为空」的 <code>afx_msg</code> 吗？它标记的函数，真正被接上系统，靠的正是这里的 <code>ON_WM_XXX</code> 宏往映射表里填的那一行。记号负责给人看，映射表负责给机器用，两者分工。</p></div>
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代批注 <span class="badge old">手法老派</span></span><p>「用一堆宏搭一张表来分发事件」是宏时代的产物，可读性和可调试性都不好（宏展开后编译错误信息面目全非）。现代 C++ 表达「消息→处理」有更干净的路子：<strong>Qt 的信号槽</strong>（<code>connect(btn, &amp;QPushButton::clicked, this, &amp;Widget::onClick)</code>）、<strong>WinUI/WPF 的事件与命令绑定</strong>、或最朴素的 <code>std::function</code> / <code>std::variant</code> + <code>std::visit</code> 派发。它们都是类型安全、IDE 能跳转、出错信息清楚的，不必再跟宏搏斗。</p></div>
 
@@ -1827,7 +1827,7 @@ Afx:00400000:8:00010003:00000000:00000000
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 14303px;--thin-h:14303px">
+<section class="chapter" style="contain-intrinsic-size:auto 14289px;--thin-h:14289px">
 <h1 id="ch7"><span class="part">第三篇 · 第 7 章</span>简单而完整：MFC 骨干程序</h1>
 
 <p>前面几章你已经领教过赤裸裸的 Win32 程序长什么样：一个 <code>WinMain</code>，一段消息循环，一个巨大的 <code>WndProc</code>，为了让窗口里能有菜单、能开关文件、能打印预览，你得亲手写上几百上千行。这一章要给你看的是另一种活法——你几乎一行业务代码没写，编译一下，就得到一个「像模像样」的应用程序：有标题栏、有下拉菜单、有工具栏、有状态栏、能新建/打开/保存文件、能打印、还带一个「关于」对话框。这就是所谓的<strong>骨干程序（skeleton / application framework）</strong>。本章我们把这具骨架从头到脚拆开，看清每一根骨头是谁、长在哪、为什么长在那儿。为了不空谈，我会带你从零设计一个原创的小涂鸦程序，边设计边讲。</p>
@@ -1835,7 +1835,7 @@ Afx:00400000:8:00010003:00000000:00000000
 <h2 id="ch7-newface">7.1 骨干程序的新风貌：几乎没写代码，界面却是全的</h2>
 <p>先问你一个问题：一个「空」的 Windows 程序应该长什么样？在纯 Win32 的世界里，「空」意味着一个光秃秃的窗口，连菜单都得自己挂。而在 MFC 的世界里，「空」程序反而是<strong>满配</strong>的——向导吐出来的骨干，一启动就是一副成熟商业软件的模样：多文档标签、可停靠的工具栏、底部状态栏会显示菜单项提示、最近打开文件列表（MRU）、打印预览、拖放打开文件……你什么都没做，它们就已经在那儿了。</p>
 <p>这背后的道理其实很朴素：绝大多数 Windows 桌面程序的「外壳」是高度雷同的。文件菜单永远是新建/打开/保存/打印/退出，编辑菜单永远是撤销/剪切/复制/粘贴。既然千篇一律，框架就干脆把这套通用外壳<strong>预先做好、白送给你</strong>，你只需要往里面填「这个程序到底处理什么数据、怎么画」的那部分。打个比方：纯 Win32 是给你一堆砖头和水泥让你自己砌房子；MFC 骨干是直接交给你一套精装样板间，水电煤气家具全齐，你搬进去重新贴壁纸就行。</p>
-<p>设计动机说白了就一句话：<strong>把 80% 重复的活儿从每个程序员身上挪走，只留下 20% 真正独特的活儿。</strong>这就是「应用程序框架（application framework）」这个词的重量——它不是一个函数库那么简单，它替你规定了整个程序的骨架结构和运转流程。</p>
+<p>设计动机本质上就一句话：<strong>把 80% 重复的活儿从每个程序员身上挪走，只留下 20% 真正独特的活儿。</strong>这就是「应用程序框架（application framework）」这个词的重量——它不是一个函数库那么简单，它替你规定了整个程序的骨架结构和运转流程。</p>
 <div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 那个年代的「新风貌」今天看是旧的</span><p>当年这套骨架最亮眼的卖点是<strong>3D 立体感的工具栏按钮</strong>、可停靠（docking）的控制条、灰底凸起的对话框控件——在 1996 年前后这确实叫「新风貌」。但那套视觉语言早已过时：今天没人觉得灰色 3D 按钮好看，Windows 自己都换过好几轮设计语言了。<span class="badge old">已过时</span></p></div>
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代更新：脚手架的思想比框架本身活得久</span><p>「一条命令生成一个能跑的完整程序」——这个理念今天无处不在，只是换了外壳。你在 2026 年会用 <code>dotnet new winui</code>、<code>npm create vite</code>、<code>cargo new</code>、Qt Creator 的项目模板来做同一件事。视觉层面，如果你要做现代 Windows 桌面壳，会选 WinUI 3 的 <code>NavigationView</code>/<code>CommandBar</code>（Fluent 设计）或 WPF，而不是 MFC 的 3D 工具栏。骨架的<em>价值</em>没变，具体的<em>样子</em>全换了。<span class="badge new">现代更新</span></p></div>
 
@@ -2020,7 +2020,7 @@ m_pMainWnd-&gt;DragAcceptFiles();
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 7736px;--thin-h:7736px">
+<section class="chapter" style="contain-intrinsic-size:auto 7729px;--thin-h:7729px">
 <h1 id="ch8"><span class="part">第四篇 · 第 8 章</span>Document-View 深入探讨</h1>
 <p>第 7 章你已经把 Doc/View 跑起来了。这一章往深里挖：<strong>为什么非得这么分？三个对象到底是怎么被牵到一起的？存盘读盘那一下，台面下究竟发生了什么？</strong>把这些想透，你对 MFC 的骨架就算真正握住了。</p>
 
@@ -2258,7 +2258,7 @@ m_pMainWnd-&gt;DragAcceptFiles();
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 9297px;--thin-h:9297px">
+<section class="chapter" style="contain-intrinsic-size:auto 9289px;--thin-h:9289px">
 <h1 id="ch9"><span class="part">第四篇 · 第 9 章</span>消息映射与命令绕行</h1>
 <p>第 3 章你见过命令绕行的「山寨版」，这一章看真章，也是 MFC 事件系统的收官。核心就一个问题：<strong>一条菜单命令(比如「保存」),凭什么能自动找到该处理它的那个对象？</strong></p>
 
@@ -2434,7 +2434,7 @@ m_pMainWnd-&gt;DragAcceptFiles();
 </div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 11438px;--thin-h:11438px">
+<section class="chapter" style="contain-intrinsic-size:auto 11425px;--thin-h:11425px">
 <h1 id="ch10"><span class="part">第四篇 · 第 10 章</span>MFC 与对话盒</h1>
 
 <p>前面几章你已经和「窗口」打过交道：一个从 CFrameWnd 派生的框架窗口，里面自己动手画东西、自己接消息。可真正让程序「和人对话」的，往往不是那块空白画布，而是一堆排好队的输入框、按钮、勾选框——也就是<strong>对话盒（dialog box）</strong>。这一章要把对话盒从头拆到尾：它的长相从哪来、它的行为归谁管、你在框里填的字又是怎么变成程序里一个变量的。其中最值得你花时间的，是 MFC 那套叫 DDX/DDV 的机制——它是三十年前的「双向数据绑定」，理解了它，你再看 WPF、WinUI 的 Binding 会有一种「原来祖师爷长这样」的通透感。</p>
@@ -2608,7 +2608,7 @@ m_pFind-&gt;ShowWindow(SW_SHOW);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 11271px;--thin-h:11271px">
+<section class="chapter" style="contain-intrinsic-size:auto 11262px;--thin-h:11262px">
 <h1 id="ch11"><span class="part">第四篇 · 第 11 章</span>View 功能之加强与重绘效率之提升</h1>
 
 <h2 id="ch11-why">11.1 这一章到底在攻克什么难题</h2>
@@ -2647,7 +2647,7 @@ m_pFind-&gt;ShowWindow(SW_SHOW);</code></pre>
 <pre style="contain-intrinsic-size:auto 114px"><code><span class="kw">void</span> CMyView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) {
     Invalidate();   <span class="cm">// 默认：整块客户区作废，等 WM_PAINT 时全画</span>
 }</code></pre>
-<p>这里有个关键的时序要拎清：<code>Invalidate</code> 并不当场画。它只是「记账」，把区域记成脏的，真正动笔发生在稍后的 <code>WM_PAINT</code>。比方说，<code>Invalidate</code> 像在白板某块区域贴张便利贴「这里要重写」，Windows 攒着这些便利贴，等手头空了（消息队列里没有更要紧的活）再一次性擦掉重写。这么设计是为了合并重画、避免你连改十次数据就傻乎乎地重画十次。</p>
+<p>这里有个关键的时序要拎清：<code>Invalidate</code> 并不当场画。它只是「记账」，把区域记成脏的，真正动笔发生在稍后的 <code>WM_PAINT</code>。比方说，<code>Invalidate</code> 像在白板某块区域贴张便利贴「这里要重写」，Windows 攒着这些便利贴，等手头空了（消息队列里没有更要紧的活）再一次性擦掉重写。这么设计是为了合并重画、避免你连改十次数据就重画十次。</p>
 <p>但默认「全区作废」的代价也在这里：它意味着 <code>OnDraw</code> 要把画面上所有东西统统重算、重画一遍。数据量小，无所谓；数据量一大，就是肉眼可见地卡、闪。这正是下一节 hint 要动手解决的痛点。</p>
 <p>顺手把三个长得像、又常被搞混的词分清楚：</p>
 <table style="contain-intrinsic-size:auto 151px">
@@ -2796,7 +2796,7 @@ m_pFind-&gt;ShowWindow(SW_SHOW);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 11988px;--thin-h:11988px">
+<section class="chapter" style="contain-intrinsic-size:auto 11980px;--thin-h:11980px">
 <h1 id="ch12"><span class="part">第四篇 · 第 12 章</span>打印与预览</h1>
 <p>到这一章，你的程序已经能把内容在窗口里画得井井有条。现在要求多加一句：把同样的东西打到纸上，还要能"打印预览"。听起来只是换个输出目的地，为什么值得单开一章？因为屏幕和纸张之间横着几道真实的鸿沟——分辨率、物理尺寸、以及"连续画布"与"一叠固定页"的根本差别。本章要讲清楚：Windows 用什么抽象把这些鸿沟填平（答案是 <strong>CDC</strong>），MFC 又如何把打印的固定套路收进框架、只把真正易变的部分留给你。你会看到一个反复出现的主线：<em>同一套 <code>OnDraw</code> 既画屏幕又打印，打印真正新增的难题其实只有一个——分页。</em></p>
 
@@ -3024,7 +3024,7 @@ dc.EndDoc();</code></pre>
 <div class="note new" style="contain-intrinsic-size:auto 198px"><span class="t">🔵 现代更新：用 PDF/XPS 直接预览</span><p><span class="badge old">已过时</span> <code>CPreviewDC</code> 这套"双 DC 掉包"是 GDI 时代的精巧障眼法。现代方案更直白：把文档渲染成 XPS 或 PDF，用现成查看器控件展示——WPF 的 <code>DocumentViewer</code>、WinUI3 内嵌 <code>WebView2</code> 显示 PDF、或直接调系统"打印到 PDF"再呈现。所见即所得由同一份 PDF 保证，连"属性 DC vs 输出 DC"这个概念都不再需要。<span class="badge ok">仍适用</span> 但底层那句洞见没变：<em>预览之所以可能，是因为绘图与设备被彻底解耦。</em></p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 10510px;--thin-h:10510px"><h1 id="ch13"><span class="part">第四篇 · 第 13 章</span>多重文件与多重显示</h1>
+<section class="chapter" style="contain-intrinsic-size:auto 10498px;--thin-h:10498px"><h1 id="ch13"><span class="part">第四篇 · 第 13 章</span>多重文件与多重显示</h1>
 
 <h2 id="ch13-sdi-mdi">13.1 SDI 与 MDI：两种应用程序骨架</h2>
 <p><span class="badge ok">SDI 仍适用</span> <span class="badge old">MDI 已过时</span>先问你一个问题：同样是文件编辑器，为什么记事本一次只肯开一份文件，而老版本的 Visual C++ 却能在一个大窗口里同时塞进好几个源码子窗口、还能各自最大化最小化？答案就是 SDI 与 MDI 这两套骨架的分野。你在建立 MFC 项目的第一步选的就是它俩，选错了后面整套窗口继承体系都跟着变。</p>
@@ -3050,7 +3050,7 @@ dc.EndDoc();</code></pre>
 <pre style="contain-intrinsic-size:auto 310px"><code><span class="cl"><span class="kw">void</span> CBudgetDoc::SetAmount(<span class="kw">int</span> idx, <span class="kw">double</span> v) {</span><span class="cl"><span class="cc" style="min-width:52.0ch">    m_items[idx].amount = v;</span><span class="cm">// 改的是唯一真相源</span></span><span class="cl"><span class="cc" style="min-width:52.0ch">    SetModifiedFlag();</span><span class="cm">// 标记「脏」，关闭时提示存盘</span></span><span class="cl"><span class="cc" style="min-width:52.0ch">    UpdateAllViews(<span class="kw">nullptr</span>, HINT_AMOUNT, <span class="kw">nullptr</span>);</span><span class="cm">// 广播：数据变了</span></span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="kw">void</span> CChartView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) {</span><span class="cl">    <span class="kw">if</span> (lHint == HINT_AMOUNT)</span><span class="cl"><span class="cc" style="min-width:52.0ch">        InvalidateRect(m_barRect);</span><span class="cm">// 只重画那一根柱子，不全刷</span></span><span class="cl">    <span class="kw">else</span></span><span class="cl"><span class="cc" style="min-width:52.0ch">        Invalidate();</span><span class="cm">// 拿不准就保守地全刷</span></span><span class="cl">}</span></code></pre>
 <p>你可以把文档理解成一个躺在内存里的「唯一真相源」——像一个小型数据库，而各个视图是订阅了它的观察者。这正是经典的 Observer(观察者)模式，也是 MVC 里 Model 与 View 关系的具体落地。设计动机是<strong>解耦</strong>:文档永远不必知道现在到底挂了几个视图、都是什么类型，它只管在数据变动时按一个「广播按钮」;将来你想再加第三个视图，文档这边一行代码都不用动。</p>
 <p>那两个参数 <code>lHint</code>(一个整数)与 <code>pHint</code>(一个对象指针)是留给你做性能优化的暗号:告诉视图「到底是哪块数据变了」,视图就能只重画受影响的一小块,而不是把整个客户区推倒重画。不传暗号时 <code>OnUpdate</code> 的默认行为就是整片 Invalidate,正确但笨。</p>
-<div class="note new" style="contain-intrinsic-size:auto 230px"><span class="t">🔵 现代更新　这就是响应式状态管理</span><p>「一个 store，多个订阅者」放到 2026 年就是响应式状态管理的日常：Redux 的 store 配上 connected 组件、Vue/Solid 的 signal、SwiftUI 的 <code>@Observable</code>、WPF/MVVM 的 <code>INotifyPropertyChanged</code>,全是同一个思想。区别在于<strong>粒度谁来算</strong>:MFC 要你亲手传 hint、亲手决定重画哪块矩形;现代框架帮你自动 diff——虚拟 DOM 做协调、细粒度 signal 自动追踪依赖,你只管改状态,该更新的像素自己会更新。<code>UpdateAllViews</code> 说白了就是一台手摇版的自动变更传播机。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 230px"><span class="t">🔵 现代更新　这就是响应式状态管理</span><p>「一个 store，多个订阅者」放到 2026 年就是响应式状态管理的日常：Redux 的 store 配上 connected 组件、Vue/Solid 的 signal、SwiftUI 的 <code>@Observable</code>、WPF/MVVM 的 <code>INotifyPropertyChanged</code>,全是同一个思想。区别在于<strong>粒度谁来算</strong>:MFC 要你亲手传 hint、亲手决定重画哪块矩形;现代框架帮你自动 diff——虚拟 DOM 做协调、细粒度 signal 自动追踪依赖,你只管改状态,该更新的像素自己会更新。<code>UpdateAllViews</code> 本质上就是一台手摇版的自动变更传播机。</p></div>
 
 <h2 id="ch13-splitter-dynamic">13.3 动态分裂窗口：CSplitterWnd 的即席复制</h2>
 <p><span class="badge ok">概念仍适用</span>换个场景:你在编辑一份很长的文档,想同时盯着开头和结尾对照修改,又不想真开两个窗口。这时不需要动用「多视图」那套重家伙,一个分裂窗口 <code>CSplitterWnd</code> 就够了。</p>
@@ -3146,7 +3146,7 @@ dc.EndDoc();</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 13853px;--thin-h:13853px">
+<section class="chapter" style="contain-intrinsic-size:auto 13842px;--thin-h:13842px">
 <h1 id="ch14"><span class="part">第四篇 · 第 14 章</span>MFC 多线程程序设计</h1>
 
 <h2 id="ch14-three-concepts">14.1 从操作系统看：模块、进程、执行线程三观念</h2>
@@ -3162,7 +3162,7 @@ dc.EndDoc();</code></pre>
 <p>原理是：单核在任一瞬间只能执行一条线程。所谓「同时」，是操作系统的<strong>排程器（Scheduler）</strong>在飞快地轮换——给线程 A 一小段时间（时间片 / quantum），时间到了、或它主动让出，就切给线程 B。切换快到你察觉不到，于是造成了「并行」的错觉。多核则是在这个错觉之上叠加了真正的并行。</p>
 <p>Windows 用的是<strong>基于优先权的抢占式排程</strong>。每条线程有一个 0～31 的优先权数值，排程器永远优先跑「就绪队列里优先权最高」的那条；同优先权的之间轮流（round-robin）。「抢占」的意思是：一旦有更高优先权的线程就绪，当前线程会被立刻打断让位，不必等它跑完时间片。这个最终数值不是你直接设的，而是两段拼出来的——进程的<em>优先权类别</em>（IDLE / BELOW_NORMAL / NORMAL / ABOVE_NORMAL / HIGH / REALTIME）加上线程在进程内的<em>相对优先权</em>（IDLE / LOWEST / BELOW_NORMAL / NORMAL / ABOVE_NORMAL / HIGHEST / TIME_CRITICAL），两者叠加映射成 0～31。系统还会动态微调：前台窗口的线程被临时加成、长期得不到执行的线程被提升以防「饿死」。</p>
 <p>那被切走的线程怎么「续跑」？这就要说 <strong>Thread Context</strong>。一条线程被切走的那一刻，它跑到哪条指令、寄存器里是什么值，都必须原样存下来，下次轮到它才能从断点继续。这份「现场快照」就是执行线程上下文——一整套 CPU 寄存器值（指令指针、栈指针、各通用寄存器等）。所谓<strong>上下文切换（context switch）</strong>，就是把当前线程的寄存器存进内存、再把下一条线程的寄存器灌回 CPU。这件事不是免费的，切换太频繁本身就是纯开销。</p>
-<p>比方说，排程器像个只有一张桌子（CPU）的自习室管理员，门外排着一群学生（就绪线程）。他按「谁更急」（优先权）叫号，每人限坐一小段。学生离座前得把草稿、书签（context）收进书包，回来再摊开接着写。为什么要分优先权、不一律平等？因为不同任务的急迫度差得远——放音频的线程晚 10 毫秒就爆音，后台算个统计晚 10 秒没人在意。优先权让系统把宝贵的 CPU 先给要紧的活。但这也是陷阱：滥设高优先权会把别的线程饿死，甚至把界面拖到没响应。</p>
+<p>比方说，排程器像个只有一张桌子（CPU）的自习室管理员，门外排着一群学生（就绪线程）。他按「谁更急」（优先权）叫号，每人限坐一小段。学生离座前得把草稿、书签（context）收进书包，回来再摊开接着写。为什么要分优先权、不一律平等？因为不同任务的急迫程度差别很大——放音频的线程晚 10 毫秒就爆音，后台算个统计晚 10 秒没人在意。优先权让系统把宝贵的 CPU 先给要紧的活。但这也是陷阱：滥设高优先权会把别的线程饿死，甚至把界面拖到没响应。</p>
 <div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代更新</span><p>手工调线程优先权在今天几乎是反模式 <span class="badge old">已过时</span>。CPU 密集的活交给线程池或 <span class="kw">std</span>::async 让运行时按核数调度；要「后台省电」用 Windows 的 <code>Quality of Service</code>（QoS）/ 电源节流，而不是自己硬调 priority。真需要精细控制并发，用结构化并发（如 PPL、C++17 并行算法 <span class="kw">std</span>::execution::par）比手拨优先权稳得多。</p></div>
 
 <h2 id="ch14-worker-vs-ui">14.3 程序设计层面：Worker Thread 与 UI Thread</h2>
@@ -3190,7 +3190,7 @@ dc.EndDoc();</code></pre>
 
 <h2 id="ch14-cwinthread">14.5 探索 CWinThread：MFC 如何封装一条线程</h2>
 <p>一条 Win32 线程本质就是 <code>CreateThread</code> 加一个函数指针，MFC 干嘛要再套一个 <code>CWinThread</code> 类？</p>
-<p>因为 MFC 想用一个 C++ 对象来「代表」一条线程，把线程句柄、线程 ID、消息循环、初始化与收尾这些东西打包进去。几个关键成员你得认识：<code>m_hThread</code>（线程内核句柄，用来等待、查退出码）、<code>m_nThreadID</code>（线程 ID）、<code>m_pMainWnd</code>（UI 线程的主窗口）、以及一个很要命的开关 <code>m_bAutoDelete</code>（决定线程结束时这个对象要不要自我 delete，默认 TRUE）。</p>
+<p>因为 MFC 想用一个 C++ 对象来「代表」一条线程，把线程句柄、线程 ID、消息循环、初始化与收尾这些东西打包进去。几个关键成员你得认识：<code>m_hThread</code>（线程内核句柄，用来等待、查退出码）、<code>m_nThreadID</code>（线程 ID）、<code>m_pMainWnd</code>（UI 线程的主窗口）、以及一个很关键的开关 <code>m_bAutoDelete</code>（决定线程结束时这个对象要不要自我 delete，默认 TRUE）。</p>
 <p>这里有个常被忽略却极其重要的事实：<strong><code>CWinApp</code> 本身就是从 <code>CWinThread</code> 派生的</strong>。也就是说，你那个 <code>theApp</code> 全局对象，本身就代表着程序的「主界面线程」，整个 MFC 程序的消息循环，跑的就是 <code>CWinThread::Run()</code>。所以「主线程」在 MFC 里并不是什么特殊物种，它只是第一条、由框架替你建好的 <code>CWinThread</code> 而已。</p>
 <pre style="contain-intrinsic-size:auto 403px"><code><span class="cl"><span class="cm">// CWinThread —— MFC 里一条线程的「化身」（说明性骨架）</span></span><span class="cl"><span class="kw">class</span> CWinThread : <span class="kw">public</span> CCmdTarget</span><span class="cl">{</span><span class="cl"><span class="kw">public</span>:</span><span class="cl"><span class="cc" style="min-width:34.0ch">    HANDLE  m_hThread;</span><span class="cm">// 线程内核句柄</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    DWORD   m_nThreadID;</span><span class="cm">// 线程 ID</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    CWnd*   m_pMainWnd;</span><span class="cm">// UI 线程的主窗口</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    BOOL    m_bAutoDelete;</span><span class="cm">// 结束后是否自我 delete，默认 TRUE</span></span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:34.0ch">    <span class="kw">virtual</span> BOOL InitInstance();</span><span class="cm">// UI 线程启动时的初始化</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    <span class="kw">virtual</span> <span class="kw">int</span>  Run();</span><span class="cm">// 消息循环本体</span></span><span class="cl"><span class="cc" style="min-width:34.0ch">    <span class="kw">virtual</span> <span class="kw">int</span>  ExitInstance();</span><span class="cm">// 收尾</span></span><span class="cl">};</span><span class="cl"> </span><span class="cl"><span class="cm">// 关键事实：CWinApp 就派生自 CWinThread —— 主线程也只是一条 CWinThread</span></span><span class="cl"><span class="kw">class</span> CWinApp : <span class="kw">public</span> CWinThread { <span class="cm">/* ... */</span> };</span></code></pre>
 <p>对 UI 线程，<code>CWinThread</code> 开放了几个可覆写的虚函数：<code>InitInstance()</code>（线程启动后做初始化，比如建窗口）、<code>Run()</code>（消息循环本体）、<code>ExitInstance()</code>（收尾）。这套「模板方法」和 <code>CWinApp</code> 长得一模一样——因为它们本就是同一个基类。</p>
@@ -3278,7 +3278,7 @@ dc.EndDoc();</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 8792px;--thin-h:8792px">
+<section class="chapter" style="contain-intrinsic-size:auto 8785px;--thin-h:8785px">
 <h1 id="ch15"><span class="part">第四篇 · 第 15 章</span>定制一个 AppWizard</h1>
 
 <p>这一章从头到尾都建立在一套 VC++ 5.0 时代的扩展机制上——那套东西今天已经彻底退役。所以请把整章当成一次「考古」：机制细节做历史了解即可，但它背后那个观念——<strong>把一类项目共有的套路模板化、问几个问题、一键生成整套骨架</strong>——不但没过时，反而是今天每一个 <code>create-xxx</code>、<code>dotnet new</code> 命令的祖宗。我们先把这个不过时的核心讲透，再看老机制怎么实现它，最后给现代对应。</p>
@@ -3407,11 +3407,11 @@ $$ENDIF</code></pre>
 </tbody>
 </table>
 <p>为什么这个观念活得这么久、载体却一直换？因为老机制把「好想法」和「时代包袱」焊死在了一起：它绑定 MFC、绑定 Windows 资源、绑定一个用 C++ 编译成 DLL 的插件模型、还发明了一门只有它自己认识的 <code>$$</code> 模板语言。这些包袱每一样都会过时。而现代脚手架吸取了教训——用<strong>纯数据（JSON）描述模板、用通用模板引擎做替换、用标准包格式分发、跨语言跨平台</strong>，于是同一套想法可以脱离任何具体框架继续活下去。</p>
-<div class="note new" style="contain-intrinsic-size:auto 232px"><span class="t">🔵 现代更新：如果今天要做团队脚手架，这样选</span><p>纯 .NET 团队直接写 <code>dotnet new</code> 自定义模板（一个 <code>template.json</code> 搞定，<code>dotnet new install</code> 分发）；深度集成 Visual Studio 2022 就导出 <code>.vstemplate</code>、需要自定义交互再实现 <code>IWizard</code> 并打成 VSIX；跨语言、跨团队的通用工程骨架用 <strong>cookiecutter</strong>（Python 生态）或 <strong>Yeoman/Plop</strong>（JS 生态）；前端项目则直接站在 <code>npm create vite@latest</code> 这类现成脚手架的肩膀上。它们全都比 <code>.awx</code> 更好版本化、更好审阅、更好 CI 化——但你会发现，坐下来设计模板时脑子里转的，仍然是这一章的那几个词：占位符、条件、清单、一键生成。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 232px"><span class="t">🔵 现代更新：如果今天要做团队脚手架，这样选</span><p>纯 .NET 团队直接写 <code>dotnet new</code> 自定义模板（一个 <code>template.json</code> 即可，<code>dotnet new install</code> 分发）；深度集成 Visual Studio 2022 就导出 <code>.vstemplate</code>、需要自定义交互再实现 <code>IWizard</code> 并打成 VSIX；跨语言、跨团队的通用工程骨架用 <strong>cookiecutter</strong>（Python 生态）或 <strong>Yeoman/Plop</strong>（JS 生态）；前端项目则直接站在 <code>npm create vite@latest</code> 这类现成脚手架的肩膀上。它们全都比 <code>.awx</code> 更好版本化、更好审阅、更好 CI 化——但你会发现，坐下来设计模板时脑子里转的，仍然是这一章的那几个词：占位符、条件、清单、一键生成。</p></div>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 8667px;--thin-h:8667px">
+<section class="chapter" style="contain-intrinsic-size:auto 8659px;--thin-h:8659px">
 <h1 id="ch16"><span class="part">第四篇 · 第 16 章</span>站上众人的肩膀——Components 与 ActiveX</h1>
 
 <p>到这一章为止，你一直在自己手里搓零件：自己写视图、自己派生文档、自己接消息。可写软件真正划算的做法，从来不是把每颗螺丝都亲手车出来，而是把别人已经磨好、测好、卖好的零件拿过来拧上去。这一章讲的就是「拿现成的」——微软当年给 Visual C++ 程序员准备了两类现成货：一类是能直接插进你源码里的 <strong>Components</strong>，另一类是以二进制方式整个搬进来的 <strong>ActiveX 控件</strong>。要看懂后者，得先看懂它脚下那块地基：<strong>COM</strong>。我们从这块地基讲起，一路讲到 2026 年这些东西还剩下什么、又被什么取代了。</p>
@@ -3518,7 +3518,7 @@ $$ENDIF</code></pre>
 </section>
 
 <!-- ===================== 附录 A：类别阶层图 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 1956px;--thin-h:1956px">
+<section class="chapter" style="contain-intrinsic-size:auto 1954px;--thin-h:1954px">
 <h1 id="appA"><span class="part">第五篇 · 附录 A ★</span>MFC 类别阶层图</h1>
 <p>学 MFC 有句老实话：<strong>熟记类别的阶层架构，是不二法门。</strong>几百个类看着吓人，但它们规规矩矩挂在一棵继承树上，你只要记住树的主干形状，就能对任何一个陌生类「按图索骥、猜出它大概有什么本事」。下面这张<strong>原创精简主干图</strong>只画最该刻进脑子里的那几根枝干：</p>
 
@@ -3741,7 +3741,7 @@ $$ENDIF</code></pre>
 </section>
 
 <!-- ===================== 附录 E：现代评估 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 3383px;--thin-h:3383px">
+<section class="chapter" style="contain-intrinsic-size:auto 3381px;--thin-h:3381px">
 <h1 id="appE"><span class="part">第五篇 · 附录 E（本导读补）</span>现代评估：MFC 在 2026</h1>
 <p>这一篇是为「2026 年的读者」补的收尾：MFC 现在到底处在什么位置、要另起炉灶有哪些替代品、以及学完这套机制真正该「带走」的是什么。</p>
 

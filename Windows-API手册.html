@@ -3788,7 +3788,7 @@ SetLayeredWindowAttributes(hwnd, RGB(255, 0, 255), 0, LWA_COLORKEY);</code></pre
 </tbody></table>
 
 <p><strong>返回值</strong></p>
-<p>三态陷阱所在。取到普通消息返回<em>非零正值</em>；取到 WM_QUIT 返回 <em>0</em>（循环正常出口）；出错（如 hWnd 失效）返回 <em>-1</em>，此时可用 <code>GetLastError()</code> 取详情。所以 <code>while (GetMessageW(&amp;msg, NULL, 0, 0))</code> 这种写法在出错时把 -1 当"真"，会变成疯转的死循环。</p>
+<p>三态陷阱所在。取到普通消息返回<em>非零正值</em>；取到 WM_QUIT 返回 <em>0</em>（循环正常出口）；出错（如 hWnd 失效）返回 <em>-1</em>，此时可用 <code>GetLastError()</code> 取详情。所以 <code>while (GetMessageW(&amp;msg, NULL, 0, 0))</code> 这种写法在出错时把 -1 当"真"，会变成不停空转的死循环。</p>
 
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 264px"><code><span class="cl">MSG  msg;</span><span class="cl">BOOL r;</span><span class="cl"><span class="kw">while</span> ((r = GetMessageW(&amp;msg, NULL, 0, 0)) != 0) {</span><span class="cl">    <span class="kw">if</span> (r == -1) {</span><span class="cl"><span class="cc" style="min-width:29.0ch">        <span class="kw">break</span>;</span><span class="cm">// 出错就退出，别带着 -1 继续转</span></span><span class="cl">    }</span><span class="cl"><span class="cc" style="min-width:29.0ch">    TranslateMessage(&amp;msg);</span><span class="cm">// 先翻译出 WM_CHAR</span></span><span class="cl"><span class="cc" style="min-width:29.0ch">    DispatchMessageW(&amp;msg);</span><span class="cm">// 再送进窗口过程</span></span><span class="cl">}</span><span class="cl"><span class="cc" style="min-width:29.0ch"><span class="kw">return</span> (<span class="kw">int</span>)msg.wParam;</span><span class="cm">// WM_QUIT 带出的退出码</span></span></code></pre>

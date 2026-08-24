@@ -271,7 +271,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 21030px;--thin-h:21030px">
+<section class="chapter" style="contain-intrinsic-size:auto 21015px;--thin-h:21015px">
 <h1 id="p1"><span class="part">第 1 章</span>PowerShell 的核心思想：传对象，不传文本</h1>
 <h2 id="p1-classics">1.0 相关经典书籍</h2>
 <p>PowerShell 的顶级读物,按「深机制 / 好教法 / 查配方」各推一本:</p>
@@ -598,7 +598,7 @@ Get-ChildItem -Path $Path -Recurse -File |
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 207px"><span class="t">现代提示　$IsWindows 在 5.1 里不存在</span><p>PowerShell 6+ 提供了 <code>$IsWindows</code> / <code>$IsLinux</code> / <code>$IsMacOS</code> 三个只读变量。但在 5.1 里它们<strong>压根没定义</strong>，取值为 <code>$null</code>——于是 <code>if (-not $IsWindows) { ... }</code> 在 5.1（必然是 Windows）上会误判成「不是 Windows」。要写跨版本判断，用：</p><p><code>$onWindows = $PSVersionTable.PSVersion.Major -lt 6 -or $IsWindows</code></p></div>
+<div class="note new" style="contain-intrinsic-size:auto 207px"><span class="t">现代提示　$IsWindows 在 5.1 里不存在</span><p>PowerShell 6+ 提供了 <code>$IsWindows</code> / <code>$IsLinux</code> / <code>$IsMacOS</code> 三个只读变量。但在 5.1 里它们<strong>根本没定义</strong>，取值为 <code>$null</code>——于是 <code>if (-not $IsWindows) { ... }</code> 在 5.1（必然是 Windows）上会误判成「不是 Windows」。要写跨版本判断，用：</p><p><code>$onWindows = $PSVersionTable.PSVersion.Major -lt 6 -or $IsWindows</code></p></div>
 
 <h2 id="p1-policy">1.6 执行策略：脚本跑不起来的头号原因</h2>
 
@@ -955,7 +955,7 @@ Get-Service -Name Spooler | Set-Service -StartupType Manual -WhatIf</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 25980px;--thin-h:25980px">
+<section class="chapter" style="contain-intrinsic-size:auto 25954px;--thin-h:25954px">
 <h1 id="p2"><span class="part">第 2 章</span>变量、类型与运算</h1>
 
 <p>上一章你已经能让 PowerShell 跑起来了。这一章处理的是每天都会碰到、也每天都会踩的东西：一个 <code>$</code> 开头的名字里到底装了什么，它有没有类型，两个值怎么比大小，为什么单引号和双引号能决定你的脚本是正常工作还是吐出一堆光秃秃的 <code>$</code> 符号。</p>
@@ -973,7 +973,7 @@ $name<span class="cm">                       # 输出 Ada</span></code></pre>
 
 <p>然后你写下这一行，它也"工作"了，只是什么都没输出：</p>
 
-<pre style="contain-intrinsic-size:auto 60px"><code>$naem<span class="cm">                       # 拼错了，PowerShell 一声不吭地返回 $null</span></code></pre>
+<pre style="contain-intrinsic-size:auto 60px"><code>$naem<span class="cm">                       # 拼错了，PowerShell 不报错，直接返回 $null</span></code></pre>
 
 <h3>机制：变量是一个对象，住在 Variable: 驱动器里</h3>
 
@@ -1367,7 +1367,7 @@ $cfg | ConvertTo-Json -Depth 5 | Set-Content .\config.json -Encoding utf8</code>
 <figcaption>+= 的隐藏成本与两种替代写法（原创绘制）</figcaption>
 </figure>
 
-<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">通俗比方</span><p>数组是一个格数固定的鸡蛋托。每加一个蛋，你就得换一个大一号的托盘，然后把原来的蛋一个一个搬过去。十个蛋无所谓，十万个蛋就是灾难。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">通俗比方</span><p>数组是一个格数固定的鸡蛋托。每加一个蛋，你就得换一个大一号的托盘，然后把原来的蛋一个一个搬过去。十个蛋无所谓，十万个蛋就完全无法接受。</p></div>
 
 <h3>两种正确写法</h3>
 
@@ -1678,7 +1678,7 @@ $lines -match 'ID-(\d)'<span class="cm">     # 返回两行，但 $Matches 保�
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 340px"><span class="t">配置文件里的 "false" 会咬人</span><pre style="contain-intrinsic-size:auto 186px"><code>$cfg = Get-Content .\app.ini | ConvertFrom-StringData
+<div class="note dead" style="contain-intrinsic-size:auto 340px"><span class="t">配置文件里的 "false" 会出问题</span><pre style="contain-intrinsic-size:auto 186px"><code>$cfg = Get-Content .\app.ini | ConvertFrom-StringData
 <span class="kw">if</span> ($cfg.EnableCache) { ... }<span class="cm">    # 值是字符串 'false' → 恒为真！</span>
 
 <span class="cm"># 正确：显式解析</span>
@@ -1729,7 +1729,7 @@ $lines -match 'ID-(\d)'<span class="cm">     # 返回两行，但 $Matches 保�
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 17962px;--thin-h:17962px">
+<section class="chapter" style="contain-intrinsic-size:auto 17950px;--thin-h:17950px">
 <h1 id="p3"><span class="part">第 3 章</span>管道与对象处理</h1>
 
 <p>如果你只学 PowerShell 的一件事，那就学管道。它不是「把上一条命令的屏幕输出喂给下一条命令」——那是 cmd 和 bash 的玩法。PowerShell 的管道传的是活的对象：带类型、带属性、带方法。这一章讲清楚管道里到底流着什么，以及沿途那七八个负责筛、变、排、算、导出的命令各自把数据改成了什么形状。</p>
@@ -2273,7 +2273,7 @@ $ids = <span class="kw">Get-Process</span> notepad | <span class="kw">Select-Obj
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 35525px;--thin-h:35525px">
+<section class="chapter" style="contain-intrinsic-size:auto 35488px;--thin-h:35488px">
 <h1 id="p4"><span class="part">第 4 章</span>流程控制、函数与脚本</h1>
 
 <p>前三章你一直在敲单行命令。从这一章开始，你要把这些命令攒成能重复运行、能被别人调用、能带参数的东西。流程控制是骨架，函数是关节，脚本和模块是外壳。PowerShell 在这三件事上有一批和 C#、Python、Bash 都不一样的规则——尤其是「函数返回什么」这一条，几乎每个新手都要在上面栽一次。这一章会把它讲透。</p>
@@ -2544,7 +2544,7 @@ $null | ForEach-Object { <span class="s">"跑了"</span> }        <span class="c
 </tbody>
 </table>
 
-<h3>那个会咬人的组合</h3>
+<h3>那个会出问题的组合</h3>
 
 <pre style="contain-intrinsic-size:auto 141px"><code><span class="cm"># 想在找到第一个匹配后停下 —— 这么写会出事</span>
 Get-ChildItem C:\Logs | ForEach-Object {
@@ -3331,7 +3331,7 @@ $script:cache = @{}
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 25495px;--thin-h:25495px">
+<section class="chapter" style="contain-intrinsic-size:auto 25473px;--thin-h:25473px">
 <h1 id="p5"><span class="part">第 5 章</span>文件、注册表与系统管理</h1>
 
 <p>前四章你学的是语言本身：管道、对象、参数、函数。这一章开始，PowerShell 要去干它真正被发明出来要干的活——管住一台 Windows 机器。你会发现，一旦把「文件系统、注册表、环境变量、证书」这些八竿子打不着的东西统统塞进同一个路径模型，你要记的命令量会突然塌缩到一个很小的集合。这是 PowerShell 最漂亮的一个设计决定，我们从它讲起。</p>
@@ -3669,7 +3669,7 @@ Get-Content .\app.log -TotalCount 100     <span class="cm"># 只读前 100 行�
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">现代提示：别急着把结果塞进变量</span><p><code>$all = Get-ChildItem D:\ -Recurse</code> 会把几十万个对象全部装进内存，然后你才开始过滤。改成一条管道，让对象流过去、用完就丢，内存占用是常数级：<code>Get-ChildItem D:\ -Recurse -File | Where-Object … | Select-Object -First 10</code>。如果只需要路径字符串、追求极致速度，可以下沉到 .NET：<code>[System.IO.Directory]::EnumerateFiles('D:\', '*.log', 'AllDirectories')</code>——它是惰性枚举，但遇到无权限目录会直接抛异常，需要自己 <code>try/catch</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">现代提示：不要急于把结果塞进变量</span><p><code>$all = Get-ChildItem D:\ -Recurse</code> 会把几十万个对象全部装进内存，然后你才开始过滤。改成一条管道，让对象流过去、用完就丢，内存占用是常数级：<code>Get-ChildItem D:\ -Recurse -File | Where-Object … | Select-Object -First 10</code>。如果只需要路径字符串、追求极致速度，可以下沉到 .NET：<code>[System.IO.Directory]::EnumerateFiles('D:\', '*.log', 'AllDirectories')</code>——它是惰性枚举，但遇到无权限目录会直接抛异常，需要自己 <code>try/catch</code>。</p></div>
 
 <h2 id="p5-registry">5.5 注册表读写：项是文件夹，值是属性</h2>
 
@@ -3819,7 +3819,7 @@ Stop-Service  -Name 'Spooler' -WhatIf
 
 <h2 id="p5-schtask">5.7 计划任务：让脚本自己跑起来</h2>
 
-<p>脚本写好了，下一个问题必然是：怎么让它每天凌晨两点自己跑？答案是注册一个计划任务。Windows 8 / Server 2012 起自带 <code>ScheduledTasks</code> 模块，全套用 PowerShell 就能搞定。</p>
+<p>脚本写好了，下一个问题必然是：怎么让它每天凌晨两点自己跑？答案是注册一个计划任务。Windows 8 / Server 2012 起自带 <code>ScheduledTasks</code> 模块，全套用 PowerShell 即可完成。</p>
 
 <p>一个任务由四块拼成，<strong>像给操作系统贴一张便利贴</strong>：什么时候（Trigger）、用谁的身份（Principal）、干什么（Action）、出状况怎么办（Settings）。</p>
 
@@ -4096,7 +4096,7 @@ $s = New-PSSession -HostName 'alice@srv01' -KeyFilePath ~/.ssh/id_ed25519</code>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 29474px;--thin-h:29474px">
+<section class="chapter" style="contain-intrinsic-size:auto 29451px;--thin-h:29451px">
 <h1 id="p6"><span class="part">第 6 章</span>错误处理、调试与实用技巧</h1>
 
 <p>前五章你已经能把命令、管道、函数串成像样的脚本了。但真正把脚本交出去跑，你会遇到另一类问题：某台机器连不上、某个文件被占用、某个字段是空的。脚本崩了不可怕，可怕的是它<strong>不崩、也不干活，还给你一路绿灯</strong>。这一章讲的就是：错误从哪来、怎么接住、怎么定位、以及怎么写得又稳又快。</p>
@@ -4105,7 +4105,7 @@ $s = New-PSSession -HostName 'alice@srv01' -KeyFilePath ~/.ssh/id_ed25519</code>
 
 <h2 id="p6-two-kinds">6.1 两类错误：非终止型与终止型</h2>
 
-<p>先看一个让无数人栽跟头的现象。你写了段脚本批量处理 500 台机器，跑完一看"成功"，结果一查发现中间 30 台压根没处理；换个脚本，开头一个小毛病就整个崩掉。同样是"出错"，为什么表现天差地别？</p>
+<p>先看一个让无数人栽跟头的现象。你写了段脚本批量处理 500 台机器，跑完一看"成功"，结果一查发现中间 30 台根本没处理；换个脚本，开头一个小毛病就整个崩掉。同样是"出错"，为什么表现天差地别？</p>
 
 <p>因为 PowerShell 里的错误分两类：</p>
 
@@ -4175,7 +4175,7 @@ Get-Item 'C:\不存在的目录\a.txt'
 [int]::Parse('abc')
 '这一行不会执行'</code></pre>
 
-<p>更要命的是，<code>try/catch</code> 对第一种<strong>完全无效</strong>。这是实测输出，一个字没改：</p>
+<p>更严重的是，<code>try/catch</code> 对第一种<strong>完全无效</strong>。这是实测输出，一个字没改：</p>
 
 <pre style="contain-intrinsic-size:auto 332px"><code><span class="kw">try</span> {
     Get-Item 'C:\no\such\file_xyz.txt'

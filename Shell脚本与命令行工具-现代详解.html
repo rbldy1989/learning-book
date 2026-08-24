@@ -281,7 +281,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 23180px;--thin-h:23180px">
+<section class="chapter" style="contain-intrinsic-size:auto 23160px;--thin-h:23160px">
 <h1 id="b1"><span class="part">第 1 章</span>Shell 是什么：从登录到执行一条命令</h1>
 <h2 id="b1-classics">1.0 相关经典书籍</h2>
 <p>Shell 脚本与命令行的经典,涵盖「可移植脚本 / 文本处理 / 命令行入门」:</p>
@@ -581,7 +581,7 @@ echo "我是 $0，进程号 $$，父进程 $PPID"</code></pre>
 <span class="cm"># 内核实际执行的是：</span>
 <span class="cm">#   /usr/bin/env bash ./hello.sh Ada</span></code></pre>
 
-<p>对 bash 来说，<code>#!</code> 那一行只是一句普通注释，它压根不在意。这也解释了一个现象：如果你用 <code>bash hello.sh</code> 的方式运行，shebang 写什么都无所谓——因为解释器是你在命令行上指定的，内核那条路径根本没走。</p>
+<p>对 bash 来说，<code>#!</code> 那一行只是一句普通注释，它根本不在意。这也解释了一个现象：如果你用 <code>bash hello.sh</code> 的方式运行，shebang 写什么都无所谓——因为解释器是你在命令行上指定的，内核那条路径根本没走。</p>
 
 <p><b>那为什么不直接写 <code>#!/bin/bash</code>？</b>因为 shebang 里的路径<b>必须是绝对路径，不做 PATH 查找</b>。而 bash 的位置在不同系统上并不统一：macOS 上的现代 bash 在 <code>/opt/homebrew/bin/bash</code>，FreeBSD 在 <code>/usr/local/bin/bash</code>，NixOS 上甚至没有 <code>/bin/bash</code> 这个文件。<code>/usr/bin/env</code> 则几乎在所有 Unix 上都待在同一个位置，而它的本职工作就是「在 PATH 里找到某个程序并执行」。用它做一次跳板，脚本就跟着 PATH 走，你在哪个系统上都能跑。</p>
 
@@ -932,7 +932,7 @@ $ ./check.sh /nope; echo "退出码=$?"
 
 <div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">set -e 不是安全带，别把命交给它</span><p><code>set -e</code> 有一长串失效场景，几乎每个人都被坑过：命令出现在 <code>if</code>/<code>while</code> 条件里、在 <code>&amp;&amp;</code> 或 <code>||</code> 左边、在 <code>!</code> 后面时，失败都<b>不会</b>触发退出；<code>local x=$(cmd)</code> 里 <code>local</code> 的退出码会盖掉 <code>cmd</code> 的；管道默认只看最后一段。<span class="badge old">已过时</span> 「加了 set -e 就万事大吉」的想法。关键步骤请显式检查退出码。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 216px"><span class="t">现代提示：脚本开头三件套</span><p><code>set -Eeuo pipefail</code> 配一个 ERR 陷阱，出问题时直接告诉你哪一行崩的：</p><p><code>trap 'echo "脚本在第 $LINENO 行失败（退出码 $?）" &gt;&amp;2' ERR</code></p><p>其中 <code>-E</code> 让函数和子 shell 也继承这个 ERR 陷阱，<code>-u</code> 让引用未定义变量直接报错——它能挡住 <code>rm -rf "$PREFIX/"</code> 里 <code>PREFIX</code> 拼错这类灾难。<span class="badge new">现代提示</span></p></div>
+<div class="note new" style="contain-intrinsic-size:auto 216px"><span class="t">现代提示：脚本开头三件套</span><p><code>set -Eeuo pipefail</code> 配一个 ERR 陷阱，出问题时直接告诉你哪一行崩的：</p><p><code>trap 'echo "脚本在第 $LINENO 行失败（退出码 $?）" &gt;&amp;2' ERR</code></p><p>其中 <code>-E</code> 让函数和子 shell 也继承这个 ERR 陷阱，<code>-u</code> 让引用未定义变量直接报错——它能挡住 <code>rm -rf "$PREFIX/"</code> 里 <code>PREFIX</code> 拼错这类事故。<span class="badge new">现代提示</span></p></div>
 
 <h2 id="b1-cheat">1.9 本章速查与自测</h2>
 
@@ -995,7 +995,7 @@ $ ./check.sh /nope; echo "退出码=$?"
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 28973px;--thin-h:28973px">
+<section class="chapter" style="contain-intrinsic-size:auto 28943px;--thin-h:28943px">
 <h1 id="b2"><span class="part">第 2 章</span>变量、引号与展开</h1>
 
 <p>上一章你学会了让 shell 跑起来一条命令。这一章我们钻进命令行内部，看 shell 在真正执行之前，对你敲下的那串字符做了什么手脚。</p>
@@ -1954,7 +1954,7 @@ IFS=$'\n\t'                <span class="cm"># 把空格从分隔符里去掉，�
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 31770px;--thin-h:31770px">
+<section class="chapter" style="contain-intrinsic-size:auto 31747px;--thin-h:31747px">
 <h1 id="b3"><span class="part">第 3 章</span>流程控制、函数与数组</h1>
 
 <p>前两章你学会了让 shell 把一条命令跑对：引号怎么加、展开什么时候发生、重定向往哪里去。但脚本之所以是脚本，而不是一串手敲的命令，靠的是它能<strong>做判断</strong>、能<strong>重复</strong>、能<strong>把逻辑收进一个名字里</strong>，还能在出事的时候<strong>体面地收场</strong>。</p>
@@ -2339,7 +2339,7 @@ find . -type f -name <span class="kw">'</span>*.log<span class="kw">'</span> -ex
 
 <h3><code>-r</code>：关掉反斜杠转义</h3>
 
-<p><code>read</code> 默认把 <code>\</code> 当转义符。这意味着 <code>C:\temp\new</code> 会变成 <code>C:tempnew</code>，而行尾的一个 <code>\</code> 会让它把下一行也吞进来。这个默认行为是给<strong>交互式输入</strong>设计的（你在终端里敲长命令时希望行尾反斜杠续行），但对读文件而言纯属灾难。<strong>读文件永远加 <code>-r</code>。</strong></p>
+<p><code>read</code> 默认把 <code>\</code> 当转义符。这意味着 <code>C:\temp\new</code> 会变成 <code>C:tempnew</code>，而行尾的一个 <code>\</code> 会让它把下一行也吞进来。这个默认行为是给<strong>交互式输入</strong>设计的（你在终端里敲长命令时希望行尾反斜杠续行），但对读文件而言完全不适用。<strong>读文件永远加 <code>-r</code>。</strong></p>
 
 <h3><code>IFS=</code>：关掉字段切分与空白剥离</h3>
 
@@ -2960,7 +2960,7 @@ main <span class="kw">"</span>$@<span class="kw">"</span></code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 21934px;--thin-h:21934px">
+<section class="chapter" style="contain-intrinsic-size:auto 21917px;--thin-h:21917px">
 <h1 id="b4"><span class="part">第 4 章</span>重定向、管道与进程</h1>
 
 <p>你写了一条命令，把输出存进文件，可报错信息偏偏还糊在屏幕上；你用管道把三个命令串起来，中间那个失败了，<code>$?</code> 却告诉你一切正常；你在后台跑了个任务，关掉终端它就没了。这些都不是玄学，而是同一套机制的不同侧面：<strong>进程只认识编号的文件描述符，shell 负责在进程启动前把这些编号接到该接的地方去</strong>。这一章就把这套机制拆开讲清楚。</p>
@@ -3680,7 +3680,7 @@ st=("${PIPESTATUS[@]}")
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 25217px;--thin-h:25217px">
+<section class="chapter" style="contain-intrinsic-size:auto 25199px;--thin-h:25199px">
 <h1 id="b5"><span class="part">第 5 章</span>文本处理三剑客：grep / sed / awk</h1>
 
 <h2 id="b5-model">5.1 同一份文本，三种切法</h2>
@@ -4070,7 +4070,7 @@ docker logs web | <span class="kw">grep</span> 'timeout'
 </tbody>
 </table>
 <pre style="contain-intrinsic-size:auto 125px"><code><span class="cl"><span class="cm"># 经典三式 —— 全靠保持空间</span></span><span class="cl">sed -n '1!G;h;$p' file        <span class="cm"># 整文件倒序(tac 的 sed 写法):每行前面垫上历史,最后一行才打印</span></span><span class="cl">sed 'N;s/\n/ /' file          <span class="cm"># 两行合一:N 把下一行追进模式空间,换行符变成可替换字符</span></span><span class="cl">sed -n '/BEGIN/,/END/p' file  <span class="cm"># 抓段落:地址范围直接给,连保持空间都不用</span></span></code></pre>
-<p>配套的多行指令还有 <code>N/D/P</code>(追一行/删首行再来/打印首行),它们把「一次看两行」变成可能——处理「错误行+它的下一行」这类上下文相关的文本,sed 也能干。但要说实话:<strong>保持空间三行以上的逻辑,可读性急坠</strong>——同样的活 awk 用一个变量就写清了。这块知识的实际价值:一是读懂网上那些神秘的 sed 单行命令,二是划清 sed 与 awk 的分界线(见 5.6 判断表)。</p>
+<p>配套的多行指令还有 <code>N/D/P</code>(追一行/删首行再来/打印首行),它们把「一次看两行」变成可能——处理「错误行+它的下一行」这类上下文相关的文本,sed 也能干。但必须承认:<strong>保持空间三行以上的逻辑,可读性急坠</strong>——同样的活 awk 用一个变量就写清了。这块知识的实际价值:一是读懂网上那些神秘的 sed 单行命令,二是划清 sed 与 awk 的分界线(见 5.6 判断表)。</p>
 
 <h2 id="b5-awk">5.5 awk：一门被低估的小语言</h2>
 
@@ -4291,7 +4291,7 @@ wc -l access.log
   | <span class="kw">awk</span> '{ c[$7]++ } END { for (u in c) print c[u], u }' \
   | sort -rn | head -10</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t"><span class="badge ok">仍适用</span>　URL 去掉查询串再分组</span><p><code>/api/users?page=2</code> 和 <code>?page=3</code> 应该算同一个接口。在 awk 里一行搞定：<code>sub(/\?.*/, "", $7)</code> 之后再计数。同理，把路径里的数字 ID 归一化：<code>gsub(/\/[0-9]+/, "/{id}", $7)</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t"><span class="badge ok">仍适用</span>　URL 去掉查询串再分组</span><p><code>/api/users?page=2</code> 和 <code>?page=3</code> 应该算同一个接口。在 awk 里一行即可：<code>sub(/\?.*/, "", $7)</code> 之后再计数。同理，把路径里的数字 ID 归一化：<code>gsub(/\/[0-9]+/, "/{id}", $7)</code>。</p></div>
 
 <h3>第 4 步：按小时分布——找出尖峰</h3>
 
@@ -4381,7 +4381,7 @@ echo "===== 按小时 ====="
 <tr><td class="nw">先 <code>grep</code> 后 <code>awk</code></td><td class="nw">数量级差异</td><td>越早缩量越好</td></tr>
 <tr><td class="nw"><code>grep -m N</code> / <code>sed 'Nq'</code></td><td class="nw">找到就早退</td><td>大文件里只要前几条时别跑完全程</td></tr>
 <tr><td class="nw"><code>sort -S 1G --parallel=4</code></td><td class="nw">大排序提速</td><td>默认缓冲区偏小，会频繁落盘</td></tr>
-<tr><td class="nw">避免 <code>sort | uniq -c</code> 走两趟</td><td class="nw">省一次全排序</td><td>能用 awk 关联数组就一趟搞定</td></tr>
+<tr><td class="nw">避免 <code>sort | uniq -c</code> 走两趟</td><td class="nw">省一次全排序</td><td>能用 awk 关联数组就一趟完成</td></tr>
 <tr><td class="nw">用 <code>mawk</code> 而非 <code>gawk</code></td><td class="nw">纯计算场景快 2–3 倍</td><td>代价是没有 <code>gensub</code>/<code>strftime</code></td></tr>
 <tr><td class="nw"><code>rg</code> 代替 <code>grep -r</code></td><td>搜代码库快 5–10 倍 <span class="badge new">现代提示</span></td><td>多线程 + 自动跳过 <code>.gitignore</code></td></tr>
 </tbody>
@@ -4458,7 +4458,7 @@ echo "===== 按小时 ====="
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 18678px;--thin-h:18678px">
+<section class="chapter" style="contain-intrinsic-size:auto 18668px;--thin-h:18668px">
 <h1 id="b6"><span class="part">第 6 章</span>常用命令行工具速查</h1>
 
 <h2 id="b6-map">6.1 先认结构，再查表</h2>
@@ -5016,7 +5016,7 @@ find /srv/app <span class="kw">-type</span> f <span class="kw">-exec</span> chmo
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 27349px;--thin-h:27349px">
+<section class="chapter" style="contain-intrinsic-size:auto 27329px;--thin-h:27329px">
 <h1 id="b7"><span class="part">第 7 章</span>写出健壮脚本：调试、陷阱与最佳实践</h1>
 
 <p>前六章你学的是「怎么让命令跑起来」。这一章要解决的是另一件事：<strong>怎么让它明天还能跑，在别人的机器上还能跑，在文件名带空格的时候还能跑，在半夜被 cron 叫醒的时候不会把生产目录删掉。</strong></p>
@@ -5652,7 +5652,7 @@ usage() {
 EOF
 }
 
-<span class="cm"># 统一的执行入口：dry-run 与日志一处搞定</span>
+<span class="cm"># 统一的执行入口：dry-run 与日志一处完成</span>
 run() {
   debug "执行: $*"
   <span class="kw">if</span> (( DRY_RUN )); <span class="kw">then</span> info "[dry-run] $*"; <span class="kw">return</span> 0; <span class="kw">fi</span>

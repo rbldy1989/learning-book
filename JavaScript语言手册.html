@@ -260,7 +260,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 48206px;--thin-h:25389px">
+<section class="chapter" style="contain-intrinsic-size:auto 48178px;--thin-h:25378px">
 <h1 id="b1"><span class="part">语言</span>类型、值与作用域</h1>
 <p>对写过 C/C++/Java/Go 的人来说,JavaScript 的语法几分钟就能看懂,真正花时间的是底下两套和静态语言不一样的机制:<strong>类型属于值,不属于变量</strong>——运算符按规范里的三个抽象操作悄悄转换操作数,于是 <code>'5' - 2</code> 得 3 而 <code>'1' + 2</code> 得 <code>"12"</code>;<strong>名字属于它被写下的那个块</strong>——函数对象带着出生地的环境记录到处跑,于是有了闭包。这一章按「先给出一个反直觉的输出 → 拆开引擎在做什么 → 推出能记住的规则」把这两套机制讲到能推导。</p>
 <p>四节的顺序不能反。<a href="#f5-types">1.1</a> 先把值这一层盘清:8 种类型、ToPrimitive/ToNumber/ToString、<code>==</code> 与 <code>&lt;</code> 两套彼此独立的算法、7 个假值。<a href="#f5-lexical">1.2</a> 退回解析层,回答「这段源码被切成了什么形状」:标识符与保留字、三种声明的四个维度、优先级与结合性、自动分号插入——这一层的坑与转换规则无关,却和转换规则的坑长得一模一样,分不开就永远排查不清。<a href="#f5-scope">1.3</a> 建立作用域链与环境记录,把「读未声明抛 <code>ReferenceError</code>、写未声明创建全局、TDZ 为什么也是 <code>ReferenceError</code>」串成一条线。<a href="#f5-closure">1.4</a> 收尾:函数带着出生地的环境记录活下来,于是有了工厂、模块模式与循环里的三个 <code>i</code>。</p>
@@ -355,7 +355,7 @@ str
 string number
 8 seven 14
 0 NaN 1 31 1000 NaN 12 3.14</code></pre></div>
-<div class="deep"><h3 class="deep">== 的算法:从规则推结果,不用背表</h3>
+<div class="deep"><h3 class="deep">== 的算法:从规则推结果,不必硬记表</h3>
 <p><code>===</code>(严格相等)不转换:类型不同直接 <code>false</code>;类型相同按值比(<code>NaN</code> 除外、<code>+0 === -0</code>)。<code>==</code>(抽象相等)在类型不同时按下面的顺序做转换再比,规范 7.2.15 的步骤整理成表:</p>
 <table style="contain-intrinsic-size:auto 337px">
 <thead><tr><th class="nw">步骤</th><th>条件</th><th>动作</th></tr></thead>
@@ -1137,7 +1137,7 @@ gs.map(f =&gt; f())       <span class="cm">// [0, 1, 2]   ← 每次迭代一个
 <p>接下来两章把这一章的机制铺开:<a href="#f5-func">2.1</a> 讲函数作为值的全部形态(参数、高阶、柯里化、纯函数),它的每一个模式都是闭包的具体用法;<a href="#f5-this">2.2</a> 讲 JavaScript 里唯一「看调用位置」的东西,和本章的词法作用域正好互补;<a href="#f5-proto">3.1</a> 再讲对象之间怎么靠原型链共享行为,那是闭包之外的第二种共享状态的方式。异步那两章(<a href="#f6-loop">8.1</a>、<a href="#f6-promise">8.2</a>)里每一个回调都在同时用到本章的两条结论——它记住了自己的词法环境,并且在未来某个时刻被别人调用。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 27541px;--thin-h:15655px">
+<section class="chapter" style="contain-intrinsic-size:auto 27523px;--thin-h:15644px">
 <h1 id="b2"><span class="part">语言</span>函数与 this</h1>
 <p>函数在 JavaScript 里是<strong>一等对象</strong>:能赋给变量、能当参数传、能当返回值返、能挂属性,还随身带着两样东西——<a href="#f5-scope">1.3</a> 讲过的词法环境,以及一个由<strong>调用形态</strong>决定的隐藏参数 <code>this</code>。这一章把这两样讲透。<a href="#f5-func">2.1</a> 讲函数作为值的全部形态:参数的三种写法(默认值、剩余参数、选项对象)与非简单参数列表带来的参数作用域,函数对象自己的 <code>name</code>/<code>length</code>,<code>map</code>/<code>filter</code>/<code>reduce</code> 的手写,柯里化、偏应用与组合,纯函数与副作用的分界,以及递归的栈上限。<a href="#f5-this">2.2</a> 讲 JS 里唯一按调用位置取值的名字:四条绑定规则、它们为什么是这个优先级,以及箭头函数这个例外。</p>
 <p>两节的顺序就是事故的因果链:先确认「函数只是一个值,可以被交出去」,再看「交出去之后调用形态由别人决定,于是 <code>this</code> 变了」——解构、<code>setTimeout</code>、<code>addEventListener</code>、<code>map</code> 里的 <code>this is undefined</code> 全出自这一条。往前它接着 <a href="#f5-closure">1.4</a>:闭包管普通名字,<code>this</code> 管这个特殊名字,箭头函数把后者并进前者。往后它是 <a href="#f5-class">3.2</a> 里 <code>new</code> 与 class 方法的前提,是 <a href="#f6-promise">8.2</a> 每个回调的行为依据,也是 <a href="浏览器API与工作原理手册.html#f7-events">《浏览器 API 与工作原理手册》2.1</a> 里事件处理器为什么能拿到元素的原因。</p>
@@ -1625,7 +1625,7 @@ h2();                         <span class="cm">// arrow field: OK</span></code><
 <p>接下来 <a href="#f5-class">3.2</a> 讲 <code>new</code> 到底做了哪四步、class 的方法为什么在原型上,正好接上本章「<code>new</code> 绑定优先级最高」这一条;<a href="#f5-array">3.4</a> 把「改原值还是返回新值」的数组方法表补齐;异步那一章(<a href="#f6-promise">8.2</a>、<a href="#f6-async">8.3</a>)会看到 Promise 如何把这一章交出去的控制权收回来。真正把这一章学到位的标志是:读别人代码时,看到一个函数被传进另一个函数,你会下意识问一句「它会被怎么调用」。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 47950px;--thin-h:28605px">
+<section class="chapter" style="contain-intrinsic-size:auto 47930px;--thin-h:28595px">
 <h1 id="b3"><span class="part">语言</span>对象、数组、原型与类</h1>
 <p>JavaScript 里没有「类」这种编译期的东西,只有对象,以及对象之间的一条 <code>[[Prototype]]</code> 链接;<code>class</code> 是这套机制之上的语法,不是另一套机制。这一章先讲机制再讲数据,四节各占一层。<a href="#f5-proto">3.1</a> 把三件最容易混成一团的东西分开——对象内部的 <code>[[Prototype]]</code>、遗留访问器 <code>__proto__</code>、函数身上那个「将来实例的原型」<code>prototype</code>——然后讲属性的读、写、删各走哪条路,<code>new</code> 的四步,<code>instanceof</code> 到底在问什么,以及不用 <code>class</code> 也能把这套机制用好的行为委托风格。<a href="#f5-class">3.2</a> 才谈 <code>class</code>:六条硬规则各自对应哪条机制、私有字段与静态成员、<code>extends</code> 接的两条链、以及 Stage 3 的装饰器。</p>
 <p>后两节转向每天搬运的数据。<a href="#f5-objarr">3.3</a> 讲对象这一面:属性描述符与 getter/setter、<code>Object</code> 的静态方法与可选链/空值合并、<code>.</code> 与 <code>[]</code> 的差别、<code>JSON</code> 的边界,以及引擎给对象建的隐藏类。<a href="#f5-array">3.4</a> 讲数组这一面:按「改不改原数组」分成的两组方法、类数组与 <code>Array.from</code>,最后落到框架真正依赖的那项技能——不可变更新。</p>
@@ -2501,7 +2501,7 @@ shallow.user === state.user            <span class="cm">// true ← 没改的子
 <p>这一章学到位的标志有三条:能手写一遍 <code>new</code> 的四步并解释每一步;能在纸上画出 <code>class B extends A</code> 的两条链;拿到一段状态更新代码,能指出它是可变的还是不可变的、以及框架会不会检测到变化。接下来 <a href="#f5-iter">4.1</a> 讲迭代协议与解构展开的完整规则(本章用到的 <code>[...arr]</code> 与 <code>{ ...o }</code> 走的其实是两套不同的机制),<a href="#fstd-coll">6.3</a> 把 <code>Map</code>/<code>Set</code>/<code>WeakMap</code> 讲全,<a href="#fstd-proxy">7.4</a> 则会展示 <code>Proxy</code> 怎么在这条属性查找链上再插一层,那正是 Vue 3 响应式的实现方式。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45750px;--thin-h:29685px">
+<section class="chapter" style="contain-intrinsic-size:auto 45722px;--thin-h:29664px">
 <h1 id="b4"><span class="part">语言</span>迭代、错误与模块</h1>
 <p>这一章讲三套<strong>协议</strong>:遍历一个东西的协议、报告失败的协议、把代码拆成文件的协议。三者都不是「某个 API 怎么用」,而是「按约定长成这个形状,语言里所有相关的机制就都认你」。<a href="#f5-iter">4.1</a> 讲可迭代协议与迭代器协议的消费端——一个对象只要有 <code>[Symbol.iterator]()</code>,<code>for…of</code>、展开、解构、<code>Array.from</code>、<code>Promise.all</code>、<code>new Map</code> 就全能消费它,顺带把五种循环语句的边界排清。<a href="#f5-gen">4.2</a> 讲生产端:<code>function*</code> 是写这套协议的语法糖,<code>yield</code> 的双向性给出暂停/恢复的能力,<code>yield*</code> 的递归形态让「惰性遍历一棵树」缩到八行。<a href="#f5-error">4.3</a> 讲 <code>Error</code> 家族、<code>try/catch/finally</code> 的准确语义、<code>cause</code> 链与自定义错误类,以及一条工程判断:什么该抛,什么该返回。<a href="#f5-modules">4.4</a> 讲 ESM 的静态结构与实时绑定、动态 <code>import()</code>、CJS 互操作、循环依赖的执行顺序,以及裸说明符为什么必须过一遍打包器。</p>
 <p>按这个顺序讲是因为它们层层递进:迭代协议是「一个对象怎么对外交出值」,生成器是「怎么一边算一边交」,错误处理是「一次调用怎么对外交出失败」,模块是「一个文件怎么对外交出名字」。三节都要用到 <a href="#f5-scope">1.3</a> 的环境记录(<a href="#f5-modules">4.4</a> 的实时绑定就是两个模块共享同一个槽)和 <a href="#f5-objarr">3.3</a> 的展开与解构。往后,生成器的暂停恢复加上 Promise 就是 <a href="#f6-async">8.3</a> 的 <code>async</code>/<code>await</code>,<code>try/catch</code> 在异步里的形态变化在 <a href="#f6-promise">8.2</a>,全局兜底事件的上报接在 <a href="浏览器API与工作原理手册.html#f12-monitor">《浏览器 API 与工作原理手册》12.5</a>,模块的构建与代码分割在 <a href="前端框架与工程化手册.html#f11-vite-build">《前端框架与工程化手册》5.2</a>。</p>
@@ -3361,7 +3361,7 @@ bad()                                  <span class="cm">// 'swallowed',没有任
 </table></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 25525px;--thin-h:20696px">
+<section class="chapter" style="contain-intrinsic-size:auto 25512px;--thin-h:20685px">
 <h1 id="b5"><span class="part">标准库</span>字符串、Unicode 与正则</h1>
 <p>从 <a href="#f5-types">1.1</a> 到 <a href="#f5-modules">4.4</a> 讲的是语言本身,从这一章开始讲「语言自带的那些东西」——规范里叫标准内置对象,和 Python 的标准库、Java 的 <code>java.lang</code>/<code>java.util</code> 是同一个层次。第一批是字符串与正则,因为它们是前端每天搬得最多的值:URL、表单输入、接口返回的文本、模板插值。<a href="#fstd-string">5.1</a> 从一句定义推开——字符串是<strong>不可变的 UTF-16 码元序列</strong>——得到码元、码点、字素簇三层单位,以及由此而来的一串反直觉行为:<code>'😀'.length</code> 是 2、两种写法的 é 用 <code>===</code> 比为不等、用 <code>slice</code> 截昵称会截出半个代理对;然后是方法速查、<code>normalize</code>、模板字面量与标签模板。<a href="#fstd-regex">5.2</a> 把正则当成一台<strong>带回溯的匹配机器</strong>讲:语法和八个标志是表,回溯与 <code>lastIndex</code> 是机制,贪婪与惰性、灾难性回溯、复用带 <code>g</code> 的正则这几类事故全从机制推出来。</p>
 <p>两节必须挨着讲,因为它们共用同一个底层单位:正则不带 <code>u</code> 标志时按码元匹配,所以 <code>/^.$/.test('😀')</code> 是 <code>false</code>——不知道第一节,第二节这类现象就只能死记。往前它们依赖 <a href="#f5-types">1.1</a> 的隐式转换(替换串的 ToString、模板插值);往后 <a href="#fstd-number">6.1</a> 与 <a href="#fstd-date">6.2</a> 接着用 <code>Intl</code> 这条线,<a href="#fstd-binary">7.1</a> 讲字符串与字节之间怎么互转,<a href="浏览器API与工作原理手册.html#f12-xss">《浏览器 API 与工作原理手册》11.3</a> 会用标签模板做「只转义数据不转义结构」的转义。</p>
@@ -3762,7 +3762,7 @@ g.test(<span>'aa'</span>), g.test(<span>'aa'</span>), g.test(<span>'aa'</span>) 
 <p>学到什么程度算够:拿到一个「字符串处理不对」的问题,能立刻判断它出在码元、码点还是字素这一层,并选对 API;读一段正则能说出它的回溯路径,并指出哪个输入会让它跑很久。接下来 <a href="#fstd-number">6.1</a> 与 <a href="#fstd-date">6.2</a> 用同样的方式处理另外两类「看起来简单其实有底层模型」的值——双精度浮点与时间戳加时区投影,并把这一章开了头的 <code>Intl</code> 讲完整;<a href="#fstd-binary">7.1</a> 则会把字符串一路拆到字节,回答「一个 emoji 到底占几个字节」这个本章没答的问题。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 33708px;--thin-h:24697px">
+<section class="chapter" style="contain-intrinsic-size:auto 33688px;--thin-h:24682px">
 <h1 id="b6"><span class="part">标准库</span>数字、日期与集合</h1>
 <p>这一章讲三类「看起来简单、底下另有模型」的值。数字只有一种——IEEE 754 双精度,53 位有效精度推出了 <code>0.1 + 0.2</code> 不等于 <code>0.3</code>、安全整数到 9007199254740991 为止、<code>toFixed</code> 按二进制真实值舍入,也推出了「金额用整数分、64 位 id 用字符串」这两条硬规矩(<a href="#fstd-number">6.1</a>)。日期只有一个数——1970 年以来的毫秒数,所有 <code>getXxx</code> 都是它在某个时区下的投影,于是月份从 0 起、只有 ISO 格式的解析可靠、跨时区显示只能交给 <code>Intl.DateTimeFormat</code> 的 <code>timeZone</code>(<a href="#fstd-date">6.2</a>)。集合是 ES2015 才补上的正式哈希表与哈希集合:任意值做键、按插入序迭代、增删查 O(1),弱引用版本让你给对象挂数据而不阻止它被回收(<a href="#fstd-coll">6.3</a>)。</p>
 <p>三节共用一条线:<strong>存储用什么、计算用什么、显示用什么,是三个分开的问题</strong>。钱存整数分、算整数、显示交给 <code>Intl.NumberFormat</code>;时间存 UTC 时间戳、算用时间戳或日历库、显示交给 <code>Intl.DateTimeFormat</code> 并显式传时区;键在运行时才知道的字典存 <code>Map</code> 而不是对象,因为对象会把键 ToString、还带着一条原型链。往前它接着 <a href="#fstd-string">5.1</a> 起的头,<code>Intl</code> 家族的其余成员在这里讲完;往后 <a href="#fstd-json">7.2</a> 说这三类值在序列化时各自会丢什么,<a href="#fstd-binary">7.1</a> 讲数字与字节之间怎么互转,<a href="#fstd-reactive">7.5</a> 会用到本章的 WeakMap 去实现响应式系统的依赖表。</p>
@@ -4380,7 +4380,7 @@ JSON.stringify(<span class="kw">new</span> Map([[<span>'a'</span>, 1]]))        
 <p>学到什么程度算够:拿到金额、大整数、时间这三类数据,能说清它们在传输、存储、计算、显示四个环节各自该用什么表示;需要一个键值容器时,能按键类型、是否要顺序、是否频繁增删、生命周期四个判据在对象、Map、WeakMap 之间选。接下来 <a href="#fstd-binary">7.1</a> 把值一路拆到字节,<a href="#fstd-json">7.2</a> 说清这三类值在序列化往返中各自会变成什么(Date 变字符串、Map 变 <code>{}</code>、BigInt 直接抛错),<a href="#fstd-reactive">7.5</a> 则用本章的 WeakMap 搭出一个最小响应式系统。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 70404px;--thin-h:46397px">
+<section class="chapter" style="contain-intrinsic-size:auto 70368px;--thin-h:46373px">
 <h1 id="b7"><span class="part">标准库</span>二进制、JSON、元编程与全局对象</h1>
 <p>这一章收的是标准库里剩下的四块,它们的共同点是<strong>都在处理「值的另一种形态」</strong>:<a href="#fstd-binary">7.1</a> 把值拆成字节——<code>ArrayBuffer</code> 是一段裸内存,类型化数组和 <code>DataView</code> 是看这段内存的两种视图,文件、协议帧、图片像素、WebAssembly 内存都从这里进出;<a href="#fstd-json">7.2</a> 讲值变成文本再变回来的那条路,以及这条路上会丢什么、会抛什么;<a href="#fstd-meta">7.3</a> 与 <a href="#fstd-proxy">7.4</a>、<a href="#fstd-reactive">7.5</a> 三节讲元编程——先是 <code>Symbol</code>、内置符号与对象的三道锁,再是 <code>Proxy</code> 的十三种捕获器与 <code>Reflect</code>,最后用它们搭出一个能跑的响应式系统,Vue 3 的骨架就是这个;<a href="#fstd-misc">7.6</a> 与 <a href="#fstd-console">7.7</a> 收拢每天都用却很少读全的一批全局对象:<code>URL</code>、三个编码函数、定时器、<code>console</code>、<code>Intl</code> 的其余成员。</p>
 <p>顺序是从「最具体」走到「最抽象」再落回「最日常」:先看字节这种最实在的形态,再看序列化这种日常的形态转换,然后是元编程这种改写语言行为的能力,最后是一组随手就用的工具。它接着 <a href="#fstd-string">5.1</a> 与 <a href="#fstd-number">6.1</a> 往下走一层——字符串到字节要过 <code>TextEncoder</code>,数字到字节要选对视图类型;<code>Proxy</code> 则是 <a href="#f5-proto">3.1</a> 那条属性查找链上再插的一层。往后,<a href="#f6-fetch">9.2</a> 的响应体、<a href="#f6-worker">9.3</a> 的结构化克隆、<a href="浏览器API与工作原理手册.html#fapi-file">《浏览器 API 与工作原理手册》6.1</a> 的文件读取、<a href="浏览器API与工作原理手册.html#fapi-canvas-pixel">《浏览器 API 与工作原理手册》5.2</a> 的像素数据都要用到本章的二进制三层,<a href="前端框架与工程化手册.html#f10-eco">《前端框架与工程化手册》3.2</a> 里响应式框架的实现原理则要用到 <code>Proxy</code>。</p>
@@ -5779,7 +5779,7 @@ https:<span class="cm">//api.example.com/v2/search?q=%E6%89%8B+%E5%86%8C&amp;tag
 <p>学完这一章应该能做到:拿到一段二进制数据,能写出正确的视图与字节序把它解析出来;看到一个序列化往返的结果不对,能指出是 <code>stringify</code> 的哪条规则丢的;需要在运行时统一拦截属性访问时,知道 <code>Proxy</code> 能做什么、代价是什么、以及它在 Vue 3 响应式里是怎么用的;写任何一个地址时都不再拼字符串。接下来 <a href="#f6-loop">8.1</a> 开始进入异步:本章的 <code>setTimeout</code> 与 <code>queueMicrotask</code> 会在那里被放回事件循环的时间线上讲清楚,<code>fetch</code> 的响应体(<a href="#f6-fetch">9.2</a>)与 Worker 的消息(<a href="#f6-worker">9.3</a>)则会直接用到本章的 <code>ArrayBuffer</code> 与结构化克隆。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41023px;--thin-h:16016px">
+<section class="chapter" style="contain-intrinsic-size:auto 40999px;--thin-h:16009px">
 <h1 id="b8"><span class="part">异步</span>事件循环、Promise 与 async/await</h1>
 <p>写过服务端的人进入前端,最先撞上的不是语法,而是「代码明明写在后面,却先跑了」:一个 <code>setTimeout(fn, 0)</code> 排在 <code>Promise.then</code> 后面执行,一个 <code>await</code> 让函数「停」在中间而按钮仍然能点,一个 <code>then</code> 里忘了 <code>return</code> 就让错误绕过了 <code>catch</code>。这些现象背后是同一套机制:JavaScript 在浏览器里只有一条线程跑你的代码,所有「等待」都不能阻塞它,于是一切 I/O、定时、用户交互都以回调的形式排队,由事件循环按固定规则取出来执行。这一章把这套机制讲到能推导任何顺序题——<a href="#f6-loop">8.1</a> 讲一条线程、两种队列、一轮循环的四个步骤,以及渲染发生在哪一步;<a href="#f6-promise">8.2</a> 讲组织回调的第一层抽象:三态不可逆、<code>then</code> 总返回新 Promise、错误沿链穿透,外加四个并发组合子;<a href="#f6-async">8.3</a> 讲第二层:<code>async</code>/<code>await</code> 只是 Promise 加事件循环的语法糖,但 <code>await</code> 写在哪一行决定了代码是串行还是并发。</p>
 <p>三节层层相搭,顺序不能反:不知道微任务检查点,就解释不了「<code>then</code> 的回调为什么一定异步」;不知道 <code>then</code> 返回的是新 Promise,就解释不了 <code>await</code> 到底在等什么。往前它用到 <a href="#f5-closure">1.4</a> 的闭包(每个回调都记着自己出生时的词法环境)、<a href="#f5-func">2.1</a> 讲的控制反转,以及 <a href="#f5-error">4.3</a> 的错误模型(<code>reject</code> 就是异步版的 <code>throw</code>)。往后 <a href="#f6-timers">9.1</a>、<a href="#f6-fetch">9.2</a>、<a href="#f6-worker">9.3</a> 是三类具体的异步来源,<a href="浏览器API与工作原理手册.html#f8-render">《浏览器 API 与工作原理手册》9.2</a> 的渲染管线、<a href="前端框架与工程化手册.html#f10-concurrent">《前端框架与工程化手册》4.1</a> 的并发渲染都建立在本章这条时间线上。</p>
@@ -6552,7 +6552,7 @@ p.then(() =&gt; { doAsync(); })          <span class="cm">// 下游拿到 undefi
 <p>这一章学到位的标志有三条:随手给一段混着 <code>setTimeout</code>、<code>then</code>、<code>await</code> 的代码,能写出输出顺序并说出每一步的依据;看到一段 <code>await</code> 串起来的代码,能立刻判断它是不是把并发写成了串行;看到 <code>Uncaught (in promise)</code>,能沿着链找到那个漏掉 <code>return</code> 或漏掉 <code>catch</code> 的位置。接下来 <a href="#f6-timers">9.1</a> 讲定时器的真实精度与后台节流、<code>requestAnimationFrame</code> 为什么必须用于动画;<a href="#f6-fetch">9.2</a> 讲一个只在网络失败时才拒绝的 API 该怎么封装;<a href="#f6-worker">9.3</a> 讲把计算挪出这条线程的唯一办法——三节都是本章这台机器上的具体零件。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 34566px;--thin-h:22413px">
+<section class="chapter" style="contain-intrinsic-size:auto 34549px;--thin-h:22401px">
 <h1 id="b9"><span class="part">异步</span>定时器、fetch 与 Worker</h1>
 <p><a href="#f6-loop">8.1</a> 讲清了事件循环这台机器,<a href="#f6-promise">8.2</a> 与 <a href="#f6-async">8.3</a> 讲清了组织回调的两层抽象;这一章讲三类<strong>往队列里投递事件的具体来源</strong>,也是前端每天真正在用的三个 API。<a href="#f6-timers">9.1</a> 讲「过一会儿做」「每隔一段时间做」「下一帧画」「闲下来再做」这四种需求各对应哪个 API:定时器按墙钟时间进宏任务队列,<code>requestAnimationFrame</code> 挂在渲染步骤上,<code>requestIdleCallback</code> 只在一帧有余时才跑——用错的症状很典型,动画抖、后台倒计时走慢、滚动卡顿,原因都能从「它排在循环的哪一步」推出来。<a href="#f6-fetch">9.2</a> 讲 HTTP 请求:一个只在拿不到响应时才拒绝的 Promise、只能读一次的响应体、用 <code>AbortController</code> 做的取消与超时、以及流式读取。<a href="#f6-worker">9.3</a> 讲唯一能让计算真正离开主线程的办法:一条独立线程、独立事件循环,只能用消息通信,碰不到 DOM。</p>
 <p>三节按「同一条线程内排队 → 跨网络等待 → 跳出这条线程」递进。前两节的每一个回调都仍然落在 <a href="#f6-loop">8.1</a> 那条时间线上,所以「定时器不准」的第一嫌疑永远是主线程在忙;第三节则是承认一件事:拆任务只能让出时间片,不能减少总量,CPU 密集的活必须换条线程。往后 <a href="浏览器API与工作原理手册.html#f7-events">《浏览器 API 与工作原理手册》2.1</a> 的事件回调是同一类宏任务,<a href="浏览器API与工作原理手册.html#f8-origin">《浏览器 API 与工作原理手册》11.1</a> 讲 <code>fetch</code> 跨源时那套由服务端说了算的规则,<a href="浏览器API与工作原理手册.html#fapi-streams">《浏览器 API 与工作原理手册》6.6</a> 把 <code>res.body</code> 的流协议讲全,<a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a> 则用 Service Worker 拦截 <code>fetch</code> 做缓存。</p>
@@ -6830,7 +6830,7 @@ signal.reason: any
 signal.addEventListener(<span>'abort'</span>, fn)      <span class="cm">// 或 signal.onabort</span>
 AbortSignal.timeout(ms: number): AbortSignal          <span class="cm">// ms 后自动中止,reason 为 DOMException("TimeoutError");Chrome 103+ / Firefox 100+ / Safari 16+ / Node 17.3+</span>
 AbortSignal.any(signals: AbortSignal[]): AbortSignal  <span class="cm">// 任一中止即中止;Chrome 116+ / Firefox 124+ / Safari 17.4+ / Node 20.3+</span></code></pre>
-<p>取消的模型是「一个控制器、一个信号」:把 <code>signal</code> 交给要取消的操作,之后任何时刻调 <code>abort()</code>,所有持有这个信号的操作一起中止,<code>fetch</code> 的 Promise 以 <code>signal.reason</code> 拒绝。如果已经拿到了 <code>Response</code> 正在读 body,<code>abort()</code> 会让 body 的读取拒绝。超时就是「定时 abort」:<code>AbortSignal.timeout(5000)</code> 一行搞定;要同时支持「用户取消」和「超时」,用 <code>AbortSignal.any([userSignal, AbortSignal.timeout(5000)])</code>。信号是一次性的,中止过的信号再传给新请求,新请求会立刻拒绝——每次请求新建控制器。</p>
+<p>取消的模型是「一个控制器、一个信号」:把 <code>signal</code> 交给要取消的操作,之后任何时刻调 <code>abort()</code>,所有持有这个信号的操作一起中止,<code>fetch</code> 的 Promise 以 <code>signal.reason</code> 拒绝。如果已经拿到了 <code>Response</code> 正在读 body,<code>abort()</code> 会让 body 的读取拒绝。超时就是「定时 abort」:<code>AbortSignal.timeout(5000)</code> 一行即可;要同时支持「用户取消」和「超时」,用 <code>AbortSignal.any([userSignal, AbortSignal.timeout(5000)])</code>。信号是一次性的,中止过的信号再传给新请求,新请求会立刻拒绝——每次请求新建控制器。</p>
 <p>中止后要区分「是谁中止的」:在 <code>catch</code> 里检查 <code>e.name === 'AbortError'</code>(用户取消,通常静默)与 <code>'TimeoutError'</code>(超时,通常提示或重试)。React 里常见用法是在 <code>useEffect</code> 清理函数里 <code>abort()</code>,避免组件卸载后 setState(见 <a href="前端框架与工程化手册.html#f10-state">《前端框架与工程化手册》2.1</a>、<a href="前端框架与工程化手册.html#f10-router-data">3.1</a>)。</p>
 <h3>上传:JSON、FormData 与 Content-Type</h3>
 <p>请求体怎么给,<code>Content-Type</code> 就怎么来。传字符串要自己设头(发 JSON 就是 <code>'content-type': 'application/json'</code>),传 <code>FormData</code> <strong>绝不要手动设 <code>Content-Type</code></strong>——浏览器会生成 <code>multipart/form-data; boundary=----WebKitFormBoundary…</code>,boundary 是随机的,自己写一个固定值服务端解析不出来。<code>URLSearchParams</code> 对应 <code>application/x-www-form-urlencoded</code>,即传统表单提交的格式(见 <a href="HTML与CSS手册.html#f2-form">《HTML 与 CSS 手册》3.3</a>)。</p>
@@ -6934,7 +6934,7 @@ stream:
   +125ms chunk 3
   +187ms chunk 4
   +249ms chunk 5</code></pre>
-<p>解读:<code>/flaky</code> 两次 503 被 <code>HttpError</code> 抛出、判定可重试、退避 100 和 200 ms 后第三次成功——如果服务端返回的是 404,<code>retriable</code> 为 false,第一次就抛出,不会傻等。<code>/slow</code> 两次都在 300 ms 被 <code>abort(reason)</code> 掐断,拒绝原因就是传给 <code>abort</code> 的那个 Error(不传则是 <code>AbortError</code> 的 DOMException);服务器那边的 2 秒定时器仍会走完,但连接已经关了。流那段每块到达就打印,间隔约 60 ms,总共 250 ms——如果换成 <code>await res.text()</code>,要等满 250 ms 才一次性拿到五行。把 <code>timeout</code> 改成 3000,<code>/slow</code> 会在 2 秒后拿到 <code>late</code> 然后在 <code>res.json()</code> 上抛 <code>SyntaxError</code>(它不是 JSON),这个错误不可重试,直接抛出。</p></div>
+<p>解读:<code>/flaky</code> 两次 503 被 <code>HttpError</code> 抛出、判定可重试、退避 100 和 200 ms 后第三次成功——如果服务端返回的是 404,<code>retriable</code> 为 false,第一次就抛出,不会空等。<code>/slow</code> 两次都在 300 ms 被 <code>abort(reason)</code> 掐断,拒绝原因就是传给 <code>abort</code> 的那个 Error(不传则是 <code>AbortError</code> 的 DOMException);服务器那边的 2 秒定时器仍会走完,但连接已经关了。流那段每块到达就打印,间隔约 60 ms,总共 250 ms——如果换成 <code>await res.text()</code>,要等满 250 ms 才一次性拿到五行。把 <code>timeout</code> 改成 3000,<code>/slow</code> 会在 2 秒后拿到 <code>late</code> 然后在 <code>res.json()</code> 上抛 <code>SyntaxError</code>(它不是 JSON),这个错误不可重试,直接抛出。</p></div>
 <div class="deep"><h3 class="deep">与 XMLHttpRequest 的关系,以及跨源时要知道的事</h3>
 <p><code>XMLHttpRequest</code> 是基于事件的老接口(<code>open</code>/<code>send</code>/<code>onreadystatechange</code>/<code>onload</code>),<code>fetch</code> 在能力上是它的超集加 Promise 形态,只有上传进度一项 XHR 仍占优;jQuery 的 <code>$.ajax</code>、axios 默认在浏览器里都是 XHR 封装(axios 1.7 起可选 fetch 适配器)。新代码直接 <code>fetch</code>。两者共用同一套安全模型:跨源请求受同源策略约束,是否能读响应由服务端的 CORS 头决定,带 Cookie 需要 <code>credentials: 'include'</code> 加服务端 <code>Access-Control-Allow-Credentials: true</code> 且 <code>Allow-Origin</code> 不能是 <code>*</code>;非简单请求会先发 OPTIONS 预检。这些的完整流程与排错见 <a href="浏览器API与工作原理手册.html#f8-cors">《浏览器 API 与工作原理手册》11.2</a>;HTTP 头与缓存见 <a href="浏览器API与工作原理手册.html#f8-cache">《浏览器 API 与工作原理手册》10.2</a>、<a href="浏览器API与工作原理手册.html#f8-net">10.4</a>。</p>
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 Headers、Request、Response 都是可独立构造的类</span><p><code>new Headers({...})</code>、<code>new Request(url, init)</code>、<code>new Response(body, {status, headers})</code> 在 Service Worker 里(拦截请求、伪造响应,见 <a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a>)和测试里(mock <code>fetch</code> 返回 <code>new Response(JSON.stringify(data))</code>)都常用。<code>Response.json(data)</code> 静态方法直接构造一个 JSON 响应,Chrome 105+ / Node 18.2+。</p></div></div>

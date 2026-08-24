@@ -604,7 +604,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <span class="t">三个最容易踩的推论</span>
 <p><strong>①</strong> <code>HANDLE</code> 的数值<strong>跨进程无意义</strong>——它只是你自己那张句柄表的下标，传给别的进程等于乱指。<br>
 <strong>②</strong> <code>HWND</code> 却是<strong>全会话公开</strong>的，你能用 <code>FindWindow</code> 拿到别人的窗口并给它发消息——这不是漏洞，任务管理器、输入法、截图工具全靠它活着。<br>
-<strong>③</strong> <code>HINSTANCE</code> <strong>压根不是句柄，是地址</strong>：它就是你的模块被加载到内存的起始位置，所以它只用于「去这个模块里找资源」（加载图标、菜单、对话框模板）。</p>
+<strong>③</strong> <code>HINSTANCE</code> <strong>根本不是句柄，是地址</strong>：它就是你的模块被加载到内存的起始位置，所以它只用于「去这个模块里找资源」（加载图标、菜单、对话框模板）。</p>
 </div>
 <h2 id="w1-five-blocks">1.6 最小窗口程序的五大块</h2>
 
@@ -945,7 +945,7 @@ SetWindowTextW(hwnd, title.c_str());
 
 <p>答案是：Windows 采用的是<strong>事件驱动</strong>模型。你的程序不再主动去问「现在发生了什么」，而是被动地等着系统把「发生了什么」以<strong>消息（message）</strong>的形式送上门来。你要做的只有两件事：一，提前把「收到某类消息该怎么办」的处理逻辑写好（这就是<strong>窗口过程</strong>）；二，搭一个循环不停地把系统排给你的消息取出来、派发下去。这就像开一家店：你不用站在门口盯着每一个路人，你只要把「有人进门怎么接待、有人结账怎么办」的规矩定好，再雇一个前台把上门的客人一个个引到对应的柜台。</p>
 
-<p>一个能独立运行、能显示、能关闭的最小窗口程序，骨架就是下面这段。别急着理解每一行，先把它当成一张地图——本章后面每一节都在放大讲解地图上的一块。</p>
+<p>一个能独立运行、能显示、能关闭的最小窗口程序，骨架就是下面这段。不要急于理解每一行，先把它当成一张地图——本章后面每一节都在放大讲解地图上的一块。</p>
 
 <pre style="contain-intrinsic-size:auto 1338px"><code><span class="cm">// 一个可独立运行的最小窗口程序（现代 Unicode 写法）</span>
 <span class="kw">#include</span> &lt;windows.h&gt;
@@ -1505,7 +1505,7 @@ InvalidateRect(hWnd, <span class="kw">nullptr</span>, TRUE);</code></pre>
 </div>
 <div class="note new" style="contain-intrinsic-size:auto 197px">
 <span class="t">现代提示：DWM 之后其实不丢了</span>
-<p>Vista 引入桌面窗口管理器（DWM）后，每个窗口都<strong>画在自己独立的缓冲区</strong>里，再由 DWM 合成到屏幕——别人的窗口压根碰不到你的像素，遮挡不再造成真正的丢失。但 <code>WM_PAINT</code> 这套机制作为兼容层<strong>完整保留</strong>了下来，你的代码写法一行都不用改。理解这段历史的意义在于：你会明白为什么这个模型看起来「多此一举」，以及为什么它至今仍是所有 Win32 程序必须遵守的契约。</p>
+<p>Vista 引入桌面窗口管理器（DWM）后，每个窗口都<strong>画在自己独立的缓冲区</strong>里，再由 DWM 合成到屏幕——别人的窗口根本碰不到你的像素，遮挡不再造成真正的丢失。但 <code>WM_PAINT</code> 这套机制作为兼容层<strong>完整保留</strong>了下来，你的代码写法一行都不用改。理解这段历史的意义在于：你会明白为什么这个模型看起来「多此一举」，以及为什么它至今仍是所有 Win32 程序必须遵守的契约。</p>
 </div>
 
 
@@ -1680,7 +1680,7 @@ std::vector&lt;POINT&gt; g_circles;                 <span class="cm">// ← 状�
 
 <p>第二，也是最容易搞混的一点：<strong>销毁一个窗口 ≠ 退出整个程序</strong>。<span class="kw">DestroyWindow</span> 只关掉一个窗口；真正让程序退出的是消息循环收到 <span class="kw">WM_QUIT</span>。而 <span class="kw">WM_QUIT</span> 只由 <span class="kw">PostQuitMessage</span> 产生。所以决定「关掉这个窗口时程序是否也退出」的开关，就在于你要不要在它的 <span class="kw">WM_DESTROY</span> 里调 <span class="kw">PostQuitMessage</span>。如果你的程序有多个窗口，通常只在<strong>主窗口</strong>的 <span class="kw">WM_DESTROY</span> 里调它——次要窗口关掉不该拖垮整个程序。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 把三个「关」字彻底分清</span><p><span class="kw">WM_CLOSE</span> 是「有人请求关闭窗口」，你可拦下取消；<span class="kw">WM_DESTROY</span> 是「窗口已在销毁」，不可挽回，只能善后；<span class="kw">WM_QUIT</span> 是「消息循环该收工了」，它针对的是<strong>线程</strong>而非某个窗口，压根不会送到任何窗口过程里（它由 <span class="kw">GetMessage</span> 直接消费）。把这三者对号入座，窗口生命周期就再也不会让你困惑。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 把三个「关」字彻底分清</span><p><span class="kw">WM_CLOSE</span> 是「有人请求关闭窗口」，你可拦下取消；<span class="kw">WM_DESTROY</span> 是「窗口已在销毁」，不可挽回，只能善后；<span class="kw">WM_QUIT</span> 是「消息循环该收工了」，它针对的是<strong>线程</strong>而非某个窗口，根本不会送到任何窗口过程里（它由 <span class="kw">GetMessage</span> 直接消费）。把这三者对号入座，窗口生命周期就再也不会让你困惑。</p></div>
 
 <p>至此，本章的四大件——窗口类、窗口实体、消息循环、窗口过程——以及贯穿其间的消息机制，你已经完整走了一遍。回头再看本章开头那段最小程序，你应该不再觉得它是一堆神秘咒语，而是一台结构清晰的机器：图纸登记规矩，实体现身屏幕，循环不停取件，大脑逐条决断，最后一条 <span class="kw">WM_QUIT</span> 让它体面收场。后面所有关于绘图、控件、输入的章节，都不过是在这颗心脏上添枝加叶。</p>
 
@@ -1759,7 +1759,7 @@ PostMessageW(hwndMain, WM_APP_WORKDONE, resultCode, 0);</code></pre>
 <p>到这一章为止，你的窗口还只会显示文字、响应鼠标和按键。可它就是一块空白画布——你还没在上面画过一条线、一个圆。这一章我们补上这块拼图：<strong>GDI（Graphics Device Interface，图形设备接口）</strong>，Windows 里最古老、也最“随处可用”的一套二维绘图机制。我会带你从“为什么需要它”出发，把设备上下文、绘图工具、坐标系、裁剪、资源管理一层层搭起来，最后诚实地告诉你：GDI 今天还能用，但已经老了，高质量的现代绘图该往哪儿走。</p>
 
 <h2 id="w4-device-independent">4.1 GDI 与“设备无关”到底解决了什么</h2>
-<p>先问你一个问题：你写了一段画折线图的代码，跑在屏幕上很好看。现在老板说“打印出来”。屏幕是每英寸 96 或 144 点、能显示上千万种颜色的发光面板；打印机可能是每英寸 600 点、只有黑白两色的激光机。如果让你的程序直接对着这两种硬件“说话”，你得为每种设备写一份代码，还得懂它们各自的指令。这显然是灾难。</p>
+<p>先问你一个问题：你写了一段画折线图的代码，跑在屏幕上很好看。现在老板说“打印出来”。屏幕是每英寸 96 或 144 点、能显示上千万种颜色的发光面板；打印机可能是每英寸 600 点、只有黑白两色的激光机。如果让你的程序直接对着这两种硬件“说话”，你得为每种设备写一份代码，还得懂它们各自的指令。这显然不可行。</p>
 <p>GDI 的核心承诺就是<strong>设备无关（device independence）</strong>：你不直接对硬件下命令，而是对一个抽象的“设备”下命令——“从这里画一条线到那里”“用这个颜色填这个矩形”。GDI 收到命令后，连同该设备的驱动程序，一起把它翻译成那台具体硬件能懂的动作。屏幕、打印机、内存里的一张位图，在你眼里都是同一套画图函数。</p>
 <p>打个比方：GDI 像一个舞台监督。你（导演）只管喊“主角走到台中央、灯光调暖”，至于这个剧场的灯是什么型号、幕布怎么拉，是舞台监督带着后台工人去落实的。换个剧场，你的导演词一个字都不用改。</p>
 <p>设备无关不等于“设备无关到你不知道设备长什么样”。有时你需要知道：这台设备多少像素宽？多少 DPI？支持多少种颜色？这时用 <code>GetDeviceCaps</code> 去<strong>查询</strong>能力，而不是<strong>假设</strong>能力。这是“设备无关”编程的正确姿势——问，别猜。</p>
@@ -2104,7 +2104,7 @@ DeleteObject(hBrush);</code></pre>
 </svg>
 <figcaption>GDI 与现代绘图 API 的三处关键差距（原创绘制）</figcaption>
 </figure>
-<p>三者在代码上的差别同样悬殊。GDI 的颜色只有 <code>RGB(r,g,b)</code> 三个分量，<strong>压根没有表达「半透明」的位置</strong>；想要渐变，得自己逐像素做颜色插值；抗锯齿则根本无从谈起——它画的每个像素非黑即白，没有中间状态。</p>
+<p>三者在代码上的差别同样悬殊。GDI 的颜色只有 <code>RGB(r,g,b)</code> 三个分量，<strong>根本没有表达「半透明」的位置</strong>；想要渐变，得自己逐像素做颜色插值；抗锯齿则根本无从谈起——它画的每个像素非黑即白，没有中间状态。</p>
 <pre style="contain-intrinsic-size:auto 413px"><code><span class="cm">// GDI —— 只能纯色、只能盖死、只有锯齿</span>
 HBRUSH b = CreateSolidBrush(RGB(25, 113, 194));
 
@@ -2119,7 +2119,7 @@ SolidBrush semi(Color(165, 25, 113, 194));          <span class="cm">// 约 65% 
 <span class="cm">// GDI+ —— 抗锯齿只需一行开关</span>
 Graphics g(hdc);
 g.SetSmoothingMode(SmoothingModeAntiAlias);</code></pre>
-<p>话说回来，把 GDI 说得一无是处也不公平。它诞生于 1985 年，用极小的开销覆盖了当年——以及今天仍然大量存在的——绝大多数「把信息画到屏幕上」的需求。下面这些正是它的主场：</p>
+<p>不过，把 GDI 说得一无是处也不公平。它诞生于 1985 年，用极小的开销覆盖了当年——以及今天仍然大量存在的——绝大多数「把信息画到屏幕上」的需求。下面这些正是它的主场：</p>
 <figure style="contain-intrinsic-size:auto 395px">
 <svg viewBox="0 -6 721 300" xmlns="http://www.w3.org/2000/svg" font-size="12">
 <text class="svgmuted" x="24" y="20" font-size="13" font-weight="600">GDI 干得又快又好的事</text>
@@ -2423,7 +2423,7 @@ TextOutW(hdc, rc.right - 8, y, L"1,234.50", 8);</code></pre>
 <div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 点阵字体与老枚举 API</span><p>点阵字体（System / Terminal 等）是历史遗留，除非你在模拟复古终端，否则不用管它们。另外还有个更老的 <code>EnumFontFamilies</code>（不带 Ex），它不支持按字符集精细筛选、也不区分同名字体的不同样式。<span class="badge new">现代更新</span> 一律用 <code>EnumFontFamiliesExW</code>，它的模板还能让你只枚举某个字体族下的各种字重/斜体变体。</p></div>
 
 <h2 id="w5-drawtext">5.8 DrawText：一步到位的高层排版</h2>
-<p>前面几节都是"低层"手艺：你自己量尺寸、自己算坐标、自己换行。大多数时候你不需要这么辛苦——<code>DrawTextW</code> 把"在一个矩形里，按规则排一段文字"这件事一次搞定：自动换行、水平/垂直对齐、放不下时加省略号，全靠一组标志位。</p>
+<p>前面几节都是"低层"手艺：你自己量尺寸、自己算坐标、自己换行。大多数时候你不需要这么辛苦——<code>DrawTextW</code> 把"在一个矩形里，按规则排一段文字"这件事一次完成：自动换行、水平/垂直对齐、放不下时加省略号，全靠一组标志位。</p>
 <pre style="contain-intrinsic-size:auto 277px"><code>RECT rc; GetClientRect(hwnd, &amp;rc);
 InflateRect(&amp;rc, -12, -12); <span class="cm">// 留点内边距</span>
 
@@ -2562,7 +2562,7 @@ pRT-&gt;DrawTextW(text, len, pFmt, layoutRect, pBrush);</code></pre>
 <p>先回答开头那个问题。系统的答案是一个简单而强硬的规则:<strong>整个系统在同一时刻,只有一个窗口拥有键盘焦点(keyboard focus)</strong>。拥有焦点的那个窗口,收下所有的按键消息;其余窗口一个字都收不到。这样一来,"输入该发给谁"就从一道要靠猜的难题,变成了一个明确、可查询的系统状态。</p>
 <p>打个比方:焦点像会议室里那支唯一的发言话筒。谁把话筒攥在手里,谁说的话才会被记进会议纪要;话筒同一时刻只有一支,想让别人发言,就得先把话筒交出去。程序里"交出话筒"这件事由 <code>SetFocus</code> 完成,想知道"话筒现在在谁手里"就用 <code>GetFocus</code>。</p>
 <p>焦点转移时,系统会礼貌地通知双方:即将失去焦点的窗口先收到 <span class="badge ok">仍适用</span> <code>WM_KILLFOCUS</code>,即将得到焦点的窗口随后收到 <code>WM_SETFOCUS</code>。这两条消息是你安排"上台/下台"动作的挂钩点——本章后面那道闪烁的插入符,正是在 <code>WM_SETFOCUS</code> 里创建、在 <code>WM_KILLFOCUS</code> 里销毁的。为什么必须这样成对处理,等讲到 Caret 时你就明白了:它是个全系统共享的稀缺资源,只有正握着话筒时才该占用。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 别把"活动窗口"和"焦点窗口"混为一谈</span><p>顶层窗口里,标题栏高亮的那个叫<strong>活动窗口(active window)</strong>,由 <code>WM_ACTIVATE</code> 通知;而焦点可能落在它内部的某个子控件(比如一个文本框)上,由 <code>WM_SETFOCUS</code> 通知。一个是"哪扇门开着",一个是"门里谁在说话",两码事。对话框里用 Tab 键在控件间跳来跳去,移动的就是焦点,而活动窗口始终没变。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 别把"活动窗口"和"焦点窗口"混为一谈</span><p>顶层窗口里,标题栏高亮的那个叫<strong>活动窗口(active window)</strong>,由 <code>WM_ACTIVATE</code> 通知;而焦点可能落在它内部的某个子控件(比如一个文本框)上,由 <code>WM_SETFOCUS</code> 通知。一个是"哪扇门开着",一个是"门里谁在说话",两件不同的事。对话框里用 Tab 键在控件间跳来跳去,移动的就是焦点,而活动窗口始终没变。</p></div>
 
 <h2 id="w6-keymsg">6.2 按下与松开:WM_KEYDOWN、WM_KEYUP 与虚拟键码</h2>
 <p>焦点在手,按键就来了。一次完整的敲键,窗口过程会先后收到两条消息:按下的瞬间是 <code>WM_KEYDOWN</code>,松开的瞬间是 <code>WM_KEYUP</code>。它们的 <code>wParam</code> 携带一个<strong>虚拟键码(virtual key code)</strong>,也就是那一堆 <code>VK_</code> 开头的常量。</p>
@@ -2772,7 +2772,7 @@ RegisterClassExW(&amp;wc);</code></pre>
 
 <h2 id="w7-capture">7.5 拖拽为什么必须捕获鼠标</h2>
 <p>现在来到鼠标编程里最容易被新手忽视、又最能体现机制的一节。设想一个再普通不过的操作:用户在你窗口里<strong>按住左键拖动</strong>——画一条线、拉一个选框、拖一个滑块。你自然会这样写:<code>WM_LBUTTONDOWN</code> 里记下起点、进入"拖动中"状态;<code>WM_MOUSEMOVE</code> 里不断更新;<code>WM_LBUTTONUP</code> 里收尾。逻辑看着天衣无缝。</p>
-<p>可你一跑就会发现一个诡异现象:<strong>只要拖动时指针滑出了窗口,一切就"断线"了。</strong>为什么?回到本章第一句话——鼠标消息跟着位置走。指针一旦离开你的客户区,移动消息就不再发给你(转投指针下方的别人了);更要命的是,如果用户<strong>在窗口外面松开了按键</strong>,那条 <code>WM_LBUTTONUP</code> 会发给<strong>外面那个窗口</strong>,你永远等不到它。结果你的程序卡在"拖动中"状态里出不来,像被人从中途拔了线。</p>
+<p>可你一跑就会发现一个诡异现象:<strong>只要拖动时指针滑出了窗口,一切就"断线"了。</strong>为什么?回到本章第一句话——鼠标消息跟着位置走。指针一旦离开你的客户区,移动消息就不再发给你(转投指针下方的别人了);更严重的是,如果用户<strong>在窗口外面松开了按键</strong>,那条 <code>WM_LBUTTONUP</code> 会发给<strong>外面那个窗口</strong>,你永远等不到它。结果你的程序卡在"拖动中"状态里出不来,像被人从中途拔了线。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 132px"><span class="t">🔴 不捕获直接拖动的两个后果</span><p><span class="badge dead">会出 bug</span> 一，指针越界后你收不到 <code>WM_MOUSEMOVE</code>,拖动画面卡住不动;二,用户在窗口外松手,<code>WM_LBUTTONUP</code> 被别人吃掉,你的"拖动中"标志永远清不掉——下次指针回来,你会以为还在拖。这不是偶发,是必然。</p></div>
 <p>解药就是<strong>鼠标捕获</strong>。在拖动开始(<code>WM_LBUTTONDOWN</code>)时调用 <code>SetCapture(hwnd)</code>,你就"抢过了话筒":从这一刻起,<strong>所有鼠标消息统统投给你</strong>,无论指针跑到屏幕的哪个角落、哪个别人的窗口上方。等拖动结束(<code>WM_LBUTTONUP</code>)再 <code>ReleaseCapture()</code> 把话筒交回去。这样越界也照收移动、也照收那条至关重要的松开消息。</p>
 <pre style="contain-intrinsic-size:auto 564px"><code><span class="cl"><span class="kw">static</span> <span class="kw">BOOL</span>  fDragging = <span class="kw">FALSE</span>;</span><span class="cl"><span class="kw">static</span> <span class="kw">POINT</span> ptStart;</span><span class="cl"> </span><span class="cl"><span class="kw">case</span> WM_LBUTTONDOWN:</span><span class="cl">    ptStart.x = GET_X_LPARAM(lParam);</span><span class="cl">    ptStart.y = GET_Y_LPARAM(lParam);</span><span class="cl">    fDragging = <span class="kw">TRUE</span>;</span><span class="cl"><span class="cc" style="min-width:27.0ch">    SetCapture(hwnd);</span><span class="cm">// 抢过话筒：此后所有鼠标消息都归我</span></span><span class="cl">    <span class="kw">return</span> 0;</span><span class="cl"> </span><span class="cl"><span class="kw">case</span> WM_MOUSEMOVE:</span><span class="cl">    <span class="kw">if</span> (fDragging) {</span><span class="cl">        <span class="cm">// 注意：捕获期间 x/y 可能是负数或超出客户区，这是正常的</span></span><span class="cl">        <span class="cm">// ... 更新橡皮筋、滑块位置等 ...</span></span><span class="cl">    }</span><span class="cl">    <span class="kw">return</span> 0;</span><span class="cl"> </span><span class="cl"><span class="kw">case</span> WM_LBUTTONUP:</span><span class="cl">    <span class="kw">if</span> (fDragging) {</span><span class="cl">        fDragging = <span class="kw">FALSE</span>;</span><span class="cl"><span class="cc" style="min-width:27.0ch">        ReleaseCapture();</span><span class="cm">// 交回话筒，别一直霸着</span></span><span class="cl">    }</span><span class="cl">    <span class="kw">return</span> 0;</span></code></pre>
@@ -2782,7 +2782,7 @@ RegisterClassExW(&amp;wc);</code></pre>
     <span class="cm">// 注意：不要在这里再调 ReleaseCapture，会引起递归</span>
     fDragging = <span class="kw">FALSE</span>;
     <span class="kw">return</span> 0;</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 一个直观的比方</span><p><span class="badge ok">仍适用</span> 平时鼠标消息像广播,谁站在指针底下谁就听得到。<code>SetCapture</code> 相当于你戴上了单人耳机——全场的鼠标动静只往你这一副耳机里灌,直到你摘下来(<code>ReleaseCapture</code>)。<code>WM_CAPTURECHANGED</code> 则是"耳机被别人一把扯走"的那一下:你得立刻知道,别还傻乎乎以为自己在听。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 一个直观的比方</span><p><span class="badge ok">仍适用</span> 平时鼠标消息像广播,谁站在指针底下谁就听得到。<code>SetCapture</code> 相当于你戴上了单人耳机——全场的鼠标动静只往你这一副耳机里灌,直到你摘下来(<code>ReleaseCapture</code>)。<code>WM_CAPTURECHANGED</code> 则是"耳机被别人一把扯走"的那一下:你得立刻知道,不能仍然以为自己在听。</p></div>
 
 <h2 id="w7-hittest">7.6 命中测试与非客户区消息</h2>
 <p>前面一直在讲客户区。现在把视野放大到整个窗口:指针压在标题栏、边框、关闭按钮上时,发生了什么?这背后有一个安静运转的机制叫<strong>命中测试(hit testing)</strong>。每当指针在你窗口上方移动或按键,系统会先发一条 <code>WM_NCHITTEST</code> 问你:"这个位置算窗口的哪一部分?"你(通常是 <code>DefWindowProc</code>)返回一个 <code>HT*</code> 码,系统据此决定接下来投什么消息、光标显示成什么形状。</p>
@@ -2923,7 +2923,7 @@ SetTimer(hwnd, 1, 1000, OnTimer);</code></pre>
     KillTimer(hwnd, IDT_CARET);
     PostQuitMessage(0);
     <span class="kw">return</span> 0;</code></pre>
-<p>还有一种特殊玩法：把 <code>hWnd</code> 传 <code>NULL</code>。这时你没有窗口来接消息，系统会<strong>忽略你传的编号</strong>，改为返回一个它自己分配的新编号，你必须用这个返回值来 <code>KillTimer</code>。因为没有窗口，这种定时器只能配合回调方式（TimerProc）使用。它偶尔用于「我压根没有窗口，只是需要一个周期回调」的工具型代码，但因为仍受消息循环制约，用处有限，你多数时候用不到。</p>
+<p>还有一种特殊玩法：把 <code>hWnd</code> 传 <code>NULL</code>。这时你没有窗口来接消息，系统会<strong>忽略你传的编号</strong>，改为返回一个它自己分配的新编号，你必须用这个返回值来 <code>KillTimer</code>。因为没有窗口，这种定时器只能配合回调方式（TimerProc）使用。它偶尔用于「我根本没有窗口，只是需要一个周期回调」的工具型代码，但因为仍受消息循环制约，用处有限，你多数时候用不到。</p>
 <table style="contain-intrinsic-size:auto 149px">
 <thead><tr><th class="nw">调用方式</th><th>nIDEvent 的含义</th><th>返回值</th><th>怎么撤销</th></tr></thead>
 <tbody>
@@ -5118,7 +5118,7 @@ ShowWindow(hPageAdvanced, cur == 1 ? SW_SHOW : SW_HIDE);</code></pre>
 
 <h3 id="w9-datetime">日期时间选择器（DATETIMEPICK_CLASS）与月历</h3>
 
-<p>让用户挑日期还在用三个编辑框拼年月日？DateTimePicker 一个控件搞定：显示格式化的日期/时间，点下拉箭头弹出月历。数据结构就是熟悉的 <code>SYSTEMTIME</code>。同库的月历控件 <code>MONTHCAL_CLASS</code> 则是那个"摊开的日历"，可独立使用（<code>MCM_GETCURSEL</code>/<code>MCM_SETCURSEL</code>，通知 <code>MCN_SELCHANGE</code>/<code>MCN_SELECT</code>）。</p>
+<p>让用户挑日期还在用三个编辑框拼年月日？DateTimePicker 一个控件即可：显示格式化的日期/时间，点下拉箭头弹出月历。数据结构就是熟悉的 <code>SYSTEMTIME</code>。同库的月历控件 <code>MONTHCAL_CLASS</code> 则是那个"摊开的日历"，可独立使用（<code>MCM_GETCURSEL</code>/<code>MCM_SETCURSEL</code>，通知 <code>MCN_SELCHANGE</code>/<code>MCN_SELECT</code>）。</p>
 
 <table style="contain-intrinsic-size:auto 469px"><thead><tr><th>风格 / 消息 / 通知</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>DTS_SHORTDATEFORMAT</code> / <code>DTS_LONGDATEFORMAT</code> / <code>DTS_TIMEFORMAT</code></td><td>短日期(2026/8/14) / 长日期(2026年8月14日) / 时间模式(时间模式自动带 UpDown)</td></tr>
@@ -6843,7 +6843,7 @@ LoadStringW      (hInstance, IDS_ERR_OPENFILE, buf, ARRAYSIZE(buf));</code></pre
 <tbody>
 <tr><td class="nw">坐标单位</td><td>像素，高 DPI 下要自己换算</td><td>DLU，跟随字体自动缩放</td></tr>
 <tr><td class="nw">改布局</td><td class="nw">改 C 代码，重新编译</td><td>改 .rc，可用可视化编辑器拖</td></tr>
-<tr><td class="nw">控件字体</td><td>每个都要手动发 WM_SETFONT</td><td>DS_SHELLFONT 自动搞定</td></tr>
+<tr><td class="nw">控件字体</td><td>每个都要手动发 WM_SETFONT</td><td>DS_SHELLFONT 自动处理</td></tr>
 <tr><td class="nw">键盘导航</td><td>Tab 序、默认按钮全自己实现</td><td>系统内建，模板顺序即 Tab 序</td></tr>
 <tr><td class="nw">文字本地化</td><td class="nw">散落在代码里</td><td>集中在 STRINGTABLE</td></tr>
 <tr><td class="nw">控件数量运行时才知道</td><td class="nw">天然支持</td><td>做不到，只能补充代码创建</td></tr>
@@ -7228,7 +7228,7 @@ END</code></pre>
 <pre style="contain-intrinsic-size:auto 194px"><code><span class="cl"><span class="kw">INT_PTR</span> r = DialogBoxW(hInst,</span><span class="cl"><span class="cc" style="min-width:53.0ch">                       MAKEINTRESOURCEW(IDD_ABOUT),</span><span class="cm">// 引用模板</span></span><span class="cl"><span class="cc" style="min-width:53.0ch">                       hwndOwner,</span><span class="cm">// 拥有者窗口</span></span><span class="cl"><span class="cc" style="min-width:53.0ch">                       AboutDlgProc);</span><span class="cm">// 对话框过程</span></span><span class="cl"><span class="kw">if</span> (r == IDOK) {</span><span class="cl">    <span class="cm">// 用户按了"确定"，可以去读控件里填的数据了</span></span><span class="cl">}</span></code></pre>
 <p>这行代码有个让初学者惊讶的性质：<strong><code>DialogBoxW</code> 不会立刻返回</strong>。它会一直卡在那里，直到对话框被关闭，返回值正是你在 <code>EndDialog</code> 里传的那个数。这就是"模态"二字的由来——程序进入了一个专属的"模式"，出不来。</p>
 <p>它凭什么能卡住？因为 <code>DialogBoxW</code> 内部<strong>自己开了一圈消息循环</strong>。你平时主窗口那个 <code>while(GetMessage...)</code> 在这段时间是停摆的，取而代之的是系统在对话框内部跑的循环：它抓消息、处理 Tab 导航、把消息派发给各个控件，直到你调 <code>EndDialog</code> 才拆掉这圈循环、让 <code>DialogBoxW</code> 带着结果返回。所以模态对话框不需要你操心消息循环——那圈循环藏在函数里看不见。</p>
-<p>关闭模态对话框<strong>只能</strong>用 <code>EndDialog(hDlg, 结果)</code>，绝不要用 <code>DestroyWindow</code>。<code>EndDialog</code> 会拆掉那圈内部循环并重新启用拥有者窗口；用 <code>DestroyWindow</code> 会把窗口销毁但循环还傻等着，程序就挂死了。</p>
+<p>关闭模态对话框<strong>只能</strong>用 <code>EndDialog(hDlg, 结果)</code>，绝不要用 <code>DestroyWindow</code>。<code>EndDialog</code> 会拆掉那圈内部循环并重新启用拥有者窗口；用 <code>DestroyWindow</code> 会把窗口销毁但循环还空等着，程序就挂死了。</p>
 <figure data-mark="fig-modal-loop" style="contain-intrinsic-size:auto 519px">
 <svg viewBox="0 -1 960 547" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="DialogBoxW 弹出模态对话框的全过程与那圈内部消息循环">
 <text class="svgmuted" x="30" y="24" font-size="12.5" font-weight="600">一次 DialogBoxW 调用的全过程：主循环把棒交出去，直到 EndDialog 才交回来</text>
@@ -7335,7 +7335,7 @@ END</code></pre>
 <!-- 收场提醒 -->
 <rect x="30" y="490" width="900" height="46" rx="6" fill="var(--svg-soft)" stroke="#e03131" stroke-dasharray="6 3"/>
 <text x="46" y="510" font-size="11.5" font-weight="700" fill="#e03131">收场只能用 EndDialog</text>
-<text class="svgmuted" x="178" y="510" font-size="10.5">换成 DestroyWindow：窗口是没了，可 ③ 那圈内部循环还傻等着 —— 程序当场挂死。</text>
+<text class="svgmuted" x="178" y="510" font-size="10.5">换成 DestroyWindow：窗口是没了，可 ③ 那圈内部循环还空等着 —— 程序当场挂死。</text>
 <text class="svgmuted" x="46" y="528" font-size="10.5">想在关闭前做校验？收到 IDOK 时先检查，不合格就别调 EndDialog、直接 return，对话框就留在原地。</text>
 </svg>
 <figcaption>DialogBoxW 弹出模态对话框的全过程与那圈藏起来的消息循环（原创绘制）</figcaption>
@@ -8096,7 +8096,7 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 <figcaption>IFileDialog 的 COM 调用时序与每一步的 HRESULT 失败分支（原创绘制）</figcaption>
 </figure>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 想选文件夹？现代接口一句话搞定</span><p>过去要让用户挑一个"文件夹"，得用 <span class="badge old">已过时</span><code>SHBrowseForFolder</code>——那个树形小框又丑又难用。现代做法是直接用 <code>IFileOpenDialog</code>，在 <code>Show</code> 之前调 <code>pfd-&gt;SetOptions(FOS_PICKFOLDERS)</code>，同一个漂亮的文件对话框立刻变成"选文件夹"模式。这是 <code>IFileDialog</code> 相比老 API 一个立竿见影的好处。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 想选文件夹？现代接口一行代码即可</span><p>过去要让用户挑一个"文件夹"，得用 <span class="badge old">已过时</span><code>SHBrowseForFolder</code>——那个树形小框又丑又难用。现代做法是直接用 <code>IFileOpenDialog</code>，在 <code>Show</code> 之前调 <code>pfd-&gt;SetOptions(FOS_PICKFOLDERS)</code>，同一个漂亮的文件对话框立刻变成"选文件夹"模式。这是 <code>IFileDialog</code> 相比老 API 一个立竿见影的好处。</p></div>
 <figure data-mark="fig-com-vtable-lifetime" style="contain-intrinsic-size:auto 626px">
 <svg viewBox="0 -2 720 507" xmlns="http://www.w3.org/2000/svg" font-size="12" role="img" aria-label="COM 的三件事：CoCreateInstance 经注册表找到 DLL 并由类厂造出对象；接口指针实为指向 vtable 的指针，前三格恒为 IUnknown，槽位顺序即接口继承链；引用计数从 1 起算，归零时对象自毁">
 <defs>
@@ -8513,7 +8513,7 @@ ShowWindow(g_hFindDlg, SW_SHOW);   <span class="cm">// 模板没写 WS_VISIBLE �
 </tbody>
 </table></div>
 <div class="note old" style="contain-intrinsic-size:auto 197px"><span class="t">🟡 SRCAND + SRCPAINT 的老式透明贴图</span><p>在没有 alpha 通道的年代，人们靠"两次 BitBlt"实现精灵透明：先准备一张<strong>单色掩码</strong>（透明处为白、不透明处为黑），用 <code>SRCAND</code> 把它和目标做与，在背景上"抠"出一个黑洞；再用 <code>SRCPAINT</code> 把彩色前景（透明处为黑）或进那个洞里。两步之后，前景就"悬浮"在背景上，边缘生硬但有效。这套技巧你在老游戏和老控件源码里会反复见到，理解它有助于读旧代码——但请看下面的现代替代。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代更新</span><p>今天要做带透明的图像合成，别再手搓两次 BitBlt 的掩码把戏。用本章后面讲的 <code>AlphaBlend</code> 一次搞定<strong>逐像素半透明</strong>（边缘平滑、可半透明），或者干脆上 Direct2D。老式掩码法只在你维护历史代码、或做纯 1 位硬边抠图时才有必要。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代更新</span><p>今天要做带透明的图像合成，别再手搓两次 BitBlt 的掩码把戏。用本章后面讲的 <code>AlphaBlend</code> 一次完成<strong>逐像素半透明</strong>（边缘平滑、可半透明），或者干脆上 Direct2D。老式掩码法只在你维护历史代码、或做纯 1 位硬边抠图时才有必要。</p></div>
 
 <h2 id="w12-stretchblt">12.5 StretchBlt 与缩放画质</h2>
 <p>当源和目标尺寸不一致时——你想把一张小图放大、或把大图缩到缩略图——就轮到 <code>StretchBlt</code>。它比 BitBlt 多两个参数：源有自己的宽高，目标也有自己的宽高，系统负责在搬运途中做缩放。</p>
@@ -9158,7 +9158,7 @@ MATHLIB_API <span class="kw">int</span> AddNumbers(<span class="kw">int</span> a
 <h2 id="w14-createthread-crt">14.7 创建线程：CreateThread 与 _beginthreadex 的取舍</h2>
 <p>怎么造一个线程？Win32 给的原生 API 是 <code>CreateThread</code>。你交给它一个「线程函数」（线程诞生后从这里开始跑）和一个要传给它的参数，它就在同进程里拉起一条新执行线，和你的当前线程并肩跑。线程函数返回，这个线程就结束了。</p>
 <pre style="contain-intrinsic-size:auto 564px"><code><span class="cl"><span class="cm">// 线程函数：新线程从这里开始独立执行</span></span><span class="cl">DWORD WINAPI WorkerProc(LPVOID lpParam)</span><span class="cl">{</span><span class="cl">    <span class="kw">int</span>* pData = (<span class="kw">int</span>*)lpParam;</span><span class="cl">    <span class="cm">// ... 在后台默默干活，不阻塞主线程 ...</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">    <span class="kw">return</span> <span class="kw">0</span>;</span><span class="cm">// 返回即线程结束</span></span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="cm">// 主线程里把它拉起来</span></span><span class="cl"><span class="kw">int</span> value = <span class="kw">42</span>;</span><span class="cl">DWORD tid = <span class="kw">0</span>;</span><span class="cl">HANDLE hThread = CreateThread(</span><span class="cl"><span class="cc" style="min-width:41.0ch">    <span class="kw">NULL</span>,</span><span class="cm">// 默认安全属性</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">    <span class="kw">0</span>,</span><span class="cm">// 默认栈大小</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">    WorkerProc,</span><span class="cm">// 线程函数</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">    &amp;value,</span><span class="cm">// 传给线程函数的参数</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">    <span class="kw">0</span>,</span><span class="cm">// 立即运行</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">    &amp;tid);</span><span class="cm">// 收回线程 ID</span></span><span class="cl"> </span><span class="cl"><span class="cm">// ... 主线程继续做别的 ...</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">WaitForSingleObject(hThread, INFINITE);</span><span class="cm">// 等它干完</span></span><span class="cl"><span class="cc" style="min-width:41.0ch">CloseHandle(hThread);</span><span class="cm">// 别忘了关句柄</span></span><span class="cl"> </span></code></pre>
-<p>看起来很顺手，但这里有一个<strong>坑深到必须专门讲</strong>的问题：如果你的线程函数里用到了 C 运行时库（CRT）——比如 <code>strtok</code>、<code>rand</code>、<code>errno</code>、<code>malloc</code> 的某些实现、乃至 <code>printf</code>——那么<strong>你不应该用 <code>CreateThread</code>，而应该用 <code>_beginthreadex</code></strong>。原因在于：CRT 有些函数依赖「每线程私有的状态」（最经典的就是 <code>errno</code> 和 <code>strtok</code> 内部的保存位置）。这块私有状态需要在线程启动时初始化、结束时清理。<code>CreateThread</code> 是纯内核 API，它压根不知道 CRT 的存在，不会替 CRT 建这块状态；而 <code>_beginthreadex</code> 是 CRT 提供的包装，它先把 CRT 的每线程状态安顿好，再在内部去调 <code>CreateThread</code>。</p>
+<p>看起来很顺手，但这里有一个<strong>坑深到必须专门讲</strong>的问题：如果你的线程函数里用到了 C 运行时库（CRT）——比如 <code>strtok</code>、<code>rand</code>、<code>errno</code>、<code>malloc</code> 的某些实现、乃至 <code>printf</code>——那么<strong>你不应该用 <code>CreateThread</code>，而应该用 <code>_beginthreadex</code></strong>。原因在于：CRT 有些函数依赖「每线程私有的状态」（最经典的就是 <code>errno</code> 和 <code>strtok</code> 内部的保存位置）。这块私有状态需要在线程启动时初始化、结束时清理。<code>CreateThread</code> 是纯内核 API，它根本不知道 CRT 的存在，不会替 CRT 建这块状态；而 <code>_beginthreadex</code> 是 CRT 提供的包装，它先把 CRT 的每线程状态安顿好，再在内部去调 <code>CreateThread</code>。</p>
 <p>用错的后果往往不是当场崩溃，而是<strong>偶发的、难以复现的内存泄漏或数据错乱</strong>——最折磨人的那种 bug。所以请把这句话背下来：<strong>只要线程里可能碰到 CRT，就用 <code>_beginthreadex</code>；这几乎意味着永远用它</strong>。它的参数和 <code>CreateThread</code> 几乎一一对应，迁移成本极低。</p>
 <div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 _beginthread（不带 ex）已不推荐</span><p>CRT 还有个更老的 <code>_beginthread</code>（没有 <code>ex</code> 后缀）。它的返回句柄在线程结束时会被 CRT 自动关闭，导致你手里的句柄可能在你还没用完时就失效了，极易引发竞态。请一律用带 <code>ex</code> 的 <code>_beginthreadex</code>，它把句柄的所有权明确交给你，由你负责 <code>CloseHandle</code>。</p></div>
 <div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 新代码直接用 std::thread</span><p>如果你写的是现代 C++，连 <code>_beginthreadex</code> 都不必直接碰了。标准库的 <code>std::thread</code> 在 Windows 上底层正是走 <code>_beginthreadex</code>（由 MSVC 的实现保证 CRT 状态正确），你还白得了类型安全的参数传递和 RAII 式的资源管理。本章最后一节会展示。</p></div>
@@ -9752,7 +9752,7 @@ BOOL fDarkNow = (value == 0);
 
 <div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">🔵 这也是你被迫学 COM 的温柔起点</span><p>现代 Windows 的新功能几乎全以 COM/WinRT 接口交付——任务栏跳转列表、通知、Direct2D/DirectWrite 无一例外。<code>IFileDialog</code> 逻辑简单、见效直观，是练习"创建—调用—释放"这套 COM 基本功最好的第一课。</p></div>
 
-<h2 id="w15-dropfiles">17.7 把文件拖进窗口：WM_DROPFILES 三十行搞定</h2>
+<h2 id="w15-dropfiles">17.7 把文件拖进窗口：WM_DROPFILES 三十行即可</h2>
 
 <p>让用户从资源管理器往你窗口里拖文件，是性价比最高的体验升级之一，而 Shell 早就替你把活干完了。最小实现只有三个要素：<code>DragAcceptFiles</code> 声明意愿、<code>WM_DROPFILES</code> 收货、<code>DragFinish</code> 释放：</p>
 
@@ -9825,7 +9825,7 @@ BOOL fDarkNow = (value == 0);
 <p><code>WaitKeepingUIAlive</code> 就是这个问题的标准解法。<code>MsgWaitForMultipleObjects</code> 的语义是「<strong>要么等到这个内核对象就绪，要么等到队列里来了新消息，哪个先到算哪个</strong>」。于是主线程在等待期间仍然会被唤醒去抽消息，界面继续重绘，跨线程的 <code>SendMessage</code> 也能被正常处理，死锁就解开了。</p>
 <div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 这段等待里藏着「重入」</span><p>一边等一边抽消息，意味着用户此刻还能点按钮、还能再次触发 <code>WM_COMMAND</code>，甚至再点一次关闭。示例里靠 <code>g_hThread == NULL</code> 判断和 <code>EnableWindow</code> 挡住了重复启动，但真实程序里请务必想清楚：<strong>在这段等待期间，哪些操作必须被禁掉</strong>。这是所有「模态等待」共同的代价，第 11 章讲模态对话框时说的是同一件事。</p></div>
 <h3>解剖四：进度消息为什么用 Post 而不是 Send</h3>
-<p>后台线程一秒钟可能报几十次进度。用 <code>PostMessageW</code>，投完就走，后台全速继续算；用 <code>SendMessageW</code>，每报一次都要停下来等 UI 线程把进度条画完才能继续——后台的速度被前台的刷新率绑架了，算得越快被拖得越惨。</p>
+<p>后台线程一秒钟可能报几十次进度。用 <code>PostMessageW</code>，投完就走，后台全速继续算；用 <code>SendMessageW</code>，每报一次都要停下来等 UI 线程把进度条画完才能继续——后台的速度被前台的刷新率绑架了，算得越快，被拖慢得越明显。</p>
 <p>还有个更隐蔽的好处：<code>PostMessage</code> 投进队列的消息，UI 线程一时忙不过来时会自然排队，而进度这种东西<strong>晚一点没关系、丢几帧也没关系</strong>。真要追求极致，可以在 UI 侧再做一层节流——收到进度消息只记下数值，用 <code>WM_TIMER</code> 每 50ms 才真正刷一次进度条，界面反而更顺。</p>
 <table style="contain-intrinsic-size:auto 189px">
 <thead><tr><th class="nw">场合</th><th>该用哪个</th><th>理由</th></tr></thead>

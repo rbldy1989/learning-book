@@ -259,7 +259,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 16426px;--thin-h:16426px">
+<section class="chapter" style="contain-intrinsic-size:auto 16416px;--thin-h:16416px">
 <h1 id="m1"><span class="part">第 1 章</span>认识 CMD：它是什么，不是什么</h1>
 <h2 id="m1-classics">1.0 相关经典书籍</h2>
 <p>批处理没有「圣经」,它是遗留技术;但要真正搞懂它的机制,下面几本(个)值得:</p>
@@ -722,7 +722,7 @@ ping -n 1 -w 1000 127.0.0.1 &gt;nul 2&gt;&amp;1
 <tbody>
 <tr><td class="nw">新的运维逻辑：有分支、要处理数据、要错误处理</td><td class="nw">PowerShell</td><td>有对象、有异常、有参数校验，写完还看得懂</td></tr>
 <tr><td>要在任意 Windows 上双击就跑，不改任何系统设置</td><td class="nw"><code>.cmd</code> 启动器</td><td>不受执行策略约束，零依赖</td></tr>
-<tr><td>WinPE、恢复环境、Nano Server 容器</td><td class="nw">CMD</td><td>那里可能压根没有 PowerShell</td></tr>
+<tr><td>WinPE、恢复环境、Nano Server 容器</td><td class="nw">CMD</td><td>那里可能根本没有 PowerShell</td></tr>
 <tr><td class="nw">维护已有的 <code>build.bat</code></td><td class="nw">就地改 CMD</td><td>重写的风险远大于收益，先让它稳定下来</td></tr>
 <tr><td>要调用 Linux 工具链（grep、awk、make）</td><td class="nw">WSL</td><td>别在 CMD 里模拟 Unix</td></tr>
 <tr><td class="nw">跨平台 CI 的 Windows 分支</td><td class="nw">pwsh 或直接调工具</td><td>与其他平台的脚本保持一致</td></tr>
@@ -766,7 +766,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 25520px;--thin-h:25520px">
+<section class="chapter" style="contain-intrinsic-size:auto 25497px;--thin-h:25497px">
 <h1 id="m2"><span class="part">第 2 章</span>变量、参数与展开机制</h1>
 
 <p>上一章你已经能让脚本跑起来了。这一章要解决的是另一件事：<strong>怎么让脚本记住东西、接收东西、算点东西</strong>。听上去平淡无奇，但 CMD 在这里埋了它最著名的一颗雷——变量到底在<em>什么时候</em>被替换。九成以上的「我的批处理明明写对了却输出 0」都出自这一点。我们会先把 <code>set</code> 讲扎实，再一路推进到延迟展开，并且用图把展开时机彻底钉死。</p>
@@ -1520,7 +1520,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 29508px;--thin-h:29508px">
+<section class="chapter" style="contain-intrinsic-size:auto 29478px;--thin-h:29478px">
 <h1 id="m3"><span class="part">第 3 章</span>流程控制：if / for / goto</h1>
 
 <p>前两章里你写的每一行命令都会被执行，从上到下，一条不落。从这一章开始，脚本才真正变成"程序"：它会挑着执行，会重复执行，会跳来跳去。</p>
@@ -1612,7 +1612,7 @@ set "NAME=Zhang San"
 
 <h3 id="m3-if-num-radix">前导零：八进制的幽灵</h3>
 
-<p>cmd 解析数字时沿用了 C 语言的字面量规则：<code>0x</code> 开头是十六进制，<code>0</code> 开头是八进制，其余是十进制。这在处理日期时间时会咬人，因为 <code>%DATE%</code> 和 <code>%TIME%</code> 切出来的月份、小时经常带前导零。</p>
+<p>cmd 解析数字时沿用了 C 语言的字面量规则：<code>0x</code> 开头是十六进制，<code>0</code> 开头是八进制，其余是十进制。这在处理日期时间时会出问题，因为 <code>%DATE%</code> 和 <code>%TIME%</code> 切出来的月份、小时经常带前导零。</p>
 
 <pre style="contain-intrinsic-size:auto 114px"><code><span class="kw">if</span> 0x10 EQU 16 echo 相等   <span class="cm">rem 成立：0x10 是十六进制 16</span>
 <span class="kw">if</span> 010  EQU 8  echo 相等   <span class="cm">rem 成立：010 是八进制 8</span>
@@ -1689,7 +1689,7 @@ set /a LEFT=%~1, RIGHT=%~2
 
 <pre style="contain-intrinsic-size:auto 60px"><code><span class="kw">if</span> errorlevel 1 <span class="kw">if</span> not errorlevel 2 echo 返回码恰好是 1</code></pre>
 
-<p>更要命的是负数。有些程序（尤其是 .NET 和 PowerShell 脚本）会返回 <code>-1</code>：</p>
+<p>更严重的是负数。有些程序（尤其是 .NET 和 PowerShell 脚本）会返回 <code>-1</code>：</p>
 
 <pre style="contain-intrinsic-size:auto 114px"><code>cmd /c exit -1
 echo %errorlevel%              <span class="cm">rem 实测输出：-1</span>
@@ -2378,10 +2378,10 @@ exit /b 0</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 25345px;--thin-h:25345px">
+<section class="chapter" style="contain-intrinsic-size:auto 25323px;--thin-h:25323px">
 <h1 id="m4"><span class="part">第 4 章</span>重定向、管道与常用命令</h1>
 
-<p>前三章你把「怎么让 cmd 正确读懂你写的一行字」这件事搞定了。这一章换个问题：一行命令跑完，产生的字往哪儿去？怎么把它们截住、拆开、送给下一个命令？</p>
+<p>前三章你把「怎么让 cmd 正确读懂你写的一行字」这件事已经解决。这一章换个问题：一行命令跑完，产生的字往哪儿去？怎么把它们截住、拆开、送给下一个命令？</p>
 
 <p>批处理没有函数返回值，也没有对象。它唯一的「数据总线」就是文本流：一个命令吐出文本，你把这股文本导进文件、导进黑洞，或者接到另一个命令的嘴边。理解了这套水管系统，剩下的常用命令不过是接在水管两头的零件——本章后半段就是这些零件的速查表。</p>
 
@@ -2782,7 +2782,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 
 <h2 id="m4-findstr">4.6 文本过滤：find、findstr 与那半套正则</h2>
 
-<p>你想从日志里挑出「以 ERROR 开头、并且带一个四位错误码」的行。<code>find</code> 做不到，因为它压根不认正则；<code>findstr</code> 能做，但只能用一种让你别扭的方式做——因为它的正则是<strong>半套</strong>。</p>
+<p>你想从日志里挑出「以 ERROR 开头、并且带一个四位错误码」的行。<code>find</code> 做不到，因为它根本不认正则；<code>findstr</code> 能做，但只能用一种让你别扭的方式做——因为它的正则是<strong>半套</strong>。</p>
 
 <h3>先分清这两个命令</h3>
 
@@ -2886,7 +2886,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 
 <span class="cm">:: 没有 /unique：要去重得自己来（先排序，再用 for 逐行比对上一行）</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p><code>Select-String</code> 支持完整的 .NET 正则（<code>+ ? | () {n,m} \d \w</code> 全都有）、正确处理 UTF-8/UTF-16、还能用 <code>-Context 2,2</code> 输出上下文行。<code>Sort-Object -Unique</code> 一步搞定去重排序，<code>Group-Object</code> 直接做频次统计。当你发现自己在为 findstr 手写第四个 <code>[0-9]</code> 时，就是该换工具的信号。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p><code>Select-String</code> 支持完整的 .NET 正则（<code>+ ? | () {n,m} \d \w</code> 全都有）、正确处理 UTF-8/UTF-16、还能用 <code>-Context 2,2</code> 输出上下文行。<code>Sort-Object -Unique</code> 一步完成去重排序，<code>Group-Object</code> 直接做频次统计。当你发现自己在为 findstr 手写第四个 <code>[0-9]</code> 时，就是该换工具的信号。</p></div>
 
 <h2 id="m4-start">4.7 start：启动程序、等待与退出码</h2>
 
@@ -2894,7 +2894,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 
 <pre style="contain-intrinsic-size:auto 60px"><code><span class="kw">start</span> "C:\Program Files\App\app.exe"</code></pre>
 
-<p>结果弹出一个空的命令行窗口，标题栏上写着那串路径，程序压根没启动。</p>
+<p>结果弹出一个空的命令行窗口，标题栏上写着那串路径，程序根本没启动。</p>
 
 <p>原因是 <code>start</code> 的第一个带引号的参数被当作<strong>窗口标题</strong>。这是从早期 Windows 就定下的语法，改不了了。所以规则是：<strong>只要程序路径带引号，前面就必须先给一个标题占位</strong>，哪怕是空标题。</p>
 
@@ -3152,7 +3152,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 23994px;--thin-h:23994px">
+<section class="chapter" style="contain-intrinsic-size:auto 23974px;--thin-h:23974px">
 <h1 id="m5"><span class="part">第 5 章</span>转义、引号与实战陷阱</h1>
 
 <h2 id="m5-why">5.1 为什么同一个脚本换台机器就崩</h2>
@@ -3536,7 +3536,7 @@ cmd /c <span class="kw">exit</span> 3
 <span class="kw">for</span> /f %%N <span class="kw">in</span> ('type data.txt ^| find /c /v ""') <span class="kw">do</span> <span class="kw">set</span> "N=%%N"
 <span class="kw">echo</span> 行数=%N%</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>PowerShell 的管道传的是对象且在同一进程内，<code>$n = (Get-Content data.txt).Count</code> 一句话搞定；错误处理有 <code>try/catch</code> 和 <code>$ErrorActionPreference</code>，不必去猜某个命令到底设不设置退出码。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>PowerShell 的管道传的是对象且在同一进程内，<code>$n = (Get-Content data.txt).Count</code> 一行代码即可；错误处理有 <code>try/catch</code> 和 <code>$ErrorActionPreference</code>，不必去猜某个命令到底设不设置退出码。</p></div>
 
 <h2 id="m5-paren">5.6 括号块：整块解析引出的连环坑</h2>
 
@@ -3750,7 +3750,7 @@ cmd /c <span class="kw">exit</span> 3
 
 <h2 id="m5-crlf">5.8 CRLF 与 BOM：看不见的字节</h2>
 
-<p>还有一类故障，你把脚本打开逐字看都找不出问题——因为出问题的字符<strong>压根不显示</strong>。</p>
+<p>还有一类故障，你把脚本打开逐字看都找不出问题——因为出问题的字符<strong>根本不显示</strong>。</p>
 
 <h3>BOM：文件开头的三个隐形字节</h3>
 

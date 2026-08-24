@@ -289,7 +289,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 43816px;--thin-h:30071px">
+<section class="chapter" style="contain-intrinsic-size:auto 43799px;--thin-h:30059px">
 <h1 id="d1"><span class="part">DOM 与事件</span>DOM:树、查询、增删改与选区</h1>
 <p>《JavaScript 语言手册》讲的是语言本身,那些代码搬到 Node 里一样能跑;从这一章起,讲的是<strong>只有浏览器才给的对象</strong>,而它们的地基只有一个——DOM。浏览器把 HTML 字节解析成一棵节点树,页面上看得见的每一个字、每一个框都对应树上的一个节点;「用 JS 改页面」的准确说法是改这棵树,渲染引擎再按树和 CSSOM 算出像素(见 <a href="#f8-render">9.2</a>)。所以这一章自始至终只回答三个问题:怎么在树上<strong>找到</strong>节点、怎么<strong>改</strong>它、每种改法<strong>要付出什么代价</strong>。最后一个问题是这一章和一般 API 手册最大的差别:同一份 2000 条数据,五种渲染写法的耗时能差 50 倍,而差别全在几个不起眼的写法上。</p>
 <p>两节讲操作,两节讲操作之外的两块对象模型。<a href="#f7-dom">1.1</a> 是「找」:节点类型与两套遍历属性、<code>querySelector</code> 家族与 <code>getElementsBy</code> 家族的静态/动态之别、以及 <code>TreeWalker</code> 这种选择器管不到的遍历方式。<a href="#f7-dom-edit">1.2</a> 是「改」:创建、插入、替换、删除的现代 API,<code>innerHTML</code>/<code>textContent</code>/<code>innerText</code> 的三方对照,属性与样式的读写,滚动定位,以及为什么「改完样式立刻读 <code>offsetHeight</code>」会把浏览器的惰性批处理打断——同一份 2000 条数据、五种写法的真实耗时就在这一节末尾。<a href="#f7-dom-range">1.3</a> 讲用户划出的选区(<code>Range</code> 与 <code>Selection</code> 不是节点而是区间),<a href="#f7-dom-cssom">1.4</a> 讲样式表自己的对象模型与动态插入的脚本为什么默认是 async。往后 <a href="#f7-events">2.1</a> 讲事件怎么沿着这棵树传播,<a href="#f7-bom">3.1</a> 讲树之外的那个窗口;而 <a href="前端框架与工程化手册.html#f10-why">《前端框架与工程化手册》1.1</a> 里框架替你省掉的,正是这几节里手写的那些 <code>createElement</code> 与 <code>append</code>——知道底下是什么,才解释得通框架为什么要 key、为什么要受控输入。</p>
@@ -1216,7 +1216,7 @@ styleEl.sheet.insertRule(text, i) / sheet.deleteRule(i) / sheet.disabled
 <p>接着看 <a href="#f7-events">2.1</a>:这一章找到并改好的节点,要靠事件才能对用户的动作起反应,而事件的传播路径正是这棵树;<a href="#f7-forms-js">2.3</a> 把两者用在表单上。想知道「改完树之后浏览器到底做了什么」,直接跳 <a href="#f8-render">9.2</a> 和 <a href="#f8-reflow">9.3</a>,那两节把这一章反复提到的「强制同步布局」拆到渲染管线的每一步上讲。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 55626px;--thin-h:34633px">
+<section class="chapter" style="contain-intrinsic-size:auto 55598px;--thin-h:34616px">
 <h1 id="d2"><span class="part">DOM 与事件</span>事件与表单交互</h1>
 <p>上一章把页面变成了一棵能读能写的树,这一章让它对人有反应。用户的每一次点击、按键、聚焦、粘贴、拖动,浏览器都包装成一个 <code>Event</code> 对象,派发到树上的某个节点,再让它沿着树传播——所以「写交互」实际上只是三个决定:监听器挂在哪个节点、在传播的哪个阶段被叫到、叫到之后还让不让浏览器做它默认要做的事(跳转、提交、勾选、滚动)。读完这一章,你应该能只用原生 API 写出一个真正可用的表单:实时校验、中文输入法下不误触发、光标不乱跳、提交不重复,并且说得清每个写法的代价。</p>
 <p>五节分两组。前两节是通用机制:<a href="#f7-events">2.1</a> 讲对所有事件都成立的部分——<code>addEventListener</code> 的四个选项、捕获/目标/冒泡三个阶段、<code>target</code> 与 <code>currentTarget</code> 的分工、三个 stop/prevent 各管什么,以及由冒泡直接推出来的事件委托;<a href="#f7-events-focus">2.2</a> 讲三类最容易写错的具体事件:焦点事件(不冒泡的那两个和冒泡的那两个)、<code>input</code> 与 <code>change</code> 的分界、以及自己派发的 <code>CustomEvent</code>。后三节把这套机制压到表单这个最密集的交互场景里:<a href="#f7-forms-js">2.3</a> 是取值、打包与复用浏览器内置的校验引擎,<a href="#f7-forms-text">2.4</a> 是文本框内部的光标、选区、输入法与富文本,<a href="#f7-forms-select">2.5</a> 是下拉框和两种原生浮层容器(<code>&lt;dialog&gt;</code> 与 <code>popover</code>)。往后 <a href="#f7-bom">3.1</a> 讲窗口这一层的事件与对象,<a href="#fapi-observers">4.1</a> 讲那些「不用轮询也能知道变化」的观察者;而 <a href="前端框架与工程化手册.html#f10-state">《前端框架与工程化手册》2.1</a> 里框架的合成事件与受控输入,底下就是这几节里的原生机制。</p>
@@ -1410,7 +1410,7 @@ blur  / focusout      <span class="cm">// 失去焦点;relatedTarget = 即将获
 <tr><td class="nw"><code>blur</code></td><td><strong>否</strong></td><td>元素失去焦点</td><td>单个控件的失焦校验、收起它自己的浮层</td></tr>
 <tr><td class="nw"><code>focusin</code></td><td>是</td><td>获得焦点,紧挨着 <code>focus</code></td><td>在容器上委托:记录组内当前活跃的是哪个控件</td></tr>
 <tr><td class="nw"><code>focusout</code></td><td>是</td><td>失去焦点,紧挨着 <code>blur</code></td><td>在容器上委托:用 <code>!box.contains(e.relatedTarget)</code> 判断焦点是不是离开了整个组件</td></tr>
-<tr><td class="nw"><code>:focus-within</code>(CSS)</td><td>—</td><td>后代里有焦点时匹配容器</td><td>只要改样式就别写 JS,一条伪类搞定</td></tr>
+<tr><td class="nw"><code>:focus-within</code>(CSS)</td><td>—</td><td>后代里有焦点时匹配容器</td><td>只要改样式就别写 JS,一条伪类即可</td></tr>
 </tbody>
 </table>
 <p><code>relatedTarget</code> 是这四个事件独有的字段,它把「从哪来、到哪去」补齐:<code>focusout</code> 上它是<strong>即将拿到焦点</strong>的那个元素,<code>focusin</code> 上它是<strong>刚刚交出焦点</strong>的那个元素。为什么非要它不可?因为在 <code>focusout</code>/<code>blur</code> 触发的那一刻,新元素<strong>还没有</strong>拿到焦点,<code>document.activeElement</code> 读到的是 <code>&lt;body&gt;</code>——想在这一刻判断「焦点是不是还在我的组件里」,只有 <code>relatedTarget</code> 能回答。它为 <code>null</code> 的情况也有明确含义:焦点去往浏览器地址栏、另一个窗口,或者落到一片不可聚焦的空白上。</p>
@@ -1485,7 +1485,7 @@ target.dispatchEvent(event)   <span class="cm">// 同步:监听器在这一行�
 <tr><td class="nw"><code>date</code>/<code>number</code></td><td>值变成一个<strong>完整合法</strong>的值时</td><td>失焦或选定时</td><td>半截的输入(number 框里只有一个减号)两个都不触发,<code>value</code> 是 <code>""</code></td></tr>
 </tbody>
 </table>
-<p>第三条规则最容易被忘,也最要命:<strong>脚本给 <code>value</code>/<code>checked</code> 赋值,两个事件都不触发</strong>。这不是遗漏而是设计——事件描述的是「用户干了什么」,你自己写的值你自己知道,不必再通知你一遍。后果是:任何靠监听 <code>input</code> 来同步状态的东西(框架的受控输入、你自己写的联动、第三方表单库),在你用 <code>el.value = x</code> 改值之后<strong>一无所知</strong>,界面和状态就此分叉。要让它们知道,必须手工补一个事件:<code>el.dispatchEvent(new Event('input', { bubbles: true }))</code>。补出来的事件 <code>isTrusted</code> 为 <code>false</code>,除此之外和真的一样。</p>
+<p>第三条规则最容易被忘,也最容易出问题:<strong>脚本给 <code>value</code>/<code>checked</code> 赋值,两个事件都不触发</strong>。这不是遗漏而是设计——事件描述的是「用户干了什么」,你自己写的值你自己知道,不必再通知你一遍。后果是:任何靠监听 <code>input</code> 来同步状态的东西(框架的受控输入、你自己写的联动、第三方表单库),在你用 <code>el.value = x</code> 改值之后<strong>一无所知</strong>,界面和状态就此分叉。要让它们知道,必须手工补一个事件:<code>el.dispatchEvent(new Event('input', { bubbles: true }))</code>。补出来的事件 <code>isTrusted</code> 为 <code>false</code>,除此之外和真的一样。</p>
 <p>还有一个类型上的细节能帮你在控制台里一眼分清:在可编辑控件上,<code>input</code> 事件的对象是 <code>InputEvent</code>,带 <code>inputType</code>(<code>"insertText"</code>、<code>"deleteContentBackward"</code>、<code>"insertFromPaste"</code>…)和 <code>data</code>;而在 checkbox、radio、select、file 上,派发的是<strong>普通 <code>Event</code></strong>,没有 <code>inputType</code>。<code>change</code> 永远是普通 <code>Event</code>。两者都冒泡、都<strong>不可取消</strong>——想在值变化<strong>之前</strong>拦住,得用 <code>beforeinput</code>(见 <a href="#f7-forms-js">2.3</a>)。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 483px"><code>document.body.innerHTML = <span>'&lt;input id="t" value="old"&gt;&lt;input type="checkbox" id="ck"&gt;'</span>
   + <span>'&lt;select id="s"&gt;&lt;option value="x"&gt;x&lt;/option&gt;&lt;option value="y"&gt;y&lt;/option&gt;&lt;/select&gt;'</span>;
@@ -2334,7 +2334,7 @@ select.selectedOptions / selectedIndex / add(option, before) / option.value</cod
 <p>接下来 <a href="#f7-bom">3.1</a> 离开文档本身,讲地址栏、历史栈与本地存储——表单提交之后要跳转、要记住草稿、要跨标签页同步,都在那一节。事件与元素状态的更高级形态在 <a href="#fapi-observers">4.1</a>(让浏览器主动通知你尺寸和可见性的变化,而不是自己在事件里轮询)和 <a href="#fapi-components">4.3</a>(把这一章的交互封装成一个能被 <code>&lt;form&gt;</code> 认识的自定义控件)。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 40344px;--thin-h:26944px">
+<section class="chapter" style="contain-intrinsic-size:auto 40323px;--thin-h:26927px">
 <h1 id="d3"><span class="part">DOM 与事件</span>浏览器对象与本地存储</h1>
 <p>DOM 描述的是「文档」,这一章讲<strong>文档外面那一圈</strong>:地址栏里的 URL、前进后退的会话历史、浏览器与设备的能力,以及页面关掉之后数据还留不留得下。这些接口没有统一的一份规范,散落在 HTML Living Standard 和各个 Web API 规范里,但用起来是一组东西——全挂在 <code>window</code> 上,全在描述「文档之外的状态」。读完这一章,你能写出一个不刷新页面的路由,能判断某个能力在当前环境到底可不可用(而不是去猜浏览器型号),能想清楚一份数据该进 Cookie、<code>localStorage</code> 还是 IndexedDB。</p>
 <p>三节按「窗口这一层有什么」「怎么问环境」「东西存在哪」分。<a href="#f7-bom">3.1</a> 是窗口本身:<code>window</code> 与 <code>globalThis</code>、<code>location</code> 与 <code>URL</code>、<code>history</code> 的三个方法与 <code>popstate</code>,以及一张「哪些通道受同源策略管、哪些不管」的对照表——这张表是后面安全几节的地基。<a href="#f7-bom-env">3.2</a> 是「问环境」:<code>navigator</code> 上真正该读的那几项、能力检测的四种正确写法与四种错法、<code>matchMedia</code> 与 <code>devicePixelRatio</code>,以及正在取代 UA 字符串的 UA-CH。<a href="#f7-storage">3.3</a> 是「存哪」:Cookie(以及 <code>__Host-</code> 前缀这一条硬性建议)、Web Storage、IndexedDB,还有它们各自的配额与驱逐规则。</p>
@@ -3075,7 +3075,7 @@ document.cookie = <span>'k=v; Path=/; Max-Age=3600; Secure; SameSite=Lax'</span>
 <p>接下来 <a href="#fapi-observers">4.1</a> 换一个思路:与其自己在事件里轮询「元素露出来没有、尺寸变了没有」,不如让浏览器在渲染流程里顺手通知你。而这一章反复出现的几个词——「强制同步布局」「用户手势」「安全上下文」「SameSite」——分别在 <a href="#f8-reflow">9.3</a>、<a href="#fapi-media">6.3</a>、<a href="#fapi-crypto">8.2</a> 和 <a href="#f12-auth">12.1</a> 得到机制层面的解释。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 44409px;--thin-h:27597px">
+<section class="chapter" style="contain-intrinsic-size:auto 44387px;--thin-h:27581px">
 <h1 id="d4"><span class="part">浏览器 API</span>观察者与 Web Components</h1>
 <p>前三章讲完 DOM、事件与浏览器对象,一个页面的「骨架动作」就齐了:找节点、改节点、响应点击、跳转、存一点数据。这一章讲两件把这些动作<strong>反过来组织</strong>的事。观察者三件套回答的是「谁来告诉我状态变了」:在它们出现之前,判断「图片滚进视口没有」「容器被挤窄了没有」只能在 <code>scroll</code>/<code>resize</code> 回调里对每个目标调一次 <code>getBoundingClientRect()</code>,每次都是一回强制同步布局(见 <a href="#f8-reflow">9.3</a>),几十个目标就是几十次;观察者把这件事挪进浏览器自己的渲染流程,回调里直接给你已经算好的矩形。Web Components 回答的是「怎么把一段界面封成一个别人能直接用的标签」:自定义元素、Shadow DOM、<code>&lt;template&gt;</code> 与 <code>&lt;slot&gt;</code> 合起来,是浏览器原生的组件模型。</p>
 <p>五节分两组。前两节是「观察者」:<a href="#fapi-observers">4.1</a> 讲三个观察者共用的形态,再把 <code>IntersectionObserver</code>(元素和视口的交叉)讲透并落到图片懒加载;<a href="#fapi-observers-rm">4.2</a> 讲另外两个——<code>ResizeObserver</code>(盒子尺寸,容器查询的 JS 版)与 <code>MutationObserver</code>(子树被谁改了)。后三节是 Web Components 的三块独立规范:<a href="#fapi-components">4.3</a> 是自定义元素本身(<code>define</code>、升级时机、四个生命周期回调、属性反射),<a href="#fapi-components-shadow">4.4</a> 是 Shadow DOM(封装的边界,以及能穿过边界的那四样东西),<a href="#fapi-components-form">4.5</a> 是让自定义控件真正被 <code>&lt;form&gt;</code> 承认的 <code>ElementInternals</code>。两组的共同点是<strong>都在把「你自己轮询」换成「浏览器在它本来就要做的那一步顺手告诉你」</strong>。</p>
@@ -3980,7 +3980,7 @@ internals.setFormValue(v) / setValidity(flags, msg, anchor) / states.add(<span>'
 <p>接下来两章继续在「浏览器还能做什么」这条线上走:<a href="#fapi-canvas">5.1</a> 与 <a href="#fapi-svg">5.3</a> 讲两种画图形的路线,<a href="#fapi-file">6.1</a> 讲字节怎么进出页面。这一章反复提到的「回调里别再读布局」在 <a href="#f8-reflow">9.3</a> 有机制层的解释;把组件模型换成框架的写法,对照 <a href="前端框架与工程化手册.html#f10-components">《前端框架与工程化手册》1.2</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45720px;--thin-h:32361px">
+<section class="chapter" style="contain-intrinsic-size:auto 45698px;--thin-h:32344px">
 <h1 id="d5"><span class="part">浏览器 API</span>图形:Canvas 与 SVG</h1>
 <p>到这里为止,页面上的一切都是 HTML 元素和 CSS 盒子拼出来的。有两类东西这套积木拼不出来:几万个数据点、每帧都要重画的画面(游戏、粒子、大数据量图表、图像处理),以及任意形状的矢量图形(图标、Logo、流程图、可交互的图表)。浏览器为此给了两条路线,这一章把它们放在一起讲——因为路线选错的代价,比 API 写错大得多。</p>
 <p>四节按「先画什么、再对已画的做什么」分成两组。Canvas 这一组:<a href="#fapi-canvas">5.1</a> 是画——上下文这个状态机、路径与弧、文本与变换、<code>drawImage</code> 与渐变图案阴影;<a href="#fapi-canvas-pixel">5.2</a> 是画完之后——逐像素读写、合成模式、<code>ctx.filter</code>、高 DPR 屏幕上怎么才不糊、<code>OffscreenCanvas</code> 挪进 Worker、导出成 PNG 或 <code>MediaStream</code>。SVG 这一组:<a href="#fapi-svg">5.3</a> 是坐标系与脚本化(<code>viewBox</code> 怎么把用户坐标映射到屏幕、<code>createElementNS</code> 为什么不能省、三种动画路线);<a href="#fapi-svg-text">5.4</a> 是图标系统、文本排版(<code>textPath</code>、<code>foreignObject</code>)与把 SVG 序列化成位图。两组的分水岭在下一段。</p>
@@ -4285,7 +4285,7 @@ ctx.filter = <span>'drop-shadow(2px 2px 4px rgba(0,0,0,.4))'</span>   <span clas
 ctx.filter = <span>'url(#my-svg-filter)'</span>        <span class="cm">// 也能引用页面里的 SVG &lt;filter&gt;(见 <a href="#fapi-svg">5.3</a>)</span>
 <span class="cm">// 可用函数与 CSS 相同:blur / brightness / contrast / drop-shadow / grayscale</span>
 <span class="cm">//                      hue-rotate / invert / opacity / saturate / sepia</span></code></pre>
-<p>界线很清楚:<strong>效果能用一个滤镜函数表达,就别 <code>getImageData</code></strong>。灰度、模糊、提亮、色相旋转都在这一栏,一行搞定且不把数据搬进 JS。只有当变换<strong>依赖像素之间的关系或需要自定义逻辑</strong>时才下到像素层:取色器、色键抠图、自定义卷积核、把画布内容当数据分析。对照很直接——给一张 1920×1080 的图做高斯模糊,<code>ctx.filter = 'blur(8px)'</code> 是一次绘制调用,在 JS 里写同半径的卷积要遍历 800 万字节若干轮。</p>
+<p>界线很清楚:<strong>效果能用一个滤镜函数表达,就别 <code>getImageData</code></strong>。灰度、模糊、提亮、色相旋转都在这一栏,一行即可且不把数据搬进 JS。只有当变换<strong>依赖像素之间的关系或需要自定义逻辑</strong>时才下到像素层:取色器、色键抠图、自定义卷积核、把画布内容当数据分析。对照很直接——给一张 1920×1080 的图做高斯模糊,<code>ctx.filter = 'blur(8px)'</code> 是一次绘制调用,在 JS 里写同半径的卷积要遍历 800 万字节若干轮。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 ctx.filter 的三个边界</span><p>① 它是<strong>状态</strong>不是一次性操作:设了不还原,后面每一笔都带着,和 <code>shadowBlur</code> 一样必须用 <code>save</code>/<code>restore</code> 圈住。② <code>blur()</code> 会让绘制超出原图形的边界,如果外面套了 <code>clip()</code>,模糊的边缘会被裁掉,看起来像「模糊没生效」。③ 它由实现决定是否走 GPU,极大的模糊半径在低端机上仍然可能很慢;真要给一整块区域上滤镜,先考虑用 CSS 的 <code>filter</code> 给 <code>&lt;canvas&gt;</code> 元素本身上,那样连绘制都省了。</p></div>
 <h3>高 DPR 屏幕、OffscreenCanvas 与导出</h3>
 <p><code>canvas.width</code>/<code>height</code>(位图有多少像素)和 CSS 的 <code>width</code>/<code>height</code>(在页面上占多大)是<strong>两个独立的量</strong>。默认位图 300x150,CSS 不设尺寸时按位图 1:1 显示;CSS 设了尺寸就把位图<strong>拉伸</strong>到那么大——200x100 的 CSS 盒子里放 300x150 的位图会被压扁,反过来位图小、盒子大就会糊。在 <code>devicePixelRatio</code> 为 2 的屏幕上,CSS 200px 对应 400 个物理像素,位图若只有 200 像素宽,每个位图像素要铺 2 个物理像素,线条和文字就发虚——这是「Canvas 在 Retina 上模糊」的全部原因。标准解法三行:位图尺寸 = CSS 尺寸 x DPR;<code>ctx.scale(dpr, dpr)</code>;之后仍按 CSS 像素写坐标。</p>
@@ -4452,7 +4452,7 @@ Canvas2D: Multiple readback operations <span class="kw">using</span> getImageDat
 <p>几个印证点:位图 960x600 而 CSS 480x300,线条在 DPR 2 的屏上是清晰的;动画帧数约 55 是测试用的无头环境的帧率,真实屏幕上它跟随显示器刷新率(60 或 120);第二笔拖到画布外仍然以「一笔结束」收尾,靠的是 <code>setPointerCapture</code>;Chrome 在第二次 <code>getImageData</code> 时打印了 <code>willReadFrequently</code> 的提示——每笔开始都读一次整幅位图,对 GPU 加速的画布意味着一次 GPU → CPU 回读,把 <code>getContext('2d', { willReadFrequently: true })</code> 加上即可,或者把撤销栈改成「记录每一笔的路径点、撤销时重放」,内存和时间都更省。把 <code>#fx</code> 的 <code>pointer-events: none</code> 去掉,画板就再也画不上去了——事件全被顶层拿走;把 <code>setup</code> 里的 <code>scale</code> 去掉,线条会画到预期位置的一半处,因为坐标仍是 CSS 像素而位图已经是两倍。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 233px"><span class="t">🟢 Canvas 性能的几条规矩</span><p>① 一切绘制放在 <code>requestAnimationFrame</code> 里,状态更新与绘制分开,别在 <code>mousemove</code> 里直接画(事件频率可能高于帧率);② 只重画变化的区域(<code>clearRect</code> 局部 + 重画局部),或者分层——静态背景一层、动态内容一层;③ 不变的复杂图形先画到离屏画布,每帧 <code>drawImage</code> 拷贝,比每帧重新走路径便宜得多;④ 坐标取整(<code>Math.round</code>),避免亚像素抗锯齿;⑤ 阴影、<code>filter</code>、大面积半透明叠加是最贵的三样,能不用就不用;⑥ <code>getImageData</code> 不要放在每帧里,需要就加 <code>willReadFrequently</code> 或挪到 Worker;⑦ 几千个以上图形每帧都动,就该考虑 WebGL。</p></div></div>
 <div class="deep"><h3 class="deep">合成模式在算什么:Porter-Duff 与「谁留下、谁被擦掉」</h3>
-<p><code>globalCompositeOperation</code> 的十几个取值不用背,它们分成两族。前一族是 <strong>Porter-Duff 合成算子</strong>,回答的是「源(即将画的)与目标(画布上已有的)各自的哪部分保留」,名字本身就是答案:<code>source-over</code>(默认,源盖在目标上)、<code>source-in</code>(只留下源与目标<strong>重叠</strong>的那部分源)、<code>source-out</code>(只留下源<strong>不重叠</strong>的部分)、<code>source-atop</code>(源画在目标上但被目标的形状裁住);把 <code>source</code> 换成 <code>destination</code>,主语就反过来——<code>destination-out</code> 是「擦掉目标中与源重叠的部分」,这正是橡皮擦的实现。此外还有 <code>copy</code>(只留源,目标全清)和 <code>xor</code>(重叠部分互相抵消)。</p>
+<p><code>globalCompositeOperation</code> 的十几个取值不必硬记,它们分成两族。前一族是 <strong>Porter-Duff 合成算子</strong>,回答的是「源(即将画的)与目标(画布上已有的)各自的哪部分保留」,名字本身就是答案:<code>source-over</code>(默认,源盖在目标上)、<code>source-in</code>(只留下源与目标<strong>重叠</strong>的那部分源)、<code>source-out</code>(只留下源<strong>不重叠</strong>的部分)、<code>source-atop</code>(源画在目标上但被目标的形状裁住);把 <code>source</code> 换成 <code>destination</code>,主语就反过来——<code>destination-out</code> 是「擦掉目标中与源重叠的部分」,这正是橡皮擦的实现。此外还有 <code>copy</code>(只留源,目标全清)和 <code>xor</code>(重叠部分互相抵消)。</p>
 <p>后一族是<strong>混合模式</strong>(<code>multiply</code>、<code>screen</code>、<code>overlay</code>、<code>difference</code>、<code>luminosity</code> 等),和 CSS 的 <code>mix-blend-mode</code> 是同一套定义:不改变「谁保留」,只改变重叠处颜色怎么算。三条共同边界:①它是<strong>状态</strong>,设了不还原后面每一笔都受影响,必须 <code>save</code>/<code>restore</code> 圈住;②<code>*-in</code>/<code>*-out</code>/<code>copy</code> 影响<strong>整块画布</strong>而不只是新图形覆盖处,要局部生效得先画到离屏画布再 <code>drawImage</code> 回来;③<code>lighter</code> 是颜色相加(粒子、光效),既不属于这两族,也不等于 <code>lighten</code>。</p></div>
 <h2 id="fapi-svg">5.3 SVG:坐标系、脚本化与动画</h2>
 <p>SVG(Scalable Vector Graphics)是一种用 XML 描述<strong>矢量</strong>图形的格式:圆、矩形、路径、文本各是一个元素,带坐标与样式属性,浏览器按描述渲染——放大多少倍都是清晰的,因为渲染的是几何而不是像素。它和 HTML 共用同一套 DOM、CSS 与事件模型:内联在 HTML 里的 <code>&lt;svg&gt;</code> 的每个子元素都是真正的 DOM 节点,能 <code>querySelector</code>、能 <code>addEventListener</code>、能被 CSS 选中并过渡,能被屏幕阅读器读到。这就是它与 Canvas(见 <a href="#fapi-canvas">5.1</a>)的分水岭:Canvas 是一块你自己管的位图,SVG 是一棵浏览器替你管的图形树。</p>
@@ -4886,7 +4886,7 @@ vector-effect=<span>"non-scaling-stroke"</span>                                 
 <p>接下来 <a href="#fapi-file-out">6.2</a> 讲画完的图怎么变成文件下载或上传、用户的图片怎么进到画布里;<a href="#fapi-media">6.3</a> 讲把视频的当前帧 <code>drawImage</code> 进画布做处理。想知道 Canvas 的绘制在渲染管线的哪一步、为什么阴影和大面积半透明特别贵,见 <a href="#f8-render-arch">9.1</a>;把重活挪出主线程的办法在 <a href="JavaScript语言手册.html#f6-worker">《JavaScript 语言手册》9.3</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 64542px;--thin-h:40919px">
+<section class="chapter" style="contain-intrinsic-size:auto 64504px;--thin-h:40896px">
 <h1 id="d6"><span class="part">浏览器 API</span>文件、媒体与流</h1>
 <p>这一章讲页面和「页面之外的字节」打交道:用户把本地文件交进来,页面把生成的数据交出去,摄像头与麦克风的实时流接到 <code>&lt;video&gt;</code> 上,一个 200 MB 的响应一边下载一边处理。三节的 API 长得完全不像,底下却是同一套类型体系——不管字节从哪来,最终都表示成 <code>Blob</code>(一段不可变的字节加一个 MIME 类型),<code>File</code> 是加了文件名和修改时间的 <code>Blob</code>,而 <code>ReadableStream</code> 是同一批字节「一段一段经过」的形态。认清这一点,剩下的都是转换路径。</p>
 <p>顺序是「静态的字节 → 会动的字节 → 流着的字节」。<a href="#fapi-file">6.1</a> 与 <a href="#fapi-file-out">6.2</a> 讲静态的:前者是字节怎么<strong>进来</strong>(Blob 与 File 这两个不可变对象、四条读取路径、<code>input type=file</code> 与拖放),后者是字节怎么<strong>出去</strong>(下载、剪贴板、真正的文件系统读写)。<a href="#fapi-media">6.3</a>、<a href="#fapi-media-capture">6.4</a> 与 <a href="#fapi-device">6.5</a> 讲会动的:媒体元素与字幕、摄像头麦克风与音频图、以及设备类 API 共用的那套「用户手势 + 权限 + 安全上下文」模型。<a href="#fapi-streams">6.6</a> 讲流着的:当数据大到不能整份放进内存,读、写、变换要变成一条管线。三组之间有一条明确的升级路径——同一个「上传一个 2 GB 的文件」的需求,用 Blob 会爆内存,用分片能扛住,用流最省心。</p>
@@ -6192,7 +6192,7 @@ rs.tee() / rs.locked / rs.cancel(reason) / <span class="kw">new</span> Compressi
 <p>接下来 <a href="#fapi-sw">7.1</a> 把这一章的字节留在本地:Service Worker 拦截请求、Cache Storage 存响应,离线也能打开;<a href="#fapi-realtime">7.3</a> 讲另一种「持续到达的数据」——WebSocket 与 SSE,和 Streams 的对照很有意思。想知道请求本身怎么发、怎么取消、响应头怎么读,回到 <a href="JavaScript语言手册.html#f6-fetch">《JavaScript 语言手册》9.2</a>;把解码、压缩这类重活挪出主线程的办法在 <a href="JavaScript语言手册.html#f6-worker">《JavaScript 语言手册》9.3</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45549px;--thin-h:27883px">
+<section class="chapter" style="contain-intrinsic-size:auto 45524px;--thin-h:27869px">
 <h1 id="d7"><span class="part">浏览器 API</span>离线与实时:Service Worker 与实时通信</h1>
 <p>前面几章的 API 都在「页面活着的时候」工作,标签页一关就全没了。这一章的两样东西打破这个前提。<strong>Service Worker</strong> 是按源注册、独立于页面存在的脚本,它坐在页面与网络之间,能把这个源下的所有请求接管过来自己应答:断网也能打开、缓存由你的代码说了算、发布新版本要走一套状态机。<strong>实时通信</strong>打破的是另一个前提——「客户端问一句、服务器答一句」:WebSocket 把连接升级成双向消息通道,SSE 用一条不结束的 HTTP 响应让服务器持续说话,BroadcastChannel 让同源的几个标签页互相通气。</p>
 <p>四节分两组,组内的顺序有依赖。离线这一组:<a href="#fapi-sw">7.1</a> 先把 SW 本身讲清——注册与作用域、五个状态的生命周期、更新为什么会卡在 waiting、<code>fetch</code> 事件怎么接管请求;<a href="#fapi-sw-cache">7.2</a> 再补上「接管之后拿什么应答」——Cache Storage、五种缓存策略、Workbox 与 manifest,以及一个可离线的最小 PWA。实时这一组:<a href="#fapi-realtime">7.3</a> 讲三条经服务器的通道(WebSocket、SSE、跨标签页广播)与它们各自的重连、心跳、可靠性问题;<a href="#fapi-realtime-webrtc">7.4</a> 讲不经服务器的那一条——信令、NAT 穿透、数据通道与多方架构,以及实时链路唯一的观测入口 <code>getStats()</code>。四节共享同一批工程难题:连接和进程随时可能被悄悄掐断、状态存在别处、失败常常没有报错只有「不工作」。读完应该能写出一个可离线、发布后会提示用户刷新的应用壳,以及一个带心跳、退避重连与消息确认的实时客户端。Cache Storage 与 HTTP 缓存怎么分工见 <a href="#f8-cache">10.2</a>,连接数与协议开销的账见 <a href="#f8-hpbn">10.5</a>,<code>Response</code> 的 body 为什么只能读一次见 <a href="#fapi-streams">6.6</a>,这些改动上线后怎么量见 <a href="#fapi-perf">8.1</a>。</p>
@@ -7030,7 +7030,7 @@ storage 8.3 MB / 60123 MB</code></pre>
 <p>接下来往两个方向走。想弄清 Cache Storage 之外浏览器自己那套缓存(强缓存、协商缓存、预加载扫描器、资源优先级)怎么和 SW 的拦截叠加,去 <a href="#f8-load">10.1</a> 与 <a href="#f8-cache">10.2</a>;想算清「HTTP/1.1 下第 7 个 SSE 为什么卡住」「WebSocket 省下的握手到底值多少毫秒」这类账,去 <a href="#f8-hpbn">10.5</a>;这一章反复出现的「HTTPS 才有」在 <a href="#fapi-crypto">8.2</a> 有系统的说法;把缓存策略变成构建配置与发布流程,以及离线改造之后 LCP 究竟降了多少,分别在 <a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a> 与 <a href="#fapi-perf">8.1</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 27600px;--thin-h:18828px">
+<section class="chapter" style="contain-intrinsic-size:auto 27588px;--thin-h:18821px">
 <h1 id="d8"><span class="part">浏览器 API</span>性能测量与 Web Crypto</h1>
 <p>这一章的两节看起来不相干,底下是同一件事:<strong>浏览器把一个平台级子系统开给 JS,而这两个子系统都是你绝对不该自己造的</strong>。一个是时间——一条不受系统对时影响的单调时钟,加上一条浏览器自动记下的性能条目时间线(导航各阶段、每个资源、每次绘制、每次布局偏移、每次交互、每个长任务);另一个是密码学——操作系统的安全随机源,加上一套经过审计的摘要、加解密、签名与密钥派生实现。用 <code>Date.now()</code> 测耗时、用 <code>Math.random()</code> 生成令牌、用 JS 自己实现 AES,都是能跑通、测试也过、却注定出事的写法。</p>
 <p>顺序是「先能量,再能信」:<a href="#fapi-perf">8.1</a> 讲怎么从真实用户的浏览器里把 TTFB、FCP、LCP、CLS、INP 与长任务采回来、怎么在页面关闭前把数据发出去;<a href="#fapi-crypto">8.2</a> 讲随机数、摘要、AES-GCM、PBKDF2 与签名各自的正确用法与致命误用。两节还共享同一道门槛——安全上下文:时钟精度为防计时攻击被降到 100 微秒量级,<code>crypto.subtle</code> 在 http 页面上直接是 <code>undefined</code>。指标的阈值与病因表在 <a href="前端框架与工程化手册.html#f11-vitals">《前端框架与工程化手册》7.1</a>,时间戳对应的浏览器内部阶段在 <a href="#f8-render">9.2</a> 与 <a href="#f8-net">10.4</a>,令牌该放哪儿在 <a href="#f12-auth">12.1</a>。</p>
@@ -7478,7 +7478,7 @@ origin = http:<span class="cm">//192.168.1.20:8080 | isSecureContext = false</sp
 <p>往下走:采回来的 LCP、INP、CLS 该落在什么阈值、超标了按什么顺序查病因,在 <a href="前端框架与工程化手册.html#f11-vitals">《前端框架与工程化手册》7.1</a>;时间线上那些阶段各自对应浏览器内部的什么工作,在 <a href="#f8-render">9.2</a>(解析、布局、绘制、合成)与 <a href="#f8-net">10.4</a>(DNS、TCP、TLS、首字节);长任务为什么会把交互拖成红色,在 <a href="JavaScript语言手册.html#f6-loop">《JavaScript 语言手册》8.1</a>;这一章反复出现的「安全上下文」在 <a href="#f8-origin">11.1</a> 有源与站点层面的完整说法,而「令牌到底该放哪儿、前端加密救不了什么」在 <a href="#f12-auth">12.1</a> 与 <a href="#f12-xss">11.3</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 34360px;--thin-h:22352px">
+<section class="chapter" style="contain-intrinsic-size:auto 34342px;--thin-h:22344px">
 <h1 id="d9"><span class="part">浏览器原理</span>渲染管线、重排与重绘</h1>
 <p>前面写的 HTML、CSS 和 JavaScript,最后都要变成屏幕上的像素。这一章只讲这条路:<strong>这些工作分别在哪个进程、哪条线程上做,字节怎样变成像素,以及改一个样式之后这条路要重走哪一段</strong>。读完能回答五个日常问题——一个标签页卡死为什么不影响别的标签页(以及什么情况下会影响),首帧到底在等什么(所以 CSS 该早该小、脚本该 <code>defer</code>),为什么同步脚本会让页面白屏更久,为什么动 <code>transform</code> 顺滑而动 <code>left</code> 掉帧,以及「列表一多就卡」「一滑就顿」背后那两个几乎人人写过的写法。</p>
 <p>三节是「地图 → 全程 → 增量」的关系。<a href="#f8-render-arch">9.1</a> 先摆地图:一个标签页背后有哪几个进程、渲染进程里有哪三条线程、为什么 Chrome 要按站点把进程拆开——后面所有「主线程 / 合成器线程 / 光栅线程」的说法都挂在这张图上,<a href="#f8-origin">11.1</a> 的跨源隔离响应头也在这里找到它的由来。<a href="#f8-render">9.2</a> 走一遍完整流水线——解析、样式计算、布局、绘制、分层光栅、合成,并说明每一段在哪条线程上、在 Performance 面板里叫什么名字;<a href="#f8-reflow">9.3</a> 接着回答「改了什么要从哪一段重跑」,给出三条路径的对照表、强制同步布局的精确成因、把重排关进盒子的四种手段,以及滚动为什么会被一个事件监听器拖回主线程。顺序不能倒过来:不先知道线程怎么分工、管线有几段,就没法理解为什么有的改动便宜有的贵。这一章的每个结论都配了在 Chrome DevTools 里复现的方法,因为浏览器内部机制最可靠的学法不是背图,而是看它在面板上留下的痕迹。上游的资源什么时候到达在 <a href="#f8-load">10.1</a>,一帧的时间预算与事件循环的关系在 <a href="JavaScript语言手册.html#f6-loop">《JavaScript 语言手册》8.1</a>,动画属性的写法在 <a href="HTML与CSS手册.html#f4-motion">《HTML 与 CSS 手册》9.1</a>。</p>
@@ -7777,7 +7777,7 @@ contain-intrinsic-size: none | &lt;length&gt;{1,2} | <span class="kw">auto</span
 <p>这张表的重点在第一行:<strong>BFC 不是性能工具</strong>。给一个容器加 <code>overflow: hidden</code> 造出 BFC,解决的是浮动与外边距折叠,浏览器该重排的依赖链一条也没少。真正把重排代价关起来的是 <code>contain</code>——它是你对浏览器做的一个承诺(「这里面的变化不会影响外面」),浏览器据此把布局与绘制的失效范围截断在这个盒子上。承诺错了后果也真实:给一个高度本该由内容撑开的元素加 <code>contain: size</code>,它会塌成 0 高。所以日常用 <code>contain: content</code> 或 <code>layout</code>,<code>size</code> 只在你确实自己定尺寸时才加。</p>
 <h3>强制同步布局:读写交替为什么贵</h3>
 <p>正常情况下浏览器对样式改动是<strong>懒惰</strong>的:JS 里连写一百个 <code>el.style.width = ...</code>,它只把这些元素标记为「需要重新布局」,等到这一帧要绘制之前才统一做一次样式计算和布局。一百次写,一次布局,这是理想状态。</p>
-<p>但只要 JS 读一个<strong>依赖布局的值</strong>——<code>offsetWidth</code>、<code>getBoundingClientRect()</code>、<code>scrollTop</code>、<code>getComputedStyle(el).height</code>——浏览器就没法偷懒了:它必须给出正确答案,而正确答案要求把所有挂起的样式和布局改动立刻算完。于是它<strong>当场同步做一次布局</strong>,这叫强制同步布局(forced synchronous layout)。一次本身不可怕(通常零点几毫秒到几毫秒),可怕的是在循环里写一次、读一次、写一次、读一次:每次读都发现布局又脏了,又来一次。1000 个元素的循环就是 1000 次布局,每次布局还要处理整棵脏树——这就是布局抖动。</p>
+<p>但只要 JS 读一个<strong>依赖布局的值</strong>——<code>offsetWidth</code>、<code>getBoundingClientRect()</code>、<code>scrollTop</code>、<code>getComputedStyle(el).height</code>——浏览器就无法推迟了:它必须给出正确答案,而正确答案要求把所有挂起的样式和布局改动立刻算完。于是它<strong>当场同步做一次布局</strong>,这叫强制同步布局(forced synchronous layout)。一次本身不可怕(通常零点几毫秒到几毫秒),可怕的是在循环里写一次、读一次、写一次、读一次:每次读都发现布局又脏了,又来一次。1000 个元素的循环就是 1000 次布局,每次布局还要处理整棵脏树——这就是布局抖动。</p>
 <table style="contain-intrinsic-size:auto 341px">
 <thead><tr><th>会强制布局的读取(节选)</th><th>所属对象</th></tr></thead>
 <tbody>
@@ -8006,7 +8006,7 @@ console.log({
 <p>接下来两个方向。往上游走,资源什么时候被发现、以什么优先级下载、缓存怎么让第二次访问跳过整段网络,在 <a href="#f8-load">10.1</a> 与 <a href="#f8-cache">10.2</a>;真正的传输层账单(RTT、慢启动、TLS 握手、HTTP/2 与 HTTP/3)在 <a href="#f8-hpbn-http">10.6</a>。往指标走,这一章的 FCP、LCP、CLS、长任务在 <a href="#fapi-perf">8.1</a> 有采集方法,在 <a href="前端框架与工程化手册.html#f11-vitals">《前端框架与工程化手册》7.1</a> 有阈值与病因表;一帧里 JS 的位置与微任务、rAF 的关系在 <a href="JavaScript语言手册.html#f6-loop">《JavaScript 语言手册》8.1</a>;把「只动 transform」落成具体动画写法在 <a href="HTML与CSS手册.html#f4-motion">《HTML 与 CSS 手册》9.1</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 70927px;--thin-h:49019px">
+<section class="chapter" style="contain-intrinsic-size:auto 70898px;--thin-h:49001px">
 <h1 id="d10"><span class="part">浏览器原理</span>加载、缓存与网络协议</h1>
 <p>上一章从 HTML 的第一个字节开始讲怎么变成像素(<a href="#f8-render">9.2</a>),这一章讲那些字节是怎么来的、为什么是那个顺序来的、以及第二次访问怎样才能一个字节都不用来。前端能感知到的「慢」大半发生在这里:资源发现得晚、优先级排错、缓存策略让用户反复下载、一次冷连接光握手就花掉三个往返。读完这一章,拿到一张瀑布图应该能逐段说出时间花在哪儿,并且知道该改的是 HTML、是响应头,还是服务端配置。</p>
 <p>六节是逐层下潜的关系。前三节站在浏览器的视角:<a href="#f8-load">10.1</a> 讲资源的发现与排序——预加载扫描器能看见什么、看不见什么,优先级怎么定,<code>fetchpriority</code> 与几个 <code>rel</code> 提示各补哪个缺口,以及重定向、字体子集化这些「不改代码就能省」的项;<a href="#f8-cache">10.2</a> 讲第二次访问,把强缓存与协商缓存组合成「哈希文件名长缓存 + 入口 HTML 每次验证」这套标准做法,并给出用 <code>curl -I</code> 当场核对的方法;<a href="#f8-load-inp">10.3</a> 讲字节到齐之后的两个指标——长任务怎么切、主线程怎么让出去(<code>scheduler.yield</code> 那一组),以及 CLS 的成因清单。后三节换成协议视角:<a href="#f8-net">10.4</a> 走一遍请求的生命周期与头、状态码;<a href="#f8-hpbn">10.5</a> 按 Grigorik《Web 性能权威指南》把每一段耗时归因到传输层——延迟的构成、TCP 慢启动与带宽时延积、TLS 握手与恢复、移动网络的电台状态机;<a href="#f8-hpbn-http">10.6</a> 接着讲协议本身怎么对付这些代价——连接管理、HTTP/2 的分帧与多路复用、HTTP/3 的 QUIC、以及压缩。每一层都给可以拿来估算的数字,因为「延迟是瓶颈、带宽不是」这个判断只有配上数字才用得起来。工程上怎么落地在 <a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a> 与 <a href="前端框架与工程化手册.html#f11-deploy">《前端框架与工程化手册》7.3</a>,线上怎么量在 <a href="#fapi-perf">8.1</a>。</p>
@@ -8136,7 +8136,7 @@ function report() { navigator.sendBeacon(<span>'/pv'</span>, location.pathname);
   font-display: swap;
 }
 /* …其余分片同理。浏览器对每一片单独判断「这一页用到了吗」,没用到就完全不请求 */</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 231px"><span class="t">🟢 子集化的两种策略,按内容是否可枚举来选</span><p>内容固定的站点(营销页、文档站、后台系统的固定文案)用<strong>按实际字符子集化</strong>:构建时扫一遍产物里出现的字符,生成一个只含这些字的字体,几十 KB 一次搞定,配 <code>preload</code> 基本不会有 FOUT。内容由用户产生、字符不可枚举(社区、电商详情、评论)用<strong><code>unicode-range</code> 分片</strong>:多花一点请求数换取「只下载用到的那几片」,而且新内容出现新字时会自动补下载。两种都别忘了 <code>font-display</code>——子集化只减少体积,不改变「字体没到之前文字怎么显示」。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 231px"><span class="t">🟢 子集化的两种策略,按内容是否可枚举来选</span><p>内容固定的站点(营销页、文档站、后台系统的固定文案)用<strong>按实际字符子集化</strong>:构建时扫一遍产物里出现的字符,生成一个只含这些字的字体,几十 KB 一次完成,配 <code>preload</code> 基本不会有 FOUT。内容由用户产生、字符不可枚举(社区、电商详情、评论)用<strong><code>unicode-range</code> 分片</strong>:多花一点请求数换取「只下载用到的那几片」,而且新内容出现新字时会自动补下载。两种都别忘了 <code>font-display</code>——子集化只减少体积,不改变「字体没到之前文字怎么显示」。</p></div>
 <div class="deep"><h3>完整示例:Network 面板瀑布图读法</h3>
 <p>下面的小服务器提供一个页面和四个子资源,分别设了不同的缓存头和一个 300 ms 的人为延迟。用 <code>node server.mjs</code> 启动,打开 Network 面板后访问 <code>http://localhost:8081</code>,先看首次加载,再按 F5 看第二次。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 945px"><code><span class="cm">// server.mjs —— node server.mjs,然后打开 http://localhost:8081</span>
@@ -8570,7 +8570,7 @@ entry.serverTiming                              <span class="cm">// 服务器通
 </tbody>
 </table>
 <h3>状态码速查</h3>
-<table style="contain-intrinsic-size:auto 573px">
+<table style="contain-intrinsic-size:auto 574px">
 <thead><tr><th>码</th><th>含义</th><th>前端怎么处理</th></tr></thead>
 <tbody>
 <tr><td class="nw">200 / 201 / 204</td><td>成功 / 已创建(常带 <code>Location</code>)/ 成功无体</td><td>204 别去 <code>response.json()</code>,会抛错</td></tr>
@@ -9126,7 +9126,7 @@ ttfb 0.101  total 0.106</code></pre>
 <p>接下来往两个方向走。往工程走:这一章的缓存与优先级结论在 <a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a> 变成构建配置与图片策略、在 <a href="前端框架与工程化手册.html#f11-deploy">《前端框架与工程化手册》7.3</a> 变成 CDN 与 Nginx 配置,指标的阈值与病因表在 <a href="前端框架与工程化手册.html#f11-vitals">《前端框架与工程化手册》7.1</a>,线上采集在 <a href="#fapi-perf">8.1</a>;把网络这一层接管到自己手里的极端做法(离线、自定义缓存策略)在 <a href="#fapi-sw-cache">7.2</a>。往安全走:这一章反复出现的「源」「跨源」「凭据」在 <a href="#f8-origin">11.1</a> 有完整的规则,而 <code>Vary: Origin</code> 那个坑正是缓存与 CORS 交界处最难查的一类问题。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 54327px;--thin-h:34237px">
+<section class="chapter" style="contain-intrinsic-size:auto 54302px;--thin-h:34224px">
 <h1 id="d11"><span class="part">安全</span>同源、CORS、CSP 与常见攻击</h1>
 <p>前端代码跑在用户的浏览器里,这意味着两件事同时成立:攻击者能看到你的全部代码、能让浏览器替他发请求;而浏览器又替你守着一道道边界——同源策略、CORS、CSP、Cookie 的 SameSite。这一章讲清这些边界各自拦什么、怎么配置,以及你自己写的哪一行会把它们打开。读完能做到三件事:看到 CORS 报错知道该谁改、怎么在三分钟内定位;审一段渲染用户内容的代码时,能指出哪个 API 会把字符串当代码;给一个改状态的接口做防护时,说得出该上 SameSite、token 还是来源核对,以及各自的盲区在哪。</p>
 <p>五节的顺序是「边界 → 改变边界的两个头 → 边界内的注入 → 边界外的借用 → 剩下的」。<a href="#f8-origin">11.1</a> 先把地基铺好:源由什么组成、它和站点差在哪、同源策略限制读不限制发(不限制的那一栏才是事故高发区),以及 Spectre 之后加上的跨源隔离。<a href="#f8-cors">11.2</a> 讲两种用响应头改变默认边界的机制,方向相反:CORS 是数据的主人把门开一条缝,CSP 是页面自己把门收紧;两者都由服务端写、浏览器执行,所以最重要的能力是「看报错知道该谁改」。有了这个地基,接下来两节正好是同一条规则的两面——<a href="#f12-xss">11.3</a> 是攻击者的代码跑进了<strong>你的源里面</strong>,于是同源策略反过来保护他;<a href="#f12-csrf">11.4</a> 是攻击者站在<strong>别的源</strong>,借浏览器自动携带凭据这个默认行为发请求(WebSocket 握手是这一家里最容易被漏掉的成员),全程读不到你的任何数据也照样得手。两类攻击正交,防御手段完全不同,把它们混为一谈是最常见的认知错误。最后 <a href="#f12-other">11.5</a> 收拢没有统一浏览器机制可讲的四类——开放重定向、原型链污染、SSRF、ReDoS,它们的共同点是「把不受信任的输入直接当成某种指令」。Cookie 属性的完整表在 <a href="#f7-storage">3.3</a>,令牌放哪儿、登录流程怎么走在 <a href="#f12-auth">12.1</a>,排查时用哪个面板在 <a href="#f12-debug">12.4</a>。</p>
@@ -9335,7 +9335,7 @@ export <span class="kw">default</span> {
 <tr><td class="nw"><code>Origin</code></td><td class="nw">请求头</td><td>由<strong>浏览器</strong>写、JS 改不了,这也是服务端可以信任它做来源核对的原因。注意它只有源(不含路径),而且某些情况下是字符串 <code>"null"</code>——见下面的批注</td></tr>
 </tbody>
 </table>
-<div class="note dead" style="contain-intrinsic-size:auto 268px"><span class="t">🔴 <code>Origin: null</code> 不是「没有来源」,它是一个真实存在的值</span><p>以下几种情况,浏览器发出的请求带的是字面量 <code>Origin: null</code>:<code>sandbox</code> 属性没写 <code>allow-same-origin</code> 的 iframe 里发出的请求、<code>data:</code> 与 <code>file:</code> 文档发出的请求、以及<strong>跨站重定向之后</strong>的请求(浏览器为了不泄露原始来源,把 <code>Origin</code> 降级成 null)。危险在服务端:一份「回显 <code>Origin</code>」的偷懒实现会回 <code>Access-Control-Allow-Origin: null</code>,而<strong>任何人都能造出一个 <code>Origin: null</code> 的上下文</strong>——一个 <code>&lt;iframe sandbox srcdoc="…"&gt;</code> 就够了,于是这条放行单等于对全世界开放。规矩两条:服务端的白名单里<strong>永远不要包含 <code>null</code></strong>;前端排查时看到请求头里是 <code>Origin: null</code>,先怀疑自己是不是在 sandbox iframe 里、或者中间吃了一次跨站重定向。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 268px"><span class="t">🔴 <code>Origin: null</code> 不是「没有来源」,它是一个真实存在的值</span><p>以下几种情况,浏览器发出的请求带的是字面量 <code>Origin: null</code>:<code>sandbox</code> 属性没写 <code>allow-same-origin</code> 的 iframe 里发出的请求、<code>data:</code> 与 <code>file:</code> 文档发出的请求、以及<strong>跨站重定向之后</strong>的请求(浏览器为了不泄露原始来源,把 <code>Origin</code> 降级成 null)。危险在服务端:一份「回显 <code>Origin</code>」的简化实现会回 <code>Access-Control-Allow-Origin: null</code>,而<strong>任何人都能造出一个 <code>Origin: null</code> 的上下文</strong>——一个 <code>&lt;iframe sandbox srcdoc="…"&gt;</code> 就够了,于是这条放行单等于对全世界开放。规矩两条:服务端的白名单里<strong>永远不要包含 <code>null</code></strong>;前端排查时看到请求头里是 <code>Origin: null</code>,先怀疑自己是不是在 sandbox iframe 里、或者中间吃了一次跨站重定向。</p></div>
 <h3>CSP:告诉浏览器哪些代码可以跑</h3>
 <p><strong>内容安全策略</strong>(Content Security Policy)是服务器通过响应头 <code>Content-Security-Policy</code>(或页面里的 <code>&lt;meta http-equiv&gt;</code>)给浏览器的一份白名单:脚本只能来自哪里、样式只能来自哪里、能连哪些接口、能被谁嵌进 iframe。它的价值在于<strong>兜底</strong>:XSS 的根本防御是输出转义(见 <a href="#f12-xss">11.3</a>),但万一漏了一处,CSP 能让注入的 <code>&lt;script&gt;</code> 根本不执行。</p>
 <table style="contain-intrinsic-size:auto 650px">
@@ -9718,7 +9718,7 @@ out-purified.innerHTML: 您搜索的是:
 <tr><td>bank 自己页面里发往 bank 的任何请求(同站)</td><td>带</td><td>带</td><td>带</td></tr>
 </tbody>
 </table>
-<p><strong>参数</strong></p><table style="contain-intrinsic-size:auto 417px">
+<p><strong>参数</strong></p><table style="contain-intrinsic-size:auto 416px">
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
 <tr><td class="nw"><code>SameSite=Strict</code></td><td class="nw">取值</td><td>任何跨站请求都不带,连用户点外站链接进来的顶层导航也不带。适合单独给高危操作用的二级会话 Cookie</td></tr>
@@ -10028,7 +10028,7 @@ set-cookie: sid=9f3a…; Path=/; HttpOnly; Secure; SameSite=Lax</code></pre>
 <p>接下来:凭据本身该怎么存、怎么带、怎么失效——也就是 XSS 想抢走的东西和 CSRF 想借用的东西究竟长什么样——在 <a href="#f12-auth">12.1</a>;真出了问题怎么在 DevTools 里钉死、怎么把线上用户遇到的错误收回来,在 <a href="#f12-debug">12.4</a> 与 <a href="#f12-monitor">12.5</a>;<code>Vary: Origin</code> 那个坑所处的缓存机制在 <a href="#f8-cache">10.2</a>;Cookie 每个属性的准确语义在 <a href="#f7-storage">3.3</a>;前端加密能防什么、不能防什么在 <a href="#fapi-crypto">8.2</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 55943px;--thin-h:36825px">
+<section class="chapter" style="contain-intrinsic-size:auto 55915px;--thin-h:36806px">
 <h1 id="d12"><span class="part">安全与排错</span>认证会话、调试方法与线上监控</h1>
 <p>这一章接着 <a href="#f12-xss">11.3</a> 与 <a href="#f12-csrf">11.4</a> 往下走一步,然后转向排错。前三节讲的是那两类攻击真正争夺的东西——凭据:它放在哪里决定了 XSS 能拿走什么(HttpOnly Cookie 只能在本页借用,localStorage 里的令牌能被整个偷走),它怎么携带决定了 CSRF 成不成立(自动附带的 Cookie 会被借用,手动加的 <code>Authorization</code> 头不会)。前端不判断身份,判断永远在服务端;前端是凭据的保管者与搬运工,这三节就是保管与搬运的规矩:<a href="#f12-auth">12.1</a> 讲两种会话模型、为什么登录成功后必须重新生成会话 id、令牌该放在哪一层;<a href="#f12-auth-token">12.2</a> 讲把长效凭据拆成访问令牌 + 刷新令牌之后,前端要处理的提前刷新、401 重放、并发单飞与失败收场;<a href="#f12-auth-oauth">12.3</a> 讲第三方授权(授权码 + PKCE、OIDC)、跨域部署时 CORS 凭据与 SameSite 怎么联动、登出怎样才算真正失效,并以一张审代码用的漏洞清单收尾。</p>
 <p>后两节是排错的两面,共用同一批面板和同一批浏览器钩子。<a href="#f12-debug">12.4</a> 是线下:复现 → 缩小 → 定位 → 验证这条固定流程,以及「知道什么就下哪种断点」的选择依据、Network 面板的排查清单、source map 怎样让堆栈停在你写的那一行。<a href="#f12-monitor">12.5</a> 是线上:用户的白屏不会有人给你发堆栈,要靠四个全局钩子把错误与 Web Vitals 收回来,再靠 source map 还原、靠去重限流脱敏让数据可用。顺序不是随意的——认证那一节最典型的故障「登录成功但之后全是 401」,正好是调试那一节 Network 清单的第一道练习题;而调试练出来的判断力,决定了监控收回来的数据看不看得懂。Cookie 每个属性的准确语义在 <a href="#f7-storage">3.3</a>,CORS 的规则在 <a href="#f8-cors">11.2</a>,Vitals 的采集细节在 <a href="#fapi-perf">8.1</a>。</p>
@@ -10448,7 +10448,7 @@ https:<span class="cm">//auth.example/authorize?response_type=code&amp;client_id
 <p>落地建议:自己写授权码 + PKCE 的全部交互(回调解析、state/nonce 核对、令牌端点、静默续期、登出)并不难但细节多,成熟库如 <code>oidc-client-ts</code>、各身份提供商的 SDK(Auth0、Okta、Keycloak 的 JS 适配器)、或 Supabase/Firebase Auth 这类托管方案已经把边角都踩过;更稳的形态仍是 BFF——让你的后端作为机密客户端完成 OAuth,持有 <code>client_secret</code> 与刷新令牌,浏览器只拿到一个 HttpOnly 会话 Cookie。只有当前端必须直接调第三方 API(没有后端,或者后端不想做代理)时,才把令牌放进浏览器。</p>
 <div class="deep"><h3 class="deep">深入:公钥从哪儿来——发现文档与 JWKS</h3>
 <p>客户端要验 <code>id_token</code> 的签名,就得有签发方的公钥;而公钥是会轮换的,写死在代码里迟早出事。OIDC 为此规定了一条固定的自描述链路:<strong>发现文档 → JWKS 端点 → 按 <code>kid</code> 取键</strong>。</p>
-<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 320px"><code><span class="cm">// ① 每个 OIDC 提供商都在这个固定路径上放一份 JSON</span>
+<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 319px"><code><span class="cm">// ① 每个 OIDC 提供商都在这个固定路径上放一份 JSON</span>
 GET https:<span class="cm">//auth.example/.well-known/openid-configuration</span>
 <span class="cm">// → { issuer, authorization_endpoint, token_endpoint, jwks_uri, end_session_endpoint,</span>
 <span class="cm">//     response_types_supported, id_token_signing_alg_values_supported, … }</span>
@@ -10615,7 +10615,7 @@ console.dir(document.body);        <span class="cm">// 看到的是属性列表�
 performance.measure(name: string, startOrOptions?: string | { start?, end?, detail? }, endMark?: string): PerformanceMeasure
 performance.getEntriesByType(<span>"measure"</span> | <span>"mark"</span> | <span>"longtask"</span> | <span>"resource"</span> | <span>"navigation"</span>): PerformanceEntry[]
 <span class="kw">new</span> PerformanceObserver(cb).observe({ type: <span>"longtask"</span> | <span>"long-animation-frame"</span> | <span>"largest-contentful-paint"</span> | …, buffered: <span class="kw">true</span> })</code></pre>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 319px"><code>performance.mark(<span>"render-start"</span>);
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 320px"><code>performance.mark(<span>"render-start"</span>);
 renderBigList(items);
 performance.mark(<span>"render-end"</span>);
 performance.measure(<span>"render"</span>, <span>"render-start"</span>, <span>"render-end"</span>);
@@ -10960,7 +10960,7 @@ POST /collect  3 events  release=1.4.2
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 386px"><code><span class="cm">// 1. 会话 Cookie:读不到才是对的</span>
 console.log(<span>'document.cookie ='</span>, document.cookie || <span>'(空 —— HttpOnly 生效,符合预期)'</span>);
 
-<span class="cm">// 2. 四类错误各来一发,去监控后台核对能收到几条</span>
+<span class="cm">// 2. 四类错误各触发一次,去监控后台核对能收到几条</span>
 setTimeout(() =&gt; { <span class="kw">throw</span> <span class="kw">new</span> Error(<span>'probe: 同步错误'</span>); }, 0);                 <span class="cm">// window.onerror</span>
 Promise.reject(<span class="kw">new</span> Error(<span>'probe: 未处理的 Promise 拒绝'</span>));                    <span class="cm">// unhandledrejection</span>
 document.body.append(Object.assign(<span class="kw">new</span> Image(), { src: <span>'/probe-404.png'</span> })); <span class="cm">// 捕获阶段的 error</span>
