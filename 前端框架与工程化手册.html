@@ -1702,7 +1702,7 @@ export function Panel({ userId }) {
 <p>练手顺序建议:先把 <a href="#f10-why">1.1</a> 的计数器扩成一个待办列表(增删、勾选、筛选、剩余计数),全程只用 <code>useState</code>,体会「三处界面由一份状态推出」;再加一个「从接口加载初始数据」,故意快速切换两次参数看竞态,再加上 <code>ignore</code> 标志;最后把它改成受控/非受控双模式的可复用组件,外面套一层错误边界。做完这三步,<a href="#f10-router-data">3.1</a> 的 loader 与 TanStack Query、<a href="#f10-eco">3.2</a> 的外部 store 才有对照物——它们解决的正是你在这一章亲手踩过的那些坑。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 29483px;--thin-h:20314px">
+<section class="chapter" style="contain-intrinsic-size:auto 29640px;--thin-h:20471px">
 <h1 id="e3"><span class="part">框架</span>路由、数据获取与状态管理</h1>
 <p>前两章的组件都活在一个页面里,数据都是写死的。这一章把两样东西也纳入「状态」:<strong>地址栏</strong>和<strong>服务器</strong>。单页应用只有一个 html,「换页」是 JS 按 URL 换一棵组件树,所以刷新能不能回到原地、后退键是否有效、分享出去的链接对不对,全由你负责;而接口数据看着像普通状态,实质是<strong>一份会过期的远端缓存</strong>——要去重、要失效、要重取、要处理竞态,拿 <code>useState</code> 加 <code>useEffect</code> 硬管的代价在 <a href="#f10-state">2.1</a> 已经露过一次头。</p>
 <p>两节是「先把数据接进来」再「决定每种状态住在哪」。<a href="#f10-router-data">3.1</a> 从 React Router 讲起:路由表把 URL 映射成组件树,嵌套路由用 <code>&lt;Outlet /&gt;</code> 复用布局;接着把数据获取的三个层次——effect 里裸写 <code>fetch</code>、路由 <code>loader</code>、TanStack Query——按竞态、缓存、重试、瀑布、加载与错误状态五项逐条对照,看清越往上走替你挡掉了什么;最后是联调绕不开的开发代理与 <code>VITE_</code> 环境变量。<a href="#f10-eco">3.2</a> 做的是釜底抽薪的分类:把状态拆成本地 UI、客户端全局、服务端、URL、表单五类,先判类别再选工具——Context 为什么是传递工具而不是订阅工具、Zustand/Jotai/Redux Toolkit 差在哪、Query 的缓存键与乐观更新怎么用、表单为什么值得交给 react-hook-form。读完能独立搭起「列表页 + 详情页 + 新建表单」并说清每份数据的真相在谁手里;这些加载状态如何交给 Suspense 统一编排,是 <a href="#f10-concurrent">4.1</a> 的事。</p>
@@ -1760,7 +1760,15 @@ createRoot(document.getElementById(<span>'root'</span>)).render(&lt;RouterProvid
 <p>两条规矩。一,<strong>站内跳转用 <code>&lt;Link&gt;</code>,不用 <code>&lt;a href&gt;</code></strong>:<code>&lt;a&gt;</code> 会整页重载,整个应用的状态清零;<code>&lt;Link&gt;</code> 渲染出来的也是 <code>&lt;a&gt;</code>(所以右键新标签、可访问性都正常),只是点击被拦截成 <code>pushState</code>。二,<strong>生产部署要配 history 回退</strong>:用户直接打开 <code>/posts/3</code> 或刷新时,浏览器向服务器请求 <code>/posts/3</code>,服务器上没有这个文件,必须配成「任何路径都返回 index.html」,否则 404。Vite 开发服务器默认这么做了,Nginx 的写法见 <a href="#f11-deploy">7.3</a>。</p>
 <h3>数据获取的三个层次</h3>
 <p>数据获取是 SPA 里最容易写出「能跑但有坑」的代码的地方,因为最直观的写法就是坑。三种做法按成熟度排列。</p>
-<p><strong>第一层:在 effect 里 fetch。</strong>写法是 <code>useEffect(() =&gt; { fetch(url).then(r =&gt; r.json()).then(setData) }, [url])</code>。它的问题在 <a href="#f10-state">2.1</a> 已经点过一个(竞态),完整清单是:① 竞态,快速切换时旧响应覆盖新响应,要手写 ignore 标志;② 没有缓存,离开再回来重新请求,两个组件要同一份数据发两次;③ 没有重试、没有去重、没有「数据过期了后台刷一下」;④ 瀑布,父组件请求完渲染出子组件,子组件才开始它的请求,网络时间串联;⑤ 加载和错误状态要自己维护三个 useState。对一次性的小组件它够用,对「从后端取数据」这件事的主干它不够。</p>
+<p><strong>第一层:在 effect 里 fetch。</strong>写法是 <code>useEffect(() =&gt; { fetch(url).then(r =&gt; r.json()).then(setData) }, [url])</code>。它的问题在 <a href="#f10-state">2.1</a> 已经点过一个(竞态),完整清单是:</p>
+<ul>
+<li><strong>竞态</strong>:快速切换时旧响应覆盖新响应,要手写 ignore 标志。</li>
+<li><strong>没有缓存</strong>:离开再回来重新请求,两个组件要同一份数据发两次。</li>
+<li><strong>没有重试、没有去重</strong>,也没有「数据过期了后台刷一下」。</li>
+<li><strong>瀑布</strong>:父组件请求完渲染出子组件,子组件才开始它的请求,网络时间串联。</li>
+<li><strong>加载和错误状态要自己维护三个 useState。</strong></li>
+</ul>
+<p>对一次性的小组件它够用,对「从后端取数据」这件事的主干它不够。</p>
 <p><strong>第二层:路由 loader。</strong>React Router 6.4 起,每条路由可以带 <code>loader</code>:进入这条路由之前,Router 先调用 loader 取数据,拿到后再渲染组件,组件里用 <code>useLoaderData()</code> 直接读。好处是数据和路由绑定,父子路由的 loader <strong>并行</strong>执行,消灭了瀑布;切换路由时上一个 loader 的结果自然作废,竞态也没了;出错统一由 <code>errorElement</code> 接住。它不做的事:不缓存(再次进入同一路由会重新 load)、不做后台刷新。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 537px"><code><span class="cm">// 路由 loader 版:数据跟着路由走</span>
 import { useLoaderData, useRouteError } from <span>'react-router'</span>;
@@ -2295,7 +2303,7 @@ useForm({ defaultValues, mode, resolver })
 <p>接下来两条路。一条继续走框架:<a href="#f10-concurrent">4.1</a> 讲加载状态怎么交给 Suspense 与 <code>useTransition</code> 统一编排,<a href="#f10-concurrent-ssr">4.2</a> 讲 SSR、流式与水合是怎么回事,<a href="#f10-actions">4.3</a> 讲 React 19 把表单提交收成了什么形态,<a href="#f10-perf">4.4</a> 用 Profiler 把这一章关于「谁重渲染了」的每条结论量一遍,<a href="#f10-vue">4.5</a> 用同一个模型看 Vue 的写法。另一条转向交付:代理与 <code>VITE_</code> 变量的完整规则在 <a href="#f11-vite">5.1</a>,SPA 部署那条绕不开的 history 回退配置在 <a href="#f11-deploy">7.3</a>,而路由级代码分割怎么把首屏包体积压下来在 <a href="#f11-opt">7.2</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 66989px;--thin-h:48009px">
+<section class="chapter" style="contain-intrinsic-size:auto 67265px;--thin-h:48285px">
 <h1 id="e4"><span class="part">框架</span>并发、SSR、性能与框架选型</h1>
 <p>前三章里,React 的渲染一直被描述成「状态一变,同步重算一遍,提交到 DOM」。这一章换掉这个底座:渲染<strong>可以被打断、可以分优先级、可以在等数据时暂停</strong>,也<strong>可以先在服务器上跑一遍</strong>。换底座是为了解决同一类问题——界面在「正确」之外还要「不卡、首屏不白、搜索引擎抓得到」,而这些没法靠多写几个 <code>useState</code> 得到。</p>
 <p>五节按「机制 → 换执行环境 → 新形态 → 度量 → 对照」排。<a href="#f10-concurrent">4.1</a> 讲并发特性:自动批处理、更新的优先级、<code>useTransition</code> 与 <code>useDeferredValue</code> 怎么把重活标记成「可以等」、Suspense 边界在等数据时先显示什么、以及唯一一个反方向的 <code>flushSync</code>——这些 API 之所以成立,靠的是 <a href="#f10-state">2.1</a> 那张时间线图里「渲染阶段是纯的、扔掉不留痕迹」的性质。<a href="#f10-concurrent-ssr">4.2</a> 把同一棵组件树搬到服务器上跑:六种渲染形态怎么分、流式发 HTML 与选择性水合各解决一半问题、水合错误的病因清单、以及服务端组件那条「什么能跨边界传」的硬边界。<a href="#f10-actions">4.3</a> 讲 React 19 围绕「异步提交」建起来的中心概念:一个 Action 交给 React,pending、错误、排队、乐观更新四份状态就都不用自己写了。<a href="#f10-perf">4.4</a> 从机制转到度量:先给一个渲染/提交/绘制/加载的成本模型,再用 Profiler 量出到底慢在哪一步,然后才谈 <code>memo</code> 家族的正确边界、虚拟列表、路由级代码分割与 React Compiler——顺序是故意的,先量后改,每个手段都配了「不该用」的情形。<a href="#f10-vue">4.5</a> 与 <a href="#f10-vue-compose">4.6</a> 用同一个模型看 Vue 3:它和 React 只在两处做了相反的选择(模板而不是 JSX、响应式代理而不是不可变替换),这两处解释了几乎全部语法差异;前者讲一个组件内部(SFC、响应式、模板指令),后者讲组件之间与逻辑复用(props/emit、<code>defineExpose</code>、组合式函数、<code>&lt;Teleport&gt;</code>),并给出两个框架逐行对齐的总表。这一章的性能结论会在 <a href="#f11-vitals">7.1</a> 换成用户侧的语言。</p>
@@ -2562,7 +2570,13 @@ hydrateRoot(container: Element, initialChildren: ReactNode, { onRecoverableError
 <tr><td class="nw"><span class="badge dead">不能</span> 客户端才有的东西</td><td><code>window</code>、<code>document</code>、<code>localStorage</code>、事件对象</td><td>服务端组件里根本不存在;需要它们说明这块该是客户端组件</td></tr>
 </tbody>
 </table>
-<div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 「传函数」是写 RSC 第一天必撞的墙</span><p>从服务端组件往客户端组件传 <code>onClick={() =&gt; …}</code>,构建或运行时直接报错。这堵墙不是刁难,它在提醒你边界画错了:<strong>事件处理器属于交互,交互属于客户端</strong>。三种修法按优先级排:①把需要交互的那一小块单独做成客户端组件,服务端组件只把数据传给它;②确实要触发服务端逻辑的,写一个 <code>'use server'</code> 函数传下去,它可以直接当 <code>&lt;form action&gt;</code> 用;③需要把服务端渲染的内容放进客户端容器里(比如客户端的 Tabs 里放服务端的图表),用 <code>children</code> 传 JSX,而不是把服务端组件当函数传。第三条最容易被忽略,而它是让「客户端包保持很小」的关键——容器是客户端的,内容仍然只在服务端跑。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 338px"><span class="t">🔴 「传函数」是写 RSC 第一天必撞的墙</span><p>从服务端组件往客户端组件传 <code>onClick={() =&gt; …}</code>,构建或运行时直接报错。这堵墙不是刁难,它在提醒你边界画错了:<strong>事件处理器属于交互,交互属于客户端</strong>。三种修法按优先级排:</p>
+<ul>
+<li>把需要交互的那一小块单独做成客户端组件,服务端组件只把数据传给它。</li>
+<li>确实要触发服务端逻辑的,写一个 <code>'use server'</code> 函数传下去,它可以直接当 <code>&lt;form action&gt;</code> 用。</li>
+<li>需要把服务端渲染的内容放进客户端容器里(比如客户端的 Tabs 里放服务端的图表),用 <code>children</code> 传 JSX,而不是把服务端组件当函数传。</li>
+</ul>
+<p>第三条最容易被忽略,而它是让「客户端包保持很小」的关键——容器是客户端的,内容仍然只在服务端跑。</p></div>
 <h3>React 19 让组件自己声明资源</h3>
 <p>一个组件知道自己接下来要用什么资源,这个知识以前只能人工搬到 <code>index.html</code> 的 <code>&lt;link&gt;</code> 里(<a href="#f11-opt">7.2</a> 讲的 <code>preconnect</code>/<code>preload</code>)。React 19 把它做成了可以在组件里直接调用的函数:调用点在组件树里,React 负责去重,并在 SSR 时把对应的标签提到 HTML 的 <code>&lt;head&gt;</code>。</p>
 <div class="note new" style="contain-intrinsic-size:auto 267px"><span class="t">🔵 react-dom 的四个资源提示 API</span><p><code>prefetchDNS(href)</code>——只做 DNS 解析,用于「可能会用到」的域名;<code>preconnect(href)</code>——建好 TCP + TLS 连接,用于「一定会用到但还不知道具体文件」的域名;<code>preload(href, { as })</code>——下载但不执行,<code>as</code> 必填(<code>'script'</code>/<code>'style'</code>/<code>'font'</code>/<code>'image'</code>);<code>preinit(href, { as })</code>——下载<strong>并且执行/应用</strong>,用于确定马上要用的脚本或样式表。四者的代价依次上升,用错方向的典型症状是:该 <code>preconnect</code> 的地方用了 <code>preload</code>(下载了一个其实用不上的文件),或者该 <code>preload</code> 字体的地方用了 <code>preinit</code>。这四个是同一件事的组件侧写法,和 HTML 里静态写 <code>&lt;link rel&gt;</code> 效果相同但更准——组件知道自己要什么,<code>index.html</code> 不知道。</p></div>
@@ -2954,7 +2968,13 @@ dist/assets/Editor-Ck2p8v.js     203.6 kB │ gzip: 61.2 kB
 <tr><td class="nw">子组件定义在父组件函数体内</td><td>每次父渲染子组件都 mount(Profiler 里 phase 是 mount)</td><td>移到模块顶层(<a href="#f10-components">1.2</a>)</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 做性能优化的顺序</span><p>① 先用 Profiler 和 Performance 面板量出到底是渲染、提交、绘制还是加载慢,别猜;② 先改结构(状态下移、内容上提、拆 Context、虚拟化、分割),这些改了以后问题通常就没了;③ 然后才是 memo 家族,而且只加在 Profiler 证明有效的地方;④ 改完再量一次,没变化就撤掉——不起作用的优化是负债。一个开发模式 + StrictMode 下「感觉慢」的应用,先 <code>npm run build &amp;&amp; npm run preview</code> 看生产构建,开发构建和双调用会让一切慢两到三倍。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 302px"><span class="t">🟢 做性能优化的顺序</span><ul>
+<li>先用 Profiler 和 Performance 面板量出到底是渲染、提交、绘制还是加载慢,别猜。</li>
+<li>先改结构(状态下移、内容上提、拆 Context、虚拟化、分割),这些改了以后问题通常就没了。</li>
+<li>然后才是 memo 家族,而且只加在 Profiler 证明有效的地方。</li>
+<li>改完再量一次,没变化就撤掉——不起作用的优化是负债。</li>
+</ul>
+<p>一个开发模式 + StrictMode 下「感觉慢」的应用,先 <code>npm run build &amp;&amp; npm run preview</code> 看生产构建;开发构建和双调用会让一切慢两到三倍。</p></div>
 <div class="deep"><h3>完整示例:一万行列表,普通渲染 vs 窗口化,用 Profiler 与 DOM 节点数对照</h3>
 <p>这个示例把前面的 <code>PlainList</code>、<code>WindowList</code>、<code>Profiler</code> 放在一起:一万行数据,两个列表并排,一个「无关状态」按钮用来制造父组件重渲染;先不加 memo 看 Profiler 的数字,再加上 memo 看变化,最后滚动窗口化列表看它只渲染可见行。放进 Vite React 项目的 <code>src/main.jsx</code>(不包 StrictMode,免得 mount 跑两遍;数字是开发构建在一台普通笔记本上的,你的机器会不同,关注相对关系)。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 918px"><code><span class="cm">// src/main.jsx</span>
@@ -3393,7 +3413,17 @@ Elements 面板:&lt;div <span class="kw">class</span>=<span>"modal-box"</span>&g
 </table>
 <h3>易错清单:动手前回看</h3>
 <p>这些错都不报错、或者报得不明显,靠的是你知道症状后主动去看。改并发相关的代码、做一轮性能优化、或者接手一个 Vue 项目之前,按这个顺序扫一遍。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 297px"><span class="t">🟢 回看清单</span><p>① 标成过渡的是不是「晚几十毫秒没人在意」的那份状态?输入框的值有没有被卷进去?② 过渡里包住的重组件有没有 <code>memo</code>?没有的话过渡只是把同样多的工作换个时机做。③ 交给 <code>use</code> 的 promise 是不是缓存过的?④ 服务端和客户端首屏会不会算出不同的东西(时间、随机数、<code>window</code>、<code>localStorage</code>、用户代理判断)?⑤ 优化之前有没有先录一段 Profiler、看一眼 Network、跑一次 build 看产物大小?⑥ Profiler 的原因栏里,有没有「Props changed」指向一个每次新建的对象或函数?⑦ 列表超过几百行了吗?超过就先虚拟化,不要先 memo。⑧ 路由级 <code>lazy</code> 加了吗?<code>lazy</code> 的模块是默认导出吗?⑨ Vue 侧:有没有解构过 <code>reactive</code>?<code>&lt;script&gt;</code> 里的 <code>ref</code> 有没有漏 <code>.value</code>?<code>v-for</code> 的 <code>:key</code> 是不是数据 id?</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 427px"><span class="t">🟢 回看清单</span><ul>
+<li>标成过渡的是不是「晚几十毫秒没人在意」的那份状态?输入框的值有没有被卷进去?</li>
+<li>过渡里包住的重组件有没有 <code>memo</code>?没有的话,过渡只是把同样多的工作换个时机做。</li>
+<li>交给 <code>use</code> 的 promise 是不是缓存过的?</li>
+<li>服务端和客户端首屏会不会算出不同的东西(时间、随机数、<code>window</code>、<code>localStorage</code>、用户代理判断)?</li>
+<li>优化之前有没有先录一段 Profiler、看一眼 Network、跑一次 build 看产物大小?</li>
+<li>Profiler 的原因栏里,有没有「Props changed」指向一个每次新建的对象或函数?</li>
+<li>列表超过几百行了吗?超过就先虚拟化,不要先 memo。</li>
+<li>路由级 <code>lazy</code> 加了吗?<code>lazy</code> 的模块是默认导出吗?</li>
+<li>Vue 侧:有没有解构过 <code>reactive</code>?<code>&lt;script&gt;</code> 里的 <code>ref</code> 有没有漏 <code>.value</code>?<code>v-for</code> 的 <code>:key</code> 是不是数据 id?</li>
+</ul></div>
 <div class="deep"><h3>完整示例:一段把这一章的手段各放对位置的骨架</h3>
 <p>这段骨架把四类手段各放一处:紧急的归紧急、重的归 <code>memo</code>、大的归虚拟化、远的归 <code>lazy</code>,提交那一段归 Action。它不是能直接跑的完整应用,是一张「哪个问题该用哪个 API」的位置图——写新页面时照这个骨架摆,后面遇到的性能问题基本都落在这五个槽位里。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 782px"><code><span class="cm">// 一段把这一章的手段用对位置的骨架:紧急的归紧急,重的归 memo,大的归虚拟化,远的归 lazy</span>
@@ -3491,7 +3521,7 @@ cd my-vue-app &amp;&amp; npm install &amp;&amp; npm i pinia vue-router</code></p
 <p>框架的部分到此为止,剩下的问题都不再是「界面怎么组织」,而是「怎么把它可靠地交出去」。<a href="#f11-vite-build">5.2</a> 讲 <code>npm run build</code> 到底做了什么、开发态和生产态的产物为什么不一样;<a href="#f11-quality">6.1</a> 是 ESLint(包括 <code>react-hooks</code> 那几条规则)、Prettier 与 Git 钩子;<a href="#f11-vitals">7.1</a> 把这一章的性能语言换成用户侧的 LCP、INP、CLS;<a href="#f11-opt">7.2</a> 展开图片、字体、缓存与更细的分割策略;<a href="#f11-deploy">7.3</a> 收尾,讲 SPA 部署绕不开的那条 history 回退配置。真正把这一章的结论钉死的是测试:<a href="#ftest-component">9.1</a> 会用 Testing Library 断言「用户看到什么」,而不是断言某个组件渲染了几次。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 42049px;--thin-h:26965px">
+<section class="chapter" style="contain-intrinsic-size:auto 42382px;--thin-h:27040px">
 <h1 id="e5"><span class="part">工程化</span>构建链:Vite、转译与兼容</h1>
 <p>前四章讲的是「怎么把界面写出来」,从这一章起换一条线:<strong>怎么把它稳定地交出去</strong>。第一步是构建——你写的 TypeScript、JSX、CSS 嵌套、<code>import</code> 语句,浏览器一样都不认;把它们变成一个 <code>dist/</code> 目录的过程,决定了产物多大、加载几个往返、缓存能不能命中、在多老的浏览器上还跑得动。目标是让 <code>npm run dev</code> 和 <code>npm run build</code> 不再是黑盒:每条构建输出都读得懂,每次「开发时好好的、打包后白屏」都知道该去哪儿看。</p>
 <p>四节两两成对:前两节讲「打包」,后两节讲「兼容」。<a href="#f11-vite">5.1</a> 打开 Vite:开发态是一台几乎不打包的服务器,浏览器按原生 ESM 逐个拉源文件;生产态换成 Rollup 整图分析——两套路径的差异正是那类「只在生产出现」的 bug 的来源;接着是 <code>vite.config</code> 里真正会改的几个字段、<code>src/</code> 与 <code>public/</code> 两种资源的不同命运、<code>.env</code> 与 <code>VITE_</code> 前缀这道安全门。<a href="#f11-vite-build">5.2</a> 把生产产物摊开:JS 按什么规则切、CSS 为什么单独有一套规则、内容哈希从哪来——这三样直接决定首屏下多少字节、缓存能不能命中。<a href="#f11-toolchain">5.3</a> 处理另一半的第一步:同一份产物在两年前的手机浏览器上还跑不跑得动。它先划清<strong>语法</strong>与 <strong>API</strong> 这条界——前者在解析阶段就 <code>SyntaxError</code>,后者要跑到那一行才 <code>TypeError</code>——再讲 browserslist 这份被所有工具共用的目标声明和 Babel/SWC/esbuild 的分工。<a href="#f11-toolchain-polyfill">5.4</a> 收 API 那一半:core-js 按「目标 × 用量」注入,以及双构建怎么让新浏览器不为老浏览器买单。这一章的产物形态决定了 <a href="#f11-opt">7.2</a> 与 <a href="#f11-deploy">7.3</a> 的可能性。</p>
@@ -3872,7 +3902,12 @@ $ npx browserslist <span>"baseline widely available"</span> | wc -l
 <tr><td class="nw">典型选择</td><td>需要自定义变换、要 IE 11、要正则降级</td><td>Next.js / 大项目想换掉 Babel 又保留配置形态</td><td>新项目默认(被 Vite 封装,几乎不用直接碰)</td><td>构建时间已经成为瓶颈、且能接受工具本身还在快速演进</td></tr>
 </tbody>
 </table>
-<div class="note new" style="contain-intrinsic-size:auto 230px"><span class="t">🔵 Rolldown 与 Oxc:装 Vite 时会在日志里看到的那两个名字</span><p>Vite 目前在开发态用 esbuild、生产态用 Rollup,两套引擎处理同一份源码,那些「dev 好好的、build 挂了」的边角差异有一半来自这里。<strong>Rolldown</strong> 是用 Rust 写的打包器,目标就是把这两套合成一套;<strong>Oxc</strong> 是它底下的工具集(解析器、转译器、压缩器,以及独立的 <code>oxlint</code>)。对你现在的项目,结论只有三条:①配置形态基本不变,<code>rollupOptions</code> 那一层是兼容的;②它以 <code>rolldown-vite</code> 这个可替换包的形式提供,不是默认值,要用得显式装;③它仍在快速变化,<strong>本节所有关于它的具体能力都以官方文档当前版本为准</strong>,别照抄任何二手教程里的配置。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 305px"><span class="t">🔵 Rolldown 与 Oxc:装 Vite 时会在日志里看到的那两个名字</span><p>Vite 目前在开发态用 esbuild、生产态用 Rollup,两套引擎处理同一份源码,那些「dev 好好的、build 挂了」的边角差异有一半来自这里。<strong>Rolldown</strong> 是用 Rust 写的打包器,目标就是把这两套合成一套;<strong>Oxc</strong> 是它底下的工具集(解析器、转译器、压缩器,以及独立的 <code>oxlint</code>)。对你现在的项目,结论只有三条:</p>
+<ul>
+<li>配置形态基本不变,<code>rollupOptions</code> 那一层是兼容的。</li>
+<li>它以 <code>rolldown-vite</code> 这个可替换包的形式提供,不是默认值,要用得显式装。</li>
+<li>它仍在快速变化,<strong>本节所有关于它的具体能力都以官方文档当前版本为准</strong>,别照抄任何二手教程里的配置。</li>
+</ul></div>
 <p><strong>参数</strong></p><table style="contain-intrinsic-size:auto 479px">
 <thead><tr><th>参数</th><th>类型</th><th>说明</th></tr></thead>
 <tbody>
@@ -3889,7 +3924,14 @@ $ npx browserslist <span>"baseline widely available"</span> | wc -l
 <div class="note new" style="contain-intrinsic-size:auto 265px"><span class="t">🔵 Babel 8 的变化</span><p>Babel 8(2026 年正式发布)移掉了 <code>@babel/preset-env</code> 里的 <code>useBuiltIns</code>/<code>corejs</code> 选项——polyfill 注入独立为 <code>babel-plugin-polyfill-corejs3</code>(它早在 Babel 7 时代就是 preset-env 内部的实现),配置里写 <code>["babel-plugin-polyfill-corejs3", { method: "usage-global", version: "3.50" }]</code>;旧配置升级后会看到 <code>Error: The 'useBuiltIns' option has been removed. Please use babel-plugin-polyfill-corejs3 instead.</code>。另外 Babel 8 默认按 ESM 加载配置文件、去掉了一批 Stage 提案插件——网上搜到的大量 Babel 7 配置要对照迁移指南看。</p></div>
 <div class="deep"><h3 class="deep">目标怎么定:Baseline、Vite 的默认 target 与 TypeScript 的 target</h3>
 <p>三个地方都有「target」,容易混。<strong>Vite 的 <code>build.target</code></strong> 控制生产产物的语法级别,传给 esbuild:默认值在 Vite 7 起是 <code>'baseline-widely-available'</code>,Vite 8.2 把它解析为 <code>chrome111, edge111, firefox114, safari16.4, ios16.4</code>(这组数字随 Vite 版本推进,查当前版本文档为准);你可以写 <code>'es2020'</code> 或版本列表,但不能写 browserslist 查询——Vite 不读 browserslist,要对齐就用 <code>browserslist-to-esbuild</code> 这类包翻译一下。<strong><code>@vitejs/plugin-legacy</code> 的 <code>targets</code></strong> 是传统包的目标,读 browserslist。<strong>TypeScript 的 <code>compilerOptions.target</code></strong>(<a href="TypeScript手册.html#c1">《TypeScript 手册》</a>)在 Vite 项目里<strong>不影响产物</strong>——tsc 只做类型检查,转译是 esbuild 干的;它影响的是类型检查时 <code>lib</code> 的默认值(<code>target: ES2020</code> 默认带 ES2020 的库声明,用 <code>Array.prototype.at</code> 会报「不存在该属性」)以及 <code>tsc</code> 自己输出 JS 时的降级——库项目用 tsc/tsup 出产物时才重要。</p>
-<p>选目标的实际步骤:① 看你的真实用户——RUM 数据(见 <a href="浏览器API与工作原理手册.html#f12-debug">《浏览器 API 与工作原理手册》12.4</a>)里按浏览器版本分布,没数据就用 <code>npx browserslist --coverage "… in CN"</code> 估;② 用 Baseline 的「广泛可用」作为现代包的下限,这是 2026 年 Vite、浏览器厂商、MDN 共同采用的口径,和 <a href="HTML与CSS手册.html#f1-mdn">《HTML 与 CSS 手册》1.4</a> 里查兼容性的流程一致;③ 只有明确存在的老用户群(企业内网 Chrome 109、老款国产安卓 WebView)才加 legacy 插件,并把它的 <code>targets</code> 精确写成那几个版本而不是 <code>defaults</code>;④ 每季度重新看一次分布,收紧目标、删掉不再需要的 polyfill。目标定得过低的代价是<strong>所有人</strong>的包更大、更慢;定得过高的代价是少数人白屏——两边都要有数据。</p></div>
+<p>选目标的实际步骤:</p>
+<ul>
+<li><strong>看你的真实用户。</strong>RUM 数据(见 <a href="浏览器API与工作原理手册.html#f12-debug">《浏览器 API 与工作原理手册》12.4</a>)里按浏览器版本分布;没数据就用 <code>npx browserslist --coverage "… in CN"</code> 估。</li>
+<li><strong>用 Baseline 的「广泛可用」作为现代包的下限。</strong>这是 2026 年 Vite、浏览器厂商、MDN 共同采用的口径,和 <a href="HTML与CSS手册.html#f1-mdn">《HTML 与 CSS 手册》1.4</a> 里查兼容性的流程一致。</li>
+<li><strong>只有明确存在的老用户群才加 legacy 插件。</strong>(企业内网 Chrome 109、老款国产安卓 WebView)并把它的 <code>targets</code> 精确写成那几个版本,而不是 <code>defaults</code>。</li>
+<li><strong>每季度重新看一次分布</strong>,收紧目标、删掉不再需要的 polyfill。</li>
+</ul>
+<p>目标定得过低的代价是<strong>所有人</strong>的包更大、更慢;定得过高的代价是少数人白屏——两边都要有数据。</p></div>
 <div class="deep"><h3>完整示例:同一段源码经三种转译器与三种目标</h3>
 <p>一份 12 行的源码,故意混进四类东西:ES2022 语法(私有字段)、ES2020 语法(<code>?.</code>、<code>??</code>)、ES2017 语法(<code>async/await</code>)、两个 API(<code>Array.prototype.at</code>、<code>Object.groupBy</code>)。分别交给 esbuild(不同 target)、SWC 和 Babel(不同 browserslist 目标 + core-js usage),观察谁改了什么、谁报了错、谁注入了什么。目的是把「语法归转译器、API 归 polyfill、目标决定两者的量」这三条在产物上亲眼看一遍。安装:<code>npm i -D esbuild @swc/cli @swc/core @babel/cli @babel/core @babel/preset-env babel-plugin-polyfill-corejs3 core-js browserslist</code>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 374px"><code><span class="cm">// src/modern.js —— 同一份源码,喂给三个转译器</span>
@@ -3977,7 +4019,13 @@ export <span class="kw">class</span> Cart {
   …
 $ # targets 改成 <span>"ie 11"</span>:Using plugins 列出 43 个插件,注入 20 条 core-js import,产物 144 行</code></pre>
 <p>解读:三组对照各说明一件事。第一组(esbuild 三个 target)说明<strong>语法降级的量由目标决定,且每个转译器都有下限</strong>——es2022 不动,es2017 把私有字段和 <code>??</code>/<code>?.</code> 降掉但保留 <code>async</code>,es2015 再把 <code>async</code> 降成生成器,es5 直接报错;但无论哪个 target,<code>.at(-1)</code> 和 <code>Object.groupBy</code> 一个字都没变——这就是「转译器不碰 API」。第二组(SWC 两个目标)说明<strong>polyfill 的量同样由目标决定</strong>:<code>ie 11</code> 注入 10 条、产物 239 行;<code>defaults</code> 注入 2 条、产物 27 行,体积差近十倍,而源码完全相同。第三组(Babel 的 <code>debug</code> 输出)是排查兼容问题时最有用的视角:<code>Using targets</code> 告诉你 browserslist 解析出的最低版本,<code>Using plugins</code> 后面的花括号告诉你每个降级是<strong>为哪个浏览器</strong>做的——如果那里出现 <code>op_mini</code>、<code>kaios</code>、<code>chrome 109</code> 而你的用户里并没有它们,就该去改 browserslist 而不是忍受它。把这三组放在一起,一条规矩就推出来了:<strong>先定目标(按真实用户),再让工具按目标决定转译量与 polyfill 量,最后用双构建把老浏览器的代价从新浏览器的包里摘出去</strong>。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 297px"><span class="t">🟢 兼容问题的排查顺序</span><p>① 拿到报错:<code>SyntaxError</code> 是语法、<code>TypeError/ReferenceError</code> 是 API;② 确认出问题的浏览器版本在不在 browserslist 解析结果里(<code>npx browserslist</code>);不在,就是目标定错了,要么收紧用户预期要么放宽目标;③ 在,语法问题看是哪一步生成的产物(esbuild 的 <code>build.target</code>、legacy 的 <code>targets</code>),API 问题看 polyfill 是否注入(产物里搜 <code>core-js</code> 模块名或 API 名)、第三方包的用量是否被 usage 模式漏掉(加到 <code>polyfills</code> 列表或改 entry);④ 修完在目标浏览器(BrowserStack、旧设备或 Playwright 的 WebKit)上跑一遍,而不是只在本机。第 ③ 步里「API 问题」那一支的全部工具——core-js、三种注入方式、以及怎么不让新浏览器为老浏览器买单——在 <a href="#f11-toolchain-polyfill">5.4</a>。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 403px"><span class="t">🟢 兼容问题的排查顺序</span><ul>
+<li><strong>①</strong> 拿到报错:<code>SyntaxError</code> 是语法、<code>TypeError</code>/<code>ReferenceError</code> 是 API。</li>
+<li><strong>②</strong> 确认出问题的浏览器版本在不在 browserslist 解析结果里(<code>npx browserslist</code>)。不在,就是目标定错了,要么收紧用户预期要么放宽目标。</li>
+<li><strong>③</strong> 在的话:语法问题看是哪一步生成的产物(esbuild 的 <code>build.target</code>、legacy 的 <code>targets</code>);API 问题看 polyfill 是否注入(产物里搜 <code>core-js</code> 模块名或 API 名)、第三方包的用量是否被 usage 模式漏掉(加到 <code>polyfills</code> 列表或改 entry)。</li>
+<li><strong>④</strong> 修完在目标浏览器(BrowserStack、旧设备或 Playwright 的 WebKit)上跑一遍,而不是只在本机。</li>
+</ul>
+<p>第 ③ 步里「API 问题」那一支的全部工具——core-js、三种注入方式、以及怎么不让新浏览器为老浏览器买单——在 <a href="#f11-toolchain-polyfill">5.4</a>。</p></div></div>
 <h2 id="f11-toolchain-polyfill">5.4 polyfill 与双构建:core-js、按需注入与 module/nomodule</h2>
 <p>上一节处理的是<strong>语法</strong>:转译器按目标把新语法改写成老语法,一切发生在构建期,产物里不需要任何额外的运行时。这一节处理另一半——<strong>API</strong>。<code>Array.prototype.at</code>、<code>Object.groupBy</code>、<code>Promise</code>、<code>fetch</code> 这些东西没法靠改写源码补出来,只能在运行时往全局对象和原型上装,这就是 polyfill。两条界线在 <a href="#f11-toolchain-polyfill">5.4</a> 开头已经划清楚了,这里回答的是接下来那三个具体问题:补哪些(按目标 × 按用量)、怎么注入(usage / entry / pure 三种方式)、以及怎么<strong>不让新浏览器为老浏览器买单</strong>(双构建)。</p>
 <p>最后一件事最值得注意:前面所有配置的效果都是「所有用户下载同一份产物」,目标定得越低,<strong>每个人</strong>的包越大。双构建是唯一一个能把老浏览器的代价从新浏览器包里摘出去的手段,它靠的是 <code>&lt;script type="module"&gt;</code> 与 <code>nomodule</code> 这一对天然互斥的属性,是一段很值得完整看一遍产物的机制。</p>
@@ -4229,7 +4277,7 @@ babel-plugin-polyfill-corejs3 { method: <span>'usage-global'</span>, version: <s
 <p>接下来 <a href="#f11-quality">6.1</a> 讲怎么让错误在提交之前被拦住(ESLint 扁平配置、Prettier、Vitest、Git 钩子与 CI),<a href="#f11-pkg-publish">6.4</a> 讲这些依赖本身怎么管、怎么发布;<a href="#f11-vitals">7.1</a> 开始把注意力从「产物是什么样」转到「用户感受到什么」,<a href="#f11-opt">7.2</a> 把这一章的分割能力用到图片、字体和缓存策略上,<a href="#f11-deploy">7.3</a> 则把 <code>dist/</code> 真正放上服务器——那里的长缓存配置成立的前提,正是这一章的内容哈希。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 60679px;--thin-h:40398px">
+<section class="chapter" style="contain-intrinsic-size:auto 60897px;--thin-h:40505px">
 <h1 id="e6"><span class="part">工程化</span>代码质量、依赖与发布</h1>
 <p>上一章把源码变成了产物,这一章管的是<strong>源码和依赖本身的秩序</strong>:一个人写的项目靠自觉,多人维护的项目靠工具。<a href="#f11-quality">6.1</a> 让能机械判断的错误在到达线上之前被机器拦下;<a href="#f11-pkg">6.2</a> 让「这个项目装出来的东西每次都一样、每个包都是我真的声明过的」;<a href="#f11-pkg-mono">6.3</a> 处理一个仓库里放多个包之后多出来的三个问题(互相引用、按拓扑跑任务、一致地定版本);<a href="#f11-pkg-publish">6.4</a> 反过来站到库作者的位置上,让「发出去的包别人真的能用」;<a href="#f11-pkg-supply">6.5</a> 换掉前面所有节的一个隐含假设——依赖是好的——讲清 audit、签名与安装脚本各自守住的是什么。五件事都属于不出问题时完全看不见、出了问题就要花一整天的那类。</p>
 <p>顺序是从「消费依赖」走到「生产依赖」。<a href="#f11-quality">6.1</a> 的内部顺序是「各管一件事,再让它们自动跑」:ESLint 是 AST 规则引擎(9 起用扁平配置),抓的是「类型对但写法可疑」(<code>react-hooks/exhaustive-deps</code>、<code>no-floating-promises</code>);Prettier 丢掉原始排版重新打印,只管格式;Vitest 直接复用 <code>vite.config</code>,所以测试里的模块解析与开发态一致;最后用 husky + lint-staged 挂到提交前,再把同一套跑在 CI 上——本地钩子是提示,CI 才是真正的门。<a href="#f11-pkg">6.2</a> 从 <code>package.json</code> 这份契约开始,讲语义化版本与范围的实际含义(<code>^0.2.3</code> 为什么不含 <code>0.3.0</code>)、锁文件与 <code>npm ci</code> 为什么是可复现构建的前提、<code>peerDependencies</code> 表达的是「和宿主共用同一份实例」、pnpm 的符号链接结构怎么在安装期堵住幽灵依赖,并用 <code>npm explain</code> + <code>overrides</code> 走一遍依赖树的诊断路径。<a href="#f11-pkg-mono">6.3</a> 把 workspace 协议、<code>--filter</code> 选择器、Turborepo 的任务缓存和 Changesets 的定版流程串成一条链。<a href="#f11-pkg-publish">6.4</a> 讲 <code>exports</code> 条件映射、ESM/CJS 双格式、库该用什么构建、<code>bin</code> 与 CLI 包、<code>sideEffects</code> 对使用者 tree shaking 的影响。<a href="#f11-pkg-supply">6.5</a> 收尾:<code>npm audit</code> 与 <code>npm audit signatures</code> 查的是两件不同的事,安装脚本为什么是最好的投毒入口,以及 2024–2025 年几次投毒事件之后包管理器补上的默认防线。测试该怎么写、测到哪一层,是 <a href="#ftest-pyramid">8.1</a> 与 <a href="#ftest-unit">8.2</a> 的事。</p>
@@ -4960,7 +5008,13 @@ $ git status --<span class="kw">short</span>
 ?? packages/ui/CHANGELOG.md
 ?? packages/utils/CHANGELOG.md</code></pre>
 <p>解读:三处细节值得停一下。第一,<code>web</code> 是 <code>private: true</code> 的应用,Changesets 不会给它定版本也不会发布它,所以 <code>pnpm -r run build</code> 的 <code>Scope: 3 of 4</code> 里那个「4」包含仓库根,而版本变更只落在两个可发布的包上。第二,<code>@mono/ui</code> 自己一行代码没改却升了 <code>0.1.1</code>,来源是 <code>updateInternalDependencies: "patch"</code>——它发出去的包里对 <code>@mono/utils</code> 的范围变了,这确实是一次面向使用者的变化。第三,<code>workspace:^</code> 在源码里<strong>始终保持原样</strong>,只有 <code>changeset publish</code>(或 <code>pnpm publish</code>)打包的那一刻才替换成 <code>^0.2.0</code>——所以千万不要手工把它改成版本号,那样本地开发就退化成从仓库下载了。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 200px"><span class="t">🟢 一个 monorepo 的最小规矩</span><p>① 根上只装工具链,业务依赖 <code>--filter</code> 到具体包;② 内部依赖一律 <code>workspace:</code> 协议(npm workspaces 则确保本地版本落在声明范围内);③ 每个改了可发布包的 PR 都要带一个 changeset,CI 上用 <code>changeset status --since=origin/main</code> 检查漏写;④ CI 里跑 <code>pnpm -r --filter "...[origin/main]" test</code>,只测改动的包和它们的下游;⑤ 包数量到两位数再上 Turborepo,之前 <code>pnpm -r</code> 就够,过早引入任务编排器只是多一层配置。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 311px"><span class="t">🟢 一个 monorepo 的最小规矩</span><ul>
+<li>根上只装工具链,业务依赖 <code>--filter</code> 到具体包。</li>
+<li>内部依赖一律 <code>workspace:</code> 协议(npm workspaces 则确保本地版本落在声明范围内)。</li>
+<li>每个改了可发布包的 PR 都要带一个 changeset,CI 上用 <code>changeset status --since=origin/main</code> 检查漏写。</li>
+<li>CI 里跑 <code>pnpm -r --filter "...[origin/main]" test</code>,只测改动的包和它们的下游。</li>
+<li>包数量到两位数再上 Turborepo,之前 <code>pnpm -r</code> 就够;过早引入任务编排器只是多一层配置。</li>
+</ul></div></div>
 <div class="deep"><h3 class="deep">Turborepo 的缓存缓存了什么</h3>
 <p><code>pnpm -r run build</code> 的问题是「没改的包也重跑」。Turborepo(与 Nx)解决它的方式是<strong>把每个任务变成一次纯函数调用</strong>:任务的<strong>输入</strong>(该包的源文件内容、它依赖的包的产物、环境变量、任务自身的配置)哈希成一个 key,<strong>输出</strong>(<code>outputs</code> 里声明的文件与该任务的终端日志)按这个 key 存起来。下次同样的 key 命中缓存,就<strong>不执行命令</strong>,直接把文件还原、把日志重放——所以你会看到「build 用了 0.1 s」并标着 cache hit,连原本的输出都一字不差地打印出来。</p>
 <p>两个配置项决定它对不对。<code>dependsOn: ["^build"]</code> 里的 <code>^</code> 表示「先跑我的依赖包的 build」,这就是拓扑顺序的声明方式;<code>outputs</code> 必须<strong>把这个任务产生的所有文件都列全</strong>——漏了哪一个,缓存命中时那个文件就不会被还原,表现为「第二次构建产物少了东西」,而且因为第一次是对的,排查起来格外费时间。同理,任务如果读了没声明的环境变量(<code>env</code> / <code>globalEnv</code>),环境变了 key 却没变,会拿到上一个环境的产物。远程缓存把这份 key→产物的映射放到共享存储上,于是 CI 能命中同事本地跑过的结果——收益最大的场景,也是「输入声明不全」代价最大的场景。</p></div>
@@ -5285,7 +5339,13 @@ audited 2 packages in 3s
 $ npm publish --help | grep provenance
 [--tag &amp;lt;tag&amp;gt;] [--access &amp;lt;restricted|<span class="kw">public</span>|<span class="kw">private</span>&amp;gt;] [--dry-run] [--otp &amp;lt;otp&amp;gt;]
 [--provenance|--provenance-file &amp;lt;file&amp;gt;]</code></pre>
-<div class="note new" style="contain-intrinsic-size:auto 331px"><span class="t">🔵 包管理器在 2025–2026 年补上的默认防线</span><p>三件事值得知道:① pnpm 10(2025 年 1 月)起<strong>默认不执行依赖的生命周期脚本</strong>,安装时会列出被跳过的包,真的需要编译原生模块的(<code>esbuild</code>、<code>sharp</code>)写进 <code>pnpm.onlyBuiltDependencies</code>;② pnpm 10.16 起有 <code>minimumReleaseAge</code>,npm 社区也在跟进;③ npm 11.x 给 <code>package.json</code> 加了 <code>allowScripts</code> 字段和 <code>npm approve-scripts</code> 命令——当前版本安装时先照跑、只打印「哪些包的安装脚本还没审过」的清单(上面安装记录里的 <code>npm warn allow-scripts</code> 就是它),后续版本计划改为默认阻止。这些默认值的变化意味着一个老项目换到新版包管理器后,某个依赖「装上了但没编译」是可能的,症状是运行时 <code>Cannot find module '…/build/Release/xxx.node'</code> 或 esbuild 报 <code>The package "@esbuild/win32-x64" could not be found</code>,处方是把它加进允许列表而不是全局放开。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 438px"><span class="t">🔵 包管理器在 2025–2026 年补上的默认防线</span><p>三件事值得知道:</p>
+<ul>
+<li>pnpm 10(2025 年 1 月)起<strong>默认不执行依赖的生命周期脚本</strong>,安装时会列出被跳过的包;真的需要编译原生模块的(<code>esbuild</code>、<code>sharp</code>)写进 <code>pnpm.onlyBuiltDependencies</code>。</li>
+<li>pnpm 10.16 起有 <code>minimumReleaseAge</code>,npm 社区也在跟进。</li>
+<li>npm 11.x 给 <code>package.json</code> 加了 <code>allowScripts</code> 字段和 <code>npm approve-scripts</code> 命令。当前版本安装时先照跑、只打印「哪些包的安装脚本还没审过」的清单(上面安装记录里的 <code>npm warn allow-scripts</code> 就是它),后续版本计划改为默认阻止。</li>
+</ul>
+<p>这些默认值的变化意味着:一个老项目换到新版包管理器后,某个依赖「装上了但没编译」是可能的。症状是运行时 <code>Cannot find module '…/build/Release/xxx.node'</code>,或 esbuild 报 <code>The package "@esbuild/win32-x64" could not be found</code>;处方是把它加进允许列表,而不是全局放开。</p></div>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 440px"><code># 三条命令,三个不同的问题
 npm audit [--omit=dev] [--audit-level=&amp;lt;info|low|moderate|high|critical|none&amp;gt;]   # 已知漏洞
 npm audit fix [--force]                       # 在范围内升级到已修复版本;--force 允许跨大版本
@@ -5451,7 +5511,7 @@ npx publint &amp;&amp; npx @arethetypeswrong/cli --pack   # 包结构与类型�
 <p>接下来 <a href="#f11-vitals">7.1</a> 换一个视角:前面几章关心的都是「代码和产物对不对」,从那里开始关心「用户感受到什么」——LCP、INP、CLS 三个指标怎么测、怎么读、实验室数据和真实用户数据为什么经常对不上;<a href="#f11-opt">7.2</a> 是对应的手段,<a href="#f11-deploy">7.3</a> 把产物真正放上服务器。而这一章只用到「能跑起来」程度的 Vitest,会在 <a href="#ftest-pyramid">8.1</a> 之后被完整展开:测什么、测到哪一层、怎么让红灯真的可信。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 43091px;--thin-h:28314px">
+<section class="chapter" style="contain-intrinsic-size:auto 43205px;--thin-h:28428px">
 <h1 id="e7"><span class="part">工程化</span>Web Vitals、优化与部署</h1>
 <p>前面几章的问题都是「对不对」,这一章的问题是「用户感受如何」,以及「怎么把手里这个 <code>dist/</code> 目录放到公网上而不出事」。「页面慢」是个没法动手的描述,所以顺序只能是:<strong>先有数字,再有归因,最后才有处方</strong>。跳过前两步直接开始优化,是这一章要防的头号错误:压了一堆图,而实际上慢在服务器响应;到处加 <code>memo</code>,而实际上是一张 800 kB 的 banner 图。</p>
 <p><a href="#f11-vitals">7.1</a> 建立度量:LCP、INP、CLS 各衡量一件事,口径是<strong>第 75 百分位</strong>,所以本机跑出来的单次数字不能当结论;接着分清实验室数据(Lighthouse:可复现、有诊断、能进 CI)与真实用户数据,再把三个指标各自拆成可归因的几段,最后给出一张病因表;三个指标里 CLS 的定义最反直觉——它取的是<strong>得分最高的那个会话窗口</strong>而不是全页累加,不知道这条就会把自己的分数算错,所以单独用一层深入把算法和推论讲透。<a href="#f11-opt">7.2</a> 是对应的处方,按「少传、晚传、早传、别重传」四个方向归类:代码分割、图片的格式与尺寸与优先级、字体的子集与 <code>font-display</code>、五种资源提示各自的代价与禁忌、虚拟化、往返缓存(bfcache)这条几乎免费的收益与毁掉它的写法、推测规则(prerender)、Service Worker 缓存策略,以及内容哈希加长缓存这条贯穿始终的规矩。<a href="#f11-deploy">7.3</a> 把产物真正放上去:SPA 的四条规矩(history 回退、缓存分层、压缩、按环境构建)、一份能直接用的 Nginx 配置、托管平台与对象存储加 CDN 的形态、原子发布与回滚。这一章的前提是 <a href="#f11-vite-build">5.2</a> 的产物形态;把这些数字变成会在合并前拦住退化的流水线,在 <a href="#ftest-a11y">9.4</a>。</p>
@@ -6174,7 +6234,14 @@ $ curl -s http:<span class="cm">//app.example.com/api/users | head -c 60</span>
 </table>
 <h3>易错清单:上线前后各过一遍</h3>
 <p>这些检查都在两分钟内能做完,而且每一条都对应上表里的一类事故。发版前在本地做前三条,发版后换一台没打开过这个站的设备做后三条。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 232px"><span class="t">🟢 回看清单</span><p>① <code>vite build &amp;&amp; vite preview</code> 打开首页,Network 里 js/css 名字带哈希、没有 404;② 在产物里搜一遍不该出现的东西(密钥、localhost、内网地址);③ 无痕窗口开 Lighthouse,Network 选 Fast 4G、CPU 4x slowdown 跑三次取中位,别用不限速的默认设置;④ 深层路径直接刷新一次,再从地址栏粘贴一次;⑤ <code>curl -I</code> 看 <code>index.html</code> 与某个 <code>assets/*</code> 的 <code>Cache-Control</code> 与 <code>Content-Encoding</code> 是不是一长一短、有没有压缩;⑥ 挂上 <code>web-vitals/attribution</code> 点几下再切走标签页,看三个值的归因指向哪个元素、哪一段。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 346px"><span class="t">🟢 回看清单</span><ul>
+<li><code>vite build &amp;&amp; vite preview</code> 打开首页,Network 里 js/css 名字带哈希、没有 404。</li>
+<li>在产物里搜一遍不该出现的东西(密钥、localhost、内网地址)。</li>
+<li>无痕窗口开 Lighthouse,Network 选 Fast 4G、CPU 4x slowdown 跑三次取中位,别用不限速的默认设置。</li>
+<li>深层路径直接刷新一次,再从地址栏粘贴一次。</li>
+<li><code>curl -I</code> 看 <code>index.html</code> 与某个 <code>assets/*</code> 的 <code>Cache-Control</code> 与 <code>Content-Encoding</code> 是不是一长一短、有没有压缩。</li>
+<li>挂上 <code>web-vitals/attribution</code> 点几下再切走标签页,看三个值的归因指向哪个元素、哪一段。</li>
+</ul></div>
 <div class="deep"><h3>完整示例:从数字到处方,一次完整的诊断</h3>
 <p>这一章的方法论压缩成一段就是下面这个流程。它的关键不是记住手段,是<strong>每一步都拿到一个能指认的对象</strong>——某个元素、某个资源、某一段时间——再去表里查对应的处方。</p>
 <pre style="contain-intrinsic-size:auto 564px"><code># ① 拿数字(真实条件:限速 + 降 CPU,不是本机裸跑)
@@ -6221,7 +6288,7 @@ inputDelay 210 ms           → 不是处理器慢,是点击那一刻主线程�
 <p>接下来是质量与验证。<a href="#ftest-pyramid">8.1</a> 讲前端到底有哪些东西可测、每种测试的可信度与成本;<a href="#ftest-unit">8.2</a> 与 <a href="#ftest-component">9.1</a> 是单元与组件层的具体写法;<a href="#ftest-e2e">9.3</a> 用 Playwright 在真浏览器里跑核心流程——它也是唯一能验证这一章「部署配好了没有」的手段:深层路径刷新、缓存头、跳转,都只有真浏览器加真服务器才测得出来。而把这一章的三个数字变成合并前会亮红灯的门禁,在 <a href="#ftest-budget">9.6</a> 的性能预算一节。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 35117px;--thin-h:23308px">
+<section class="chapter" style="contain-intrinsic-size:auto 35361px;--thin-h:23308px">
 <h1 id="e8"><span class="part">质量</span>测试形态与单元测试</h1>
 <p><a href="#f11-quality">6.1</a> 把 Vitest 当成工具链上的一环带过,只用到「能跑起来」的程度。这一章把测试单独拿出来展开,先回答动手之前必须回答的两个问题:<strong>测什么</strong>,以及<strong>测试红了到底证明了什么</strong>。前端测试比后端多两个变量——输出是界面而不是返回值,运行时是浏览器而不是一个进程——所以同一个「测试」一词底下藏着从毫秒级的纯函数断言到分钟级的真浏览器巡检共八种形态,选错形态的代价是写了一堆慢而脆、一改样式就全挂、红了也没人信的用例。</p>
 <p>三节从「怎么想」到「怎么写」。<a href="#ftest-pyramid">8.1</a> 不写一行框架代码,只建立判断力:八种形态在同一条「可信度—成本」轴上的位置、金字塔与奖杯两种比例主张的分歧到底在哪、「测行为不测实现」为什么决定一个测试套件的寿命、四种替身(stub/spy/mock/fake)各自的断言落在哪里,以及覆盖率这个数字度量了什么、没度量什么。<a href="#ftest-unit">8.2</a> 落到 Vitest 上:配置与文件约定、监听模式为什么能当「保存即验证」用、匹配器怎么选、<code>it.each</code> 怎么把十条重复用例压成一张表、<code>vi.fn</code>/<code>vi.spyOn</code>/<code>vi.mock</code> 的分工与那条会出问题的提升规则,以及用例之间到底靠什么隔离。<a href="#ftest-unit-time">8.3</a> 收拾会让结果变得不确定的三样东西——时间、异步与「输出太大不好手写期望值」:假时钟怎么把「等 300 毫秒」变成确定的一行断言、异步断言为什么必须 await、快照与覆盖率各自该怎么用,最后用一个带指数退避的 <code>fetchJson</code> 把它们凑在一起。界面那一半在 <a href="#ftest-component">9.1</a> 与 <a href="#ftest-e2e">9.3</a>;本章的版本基线是 Vitest 4、Node 20+。</p>
@@ -6315,7 +6382,14 @@ test(<span>'名字'</span>, async ({ page }) =&amp;gt; {
 <div class="deep"><h3 class="deep">覆盖率:它度量什么、不度量什么</h3>
 <p>覆盖率工具(Vitest 用 V8 原生覆盖或 Istanbul 插桩)统计的是<strong>测试运行期间哪些代码被执行过</strong>,按四个粒度报:语句(statements)、分支(branches,if/三元/&amp;&amp;/?? 的每个方向)、函数(functions)、行(lines)。它回答的问题是「<strong>哪些代码从来没在测试里跑过</strong>」——这很有用,一个从未执行过的分支里藏着什么都不知道。它<strong>不</strong>回答的问题是「被跑过的代码对不对」:一个没有任何 <code>expect</code> 的测试把函数调一遍,覆盖率就是 100%,而它什么都没验证;反过来,一个断言充分的测试只走了主路径,覆盖率 60%,却可能守住了 90% 的风险。所以覆盖率是<strong>找盲区的地图</strong>,不是质量的分数。</p>
 <div class="deep">
-<p>误用有两种。第一种是<strong>拿覆盖率当 KPI</strong>:要求 90% 以上,团队就会去给 getter/setter、纯展示组件写无断言的「跑一遍」测试凑数,真正复杂的逻辑反而没人碰,因为凑数字不需要。第二种是<strong>拿本机的 100% 当安全感</strong>:覆盖率是对<strong>已写代码</strong>的度量,对「该有而没有的处理」(没写的 catch、没处理的空数组)无能为力,而线上事故多半来自后者。合理的用法是:① 看报告里<strong>红色的分支</strong>,问「这个分支走到会怎样」,值得的补用例,不值得的(防御性日志)忽略;② CI 里只设<strong>不下降</strong>的门(<code>thresholds.autoUpdate</code> 或与主干比较),不设绝对高线;③ 关键模块(计费、权限、解析器)单独要求高分支覆盖,其他模块不强求。Vitest 的 <code>coverage.thresholds</code> 支持按 glob 分别设,见 <a href="#ftest-unit-time">8.3</a>。</p>
+<p>误用有两种。第一种是<strong>拿覆盖率当 KPI</strong>:要求 90% 以上,团队就会去给 getter/setter、纯展示组件写无断言的「跑一遍」测试凑数,真正复杂的逻辑反而没人碰,因为凑数字不需要。第二种是<strong>拿本机的 100% 当安全感</strong>:覆盖率是对<strong>已写代码</strong>的度量,对「该有而没有的处理」(没写的 catch、没处理的空数组)无能为力,而线上事故多半来自后者。</p>
+<p>合理的用法是:</p>
+<ul>
+<li>看报告里<strong>红色的分支</strong>,问「这个分支走到会怎样」,值得的补用例,不值得的(防御性日志)忽略。</li>
+<li>CI 里只设<strong>不下降</strong>的门(<code>thresholds.autoUpdate</code> 或与主干比较),不设绝对高线。</li>
+<li>关键模块(计费、权限、解析器)单独要求高分支覆盖,其他模块不强求。</li>
+</ul>
+<p>Vitest 的 <code>coverage.thresholds</code> 支持按 glob 分别设,见 <a href="#ftest-unit-time">8.3</a>。</p>
 </div></div>
 <div class="deep"><h3>完整示例:给一个纯函数和一个组件各写一个测试</h3>
 <p>两段被测代码故意选得很小,重点在<strong>为什么它们分别属于单元层和组件层</strong>。<code>finalPrice</code> 是订单金额计算:满 100 减 10、会员再 95 折、保留两位小数、负数抛错——四条规则、三个分支,没有任何界面与环境依赖,它的全部行为就是「输入 → 输出」,放在 Node 环境里用 Vitest 跑,毫秒级。<code>Toggle</code> 是一个开关按钮:显示标签与状态文字,点击翻转,并同步 <code>aria-pressed</code>——它的行为是「渲染出什么 DOM、点击后 DOM 怎么变」,必须有 DOM 与事件才能测,所以用 jsdom 环境 + Testing Library。配置里用 Vitest 的 <code>projects</code> 把两类文件分到两个环境:<code>*.test.ts</code> 走 node,<code>*.test.tsx</code> 走 jsdom——纯逻辑测试不为 jsdom 的启动付费。</p>
@@ -6749,7 +6823,13 @@ All files     |   97.67 |      100 |   93.33 |   96.87 |
 </tbody>
 </table>
 <div class="deep"><h3 class="deep">与 TypeScript 的配合:类型错误不会让测试失败</h3>
-<p>Vitest 用 esbuild 转译 TS,而 esbuild <strong>只去类型不查类型</strong>——一个类型错误的测试文件照样能跑、能通过。这是刻意的取舍(快),代价是类型检查必须另起一条线:CI 里单独跑 <code>tsc --noEmit</code>(见 <a href="TypeScript手册.html#f9-config">《TypeScript 手册》8.1</a>),或者用 <code>vitest --typecheck</code>,它会对 <code>*.test-d.ts</code> 文件调用 tsc,配合 <code>expectTypeOf&lt;T&gt;().toEqualTypeOf&lt;U&gt;()</code> / <code>assertType</code> 写纯类型断言——这对工具类型库有用,普通业务项目只需要 tsc。几个 TS 相关的细节:① <code>globals: true</code> 时要在 tsconfig 的 <code>types</code> 里加 <code>"vitest/globals"</code>,否则 <code>describe</code> 在编辑器里标红;② jest-dom 的匹配器类型通过 <code>import '@testing-library/jest-dom/vitest'</code> 扩展到 <code>expect</code> 上,setup 文件要在 tsconfig 的 <code>include</code> 里;③ <code>vi.fn&lt;typeof fetch&gt;()</code> 带泛型能让 <code>mockResolvedValue</code> 的参数有类型,<code>vi.mocked(fn)</code> 把被 <code>vi.mock</code> 替换的导入转成 mock 类型。</p>
+<p>Vitest 用 esbuild 转译 TS,而 esbuild <strong>只去类型不查类型</strong>——一个类型错误的测试文件照样能跑、能通过。这是刻意的取舍(快),代价是类型检查必须另起一条线:CI 里单独跑 <code>tsc --noEmit</code>(见 <a href="TypeScript手册.html#f9-config">《TypeScript 手册》8.1</a>),或者用 <code>vitest --typecheck</code>,它会对 <code>*.test-d.ts</code> 文件调用 tsc,配合 <code>expectTypeOf&lt;T&gt;().toEqualTypeOf&lt;U&gt;()</code> / <code>assertType</code> 写纯类型断言——这对工具类型库有用,普通业务项目只需要 tsc。</p>
+<p>几个 TS 相关的细节:</p>
+<ul>
+<li><code>globals: true</code> 时要在 tsconfig 的 <code>types</code> 里加 <code>"vitest/globals"</code>,否则 <code>describe</code> 在编辑器里标红。</li>
+<li>jest-dom 的匹配器类型通过 <code>import '@testing-library/jest-dom/vitest'</code> 扩展到 <code>expect</code> 上,setup 文件要在 tsconfig 的 <code>include</code> 里。</li>
+<li><code>vi.fn&lt;typeof fetch&gt;()</code> 带泛型能让 <code>mockResolvedValue</code> 的参数有类型;<code>vi.mocked(fn)</code> 把被 <code>vi.mock</code> 替换的导入转成 mock 类型。</li>
+</ul>
 <div class="deep">
 <p>一个容易被忽略的点:<code>vi.mock</code> 自动 mock 后,<code>import { track } from './analytics'</code> 的类型仍是原函数类型,<code>track.mockResolvedValue</code> 在 TS 里不存在;写法是 <code>vi.mocked(track).mockImplementation(...)</code>。<code>vi.mocked(x, { deep: true })</code> 递归转换对象上的方法。另外,测试文件与源码共用同一个 tsconfig 时,<code>noUnusedLocals</code> 会对测试里只为类型而 import 的东西报错,可以给测试单独一个 <code>tsconfig.test.json</code> 放松这些项。</p>
 </div></div>
@@ -6909,7 +6989,7 @@ ReferenceError: document is not defined
 <p>接下来把同一套判断力用到界面上。<a href="#ftest-component">9.1</a> 是这一章的直接延伸:Testing Library 的查询 API 就是「测行为」原则的具体化,MSW 则是「fake 优先于 mock」的具体化;<a href="#ftest-e2e">9.3</a> 走到金字塔顶端,用 Playwright 在真浏览器里跑那几条坏了就是事故的流程;<a href="#ftest-vrt">9.5</a> 加上可访问性、视觉回归与性能预算,并把这些检查连同 <a href="#f11-quality">6.1</a> 的 lint 与类型检查编排成一条完整的流水线。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 66290px;--thin-h:38880px">
+<section class="chapter" style="contain-intrinsic-size:auto 66578px;--thin-h:39008px">
 <h1 id="e9"><span class="part">质量</span>组件测试、端到端与质量门禁</h1>
 <p><a href="#ftest-unit">8.2</a> 停在「纯逻辑」这一层:输入进去、输出出来,断言写在返回值上。界面不是这样——它的输出是一棵 DOM 树和它对交互的反应,它的运行时是浏览器。这一章把测试推到界面上,并在最后把所有检查编排成一条真正会拦住人的流水线。六节按可信度与成本递增:组件层在 jsdom 里几十毫秒验一个组件的行为,端到端层在真浏览器里秒级验一整条流程,最后三节守的是三类「不会表现为功能不对、但一样是退化」的东西——可访问性、外观和性能。</p>
 <p><a href="#ftest-component">9.1</a> 讲组件自足的那一半:Testing Library 的查询优先级(角色 → 标签 → 文字 → 兜底的 testid)逼着你按用户识别元素的方式找元素,<code>userEvent</code> 模拟的是用户做这件事时浏览器会发生的整个事件序列,而查询失败时打印出来的那一大段 DOM 里通常已经写好了答案。<a href="#ftest-component-msw">9.2</a> 处理外部世界:MSW 把替身放在网络边界上——被测代码里的 <code>fetch</code> 原样执行、拿到真正的 <code>Response</code>;表单与路由用真上下文而不是 mock 掉 Hook;并划清 jsdom 的边界:它模拟的是 DOM,不是浏览器,没有布局引擎。<a href="#ftest-e2e">9.3</a> 用 Playwright:定位器是「怎么找」的描述而不是元素本身,操作自带可操作性等待,<code>expect(locator)</code> 自带重试——所以一条写对的 E2E 里不该出现任何手写等待;再加上 <code>storageState</code> 复用登录态、<code>page.route</code> 造异常场景、trace 与录像留现场。最后三节各守一类退化:<a href="#ftest-a11y">9.4</a> 用 axe-core 守语义,<a href="#ftest-vrt">9.5</a> 用截图对比守外观(重点是抖动怎么掐、基线谁来接受),<a href="#ftest-budget">9.6</a> 用 Lighthouse CI 与包体积守性能,并把全部检查编排成一条流水线。它们验证的对象来自 <a href="#f11-vite-build">5.2</a> 的构建产物与 <a href="#f11-deploy">7.3</a> 的部署配置。</p>
@@ -7900,7 +7980,11 @@ $ # 把 .btn 的 padding 从 8px 改成 12px 再跑(其余不动):
 <div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 本机生成基线、CI 里比对</span><p>字体渲染、抗锯齿、系统字体回退在 Windows/macOS/Linux 上都不同,本机 macOS 上生成的 <code>login-chromium-darwin.png</code> 到了 Linux CI 根本不会被读取(文件名带平台),而在同平台不同机器之间也常有 0.1%–1% 的噪声。正确做法:基线只在 CI 环境(或同一个 Docker 镜像 <code>mcr.microsoft.com/playwright</code>)里生成与更新;本地开发者通过 <code>--update-snapshots</code> 在容器里跑,或由 CI 的「更新基线」工作流提交。</p></div></div>
 <div class="deep"><h3 class="deep">基线该由谁生成、谁来接受</h3>
 <p>视觉回归的成败不在断言,在<strong>基线的所有权</strong>。基线图是代码的一部分——它记录的是「我们认为正确的样子」,所以它必须像代码一样被生成得可复现、被审查后才进主干。三条规矩:</p>
-<p><strong>① 基线只在一个固定环境里生成。</strong>文件名里的 <code>-chromium-win32</code> 已经暗示了这一点:换平台就是另一套基线。可行的做法只有两种——全员用同一个容器(<code>mcr.microsoft.com/playwright</code> 官方镜像,版本与 <code>@playwright/test</code> 对齐),或者干脆规定「基线由 CI 生成」,本地只读不写。<strong>② 更新基线是一次显式操作,不是顺手。</strong>把它做成一个单独的手动触发工作流(跑 <code>--update-snapshots</code>,把改动提成一个只含图片的 PR),而不是让每个人本机 <code>-u</code> 一把梭——后者的代价是某天有人把一个真 bug 的截图当成新基线固化了,从此再也没人会发现。<strong>③ 差异必须能在 PR 里被看见。</strong>自建方案是把 <code>test-results/</code> 里的 expected/actual/diff 三张图作为构建产物上传,并在 PR 评论里给出链接;托管服务(Chromatic、Percy、Argos)卖的其实就是这一步——差异直接渲染在 PR 检查里,点一下接受就更新基线,还能记录是谁接受的。</p>
+<ul>
+<li><strong>基线只在一个固定环境里生成。</strong>文件名里的 <code>-chromium-win32</code> 已经暗示了这一点:换平台就是另一套基线。可行的做法只有两种——全员用同一个容器(<code>mcr.microsoft.com/playwright</code> 官方镜像,版本与 <code>@playwright/test</code> 对齐),或者干脆规定「基线由 CI 生成」,本地只读不写。</li>
+<li><strong>更新基线是一次显式操作,不是顺手。</strong>把它做成一个单独的手动触发工作流(跑 <code>--update-snapshots</code>,把改动提成一个只含图片的 PR),而不是让每个人本机 <code>-u</code> 一把梭——后者的代价是某天有人把一个真 bug 的截图当成新基线固化了,从此再也没人会发现。</li>
+<li><strong>差异必须能在 PR 里被看见。</strong>自建方案是把 <code>test-results/</code> 里的 expected/actual/diff 三张图作为构建产物上传,并在 PR 评论里给出链接;托管服务(Chromatic、Percy、Argos)卖的其实就是这一步——差异直接渲染在 PR 检查里,点一下接受就更新基线,还能记录是谁接受的。</li>
+</ul>
 <p>选自建还是托管,判据是<strong>每次 PR 会产生多少张待审的图</strong>。只给设计系统的十来个基础组件做视觉回归,自建足够;要覆盖几十个页面 × 三种视口 × 明暗两套主题,人工翻 artifact 的方式撑不住,那时托管服务按截图计费的钱花得值。还有一个常被忽略的省钱办法:<strong>只对改动影响到的组件截图</strong>——Storybook 生态的托管服务能按依赖图判断哪些故事受影响,自建方案可以用 <code>--grep</code> 配合改动路径粗略近似。</p></div>
 <h2 id="ftest-budget">9.6 性能预算:Lighthouse CI、包体积与流水线编排</h2>
 <p>前两节守的是「看得见的退化」:语义丢了、样式错位。这一节守的是<strong>看不见的退化</strong>——包体积一次加 40 kB、LCP 从 1.8 s 慢慢滑到 3 s。它的特点是每一次改动都「只慢了一点点」,没有任何一次值得拦下来,半年之后页面已经不能用了。<strong>性能预算</strong>就是把「一点点」变成可执行的判断:给几个数字划一条线,越线就红。</p>
@@ -8173,7 +8257,15 @@ $ echo <span>"exit=$?"</span>
 exit=0</code></pre>
 <p>解读。<code>needs: check</code> 让两个慢 job 只在快门全过之后才起,<code>concurrency</code> 让同一个 PR 连续推送时旧运行被取消——这两条决定了 CI 的等待时间和费用。<code>container: mcr.microsoft.com/playwright:v1.62.1-noble</code> 同时解决了「装浏览器」和「截图基线环境一致」两个问题;版本号要与 <code>package.json</code> 里的 <code>@playwright/test</code> 一致,否则报 <code>browserType.launch: Executable doesn't exist</code>。<code>dist</code> 作为 artifact 在 job 之间传递,E2E 与 Lighthouse 测的是<strong>同一份</strong>产物,也就是将来会部署的那一份。每个上传报告的步骤都带 <code>if: always()</code> 或 <code>!cancelled()</code>,失败时更需要报告。把这份工作流与分支保护规则(required checks: check、e2e、lighthouse)合起来,就是「合并前必须绿」的完整形态——它守住的不只是功能,还有可访问性、外观与性能。</p>
 <p>再看那份本地运行记录里的时间分布,它解释了流水线为什么必须分阶段:<code>lint</code> 与 <code>typecheck</code> 加起来不到 5 s,Vitest 的 27 条用例 4.71 s,构建 1.04 s,<code>size-limit</code> 不到 1 s——也就是说<strong>十秒出头就能否掉绝大多数有问题的提交</strong>;而 Playwright 的 12 条用例 9.8 s(CI 的共享 runner 上通常是本机的两三倍),Lighthouse 三轮又是三四十秒。把它们塞进一个 job 串行跑,每次失败都要等完整时长;分成两阶段之后,类型错误的 PR 在十几秒内就红了,浏览器根本不用启动。三个数字值得记下来当调优的判据:<strong>阶段一超过 3 分钟</strong>就该查缓存有没有命中、有没有把慢测试放错层;<strong>阶段二超过 10 分钟</strong>就该加分片;<strong>整条流水线的 flaky 率超过 1%</strong>,先停下来治理,不要急于加新用例——这条在 <a href="#ftest-e2e">9.3</a> 里已经说过一次,放到流水线尺度上同样成立。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 230px"><span class="t">🟢 门禁的最小可用集</span><p>一个新项目不必一上来就装齐五种门。按投入产出排序:① <code>tsc --noEmit</code> + ESLint(半天配好,拦掉最多的低级错);② Vitest 跑单元与组件测试,顺带 <code>axe(container)</code>(一天,收益最大的一层);③ <code>size-limit</code>(半小时,唯一零成本零抖动的性能门);④ Playwright 守三到五条核心流程(两三天,含 CI 与 flaky 治理);⑤ Lighthouse CI 与视觉回归(有余力再上,前者只对关键页、后者只对设计系统组件)。顺序反过来做——先花两周搭视觉回归再回头补单元测试——是最常见的浪费。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 347px"><span class="t">🟢 门禁的最小可用集</span><p>一个新项目不必一上来就装齐五种门。按投入产出排序:</p>
+<ul>
+<li><code>tsc --noEmit</code> + ESLint——半天配好,拦掉最多的低级错。</li>
+<li>Vitest 跑单元与组件测试,顺带 <code>axe(container)</code>——一天,收益最大的一层。</li>
+<li><code>size-limit</code>——半小时,唯一零成本零抖动的性能门。</li>
+<li>Playwright 守三到五条核心流程——两三天,含 CI 与 flaky 治理。</li>
+<li>Lighthouse CI 与视觉回归——有余力再上,前者只对关键页、后者只对设计系统组件。</li>
+</ul>
+<p>顺序反过来做——先花两周搭视觉回归再回头补单元测试——是最常见的浪费。</p></div></div>
 <h2 id="ftest-sum">9.7 小结:本章要点与易错清单</h2>
 <p>这一章的 6 节是同一个问题在三个高度上的答案:<strong>我改了界面,怎么在几十毫秒到几分钟内知道有没有改坏</strong>。组件层(<a href="#ftest-component">9.1</a> 与 <a href="#ftest-component-msw">9.2</a>)在 jsdom 里验「这个组件对这些操作的反应对不对」,端到端层(<a href="#ftest-e2e">9.3</a>)在真浏览器里验「整条流程还能不能走通」,最后三节(<a href="#ftest-a11y">9.4</a>、<a href="#ftest-vrt">9.5</a>、<a href="#ftest-budget">9.6</a>)验的是三类不会表现为「功能不对」的退化——可访问性、外观、性能,并把全部检查编排成一条流水线。三层的取舍规则只有一条,来自 <a href="#ftest-pyramid">8.1</a>:<strong>把每一类风险放到能守住它的最便宜的那一层</strong>;每上一层,单例成本涨一个数量级,还多出一批与被测逻辑无关的失败原因(环境、网络、时序)。</p>
 <p>另一条贯穿全章的是<strong>测行为不测实现</strong>,它在每一层都有具体形态:组件层不碰 <code>useState</code>,按角色与可访问名称找元素;E2E 层不用 CSS 选择器绑结构,用 <code>getByRole</code> 绑用户看到的东西;视觉回归只给基础组件立基线,不给天天变的业务页立。守住这条,重构不会让测试变红;守不住,测试很快从资产变成负债——每次改代码都要顺手修一堆用例,再过一阵大家就开始把红色当噪声。</p>
@@ -8208,7 +8300,17 @@ exit=0</code></pre>
 <tr><td><a href="#ftest-budget">9.6</a> 超了预算查原因,不是调预算</td><td><code>size-limit --why</code> 直接告诉你谁把体积撑大了</td><td>每次超了就把 limit 往上抬,一年后这个门什么也拦不住</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 330px"><span class="t">🟢 回看清单:写完一条测试或一条流水线,过一遍</span><p>① 这条测试如果挂了,用户会遇到问题吗?如果只是「内部实现变了」,它就不该存在。② 它绑的是角色/标签/文字,还是 class 名与 DOM 结构?换个等价实现它还能过吗?③ 它能不能放到更便宜的一层?E2E 里在验的这件事,组件测试是不是也能验?④ 它是确定的吗?连跑 20 次(<code>vitest --repeat-each=20</code> / <code>playwright test --repeat-each=20</code>)全绿吗?有没有依赖当前时间、时区、随机数、机器速度、别的用例留下的状态?⑤ 异步都等对了吗?组件层用 <code>findBy</code>/<code>waitFor</code>,E2E 层用 <code>expect(locator)</code> 而不是读值再比。⑥ 替身放在哪条边界上?能用 MSW 就别 mock <code>fetch</code>,能用真后端就别 <code>page.route</code>。⑦ 失败时看得到现场吗?trace、截图、报告有没有作为 artifact 上传,并且带 <code>if: always()</code>?⑧ 门禁里哪些是必需检查?它们的 flaky 率低于 1% 吗?⑨ 有没有一条改动能同时让所有门变绿而实际把产品改坏了——如果有,说明缺了一层。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 458px"><span class="t">🟢 回看清单:写完一条测试或一条流水线,过一遍</span><ul>
+<li>这条测试如果挂了,用户会遇到问题吗?如果只是「内部实现变了」,它就不该存在。</li>
+<li>它绑的是角色/标签/文字,还是 class 名与 DOM 结构?换个等价实现它还能过吗?</li>
+<li>它能不能放到更便宜的一层?E2E 里在验的这件事,组件测试是不是也能验?</li>
+<li>它是确定的吗?连跑 20 次(<code>vitest --repeat-each=20</code> / <code>playwright test --repeat-each=20</code>)全绿吗?有没有依赖当前时间、时区、随机数、机器速度、别的用例留下的状态?</li>
+<li>异步都等对了吗?组件层用 <code>findBy</code>/<code>waitFor</code>,E2E 层用 <code>expect(locator)</code> 而不是读值再比。</li>
+<li>替身放在哪条边界上?能用 MSW 就别 mock <code>fetch</code>,能用真后端就别 <code>page.route</code>。</li>
+<li>失败时看得到现场吗?trace、截图、报告有没有作为 artifact 上传,并且带 <code>if: always()</code>?</li>
+<li>门禁里哪些是必需检查?它们的 flaky 率低于 1% 吗?</li>
+<li>有没有一条改动能同时让所有门变绿而实际把产品改坏了?如果有,说明缺了一层。</li>
+</ul></div>
 <h3>五条能从机制推出来的规矩</h3>
 <p>第一,<strong>断言必须带重试,读值不带</strong>。Playwright 的 <code>expect(locator).toHaveCount(3)</code> 和 <code>expect(await locator.count()).toBe(3)</code> 看起来等价,行为完全不同:前者是一个会反复求值到超时的断言,后者在调用那一刻取一次数再比。界面是异步渲染的,「那一刻」几乎总是早于数据到达,所以后者在快机器上偶尔绿、慢机器上经常红。同一条规矩在 Testing Library 里的形态是 <code>findBy</code>/<code>waitFor</code> 与 <code>getBy</code> 的分工:内容要等就用 <code>findBy</code>,已经在就用 <code>getBy</code>,永远不要用 <code>getBy</code> 配一个手写的 <code>setTimeout</code>。</p>
 <p>第二,<strong>能确定的量,阈值就卡死;带噪声的量,阈值要留出噪声</strong>。产物字节数在任何机器上都一样,所以 size-limit 可以设成硬门;Lighthouse 的 LCP 在同一台机器上三次能差 8%,所以要么多跑几次取中位、要么只把它设成 <code>warn</code>。截图的差异像素数是这条规矩的一个混合案例:它本应是确定的,但字体回退、动画、动态内容会把它变成噪声源——正确做法是把这些源头一个个掐掉(固定环境、<code>animations: 'disabled'</code>、<code>mask</code>、冻结时间),而不是把 <code>maxDiffPixelRatio</code> 一路调大,因为调大之后真正的样式退化也会被吞掉。</p>
