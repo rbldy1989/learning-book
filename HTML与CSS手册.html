@@ -1018,7 +1018,7 @@ npm run build &amp;&amp; npm run preview             # dist/ → http:<span clas
 <p>书这一侧:红宝书(Frisbee《JavaScript 高级程序设计》)提供「概念 → 语法 → 示例 → 兼容性」的骨架,犀牛书(Flanagan《JavaScript 权威指南》)提供定义的精度与标准库的穷举,《你不知道的 JavaScript》提供从机制推出规则的写法。本书全书的讲法就锚定在这几本上,<a href="#f1-classics">1.0</a> 那张表列出了完整书目与各自的局限。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46361px;--thin-h:28358px">
+<section class="chapter" style="contain-intrinsic-size:auto 46487px;--thin-h:28358px">
 <h1 id="a2"><span class="part">HTML</span>文档骨架、语义与元数据</h1>
 <p>HTML 不是「排版语言」,而是一棵<strong>带语义的树</strong>的文本写法:每个标签声明「这一块内容是什么」,浏览器据此建 DOM、算可访问树、定默认样式与默认行为,搜索引擎、阅读模式与分享预览器据此抽取信息。这一章只管文档的<strong>外壳</strong>——真正的内容元素在下一章。<a href="#f2-doc">2.1</a> 讲 <code>&lt;head&gt;</code> 里那十几行骨架:渲染模式、字符编码、移动端视口,以及 <code>&lt;script&gt;</code> 与样式表在解析的哪一刻被下载和执行;<a href="#f2-semantic">2.2</a> 讲 body 的分区骨架:七个分区元素与 <code>h1</code>–<code>h6</code> 怎么决定可访问树里的地标与大纲,以及 <code>div</code> 什么时候才是正当的;<a href="#f2-meta">2.3</a> 讲那些不渲染却决定「这一页叫什么、正式地址是哪个、在浏览器外壳里长什么样」的声明:<code>title</code>、<code>description</code>、<code>canonical</code>、<code>hreflang</code>、主题色、图标与 manifest;<a href="#f2-meta-share">2.4</a> 单讲给第三方预览器与搜索富结果用的那一层:Open Graph、Twitter Card、JSON-LD,以及爬虫从发现到索引的四关和 SPA 为什么会在这里翻车。</p>
 <p>四节是同一份文档的三层读者:渲染引擎、辅助技术、爬虫与浏览器外壳。写后端的人最容易在这一层栽跟头——功能全对,但手机上整页缩成一团、屏幕阅读器读不出结构、分享出去的链接全叫「Vite App」。每一条骨架行都能在 DevTools 里当场验证,所以先要有 <a href="#f1-devtools">1.2</a> 里 Elements 与 Network 面板的用法。文本、图片、表单、表格与 ARIA 从 <a href="#f2-text">3.1</a> 开始;等标签写对了,<a href="#f3-cascade">4.1</a> 再给它们上样式,那时你会发现语义标签同时也是最稳定的选择器。</p>
@@ -1788,7 +1788,16 @@ console.table(rows);</code></pre>
 │ 10      │ <span>'main / h1 数量'</span>           │ <span>'1 / 1'</span>                                │
 └─────────┴────────────────────────────┴────────────────────────────────────────┘</code></pre>
 <p>这段脚本只覆盖能机械判定的部分,剩下三件要用眼睛和耳朵:在 DevTools 的设备工具栏里把宽度调到 375px,看有没有横向滚动条;在 Elements 的 Accessibility 面板里逐个点开地标,确认每个 <code>&lt;section&gt;</code> 和重复出现的 <code>&lt;nav&gt;</code> 都有名字;把页面 URL 贴进任意一个聊天窗口,看弹出的卡片标题、描述、图是不是这一页的。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 300px"><span class="t">🟢 页面外壳的验收清单</span><p>① 第一行 <code>&lt;!DOCTYPE html&gt;</code>,<code>&lt;html lang&gt;</code> 写对语言。② <code>&lt;head&gt;</code> 前三行是 <code>charset</code>、<code>viewport</code>、<code>title</code>,charset 之前不放任何脚本或样式。③ 外部脚本只有 <code>type="module"</code> 或 <code>defer</code>;只有首屏必须先跑的那一小段(读 <code>localStorage</code> 定主题之类)才用内联经典脚本。④ 只有一个 <code>&lt;main&gt;</code>、一个 <code>&lt;h1&gt;</code>,标题不跳级,重复的地标都有 <code>aria-label</code>,页首有跳转链接。⑤ 每页有各自的 <code>title</code>、<code>description</code>、<code>canonical</code>,三者由服务器输出而不是 JS 改写。⑥ Open Graph 五件套齐全,<code>og:image</code> 是绝对 URL、1200x630。⑦ 写了 <code>color-scheme</code>,以及两条带 <code>media</code> 的 <code>theme-color</code>。⑧ 图标三件套加 <code>manifest</code>;需要收录的站点有 <code>sitemap.xml</code> 与 <code>robots.txt</code>。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 426px"><span class="t">🟢 页面外壳的验收清单</span><ul>
+<li>第一行 <code>&lt;!DOCTYPE html&gt;</code>,<code>&lt;html lang&gt;</code> 写对语言。</li>
+<li><code>&lt;head&gt;</code> 前三行是 <code>charset</code>、<code>viewport</code>、<code>title</code>,charset 之前不放任何脚本或样式。</li>
+<li>外部脚本只有 <code>type="module"</code> 或 <code>defer</code>;只有首屏必须先跑的那一小段(读 <code>localStorage</code> 定主题之类)才用内联经典脚本。</li>
+<li>只有一个 <code>&lt;main&gt;</code>、一个 <code>&lt;h1&gt;</code>,标题不跳级,重复的地标都有 <code>aria-label</code>,页首有跳转链接。</li>
+<li>每页有各自的 <code>title</code>、<code>description</code>、<code>canonical</code>,三者由服务器输出而不是 JS 改写。</li>
+<li>Open Graph 五件套齐全,<code>og:image</code> 是绝对 URL、1200x630。</li>
+<li>写了 <code>color-scheme</code>,以及两条带 <code>media</code> 的 <code>theme-color</code>。</li>
+<li>图标三件套加 <code>manifest</code>;需要收录的站点有 <code>sitemap.xml</code> 与 <code>robots.txt</code>。</li>
+</ul></div></div>
 <h3>本章元素、属性与 API 速查</h3>
 <table style="contain-intrinsic-size:auto 1080px">
 <thead><tr><th>元素 / 属性 / API</th><th class="nw">节</th><th>形态</th><th>一句话</th></tr></thead>
@@ -1819,7 +1828,7 @@ console.table(rows);</code></pre>
 <p><code>theme-color</code>、<code>color-scheme</code>、图标与 manifest 这一组落在 HTML Standard 与 Web App Manifest 规范之间,实际表现各平台差异较大(尤其 iOS),遇到不一致时先在真机上验,再去查 MDN 的兼容表。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 76998px;--thin-h:53942px">
+<section class="chapter" style="contain-intrinsic-size:auto 77433px;--thin-h:54015px">
 <h1 id="a3"><span class="part">HTML</span>内容元素、表单与可访问性</h1>
 <p>上一章把文档的外壳立了起来(<a href="#f2-doc">2.1</a> 的骨架行、<a href="#f2-semantic">2.2</a> 的分区与标题),这一章往里面填内容。七节按一页东西的组成顺序排:<a href="#f2-text">3.1</a> 是文本、链接、图片与媒体——难点不在标签名而在细节,<code>&lt;strong&gt;</code> 与 <code>&lt;b&gt;</code> 的差别全在语义,一张没写尺寸的图会让整页跳一下,一张给手机发的 2000px 宽图会白白多下 1 MB;<a href="#f2-text-i18n">3.2</a> 接着补上文本的另一半——方向、注音、语言分支与字符引用,这些是中文书里最不该薄的一块,前面几节反复依赖的「按 lang 自动加引号」「竖排里逻辑属性会翻转」在这里才拿到因;<a href="#f2-form">3.3</a> 是表单,HTML 里唯一自带后端语义的部分,一个 <code>&lt;form&gt;</code> 就是一次 HTTP 请求的完整声明,浏览器免费给你聚焦、键盘、序列化与提交;<a href="#f2-form-validate">3.4</a> 接着讲提交之前那道拦截——约束属性、<code>validity</code>、表单伪类,以及怎么让自定义元素也参与这一套;<a href="#f2-table-list">3.5</a> 收表格、<code>&lt;details&gt;</code>、<code>&lt;dialog&gt;</code>、<code>&lt;template&gt;</code> 与 <code>&lt;iframe&gt;</code> 这些「不写 JS 也能动」的结构元素;<a href="#f2-a11y">3.6</a> 与 <a href="#f2-a11y-keyboard">3.7</a> 把前面几节反复出现的那条暗线挑明——前者讲可访问树是什么、ARIA 什么时候才该出场、一个元素的名字怎么算出来,后者讲键盘怎么走完一条完整流程、WCAG 2.2 的九条新准则落到哪几行代码上。</p>
 <p>顺序不是从易到难,而是从「语义」到「行为」再到「验证」:前面几节每讲一个元素都会说清它白送了哪些行为,最后两节给出这些行为的统一解释和检查手段,所以它们压在最后而不是单独成章。贯穿全章的判据只有一句——<strong>原生元素白送的行为,用 div 加 JS 重写既贵又永远少一块</strong>。这一章几乎不写 JS:表单与焦点的脚本侧在 <a href="浏览器API与工作原理手册.html#f7-forms-js">《浏览器 API 与工作原理手册》2.3</a> 与 <a href="浏览器API与工作原理手册.html#f7-events-focus">《浏览器 API 与工作原理手册》2.2</a>,图片加载的量化与优化在 <a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a>,样式从 <a href="#f3-cascade">4.1</a> 开始。</p>
@@ -2202,7 +2211,15 @@ c6 高度 74  内容宽 242 容器可视宽 242
 页面有横向滚动: <span class="kw">false</span>
 <span class="cm">// 把 c3 的 line-height 从 2.2 改回默认:高度降到 62,但拼音会贴上一行的底部 —— 数字变好看,排版变差。</span></code></pre>
 <p>三组数字对应三件事。第一组是双向隔离:12px 的差就是那个冒号被排到了名字左边,<code>&lt;bdi&gt;</code> 一加就归位——这是全节最该记住的一条,因为它只在真实用户数据上才会暴露。第二组是注音的代价:同样一行字,带 ruby 的容器高 96,不带的高 42,多出来的部分正是注音占的行;所以带注音的段落必须单独调 <code>line-height</code>,沿用正文的行距会让上下两行的注音撞在一起。第三组是三种断行手段的对比:<code>&lt;wbr&gt;</code> 让内容宽度从 393 降到与容器齐平,页面的横向滚动条消失;换成 <code>overflow-wrap: anywhere</code> 效果一样但断点由浏览器挑,可能断在路径中间。<code>document.documentElement.scrollWidth &gt; clientWidth</code> 这一行值得单独记下来——它是「页面为什么能横向滚动」最快的判据,配合逐个元素比较 <code>scrollWidth</code> 就能定位到是谁撑破的。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 233px"><span class="t">🟢 一份国际化的最小清单</span><p>① <code>&lt;html lang dir&gt;</code> 两个属性都写。② 模板里所有插值出来的短文本包 <code>&lt;bdi&gt;</code>,长文本加 <code>dir="auto"</code>。③ 样式一律用逻辑属性(<code>margin-inline</code>、<code>inset-inline</code>、<code>text-align: start</code>),需要按方向分支时用 <code>:dir()</code> 而不是 <code>[dir]</code>。④ 语言相关的样式用 <code>:lang()</code> 而不是 <code>[lang|=]</code>,后者不继承。⑤ 带注音的段落单独放大 <code>line-height</code>。⑥ 用户可控内容一律走会转义的通道,不要用 <code>innerHTML</code>。⑦ 需要「不断开」的地方用 <code>&amp;nbsp;</code>,需要「可以断开」的地方用 <code>&lt;wbr&gt;</code> 或 <code>&amp;shy;</code>,都不要拿它们当排版工具。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 421px"><span class="t">🟢 一份国际化的最小清单</span><ul>
+<li><code>&lt;html lang dir&gt;</code> 两个属性都写。</li>
+<li>模板里所有插值出来的短文本包 <code>&lt;bdi&gt;</code>,长文本加 <code>dir="auto"</code>。</li>
+<li>样式一律用逻辑属性(<code>margin-inline</code>、<code>inset-inline</code>、<code>text-align: start</code>),需要按方向分支时用 <code>:dir()</code> 而不是 <code>[dir]</code>。</li>
+<li>语言相关的样式用 <code>:lang()</code> 而不是 <code>[lang|=]</code>,后者不继承。</li>
+<li>带注音的段落单独放大 <code>line-height</code>。</li>
+<li>用户可控内容一律走会转义的通道,不要用 <code>innerHTML</code>。</li>
+<li>需要「不断开」的地方用 <code>&amp;nbsp;</code>,需要「可以断开」的地方用 <code>&lt;wbr&gt;</code> 或 <code>&amp;shy;</code>,都不要拿它们当排版工具。</li>
+</ul></div></div>
 <h2 id="f2-form">3.3 表单:控件、校验与提交</h2>
 <p>表单是 HTML 里唯一「自带后端语义」的部分:<code>&lt;form&gt;</code> 描述了一次 HTTP 请求——往哪发(<code>action</code>)、用什么方法(<code>method</code>)、正文怎么编码(<code>enctype</code>),控件的 <code>name</code>/<code>value</code> 就是请求参数。在没有一行 JS 的情况下,浏览器能完成聚焦、键盘操作、输入约束、校验提示、序列化、提交、导航整条链路。后端工程师做前端最常见的浪费就是无视这套原生能力,用 div 和 JS 重新发明一遍,结果键盘用不了、校验提示风格不一、提交数据还要手拼。这一节按「控件 → name 与值 → 原生校验 → 提交的三种形态」讲,完整示例是一个带校验的注册表单,并在 Network 面板里看请求体长什么样。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 265px"><code>&lt;form action=<span>"/register"</span>          <span class="cm">// 提交地址;省略 = 当前页面 URL</span>
@@ -2793,7 +2810,13 @@ inert                              <span class="cm">// 整棵子树不可聚焦�
 <div class="note dead" style="contain-intrinsic-size:auto 368px"><span class="t">🔴 <code>[hidden]</code> 的优先级只有 (0,1,0),一条 <code>display: flex</code> 就能把它顶掉</span><p><code>hidden</code> 属性看起来是「藏起来」的开关,但它的效果来自浏览器默认样式表里的一条普通规则 <code>[hidden] { display: none }</code>——优先级只有一个属性选择器那么高。于是 <code>.item { display: flex }</code>、<code>.row { display: grid }</code> 这类<strong>类选择器</strong>规则会稳稳地压过它(同为 (0,1,0) 时后来者胜,而作者样式表总在 UA 样式表之后),元素照样显示,而 DOM 里那个 <code>hidden</code> 属性还在,读代码的人一头雾水。兜底写法是在自己的重置样式里加一条 <code>[hidden] { display: none !important }</code>。另一件不能混淆的事:<code>hidden</code> 属性把元素<strong>同时</strong>从渲染树和可访问树里移除;<code>aria-hidden="true"</code> 只从可访问树移除——元素仍然看得见、仍然能被 Tab 聚焦,于是「看得见、能聚焦、读屏却什么都不说」,这是 Lighthouse <code>aria-hidden-focus</code> 审计要抓的那一类;<code>inert</code> 则是第三种:看得见但不可点、不可聚焦、对辅助技术不可见。三者的选法:要藏内容用 <code>hidden</code>,要让装饰性元素不被朗读用 <code>aria-hidden</code>(且它内部不能有可聚焦元素),要冻结一整片区域用 <code>inert</code>。</p></div>
 <div class="deep"><h3 class="deep">accname 算法:一个元素的名字到底从哪来</h3>
 <p>「可访问名称」不是一个属性,是一个<strong>算出来</strong>的字符串。规范(Accessible Name and Description Computation,简称 accname)规定了一条固定的优先级链,浏览器从上往下找,第一个非空的结果胜出,后面的全部不看:</p>
-<p>① <code>aria-labelledby</code>——按 id 列表<strong>逐个取那些元素的可访问名称</strong>再用空格拼起来;可以指多个 id,可以指向隐藏元素(<code>display: none</code> 的元素也能被它取到文本,这是唯一的例外),甚至可以指向自己。② <code>aria-label</code>——直接给一个字符串。③ <strong>原生来源</strong>——因元素而异:表单控件用关联的 <code>&lt;label&gt;</code>,<code>&lt;img&gt;</code> 用 <code>alt</code>,<code>&lt;table&gt;</code> 用 <code>&lt;caption&gt;</code>,<code>&lt;fieldset&gt;</code> 用 <code>&lt;legend&gt;</code>,<code>&lt;figure&gt;</code> 用 <code>&lt;figcaption&gt;</code>,<code>&lt;svg&gt;</code> 用第一个 <code>&lt;title&gt;</code>。④ <strong>内容</strong>——只有部分角色允许「用自己的文本内容当名字」(按钮、链接、标题、单元格、菜单项等),<code>&lt;div&gt;</code>、<code>&lt;section&gt;</code>、输入框都不允许,所以给 <code>&lt;section&gt;</code> 放段文字它仍然没有名字。⑤ <code>title</code> 属性、<code>placeholder</code>——最后的兜底,鼠标悬停才可见、触屏上根本看不到,不要指望它。</p>
+<ul>
+<li><strong><code>aria-labelledby</code></strong>——按 id 列表<strong>逐个取那些元素的可访问名称</strong>再用空格拼起来;可以指多个 id,可以指向隐藏元素(<code>display: none</code> 的元素也能被它取到文本,这是唯一的例外),甚至可以指向自己。</li>
+<li><strong><code>aria-label</code></strong>——直接给一个字符串。</li>
+<li><strong>原生来源</strong>——因元素而异:表单控件用关联的 <code>&lt;label&gt;</code>,<code>&lt;img&gt;</code> 用 <code>alt</code>,<code>&lt;table&gt;</code> 用 <code>&lt;caption&gt;</code>,<code>&lt;fieldset&gt;</code> 用 <code>&lt;legend&gt;</code>,<code>&lt;figure&gt;</code> 用 <code>&lt;figcaption&gt;</code>,<code>&lt;svg&gt;</code> 用第一个 <code>&lt;title&gt;</code>。</li>
+<li><strong>内容</strong>——只有部分角色允许「用自己的文本内容当名字」(按钮、链接、标题、单元格、菜单项等),<code>&lt;div&gt;</code>、<code>&lt;section&gt;</code>、输入框都不允许,所以给 <code>&lt;section&gt;</code> 放段文字它仍然没有名字。</li>
+<li><strong><code>title</code> 属性、<code>placeholder</code></strong>——最后的兜底,鼠标悬停才可见、触屏上根本看不到,不要指望它。</li>
+</ul>
 <p>三条由这条链直接推出的结论。<strong><code>aria-label</code> 会盖掉可见文本</strong>:给 <code>&lt;button&gt;保存&lt;/button&gt;</code> 加一个 <code>aria-label="提交表单"</code>,屏幕阅读器念的是「提交表单」而屏幕上写的是「保存」——语音控制用户说「点击保存」会失败(这是 WCAG 2.5.3「名称中包含标签」要求可见文本必须是可访问名称的一部分的原因)。<strong>算名字时会穿过子元素</strong>:按钮里嵌了一个 <code>&lt;svg&gt;</code> 图标和一段文字,图标若有 <code>&lt;title&gt;</code> 会被一起拼进名字,变成「图标名 保存」;所以装饰性图标一律 <code>aria-hidden="true"</code>。<strong>拼接是有空格的</strong>:<code>aria-labelledby="a b"</code> 得到的是「A 的名字 空格 B 的名字」,常用来把「删除」按钮和它所在行的标题拼成「删除 2026 年度报告」,一次解决「一列十个都叫『删除』的按钮」。</p></div>
 <div class="deep"><h3>完整示例:同一个图标按钮的五种写法,名字各是什么</h3>
 <p>五个按钮长得一模一样(一个垃圾桶图标),标记不同。脚本用一个简化版的 accname 计算把每个按钮的名字算出来,再和 DevTools 的 Accessibility 面板对照——面板里 Computed Properties → Name 会逐项列出哪个来源被采用、哪些被跳过。</p>
@@ -2862,7 +2885,13 @@ el.matches(<span>':focus-visible'</span>)     <span class="cm">// 判断这次�
 <p>键盘用户(包括很多高级用户和所有屏幕阅读器用户)靠 Tab/Shift+Tab 在<strong>可聚焦元素</strong>间移动,靠 Enter/空格/方向键操作。原生可聚焦的元素:<code>&lt;a href&gt;</code>、<code>&lt;button&gt;</code>、表单控件、<code>&lt;summary&gt;</code>、<code>&lt;iframe&gt;</code>、带 <code>contenteditable</code> 的元素;其余元素用 <code>tabindex</code> 加入:<code>tabindex="0"</code> 按 DOM 顺序进入 Tab 序,<code>tabindex="-1"</code> 不进 Tab 序但可以被 <code>element.focus()</code> 聚焦(用于「把焦点移到刚出现的错误汇总 / 新页面的标题」),<strong>正数 tabindex 会在所有 0 之前形成一套单独的顺序,几乎总是错的</strong>,Lighthouse 直接报 <code>tabindex</code> 审计。<strong>Tab 顺序跟随 DOM 顺序,不跟随视觉顺序</strong>:Flex 的 <code>order</code>、Grid 的区域摆放、<code>flex-direction: row-reverse</code> 都会让视觉顺序与 Tab 顺序脱节,用户看到焦点「乱跳」。这是 CSS 布局章(<a href="#f4-flex">6.1</a>、<a href="#f4-grid">6.2</a>)要反复提醒的;CSS 的 <code>reading-flow</code> 属性(Chrome 137+)开始允许让焦点顺序跟随视觉顺序,但今天的规矩仍是「先把 DOM 顺序写对」。</p>
 <p><strong>焦点必须可见</strong>。浏览器默认给聚焦元素画轮廓(outline),很多人第一件事就是 <code>outline: none</code> 把它去掉,于是键盘用户完全不知道焦点在哪。<code>:focus-visible</code>(Chrome 86+ / Firefox 85+ / Safari 15.4+)解决了「鼠标点按钮也出现轮廓很丑」的原始动机:它只在浏览器判断用户在用键盘(或辅助技术)时匹配,鼠标点击不匹配。现代 UA 样式表已经改用 <code>:focus-visible</code> 画轮廓,所以<strong>不要再写 <code>outline: none</code></strong>;要自定义就写 <code>:focus-visible { outline: 2px solid …; outline-offset: 2px }</code>。<code>:focus-within</code> 在后代聚焦时匹配祖先,适合高亮整个表单行。</p>
 <p><strong>焦点管理</strong>是动态界面的必修课:弹出模态框时焦点要进入框内,Tab 不能跑到框外(焦点陷阱),关闭后焦点回到触发它的按钮——原生 <code>&lt;dialog&gt;</code>+<code>showModal()</code> 全包了,自定义模态要自己做,最省事的办法是给模态以外的内容加 <code>inert</code> 属性。单页应用切换「页面」时要把焦点移到新内容的标题(<code>h1.tabIndex = -1; h1.focus()</code>)或宣布页面变化,否则屏幕阅读器用户不知道发生了什么(见 <a href="前端框架与工程化手册.html#f10-router-data">《前端框架与工程化手册》3.1</a>)。删除列表项后焦点应移到相邻项或列表容器,而不是丢到 <code>body</code>。页面顶部放一个「跳到主内容」链接(<code>&lt;a href="#main" class="skip-link"&gt;</code>,默认视觉隐藏、聚焦时出现),让键盘用户不必每页 Tab 过整个导航——Lighthouse 的 <code>bypass</code> 审计检查的就是有没有这种跳转手段或地标。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 最常见的四个键盘事故及其现场</span><p>① <code>&lt;div onclick&gt;</code> 当按钮:Tab 跳过它;Accessibility 面板 Role 为 generic、Focusable 缺失。② <code>outline: none</code> 无替代:按 Tab 页面「没反应」,其实焦点在动只是看不见。③ 自定义模态没有陷阱:Tab 几下焦点跑到遮罩后面的页面上,屏幕阅读器开始读背景内容。④ 正数 tabindex 或 CSS <code>order</code> 重排:焦点在屏幕上跳来跳去。排查都用同一个动作——<strong>把鼠标放下,只用 Tab 和 Enter 走一遍流程</strong>,再在控制台用 <code>document.activeElement</code> 随时查焦点在谁身上。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 305px"><span class="t">🔴 最常见的四个键盘事故及其现场</span><ul>
+<li><strong><code>&lt;div onclick&gt;</code> 当按钮。</strong>Tab 跳过它;Accessibility 面板 Role 为 generic、Focusable 缺失。</li>
+<li><strong><code>outline: none</code> 无替代。</strong>按 Tab 页面「没反应」,其实焦点在动只是看不见。</li>
+<li><strong>自定义模态没有陷阱。</strong>Tab 几下焦点跑到遮罩后面的页面上,屏幕阅读器开始读背景内容。</li>
+<li><strong>正数 tabindex 或 CSS <code>order</code> 重排。</strong>焦点在屏幕上跳来跳去。</li>
+</ul>
+<p>排查都用同一个动作——<strong>把鼠标放下,只用 Tab 和 Enter 走一遍流程</strong>,再在控制台用 <code>document.activeElement</code> 随时查焦点在谁身上。</p></div>
 <h3>对比度与视觉可读性</h3>
 <p>WCAG 2.x 的 AA 级要求:普通文本与背景的对比度 <strong>≥ 4.5:1</strong>,大文本(≥ 24px,或 ≥ 18.66px 且加粗)<strong>≥ 3:1</strong>,非文本的界面元素(按钮边框、图标、焦点轮廓、表单控件边框)与相邻颜色 <strong>≥ 3:1</strong>;AAA 级是 7:1 与 4.5:1。灰色占位文字(<code>#999</code> 在白底上约 2.8:1)、浅色链接、禁用态文字是最常见的不达标项。DevTools 的颜色拾取器(Styles 面板里点颜色块)会直接显示当前前景/背景的对比度和 AA/AAA 是否通过,还能在色板上画出达标分界线;Rendering 面板的「Emulate vision deficiencies」可以模拟色盲和模糊视觉。颜色不能是唯一的信息渠道(错误只标红不写字、图例只靠颜色区分)——<code>prefers-contrast</code>、<code>prefers-reduced-motion</code>(见 <a href="#f4-motion">9.1</a>)、<code>forced-colors</code>(Windows 高对比度模式)这几个媒体特性让你为不同视觉需求做适配。WCAG 2.2 新增的目标尺寸要求(可点击区域至少 24x24 CSS px)也进了 Lighthouse 的 <code>target-size</code> 审计。</p>
 <h3>WCAG 2.2 的新准则:九条里最容易漏掉的那几条</h3>
@@ -3084,7 +3113,15 @@ console.table(bad);</code></pre>
 │ 1       │ <span>'表单里的 button 未写 type'</span>   │ <span>'显示密码'</span>                     │
 │ 2       │ <span>'iframe 无 title'</span>             │ <span>'https://player.example.com/e'</span> │
 └─────────┴───────────────────────────────┴────────────────────────────────┘</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 299px"><span class="t">🟢 交付一个页面前按这张单子过一遍</span><p>① 每张内容图有 <code>alt</code>、有 <code>width</code>/<code>height</code>,首屏主图不 lazy,多尺寸图配了 <code>srcset</code>/<code>sizes</code> 且 <code>sizes</code> 与实际布局一致。② 能点的是 <code>&lt;button&gt;</code>,能跳的是 <code>&lt;a href&gt;</code>,能输入的是表单控件;Tab 能走完整条主流程,焦点始终可见。③ 表单:label 都绑定了,每个 <code>&lt;button&gt;</code> 显式写了 <code>type</code>,校验用约束属性、拦截走 <code>submit</code> 事件;在 Network 面板里看一眼请求体的编码与字段名对不对。④ 二维数据才用 <code>&lt;table&gt;</code>,有 <code>&lt;caption&gt;</code> 与带 <code>scope</code> 的 <code>&lt;th&gt;</code>。⑤ 模态用 <code>&lt;dialog&gt;</code> 的 <code>showModal()</code>,折叠用 <code>&lt;details&gt;</code>,第三方 <code>&lt;iframe&gt;</code> 有 <code>title</code> + <code>sandbox</code> + <code>allow</code>。⑥ 图标按钮有可访问名称,状态属性挂在触发器上并随交互同步,提示区域的容器预先存在。⑦ Lighthouse 的可访问性审计无红项,再开一次屏幕阅读器把首页和核心流程听一遍。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 418px"><span class="t">🟢 交付一个页面前按这张单子过一遍</span><ul>
+<li>每张内容图有 <code>alt</code>、有 <code>width</code>/<code>height</code>,首屏主图不 lazy,多尺寸图配了 <code>srcset</code>/<code>sizes</code> 且 <code>sizes</code> 与实际布局一致。</li>
+<li>能点的是 <code>&lt;button&gt;</code>,能跳的是 <code>&lt;a href&gt;</code>,能输入的是表单控件;Tab 能走完整条主流程,焦点始终可见。</li>
+<li>表单:label 都绑定了,每个 <code>&lt;button&gt;</code> 显式写了 <code>type</code>,校验用约束属性、拦截走 <code>submit</code> 事件;在 Network 面板里看一眼请求体的编码与字段名对不对。</li>
+<li>二维数据才用 <code>&lt;table&gt;</code>,有 <code>&lt;caption&gt;</code> 与带 <code>scope</code> 的 <code>&lt;th&gt;</code>。</li>
+<li>模态用 <code>&lt;dialog&gt;</code> 的 <code>showModal()</code>,折叠用 <code>&lt;details&gt;</code>,第三方 <code>&lt;iframe&gt;</code> 有 <code>title</code> + <code>sandbox</code> + <code>allow</code>。</li>
+<li>图标按钮有可访问名称,状态属性挂在触发器上并随交互同步,提示区域的容器预先存在。</li>
+<li>Lighthouse 的可访问性审计无红项,再开一次屏幕阅读器把首页和核心流程听一遍。</li>
+</ul></div></div>
 <h3>机制回顾:为什么这些规矩是这样</h3>
 <p>几条规矩值得带着机制记住,因为它们会在后面的章节反复出现。<strong><code>srcset</code> 是提示</strong>,浏览器在解析阶段就按「<code>sizes</code> x DPR」挑图,那时布局还没算出来,所以 <code>sizes</code> 是你对布局的预测而不是描述;它与 <a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a> 的图片优化、<a href="#f4-responsive">6.3</a> 的响应式是同一件事的三个视角。<strong>表单数据集的规则</strong>(有 <code>name</code>、未禁用、勾选了才进,同名多值,含文件必须 multipart)就是 HTTP 请求体的生成规则,<a href="浏览器API与工作原理手册.html#f7-forms-js">《浏览器 API 与工作原理手册》2.3</a> 讲 JS 里读写表单时沿用它,<a href="JavaScript语言手册.html#f6-fetch">《JavaScript 语言手册》9.2</a> 的上传也沿用它。<strong>可访问树</strong>是语义标签、ARIA、焦点管理三者共同的对象:语义标签让它自动正确,ARIA 手动补写它,焦点管理决定辅助技术此刻读它的哪个节点——<a href="前端框架与工程化手册.html#f10-components">《前端框架与工程化手册》1.2</a> 用 React 写组件时,这三件事一件都不会因为换了写法而消失,JSX 最终产出的仍是这一章的标签。</p>
 <p>还有一条关于「现代替代」的判断方式。这一章出现了不少 Baseline 之后才有的东西:<code>&lt;dialog&gt;</code>、<code>details name</code>、<code>:user-invalid</code>、<code>popover</code>、<code>inert</code>、<code>sizes="auto"</code>、<code>fetchpriority</code>。判断能不能用,看 <a href="#f1-mdn">1.4</a> 讲的流程:MDN 兼容性表里的 Baseline 标记与具体版本号,再对照你的用户浏览器分布;能优雅降级的(<code>sizes="auto, 100vw"</code>、<code>fetchpriority</code> 被忽略也无害)直接用,不能降级的(<code>dialog</code> 在不支持的浏览器里只是个 div)要么接受最低支持版本、要么加 polyfill。</p>
@@ -3137,7 +3174,7 @@ console.table(bad);</code></pre>
 <p>可访问性这一侧有四份文档要分清:<strong>WAI-ARIA</strong> 定义 role 与 aria-* 属性各是什么意思;<strong>ARIA in HTML</strong> 定义哪个 HTML 元素对应哪个隐式 role、哪些 role 允许被覆盖;<strong>accname</strong>(Accessible Name and Description Computation)定义可访问名称那条优先级链;<strong>WCAG 2.2</strong> 定义验收准则(A/AA/AAA 三级)。另外 <strong>ARIA Authoring Practices Guide</strong>(APG)不是规范而是模式手册,标签页、菜单、组合框这类自定义控件该有哪些键位与属性,以它为准。Lighthouse 的可访问性审计跑的是 <strong>axe-core</strong> 规则集的一个子集,它的每条规则在 Deque 的文档里都有对应说明。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 35860px;--thin-h:23155px">
+<section class="chapter" style="contain-intrinsic-size:auto 36211px;--thin-h:23155px">
 <h1 id="a4"><span class="part">CSS</span>选择器、层叠与值</h1>
 <p>CSS 只做一件事:给文档树上的每个元素、每个属性算出一个值,再把这些值交给布局与绘制(见 <a href="浏览器API与工作原理手册.html#f8-render">《浏览器 API 与工作原理手册》9.2</a>)。这一章讲算值链条的前两环,也是排查一切「样式怎么不生效」的两把尺子。<a href="#f3-cascade">4.1</a> 回答「这个属性的值从哪条声明来」——选择器决定哪些声明命中,层叠从命中的声明里挑出一条赢家,一条都没命中时再由继承或初始值兜底;这一环里最反直觉的一句是「写在后面不一定赢,优先级高也不一定赢」,因为优先级只是层叠的第四道关。<a href="#f3-units">4.2</a> 回答「赢下来的那个值到底有多大」——<code>1em</code>、<code>50%</code>、<code>100vw</code> 各自相对谁换算,同一个百分比在 <code>width</code>、<code>padding</code>、<code>line-height</code> 上参照的根本不是一个东西,<code>calc()</code> 与 <code>clamp()</code> 又怎么把这些相对量组合成一个能随视口连续变化的表达式。<a href="#f3-counter">4.3</a> 把这两环合起来用在一个特殊的属性上——<code>content</code>:<code>::before</code>/<code>::after</code> 凭空造出来的那个盒是什么、不是什么,以及 <code>content</code> 能往里装的六类东西(字符串、<code>attr()</code>、图像、引号、计数器,加一段只给辅助技术读的备用文本)。</p>
 <p>两节合起来正好是 DevTools 里两个面板的分工:Styles 面板显示层叠的过程与结果(谁被划掉了),Computed 面板显示换算之后的最终值。后面几章的每个属性都架在这条链上——<a href="#f3-box">5.1</a> 的 <code>width</code> 落在盒子哪一圈、<a href="#fcss-width">5.3</a> 的 <code>height: 100%</code> 为什么时灵时不灵、<a href="#f4-responsive">6.3</a> 的断点为什么建议用 <code>em</code>,追到底都是「谁赢了」和「这个值相对谁」这两个问题。<a href="#f4-modern">10.1</a> 的 <code>@layer</code>、自定义属性与 <code>:has()</code> 是本章规则的现代扩展,读完那一节值得回来再看一遍层叠顺序表。</p>
@@ -3341,8 +3378,20 @@ Elements → 选中 &lt;a&gt; → Styles 面板(从上到下):
 
 Computed 面板 → color: rgb(26, 115, 232),点开箭头列出全部来源,第一条是 #site-nav a</code></pre>
 <p>解读:<code>.nav .link</code> 是 (0,2,0),<code>#site-nav a</code> 是 (1,0,1),逐位比第一位就输了,写在后面也没用——出现顺序是最后一关。<code>.link:hover</code> 是 (0,2,0),同样输,所以悬停也不红。<code>nav { color }</code> 对 <code>span</code> 生效是因为 <code>span</code> 没有任何直接命中的 <code>color</code> 声明;对 <code>a</code> 不生效是因为 UA 样式表已经直接给 <code>a</code> 命中了一个 <code>color</code>,继承值在层叠里排在所有直接命中声明之后。</p>
-<p>改法有四种,按推荐顺序:① 把自己的选择器提到同量级:<code>#site-nav .link { color: crimson }</code>,(1,1,0) &gt; (1,0,1);② 改旧规则,把 id 包进 <code>:where(#site-nav) a</code>,它变成 (0,0,1),谁都能覆盖;③ 把旧样式表整个放进 <code>@layer legacy</code>,新样式不分层就压过它;④ <code>!important</code>——能用但别用。改完任一种,第一行输出变成 <code>rgb(220, 20, 60)</code>。想让链接跟着父元素变色,给它写 <code>a { color: inherit }</code>,这是导航、卡片里链接的常见重置。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 230px"><span class="t">🟢 排查样式的固定流程</span><p>① Elements 里选中元素,Styles 面板搜属性名:没看到你的规则 → 选择器没命中(检查拼写、类名是否真的在 DOM 上、伪类状态要用 :hov 面板强制);看到了但划线 → 被层叠掉,看划线上方是谁赢的;② 看 Computed 面板确认最终值,展开看来源列表;③ 值对但效果不对 → 属性不适用(<code>width</code> 对内联元素无效、<code>z-index</code> 对非定位元素无效,见 <a href="#f3-display">5.2</a>),DevTools 会在这类声明旁边给个感叹号提示;④ 以上都对还不对,看是不是动画/过渡在接管,或者属性被父级 <code>overflow</code>、<code>opacity</code> 之类间接影响。</p></div></div>
+<p>改法有四种,按推荐顺序:</p>
+<ul>
+<li>把自己的选择器提到同量级:<code>#site-nav .link { color: crimson }</code>,(1,1,0) &gt; (1,0,1)。</li>
+<li>改旧规则,把 id 包进 <code>:where(#site-nav) a</code>,它变成 (0,0,1),谁都能覆盖。</li>
+<li>把旧样式表整个放进 <code>@layer legacy</code>,新样式不分层就压过它。</li>
+<li><code>!important</code>——能用但别用。</li>
+</ul>
+<p>改完任一种,第一行输出变成 <code>rgb(220, 20, 60)</code>。想让链接跟着父元素变色,给它写 <code>a { color: inherit }</code>,这是导航、卡片里链接的常见重置。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 303px"><span class="t">🟢 排查样式的固定流程</span><ul>
+<li><strong>Elements 里选中元素,Styles 面板搜属性名。</strong>没看到你的规则 → 选择器没命中(检查拼写、类名是否真的在 DOM 上、伪类状态要用 :hov 面板强制);看到了但划线 → 被层叠掉,看划线上方是谁赢的。</li>
+<li><strong>看 Computed 面板确认最终值</strong>,展开看来源列表。</li>
+<li><strong>值对但效果不对</strong> → 属性不适用(<code>width</code> 对内联元素无效、<code>z-index</code> 对非定位元素无效,见 <a href="#f3-display">5.2</a>),DevTools 会在这类声明旁边给个感叹号提示。</li>
+<li><strong>以上都对还不对</strong>,看是不是动画/过渡在接管,或者属性被父级 <code>overflow</code>、<code>opacity</code> 之类间接影响。</li>
+</ul></div></div>
 <h2 id="f3-units">4.2 单位与值:px、em、rem、vw、% 与 calc</h2>
 <p>CSS 属性的值有类型:长度、百分比、数字、颜色、时间、角度、关键字、函数。同一个 <code>50%</code> 写在 <code>width</code>、<code>height</code>、<code>font-size</code>、<code>line-height</code>、<code>top</code>、<code>transform</code> 上,相对的基准各不相同;同一个 <code>1em</code> 在 <code>font-size</code> 上相对父元素、在 <code>padding</code> 上相对自己。「这个值相对谁换算」是一张要背下来的表——背不下来就去查,但不能靠猜。这一节把长度单位、百分比的参照物、数学函数和颜色值的形态一次列清,最后用流体排版把它们串起来。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 292px"><code>&lt;length&gt;      : &lt;number&gt;&lt;单位&gt;;0 可以不带单位,其他长度必须带单位
@@ -3720,7 +3769,16 @@ why(<span>'.card .title'</span>, <span>'color'</span>);</code></pre>
 └─────────┴────────────────┴───────────┴───────────┴─────────┴────────────┘
 内联: (无) | 计算值: rgb(255, 255, 255)</code></pre>
 <p>读法:三条规则都命中了这个元素,第三条带一个 id,三元组第一位是 1,直接赢——所以计算值是白色,前两条在 Styles 面板里会带删除线。把第二条改成 <code>.card .title.title</code>(三元组 0,3,0)仍然赢不了,因为不进位;真正的修法是把 <code>#hero</code> 换成类,或者把基础样式包进 <code>@layer base</code> 再把主题放到更后面的层。脚本有两处不精确要知道:跨源样式表(CDN 上的字体或组件库)会被 <code>try</code> 跳过,<code>@media</code> 与 <code>@layer</code> 里的规则要递归 <code>cssRules</code> 才能取到——所以它是快速定位工具,最终裁判仍然是 Styles 面板。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 265px"><span class="t">🟢 回看清单:写完一段 CSS 后过一遍</span><p>① 选择器里有没有 id,能不能换成类;有没有 <code>!important</code>,能不能改用 <code>@layer</code> 或 <code>:where()</code> 解决。② 基础样式(reset、排版默认值)是不是包在 <code>:where()</code> 或低层 <code>@layer</code> 里,让业务样式不用加优先级就能覆盖。③ <code>@layer</code> 的顺序声明是不是写在入口文件第一行,第三方样式有没有被显式放进某一层。④ 字号、间距用 rem 或 em,边框、阴影这类不该随字号缩放的用 px。⑤ 每个百分比都能说出它相对谁;<code>height</code> 的百分比确认过父级有确定高度。⑥ 宽度方向不用 <code>100vw</code>,满屏高用 <code>100dvh</code> 并留 <code>100vh</code> 作前一行兜底。⑦ <code>calc()</code> 的加减号两侧有空格;所有时间值带单位。⑧ 改完在 Computed 面板确认最终值,而不是只看自己写了什么。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 424px"><span class="t">🟢 回看清单:写完一段 CSS 后过一遍</span><ul>
+<li>选择器里有没有 id,能不能换成类;有没有 <code>!important</code>,能不能改用 <code>@layer</code> 或 <code>:where()</code> 解决。</li>
+<li>基础样式(reset、排版默认值)是不是包在 <code>:where()</code> 或低层 <code>@layer</code> 里,让业务样式不用加优先级就能覆盖。</li>
+<li><code>@layer</code> 的顺序声明是不是写在入口文件第一行,第三方样式有没有被显式放进某一层。</li>
+<li>字号、间距用 rem 或 em,边框、阴影这类不该随字号缩放的用 px。</li>
+<li>每个百分比都能说出它相对谁;<code>height</code> 的百分比确认过父级有确定高度。</li>
+<li>宽度方向不用 <code>100vw</code>,满屏高用 <code>100dvh</code> 并留 <code>100vh</code> 作前一行兜底。</li>
+<li><code>calc()</code> 的加减号两侧有空格;所有时间值带单位。</li>
+<li>改完在 Computed 面板确认最终值,而不是只看自己写了什么。</li>
+</ul></div></div>
 <h3>机制回顾:两句话推出这一章</h3>
 <p>第一句:<strong>层叠是一场分关淘汰的比赛,优先级只排在第四关</strong>。先比来源与重要性——同为作者样式的普通声明才轮到后面的关卡,而 <code>!important</code> 会把声明换到另一条赛道上,这条赛道里作者的重要声明反而输给用户与 UA 的重要声明(这正是「用户的高对比度设置能压过网站样式」的机制来源);再比是不是内联;再比 <code>@layer</code>,后声明的层更强,没写在任何层里的样式最强,而层里的重要声明顺序反转;到这一步还平手,才去算优先级三元组;三元组也一模一样,才看谁写在后面。知道了这个顺序,「为什么加了个类还是压不过」就有了确定的分诊路径:先看对方是不是 <code>!important</code>,再看自己有没有掉进某个弱层,最后才数选择器。反过来,这也解释了为什么 <code>@layer</code> 比 <code>!important</code> 便宜——它在优先级之前就分出了胜负,不需要参与选择器的军备竞赛。</p>
 <p>第二句:<strong>相对单位的参照物要到「用值」阶段才确定</strong>。<code>em</code> 相对的是这个元素自己 <code>font-size</code> 的<strong>计算值</strong>,而 <code>font-size</code> 自己写 <code>em</code> 时相对的是父级——所以嵌套三层 <code>0.9em</code> 会连乘成 0.729,而同一元素上 <code>padding: 1em</code> 用的是这个元素已经算好的字号,不再乘一次。百分比参照的是包含块的对应维度,唯独 <code>padding</code> 与 <code>margin</code> 的竖直方向也按<strong>宽度</strong>算,原因是文档流里包含块的高度经常还没确定,而宽度总是先算出来的;这条看起来别扭的规则反而成全了 <code>padding-top: 56.25%</code> 这个在 <code>aspect-ratio</code> 出现之前唯一可靠的宽高比占位技巧。<code>vw</code> 与 <code>vh</code> 在布局前就有确定的值,不依赖任何祖先,代价是它们不知道滚动条与移动端地址栏的存在,于是有了 <code>svh</code>/<code>lvh</code>/<code>dvh</code> 三兄弟。<code>calc()</code> 之所以能混用 <code>%</code> 与 <code>rem</code>,是因为它把表达式保留到用值阶段才求值——同样的原因,<code>calc()</code> 里的百分比该按什么算,取决于它出现在哪个属性上。</p>
@@ -3751,7 +3809,7 @@ why(<span>'.card .title'</span>, <span>'color'</span>);</code></pre>
 <p>书这一侧,Meyer《CSS 权威指南》讲选择器与层叠的那两章是最系统的中文可得资料,张鑫旭《CSS 世界》则补上了「为什么规范这么定」的那一层;<code>:visited</code> 被削弱的历史、匹配从右往左这类实现层面的事,规范里不写,要去看浏览器团队的公开文章与 Chromium/WebKit 的设计文档。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 37408px;--thin-h:25438px">
+<section class="chapter" style="contain-intrinsic-size:auto 38014px;--thin-h:25884px">
 <h1 id="a5"><span class="part">CSS</span>盒模型与视觉格式化</h1>
 <p>上一章算出了每个属性的值(<a href="#f3-cascade">4.1</a> 决定用哪条声明,<a href="#f3-units">4.2</a> 决定这个值有多大),这一章把值变成屏幕上的矩形。四节沿着一个盒子的一生排:<a href="#f3-box">5.1</a> 讲盒子的四圈——<code>width</code> 写的是哪一圈由 <code>box-sizing</code> 决定,<code>margin</code> 为什么会折叠、能为负、能 <code>auto</code>,以及 <code>outline</code> 与 <code>box-shadow</code> 为什么画得出来却不占地方;<a href="#f3-display">5.2</a> 讲这个盒子参与哪种布局、脱不脱离正常流、重叠时谁在上面;<a href="#fcss-width">5.3</a> 回到尺寸本身,把「不写 <code>width</code> 有多宽」的四种表现、百分比高度的生效条件、min/max 的优先级、<code>margin: auto</code> 到底靠什么判断,讲成能在 DevTools 里逐条复核的规则;<a href="#fcss-flow">5.4</a> 讲流的破坏与保护——<code>float</code> 与绝对定位怎么把元素拿出正常流,BFC 又怎么把一块区域围起来让内外互不干扰。</p>
 <p>这一章按《CSS 世界》的路子讲:每条规则都从「浏览器为什么必须这样做」推出来,而不是背口诀。它也是本书 CSS 部分排错密度最高的一章——<code>width: 100%</code> 加 padding 就溢出、子元素的 <code>margin-top</code> 跑到父元素外面、<code>height: 100%</code> 时灵时不灵、<code>fixed</code> 弹窗跟着页面滚、<code>z-index: 9999</code> 压不过 2、父元素高度塌成 0,这六个现场在这里都有确定答案。Flex 与 Grid 容器内部建立各自的格式化上下文,不走本章的正常流规则(见 <a href="#f4-flex">6.1</a>、<a href="#f4-grid">6.2</a>),但容器自己与外部世界的关系仍由本章决定;元素画出来之后的着色、圆角与阴影在 <a href="#f3-color-bg">8.1</a>。</p>
@@ -3909,7 +3967,13 @@ isolation: <span class="kw">auto</span> | isolate                               
 <p>有了这个坐标系,好几条零散的规则一次就解释清了。<code>inline-block</code> 与 <code>flow-root</code> 的关系:两者内在盒子相同(都自成 BFC,都能包住浮动、都能挡住 margin 折叠),差别只在外在盒子——所以「想包住浮动但不想变成内联」的答案是 <code>flow-root</code> 而不是 <code>inline-block</code>。<code>display: contents</code> 的定位:它是「<strong>把外在盒子去掉</strong>」——元素自己不生成盒,孩子直接成为祖父的 flex/grid 项目,这正是它用来「消掉一层包装元素」的原理,也是它会连带丢掉背景、边框、以及某些浏览器上的可访问性语义的原因(盒子都没了,画在盒子上的东西自然没了)。flex 与 grid <strong>子项</strong>的行为:成为子项之后,它的外在类型被<strong>块化</strong>(inline 的子项也会变成块),而内在类型保持不变——这解释了「给 <code>&lt;span&gt;</code> 设宽高无效,但把它放进 flex 容器就有效了」。</p>
 <p>双值语法本身今天基本不用写(浏览器支持较晚,而单值写法永远合法),它的价值在于<strong>读</strong>:遇到一个 <code>display</code> 关键字拿不准它意味着什么时,把它拆成「跟兄弟怎么排 + 孩子怎么排」两问,答案就出来了。BFC 是内在盒子那一侧的话题,下面接着讲。</p></div>
 <h3>正常流与块格式化上下文</h3>
-<p>不写 <code>display</code>、<code>position</code>、<code>float</code> 的元素走<strong>正常流</strong>:块级盒从上到下一个接一个竖排,内联盒从左到右排成行框、排不下就折行。每个盒都在某个<strong>格式化上下文</strong>里布局,块级盒在块格式化上下文(BFC)里,内联盒在内联格式化上下文(IFC)里,flex 子项在 flex 格式化上下文里。BFC 的关键性质是<strong>隔离</strong>:BFC 内部的布局不影响外部,外部的浮动、margin 也不会侵入内部。具体表现为三条:① 内部子元素的 margin 不会和外部折叠;② 它会<strong>包住</strong>内部的浮动元素(高度把浮动算进去);③ 它不会和外部的浮动重叠,而是让出位置排在浮动旁边。</p>
+<p>不写 <code>display</code>、<code>position</code>、<code>float</code> 的元素走<strong>正常流</strong>:块级盒从上到下一个接一个竖排,内联盒从左到右排成行框、排不下就折行。每个盒都在某个<strong>格式化上下文</strong>里布局,块级盒在块格式化上下文(BFC)里,内联盒在内联格式化上下文(IFC)里,flex 子项在 flex 格式化上下文里。</p>
+<p>BFC 的关键性质是<strong>隔离</strong>:BFC 内部的布局不影响外部,外部的浮动、margin 也不会侵入内部。具体表现为三条:</p>
+<ul>
+<li>内部子元素的 margin 不会和外部折叠。</li>
+<li>它会<strong>包住</strong>内部的浮动元素(高度把浮动算进去)。</li>
+<li>它不会和外部的浮动重叠,而是让出位置排在浮动旁边。</li>
+</ul>
 <table style="contain-intrinsic-size:auto 392px">
 <thead><tr><th>建立 BFC 的条件</th><th>备注</th></tr></thead>
 <tbody>
@@ -3968,12 +4032,26 @@ isolation: <span class="kw">auto</span> | isolate                               
 <tr><td>顶层(top layer)元素:<code>dialog.showModal()</code>、全屏元素、popover</td><td>它们在所有层叠上下文之上,见 <a href="#f2-table-list">3.5</a></td></tr>
 </tbody>
 </table>
-<p>同一个层叠上下文内部,绘制顺序固定为七层,从下到上:① 上下文根元素自己的背景和边框;② <code>z-index</code> 为负的子层叠上下文(越负越下);③ 正常流里非定位的块级后代;④ 浮动后代;⑤ 正常流里的内联后代(文字、图片);⑥ <code>z-index: auto</code> 或 <code>0</code> 的定位后代、以及 <code>opacity/transform</code> 等创建的子上下文,按 DOM 顺序;⑦ <code>z-index</code> 为正的子层叠上下文,按值升序。读这七层能回答几个常见疑问:为什么 <code>position: relative</code> 不写 <code>z-index</code> 就能盖住前面的普通块(⑥ 在 ③ 之上);为什么文字能浮在浮动图片上面(⑤ 在 ④ 之上);为什么给父元素设 <code>z-index: -1</code> 的伪元素背景会跑到祖父元素后面(② 在 ① 之上但在祖父的内容之下——除非父元素自己是层叠上下文)。</p>
+<p>同一个层叠上下文内部,绘制顺序固定为七层,从下到上:</p>
+<ul>
+<li><strong>①</strong> 上下文根元素自己的背景和边框。</li>
+<li><strong>②</strong> <code>z-index</code> 为负的子层叠上下文(越负越下)。</li>
+<li><strong>③</strong> 正常流里非定位的块级后代。</li>
+<li><strong>④</strong> 浮动后代。</li>
+<li><strong>⑤</strong> 正常流里的内联后代(文字、图片)。</li>
+<li><strong>⑥</strong> <code>z-index: auto</code> 或 <code>0</code> 的定位后代,以及 <code>opacity</code>/<code>transform</code> 等创建的子上下文,按 DOM 顺序。</li>
+<li><strong>⑦</strong> <code>z-index</code> 为正的子层叠上下文,按值升序。</li>
+</ul>
+<p>读这七层能回答几个常见疑问:为什么 <code>position: relative</code> 不写 <code>z-index</code> 就能盖住前面的普通块(⑥ 在 ③ 之上);为什么文字能浮在浮动图片上面(⑤ 在 ④ 之上);为什么给父元素设 <code>z-index: -1</code> 的伪元素背景会跑到祖父元素后面(② 在 ① 之上但在祖父的内容之下——除非父元素自己是层叠上下文)。</p>
 <figure style="contain-intrinsic-size:auto 367px">
 <svg viewBox="-24 10 736 280" xmlns="http://www.w3.org/2000/svg" font-size="13"><defs><marker id="ar-f3-2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs><line x1="28" y1="262" x2="28" y2="30" stroke="var(--accent)" marker-end="url(#ar-f3-2)"/><text class="svgmuted" x="14" y="150" font-size="11" transform="rotate(-90 14 150)" text-anchor="middle">后画 = 在上</text><rect x="44" y="20" width="400" height="28" rx="5" fill="var(--ok-bg)" stroke="var(--ok-fg)"/><text class="svgtext" x="54" y="39" font-size="12">7  z-index 为正的子层叠上下文(值小的在下)</text><rect x="44" y="54" width="400" height="28" rx="5" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="54" y="73" font-size="12">6  z-index: auto / 0 的定位后代;opacity、transform 创建的子上下文</text><rect x="44" y="88" width="400" height="28" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="54" y="107" font-size="12">5  正常流里的内联内容(文字、行内图片)</text><rect x="44" y="122" width="400" height="28" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="54" y="141" font-size="12">4  浮动元素</text><rect x="44" y="156" width="400" height="28" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/><text class="svgtext" x="54" y="175" font-size="12">3  正常流里非定位的块级后代(背景、边框)</text><rect x="44" y="190" width="400" height="28" rx="5" fill="var(--svg-soft2)" stroke="var(--muted)"/><text class="svgtext" x="54" y="209" font-size="12">2  z-index 为负的子层叠上下文</text><rect x="44" y="224" width="400" height="28" rx="5" fill="var(--svg-soft2)" stroke="var(--muted)"/><text class="svgtext" x="54" y="243" font-size="12">1  上下文根元素自己的背景与边框</text><text class="svgmuted" x="244" y="276" text-anchor="middle" font-size="11">子上下文整体占一层,内部的 z-index 出不来</text><rect x="470" y="20" width="232" height="232" rx="6" fill="var(--svg-fill)" stroke="var(--dead-fg)"/><text class="svgtext" x="482" y="42" font-size="12">这些会创建新的层叠上下文</text><text class="svgmuted" x="482" y="66" font-size="11">定位 + z-index 不为 auto</text><text class="svgmuted" x="482" y="86" font-size="11">position: fixed / sticky</text><text class="svgmuted" x="482" y="106" font-size="11">flex / grid 子项 + z-index</text><text class="svgmuted" x="482" y="126" font-size="11">opacity &lt; 1</text><text class="svgmuted" x="482" y="146" font-size="11">transform / filter / backdrop-filter</text><text class="svgmuted" x="482" y="166" font-size="11">perspective / clip-path / mask</text><text class="svgmuted" x="482" y="186" font-size="11">mix-blend-mode / isolation: isolate</text><text class="svgmuted" x="482" y="206" font-size="11">will-change / contain: paint|layout</text><text class="svgmuted" x="482" y="226" font-size="11">top layer:dialog / popover / 全屏</text><text class="svgmuted" x="482" y="246" font-size="11">(z-index: 9999 压不过 2 的原因)</text></svg>
 <figcaption>同一个层叠上下文内的七层绘制顺序,以及哪些属性会悄悄创建新上下文（原创绘制）</figcaption>
 </figure>
-<div class="note ok" style="contain-intrinsic-size:auto 200px"><span class="t">🟢 管理 z-index 的两条规矩</span><p>① 需要「这一块内部怎么叠都别影响外面」时,主动用 <code>isolation: isolate</code> 建一个层叠上下文,而不是等 <code>transform</code> 之类的属性意外地建;② 全局只维护一小组 <code>z-index</code> 令牌(如 <code>--z-dropdown: 100; --z-modal: 200; --z-toast: 300</code>),弹层都挂在 <code>body</code> 直属的容器里,让它们在根上下文里比较。弹窗、提示这类「必须在一切之上」的东西,用 <code>&lt;dialog&gt;</code> 的 <code>showModal()</code> 或 popover 进入顶层,不用再和 <code>z-index</code> 较劲(见 <a href="#f2-table-list">3.5</a>)。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 298px"><span class="t">🟢 管理 z-index 的两条规矩</span><ul>
+<li>需要「这一块内部怎么叠都别影响外面」时,主动用 <code>isolation: isolate</code> 建一个层叠上下文,而不是等 <code>transform</code> 之类的属性意外地建。</li>
+<li>全局只维护一小组 <code>z-index</code> 令牌(如 <code>--z-dropdown: 100; --z-modal: 200; --z-toast: 300</code>),弹层都挂在 <code>body</code> 直属的容器里,让它们在根上下文里比较。</li>
+</ul>
+<p>弹窗、提示这类「必须在一切之上」的东西,用 <code>&lt;dialog&gt;</code> 的 <code>showModal()</code> 或 popover 进入顶层,不用再和 <code>z-index</code> 较劲(见 <a href="#f2-table-list">3.5</a>)。</p></div>
 <h3>float 与 clear</h3>
 <p><code>float: left/right</code> 把元素从正常流里拿出来贴到包含块的一侧,后面的<strong>块级盒当它不存在</strong>(会和它重叠),但<strong>行框会缩短绕开它</strong>——这就是文字环绕。它的设计目的只有文字环绕图片这一件事;用它做多栏布局是 Flex/Grid 之前的权宜之计,今天不该再出现在新代码里。浮动的两个副作用:父元素的 <code>height: auto</code> 不把浮动算进去(高度塌陷,父元素背景看起来消失),后面的块级元素会被环绕。<code>clear: left/right/both</code> 让元素的上边沿放到对应方向浮动的下面;老式 clearfix 是 <code>.cf::after { content: ""; display: block; clear: both }</code>,现代直接给父元素 <code>display: flow-root</code>。<code>shape-outside: circle()</code> 可以让文字沿圆形图片的轮廓环绕,是浮动今天为数不多的新玩法。</p>
 <div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 浮动布局是历史包袱</span><p>遇到 <code>float: left; width: 33.33%</code> 加 clearfix 的三栏,这是 2015 年前的写法;改成 <code>display: flex</code> 或 <code>grid-template-columns: repeat(3, 1fr)</code> 可以删掉 clearfix、不再担心高度塌陷和百分比加边框溢出。读老代码时记住:<code>overflow: hidden</code> 出现在一个没有溢出内容的容器上,十有八九是当年为了包住浮动。</p></div>
@@ -4289,7 +4367,16 @@ box(<span>'.panel'</span>);</code></pre>
 │ 2       │ <span>'div.app'</span>     │ <span>'fixed 的包含块 + 层叠上下文'</span>      │
 └─────────┴───────────────┴────────────────────────────────────┘</code></pre>
 <p>第一张表有个容易看漏的细节:CSS 里写的是 <code>width: 320px; box-sizing: border-box</code>,但 <code>getComputedStyle().width</code> 返回的是 <code>286px</code>——CSSOM 规定这里给的是<strong>用过值</strong>,浏览器一律换算成内容盒宽度(320 − 16×2 − 1×2)。想知道元素实际占多宽看 <code>offsetWidth</code> 或 <code>getBoundingClientRect().width</code>。第二张表就是排查清单本身:<code>.panel</code> 里的绝对定位子元素会挂在 <code>.card</code> 上;它的 <code>box-shadow</code> 和下拉菜单会被 <code>main.list</code> 的 <code>overflow: hidden</code> 裁掉;而它里面任何 <code>position: fixed</code> 的元素都不会相对视口,而是被 <code>div.app</code> 的 <code>transform</code> 俘获——同时 <code>.app</code> 建立的层叠上下文也解释了为什么里面的 <code>z-index: 9999</code> 压不过外面的 <code>z-index: 2</code>。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 334px"><span class="t">🟢 回看清单:布局出问题时按顺序问自己</span><p>① 全局有没有 <code>*, *::before, *::after { box-sizing: border-box }</code>。② 这个百分比相对谁——宽度类看包含块宽,<code>height</code> 类要求父级高度确定。③ 定位元素的参照祖先写了 <code>position: relative</code> 吗;弹层是不是应该挂到 <code>body</code> 直属容器,或者干脆用 <code>&lt;dialog&gt;</code> 的顶层(见 <a href="#f2-table-list">3.5</a>)。④ <code>z-index</code> 来自一组全局令牌吗;有没有祖先因为 <code>transform</code>、<code>opacity</code>、<code>filter</code>、<code>will-change</code> 意外建了层叠上下文。⑤ 需要「内外互不干扰」时用的是 <code>display: flow-root</code> 而不是 <code>overflow: hidden</code>。⑥ 焦点环只换样式不删除,用 <code>:focus-visible</code> 区分键盘与鼠标。⑦ 量尺寸用 <code>offsetWidth</code> 或 <code>getBoundingClientRect()</code>,不要拿 <code>getComputedStyle().width</code> 当占位宽度。⑧ 老代码里出现在没有溢出内容的容器上的 <code>overflow: hidden</code>,十有八九是当年用来清浮动的,可以换成 <code>flow-root</code>。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 493px"><span class="t">🟢 回看清单:布局出问题时按顺序问自己</span><ul>
+<li>全局有没有 <code>*, *::before, *::after { box-sizing: border-box }</code>。</li>
+<li>这个百分比相对谁——宽度类看包含块宽,<code>height</code> 类要求父级高度确定。</li>
+<li>定位元素的参照祖先写了 <code>position: relative</code> 吗;弹层是不是应该挂到 <code>body</code> 直属容器,或者干脆用 <code>&lt;dialog&gt;</code> 的顶层(见 <a href="#f2-table-list">3.5</a>)。</li>
+<li><code>z-index</code> 来自一组全局令牌吗;有没有祖先因为 <code>transform</code>、<code>opacity</code>、<code>filter</code>、<code>will-change</code> 意外建了层叠上下文。</li>
+<li>需要「内外互不干扰」时用的是 <code>display: flow-root</code> 而不是 <code>overflow: hidden</code>。</li>
+<li>焦点环只换样式不删除,用 <code>:focus-visible</code> 区分键盘与鼠标。</li>
+<li>量尺寸用 <code>offsetWidth</code> 或 <code>getBoundingClientRect()</code>,不要拿 <code>getComputedStyle().width</code> 当占位宽度。</li>
+<li>老代码里出现在没有溢出内容的容器上的 <code>overflow: hidden</code>,十有八九是当年用来清浮动的,可以换成 <code>flow-root</code>。</li>
+</ul></div></div>
 <h3>本章属性速查</h3>
 <table style="contain-intrinsic-size:auto 1189px">
 <thead><tr><th>属性 / 关键字</th><th>形态</th><th>要点</th><th class="nw">节</th></tr></thead>
@@ -4321,7 +4408,7 @@ box(<span>'.panel'</span>);</code></pre>
 <p>书这一侧,张鑫旭《CSS 世界》把流、盒模型、BFC、外在/内在盒子这套模型讲得最透,本章的「外在盒子与内在盒子」那一节就是照它的框架写的;Meyer《CSS 权威指南》讲视觉格式化与定位的那两章则更接近规范的组织方式,适合当作查阅型的对照。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 35062px;--thin-h:23527px">
+<section class="chapter" style="contain-intrinsic-size:auto 35331px;--thin-h:23795px">
 <h1 id="a6"><span class="part">CSS</span>布局:Flex、Grid 与响应式</h1>
 <p>正常流擅长文档,不擅长界面:块盒从上往下摞、行内盒从左往右排(见 <a href="#f3-display">5.2</a>),而真实的界面要求导航栏把最后一项推到最右、三张卡片不管内容多少都等高、页脚吸在视口底部、一组卡片随容器宽度自动决定列数。这些事在只有 <code>float</code> 与 <code>inline-block</code> 的年代全靠技巧和补丁,今天由两种专为界面设计的格式化上下文承担:<a href="#f4-flex">6.1</a> 管一条轴线上的空间分配与对齐,<a href="#f4-grid">6.2</a> 管行列两个方向的轨道;<a href="#f4-responsive">6.3</a> 在它们之上按视口或容器尺寸切换参数,让同一份 HTML 在 375px 和 1440px 下都成立。</p>
 <p>三节的顺序就是解决一个布局问题的顺序:先问它是一维还是二维,再问尺寸变化时哪些参数要跟着变。三节共用同一批底层概念——包含块、剩余空间、最小内容尺寸——它们在 <a href="#f3-box">5.1</a> 与 <a href="#fcss-width">5.3</a> 已经讲过,布局里的怪事十有八九能追回去:「这一列怎么被撑宽了」的答案是 <code>min-content</code>,「<code>justify-content</code> 怎么没效果」的答案是剩余空间已经被吃光。这一章不讲动效与新语法:<code>transform</code>/<code>transition</code>/<code>animation</code> 在 <a href="#f4-motion">9.1</a>,自定义属性、原生嵌套、<code>:has()</code> 与 <code>@layer</code> 在 <a href="#f4-modern">10.1</a>;响应式图片的 <code>srcset</code>/<code>sizes</code> 属于 HTML,在 <a href="#f2-text">3.1</a>。</p>
@@ -4369,7 +4456,13 @@ order:        &lt;integer&gt;                                            <span c
 </tbody>
 </table>
 <h3>剩余空间怎么分:basis、grow、shrink</h3>
-<p>浏览器给 flex 容器排版时,主轴上的步骤固定:① 先算每个项目的<strong>假设主尺寸</strong>——取 <code>flex-basis</code>(<code>auto</code> 就看 <code>width</code>/<code>height</code>,再没有就按内容的 max-content 宽度),再被自身的 min/max 尺寸夹住;② 用容器内容区的主轴长度减去所有项目的假设尺寸、外边距和 gap,得到<strong>剩余空间</strong>;③ 剩余空间为正,按各项目 <code>flex-grow</code> 的比例把它分掉,<code>flex-grow: 0</code> 的一分不拿;剩余空间为负(放不下),按 <code>flex-shrink × flex-basis</code> 的比例分摊溢出量——所以<strong>同样 <code>flex-shrink: 1</code>,基准尺寸大的项目缩得更多</strong>;④ 任何项目碰到自己的 min/max 边界就被「冻结」在边界上,剩下的项目重新分一轮。</p>
+<p>浏览器给 flex 容器排版时,主轴上的步骤固定:</p>
+<ul>
+<li>先算每个项目的<strong>假设主尺寸</strong>——取 <code>flex-basis</code>(<code>auto</code> 就看 <code>width</code>/<code>height</code>,再没有就按内容的 max-content 宽度),再被自身的 min/max 尺寸夹住。</li>
+<li>用容器内容区的主轴长度减去所有项目的假设尺寸、外边距和 gap,得到<strong>剩余空间</strong>。</li>
+<li>剩余空间为正,按各项目 <code>flex-grow</code> 的比例把它分掉,<code>flex-grow: 0</code> 的一分不拿;剩余空间为负(放不下),按 <code>flex-shrink × flex-basis</code> 的比例分摊溢出量——所以<strong>同样 <code>flex-shrink: 1</code>,基准尺寸大的项目缩得更多</strong>。</li>
+<li>任何项目碰到自己的 min/max 边界就被「冻结」在边界上,剩下的项目重新分一轮。</li>
+</ul>
 <p>这套算法解释了 <code>flex: 1</code> 和 <code>flex: auto</code> 的差别:前者基准为 0,容器的全部宽度都是「剩余空间」,按权重平分,于是三列严格等宽;后者基准是内容宽度,只有内容之外的富余才被平分,内容多的列最终更宽。它也解释了「为什么 <code>width: 33%</code> 在 flex 里不严格」:<code>width</code> 只是基准,后面还有 grow/shrink 在动它;想固定,写 <code>flex: 0 0 33%</code>,或者直接把 <code>flex-basis</code> 写成百分比。</p>
 <table style="contain-intrinsic-size:auto 303px">
 <thead><tr><th class="nw">写法</th><th>展开</th><th>效果</th><th>典型用途</th></tr></thead>
@@ -4858,7 +4951,18 @@ grid-<span class="kw">template</span>-rows: subgrid;   /* 自己也是网格项�
 <p>第三条,对齐属性的分工。两个前缀按轴分:<code>justify-*</code> 管行内轴(Flex 里是主轴,Grid 里是列方向),<code>align-*</code> 管块轴(Flex 里是交叉轴,Grid 里是行方向);两个后缀按对象分:<code>-content</code> 分配<strong>轨道或行之间</strong>的剩余空间,<code>-items</code> 与 <code>-self</code> 决定<strong>项目在自己那一格里</strong>怎么放。四个组合不必硬记,记住「轴 × 对象」这张二维表就够:想让几个盒子在容器里整体靠右,是 <code>justify-content</code>;想让每个盒子在各自的格子里靠右,是 <code>justify-items</code>。它顺带解释两个高频困惑——<code>justify-content</code> 在全是 <code>1fr</code> 的列上毫无效果,因为 fr 已经把剩余空间分完了,轨道之间没有空隙可调;单行 flex 容器里 <code>align-content</code> 无效,因为只有一行,行与行之间同样没有空间。<code>place-items: center</code> 是 <code>align-items</code> 加 <code>justify-items</code> 的简写,配 <code>display: grid</code> 就是今天最短的居中写法。</p>
 <h3>一眼分清:该用哪个</h3>
 <p>选择题通常只有三道。<strong>布局</strong>:一条线上分配空间用 Flex,两个方向都要对齐用 Grid,单个元素居中用 <code>display: grid; place-items: center</code>,拿不准就先上 Grid。<strong>列数</strong>:固定列数用 <code>repeat(3, minmax(0, 1fr))</code>,列数随宽度变用 <code>repeat(auto-fit, minmax(最小宽, 1fr))</code>,最后一行不希望被拉宽就把 <code>auto-fit</code> 换成 <code>auto-fill</code>,列数要有上限就在外面包一层 <code>max-width</code>。<strong>响应</strong>:能流动的(<code>auto-fit</code>、<code>flex-wrap</code>、<code>clamp()</code>、<code>max-width</code>)先流动,只有结构真要换——侧栏挪位置、导航从汉堡菜单变横排、三栏变一栏——才写媒体查询;组件按所在容器切换用 <code>@container</code>,它不关心视口有多宽,所以同一个组件放进侧栏和放进主区能各自正确。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 300px"><span class="t">🟢 回看清单:交付前过一遍</span><p>① 每个 flex/grid 项目里可能出现长内容的地方有没有 <code>min-width: 0</code> 或 <code>minmax(0, 1fr)</code>。② <code>&lt;head&gt;</code> 里有 viewport meta 且没有禁缩放。③ 断点用 <code>em</code>、移动优先、顺序从窄到宽。④ 能流动的地方没有硬写断点;字号用 <code>clamp()</code> 而不是一堆字号断点。⑤ <code>:hover</code> 效果包在 <code>@media (hover: hover)</code> 里。⑥ 用了 <code>order</code>、<code>grid-auto-flow: dense</code> 或 <code>row-reverse</code> 的地方检查过键盘顺序。⑦ 需要容器查询的组件,容器上设了 <code>container-type: inline-size</code>,查询写在子元素上。⑧ 满屏高用 <code>100dvh</code> 并留 <code>100vh</code> 兜底,宽度方向不用 <code>100vw</code>。⑨ HTML 里 <code>sizes</code> 的媒体条件与 CSS 的列数保持一致。⑩ 新特性在 Can I use 上对照过目标浏览器,必要时用 <code>@supports</code> 降级。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 470px"><span class="t">🟢 回看清单:交付前过一遍</span><ul>
+<li>每个 flex/grid 项目里可能出现长内容的地方有没有 <code>min-width: 0</code> 或 <code>minmax(0, 1fr)</code>。</li>
+<li><code>&lt;head&gt;</code> 里有 viewport meta 且没有禁缩放。</li>
+<li>断点用 <code>em</code>、移动优先、顺序从窄到宽。</li>
+<li>能流动的地方没有硬写断点;字号用 <code>clamp()</code> 而不是一堆字号断点。</li>
+<li><code>:hover</code> 效果包在 <code>@media (hover: hover)</code> 里。</li>
+<li>用了 <code>order</code>、<code>grid-auto-flow: dense</code> 或 <code>row-reverse</code> 的地方检查过键盘顺序。</li>
+<li>需要容器查询的组件,容器上设了 <code>container-type: inline-size</code>,查询写在子元素上。</li>
+<li>满屏高用 <code>100dvh</code> 并留 <code>100vh</code> 兜底,宽度方向不用 <code>100vw</code>。</li>
+<li>HTML 里 <code>sizes</code> 的媒体条件与 CSS 的列数保持一致。</li>
+<li>新特性在 Can I use 上对照过目标浏览器,必要时用 <code>@supports</code> 降级。</li>
+</ul></div>
 <div class="deep"><h3>完整示例:两个最小的「诊断模板」</h3>
 <p>布局问题的排查顺序是固定的:Elements 面板选中出问题的元素 → 点 flex/grid 徽章看轴线、轨道与 gap → Computed 面板看 <code>width</code>/<code>min-width</code>/<code>flex-basis</code>(或 <code>grid-template-columns</code> 的解析值)→ 与父容器宽度比较 → 找到谁多占了空间。下面两段是把这个顺序写成控制台脚本,贴进 Console 就能跑,比逐个点 Computed 快。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 319px"><code><span class="cm">// 诊断 flex:列出每个项目的基准、实际宽度、最小宽度与是否溢出容器</span>
@@ -5765,7 +5869,7 @@ background-repeat: repeat | repeat-x | repeat-y | no-repeat | space | round</cod
 <p>背景定位的三个写法对应三种需求:想让图片「距右下角各 20px/10px」,用四值语法 <code>background-position: right 20px bottom 10px</code>;想让它「距边缘的距离等于 padding」,不用写数字,<code>background-origin: content-box</code> 让 0 0 从内容区算,padding 变了背景跟着动;要和其他单位混算,<code>background-position: calc(100% - 20px) calc(100% - 10px)</code>——这里要知道百分比定位的定义是「图片的 X% 点对齐到容器的 X% 点」,所以 100% 就是右/下贴边,减 20px 就是往回退。三种写法的兼容性都已不是问题,按语义选最直接的那个。</p>
 <h3>多重边框:box-shadow 扩展与 outline</h3>
 <p><code>border</code> 只能有一层,但视觉上的「几层边框」有两条路。<strong><code>box-shadow</code> 的扩展半径</strong>(第四个值)可以把阴影向四周放大而不模糊:<code>box-shadow: 0 0 0 10px #655, 0 0 0 15px deeppink</code> 就是两层实色「边框」,注意多层阴影<strong>先写的在上面</strong>,所以第二层的扩展值要包含第一层(15 = 10 + 5)才露出 5px;阴影不占布局空间、不接收鼠标事件,需要占位就在外层留同样的 margin,需要在内侧画就用 <code>inset</code>。<strong><code>outline</code></strong> 是第二条路:<code>border: 10px solid #655; outline: 5px solid deeppink</code>,它只能再加一层,但能画虚线、能用 <code>outline-offset</code> 负值缩进到元素内部做「缝线」效果(<code>outline: 1px dashed white; outline-offset: -8px</code>)。过去 <code>outline</code> 不跟随 <code>border-radius</code>,圆角元素上它是个直角框;Chrome 94+ / Firefox 88+ / Safari 16.4+ 之后 outline 跟随圆角,《CSS 揭秘》里「边框内圆角」那个靠 outline 直角 + box-shadow 补缝的技巧(<code>border-radius: .8em; box-shadow: 0 0 0 .6em #655; outline: .6em solid #655</code>)在新浏览器里看起来只剩一圈圆角粗边——它的目标效果「外直角内圆角」今天要靠一层容器 <code>padding</code> + 内层圆角来做。</p>
-<table style="contain-intrinsic-size:auto 427px">
+<table style="contain-intrinsic-size:auto 426px">
 <thead><tr><th>做法</th><th class="nw">层数</th><th class="nw">占空间</th><th class="nw">跟随圆角</th><th class="nw">鼠标事件</th><th>适合</th></tr></thead>
 <tbody>
 <tr><td class="nw"><code>border</code></td><td class="nw">1</td><td class="nw">是</td><td class="nw">是</td><td class="nw">是</td><td>常规边框</td></tr>
@@ -6581,7 +6685,7 @@ dialog[open] { opacity: 1; translate: 0 0; }
 <p>下一章 <a href="#f4-modern">10.1</a> 把这一章的时长、曲线连同颜色、间距一起收进自定义属性与 <code>@layer</code>,回答「一套样式怎么组织才活得久」;需要用 JS 精确控制播放、暂停与时间轴的场合见 <a href="JavaScript语言手册.html#f6-timers">《JavaScript 语言手册》9.1</a>,动画背后的渲染管线见 <a href="浏览器API与工作原理手册.html#f8-render">《浏览器 API 与工作原理手册》9.2</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45311px;--thin-h:30357px">
+<section class="chapter" style="contain-intrinsic-size:auto 45569px;--thin-h:30428px">
 <h1 id="a10"><span class="part">CSS</span>现代 CSS、体验细节与样式架构</h1>
 <p>前面几章回答的是「一个效果怎么写出来」,这一章回答「一整套样式怎么活得久」。四节各解一层:语言这几年补上的能力(自定义属性、原生嵌套、<code>:is()</code>/<code>:where()</code>/<code>:has()</code>、<code>@layer</code>、逻辑属性、<code>aspect-ratio</code>、<code>scroll-snap</code>),界面里那些不做就显得业余的细节(可点区域够不够大、光标说没说清能不能点、弹层背后要不要变惰性、可滚动区域有没有提示、垂直居中到底该用哪一种、页脚怎么贴住底部),一套让编号跟着文档结构自动算出来的计数器机制(<code>counter-reset</code>/<code>counter-increment</code>/<code>counter-set</code>、<code>counter()</code> 与 <code>counters()</code>、<code>@counter-style</code>),以及一个团队几万行样式的组织方式(命名约定、CSS Modules、原子化、CSS-in-JS、设计令牌、层叠分层)。</p>
 <p>顺序是从工具到用法再到秩序。<a href="#f4-modern">10.1</a> 先给能力,因为后两节都建立在它上面:主题切换、令牌体系、组件的局部覆盖全靠自定义属性,而 <code>@layer</code> 直接是架构一节的结论之一;<a href="#fcss-counter">10.2</a> 单拎出计数器这一族——它不属于「新特性」,却是唯一能让编号、图表序号、多级目录跟着结构走的机制,它的值只能落在 <code>content</code> 里,而 <code>content</code> 本身的能力面在 <a href="#f3-counter">4.3</a>,同一套语法还撑着 <a href="#fcss-typo">7.3</a> 的引号;<a href="#fcss-ux">10.3</a> 是这些能力落到具体交互上的样子,每一条都给出「过去的变通写法」与「今天的一个属性」,用一张全量对照表收掉垂直居中这个被问得最多的问题,并补上为 <code>popover</code> 配套而生的锚点定位;<a href="#fcss-arch">10.4</a> 回答样式怎么分文件、类名从哪来、优先级归谁管,把 BEM 到零运行时 CSS-in-JS 放在同一张表上按四个维度比较,最后收敛成两条不论选哪条路都成立的结论:令牌用自定义属性,层叠用 <code>@layer</code>。层叠与优先级的规则本身在 <a href="#f3-cascade">4.1</a>,Flex 与 Grid 在 <a href="#f4-flex">6.1</a>、<a href="#f4-grid">6.2</a>,动效与它的令牌在 <a href="#f4-motion">9.1</a>;构建工具怎么处理这些 CSS 见 <a href="前端框架与工程化手册.html#f11-vite">《前端框架与工程化手册》5.1</a>。</p>
@@ -6747,7 +6851,9 @@ mode=system 系统深色=<span class="kw">true</span> --bg=#111418        ← ch
 mode=light 系统深色=<span class="kw">true</span> --bg=#ffffff          ← :root:not([data-theme=<span>"light"</span>]) 不再匹配,手动选择压过系统偏好</code></pre>
 <p>四条记录对应四个分支,关键在 <code>:root:not([data-theme="light"])</code> 这条选择器:它让系统深色只在「用户没有强制浅色」时生效,而 <code>:root[data-theme="dark"]</code> 无条件生效,两者的优先级都是 (0,2,0),高于裸 <code>:root</code> 的 (0,1,0),所以不需要 <code>!important</code>,也不依赖书写顺序。<code>getPropertyValue('--bg')</code> 读到的是计算值,也就是层叠之后真正生效的那一套;把 <code>&lt;head&gt;</code> 里那段同步脚本挪到 <code>&lt;body&gt;</code> 末尾或加 <code>defer</code>,深色用户每次刷新都会先看到一帧白底,这是「为什么主题切换脚本要阻塞」的唯一正当理由。<code>color-mix()</code> 让边框色从前景色派生,换主题时自动跟着变,不必再为每个派生色开一个变量。</p></div>
 <h2 id="fcss-counter">10.2 计数器:让编号跟着结构走</h2>
-<p>CSS 计数器让编号<strong>从文档结构里算出来</strong>,而不是手写在 HTML 里:多级标题自动编成 <code>1</code>、<code>1.2</code>、<code>1.2.3</code>;不是列表的元素也能编号(「图 3-2」「表 4-1」「公式 (5)」);列表跳过某几项之后编号继续连着;把阿拉伯数字换成「一、二、三」或「① ② ③」。它的全部价值在改稿的那一刻兑现——中间插一节、删一张图,后面的编号自己收拢,不用回头改任何一个数字。这一节只讲计数器这一族:三个属性负责建作用域与递增,两个函数负责取值,一条 <code>@counter-style</code> 规则负责定义编号符号。计数器的值只能出现在 <code>content</code> 里,而 <code>content</code> 本身能生成哪几类东西、伪元素生成的盒有哪些规矩(以及为什么脚本读不到这些编号),都在 <a href="#f3-counter">4.3</a>;列表元素本身、<code>::marker</code> 与 <code>&lt;ol start&gt;</code> 那一侧在 <a href="#f2-table-list">3.5</a>。</p>
+<p>CSS 计数器让编号<strong>从文档结构里算出来</strong>,而不是手写在 HTML 里:多级标题自动编成 <code>1</code>、<code>1.2</code>、<code>1.2.3</code>;不是列表的元素也能编号(「图 3-2」「表 4-1」「公式 (5)」);列表跳过某几项之后编号继续连着;把阿拉伯数字换成「一、二、三」或「① ② ③」。</p>
+<p>它的全部价值在改稿的那一刻兑现——中间插一节、删一张图,后面的编号自己收拢,不用回头改任何一个数字。</p>
+<p>这一节只讲计数器这一族:三个属性负责建作用域与递增,两个函数负责取值,一条 <code>@counter-style</code> 规则负责定义编号符号。计数器的值只能出现在 <code>content</code> 里,而 <code>content</code> 本身能生成哪几类东西、伪元素生成的盒有哪些规矩(以及为什么脚本读不到这些编号),都在 <a href="#f3-counter">4.3</a>;列表元素本身、<code>::marker</code> 与 <code>&lt;ol start&gt;</code> 那一侧在 <a href="#f2-table-list">3.5</a>。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 782px"><code>counter-reset:     [ &lt;counter-name&gt; &lt;integer&gt;? ]+ | none
     在这个元素上「新建」一个计数器实例,初值默认 0
     作用域 = 该元素 + 它的后代 + 它后面的兄弟及那些兄弟的后代
@@ -7305,7 +7411,14 @@ export <span class="kw">const</span> variant = styleVariants({ primary: {}, seco
 构建产物:
 ① button.css 原样进 bundle;② 同上但类名被改写,未使用的类仍会保留;③ 只生成源码里出现过的工具类,整站通常 10KB gzip 上下;④ Button.css.ts 编译为一份静态 .css,运行时零 JS
 优先级:①②④ 全部 (0,1,0) 单类;③ 也是单类,变体前缀(hover:)是 (0,2,0) 或借助 @layer utilities 保证压过 base</code></pre>
-<p>解读:四种写法的 CSS 声明几乎一样,差别全在<strong>类名的生产方式</strong>。① 靠人保证 <code>btn</code> 不与别处冲突;② 构建器保证,代价是类名要经 JS 引用;③ 没有组件级类名,变体是两串字面量的拼接——注意 <code>look</code> 两个分支的类名都完整写出,不能写成 <code>bg-${color}-600</code>;④ 类名由工具生成且有 TypeScript 类型,<code>vars.color.action</code> 拼错会在编译期报错,这是它相对 CSS Modules 的增量价值。四种里令牌都来自同一处(自定义属性),主题切换对四种写法都是改 <code>[data-theme]</code> 上的变量,这正是「令牌与方案解耦」的意义——换方案不用重做主题。</p></div>
+<p>解读:四种写法的 CSS 声明几乎一样,差别全在<strong>类名的生产方式</strong>。</p>
+<ul>
+<li>靠人保证 <code>btn</code> 不与别处冲突。</li>
+<li>构建器保证,代价是类名要经 JS 引用。</li>
+<li>没有组件级类名,变体是两串字面量的拼接——注意 <code>look</code> 两个分支的类名都完整写出,不能写成 <code>bg-${color}-600</code>。</li>
+<li>类名由工具生成且有 TypeScript 类型,<code>vars.color.action</code> 拼错会在编译期报错,这是它相对 CSS Modules 的增量价值。</li>
+</ul>
+<p>四种里令牌都来自同一处(自定义属性),主题切换对四种写法都是改 <code>[data-theme]</code> 上的变量,这正是「令牌与方案解耦」的意义——换方案不用重做主题。</p></div>
 <h2 id="fcss-sum">10.5 小结:本章要点与易错清单</h2>
 <p>这一章的四节讲的是同一件事的四个尺度:一条声明、一段由结构算出来的内容、一个交互、一整个代码库。<a href="#f4-modern">10.1</a> 是语言给的新工具——自定义属性把「值」从编译期搬到了运行时,<code>:where()</code> 与 <code>@layer</code> 把「谁能覆盖谁」从优先级竞赛变成显式声明,<code>:has()</code> 让父元素能对子树的状态做出反应;<a href="#fcss-counter">10.2</a> 是「编号也能从结构推出来」这条线——章节号、图表序号、多级目录不再手写,承载它的 <code>content</code> 属性本身在 <a href="#f3-counter">4.3</a>;<a href="#fcss-ux">10.3</a> 是这些工具落到手上的样子,一条条对着「过去怎么绕、今天哪个属性」写;<a href="#fcss-arch">10.4</a> 把视角拉到几万行,回答类名从哪来、令牌放哪层、第三方样式怎么管。</p>
 <p>贯穿全章的一句话是:<strong>把「会变的东西」收敛成变量,把「谁压过谁」写成声明,而不是靠选择器权重和引入顺序碰运气</strong>。主题、间距、圆角、时长收进自定义属性,组件只引用语义层;重置、第三方库、组件、工具类各进一个 <code>@layer</code>,顺序声明一次;需要被使用者覆盖的默认样式用 <code>:where()</code> 把优先级压到 0。做到这三条,一个项目里就几乎不再需要 <code>!important</code>,新人也能凭规则而不是凭经验加样式。</p>
