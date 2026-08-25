@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Qt 性能优化 · 现代详解</title>
+<title>Qt 性能优化</title>
 <script>
 /* 主题与目录开关的初值在这里定好：解析 <body> 之前完成，避免加载完再改 <html> 属性触发一次全量样式重算 */
 (function(){var r=document.documentElement;
@@ -197,9 +197,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <button id="depthBtn" title="薄/厚阅读:点一下只看主干(薄),再点一下看全部(厚)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
 <button id="navBtn" title="显示/隐藏目录"></button>
 <nav id="sidebar">
-<div class="booktitle">Qt 性能优化 · 现代详解</div>
+<div class="booktitle">Qt 性能优化</div>
 <details><summary><a class="ch" href="#p1">Qt 程序的性能怎么测:工具、指标与陷阱</a></summary>
-<a class="sec" href="#p1-open">1.0 开卷:锚定、定位与读法</a>
+<a class="sec" href="#p1-open">1.0 导读</a>
 <a class="sec" href="#p1-what">1.1 Qt 程序的性能问题分几类</a>
 <a class="sec" href="#p1-tool">1.2 工具全景:各自能看到什么、看不到什么</a>
 <a class="sec" href="#p1-gammaray">1.3 GammaRay:对象树、连接与绑定</a>
@@ -311,9 +311,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 69009px;--thin-h:69009px">
+<section class="chapter" style="contain-intrinsic-size:auto 68881px;--thin-h:68881px">
 <h1 id="p1"><span class="part">第 1 章</span>Qt 程序的性能怎么测:工具、指标与陷阱</h1>
-<h2 id="p1-open">1.0 开卷:锚定、定位与读法</h2>
+<h2 id="p1-open">1.0 导读</h2>
 <p>Qt 在 C++ 之上叠了一层运行期机制:元对象系统与信号槽、事件循环与事件分发、隐式共享的容器与字符串、Widget 与 Quick 两套彼此独立的渲染管线。这层机制换来了开发效率,代价则以固定的形式落在运行期——多一次间接分派、多一组原子操作、多一次深拷贝、多一段渲染线程上的同步。</p>
 <p><strong>本书只处理这一层的代价:它落在哪里、有多大、什么条件下可以不付。</strong>基线取 Qt 6.5 以上,行为随版本变动处标出分界;数字统一在一台写明配置的机器上取得,Linux 侧记作机器 L、Windows 侧记作机器 W,两侧的采集命令都给;构建以 CMake 为主,与测量有关的构建开关逐处写明。</p>
 <p>性能与机制有一处不同:它的结论有保质期。一条机制结论——一次信号发射经过哪几道关口——在同一个大版本里不会变;而一个数字取决于处理器、编译器、Qt 小版本、构建配置与数据规模,任何一项变了都要重取。全书据此把两者分开写:数字随测量条件给出,判据单独成表。</p>
@@ -328,14 +328,14 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td>Qt 官方性能主题文档:Best Practices for QML and Qt Quick、Qt Quick Scene Graph、QML 性能相关页</td><td>官方文档</td><td>锚定</td><td>渲染管线事实层最重要的来源:批次合并在什么条件下成立、几种渲染循环模式各自把动画驱动挂在哪里、一次绑定求值经过哪几步。局限:按主题分页,一条完整规则常要跨几页拼;给规则不给量级,也不写违反之后以什么形式暴露</td></tr>
 <tr><td>Qt 源码(<code>qtbase</code> 与 <code>qtdeclarative</code> 仓库)</td><td>源码</td><td>锚定</td><td>开销落在哪一行,文档不写时只能从这里读。局限:私有实现随小版本改动,读出来的是当前行为而不是接口承诺;读一条调用路径的成本远高于查一页文档,只在文档确实不写时才值得</td></tr>
 <tr><td class="nw">KDAB 的 GammaRay 与技术博客</td><td>在线资料</td><td>锚定</td><td>Qt 特有的剖析手段集中在这里:对象树检查、连接表检查、信号槽追踪与绑定循环定位,配着真实工程的现场。局限:博客按单点成文,彼此不衔接;跨 Qt 5 与 Qt 6 两代,结论要按发表时间折算;GammaRay 自身的注入会改变被测程序的时间特征</td></tr>
-<tr><td class="nw">《C++ 性能优化 · 现代详解》</td><td>相邻领域</td><td>锚定</td><td>通用层的全部内容在那里:测量方法、缓存与访存、动态分配、编译器行为、算法与数据结构。局限:不含任何 Qt 内容,元对象、事件分发、场景图这一层在那里查不到</td></tr>
+<tr><td class="nw">《C++ 性能优化》</td><td>相邻领域</td><td>锚定</td><td>通用层的全部内容在那里:测量方法、缓存与访存、动态分配、编译器行为、算法与数据结构。局限:不含任何 Qt 内容,元对象、事件分发、场景图这一层在那里查不到</td></tr>
 <tr><td>Qt Creator 的 QML Profiler 文档</td><td>参考手册</td><td>参考</td><td>六条时间线各自采什么、怎么开启、怎么导出都写清楚了。局限:讲界面上每一栏是什么,不讲哪条线该先看;采集本身有开销,绑定与创建两条线的绝对值偏高,文档对此只有一句提示</td></tr>
 <tr><td>perf 与 Linux 性能工具的官方资料(man 手册与 perf 的维基)</td><td>参考手册</td><td>参考</td><td>采样原理、事件名、调用栈的几种取法与各自代价的一手出处。局限:面向通用程序,不知道 Qt 的调用栈长什么样;缺符号包或缺帧指针时,Qt 库里的栈会收成一片读不出名字的地址,而文档不提示这一点</td></tr>
 <tr><td class="nw">Intel VTune 的官方文档</td><td>参考手册</td><td>参考</td><td>微架构分析、线程与等待分析、内存消耗分析三条采集线的配置与指标释义。局限:以 Intel 平台为准,换到别家处理器上部分硬件事件不可用;教怎么采,不教拿到微架构指标之后在一个 Qt 程序里该改什么</td></tr>
 <tr><td>Windows Performance Analyzer 与 ETW 的官方文档</td><td>参考手册</td><td>参考</td><td>Windows 侧唯一能同时看到调度、等待、磁盘与图形栈的手段,精确 CPU 使用与等待分析的口径写得清楚。局限:概念与界面各成一套,首次上手成本高;提供程序与事件名随 Windows 版本变动,旧文章里的采集命令常常已经不能用</td></tr>
 <tr><td>Brendan Gregg 的性能方法论(USE 方法、火焰图、off-CPU 分析)</td><td>进阶专题</td><td>参考</td><td>把「先看什么、再看什么」写成了可复用的方法,off-CPU 分析尤其适合界面卡在等待上的情形。局限:以服务端与内核为背景,USE 方法套到单进程的桌面程序上要自己改写口径;示例基于 Linux,Windows 侧要另找对应工具</td></tr>
 <tr><td class="nw">Qt 官方博客与发布说明里的性能条目</td><td>在线资料</td><td>推荐</td><td>渲染后端切换、属性系统变更、容器实现调整这类会推翻旧结论的改动,最早出现在这里。局限:按时间排列,不成体系;结论的适用版本要从发表时间回推,测量条件通常不写</td></tr>
-<tr><td class="nw">《Qt 核心与 Widget · 现代详解》</td><td>相邻领域</td><td>参考</td><td>本书假定的 Qt 机制基础都在里面:对象树与所有权、元对象系统、信号槽的五种连接方式、事件分发路径。局限:讲机制不讲代价,不给测量流程与优化手段</td></tr>
+<tr><td class="nw">《Qt 核心与 Widget》</td><td>相邻领域</td><td>参考</td><td>本书假定的 Qt 机制基础都在里面:对象树与所有权、元对象系统、信号槽的五种连接方式、事件分发路径。局限:讲机制不讲代价,不给测量流程与优化手段</td></tr>
 </tbody>
 </table>
 <div class="note old" style="contain-intrinsic-size:auto 197px"><span class="t">🟡 Qt 5 时代的性能资料只取问题清单与排查方法,数字一律重测</span><p>它们提出的问题至今成立:信号槽在高频路径上贵不贵、容器与字符串什么时候发生深拷贝、界面为什么在数据量上来之后掉帧、启动时间花在了哪里。排查方法也仍然可用。失效的是数字与部分结论:Qt 6 的 Quick 渲染改走图形接口抽象层,后端不再固定为一种;属性系统多了一套可绑定的实现;<code>QList</code> 与 <code>QVector</code> 合并成同一份实现,内存布局与增长行为随之改变。这三处上照搬 Qt 5 的量级会得到相反的判断。</p></div>
@@ -352,11 +352,11 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw">Qt 官方性能主题文档</td><td>渲染管线的事实一律以它为准。9.1 节渲染循环模式的划分、9.2 节各阶段的线程归属取自场景图文档;9.3 节「批次合并被打断的四种情形」是把它散在几页里的成立条件反过来写成失效条件;第 10 章绑定与组件实例化的开销分类,沿用它对一次绑定求值的拆法</td></tr>
 <tr><td>Qt 源码(<code>qtbase</code> 与 <code>qtdeclarative</code>)</td><td>文档不写开销落在哪一行时,结论从源码读出来再写:一次信号发射在连接表上走了几步、一次分离在哪个函数里触发、一个 QML 组件实例化时哪几段工作不可跳过。第 3、4 章的路径图按实际调用链画,不按文档的叙述顺序</td></tr>
 <tr><td class="nw">KDAB 的 GammaRay 与技术博客</td><td>两处。1.3 节的三条排查路线——对象树检查、连接表检查、绑定循环定位——照 GammaRay 的视图组织,每条给出「看什么、看到什么算不正常」;2.4 节十种常见问题的分类,来自它们博客里反复出现的现场记录</td></tr>
-<tr><td class="nw">《C++ 性能优化 · 现代详解》</td><td>一条分界与两处口径。分界是「把 Qt 换成别的库,这个现象还在不在」,全书据此取舍,还在的一律引它。口径一是基准的报告方式:报中位数与分位数而不是平均,并写明构建配置与取样次数;口径二是把「测量本身会不会骗人」放在手段之前,1.6 节的分位数与噪声、1.7 节的基准写法核对对应那本第 1 章同一位置的内容,两本的验收标准因此一致</td></tr>
+<tr><td class="nw">《C++ 性能优化》</td><td>一条分界与两处口径。分界是「把 Qt 换成别的库,这个现象还在不在」,全书据此取舍,还在的一律引它。口径一是基准的报告方式:报中位数与分位数而不是平均,并写明构建配置与取样次数;口径二是把「测量本身会不会骗人」放在手段之前,1.6 节的分位数与噪声、1.7 节的基准写法核对对应那本第 1 章同一位置的内容,两本的验收标准因此一致</td></tr>
 </tbody>
 </table>
 <p>三类来源在本书里的分工是固定的:<strong>官方文档给规则,源码给当前行为,书与博客给症状。</strong>规则最稳,但覆盖不到边界;当前行为可信而不可依赖,换一个小版本就要重看;症状最容易过期,因为它绑在具体版本与具体机器上。全书凡是写「某某情况下会怎样」的地方,都能追到这三者之一。</p>
-<p>五样锚定里有一样与其余四样性质不同。《C++ 性能优化 · 现代详解》不提供 Qt 的事实,它提供的是取舍:凡是通用层的内容一律不在本书重复推导,只给一个指向。这条取舍决定了本书的厚度——去掉通用层之后,剩下的正好是 Qt 这一层的账。</p>
+<p>五样锚定里有一样与其余四样性质不同。《C++ 性能优化》不提供 Qt 的事实,它提供的是取舍:凡是通用层的内容一律不在本书重复推导,只给一个指向。这条取舍决定了本书的厚度——去掉通用层之后,剩下的正好是 Qt 这一层的账。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 数字有分歧时按目标机实测、官方文档、二手资料的顺序取信</span><p>性能问题与机制问题的取信顺序不同。机制问题以官方文档的承诺为准,而性能问题的最终事实是目标机上的一次实测:文档保证「批次会被打断」,不保证打断一次要花多少微秒。源码能解释数字为什么落在这个量级,但换一个小版本就可能变;二手资料给的是线索与症状,数字部分默认已经过期。做法固定为先在目标机上量一次,再用文档与源码解释这个数字,二手资料只用来提示该往哪里看。</p></div>
 <h3>讲什么、不讲什么</h3>
 <p>本书覆盖<strong>一个 Qt 桌面程序在一台机器上的性能</strong>,五组内容各回答一个问题。分组不是阅读顺序,是问题的归类。</p>
@@ -372,21 +372,21 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </table>
 <p>合计 14 章 81 节。五组之间不是严格的单向依赖,但前两组是其余三组的前提:没有第 1 章的测量口径,后面每一条手段的收益都无法验收;没有第 2 章的排查顺序,读到的手段只能按清单从头逐条试。</p>
 <p>第一组的位置与其余四组不同。它不给手段,只给测量口径与排查顺序,读完之后手上没有多出任何一条可以直接改的代码,却决定了后面每一条手段用得对不对。跳过它去读第 3 到 12 章,读到的都是「什么情况下这样写更快」,而判断自己是不是那个情况的能力恰好在第一组里。</p>
-<p>最要紧的一条边界是<strong>只写 Qt 特有的那一层</strong>。判据可以当场执行:把 Qt 换成别的库,这个现象还在不在。还在的属于通用性能问题,归《C++ 性能优化 · 现代详解》;不在的才归本书。14.3 节把这条判据写成了一条按热点符号归属来分流的检查。</p>
+<p>最要紧的一条边界是<strong>只写 Qt 特有的那一层</strong>。判据可以当场执行:把 Qt 换成别的库,这个现象还在不在。还在的属于通用性能问题,归《C++ 性能优化》;不在的才归本书。14.3 节把这条判据写成了一条按热点符号归属来分流的检查。</p>
 <p>不讲的部分同样要说清楚,并且指明归谁。<strong>分界写成一句可以当场判断的话</strong>,遇到一个话题时能立刻知道该翻哪一本。</p>
-<table style="contain-intrinsic-size:auto 513px">
+<table style="contain-intrinsic-size:auto 462px">
 <thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
-<tr><td>缓存与访存、动态分配器、编译器优化、算法与数据结构、SIMD</td><td>《C++ 性能优化 · 现代详解》</td><td>本书讲一次隐式共享的分离为什么发生,那本讲这一次内存拷贝为什么慢</td></tr>
-<tr><td>元对象怎么生成、事件怎么分发、部件的几何与布局怎么算</td><td>《Qt 核心与 Widget · 现代详解》</td><td>本书讲一次信号发射要多少纳秒,那本讲这一次发射经过了哪几道关口</td></tr>
-<tr><td>QML 的语法与类型系统、Quick 的组件与状态怎么写</td><td>《Qt Quick 与 QML · 现代详解》</td><td>本书讲一次绑定重算要多少微秒,那本讲这个绑定为什么会重算</td></tr>
-<tr><td class="nw">第三方组件、图表、多媒体与数据库驱动的选型和接入</td><td>《Qt 组件与生态 · 现代详解》</td><td>本书讲接进来之后开销落在哪一段,那本讲该不该接、怎么接</td></tr>
+<tr><td>缓存与访存、动态分配器、编译器优化、算法与数据结构、SIMD</td><td>《C++ 性能优化》</td><td>本书讲一次隐式共享的分离为什么发生,那本讲这一次内存拷贝为什么慢</td></tr>
+<tr><td>元对象怎么生成、事件怎么分发、部件的几何与布局怎么算</td><td>《Qt 核心与 Widget》</td><td>本书讲一次信号发射要多少纳秒,那本讲这一次发射经过了哪几道关口</td></tr>
+<tr><td>QML 的语法与类型系统、Quick 的组件与状态怎么写</td><td>《Qt Quick 与 QML》</td><td>本书讲一次绑定重算要多少微秒,那本讲这个绑定为什么会重算</td></tr>
+<tr><td class="nw">第三方组件、图表、多媒体与数据库驱动的选型和接入</td><td>《Qt 组件与生态》</td><td>本书讲接进来之后开销落在哪一段,那本讲该不该接、怎么接</td></tr>
 <tr><td class="nw">服务端、分布式与集群层面的性能</td><td class="nw">不在本书系范围</td><td>本书的边界是一台机器上的一个带界面的进程,跨机延迟与容量规划另有一套模型</td></tr>
 <tr><td class="nw">移动端与嵌入式的功耗预算与资源约束</td><td class="nw">不在本书系范围</td><td>判据与排查顺序可以照搬,数字与预算不能,那两类平台的帧预算与内存上限与桌面完全不同</td></tr>
 </tbody>
 </table>
 <p>表里的六条有一个共同点:<strong>它们不是因为不重要才不讲,而是因为在别处讲得更完整。</strong>一个真实的性能问题经常横跨两三本,例如列表滚动掉帧同时牵涉委托的写法、模型的信号粒度与一次字符串格式化的开销。分界的作用不是切断问题,而是让每一段只在一个地方被讲透。</p>
-<p>有一类边界值得单独说明:<strong>本书与《Qt Quick 与 QML · 现代详解》在同一个话题上分的是不同的问题,不是把内容切成两半。</strong>那本讲一个绑定为什么会重算、委托里为什么不能存状态;本书讲同一份列表在几种写法下的帧时间分布,以及重算一次的实际耗时。两本都读过,判据与数字才对得上。</p>
+<p>有一类边界值得单独说明:<strong>本书与《Qt Quick 与 QML》在同一个话题上分的是不同的问题,不是把内容切成两半。</strong>那本讲一个绑定为什么会重算、委托里为什么不能存状态;本书讲同一份列表在几种写法下的帧时间分布,以及重算一次的实际耗时。两本都读过,判据与数字才对得上。</p>
 <h3>读之前要会什么</h3>
 <p>前置分两档,每一条都给出可以执行的自测动作。「熟悉 Qt」「用过剖析器」这类说法无法自测,也就无法用来判断该不该现在读;能不能在十几分钟内做出下表右列那件事,才是判据。</p>
 <table style="contain-intrinsic-size:auto 602px">
@@ -405,7 +405,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </table>
 <p>两样明确不在前置里。<strong>不需要做过性能工作</strong>,1.2 到 1.5 节从装工具与第一条命令开始,每样工具都写明它能看到什么、看不到什么。<strong>不需要懂图形学</strong>,第 9 章只用到「一批绘制」「状态切换」「过度绘制」三个概念,不涉及矩阵推导与着色器编写。</p>
 <p>五条必须里有三条与测量有关,一条与构建有关,只有一条与 Qt 本身有关。这个比例反映了本书的重心:Qt 的机制细节可以边读边补,而测量能力补不了——不会读分位数的人拿到帧时间数据只能报平均,分不清构建配置的人测出来的数字全部作废。</p>
-<p>前置缺了某一条不必先补全再开始。缺信号槽机制的先读《Qt 核心与 Widget · 现代详解》的对应章节,再回到第 3 章;缺构建配置那一条的从 1.7 节读起,那一节把性能测量需要的构建开关讲全;缺分位数那一条的直接读 1.6 节,它从「为什么不能报平均值」讲起。</p>
+<p>前置缺了某一条不必先补全再开始。缺信号槽机制的先读《Qt 核心与 Widget》的对应章节,再回到第 3 章;缺构建配置那一条的从 1.7 节读起,那一节把性能测量需要的构建开关讲全;缺分位数那一条的直接读 1.6 节,它从「为什么不能报平均值」讲起。</p>
 <h3>与那些资料相比,本书多给了什么</h3>
 <p>每一条特点都配了可以当场翻到的位置。指不到具体节的特点无法核对,也就不必写。</p>
 <table style="contain-intrinsic-size:auto 589px">
@@ -522,9 +522,9 @@ wpr -start GeneralProfile -filemode ; .\app.exe ; wpr -stop start.etl</code></pr
 <table style="contain-intrinsic-size:auto 227px">
 <thead><tr><th>成因</th><th>负载停止后的表现</th><th>典型 Qt 场景</th><th>处理方向</th></tr></thead>
 <tbody>
-<tr><td class="nw">泄漏</td><td>完全不回落,且随操作次数线性增长</td><td>每次打开对话框都 <code>new</code> 一个没有父对象的 QObject</td><td>5.3 节;通用部分见《C++ 性能优化 · 现代详解》第 6 章</td></tr>
+<tr><td class="nw">泄漏</td><td>完全不回落,且随操作次数线性增长</td><td>每次打开对话框都 <code>new</code> 一个没有父对象的 QObject</td><td>5.3 节;通用部分见《C++ 性能优化》第 6 章</td></tr>
 <tr><td class="nw">缓存增长</td><td>不回落,但增长会在某个水位收敛</td><td><code>QPixmapCache</code>、模型里的行缓存、网络响应缓存没有上限</td><td>5.3 节,给缓存设上限并接入清理时机</td></tr>
-<tr><td class="nw">堆碎片</td><td>不回落,但分配器统计里的「已分配」远小于常驻内存</td><td>大量不同尺寸的短命对象反复创建销毁</td><td>《C++ 性能优化 · 现代详解》第 6 章</td></tr>
+<tr><td class="nw">堆碎片</td><td>不回落,但分配器统计里的「已分配」远小于常驻内存</td><td>大量不同尺寸的短命对象反复创建销毁</td><td>《C++ 性能优化》第 6 章</td></tr>
 </tbody>
 </table>
 <p>判别流程固定:先跑一轮负载,记下常驻内存;回到空闲等两分钟再记一次;然后把同一轮负载重复十次,看曲线是线性上升还是趋于平缓。线性上升指向泄漏,趋于平缓指向缓存。两者都排除之后再考虑碎片,因为碎片的确认要看分配器的内部统计,成本高得多。</p>
@@ -805,7 +805,7 @@ gammaray --listen tcp:<span class="cm">//127.0.0.1:11732 app.exe</span></code></
 <div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 Windows 侧注入失败最常见的原因是位数或运行库不一致,现象只是一直连不上</span><p>GammaRay 的探针 DLL 必须与目标程序用同一位数、同一套 MSVC 运行库、同一个 Qt 大版本。任何一项不匹配,注入都会失败,而界面只显示等待连接,不给出原因。做法是先确认三件事:目标是 64 位就用 64 位的 GammaRay;目标用 MSVC 2022 构建就用同一工具链构建的 GammaRay;目标链接 Qt 6.5 就用为 Qt 6.5 构建的版本。三项都对上之后注入几乎不会失败。</p></div>
 <h3>能看到什么</h3>
 <p>下面按面板列出 GammaRay 的观测能力,以及每一项在什么情况下用得上。这张表也是它与其他工具分工的说明。</p>
-<table style="contain-intrinsic-size:auto 474px">
+<table style="contain-intrinsic-size:auto 448px">
 <thead><tr><th>面板</th><th>它给出什么</th><th>什么时候用</th></tr></thead>
 <tbody>
 <tr><td class="nw">Objects(对象树)</td><td>进程里全部 QObject 的父子树,可按类名过滤并给出实例计数</td><td>怀疑对象没有被释放,或某个类的实例数随操作次数增长</td></tr>
@@ -814,7 +814,7 @@ gammaray --listen tcp:<span class="cm">//127.0.0.1:11732 app.exe</span></code></
 <tr><td class="nw">Properties(属性)</td><td>选中对象的全部属性当前值,包括动态属性;QML 侧能看到绑定表达式</td><td>绑定链不清楚,或想确认某个属性到底被谁改了</td></tr>
 <tr><td class="nw">Models(模型检查)</td><td>任意 QAbstractItemModel 的行列结构与角色数据</td><td>模型层出问题,尤其是行数与预期不符</td></tr>
 <tr><td class="nw">Quick Scenes</td><td>QQuickItem 树、层级、可见性,以及场景图节点</td><td>QML 页面结构复杂,想知道实际建了多少 item</td></tr>
-<tr><td class="nw">Meta Object Browser</td><td>运行期的元对象信息:类的方法、属性、枚举</td><td>确认 moc 到底生成了什么;与《Qt 核心与 Widget · 现代详解》第 3 章对照</td></tr>
+<tr><td class="nw">Meta Object Browser</td><td>运行期的元对象信息:类的方法、属性、枚举</td><td>确认 moc 到底生成了什么;与《Qt 核心与 Widget》第 3 章对照</td></tr>
 </tbody>
 </table>
 <p>其中 <strong>Connections 与 Objects 两个面板是本书最常用的</strong>。第 3 章讲信号槽的运行期代价时,判断「连接数是不是异常」的唯一实用手段就是这里;第 5 章讲对象树的构造与析构时,数实例个数同样靠这里。</p>
@@ -1128,7 +1128,7 @@ wpa.exe trace.etl</code></pre>
 <tr><td class="nw"><code>threading</code></td><td class="nw">线程等待、锁争用与并行度</td><td><code>perf record -e sched:sched_switch</code></td></tr>
 </tbody>
 </table>
-<p><code>uarch-exploration</code> 给出的自顶向下分解属于通用性能范畴,判读方法引《C++ 性能优化 · 现代详解》,本书不展开。这里只给一条与 Qt 相关的结论:<strong>Qt 程序在这项分析里常见的形态是访存受限而非指令受限</strong>,原因是对象树、隐式共享的数据块与场景图节点都是散落在堆上的小对象,遍历时缓存局部性差。第 5 章与第 8 章会从 Qt 侧给出对应的改法。</p>
+<p><code>uarch-exploration</code> 给出的自顶向下分解属于通用性能范畴,判读方法引《C++ 性能优化》,本书不展开。这里只给一条与 Qt 相关的结论:<strong>Qt 程序在这项分析里常见的形态是访存受限而非指令受限</strong>,原因是对象树、隐式共享的数据块与场景图节点都是散落在堆上的小对象,遍历时缓存局部性差。第 5 章与第 8 章会从 Qt 侧给出对应的改法。</p>
 <p>采集的命令与结果查看两侧对照如下,注意 VTune 的结果目录名要每次换,同名目录会追加而不是覆盖。</p>
 <pre style="contain-intrinsic-size:auto 332px"><code># 机器 W:三种采集
 vtune -collect hotspots -knob sampling-mode=hw -r r001hs -- app.exe
@@ -1147,7 +1147,7 @@ vtune-gui r001hs</code></pre>
 <h3>为什么量分布而不量均值</h3>
 <p>帧时间必须量分布,这一条在 1.1 节提过,这里给出完整理由。<strong>「平均帧时间 8 毫秒」与「p99 帧时间 45 毫秒」可以同时成立</strong>,而用户只感觉得到后者。</p>
 <p>算一遍就清楚:一秒钟 60 帧里,59 帧各花 7.4 毫秒,1 帧花 45 毫秒,平均是 8.0 毫秒。均值漂亮到可以写进发布说明,而用户每秒钟看到一次明显的顿挫。<strong>均值把最重要的信息平均掉了。</strong></p>
-<p>分位数的统计学方法——为什么用 p99 而不是最大值、样本量要多少才够、怎么合并多次采集的分位数——属于通用性能方法,引《C++ 性能优化 · 现代详解》,本书不展开推导,只用它的结论:</p>
+<p>分位数的统计学方法——为什么用 p99 而不是最大值、样本量要多少才够、怎么合并多次采集的分位数——属于通用性能方法,引《C++ 性能优化》,本书不展开推导,只用它的结论:</p>
 <ul>
 <li><strong>报数字时至少给 p50、p95、p99 三个,不要只给均值。</strong></li>
 <li><strong>最大值单独看意义有限</strong>,它常常来自一次与被测对象无关的系统事件,但连续多次采集里最大值稳定复现时要单独查。</li>
@@ -1564,7 +1564,7 @@ cmake --build build --config RelWithDebInfo
 </table>
 <h3>按症状反查:先用哪个工具</h3>
 <p>这张表是本章最常被回查的一张。使用方式是从左边找到最接近自己观察到的现象,按中间一列执行,然后按右边一列继续。<strong>中间一列的每一条都能在十分钟内做完。</strong></p>
-<table style="contain-intrinsic-size:auto 768px">
+<table style="contain-intrinsic-size:auto 716px">
 <thead><tr><th>症状</th><th>先用哪个工具</th><th>然后看本书哪一节</th></tr></thead>
 <tbody>
 <tr><td class="nw">点击后界面停顿几百毫秒,之后恢复正常</td><td>主线程卡顿探针,确认主线程是否被占住</td><td>1.1;确认后按占住的原因转 6.1 或 8.2</td></tr>
@@ -1574,7 +1574,7 @@ cmake --build build --config RelWithDebInfo
 <tr><td>剖析里 <code>QMetaObject::activate</code> 自耗时高</td><td class="nw">GammaRay 数连接数</td><td>3.2</td></tr>
 <tr><td class="nw">剖析里没有明显热点,程序却慢</td><td>off-CPU 采集(<code>sched:sched_switch</code> 或 WPA Precise)</td><td>6.3 与 11.2</td></tr>
 <tr><td class="nw">常驻内存单调上升,泄漏检测器报零泄漏</td><td>GammaRay 数存活对象,或加静态计数器</td><td>5.3</td></tr>
-<tr><td class="nw">常驻内存高但对象数正常</td><td>heaptrack 或 VTune memory-consumption 看分配点</td><td>5.1;碎片部分引《C++ 性能优化 · 现代详解》第 6 章</td></tr>
+<tr><td class="nw">常驻内存高但对象数正常</td><td>heaptrack 或 VTune memory-consumption 看分配点</td><td>5.1;碎片部分引《C++ 性能优化》第 6 章</td></tr>
 <tr><td class="nw">启动慢,窗口出现前有长时间空白</td><td><code>QT_DEBUG_PLUGINS=1</code> 加 <code>LD_DEBUG=statistics</code></td><td>5.4 与 12.2</td></tr>
 <tr><td class="nw">批量处理慢,期间界面无响应</td><td><code>QElapsedTimer</code> 切区间,确认时间落在哪一段</td><td>6.1 与 11.1</td></tr>
 <tr><td class="nw">空闲时 CPU 占用不为零</td><td><code>QSG_RENDER_TIMING</code> 数空闲帧数,<code>perf stat</code> 看唤醒</td><td>10.5 与 6.4</td></tr>
@@ -1699,14 +1699,14 @@ Measure-Command { .\app.exe --exit-after-first-frame }</code></pre>
 <tr><td class="nw">第 14 章</td><td class="nw">速查与索引</td><td>本章的工具全景表与症状反查表在那里合并成完整索引</td></tr>
 </tbody>
 </table>
-<p>与姊妹书的分工在这里也要重申一次。<strong>《Qt 核心与 Widget · 现代详解》讲机制</strong>——moc 生成了什么、信号槽怎么连上、事件怎么分发;<strong>本书讲代价</strong>——同样的机制跑一次要多少纳秒、什么时候这个代价会被放大。<strong>《C++ 性能优化 · 现代详解》讲通用层</strong>——缓存层次、分配器、编译器优化、分位数的统计方法与内存问题三分法。本章多次引用它的结论而不展开推导,原因即在此:那些内容与 Qt 无关,重复一遍没有价值。</p>
+<p>与姊妹书的分工在这里也要重申一次。<strong>《Qt 核心与 Widget》讲机制</strong>——moc 生成了什么、信号槽怎么连上、事件怎么分发;<strong>本书讲代价</strong>——同样的机制跑一次要多少纳秒、什么时候这个代价会被放大。<strong>《C++ 性能优化》讲通用层</strong>——缓存层次、分配器、编译器优化、分位数的统计方法与内存问题三分法。本章多次引用它的结论而不展开推导,原因即在此:那些内容与 Qt 无关,重复一遍没有价值。</p>
 <p>读完这一章,应当能做到三件具体的事:拿到一句「程序卡」之后,在十分钟内确定它属于五类中的哪一类;针对这一类选出正确的工具并采到可读的数据;以及写出一份别人能复现的测量报告,里面每个数字都带着测量条件。<strong>做不到第三件,前两件的结论就无法被验证,也就无法进入决策。</strong></p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41043px;--thin-h:41043px">
+<section class="chapter" style="contain-intrinsic-size:auto 41009px;--thin-h:41009px">
 <h1 id="p2"><span class="part">第 2 章</span>Qt 特有的开销来源:一张地图</h1>
 <h2 id="p2-map">2.1 Qt 相对裸 C++ 多付了什么:一张地图</h2>
-<p>同一段逻辑,用 Qt 写和用裸 C++ 写,多出来的那部分开销花在哪里、有多大、什么时候需要在意?机制本身不重复讲——元对象怎么生成、信号槽怎么连接、事件怎么分发,姊妹书《Qt 核心与 Widget · 现代详解》已经讲完了,这里只讲价钱。</p>
+<p>同一段逻辑,用 Qt 写和用裸 C++ 写,多出来的那部分开销花在哪里、有多大、什么时候需要在意?机制本身不重复讲——元对象怎么生成、信号槽怎么连接、事件怎么分发,姊妹书《Qt 核心与 Widget》已经讲完了,这里只讲价钱。</p>
 <p>先给结论。Qt 相对裸 C++ 多付的开销集中在<strong>六项</strong>,单次量级从几纳秒到几十微秒,横跨四个数量级。四个数量级意味着这六项不能用同一套标准对待:把最便宜的那项当瓶颈去优化,收益是零;把最贵的那项放进每帧执行几万次的路径里,程序一定卡。</p>
 <p>这张地图的用法是定位:遇到具体现象,先回到图上找到对应的那一项,再翻到展开它的章节。</p>
 <h3>六项开销,按离硬件多远排列</h3>
@@ -1905,7 +1905,7 @@ QTEST_MAIN(BenchSignal)
 <p>表里六行有一个共同点:<strong>右边三列里没有一列写着「Qt」</strong>。决定贵不贵的全部是次数、规模和调用形态,不是框架本身。</p>
 <p>这一点值得说透。六项里没有一项是「Qt 慢」的证据。每一项都在换一件裸 C++ 里要自己实现的能力,而且换得不算贵——20 到 40 纳秒买一次完全解耦的调用,200 到 500 纳秒买一次线程安全的跨线程投递,单看都很划算。</p>
 <p>慢的是把它们放进了每帧几万次的路径。同样的 40 纳秒,执行 100 次和执行 5 万次,一个是 4 微秒一个是 2 毫秒,后者直接吃掉八分之一的帧预算。所以本章后两节讲的不是「怎么让 Qt 更快」,而是<strong>怎么找到那条被执行了几万次的路径</strong>,以及<strong>一帧里到底能放多少次</strong>。</p>
-<p>通用层的开销——缓存未命中、分配器行为、编译器有没有内联、分支预测——不在这张地图上。那些在 Qt 程序和裸 C++ 程序里表现完全一样,一律引《C++ 性能优化 · 现代详解》,本书只在结论层引用,不重复推导。</p>
+<p>通用层的开销——缓存未命中、分配器行为、编译器有没有内联、分支预测——不在这张地图上。那些在 Qt 程序和裸 C++ 程序里表现完全一样,一律引《C++ 性能优化》,本书只在结论层引用,不重复推导。</p>
 <h2 id="p2-order">2.2 排查的固定顺序</h2>
 <p>上一节给了地图,这一节给走法。性能排查有一个固定顺序,四步,不能跳也不能颠倒。顺序错了不是效率低一点,而是<strong>会得出错误的结论并据此改错地方</strong>,那一轮工作全部白做。</p>
 <p>这个顺序的依据是:每一步的测量手段,都建立在上一步已经排除了某种情形的前提上。前提不成立时,工具照样出数字,但那个数字不代表你以为的东西。</p>
@@ -1963,7 +1963,7 @@ QTEST_MAIN(BenchSignal)
 
   <rect x="36" y="344" width="280" height="56" rx="5" fill="var(--svg-fill)" stroke="var(--rule)"/>
   <text class="svgtext" x="48" y="366" text-anchor="start">第四步 函数内部的微观优化</text>
-  <text class="svgmuted" x="48" y="386" text-anchor="start" font-size="11">引《C++ 性能优化 · 现代详解》</text>
+  <text class="svgmuted" x="48" y="386" text-anchor="start" font-size="11">引《C++ 性能优化》</text>
   <path d="M316,372 H388" stroke="var(--rule)" fill="none" marker-end="url(#p2ord_ar)"/>
   <rect x="396" y="344" width="308" height="56" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
   <text class="svgmuted" x="408" y="366" text-anchor="start" font-size="11">收益上限是常数倍</text>
@@ -2097,7 +2097,7 @@ $ perf report --sort=dso,symbol
 <h3>第四步:才轮到函数内部</h3>
 <p>定位到函数之后,还有一个顺序不能颠倒:<strong>先问这个函数能不能少调用几次,再问它内部能不能更快</strong>。</p>
 <p>原因是收益上限差得很远。函数内部的微观优化,上限是常数倍——把 100 纳秒改到 20 纳秒是 5 倍。而减少调用次数经常是数量级的:每帧两万次改成每帧两百次是 100 倍,而且往往只需要加一层缓存或者把计算搬出循环。</p>
-<p>只有确认了调用次数无法再减,才进入函数内部。这一层的手段——减少拷贝与分配、改数据布局、帮编译器内联、消除分支——在 Qt 程序和裸 C++ 程序里表现完全相同,一律引《C++ 性能优化 · 现代详解》,本书不重复推导。</p>
+<p>只有确认了调用次数无法再减,才进入函数内部。这一层的手段——减少拷贝与分配、改数据布局、帮编译器内联、消除分支——在 Qt 程序和裸 C++ 程序里表现完全相同,一律引《C++ 性能优化》,本书不重复推导。</p>
 <p>本书在这一层只补 Qt 特有的部分:哪些 Qt 类型的构造比看上去贵(第 4、5 章)、哪些 Qt 接口有更便宜的等价形式(第 4 章的五个改法)、哪些 Qt 机制可以整段绕过(第 3 章)。</p>
 <p>「先减次数」有几种固定的形态,可以按顺序试一遍:把结果缓存起来,下次直接取;把循环不变的计算提到循环外;把每帧都做的事改成只在数据真的变了的时候做;把逐个处理改成批量处理。四种里前三种在 Qt 程序里尤其常见,因为界面代码天然是「每帧重来一遍」的结构。</p>
 <table style="contain-intrinsic-size:auto 186px">
@@ -2262,7 +2262,7 @@ $ perf report --sort=dso,symbol
 <tr><td class="nw">最大帧时间</td><td class="nw">全程最大值</td><td><strong>只记录,不作为验收线</strong></td></tr>
 </tbody>
 </table>
-<p>分位数的统计方法、样本量要求与置信区间,《C++ 性能优化 · 现代详解》里有完整的处理,本书只用结论:<strong>报帧时间一律报分布,p50 与 p99 同时给;单个最大值只作参考。</strong></p>
+<p>分位数的统计方法、样本量要求与置信区间,《C++ 性能优化》里有完整的处理,本书只用结论:<strong>报帧时间一律报分布,p50 与 p99 同时给;单个最大值只作参考。</strong></p>
 <h3>把预算落成三段埋点</h3>
 <p>预算表要能验收,就得有数据。最小可用的方案是三段埋点:逻辑、sync、render 各自一个计时,加上一个整帧计时。Qt Quick 侧有现成的信号可以挂。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 863px"><code><span class="cm">// framebudget.cpp —— 挂在 QQuickWindow 上,三段各自计时</span>
@@ -2477,7 +2477,7 @@ $ perf stat -e task-clock,context-switches ./gallery  # 机器 L,让程序空闲
 &gt; wpr -start GeneralProfile -filemode                 # 机器 W
 &gt; wpr -stop idle.etl
 &gt; wpa idle.etl                                        # 看 CPU Usage (Precise) 的 Ready/Waits</code></pre>
-<p>定时器的形态:几十个组件各自建一个 <code>QTimer</code>,周期从 100 毫秒到 5 秒不等,互相错开。每个定时器到期都要唤醒一次线程,一次唤醒加上下文切换在微秒量级(通用层的数字见《C++ 性能优化 · 现代详解》)。几十个定时器意味着每秒上百次唤醒,程序在完全空闲时也保持着几个百分点的 CPU 占用,在笔记本上直接反映为续航下降。</p>
+<p>定时器的形态:几十个组件各自建一个 <code>QTimer</code>,周期从 100 毫秒到 5 秒不等,互相错开。每个定时器到期都要唤醒一次线程,一次唤醒加上下文切换在微秒量级(通用层的数字见《C++ 性能优化》)。几十个定时器意味着每秒上百次唤醒,程序在完全空闲时也保持着几个百分点的 CPU 占用,在笔记本上直接反映为续航下降。</p>
 <p>两条改法。第一,把周期相近的定时器合并成一个统一的 tick,由它分发给各个订阅者。第二,对精度要求不高的长周期任务,把定时器类型设为 <code>Qt::VeryCoarseTimer</code>,系统可以把多个到期时刻合并到同一次唤醒上。</p>
 <div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 几十个独立 QTimer 各自唤醒的写法要合并成一个统一的 tick</span><p>每个组件建自己的定时器,写起来最直接,在组件数量少时也没有问题。组件数量上去之后,唤醒密度与组件数成正比,而每次唤醒真正要做的事可能只有几微秒。这种写法在旧代码里很常见,不必急着全改,但新代码一律走统一 tick 加订阅,长周期任务加上 <code>setTimerType(Qt::VeryCoarseTimer)</code>。</p></div>
 <h3>怎么用这张表</h3>
@@ -2555,7 +2555,7 @@ $ heaptrack ./gallery                                               # 第四步:
 <tr><td class="nw">空闲时也有几个百分点 CPU,笔记本耗电快</td><td><code>perf stat</code> 的 context-switches</td><td>定时器过密,唤醒风暴</td><td>第 3 章、第 6 章</td></tr>
 <tr><td class="nw">滚动时掉帧,静止时正常</td><td>QML Profiler 的 Creating 与 Binding 行</td><td>委托里放了重活,或绑定依赖过深</td><td>第 9 章、第 10 章</td></tr>
 <tr><td class="nw">从双击到首帧要几秒</td><td><code>QT_DEBUG_PLUGINS=1</code> 加启动阶段采样</td><td>启动时一次性构造全部界面并扫描全部插件</td><td>第 5 章、第 12 章</td></tr>
-<tr><td class="nw">常驻内存只增不减</td><td>先分清泄漏、缓存与碎片</td><td>三种成因的处理完全不同</td><td>第 5 章;三分法见《C++ 性能优化 · 现代详解》第 6 章</td></tr>
+<tr><td class="nw">常驻内存只增不减</td><td>先分清泄漏、缓存与碎片</td><td>三种成因的处理完全不同</td><td>第 5 章;三分法见《C++ 性能优化》第 6 章</td></tr>
 <tr><td class="nw">采样热点全是库函数,自己的函数占比都不高</td><td>回到第一步复核前提</td><td>要么次数问题,要么前提不成立</td><td>本章 p2-order;第 4 章</td></tr>
 <tr><td class="nw">改完基准快了几倍,整体一点没变</td><td>回到第一步</td><td>归因错了,不是幅度不够</td><td>本章 p2-order 第六段</td></tr>
 </tbody>
@@ -2591,14 +2591,14 @@ $ heaptrack ./gallery                                               # 第四步:
 <tr><td class="nw">第 14 章 速查与索引</td><td class="nw">命令、开关、量级的集中回查</td><td>日常使用</td></tr>
 </tbody>
 </table>
-<p>通用层的问题——缓存未命中、分配器行为、编译器优化、分位数与基准方法——不在本书范围内,一律引《C++ 性能优化 · 现代详解》。Qt 机制本身怎么用,归《Qt 核心与 Widget · 现代详解》与《Qt Quick 与 QML · 现代详解》。第三方组件的选型、接入与崩溃上报,归《Qt 组件与生态 · 现代详解》。</p>
+<p>通用层的问题——缓存未命中、分配器行为、编译器优化、分位数与基准方法——不在本书范围内,一律引《C++ 性能优化》。Qt 机制本身怎么用,归《Qt 核心与 Widget》与《Qt Quick 与 QML》。第三方组件的选型、接入与崩溃上报,归《Qt 组件与生态》。</p>
 <p>从第 3 章起,每一章的编排都固定为:先给这一类机制的量级,再给判据,再给改法,最后给一组前后对照的数字。带着本章的地图和顺序进去,读到的每一条都能挂在已知的位置上。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 53484px;--thin-h:53484px">
 <h1 id="p3"><span class="part">第 3 章</span>信号槽、事件与元对象的运行期代价</h1>
 <h2 id="p3-signal">3.1 一次信号调用的实际开销</h2>
-<p>姊妹书《Qt 核心与 Widget · 现代详解》已经把信号槽的语义讲完了:谁能连谁、五种连接类型各自什么含义、参数怎么匹配。这一节不重复那些,只回答一个问题——<strong>发一次信号,机器实际做了多少事</strong>。</p>
+<p>姊妹书《Qt 核心与 Widget》已经把信号槽的语义讲完了:谁能连谁、五种连接类型各自什么含义、参数怎么匹配。这一节不重复那些,只回答一个问题——<strong>发一次信号,机器实际做了多少事</strong>。</p>
 <p>结论先给。在<strong>机器 L</strong>(Ubuntu 24.04,Intel Core i7-12700K,32 GB DDR4-3200,GCC 13.2,Qt 6.5.3,<code>-DCMAKE_BUILD_TYPE=RelWithDebInfo</code>)上,一次直接连接、单接收者、无参数的发射约 20 到 40 纳秒;同一台机器上一次虚函数调用约 2 到 4 纳秒。</p>
 <p><strong>一次发射的量级大约是一次虚调用的十倍,是一次未内联的普通成员函数调用的二十倍。</strong>这个倍数是本章的锚:它说明信号槽不是免费的,也说明它远没有贵到不能用。每帧发几十次,总代价停在微秒量级,和一次布局计算比可以忽略不计。</p>
 <p>出问题的从来不是「用了信号槽」,而是把它放进了每秒执行上万次的位置。后面几节反复用到这条判据。</p>
@@ -2624,7 +2624,7 @@ $ heaptrack ./gallery                                               # 第四步:
 <p>20 到 40 纳秒听上去不多,但它比一次虚调用贵一个数量级,差额要有出处。拆开看是五项,每一项都不大,叠起来就到了这个量级。</p>
 <ul>
 <li><strong>一次原子读。</strong>连接表指针随时可能被别的线程改写(另一个线程正在连接或断开),读它必须是原子的。无争用的原子操作在机器 L 上约 5 到 10 纳秒,这一项就吃掉了下限的四分之一。</li>
-<li><strong>一串依赖访存。</strong>同一个信号的多个连接串成链表,下一个节点的地址要等当前节点读回来才知道。这是典型的指针追逐:处理器无法提前预取,某个节点不在缓存里时整条流水线停下来等内存。这一层的通用分析见《C++ 性能优化 · 现代详解》第 3 章。</li>
+<li><strong>一串依赖访存。</strong>同一个信号的多个连接串成链表,下一个节点的地址要等当前节点读回来才知道。这是典型的指针追逐:处理器无法提前预取,某个节点不在缓存里时整条流水线停下来等内存。这一层的通用分析见《C++ 性能优化》第 3 章。</li>
 <li><strong>两到三次难预测的分支。</strong>连接类型、接收者线程、连接是否已被标记失效,每个接收者都要判一遍。<code>activate</code> 是全程序共用的一份代码,不同发送者走过来的历史互相污染,分支预测在这里的命中率明显低于普通业务代码。</li>
 <li><strong>参数走 <code>void *</code> 数组。</strong>实参不是装在寄存器里传过去的,而是取地址写进数组、槽那侧再解引用取回来。多一层间接,并且断掉了寄存器传参这条快路。</li>
 <li><strong>调用点无法内联。</strong><code>activate</code> 在编译期不知道要调谁,槽体一定是间接调用。哪怕槽只有一句 <code>m_value = v;</code>,这一句也永远不可能被内联到发射点。</li>
@@ -2860,7 +2860,7 @@ vtune -report hotspots -r r001hs -group-by function -format csv \
 <div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 Debug 构建里量出来的信号槽开销高出好几倍,不能用</span><p>Debug 构建下 <code>activate</code> 里的内联全部失效,Qt 自身还会打开若干断言与容器检查,一次发射常常量到 100 纳秒以上。用这个数字做的任何判断都是错的:它既高估了信号槽的绝对开销,也扭曲了它与槽体的比例。基准一律用 <code>RelWithDebInfo</code>,它与 <code>Release</code> 的代码生成相同,只是多带一份符号表。</p></div>
 <h2 id="p3-conn">3.2 连接数量与断开成本</h2>
 <p>上一节留下一个限定词:一次发射的成本正比于<strong>这一个信号</strong>的接收者数。这个限定词推翻了一个流传很广的粗判断——「一个对象连接多了就会变慢」。</p>
-<p>那句话只在很窄的一种情况下成立,而那种情况和「连接多」的关系比想象中弱。要说清楚,得先看连接存在哪里。连接结构的完整说明在《Qt 核心与 Widget · 现代详解》,这里只取与代价直接相关的部分。</p>
+<p>那句话只在很窄的一种情况下成立,而那种情况和「连接多」的关系比想象中弱。要说清楚,得先看连接存在哪里。连接结构的完整说明在《Qt 核心与 Widget》,这里只取与代价直接相关的部分。</p>
 <h3>连接存在哪:按信号索引分桶的那张表</h3>
 <p>每个<strong>有连接的</strong> <code>QObject</code> 持有一份 <code>ConnectionData</code>;一条连接都没有的对象根本不分配它,指针是空的——这正是上一节第 4 步能几纳秒返回的原因。</p>
 <p><code>ConnectionData</code> 的核心是一个按<strong>信号索引</strong>分桶的向量:第 <code>i</code> 个槽位放的是「信号 <code>i</code> 的连接链表头」。同一个信号的多个接收者串在这一条链上,不同信号的连接彼此不相邻、互不影响。</p>
@@ -3271,7 +3271,7 @@ wpa wake.etl
 <p>队列长度没有现成的外部工具,只能用前面那个原子计数器自己数。把它和唤醒次数一起打印,两个数字合起来能区分「投递太多」与「处理太慢」:唤醒多而队列短是前者,唤醒少而队列长是后者。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 空闲状态下每秒上千次唤醒,一定有定时器或轮询没有关掉</span><p>唤醒次数是一个不用改代码就能拿到的外部指标,机器 L 用 <code>perf stat -e sched:sched_wakeup</code>,机器 W 用 WPA 的 CPU Usage (Precise) 表的 Count 列。空闲桌面程序的正常值是每秒两位数。数字异常时先查三处:界面隐藏后没有停掉的刷新定时器、按毫秒轮询状态的循环、以及被改成 <code>Qt::PreciseTimer</code> 的低频定时器。</p></div>
 <h2 id="p3-meta">3.4 元对象查找与 invokeMethod 的代价</h2>
-<p>元对象里存了什么、moc 怎么把它生成出来,《Qt 核心与 Widget · 现代详解》讲得很细。这一节只问一件事:<strong>去查它要花多少钱</strong>,以及同一个调用换成编译期的写法能省下多少。</p>
+<p>元对象里存了什么、moc 怎么把它生成出来,《Qt 核心与 Widget》讲得很细。这一节只问一件事:<strong>去查它要花多少钱</strong>,以及同一个调用换成编译期的写法能省下多少。</p>
 <p>先给结论。元对象查询的所有入口都建立在<strong>字符串线性比较</strong>之上,没有哈希表;因此成本随类的成员数增长,一次查找在机器 L 上约 100 到 500 纳秒。而同一个调用如果能在编译期定下来,代价是 1 到 15 纳秒。<strong>差二三十倍到上百倍。</strong></p>
 <h3>indexOfMethod 做的是字符串比较</h3>
 <p><code>QMetaObject</code> 的实体是两张编译期就摆好的静态表:一张整数表存索引与标志,一张字符串表存所有名字与签名。查找的实现是从最派生的元对象开始,逐个取出方法签名与传入的字符串比较,不匹配就沿 <code>superClass</code> 往基类走。</p>
@@ -3539,7 +3539,7 @@ settings-&gt;setValue(42);</code></pre>
 <p>给一条能闭眼执行的规矩:<strong>标量、枚举、指针、隐式共享类型的 setter 一律先判等再发。</strong>其余类型按实测决定。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 setter 里不判等就发 NOTIFY,一次赋值会被放大成几十次无效计算</span><p>Qt 不会替你判断新值和旧值是否相同,发不发由 setter 决定。不判等时,重复写入同一个值同样会触发整条接收者链:布局失效、重绘请求、模型刷新,而这些又可能改回别的属性继续往下发。功能上看不出任何异常,只是每一轮都比需要的重一截。标量、枚举、指针与隐式共享类型的 setter 一律先判等再发,这是收益最高的一条改动。</p></div>
 <h3>Qt 6 的可绑定属性:依赖跟踪与惰性求值</h3>
-<p>Qt 6 引入了 <code>QProperty&lt;T&gt;</code> 与 <code>QObjectBindableProperty</code>,把「一个值由别的值算出来」这件事从手写 signal/slot 同步改成引擎维护。机制详见《Qt 核心与 Widget · 现代详解》,这里只讲三条决定代价的性质。</p>
+<p>Qt 6 引入了 <code>QProperty&lt;T&gt;</code> 与 <code>QObjectBindableProperty</code>,把「一个值由别的值算出来」这件事从手写 signal/slot 同步改成引擎维护。机制详见《Qt 核心与 Widget》,这里只讲三条决定代价的性质。</p>
 <ul>
 <li><strong>依赖跟踪是动态的。</strong>绑定表达式求值时,引擎维护一个「正在求值」的上下文;表达式里读到的每一个可绑定属性都会把自己登记为依赖。<strong>依赖集合由这一次实际走过的分支决定</strong>,带 <code>if</code> 的表达式在不同分支下依赖集合不同,每次求值都可能重建。</li>
 <li><strong>求值是惰性的。</strong>依赖变化时不立刻重算,只把绑定标记为脏;下一次读取这个属性才真正求值。连续改十次依赖只求一次值,这是绑定相对 <code>NOTIFY</code> 最主要的收益来源。</li>
@@ -3785,10 +3785,10 @@ $env:QT_LOGGING_RULES=<span>"*.warning=true"</span>
 <div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 本章的开销分布最广,因此最容易在功能正确的前提下悄悄累积</span><p>信号发射、事件投递、属性读写这三条通道贯穿整个程序,每一处的单次成本都小到测不出来,任何一次提交都不会让它明显变慢。等到能感觉出卡顿时,原因已经分散在几百处,没有一处能被指认。唯一有效的办法是把上一小节那四条检查做成常态,盯住趋势而不是绝对值。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 37757px;--thin-h:37757px">
+<section class="chapter" style="contain-intrinsic-size:auto 37647px;--thin-h:37647px">
 <h1 id="p4"><span class="part">第 4 章</span>隐式共享、容器与字符串的真实成本</h1>
 <h2 id="p4-detach">4.1 分离:最容易被忽略的一次深拷贝</h2>
-<p>隐式共享让 Qt 的容器与字符串可以按值传递:拷贝一个 <code>QString</code> 只是把数据指针抄一份,再把引用计数加一。机制在《Qt 核心与 Widget · 现代详解》里讲过,这一节只算账。</p>
+<p>隐式共享让 Qt 的容器与字符串可以按值传递:拷贝一个 <code>QString</code> 只是把数据指针抄一份,再把引用计数加一。机制在《Qt 核心与 Widget》里讲过,这一节只算账。</p>
 <p>账的要点是:<strong>拷贝那一行几乎不花钱,花钱的是之后某一行不起眼的非 const 访问</strong>。它会把整块数据复制出来,这次复制叫分离,机制上就是写时复制。</p>
 <p>分离之所以最容易被忽略,是因为它不出现在你写的那一行里。<code>QList&lt;int&gt; b = a;</code> 看得见,<code>b[0] = 1;</code> 也看得见,而 <code>for (auto &amp;x : b)</code> 里没有任何符号提示这里要复制一万个元素。剖析器给出的热点落在 <code>QArrayData::allocate</code> 与 <code>memcpy</code> 上,与源码里的哪一行对不上号。</p>
 <h3>拷贝很便宜,写入不便宜</h3>
@@ -3936,7 +3936,7 @@ vtune -collect hotspots -knob sampling-mode=hw -r r002hs -- gallery.exe
 vtune-gui r002hs</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 写入前后 constData 指针不变,就说明这一行没有分离</span><p>这是最便宜的判据,一行断言即可,不需要任何工具。做法是在可疑语句前后各取一次 constData(),把两个指针比较一下;指针变了就是分离,没变就是原地写。它同时适用于 QString、QByteArray 与全部 Qt 容器。</p></div>
 <h3>多线程共享时的额外一笔账</h3>
-<p>引用计数是原子的。单线程里一次自增约 5 到 10 纳秒,几个线程同时持有同一块数据时,这个计数所在的缓存行会在核之间来回弹,一次自增涨到 100 纳秒以上。缓存行在核间迁移的通用原理见《C++ 性能优化 · 现代详解》,这里只取结论。</p>
+<p>引用计数是原子的。单线程里一次自增约 5 到 10 纳秒,几个线程同时持有同一块数据时,这个计数所在的缓存行会在核之间来回弹,一次自增涨到 100 纳秒以上。缓存行在核间迁移的通用原理见《C++ 性能优化》,这里只取结论。</p>
 <p>由此推出一条与直觉相反的规矩:<strong>把一份大数据交给多个工作线程去读,按值拷贝比共享一份更快</strong>。每个线程拿一份独立的副本之后,后续所有访问都是本地的,不再有跨核的原子操作。付出的是一次复制与更多内存。</p>
 <ul>
 <li><strong>只读、线程数少、数据大:</strong>继续共享,一次原子操作换掉一次大复制是划算的。</li>
@@ -3947,7 +3947,7 @@ vtune-gui r002hs</code></pre>
 <p>三条判据可以合成一句:<strong>拷贝按次计费,分离按量计费</strong>。优化的方向从来不是减少拷贝,而是让写入发生在独占的那一份上。</p>
 <h2 id="p4-container">4.2 Qt 容器与标准库容器的实测差别</h2>
 <p>Qt 5 时代关于容器的结论有相当一部分在 Qt 6 里已经不成立,原因是 <code>QList</code> 被整体换掉了。这一节先把 Qt 6 的实际形态讲清楚,再给实测对照,最后给选型判据。</p>
-<p>前提要说明:容器本身的复杂度、缓存友好性、分配器行为属于通用性能话题,《C++ 性能优化 · 现代详解》讲透了,这里只引结论。本节回答的是 Qt 特有的那一层——<strong>隐式共享带来的差别,以及跨 API 边界时的转换成本</strong>。</p>
+<p>前提要说明:容器本身的复杂度、缓存友好性、分配器行为属于通用性能话题,《C++ 性能优化》讲透了,这里只引结论。本节回答的是 Qt 特有的那一层——<strong>隐式共享带来的差别,以及跨 API 边界时的转换成本</strong>。</p>
 <h3>Qt 6 的 QList 就是原来的 QVector</h3>
 <p>Qt 5 的 <code>QList&lt;T&gt;</code> 存的是指针数组:元素大于一个指针宽度、或者不可平凡重定位时,每个元素单独堆分配一次。这个设计让 <code>QList&lt;QRect&gt;</code> 在 Qt 5 里既费内存又费缓存。</p>
 <p>Qt 6 取消了这套间接层。<code>QList&lt;T&gt;</code> 现在是连续存储的动态数组,<code>QVector&lt;T&gt;</code> 成为它的别名,两者是同一个类型。</p>
@@ -4035,7 +4035,7 @@ $env:QT_HASH_SEED = <span>"0"</span>
 </table>
 <div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 在 Qt 容器与标准库容器之间来回转换,每转一次就是一次全量复制</span><p>常见形态是内部一律用 std::vector,到了信号或模型接口再转成 QList。10 万元素转一次在机器 L 上约 60 到 120 微秒,一帧转两次就吃掉半个毫秒。判据很简单:如果一份数据要经过 Qt 的 API,它从产生到消费全程都应当是 Qt 容器。</p></div>
 <h3>reserve、prepend 与 QVarLengthArray</h3>
-<p><code>reserve</code> 的通用收益是消掉扩容期间的重复分配与搬移,《C++ 性能优化 · 现代详解》里有完整讨论。在 Qt 容器上它多一层含义:<strong><code>reserve</code> 是非 const 成员函数,共享状态下会先分离</strong>。</p>
+<p><code>reserve</code> 的通用收益是消掉扩容期间的重复分配与搬移,《C++ 性能优化》里有完整讨论。在 Qt 容器上它多一层含义:<strong><code>reserve</code> 是非 const 成员函数,共享状态下会先分离</strong>。</p>
 <p>由此推出一条写法:先赋值再 <code>reserve</code> 是错的,顺序应当反过来,或者干脆在容器还是空的时候就 <code>reserve</code>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 277px"><code><span class="cm">// 不好:list 此刻与别处共享,reserve 先复制一整块,再扩容</span>
 QList&lt;Row&gt; list = source-&gt;rows();
@@ -4584,7 +4584,7 @@ Select-String -Path src\*.cpp -Pattern <span>'for \(\s*(const )?auto\s*&amp;'</s
 </tbody>
 </table>
 <p>表里有两行值得单独说。第四行的症状最容易被误判成「模型太大」,而实际原因是每次 <code>data()</code> 调用都在构造对象;数据量不变,把构造挪走就解决了。</p>
-<p>最后一行的成因在《C++ 性能优化 · 现代详解》里叫缓存行争用,这里的 Qt 特有形态是隐式共享的引用计数落在同一条缓存行上,与数据本身是不是只读无关。</p>
+<p>最后一行的成因在《C++ 性能优化》里叫缓存行争用,这里的 Qt 特有形态是隐式共享的引用计数落在同一条缓存行上,与数据本身是不是只读无关。</p>
 <h3>五条判据速查</h3>
 <p>把全章的判据压成五句,每一句都能直接执行。</p>
 <ul>
@@ -4613,11 +4613,11 @@ Select-String -Path src\*.cpp -Pattern <span>'for \(\s*(const )?auto\s*&amp;'</s
 <p>第 7 步的数字形态也值得注意:平均帧时间从 9 毫秒降到 7 毫秒,肉眼几乎看不出;p99 从 60 毫秒降到 14 毫秒,用户能直接感觉到。<strong>用平均值验收会得出「几乎没改善」的错误结论。</strong></p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 每一步都要有可检验的产出,产出对不上就停下来重新分类</span><p>上面七步里,第 1、2 步给的是分类结论,第 3、4 步给的是位置,第 6、7 步给的是收益。任何一步的产出与预期不符,都应当回到上一步重新判断,而不是继续往下走。最常见的失败形态是第 2 步草草跳过,直接对着采样结果改代码,改完发现帧时间没动。</p></div>
 <h3>与其他章的连接</h3>
-<table style="contain-intrinsic-size:auto 335px">
+<table style="contain-intrinsic-size:auto 259px">
 <thead><tr><th>话题</th><th>去哪一章</th><th>为什么不在这里讲</th></tr></thead>
 <tbody>
-<tr><td class="nw">分配器行为、内存碎片、缓存行争用</td><td>《C++ 性能优化 · 现代详解》</td><td>通用性能话题,与 Qt 无关</td></tr>
-<tr><td class="nw">隐式共享的机制与线程安全语义</td><td>《Qt 核心与 Widget · 现代详解》</td><td>机制的主场,本章只算代价</td></tr>
+<tr><td class="nw">分配器行为、内存碎片、缓存行争用</td><td>《C++ 性能优化》</td><td>通用性能话题,与 Qt 无关</td></tr>
+<tr><td class="nw">隐式共享的机制与线程安全语义</td><td>《Qt 核心与 Widget》</td><td>机制的主场,本章只算代价</td></tr>
 <tr><td class="nw">跨线程传递数据的正确形态</td><td class="nw">本书第 6 章</td><td>涉及队列连接与线程亲和,是另一层话题</td></tr>
 <tr><td class="nw">模型的 data 被调用多少次、代理模型的开销</td><td class="nw">本书第 8 章</td><td>需要先讲清视图的请求模式</td></tr>
 <tr><td class="nw">QML 侧的属性访问与值类型注册</td><td class="nw">本书第 10 章</td><td>涉及 QML 引擎的类型系统</td></tr>
@@ -4639,7 +4639,7 @@ Select-String -Path src\*.cpp -Pattern <span>'for \(\s*(const )?auto\s*&amp;'</s
 <div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 只看单次成本就动手改,九成的工作量花在不产生可测收益的位置上</span><p>本章给的所有量级都是单次成本。要换算成收益必须乘以调用次数,而调用次数只能测,不能猜。做法是先用剖析器或计数器确认这段代码每秒执行多少次,再对照单次成本估算上限;上限不到一毫秒的位置直接跳过,不管它看上去多么明显。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 37348px;--thin-h:37348px">
+<section class="chapter" style="contain-intrinsic-size:auto 37238px;--thin-h:37238px">
 <h1 id="p5"><span class="part">第 5 章</span>对象创建、内存占用与启动时间</h1>
 <h2 id="p5-obj">5.1 一个 QObject 要花多少内存与时间</h2>
 <p>上一章算的是值类型的账:成本按数据量计费。这一章算的是对象的账:<strong>成本按个计费</strong>。一个界面程序里活着几千到几万个 <code>QObject</code>,每个的固定开销乘上个数,就是启动时间与常驻内存的主要来源之一。</p>
@@ -4762,7 +4762,7 @@ QList&lt;LogRow *&gt; rows;      <span class="cm">// 十万行 = 十万个 QObje
 <p>第二种写法是模型视图框架的标准形态:<strong>把「数据有多少行」与「有多少个对象」解耦</strong>。十万行数据只对应一个 <code>QObject</code>,QML 与部件视图都能直接用。模型侧的完整处理见第 8 章。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 数据行不要做成 QObject,做成结构体加一个模型</span><p>判据是实例数会不会到几千以上。上万个 QObject 的固定开销是内存一两兆、构造两毫秒,还要加上每个对象的连接与事件能力——这些能力在纯数据行上一样也用不到。把数据放进结构体、用一个 QAbstractItemModel 暴露出去,QML 与部件视图的用法完全不变。</p></div>
 <h2 id="p5-tree">5.2 大对象树的构造与析构</h2>
-<p>对象树是 Qt 管理生存期的方式:父对象析构时删掉全部子对象。这套机制的语义在《Qt 核心与 Widget · 现代详解》里讲过,这一节算它的代价——<strong>代价集中在挂载与卸载两个动作上,并且其中一个动作有退化成平方复杂度的写法</strong>。</p>
+<p>对象树是 Qt 管理生存期的方式:父对象析构时删掉全部子对象。这套机制的语义在《Qt 核心与 Widget》里讲过,这一节算它的代价——<strong>代价集中在挂载与卸载两个动作上,并且其中一个动作有退化成平方复杂度的写法</strong>。</p>
 <h3>setParent 做了什么</h3>
 <p>挂载一个子对象不是写一个指针那么简单。<code>setParent</code> 的完整动作有五步。</p>
 <ol>
@@ -4912,7 +4912,7 @@ gammaray.exe --listen tcp:<span class="cm">//127.0.0.1:11732 gallery.exe</span><
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 对象计数曲线是区分「泄漏」与「内存正常增长」最快的一步</span><p>在关心的基类构造与析构里各加一个原子计数器,几行代码,几乎没有开销,可以长期留在发布构建里。运行半小时之后看这条曲线:单调上升就是对象没被释放,平稳波动而内存仍在涨,问题就不在对象上,要按下一节的判据继续分。</p></div>
 <h2 id="p5-leak">5.3 内存只增不减:泄漏、缓存还是碎片</h2>
 <p>「内存只增不减」是一个症状,不是一个原因。它对应三种成因,<strong>修法完全不同,而三者的表面现象一模一样</strong>:常驻内存随运行时间上涨,重启之后恢复正常。</p>
-<p>先分类再动手,这一节给的就是分类的判据。分配器行为、内存碎片的成因与虚拟内存与常驻内存的关系属于通用话题,《C++ 性能优化 · 现代详解》第 6 章讲透了,这里只取结论并给出 Qt 侧的具体形态。</p>
+<p>先分类再动手,这一节给的就是分类的判据。分配器行为、内存碎片的成因与虚拟内存与常驻内存的关系属于通用话题,《C++ 性能优化》第 6 章讲透了,这里只取结论并给出 Qt 侧的具体形态。</p>
 <h3>三种成因,同一个症状</h3>
 <p>三者的区别落在三条曲线上:存活对象数、某个容器的元素个数、以及存活字节数与常驻内存的差。</p>
 <figure style="contain-intrinsic-size:auto 298px">
@@ -5170,7 +5170,7 @@ connect(mainWindow-&gt;windowHandle(), &amp;QWindow::frameSwapped, <span class="
 <ul>
 <li><strong>能改成惰性的一律改。</strong>Qt 提供的 <code>Q_GLOBAL_STATIC</code> 在第一次访问时才构造,并且线程安全。普通的命名空间级全局对象在 <code>main</code> 之前就构造。</li>
 <li><strong>正则表达式与查找表是重灾区。</strong>一个全局的 <code>QRegularExpression</code> 在构造时就要编译模式,几十个这样的对象合起来能占掉几十毫秒。</li>
-<li><strong>不要在全局对象的构造函数里访问其他翻译单元的全局对象。</strong>顺序不确定,这既是性能问题也是正确性问题,后者见《C++ 性能优化 · 现代详解》。</li>
+<li><strong>不要在全局对象的构造函数里访问其他翻译单元的全局对象。</strong>顺序不确定,这既是性能问题也是正确性问题,后者见《C++ 性能优化》。</li>
 </ul>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 223px"><code><span class="cm">// 在 main 之前构造,并且立刻编译正则表达式</span>
 <span class="kw">static</span> <span class="kw">const</span> QRegularExpression kTokenRe(QStringLiteral(<span>"[A-Za-z_]\\w*"</span>));
@@ -5484,11 +5484,11 @@ connect(window, &amp;QWindow::frameSwapped, <span class="kw">this</span>, [<span
 <p>第二条的判据是生存期而不是性能:对象要跟着某个父对象一起消失就挂在树上,生存期与某个作用域一致就放栈上或用 <code>QScopedPointer</code>,生存期由多方共同决定就用共享指针并想清楚谁最后释放。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 用对象池优化 QObject 的构造,最多只能省掉一半,而且掩盖了真正的问题</span><p>QObject 的构造有两次分配,对象池只能接管外层那一次,QObjectPrivate 的分配在构造函数内部。省下的百分之三四十会让人误以为问题解决了,而真正的问题——为什么需要上万个 QObject——被推迟到了下一次规模翻倍的时候。先问数量,再问速度。</p></div>
 <h3>与其他章的连接</h3>
-<table style="contain-intrinsic-size:auto 409px">
+<table style="contain-intrinsic-size:auto 333px">
 <thead><tr><th>话题</th><th>去哪一章</th><th>为什么不在这里讲</th></tr></thead>
 <tbody>
-<tr><td class="nw">分配器、碎片与虚拟内存的一般行为</td><td>《C++ 性能优化 · 现代详解》第 6 章</td><td>通用话题,与 Qt 无关</td></tr>
-<tr><td class="nw">对象树与生存期的语义</td><td>《Qt 核心与 Widget · 现代详解》</td><td>机制的主场,本章只算代价</td></tr>
+<tr><td class="nw">分配器、碎片与虚拟内存的一般行为</td><td>《C++ 性能优化》第 6 章</td><td>通用话题,与 Qt 无关</td></tr>
+<tr><td class="nw">对象树与生存期的语义</td><td>《Qt 核心与 Widget》</td><td>机制的主场,本章只算代价</td></tr>
 <tr><td class="nw">信号槽与事件的运行期代价</td><td class="nw">本书第 3 章</td><td>已在前一章讲过,本章只引用结论</td></tr>
 <tr><td class="nw">隐式共享与字符串的成本</td><td class="nw">本书第 4 章</td><td>值类型按量计费,与对象按个计费是两套模型</td></tr>
 <tr><td class="nw">跨线程构造与线程亲和</td><td class="nw">本书第 6 章</td><td>涉及线程池与队列连接</td></tr>
@@ -5568,7 +5568,7 @@ REM Windows:VTune 的线程分析直接给出创建、等待与切换的分布
 <tr><td class="nw"><strong>跨核迁移</strong></td><td class="nw">再加 10 到 50 微秒</td><td>数据留在原来那个核的私有缓存里,新核要一路从 L3 甚至内存重新取</td></tr>
 </tbody>
 </table>
-<p>间接代价的大小取决于线程的工作集。一个只操作几百字节的线程切回来几乎没有损失;一个遍历几 MB 数组的线程切回来时缓存已经被别人挤干净,要重新预热。<strong>这解释了一个常见现象:线程数超过核数之后,总吞吐不是持平而是下降</strong>——每个线程分到的时间片变短,切换频率变高,而每次切换都要重付一遍预热成本。通用层面的缓存与 TLB 行为在《C++ 性能优化 · 现代详解》第 3 章有完整推导,这里只用结论。</p>
+<p>间接代价的大小取决于线程的工作集。一个只操作几百字节的线程切回来几乎没有损失;一个遍历几 MB 数组的线程切回来时缓存已经被别人挤干净,要重新预热。<strong>这解释了一个常见现象:线程数超过核数之后,总吞吐不是持平而是下降</strong>——每个线程分到的时间片变短,切换频率变高,而每次切换都要重付一遍预热成本。通用层面的缓存与 TLB 行为在《C++ 性能优化》第 3 章有完整推导,这里只用结论。</p>
 <p>观测手段两侧都有。Linux 用 <code>perf stat</code> 拿到切换与迁移次数,再用 <code>perf sched</code> 看具体是谁在等、等了多久;Windows 用 WPA 的 CPU Usage (Precise) 视图,它按上下文切换事件重建每个线程的运行与等待区间。</p>
 <pre style="contain-intrinsic-size:auto 196px"><code># Linux:哪些线程切换最频繁,最长的一次等待有多久
 $ perf sched record -- ./app
@@ -5585,7 +5585,7 @@ $ perf stat -e context-switches,cpu-migrations -p $(pgrep -n app) -- sleep 30</c
 <li><strong>事件循环不是免费的</strong>。启动后 Qt 要为该线程建一个事件分发器:Linux 上是基于 <code>epoll</code> 或 glib 主循环的对象,Windows 上会创建一个隐藏窗口并挂上消息队列。这一步在基准环境上约 10 到 30 微秒,只发生一次。</li>
 <li><strong>不需要事件循环的线程不要开</strong>。纯计算任务重写 <code>run()</code> 做完就返回,可以省掉分发器的建立与销毁,也省掉线程空闲时的阻塞等待。</li>
 </ul>
-<p>线程亲和(thread affinity)是 Qt 判断连接类型、投递事件、执行 <code>deleteLater</code> 的依据,机制层面在《Qt 核心与 Widget · 现代详解》第 4 章与第 6 章有完整说明。</p>
+<p>线程亲和(thread affinity)是 Qt 判断连接类型、投递事件、执行 <code>deleteLater</code> 的依据,机制层面在《Qt 核心与 Widget》第 4 章与第 6 章有完整说明。</p>
 <p>性能视角只需要记住两点:<code>QObject::thread()</code> 的查询本身是一次指针读取,可以忽略;但<strong><code>moveToThread()</code> 会遍历整棵子对象树逐个改写亲和,并重新登记该对象上所有的定时器</strong>,对一棵上千个对象的树来说是毫秒级的操作,不能放在每帧执行的路径上。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 moveToThread 只能从对象当前所属线程调用,且有父对象的不能单独搬</span><p><code>moveToThread()</code> 的前置条件是调用方就是对象当前的亲和线程,或者对象当前没有亲和线程。从别的线程调用会打印 <code>Cannot move to target thread</code> 并<strong>直接返回,对象留在原地</strong>——后续所有本以为会在新线程执行的槽,实际仍在旧线程跑,表现为「加了线程但界面照样卡」。另一条:<strong>带父对象的子对象不能单独移动</strong>,Qt 会拒绝并警告,必须移动树根。</p></div>
 <h3>该开多少个线程</h3>
@@ -5936,7 +5936,7 @@ QtConcurrent::blockingMap(ranges, [&amp;items](<span class="kw">const</span> QPa
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 并行之前先量单元素耗时,低于 1 微秒的循环并行只会变慢</span><p>判据来自调度开销:一次任务的入队、唤醒、出队合计 2 到 8 微秒。单元素耗时 1 微秒的循环,按元素并行意味着每 1 微秒的有效工作要付 2 到 8 微秒的调度费,总耗时必然上升。<strong>正确的做法是按块并行</strong>:块数取线程数的三到五倍,块内串行。块数太少会因为负载不均导致最后一个线程拖尾,太多则调度开销回升。</p></div>
 <h2 id="p6-lock">6.4 Qt 同步原语的开销对照</h2>
 <p>锁的开销有两个截然不同的量级:<strong>无竞争时是几十纳秒的用户态原子操作,有竞争时是几微秒的内核等待</strong>。两者相差两个数量级,而同一把锁在不同负载下会在这两个区间之间跳。因此「这把锁贵不贵」这个问题没有单一答案,要问的是「它的竞争率是多少」。</p>
-<p>Qt 的同步原语都建立在平台原语之上:Linux 上是 futex,Windows 上是 <code>WaitOnAddress</code> 与轻量级同步对象。它们相对于直接用 <code>std::mutex</code> 的价值在于跨平台一致的语义与可移植的超时接口,性能特征则基本一致。通用层面的锁扩展性、伪共享与内存序在《C++ 性能优化 · 现代详解》第 8 章有完整推导,这一节只给 Qt 侧的对照与选择判据。</p>
+<p>Qt 的同步原语都建立在平台原语之上:Linux 上是 futex,Windows 上是 <code>WaitOnAddress</code> 与轻量级同步对象。它们相对于直接用 <code>std::mutex</code> 的价值在于跨平台一致的语义与可移植的超时接口,性能特征则基本一致。通用层面的锁扩展性、伪共享与内存序在《C++ 性能优化》第 8 章有完整推导,这一节只给 Qt 侧的对照与选择判据。</p>
 <h3>五类原语的开销对照</h3>
 <table style="contain-intrinsic-size:auto 388px">
 <thead><tr><th>原语</th><th>无竞争一次获取与释放</th><th>有竞争</th><th>说明</th></tr></thead>
@@ -5992,7 +5992,7 @@ QtConcurrent::blockingMap(ranges, [&amp;items](<span class="kw">const</span> QPa
 <div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 持锁状态下发信号,槽里再取同一把锁就是自死锁</span><p>直接连接的信号是同步调用,槽体在发射线程执行。在 <code>QMutexLocker</code> 的作用域里 <code>emit</code>,等于把整个槽拉进了临界区。现场表现是<strong>界面完全冻结、CPU 占用为零</strong>,栈上能看到 <code>QMetaObject::activate</code> 夹在两次加锁之间。规避写法是在临界区内只收集数据,用花括号显式结束 <code>QMutexLocker</code> 的作用域,出锁之后再 <code>emit</code>。</p></div>
 <h3>原子量:什么时候够用</h3>
 <p>单个整数或指针的读改写用 <code>QAtomicInteger</code> 或 <code>std::atomic</code> 就够,不需要锁。Qt 的隐式共享引用计数、<code>QThreadPool</code> 的活跃线程数都是这么做的。判据是<strong>共享状态能否压缩成一个机器字</strong>:能,用原子量;不能,用锁。</p>
-<p>内存序的选择在 Qt 的接口里体现为 <code>loadRelaxed</code> / <code>loadAcquire</code> / <code>storeRelease</code> 这组命名。计数器用 relaxed 即可;用作「数据已就绪」标志时必须用 acquire/release 配对,否则编译器与处理器的重排会让读到标志的线程读到未初始化的数据。这套规则的完整推导在《C++ 性能优化 · 现代详解》第 8 章。</p>
+<p>内存序的选择在 Qt 的接口里体现为 <code>loadRelaxed</code> / <code>loadAcquire</code> / <code>storeRelease</code> 这组命名。计数器用 relaxed 即可;用作「数据已就绪」标志时必须用 acquire/release 配对,否则编译器与处理器的重排会让读到标志的线程读到未初始化的数据。这套规则的完整推导在《C++ 性能优化》第 8 章。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 多个原子量组成的状态不是原子的,读到的可能是撕裂的组合</span><p>把「计数」与「容量」分别放进两个 <code>QAtomicInt</code>,再分别读出来做判断,读到的两个值可能来自不同的时刻。程序看到的是一个从未真实存在过的状态组合,后果是<strong>断言偶发失败、缓冲区偶发越界</strong>,而且复现率随负载升高。<strong>需要多个变量一致时,要么合并进一个字用位域,要么用锁</strong>——原子量的原子性只覆盖单个变量。</p></div>
 <h3>信号量与条件变量:等待的两条规则</h3>
 <p><code>QSemaphore</code> 与 <code>QWaitCondition</code> 处理的是「等到某个条件成立再继续」,它们的成本结构与互斥量不同:<strong>互斥量的常态是不等待,条件变量的常态是等待</strong>,所以后者每次都要经过内核的挂起与唤醒,一次往返 5 到 50 微秒。这个价格决定了它们只适合低频的阶段切换,不适合高频的数据交接。</p>
@@ -6136,7 +6136,7 @@ QtConcurrent::run([promise] {
 </tbody>
 </table>
 <p>第一行有一个常被忽略的中间方案:<strong>数据本身共享,但把它切成互不重叠的分片,每个线程只碰自己那片</strong>。一张大图按行带切给八个线程各自处理,虽然物理上是同一块内存,逻辑上却没有共享,同样不需要锁。这个手法在图像处理与矩阵运算里最常见,前提是切分边界处没有相互依赖。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 大数据共享不掉时,先切分片再考虑加锁</span><p>同一块内存被多个线程访问,只要访问范围不重叠,就不构成竞争,也不需要同步。图像按行带切、数组按区间切、哈希表按桶切,都属于这一类。<strong>唯一要注意的是切分边界要对齐到缓存行(通常 64 字节)</strong>,否则相邻分片的边界数据落在同一条缓存行上,会产生伪共享——表现为加了线程却几乎不加速。伪共享的完整机制在《C++ 性能优化 · 现代详解》第 8 章。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 大数据共享不掉时,先切分片再考虑加锁</span><p>同一块内存被多个线程访问,只要访问范围不重叠,就不构成竞争,也不需要同步。图像按行带切、数组按区间切、哈希表按桶切,都属于这一类。<strong>唯一要注意的是切分边界要对齐到缓存行(通常 64 字节)</strong>,否则相邻分片的边界数据落在同一条缓存行上,会产生伪共享——表现为加了线程却几乎不加速。伪共享的完整机制在《C++ 性能优化》第 8 章。</p></div>
 <h3>一次改造的前后对照</h3>
 <table style="contain-intrinsic-size:auto 250px">
 <thead><tr><th>项目</th><th>改造前</th><th>改造后</th></tr></thead>
@@ -6231,8 +6231,8 @@ REM 只要线程栈时,用 WinDbg 附加后一条命令
 <ul>
 <li><strong>信号槽与元对象的代价</strong>在第 3 章。本章的队列连接成本建立在那一章的连接表遍历与元调用之上,直接连接的几十纳秒是本章一切对比的基线。</li>
 <li><strong>隐式共享与容器</strong>在第 4 章。跨线程传值几乎免费这一条,以及「发完不要再碰」这条纪律,都源自那一章的写时复制机制。</li>
-<li><strong>通用的并发理论</strong>在《C++ 性能优化 · 现代详解》第 8 章:内存序、伪共享、锁的扩展性曲线、无锁数据结构的正确性证明,本章只引结论。</li>
-<li><strong>Qt 的线程机制本身</strong>在《Qt 核心与 Widget · 现代详解》第 17 章,以及第 4 章、第 6 章关于连接类型与事件循环的部分。本章只讲代价,不重复讲机制。</li>
+<li><strong>通用的并发理论</strong>在《C++ 性能优化》第 8 章:内存序、伪共享、锁的扩展性曲线、无锁数据结构的正确性证明,本章只引结论。</li>
+<li><strong>Qt 的线程机制本身</strong>在《Qt 核心与 Widget》第 17 章,以及第 4 章、第 6 章关于连接类型与事件循环的部分。本章只讲代价,不重复讲机制。</li>
 <li><strong>渲染相关的线程分工</strong>从下一章开始:Widget 的绘制只能在 GUI 线程完成,而 Qt Quick 的场景图有独立的渲染线程,两者的约束完全不同。</li>
 </ul>
 <div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 每个任务一个 QThread 是 Qt 4 时代的写法,新代码用线程池</span><p>直接 <code>new QThread</code> 并为单个任务启动它,在 Qt 4 的示例里很常见。它今天仍然能工作,但每次要付几十到两百微秒的创建成本,还要自己管理生命周期与销毁时机。<strong>短任务一律用 <code>QThreadPool</code> 或 <code>QtConcurrent</code>;<code>QThread</code> 留给长期存在的工作线程</strong>,例如一个持续跑事件循环、接收队列连接的后台服务对象。</p></div>
@@ -6336,7 +6336,7 @@ REM 只要线程栈时,用 WinDbg 附加后一条命令
 <tr><td class="nw">滚动</td><td class="nw">新露出的条带</td><td>前提是用了 <code>scroll()</code>;直接重画视口则是全量</td></tr>
 </tbody>
 </table>
-<p>第四行是最容易被低估的一项。<strong><code>setStyleSheet()</code> 不只是一次重绘,它会触发样式表的重新解析与整棵子树的重新求样式</strong>,对一棵几百个部件的树来说是几毫秒到几十毫秒。把它放在鼠标悬停、选中变化这类高频路径上,代价与「每帧重新布局整个窗口」相当。正确做法是用动态属性配合 <code>style()-&gt;polish()</code> 只刷新受影响的部件,样式表机制本身在《Qt 核心与 Widget · 现代详解》第 15 章。</p>
+<p>第四行是最容易被低估的一项。<strong><code>setStyleSheet()</code> 不只是一次重绘,它会触发样式表的重新解析与整棵子树的重新求样式</strong>,对一棵几百个部件的树来说是几毫秒到几十毫秒。把它放在鼠标悬停、选中变化这类高频路径上,代价与「每帧重新布局整个窗口」相当。正确做法是用动态属性配合 <code>style()-&gt;polish()</code> 只刷新受影响的部件,样式表机制本身在《Qt 核心与 Widget》第 15 章。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 用 setStyleSheet 做状态切换,等于每次都重新求整棵子树的样式</span><p>样式表的赋值会让 Qt 重新解析这段文本,并对该部件及其全部后代重新计算样式、重新计算尺寸提示、再触发重绘。一棵几百个部件的窗口上,单次代价在毫秒到几十毫秒之间。<strong>把它接在悬停、选中、数值变化这类高频信号上,界面会随着交互频率线性变卡</strong>。替代写法是预先在样式表里按动态属性写好规则,状态变化时只 <code>setProperty</code> 再对单个部件调 <code>unpolish</code> 与 <code>polish</code>。</p></div>
 <h3>不透明属性:让遮挡剔除生效</h3>
 <p>管线的第 3 步会把「被不透明部件完全遮住的区域」从脏区里减掉,第 4 步会决定要不要先擦一遍背景。这两项判断都依赖属性标志,而<strong>默认值是保守的:Qt 假定你的 <code>paintEvent</code> 不一定填满整个矩形,因此先擦背景,也不敢把你当成遮挡物</strong>。</p>
@@ -6778,7 +6778,7 @@ REM 内存带宽是否已经打满,用微架构分析
 </ol>
 <h2 id="p7-gv">7.5 图形视图的索引与视口裁剪</h2>
 <p>图形视图框架处理的是「几千到几十万个可独立移动的图形项」这一类场景:地图、时间线、原理图、节点编辑器。它比自绘部件多出两项机制——<strong>场景索引</strong>与<strong>视口裁剪</strong>——正是这两项决定了它在大规模场景下的表现。</p>
-<p>框架本身的用法在《Qt 核心与 Widget · 现代详解》第 14 章;决定大规模场景表现的是配置与写法这一层。</p>
+<p>框架本身的用法在《Qt 核心与 Widget》第 14 章;决定大规模场景表现的是配置与写法这一层。</p>
 <h3>场景索引:两种模式的分界</h3>
 <p><code>QGraphicsScene</code> 默认用一棵 BSP 树索引所有图形项,查询「哪些项与这个矩形相交」时可以跳过绝大多数项。代价是<strong>每次项的位置或边界变化都要更新索引</strong>。</p>
 <table style="contain-intrinsic-size:auto 114px">
@@ -6944,7 +6944,7 @@ $ perf report --sort symbol | grep -iE <span>'QGraphicsScene|QGraphicsView|BspTr
 <li><strong>并发的约束</strong>在第 6 章。Widget 的绘制只能在 GUI 线程完成,因此本章的每一毫秒都直接顶在事件循环上,并推迟所有跨线程回调。</li>
 <li><strong>模型/视图的绘制</strong>在下一章。委托的 <code>paint()</code> 就是本节讲的绘制操作,只是调用频率高得多,所以本章的每一条判据在那里都要再收紧一档。</li>
 <li><strong>Qt Quick 的渲染模型</strong>从第 9 章开始,它有独立的渲染线程与 GPU 批次合并,与本章的 CPU 光栅模型是两套完全不同的成本结构。</li>
-<li><strong>绘图机制本身</strong>在《Qt 核心与 Widget · 现代详解》第 14 章,坐标系、画家状态、图形视图的用法都在那里,本章只讲代价。</li>
+<li><strong>绘图机制本身</strong>在《Qt 核心与 Widget》第 14 章,坐标系、画家状态、图形视图的用法都在那里,本章只讲代价。</li>
 </ul>
 <div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 Qt 6 的 backing store 走 RHI,绘制仍在 CPU 上</span><p>Qt 6 把上屏那一段统一到了 RHI 抽象层,某些平台上 backing store 的呈现会经过图形 API 而不是纯 CPU 拷贝。<strong>这只影响管线的第 6 步,第 4 步的绘制仍然由光栅引擎在 CPU 上完成</strong>,本章的全部量级与判据不受影响。需要 GPU 参与实际绘制时,应当考虑的是 Qt Quick 或 <code>QOpenGLWidget</code>,而不是期待 Widget 的绘制自动变快。</p></div>
 </section>
@@ -6953,7 +6953,7 @@ $ perf report --sort symbol | grep -iE <span>'QGraphicsScene|QGraphicsView|BspTr
 <h1 id="p8"><span class="part">第 8 章</span>模型/视图的性能:大数据集、延迟加载与代理</h1>
 <h2 id="p8-data">8.1 大数据集:模型该怎么写</h2>
 <p>模型/视图框架把数据与显示分开,代价是<strong>视图对模型的调用频率极高</strong>。一个自定义部件的 <code>paintEvent</code> 一秒被调用几十次;而一个表格视图的 <code>data()</code> 一秒可以被调用几万次。这个数量级差别决定了模型代码的写法必须比普通业务代码严格得多。</p>
-<p>调用次数先算清楚,「<code>data()</code> 里能做什么、不能做什么」的判据才有依据,正确的模型结构与测量方法也才有落点。框架本身的用法在《Qt 核心与 Widget · 现代详解》第 13 章,这里只讲代价。</p>
+<p>调用次数先算清楚,「<code>data()</code> 里能做什么、不能做什么」的判据才有依据,正确的模型结构与测量方法也才有落点。框架本身的用法在《Qt 核心与 Widget》第 13 章,这里只讲代价。</p>
 <h3>data() 被调用的次数</h3>
 <figure style="contain-intrinsic-size:auto 418px">
 <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" font-size="13">
@@ -7256,7 +7256,7 @@ QVariant PagedModel::data(<span class="kw">const</span> QModelIndex&amp; index, 
 <p>首屏时间的验收方式与启动时间一致(第 5 章):从用户发起操作到第一屏内容可见的时间,取多次运行的中位数,并单独记录冷启动与热启动。<strong>第一页的大小应当按「读完它的时间不超过 100 毫秒」来定</strong>,这是交互上不被感知为等待的上限。</p>
 <h3>排序与过滤必须下推</h3>
 <p>延迟加载与「在内存里排序过滤」是互斥的:<strong>内存里只有一部分行,对它排序得到的顺序是错的。</strong>因此一旦采用延迟加载,排序与过滤就必须交给数据源完成——数据库用 <code>ORDER BY</code> 与 <code>WHERE</code>,文件用预先建好的索引。</p>
-<table style="contain-intrinsic-size:auto 149px">
+<table style="contain-intrinsic-size:auto 150px">
 <thead><tr><th>操作</th><th>在内存里做</th><th>下推到数据源</th></tr></thead>
 <tbody>
 <tr><td class="nw">排序</td><td class="nw"><strong>结果错误</strong>,只排了已加载的部分</td><td>正确,且数据库有索引时几乎免费</td></tr>
@@ -7328,7 +7328,7 @@ QVariant PagedModel::data(<span class="kw">const</span> QModelIndex&amp; index, 
 <div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 重写 filterAcceptsRow 直接读源数据,单行成本能降一个数量级</span><p>默认实现要走 <code>data()</code>、构造 <code>QVariant</code>、再做正则匹配,三步都是通用路径的开销。源模型是自己的类时,把它的行结构暴露一个 <code>rowAt(int)</code> 接口,在代理里直接读,单行从 1 到 5 微秒降到 0.1 到 0.3 微秒。<strong>配套的一条:把用于匹配的字段预先大小写折叠并存好</strong>,否则每行都要折叠一次,省下来的又还回去了。</p></div>
 <h3>dynamicSortFilter 与批量更新</h3>
 <p><code>dynamicSortFilter</code> 默认为真,含义是<strong>源模型的每一次变更都要立刻判断受影响的行是否仍然通过过滤、是否需要换位置</strong>。这在交互式修改时是对的,在批量装载时是成本的主要来源。</p>
-<table style="contain-intrinsic-size:auto 150px">
+<table style="contain-intrinsic-size:auto 149px">
 <thead><tr><th>场景</th><th>建议</th><th>理由</th></tr></thead>
 <tbody>
 <tr><td class="nw">批量插入或整体刷新</td><td class="nw"><strong>先关掉,完成后再打开</strong></td><td>每插入一行都触发一次过滤判断与可能的位置调整</td></tr>
@@ -7744,7 +7744,7 @@ qint64 benchReset(Model* m, <span class="kw">const</span> QList&lt;Row&gt;&amp; 
 <li><strong>绘制操作的开销</strong>在第 7 章。委托的 <code>paint()</code> 里每一条绘制命令都适用那一章的排序表,只是调用频率高一到两个数量级,所以那里的判据在这里要再收紧一档。</li>
 <li><strong>跨线程的约束</strong>在第 6 章。后台读取数据用队列连接把结果送回 GUI 线程,合批的做法与那里完全一致。</li>
 <li><strong>隐式共享</strong>在第 4 章。模型行结构里存 <code>QString</code> 与 <code>QIcon</code> 之所以便宜,靠的是那一章的机制;而 <code>data()</code> 返回 <code>QVariant</code> 时的一次包装,也是那里讲的代价。</li>
-<li><strong>模型/视图框架本身</strong>在《Qt 核心与 Widget · 现代详解》第 13 章,自定义模型、代理、委托的完整用法在那里,本章只讲代价与判据。</li>
+<li><strong>模型/视图框架本身</strong>在《Qt 核心与 Widget》第 13 章,自定义模型、代理、委托的完整用法在那里,本章只讲代价与判据。</li>
 <li><strong>Qt Quick 侧的对应问题</strong>在第 10 章:那里的委托是 QML 组件,创建成本比这里高一个数量级,因此复用与增量创建的重要性更高。</li>
 </ul>
 </section>
@@ -8182,7 +8182,7 @@ $ QT_LOGGING_RULES=<span>"qt.scenegraph.time.glyph=true"</span> ./app</code></pr
 <p>额外的渲染通道在移动与嵌入式 GPU 上代价尤其高:<strong>基于分块的 GPU 每次切换渲染目标都要把分块缓冲写回内存再读回来</strong>,一次切换的固定成本可以到几百微秒。因此「给每个卡片加一层 <code>layer</code> 做圆角裁剪」这种写法在桌面上勉强可用,在嵌入式设备上会直接掉帧。</p>
 <div class="note old" style="contain-intrinsic-size:auto 197px"><span class="t">🟡 新代码用 layer 附加属性代替 ShaderEffectSource</span><p><code>ShaderEffectSource</code> 是把子树渲染成纹理的原始接口,要显式指定源项并自己管理尺寸与失效;<code>layer.enabled</code> 是同一机制的附加属性形态,由引擎跟随目标项自动处理尺寸、设备像素比与更新。<strong>两者的运行时成本相同,差别在写法与出错概率</strong>——显式实例最常见的问题是源项尺寸变化后纹理没跟着更新,表现为内容模糊或被裁切。只有需要把同一份渲染结果同时喂给多个消费者时,显式实例才有不可替代的价值。</p></div>
 <p>由此得到一条判据:<strong><code>layer</code> 与 <code>ShaderEffectSource</code> 的数量应当是个位数,而且它们的内容应当是基本不变的</strong>。每帧都变的内容套一层 <code>layer</code>,等于每帧多一次渲染通道加一次纹理写入,收益为负。</p>
-<p>Qt 6 的 <code>ShaderEffect</code> 需要预编译的着色器:用 <code>qsb</code> 工具把 GLSL 编译成 <code>.qsb</code> 包,再在 QML 里引用。<strong>这一步在构建时完成,运行时没有编译开销</strong>,是相对 Qt 5 的一项改进。着色器的写法与工具链在《Qt Quick 与 QML · 现代详解》里有完整说明。</p>
+<p>Qt 6 的 <code>ShaderEffect</code> 需要预编译的着色器:用 <code>qsb</code> 工具把 GLSL 编译成 <code>.qsb</code> 包,再在 QML 里引用。<strong>这一步在构建时完成,运行时没有编译开销</strong>,是相对 Qt 5 的一项改进。着色器的写法与工具链在《Qt Quick 与 QML》里有完整说明。</p>
 <div class="note new" style="contain-intrinsic-size:auto 198px"><span class="t">🔵 Qt 6 的着色器在构建时用 qsb 预编译,运行时不再有编译停顿</span><p>Qt 5 的 <code>ShaderEffect</code> 直接接受 GLSL 源码字符串,首次使用时由驱动编译,单次几十到几百毫秒,表现为「第一次出现这个特效时卡一下」。<strong>Qt 6 改为通过 <code>qsb</code> 在构建期编译成中间格式,运行时只做后端相关的最后一步转换</strong>,首帧停顿基本消失。迁移的代价是要把着色器源码从 QML 字符串挪进独立文件并加进构建系统,收益是首次显示不再卡顿,且同一份着色器能在 OpenGL、Vulkan、Direct3D、Metal 上通用。</p></div>
 <h2 id="p9-overdraw">9.5 过度绘制与不透明性</h2>
 <p>过度绘制指同一个像素在一帧里被写入多次。<strong>GPU 的填充率是一个硬上限,它与代码写得好不好无关:每秒能写多少像素是由硬件决定的。</strong>过度绘制层数乘以屏幕像素数如果超过这个上限,帧率就下降,并且优化 CPU 侧的一切都没有用。</p>
@@ -8333,11 +8333,11 @@ $ QSG_VISUALIZE=batches ./app</code></pre>
 <li><strong>Widget 的渲染管线</strong>在第 7 章。两章的结构可以对照着看:脏区收敛对应这里的过度绘制,绘制操作的开销排序对应这里的材质成本,位图缓存对应这里的 <code>layer.enabled</code>。</li>
 <li><strong>QML 引擎的开销</strong>在下一章。本章讲的是场景图这一侧,下一章讲绑定、JavaScript 与组件实例化——它们全部发生在 GUI 线程,与本章的 polish 段共享同一份预算。</li>
 <li><strong>线程与并发</strong>在第 6 章。渲染线程与 GUI 线程的同步就是那一章讲的阻塞式等待,sync 段的双倍计费正是由此而来。</li>
-<li><strong>QML 的写法本身</strong>在《Qt Quick 与 QML · 现代详解》,组件、锚定、状态机、着色器工具链都在那里,本章只讲代价与判据。</li>
+<li><strong>QML 的写法本身</strong>在《Qt Quick 与 QML》,组件、锚定、状态机、着色器工具链都在那里,本章只讲代价与判据。</li>
 </ul>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 30840px;--thin-h:30840px">
+<section class="chapter" style="contain-intrinsic-size:auto 30806px;--thin-h:30806px">
 <h1 id="p10"><span class="part">第 10 章</span>QML 引擎开销:绑定、JavaScript 与组件实例化</h1>
 <h2 id="p10-bind">10.1 绑定求值的开销与绑定循环的代价</h2>
 <p>上一章讲的场景图开销在渲染线程与 GPU 上,这一章讲的全部在 GUI 线程上,与 polish 段共享同一份预算。<strong>绑定是 QML 最核心的机制,也是 GUI 线程上最容易累积成毫秒级开销的一项</strong>——单条绑定的成本以微秒计,而一个中等界面上有上千条。</p>
@@ -9035,7 +9035,7 @@ $ cmake --build build --target myapp_qmllint</code></pre>
 <li><strong>模型/视图的成本结构</strong>在第 8 章。那里的 <code>data()</code> 与这里的委托绑定是同一条链的两端:委托每读一次模型数据,就要走一遍那一章讲的模型调用。</li>
 <li><strong>对象创建与启动时间</strong>在第 5 章。本章的组件实例化是那一章讲的对象创建在 QML 侧的具体形态,判据一致。</li>
 <li><strong>并发</strong>在第 6 章。把计算移出 GUI 线程的做法与那里完全相同,而 QML 侧的额外约束是:<strong>所有 QML 对象只能在 GUI 线程创建与访问</strong>,工作线程只能产出数据。</li>
-<li><strong>QML 的语言与用法</strong>在《Qt Quick 与 QML · 现代详解》,组件、状态、动画、模型的完整写法在那里;<strong>通用的解释器、垃圾回收与编译原理</strong>在《C++ 性能优化 · 现代详解》。本章只讲这些机制在 Qt 里的代价与判据。</li>
+<li><strong>QML 的语言与用法</strong>在《Qt Quick 与 QML》,组件、状态、动画、模型的完整写法在那里;<strong>通用的解释器、垃圾回收与编译原理</strong>在《C++ 性能优化》。本章只讲这些机制在 Qt 里的代价与判据。</li>
 </ul>
 </section>
 
@@ -9229,7 +9229,7 @@ $env:QT_LOGGING_RULES=<span>"qt.network.ssl=true;qt.network.http*=true"</span></
 <div class="note new" style="contain-intrinsic-size:auto 99px"><span class="t">🔵 Qt 6 对 HTTPS 默认协商 HTTP/2,并发上限不再是 6</span><p>明文 HTTP 仍走 HTTP/1.1。要对明文启用 HTTP/2 需显式设 Http2DirectAttribute,并确认服务端支持。</p></div>
 <h2 id="p11-file">11.2 文件 I/O:缓冲、映射与异步</h2>
 <p>文件这一层的 Qt 特有开销集中在三处:<code>QFile</code> 的读写路径上有一层自己的缓冲,<code>QTextStream</code> 会做编码转换与状态维护,<code>QFileInfo</code> 与 <code>QDir</code> 的每一次属性查询背后可能是一次系统调用。三处的共同点是<strong>接口看起来是纯计算,代价却是系统调用</strong>。</p>
-<p>通用的文件 I/O 原理——页缓存、预读、写回、直接 I/O 与顺序随机的差别——见《C++ 性能优化 · 现代详解》。本节只讲 Qt 这一层怎么把请求转成系统调用,以及在哪里能省掉一次。</p>
+<p>通用的文件 I/O 原理——页缓存、预读、写回、直接 I/O 与顺序随机的差别——见《C++ 性能优化》。本节只讲 Qt 这一层怎么把请求转成系统调用,以及在哪里能省掉一次。</p>
 <h3>QFile 有自己的缓冲,但只对写有效</h3>
 <p><code>QFile</code> 继承自 <code>QFileDevice</code>,内部有一个读缓冲(<code>QIODevicePrivate::buffer</code>)。读的路径上,一次 <code>read(n)</code> 会先从缓冲里取,不够时向内核要一大块。默认块大小在 16 KB 量级。这意味着<strong>逐字节或逐小块读取不会退化成逐次系统调用</strong>,但每一次调用仍然要走一遍 <code>QIODevice</code> 的虚函数与状态检查。</p>
 <p>真正的问题在于逐行读。<code>QFile::readLine()</code> 与 <code>QTextStream::readLine()</code> 每次返回一个新构造的 <code>QByteArray</code> 或 <code>QString</code>。读 1200 万行就是 1200 万次堆分配,加上 <code>QString</code> 的 UTF-16 表示带来的两倍内存。第 4 章讲过单个 <code>QString</code> 的成本,这里是它乘以行数之后的样子。</p>
@@ -9741,7 +9741,7 @@ qInfo() &lt;&lt; <span>"解析后增加"</span> &lt;&lt; (after - before) / 1024
 <tr><td class="nw">数据取回来了但表格滚不动</td><td class="nw">第 8 章 模型/视图的性能</td><td>瓶颈在 <code>data()</code> 与代理链,不在 I/O</td></tr>
 <tr><td class="nw">启动时读配置与插件太慢</td><td>第 12 章 插件、动态库与部署</td><td>启动期的 I/O 与插件扫描交织在一起</td></tr>
 <tr><td class="nw">想知道整条链路上钱花在哪</td><td class="nw">第 1 章 性能怎么测</td><td>先有分段计时,再谈优化哪一段</td></tr>
-<tr><td class="nw">需要通用的 I/O 与缓存原理</td><td>《C++ 性能优化 · 现代详解》</td><td>页缓存、预读、写回与直接 I/O 不是 Qt 特有的</td></tr>
+<tr><td class="nw">需要通用的 I/O 与缓存原理</td><td>《C++ 性能优化》</td><td>页缓存、预读、写回与直接 I/O 不是 Qt 特有的</td></tr>
 </tbody>
 </table>
 <p>下一章处理的是这一章的一个特例:<strong>启动阶段的 I/O</strong>。动态库加载、插件目录扫描、资源解压都是文件 I/O,但它们发生在事件循环开始之前,普通的界面卡顿测量手段用不上,需要另一套工具。</p>
@@ -9990,7 +9990,7 @@ $p.WaitForExit()
 <div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 启动测量必须从进程创建时刻起算,不是从 main 起算</span><p>从 main 起算会漏掉动态链接与静态初始化两段,而这两段合起来常占三成。Linux 读 /proc/self/stat,Windows 用 GetProcessTimes。</p></div>
 <h2 id="p12-size">12.2 二进制与安装包体积</h2>
 <p>体积影响的不只是下载时间。<strong>可执行文件越大,启动时需要映射与调页的内容越多,冷启动越慢</strong>;库越多,动态链接的固定成本越高。所以体积与启动这两件事是连着的,这一节的手段有相当一部分同时改善两者。</p>
-<p>通用的二进制体积优化——内联展开、模板实例化膨胀、异常表与调试信息的比重——见《C++ 性能优化 · 现代详解》。这一节只讲 Qt 这一层多出来的部分:模块粒度、插件、翻译文件、资源系统与部署工具。</p>
+<p>通用的二进制体积优化——内联展开、模板实例化膨胀、异常表与调试信息的比重——见《C++ 性能优化》。这一节只讲 Qt 这一层多出来的部分:模块粒度、插件、翻译文件、资源系统与部署工具。</p>
 <h3>体积从哪里来:先做一张按来源分的账</h3>
 <p>优化体积的第一步与优化耗时一样,是分账。下面这张表是同一个示例应用在机器 L 上的安装目录构成,右列是本节全部手段做完之后的结果。</p>
 <table style="contain-intrinsic-size:auto 335px">
@@ -11662,7 +11662,7 @@ done</code></pre>
 <p>最后一句留给顺序:<strong>这四轮的顺序不是这个案例特有的</strong>。启动与构造、渲染与重绘、数据与模型、并发与 I/O——从用户最先感知的往里走,从改动风险小的往大走,从上层往下层走。换一个应用,四轮的具体内容会变,顺序通常不变。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 15035px;--thin-h:15035px">
+<section class="chapter" style="contain-intrinsic-size:auto 14896px;--thin-h:14896px">
 <h1 id="p14"><span class="part">第 14 章</span>小结:速查、判据索引与继续读什么</h1>
 <h2 id="p14-quick">14.1 速查:症状到手段</h2>
 <p>这本书的正文按机制组织:信号槽一章、值类型一章、渲染一章。这个顺序适合通读,不适合排障——排障时手里只有一个症状,而症状与机制不是一一对应的。同一句「界面卡顿」可能落在第 3、6、7、8 章中的任何一章。</p>
@@ -11676,7 +11676,7 @@ done</code></pre>
 </ul>
 <p>使用顺序固定为:先按症状找到行 → 按「先测什么」采一次数据 → 数据对得上就去看对应章节,对不上就回第 1 章重新分类。<strong>跳过中间那一步直接去改代码,是这张表最容易被误用的方式。</strong></p>
 <h3>症状到手段</h3>
-<table style="contain-intrinsic-size:auto 2139px">
+<table style="contain-intrinsic-size:auto 2035px">
 <thead><tr><th>症状</th><th>先测什么</th><th>常见根因</th><th>去看哪一章</th></tr></thead>
 <tbody>
 <tr><td class="nw">点击之后要过一会儿才有反应</td><td>主线程停顿探针:定时器实际回来的间隔</td><td>槽函数里做了同步 I/O 或长循环</td><td>第 6 章、第 11 章</td></tr>
@@ -11707,7 +11707,7 @@ done</code></pre>
 <tr><td class="nw">后台任务运行时界面周期性短卡</td><td>队列积压探针:投递数减去处理数</td><td>高频跨线程信号,主线程事件队列积压</td><td>第 6 章、13.5</td></tr>
 <tr><td class="nw">后台任务一跑,别的短任务全变慢</td><td>任务从提交到开始执行的排队时间</td><td>长任务占满了全局 <code>QThreadPool</code></td><td>第 6 章、13.5</td></tr>
 <tr><td class="nw">工作线程的进度随主线程忙闲波动</td><td>工作线程的等待时长与唤醒它的对象</td><td>用了 <code>BlockingQueuedConnection</code></td><td>第 6 章、第 3 章</td></tr>
-<tr><td class="nw">多线程版本比单线程还慢</td><td>每线程的有效工作时间与锁等待时间</td><td>锁竞争或伪共享</td><td>第 6 章;《C++ 性能优化 · 现代详解》</td></tr>
+<tr><td class="nw">多线程版本比单线程还慢</td><td>每线程的有效工作时间与锁等待时间</td><td>锁竞争或伪共享</td><td>第 6 章;《C++ 性能优化》</td></tr>
 <tr><td class="nw">安装包比同类产品大一倍</td><td>按来源做体积分账</td><td>Qt 模块与插件冗余,不是自己的代码</td><td>12.2</td></tr>
 <tr><td class="nw">可执行文件本身很大</td><td><code>size -A</code> 与 bloaty 按节分账</td><td>调试信息没有分离出去</td><td>12.2</td></tr>
 <tr><td class="nw">裁剪部署内容之后部分机器起不来</td><td>在没装过 Qt 的干净环境复现</td><td>裁掉了那台机器上必需的插件或运行库</td><td>12.2</td></tr>
@@ -11743,7 +11743,7 @@ wpr -start GeneralProfile -filemode
 .\yourapp.exe --your-scenario
 wpr -stop C:\perf\triage.etl
 :: CPU Usage (Sampled) 对应第三步,CPU Usage (Precise) 的 Waits 列对应第二步</code></pre>
-<p>第 2 章那张地图是这四步的落点。它把 Qt 相对裸 C++ 多付出的开销按层次排开——元对象、事件分发、值类型、绘制管线、场景图——采样里出现的符号几乎总能落到其中一层上。<strong>落不到任何一层的符号,说明问题不在 Qt 这一侧,应当转到《C++ 性能优化 · 现代详解》去查。</strong></p>
+<p>第 2 章那张地图是这四步的落点。它把 Qt 相对裸 C++ 多付出的开销按层次排开——元对象、事件分发、值类型、绘制管线、场景图——采样里出现的符号几乎总能落到其中一层上。<strong>落不到任何一层的符号,说明问题不在 Qt 这一侧,应当转到《C++ 性能优化》去查。</strong></p>
 <div class="note dead" style="contain-intrinsic-size:auto 131px"><span class="t">🔴 一次同时打开多种采集工具,得到的数字全部不可用</span><p>GammaRay 的探针会拉长信号发射路径,heaptrack 拦截每次分配,带栈采样让程序慢一到两成。定位时可以叠加,记账时必须只留一种或全不留。</p></div>
 <h2 id="p14-index">14.2 判据索引</h2>
 <p>全书的判据在这里汇总。<strong>判据指的是一句话就能用于决策的结论</strong>:读到它就知道该怎么选,不需要再回去读推导过程。推导在正文里,这一节只给结论与出处。</p>
@@ -11848,13 +11848,13 @@ wpr -stop C:\perf\triage.etl
 <table style="contain-intrinsic-size:auto 287px">
 <thead><tr><th>书名</th><th>它接着讲什么</th><th>什么时候去读</th><th>与本书的接口</th></tr></thead>
 <tbody>
-<tr><td class="nw">《Qt 核心与 Widget · 现代详解》</td><td>对象模型、事件系统、部件与布局的完整机制</td><td>本书某一章的机制部分读不下去时</td><td>本书假定读者已经读过它,不重复讲机制</td></tr>
-<tr><td class="nw">《Qt Quick 与 QML · 现代详解》</td><td>场景图、QML 语言、组件模型与状态机的完整用法</td><td>要写 Quick 界面,而不只是优化已有的</td><td>本书第 9、10 章只讲开销,不讲怎么写</td></tr>
-<tr><td class="nw">《Qt 组件与生态 · 现代详解》</td><td>网络、数据库、多媒体、图表等模块的完整接口</td><td>需要某个模块的功能而不只是它的性能</td><td>本书第 11 章只讲开销来源与判据</td></tr>
-<tr><td class="nw">《C++ 性能优化 · 现代详解》</td><td>测量方法论、硬件模型、编译器行为、语言层开销</td><td>采样里的热点符号落不到 Qt 的任何一层上</td><td>本书凡是通用层的内容一律引它</td></tr>
+<tr><td class="nw">《Qt 核心与 Widget》</td><td>对象模型、事件系统、部件与布局的完整机制</td><td>本书某一章的机制部分读不下去时</td><td>本书假定读者已经读过它,不重复讲机制</td></tr>
+<tr><td class="nw">《Qt Quick 与 QML》</td><td>场景图、QML 语言、组件模型与状态机的完整用法</td><td>要写 Quick 界面,而不只是优化已有的</td><td>本书第 9、10 章只讲开销,不讲怎么写</td></tr>
+<tr><td class="nw">《Qt 组件与生态》</td><td>网络、数据库、多媒体、图表等模块的完整接口</td><td>需要某个模块的功能而不只是它的性能</td><td>本书第 11 章只讲开销来源与判据</td></tr>
+<tr><td class="nw">《C++ 性能优化》</td><td>测量方法论、硬件模型、编译器行为、语言层开销</td><td>采样里的热点符号落不到 Qt 的任何一层上</td><td>本书凡是通用层的内容一律引它</td></tr>
 </tbody>
 </table>
-<p>四本里与本书关系最紧的是最后一本。<strong>判断该看哪一本的规则很简单:采样里的热点符号如果在 <code>libQt6*</code> 里,查本书;如果在应用自己的目标文件或 <code>libc</code> 里,查《C++ 性能优化 · 现代详解》。</strong>两者的边界正好落在这条线上。</p>
+<p>四本里与本书关系最紧的是最后一本。<strong>判断该看哪一本的规则很简单:采样里的热点符号如果在 <code>libQt6*</code> 里,查本书;如果在应用自己的目标文件或 <code>libc</code> 里,查《C++ 性能优化》。</strong>两者的边界正好落在这条线上。</p>
 <h3>工具的官方资料</h3>
 <p>本书用到的工具都只讲了「怎么用它回答本书的问题」,没有完整介绍。需要深入时按下表去查。</p>
 <table style="contain-intrinsic-size:auto 333px">

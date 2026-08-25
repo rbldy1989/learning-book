@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PowerShell 脚本 · 现代详解</title>
+<title>PowerShell 脚本</title>
 <script>
 /* 主题与目录开关的初值在这里定好：解析 <body> 之前完成，避免加载完再改 <html> 属性触发一次全量样式重算 */
 (function(){var r=document.documentElement;
@@ -197,7 +197,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">PowerShell 脚本</div>
 <details><summary><a class="ch" href="#p1">第 1 章 PowerShell 的核心思想：传对象，不传文本</a></summary>
-<a class="sec" href="#p1-open">1.0 开卷:锚定、定位与读法</a>
+<a class="sec" href="#p1-open">1.0 导读</a>
 <a class="sec" href="#p1-problem">1.1 从一个真实的痛点说起</a>
 <a class="sec" href="#p1-object">1.2 管道里流的是对象，不是文本</a>
 <a class="sec" href="#p1-verb-noun">1.3 动词-名词：命令名本身就是文档</a>
@@ -271,13 +271,13 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 25571px;--thin-h:25571px">
+<section class="chapter" style="contain-intrinsic-size:auto 25438px;--thin-h:25438px">
 <h1 id="p1"><span class="part">第 1 章</span>PowerShell 的核心思想：传对象，不传文本</h1>
-<h2 id="p1-open">1.0 开卷:锚定、定位与读法</h2>
+<h2 id="p1-open">1.0 导读</h2>
 <p>PowerShell 与它之前的每一种命令行都差一件事：<strong>管道里传的不是文本行，是结构化的 .NET 对象</strong>。这一条决定了它的筛选、排序、导出、格式化各是怎么设计的，也决定了从 CMD 或 bash 转过来的人最容易卡在哪里。<strong>本书讲清这套对象模型怎么运作，以及它在什么条件下不成立。</strong>Windows PowerShell 5.1 与 PowerShell 7 两条线并行覆盖，行为不同处两侧写法都给。</p>
 <h3>这个领域有哪些资料</h3>
 <p>PowerShell 的资料结构清楚：语言机制有一本奠基之作，教法有一本公认最好的入门书，事实以官方文档与本机帮助为准，边界情况去仓库里查。下表按类型排开。<strong>锚定</strong>指本书的骨架或写法从它来，<strong>参考</strong>指写作时查证过但没有影响结构，<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 841px">
+<table style="contain-intrinsic-size:auto 816px">
 <thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
 <tbody>
 <tr><td>Payette 与 Siddaway《Windows PowerShell in Action》（中译《Windows PowerShell 实战指南》）</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>作者是语言设计者，参数绑定、作用域、语言语义讲得最深，是这个领域唯一一本机制类著作。局限：偏厚且默认读者已有基础；成书版本落后于当前的 PowerShell 7，跨平台与新语法要另补</td></tr>
@@ -289,7 +289,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td>PowerShell 团队博客</td><td class="nw">在线资料</td><td class="nw">参考</td><td>新版本特性与设计取舍的第一手说明，发布节奏之外还会讲清为什么这么改。局限：按发布节奏写，不成体系</td></tr>
 <tr><td>PowerShell Gallery 与 PSScriptAnalyzer</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>模块的发布与获取渠道；PSScriptAnalyzer 同时是一份可执行的写法规范。局限：Gallery 上模块质量参差，引入前要看维护状态与下载来源</td></tr>
 <tr><td>Microsoft Learn 的 .NET API 文档</td><td class="nw">官方文档</td><td class="nw">推荐</td><td>PowerShell 的类型来自 .NET，方法与属性最终要查这里。局限：面向 C#，示例要自己翻成 PowerShell 的写法</td></tr>
-<tr><td>《CMD 批处理 · 现代详解》与《Shell 脚本与命令行工具 · 现代详解》</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>同一套三本里的另外两本，同样的教材加速查结构。局限：不含 PowerShell 内容，只在互相调用的写法上与本书衔接</td></tr>
+<tr><td>《CMD 批处理》与《Shell 脚本与命令行工具》</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>同一套三本里的另外两本，同样的教材加速查结构。局限：不含 PowerShell 内容，只在互相调用的写法上与本书衔接</td></tr>
 </tbody>
 </table>
 <div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 查语言语义先看 about_ 主题，再看单条命令的帮助</span><p>两类帮助回答的是不同的问题。<code>Get-Help Get-ChildItem</code> 回答「这条命令有哪些参数」，<code>Get-Help about_Parameters</code> 回答「参数是怎么绑定上去的」。绑定失败、作用域不符预期、比较运算结果反常这类问题，答案基本都在 <code>about_*</code> 主题里，用 <code>Get-Help about_*</code> 可以列出本机全部主题。</p></div>
@@ -318,13 +318,13 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </tbody>
 </table>
 <p>不讲的部分同样要说清楚，并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 450px">
+<table style="contain-intrinsic-size:auto 449px">
 <thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
 <tr><td>.NET 类库本身与 C# 语法</td><td class="nw">Microsoft Learn 的 .NET 文档</td><td>本书讲怎么在 PowerShell 里调它们、类型怎么转换，不讲类库内部</td></tr>
 <tr><td>具体产品的模块：Azure、Exchange、Active Directory 等</td><td class="nw">各产品自己的文档</td><td>本书讲模块怎么装、命令怎么找，不讲某个产品的命令集</td></tr>
-<tr><td>批处理与 <code>cmd.exe</code> 的语法</td><td class="nw">《CMD 批处理 · 现代详解》</td><td>本书只讲互相调用，以及为什么读外部程序的退出码要用 <code>$LASTEXITCODE</code></td></tr>
-<tr><td>bash 语法与 Linux 命令行工具</td><td>《Shell 脚本与命令行工具 · 现代详解》</td><td>PowerShell 7 在 Linux 上能跑，但那一套工具链的用法归那本</td></tr>
+<tr><td>批处理与 <code>cmd.exe</code> 的语法</td><td class="nw">《CMD 批处理》</td><td>本书只讲互相调用，以及为什么读外部程序的退出码要用 <code>$LASTEXITCODE</code></td></tr>
+<tr><td>bash 语法与 Linux 命令行工具</td><td>《Shell 脚本与命令行工具》</td><td>PowerShell 7 在 Linux 上能跑，但那一套工具链的用法归那本</td></tr>
 <tr><td>Windows 内核与 API 层面的机制</td><td class="nw">《Windows API 手册》</td><td>本书到 WMI/CIM 与 .NET 这一层为止，再往下不碰</td></tr>
 <tr><td>远程管理的完整部署：WinRM 与 SSH 配置、双跳认证</td><td class="nw">产品文档</td><td>5.9 只讲 <code>Invoke-Command</code> 的用法与序列化边界</td></tr>
 <tr><td>期望状态配置与 CI 平台的集成</td><td class="nw">不在本书系范围</td><td>本书讲脚本本身，不讲它被什么调度</td></tr>
@@ -2853,7 +2853,7 @@ Test-Port <span class="s">"abc"</span>       <span class="cm"># 报错：无法�
 
 <h2 id="p4-return">4.7 返回值的坑：没被吞掉的输出全都还给你</h2>
 
-<p>这一节是整章最重要的部分。PowerShell 的返回值模型和你熟悉的任何一门语言都不一样，不理解它，你的函数迟早会在生产环境里返回一堆莫名其妙的东西。</p>
+<p>PowerShell 的返回值模型和你熟悉的任何一门语言都不一样，不理解它，你的函数迟早会在生产环境里返回一堆莫名其妙的东西。</p>
 
 <h3>一条规则</h3>
 
@@ -3419,7 +3419,7 @@ $script:cache = @{}
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 25473px;--thin-h:25473px">
+<section class="chapter" style="contain-intrinsic-size:auto 25525px;--thin-h:25525px">
 <h1 id="p5"><span class="part">第 5 章</span>文件、注册表与系统管理</h1>
 
 <p>前四章你学的是语言本身：管道、对象、参数、函数。这一章开始，PowerShell 要去干它真正被发明出来要干的活——管住一台 Windows 机器。你会发现，一旦把「文件系统、注册表、环境变量、证书」这些八竿子打不着的东西统统塞进同一个路径模型，你要记的命令量会突然塌缩到一个很小的集合。这是 PowerShell 最漂亮的一个设计决定，我们从它讲起。</p>
@@ -3502,7 +3502,8 @@ Get-ChildItem Env:</code></pre>
 <figcaption>PSProvider 与统一路径模型（原创绘制）</figcaption>
 </figure>
 
-<p><strong>打个比方。</strong>你家里的 U 盘、移动硬盘、SD 卡，内部构造天差地别，但插到电脑上都是「一个盘符 + 文件夹 + 文件」。USB 协议做的事，就是 PSProvider 做的事——把内部差异藏在适配层后面，对外只暴露一套统一接口。如果你用过 Linux 的 <code>/proc</code>，那更贴切：<code>/proc</code> 把内核状态伪装成文件，好让 <code>cat</code> 和 <code>grep</code> 能读它。PowerShell 把这个思路推广到了极致——不是只有内核状态，而是所有层次化数据都伪装成文件系统。</p>
+<p><strong>打个比方。</strong>你家里的 U 盘、移动硬盘、SD 卡，内部构造天差地别，但插到电脑上都是「一个盘符 + 文件夹 + 文件」。USB 协议做的事，就是 PSProvider 做的事——把内部差异藏在适配层后面，对外只暴露一套统一接口。</p>
+<p>如果你用过 Linux 的 <code>/proc</code>，那更贴切：<code>/proc</code> 把内核状态伪装成文件，好让 <code>cat</code> 和 <code>grep</code> 能读它。PowerShell 把这个思路推广到了极致——不是只有内核状态，而是所有层次化数据都伪装成文件系统。</p>
 
 <p><strong>设计动机很直白：命令数量从「数据源 × 操作」降成了「数据源 + 操作」。</strong>假设有 8 种数据源、12 种操作，传统做法要造 96 个工具，PowerShell 只要 8 个 provider 加 12 个命令。对你来说更实惠的是：学会一次 Item 命令族，以后遇到任何新 provider（IIS 的 <code>IIS:</code>、SQL Server 的 <code>SQLSERVER:</code>、Active Directory 的 <code>AD:</code>），你已经会用了。</p>
 
@@ -3617,7 +3618,7 @@ Remove-Item 'D:\temp\*' -Recurse -Force -Confirm:$false</code></pre>
 
 <h2 id="p5-content">5.3 读写文件内容：Get/Set/Add-Content 与编码陷阱</h2>
 
-<p>这一节讲的坑，几乎每个写 PowerShell 的中文用户都踩过：脚本在你机器上跑得好好的，同事一跑，日志里的中文全变成了 <code>?????</code> 或者 <code>浣犲ソ</code>。或者你用 PowerShell 生成一个 CSV，Excel 打开是乱码。</p>
+<p>几乎每个写 PowerShell 的中文用户都踩过这个坑：脚本在你机器上跑得好好的，同事一跑，日志里的中文全变成了 <code>?????</code> 或者 <code>浣犲ソ</code>。或者你用 PowerShell 生成一个 CSV，Excel 打开是乱码。</p>
 
 <p>根源只有一句话：<strong>磁盘上的文本文件里没有「文字」，只有字节。</strong>字节要变回文字，必须选一种编码去解释它。文件本身通常不告诉你该选哪种，于是读的人只能猜——而 Windows PowerShell 5.1 和 PowerShell 7 的猜法不一样。</p>
 
@@ -4184,7 +4185,7 @@ $s = New-PSSession -HostName 'alice@srv01' -KeyFilePath ~/.ssh/id_ed25519</code>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 29451px;--thin-h:29451px">
+<section class="chapter" style="contain-intrinsic-size:auto 29452px;--thin-h:29452px">
 <h1 id="p6"><span class="part">第 6 章</span>错误处理、调试与实用技巧</h1>
 
 <p>前五章你已经能把命令、管道、函数串成像样的脚本了。但真正把脚本交出去跑，你会遇到另一类问题：某台机器连不上、某个文件被占用、某个字段是空的。脚本崩了不可怕，可怕的是它<strong>不崩、也不干活，还给你一路绿灯</strong>。这一章讲的就是：错误从哪来、怎么接住、怎么定位、以及怎么写得又稳又快。</p>

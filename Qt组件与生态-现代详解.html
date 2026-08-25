@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Qt 组件与生态 · 现代详解</title>
+<title>Qt 组件与生态</title>
 <script>
 /* 主题与目录开关的初值在这里定好：解析 <body> 之前完成，避免加载完再改 <html> 属性触发一次全量样式重算 */
 (function(){var r=document.documentElement;
@@ -197,9 +197,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <button id="depthBtn" title="薄/厚阅读:点一下只看主干(薄),再点一下看全部(厚)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
 <button id="navBtn" title="显示/隐藏目录"></button>
 <nav id="sidebar">
-<div class="booktitle">Qt 组件与生态 · 现代详解</div>
+<div class="booktitle">Qt 组件与生态</div>
 <details><summary><a class="ch" href="#c0">引一个第三方库之前:评估、集成与退路</a></summary>
-<a class="sec" href="#c0-open">0.0 开卷:锚定、定位与读法</a>
+<a class="sec" href="#c0-open">0.0 导读</a>
 <a class="sec" href="#c0-eval">0.1 评估一个第三方库:七个维度</a>
 <a class="sec" href="#c0-license">0.2 许可证:四类常见协议对商业发布的影响</a>
 <a class="sec" href="#c0-integrate">0.3 四种集成方式:包管理、子模块、源码内嵌与预编译</a>
@@ -354,9 +354,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 46345px;--thin-h:46345px">
+<section class="chapter" style="contain-intrinsic-size:auto 46235px;--thin-h:46235px">
 <h1 id="c0"><span class="part">第 0 章</span>引一个第三方库之前:评估、集成与退路</h1>
-<h2 id="c0-open">0.0 开卷:锚定、定位与读法</h2>
+<h2 id="c0-open">0.0 导读</h2>
 <p>一个桌面产品要用到的能力,远多于 Qt 自身提供的那一部分。图表、三维、电子表格、报表、设备通信、崩溃上报——每一项都有现成的第三方方案,也都可以自己写。选哪一条,决定的不是这个月的排期,而是此后几年里这一块由谁维护、出了问题找谁、上游停下来之后退到哪里。</p>
 <p><strong>本书讲清这笔账怎么算,算完之后怎么把选中的库接进 Qt 的机制,以及接错了怎么退出去。</strong>基线取 Qt 6.5 以上,构建以 CMake 为主,平台覆盖桌面的 Linux 与 Windows。凡是会随时间变动的事实——版本号、授权条款、维护状态——书里给的是查证方法,不是写作当时的取值。</p>
 <h3>这个领域没有权威教材可锚定</h3>
@@ -383,9 +383,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw">SPDX 许可证清单</td><td>参考手册</td><td>参考</td><td>把「这是什么许可证」变成一个能写进构建脚本与物料清单的标识符,拼写与版本后缀统一。局限:只解决命名,不解决义务判断;库声明的标识符与源码树里内嵌代码的实际情况可能对不上</td></tr>
 <tr><td class="nw">Qt 官方示例仓库</td><td>在线资料</td><td>参考</td><td>与当前版本同步、能直接构建运行,是 Qt 侧接口用法最可靠的对照物。局限:为展示单个功能而写,错误处理、构建配置与工程划分普遍被简化,不能当模板</td></tr>
 <tr><td class="nw">Qt 官方博客与发布说明</td><td>在线资料</td><td>推荐</td><td>模块的新增、废弃与授权变更最早出现在这里,发布说明还能反查某个行为是哪一版改的。局限:按时间排列,不成体系;结论的适用版本要自己从发表时间回推</td></tr>
-<tr><td class="nw">《Qt 核心与 Widget · 现代详解》</td><td>相邻领域</td><td>锚定</td><td>对象树、信号槽、样式表与模型/视图的机制在那本书里,本书一律引它,不重讲。局限:不含第三方库的选型、接入与退路</td></tr>
-<tr><td class="nw">《Qt Quick 与 QML · 现代详解》</td><td>相邻领域</td><td>推荐</td><td>界面用 QML 写时,第 3 章与第 13 章的结论要与它的互操作与模块两章对照着读。局限:不讲 Widget 侧的第三方组件</td></tr>
-<tr><td class="nw">《Qt 性能优化 · 现代详解》</td><td>相邻领域</td><td>推荐</td><td>本书给的是「这个方案在多大数据量上开始退化」,那本给测量方法与优化流程。局限:不讲选型,方案之间的取舍不在它的范围里</td></tr>
+<tr><td class="nw">《Qt 核心与 Widget》</td><td>相邻领域</td><td>锚定</td><td>对象树、信号槽、样式表与模型/视图的机制在那本书里,本书一律引它,不重讲。局限:不含第三方库的选型、接入与退路</td></tr>
+<tr><td class="nw">《Qt Quick 与 QML》</td><td>相邻领域</td><td>推荐</td><td>界面用 QML 写时,第 3 章与第 13 章的结论要与它的互操作与模块两章对照着读。局限:不讲 Widget 侧的第三方组件</td></tr>
+<tr><td class="nw">《Qt 性能优化》</td><td>相邻领域</td><td>推荐</td><td>本书给的是「这个方案在多大数据量上开始退化」,那本给测量方法与优化流程。局限:不讲选型,方案之间的取舍不在它的范围里</td></tr>
 </tbody>
 </table>
 <div class="note old" style="contain-intrinsic-size:auto 195px"><span class="t">🟡 旧组件资料只取问题清单,方案清单与接入写法要整体重来</span><p>它们提出的问题至今成立:图表要不要自绘、富文本用什么做、跨平台的设备通信怎么接。方案与写法部分已经整段作废——当年的推荐项有的停在最后一次提交上,有的换了授权,有的被 Qt 自身的模块吸收;构建基于 qmake,接入靠手工抄源码文件,版本靠「拉最新」。这些写法多数仍能编过,代价推迟到升级工具链或者法务核实时才暴露。</p></div>
@@ -404,7 +404,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw">CMake 官方文档</td><td>第 0.4 节的编排顺序:先分清配置模式与模块模式,再讲查找路径与变量优先级,最后讲版本锁定。第 0.3 节四种集成方式的对比表里,「可修改性」与「离线构建」两列是按它的选项划出来的</td></tr>
 <tr><td class="nw">KDAB 与 ICS 的组件实践文章</td><td>每章末「与 Qt 机制的四个接口点」这张表的四个维度就是从它们记录的事故里归出来的:对象树归属、信号槽桥接、样式与主题、高分屏与国际化。红色批注里的症状描述也以这类现场记录为底本</td></tr>
 <tr><td class="nw">vcpkg 与 Conan 的 Qt 生态包清单</td><td>第 0.1 节维护状态的四个量,与第 18.3 节季度体检脚本的数据入口:端口最近一次更新、还有没有人在打包、锁定的版本是哪一个。判据写成可复核的查询动作,而不是活跃度印象</td></tr>
-<tr><td class="nw">《Qt 核心与 Widget · 现代详解》</td><td>机制不重复讲这条分界:对象树、信号槽、样式表、模型/视图一律引它。接口表的列划分也照它——签名、参数含义、引入版本、线程安全性各占一列,各章的方案接口表按同一组列写</td></tr>
+<tr><td class="nw">《Qt 核心与 Widget》</td><td>机制不重复讲这条分界:对象树、信号槽、样式表、模型/视图一律引它。接口表的列划分也照它——签名、参数含义、引入版本、线程安全性各占一列,各章的方案接口表按同一组列写</td></tr>
 </tbody>
 </table>
 <p>三类一手材料在本书里的分工是固定的:<strong>官方文档给接口与接入步骤,源码与问题追踪页给维护状态,实践文章给失效症状。</strong>症状最容易过期,因为它绑在具体版本上;接口相对稳,但覆盖不到边界;维护状态介于两者之间,可信但必须定期重取。</p>
@@ -434,12 +434,12 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <li><strong>维护状态与退路。</strong>授权怎么查、维护状态怎么查、停更或者谈不拢时退到哪里、退了之后损失什么。</li>
 </ol>
 <p>不讲的部分同样要说清楚,并指明归谁。<strong>分界一律写成一句能当场判断的话</strong>,遇到一个话题时可以立刻知道该翻哪一本、哪一章。</p>
-<table style="contain-intrinsic-size:auto 663px">
+<table style="contain-intrinsic-size:auto 587px">
 <thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
-<tr><td>Qt 自身的机制:对象树、信号槽、样式表、模型/视图框架</td><td>《Qt 核心与 Widget · 现代详解》</td><td>本书讲一个第三方部件怎么接进这套机制,那本讲这套机制自身怎么运作</td></tr>
-<tr><td class="nw">QML 语言与 Qt Quick 的渲染</td><td>《Qt Quick 与 QML · 现代详解》</td><td>本书只在某个方案的界面层落在 QML 上时说明接口形态,声明式语言与场景图不讲</td></tr>
-<tr><td class="nw">性能剖析与调优的细账</td><td>《Qt 性能优化 · 现代详解》</td><td>本书给「这个方案在多大数据量上开始退化」,那本给一次绘制花掉多少毫秒以及怎么量出来</td></tr>
+<tr><td>Qt 自身的机制:对象树、信号槽、样式表、模型/视图框架</td><td>《Qt 核心与 Widget》</td><td>本书讲一个第三方部件怎么接进这套机制,那本讲这套机制自身怎么运作</td></tr>
+<tr><td class="nw">QML 语言与 Qt Quick 的渲染</td><td>《Qt Quick 与 QML》</td><td>本书只在某个方案的界面层落在 QML 上时说明接口形态,声明式语言与场景图不讲</td></tr>
+<tr><td class="nw">性能剖析与调优的细账</td><td>《Qt 性能优化》</td><td>本书给「这个方案在多大数据量上开始退化」,那本给一次绘制花掉多少毫秒以及怎么量出来</td></tr>
 <tr><td class="nw">各第三方库的内部实现</td><td class="nw">不讲</td><td>凡是不改变「用不用它、怎么接它、什么时候退出去」这三个判断的实现细节,一律不写</td></tr>
 <tr><td class="nw">具体的版本号、价格、收藏数与厂商的平台策略</td><td class="nw">不写死</td><td>凡是会随时间变的取值,书里给的是查证方法;需要当下的数字时按方法自己取一次</td></tr>
 <tr><td class="nw">法律意见与合规判断</td><td class="nw">归法务</td><td>本书只讲哪些技术选择会牵动授权义务,条款解释与风险判断不在书里</td></tr>
@@ -468,7 +468,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </table>
 <p>两样明确不在前置里。<strong>不需要用过书里的任何一个第三方库</strong>,每一章的接入步骤都从空工程开始,第一个示例只确认构建配置正确。<strong>不需要有法律背景</strong>,第 0.2 节把许可证按「对发布方式的影响」归成四类,读者要做的是识别与提问,不是解释条款。</p>
 <p>前置里没有「读过某个第三方库的源码」这一条,但它会在第 0.1 节以另一种形式回来:评估一个骨架依赖时,要从它的问题列表里挑一个已确认未修复的问题,自己定位并写出补丁。那不是读之前的门槛,是评估动作本身,做不下去正说明这个库的接手成本超出了团队。</p>
-<p>前置缺了某一条时不必先补全再开始。缺 CMake 的从第 0.4 节读起,那一节把引一个依赖用得到的部分讲全;缺对象树与信号槽的先读《Qt 核心与 Widget · 现代详解》的对应章节,再回到各章末的接口点那一段;缺跨平台构建经验的可以先在单平台上跟着做,到第 17 章之前补上第二个平台即可。</p>
+<p>前置缺了某一条时不必先补全再开始。缺 CMake 的从第 0.4 节读起,那一节把引一个依赖用得到的部分讲全;缺对象树与信号槽的先读《Qt 核心与 Widget》的对应章节,再回到各章末的接口点那一段;缺跨平台构建经验的可以先在单平台上跟着做,到第 17 章之前补上第二个平台即可。</p>
 <div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 许可证核实改用 SPDX 标识符与物料清单,不再靠人工维护的表格</span><p>人工维护的依赖清单有两个固有缺陷:传递依赖漏登记,以及源码树里内嵌的第三方代码不在清单上。现代做法是让构建产出一份软件物料清单,清单里每一项带一个 SPDX 标识符,再拿这份清单去对授权策略与公开漏洞库。第 0.2 节讲三处都要查的理由,第 18.3 节把它做成一步可以进持续集成的检查,产出物作为构建产物保留,便于比较两次发布之间新增了什么。</p></div>
 <h3>与那些资料相比,本书多给了什么</h3>
 <p>每一条特点都配了可以当场翻到的位置。指不到具体节的特点无法核对,也就不必写。</p>
@@ -1446,11 +1446,11 @@ done &lt; <span>"$1"</span></code></pre>
 </tbody>
 </table>
 <p>后面每一章都按同一套七段结构展开:先讲清这一类需求分几种、判据是什么,再把三到四个方案放进同一张对比表,然后逐个给接入步骤与两种形态的完整示例,接着按四个接口点逐条对照,最后是边界与坑、维护状态与退路。<strong>读的时候可以只看对比表与小结,需要动手时再回到接入步骤与示例。</strong></p>
-<p>与姊妹书的分工也在这里说明:Qt 自身的机制,包括对象树、信号槽、事件系统与样式表,主场在《Qt 核心与 Widget · 现代详解》,本书只在接口点处引用结论;声明式界面与 QML 的部分,主场在《Qt Quick 与 QML · 现代详解》;性能测量的方法与工具,主场在《Qt 性能优化 · 现代详解》,本书给的是各方案的规模边界而不是调优流程。</p>
+<p>与姊妹书的分工也在这里说明:Qt 自身的机制,包括对象树、信号槽、事件系统与样式表,主场在《Qt 核心与 Widget》,本书只在接口点处引用结论;声明式界面与 QML 的部分,主场在《Qt Quick 与 QML》;性能测量的方法与工具,主场在《Qt 性能优化》,本书给的是各方案的规模边界而不是调优流程。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 评估记录与依赖清单一起进版本库,和代码同等对待</span><p>包括三样:评估表、否决项核对结果、退路方案。它们的价值在两年后:有人问「当时为什么选它」「现在能不能换」,答案在文件里而不在某个人的记忆里。这份记录随依赖升级一起更新,与第三方声明清单放在同一个目录下。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 50857px;--thin-h:50857px">
+<section class="chapter" style="contain-intrinsic-size:auto 50823px;--thin-h:50823px">
 <h1 id="c1"><span class="part">第 1 章</span>画图表(一):静态图与交互</h1>
 <h2 id="c1-need">1.1 画图表的需求分几类</h2>
 <p>「要画个图表」是产品需求里最容易被低估的一句话。它可能是一张随报告导出的静态折线图,也可能是一个要在十万点数据上做缩放、游标读数与框选标注的分析界面。<strong>这两种需求对应的方案不同、工作量差十倍以上,而且选错之后很难回头。</strong></p>
@@ -1773,7 +1773,7 @@ target_link_libraries(chartsdemo PRIVATE Qt6::Widgets Qt6::Charts)</code></pre>
 </tbody>
 </table>
 <p>这个结构带来两个直接后果。<strong>样式表对图表内部无效</strong>:给 <code>QChartView</code> 设背景色只影响它的视口边框,图表区域的配色要通过图表自己的接口设置。<strong>图表可以脱离视图使用</strong>:把 <code>QChart</code> 放进任意 <code>QGraphicsScene</code>,或者直接在一个矢量设备上渲染它,这是导出高质量图片的基础。</p>
-<p>Graphics View 的机制,包括场景坐标、变换与项的绘制顺序,主场在《Qt 核心与 Widget · 现代详解》,本节只用它的结论。</p>
+<p>Graphics View 的机制,包括场景坐标、变换与项的绘制顺序,主场在《Qt 核心与 Widget》,本节只用它的结论。</p>
 <h3>接近真实需求的形态:时间轴、双 Y 轴、图例交互与导出</h3>
 <p>下面这个例子覆盖了监测类界面最常见的四项需求:横轴是时间,两条量纲不同的曲线各用一侧的纵轴,点击图例可以切换曲线显隐,右键可以导出为矢量 PDF。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 739px"><code><span class="cm">// sensorchart.h —— 温湿度双轴图表,带图例交互与矢量导出</span>
@@ -2202,7 +2202,7 @@ TraceChart::TraceChart(QWidget *parent) : QCustomPlot(parent)
 <li><strong>数据必须按键升序。</strong>它的数据容器按键排序,声明「已排序」而实际未排序时,绘制结果会出现回折的线段。不确定时不要声明已排序。</li>
 <li><strong>绘制只能在界面线程。</strong>后台线程算好数据之后,通过队列连接送到界面线程再设置进曲线。</li>
 <li><strong>单个大翻译单元影响构建。</strong>直接加进主目标会拖慢全量构建,做法见前面的独立库目标写法。</li>
-<li><strong>没有 QML 版本。</strong>界面走 Qt Quick 的项目用不上它,Quick 侧的图表方案见《Qt Quick 与 QML · 现代详解》。</li>
+<li><strong>没有 QML 版本。</strong>界面走 Qt Quick 的项目用不上它,Quick 侧的图表方案见《Qt Quick 与 QML》。</li>
 <li><strong>个人维护。</strong>新的 Qt 版本发布后,适配版本出现的时间不确定。判据与退路见下一段。</li>
 </ul>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 源码在你手里,是 QCustomPlot 最实际的退路</span><p>它是两个文件,总量在一个人能读完的范围内,并且不依赖任何外部构建设施。上游停止更新时,自己接手维护是可行的:按第 0 章的规矩把本地修改做成补丁文件,新 Qt 版本的适配问题多数集中在少数几处废弃接口上。这条退路在四个方案里是最扎实的一条。</p></div>
@@ -2707,7 +2707,7 @@ QRectF MiniPlot::plotRect() <span class="kw">const</span>
 <tr><td class="nw">需要仪表控件或频谱图</td><td class="nw">Qwt</td><td>另外三个方案都没有现成的仪表控件</td></tr>
 <tr><td class="nw">只要一个迷你趋势图</td><td class="nw">自绘</td><td>不需要坐标轴与交互时,几十行代码优于任何库</td></tr>
 <tr><td class="nw">图种特殊,例如甘特、瀑布、状态带</td><td class="nw">自绘</td><td>现成方案的坐标系统在这类图上帮不上忙</td></tr>
-<tr><td class="nw">界面走 Qt Quick</td><td class="nw">见姊妹书</td><td>Quick 侧的图表方案与本章不同,详见《Qt Quick 与 QML · 现代详解》</td></tr>
+<tr><td class="nw">界面走 Qt Quick</td><td class="nw">见姊妹书</td><td>Quick 侧的图表方案与本章不同,详见《Qt Quick 与 QML》</td></tr>
 </tbody>
 </table>
 <h3>四个方案的接入清单</h3>
@@ -2780,7 +2780,7 @@ QRectF MiniPlot::plotRect() <span class="kw">const</span>
 <tr><td class="nw">第 4 章 表格与电子表格</td><td>读数需求用表格承载时的定制手段,以及图表与表格并列的形态</td></tr>
 </tbody>
 </table>
-<p>与姊妹书的分工:<code>QPainter</code> 的绘制机制、绘图设备与坐标变换,主场在《Qt 核心与 Widget · 现代详解》,本章只用它的结论;图表在大数据量下的性能测量方法与剖析工具,主场在《Qt 性能优化 · 现代详解》,本书第 2 章给的是规模分界与做法,不展开测量流程。</p>
+<p>与姊妹书的分工:<code>QPainter</code> 的绘制机制、绘图设备与坐标变换,主场在《Qt 核心与 Widget》,本章只用它的结论;图表在大数据量下的性能测量方法与剖析工具,主场在《Qt 性能优化》,本书第 2 章给的是规模分界与做法,不展开测量流程。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 把图表调用集中在一个自己的部件类里,是本章最值得先做的一件事</span><p>四个方案的接口差别很大,而选型结论会随需求变化。第 0 章那个隔离层的例子在这里就是可以直接照抄的形态:头文件里不出现任何第三方类型,替换方案时只改一个实现文件。这件事在接入当天做,成本几乎为零。</p></div>
 </section>
 
@@ -2938,7 +2938,7 @@ QRectF MiniPlot::plotRect() <span class="kw">const</span>
                           &lt;&lt; (ms &gt; 0 ? 1000.0 / ms : 0.0) &lt;&lt; <span>" 帧"</span>;
     }
 }</code></pre>
-<p>使用这段代码时有三条注意事项。<strong>第一次渲染不算数</strong>,它包含字体加载、缓存建立等一次性成本,所以要取中位数而不是平均值。<strong>渲染到图片与显示到屏幕不完全等价</strong>:它不含窗口系统的合成开销,也可能绕过部件自身的部分重绘路径,所以它给的是绘制成本的相对比较,不是端到端的帧时间。<strong>要测端到端的帧时间</strong>,用剖析工具,方法与工具的主场在《Qt 性能优化 · 现代详解》。</p>
+<p>使用这段代码时有三条注意事项。<strong>第一次渲染不算数</strong>,它包含字体加载、缓存建立等一次性成本,所以要取中位数而不是平均值。<strong>渲染到图片与显示到屏幕不完全等价</strong>:它不含窗口系统的合成开销,也可能绕过部件自身的部分重绘路径,所以它给的是绘制成本的相对比较,不是端到端的帧时间。<strong>要测端到端的帧时间</strong>,用剖析工具,方法与工具的主场在《Qt 性能优化》。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 分界要在你自己的目标机器上测一次,不要照搬任何书里的数字</span><p>变量太多:绘图区尺寸、抗锯齿、线宽、系列数、机器档次,任何一项变化都能让结果差几倍。上面这段代码不到五十行,跑一次几分钟,得到的是你自己项目的分界。把结果连同测量条件写进工程文档,后面讨论优化时才有共同的基准。</p></div>
 <h2 id="c2-decimate">2.2 抽稀:在不失真的前提下少画</h2>
 <p>上一节的结论是:提交给绘制的点数要压到与绘图区宽度同量级。这一节讲怎么压。<strong>关键不在于压多少,而在于压掉的是不是不该丢的那些点。</strong></p>
@@ -3359,7 +3359,7 @@ LiveChart::LiveChart(QWidget *parent) : QCustomPlot(parent)
 <li><strong>共享缓冲比信号槽更适合高频数据。</strong>采集线程写缓冲,界面线程定时取走,交互次数从每个点一次降到每帧一次。</li>
 </ul>
 <p>用信号槽也可以,前提是<strong>按批发送</strong>:采集线程自己攒够一批或者攒够一段时间再发一次信号,携带一个数组。这样投递频率与上面的定时器方案同量级。</p>
-<p>还有一处与 Qt 容器有关:跨线程传递隐式共享的容器时,两侧同时持有同一份数据的引用。<strong>接收方修改它会触发一次分离,也就是一次完整拷贝</strong>。数据量大时这次拷贝很显眼。做法是发送方发出之后不再持有,或者接收方明确知道自己拿到的是唯一引用。隐式共享的机制主场在《Qt 核心与 Widget · 现代详解》。</p>
+<p>还有一处与 Qt 容器有关:跨线程传递隐式共享的容器时,两侧同时持有同一份数据的引用。<strong>接收方修改它会触发一次分离,也就是一次完整拷贝</strong>。数据量大时这次拷贝很显眼。做法是发送方发出之后不再持有,或者接收方明确知道自己拿到的是唯一引用。隐式共享的机制主场在《Qt 核心与 Widget》。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 131px"><span class="t">🔴 在采集线程里直接调用图表对象,表现是随机位置的崩溃或画面错乱</span><p>这类问题的难点在于它不稳定复现:多数时候相安无事,负载高时才出问题,而且崩溃点常常落在与图表无关的代码里。判别方法是在图表的关键接口里加一句断言,确认调用线程是界面线程;开发期打开,发布时去掉。</p></div>
 <h3>实时界面的验收清单</h3>
 <ol>
@@ -3602,11 +3602,11 @@ LiveChart::LiveChart(QWidget *parent) : QCustomPlot(parent)
 <tr><td class="nw">第 16 章 日志与线上诊断</td><td>把本章的渲染耗时与帧率记进日志,用于判断线上机器实际走的是哪条路径</td></tr>
 </tbody>
 </table>
-<p>与姊妹书的分工:性能测量的方法、剖析工具的用法与结果判读,主场在《Qt 性能优化 · 现代详解》,本章只给了一段最小的基准代码与量级参考;渲染管线、重绘区域与双缓冲的机制,主场在《Qt 核心与 Widget · 现代详解》,本章用的是它的结论。</p>
+<p>与姊妹书的分工:性能测量的方法、剖析工具的用法与结果判读,主场在《Qt 性能优化》,本章只给了一段最小的基准代码与量级参考;渲染管线、重绘区域与双缓冲的机制,主场在《Qt 核心与 Widget》,本章用的是它的结论。</p>
 <p>本章还有一条贯穿全书的结论值得单独记下:<strong>图表的性能问题几乎全部可以归结为「画了看不见的东西」</strong>。看不见的点、看不见的重复绘制、看不见的重绘次数。每一处优化都是在回答同一个问题:这一次绘制里,有多少工作最终没有出现在屏幕上。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 28266px;--thin-h:28266px">
+<section class="chapter" style="contain-intrinsic-size:auto 28232px;--thin-h:28232px">
 <h1 id="c3"><span class="part">第 3 章</span>三维与空间数据</h1>
 <h2 id="c3-need">3.1 三维展示的需求与它的真实成本</h2>
 <p>三维展示是产品需求里最容易被轻易提出、也最容易被低估的一项。<strong>「加个三维视图」这句话背后是一整条资源管线、一套相机与拾取的交互设计,以及一个你无法在开发机上验证的部署前提。</strong></p>
@@ -3705,7 +3705,7 @@ QString describeGraphics()
 <p>这张表与第 1 章那张需求表的用法一致:<strong>填完再读后面几节,选型会变成对照</strong>。表里第二行是这一章唯一的否决线,其余各项是权衡。</p>
 <h2 id="c3-quick3d">3.2 Qt Quick 3D:场景、模型与材质</h2>
 <p>Qt Quick 3D 是 Qt 的三维主线。它的设计出发点是<strong>让三维场景与 Quick 界面共用同一套描述方式与同一个渲染器</strong>,而不是把一个独立的三维引擎嵌进界面里。</p>
-<p>接入、最小场景、资源管线,以及在 Widget 工程里怎么嵌它,是这里要解决的四件事。QML 语言本身与 Quick 的场景图机制,主场在《Qt Quick 与 QML · 现代详解》,这里只用它的结论。</p>
+<p>接入、最小场景、资源管线,以及在 Widget 工程里怎么嵌它,是这里要解决的四件事。QML 语言本身与 Quick 的场景图机制,主场在《Qt Quick 与 QML》,这里只用它的结论。</p>
 <h3>接入与最小场景</h3>
 <pre style="contain-intrinsic-size:auto 440px"><code>cmake_minimum_required(VERSION 3.21)
 project(quick3ddemo LANGUAGES CXX)
@@ -3912,7 +3912,7 @@ QWidget *makeSceneWidget(QWidget *parent)
 <table style="contain-intrinsic-size:auto 287px">
 <thead><tr><th>接口点</th><th>Quick 3D 的情况</th><th>要做什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">对象树归属</td><td>承载部件按普通父子关系管理;QML 侧的对象由引擎管理</td><td>C++ 暴露给 QML 的对象要明确所有权,规则见《Qt Quick 与 QML · 现代详解》</td></tr>
+<tr><td class="nw">对象树归属</td><td>承载部件按普通父子关系管理;QML 侧的对象由引擎管理</td><td>C++ 暴露给 QML 的对象要明确所有权,规则见《Qt Quick 与 QML》</td></tr>
 <tr><td class="nw">信号槽桥接</td><td>C++ 与 QML 之间通过属性、信号与可调用方法通信</td><td>数据更新走属性绑定;高频数据要按第 2 章的做法批量提交</td></tr>
 <tr><td class="nw">样式与主题</td><td>三维场景不参与样式表;颜色写在材质与环境里</td><td>主题切换时把配色作为属性传进 QML,由绑定驱动材质更新</td></tr>
 <tr><td class="nw">高分屏与国际化</td><td>渲染按设备像素比处理;场景里的文字要单独考虑</td><td>三维场景里的标签用二维覆盖层实现更省事,也便于翻译</td></tr>
@@ -4048,7 +4048,7 @@ QWidget *makeSceneWidget(QWidget *parent)
 <li><strong>直接构造数据数组。</strong>按图表要求的结构逐行填好交进去,适合数据来自计算或文件解析。</li>
 <li><strong>接一个条目模型。</strong>模块提供了把条目模型映射成图表数据的代理,指定哪一列作为行、哪一列作为列、哪一列作为数值即可。<strong>数据已经在表格模型里时,这条路省掉整个转换步骤。</strong></li>
 </ul>
-<p>第二条是这个模块相对自己搭场景最实在的优势,也是它与第 4 章表格内容的直接连接点:表格与三维图共用同一个模型,数据变化时两边同步更新,不需要写任何同步代码。模型与视图的机制主场在《Qt 核心与 Widget · 现代详解》。</p>
+<p>第二条是这个模块相对自己搭场景最实在的优势,也是它与第 4 章表格内容的直接连接点:表格与三维图共用同一个模型,数据变化时两边同步更新,不需要写任何同步代码。模型与视图的机制主场在《Qt 核心与 Widget》。</p>
 <p>三种图表覆盖的需求可以用一句话区分:<strong>两个分类维度加一个数值用柱状,三个连续变量用散点,规则网格上的高度用曲面</strong>。需求不落在这三者里时,这个模块帮不上忙,要回到通用三维场景。</p>
 <p>数据代理这一层还承担了增量更新:数据变化时通过代理的相应接口提交,而不是整体重置数组,这样图表只更新变化的部分。实时刷新的做法与第 2 章一致,批量提交加定时驱动。</p>
 <p>三种图表的数据规模上限差别不小:柱状受限于柱子的数量,散点受限于点数,曲面受限于网格的行列数。<strong>三者都不是为大规模数据设计的</strong>,超出统计图表的量级时,要么先聚合再交给它,要么改用通用三维场景加自定义几何。</p>
@@ -4305,16 +4305,16 @@ target_link_libraries(pointcloud PRIVATE Qt6::Gui)</code></pre>
 </tbody>
 </table>
 <p>本章与前两章还有一处结构上的差别值得点出:<strong>二维图表的四个方案是同一件事的四种做法,三维的四个方案是四件不同的事</strong>。所以前两章的选型是权衡,本章的选型更接近分类。真正需要权衡的只有一处,就是要不要进入三维。</p>
-<p>与姊妹书的分工:QML 语言、Quick 的元素树与场景图机制,主场在《Qt Quick 与 QML · 现代详解》,本章只讲三维部分怎么用;三维渲染的性能测量与调优,主场在《Qt 性能优化 · 现代详解》。</p>
+<p>与姊妹书的分工:QML 语言、Quick 的元素树与场景图机制,主场在《Qt Quick 与 QML》,本章只讲三维部分怎么用;三维渲染的性能测量与调优,主场在《Qt 性能优化》。</p>
 <p>症状反查表里前四行都指向同一类原因:场景搭起来了,但某个必要条件没满足。<strong>三维出问题时的排查顺序固定为相机、光源、资源、环境四步</strong>,按这个顺序走一遍,绝大多数「什么都看不见」的情形能在几分钟内定位。</p>
 <p>最后重复本章开头那条判据,因为它比本章任何具体方案都更常用到:<strong>用户要读出数值就用二维,要看空间关系才用三维</strong>。这一条挡住的成本,多于本章其余全部内容能省下的成本。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 三维项目最值得先做的准备是把资源管线独立出来,而不是抽象一层接口</span><p>三维场景的描述方式与具体框架深度绑定,抽象接口的收益远低于二维图表那边。真正能带走的是网格、贴图与材质参数,而它们只与转换流程有关。把转换流程、资源规范与命名约定固定下来,换框架时这部分工作可以完整复用。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 57622px;--thin-h:57622px">
+<section class="chapter" style="contain-intrinsic-size:auto 57588px;--thin-h:57588px">
 <h1 id="c4"><span class="part">第 4 章</span>表格与电子表格</h1>
 <h2 id="c4-view">4.1 QTableView 深度定制:超出第一本的部分</h2>
-<p>模型与视图的索引语义、角色约定、代理模型的过滤与排序、委托的绘制入口,这四件事在《Qt 核心与 Widget · 现代详解》里已经交代完整,本节不重复其中任何一条。这里处理的是另一类问题:机制本身没有疑问,而需求清单上写着冻结首列、表头合并、行内校验与十万行滚动不掉帧,这些在 Qt 的公开接口里没有一一对应的开关。</p>
+<p>模型与视图的索引语义、角色约定、代理模型的过滤与排序、委托的绘制入口,这四件事在《Qt 核心与 Widget》里已经交代完整,本节不重复其中任何一条。这里处理的是另一类问题:机制本身没有疑问,而需求清单上写着冻结首列、表头合并、行内校验与十万行滚动不掉帧,这些在 Qt 的公开接口里没有一一对应的开关。</p>
 <p>这类需求有一个共同形状。<strong>QTableView 提供的是零件,不是成品。</strong>零件怎么组合由使用者决定,官方示例给出过其中几种,但示例的数据规模与真实业务的数据规模差着两三个数量级,示例里合理的写法换到十万行上会变成肉眼可见的停顿。组合方式按需求逐条给出,每一种的代价与失效条件写在同一处。</p>
 <h3>需求清单与选型判据</h3>
 <p>先把这一章要满足的产品需求摆开。一个数据表界面通常被要求同时具备下面这些能力,而它们分属四个完全不同的实现层次:视图层、模型层、委托层与导出层。分不清层次,改动就会落在错误的地方,典型表现是「明明设了合并,排完序就乱」。</p>
@@ -4746,7 +4746,7 @@ view-&gt;setWordWrap(<span class="kw">false</span>);                            
 </table>
 <p>表里最后一行值得单独说明。<code>QSortFilterProxyModel</code> 解决的是「显示哪些行」,不解决「装载哪些行」;它建立在一个已经存在的源模型之上,源模型多大它就要遍历多大。把它当成性能手段是一种常见错位——过滤之后视图上只剩几十行,但内存里那十万行一行都没少,而且每次改变过滤条件都要重新遍历一遍。</p>
 <p>四者可以叠加。生产中常见的组合是:数据库分页负责限制总量,代理模型负责页内的即时筛选,视图侧固定行高负责布局速度。三者叠加时要注意排序的归属——页内排序只对当前页有效,用户往往期望的是全局排序,这时排序必须下推到查询语句里。</p>
-<p>每种策略在具体机器上的实测数字与逐项的耗时拆解,属于《Qt 性能优化 · 现代详解》的范围,本节只给结论与选择依据。这里唯一需要记住的量级判断是:<strong>视图侧的布局开销与行数成正比且常数不小,而固定行高能把这个常数降到接近零。</strong>十万行规模上,这一条的影响通常大于换一种模型实现。</p>
+<p>每种策略在具体机器上的实测数字与逐项的耗时拆解,属于《Qt 性能优化》的范围,本节只给结论与选择依据。这里唯一需要记住的量级判断是:<strong>视图侧的布局开销与行数成正比且常数不小,而固定行高能把这个常数降到接近零。</strong>十万行规模上,这一条的影响通常大于换一种模型实现。</p>
 <div class="note new" style="contain-intrinsic-size:auto 232px"><span class="t">🔵 Qt 6 的 QList 与 QVector 已统一,行容器用 QList 即可</span><p>Qt 5 时代关于「QList 存大对象会额外分配」的经验在 Qt 6 上不再成立,<code>QList</code> 与 <code>QVector</code> 现在是同一个模板的两个名字,元素连续存放。因此模型内部存行数据时不必再为容器选型纠结,按值语义直接用 <code>QList</code>。真正影响内存的是每行里的字符串数量——十万行乘八列意味着八十万个 <code>QString</code>,每个都带独立的堆分配。数据以数值为主时,把行结构体的字段声明成具体类型而不是统一的 <code>QString</code>,内存能降一个可观的比例,顺带省掉展示时的转换。</p></div>
 <h2 id="c4-xlsx">4.2 QXlsx:读写 Excel 文件</h2>
 <p>需求方对「导出」这个词的默认理解通常是 xlsx,而不是 CSV。差别在于对方拿到文件之后要做什么:CSV 是数据交换格式,xlsx 是可以直接打开、带格式、带多张工作表的文档格式。凡是导出结果要发给人看、要打印、要在上面继续标注的场合,产出必须是 xlsx。</p>
@@ -5545,7 +5545,7 @@ signals:
     m_watcher.setFuture(fut);
 }</code></pre>
 <p>这份骨架里有四个决定。<strong>数据以值传入</strong>:<code>snapshot</code> 是一份拷贝,工作线程不访问模型,因此主线程可以在导出期间继续编辑数据。<strong>取消用原子标志而不是中断线程</strong>:标志在每行开头检查一次,取消的延迟最多是一行的处理时间。<strong>进度只在百分比变化时发</strong>:否则十万次跨线程信号会把主线程的事件队列淹没。<strong>析构函数里等待完成</strong>:导出未结束时销毁这个对象,lambda 捕获的 <code>this</code> 会成为悬垂指针。</p>
-<p>信号从工作线程发出、槽在主线程执行,这一段依赖的是自动连接的默认行为——接收者所属线程与发射线程不同,连接按队列方式执行,参数被拷贝后投递。参数类型因此必须是可拷贝且已注册的类型,<code>int</code> 与 <code>QString</code> 都满足。这一机制的完整语义见《Qt 核心与 Widget · 现代详解》,此处只用结论。</p>
+<p>信号从工作线程发出、槽在主线程执行,这一段依赖的是自动连接的默认行为——接收者所属线程与发射线程不同,连接按队列方式执行,参数被拷贝后投递。参数类型因此必须是可拷贝且已注册的类型,<code>int</code> 与 <code>QString</code> 都满足。这一机制的完整语义见《Qt 核心与 Widget》,此处只用结论。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 QXlsx 的 Document 跨线程共用,崩溃点与写入点无关</span><p>症状是导出偶尔崩溃,栈顶落在字符串或容器的内部函数里,重跑同样的数据往往不复现;也可能不崩溃而是生成一个 Excel 打不开的文件。根因是 <code>QXlsx::Document</code> 内部持有共享字符串表、样式表与工作表结构,这些都是普通的容器,没有任何线程同步;两个线程同时写等于对同一个容器并发修改。排查手段是给所有 <code>write</code> 调用点打印 <code>QThread::currentThread()</code>,出现两个不同的值即可确认。改法是把 <code>Document</code> 变成工作线程函数体里的局部对象,主线程只通过信号拿到「完成」与「失败」。同一条同样适用于 <code>Format</code> 对象——它可以在线程内复用,但不要跨线程共享。</p></div>
 <h3>四个 Qt 接口点在导出上的落点</h3>
 <p>四个与 Qt 机制相接的位置在导出这一步汇齐,分别落在所有权、信号形状、颜色来源与文本格式化四件事上。</p>
@@ -5678,7 +5678,7 @@ cat third_party/QXlsx/LICENSE</code></pre>
 <tr><td class="nw">本地化</td><td>给人看的走 <code>tr()</code> 与 <code>QLocale()</code>,给程序读的走不变格式</td></tr>
 </tbody>
 </table>
-<p>本章与相邻章节的分工也在此明确。表格数据的可视化呈现属于图表两章,数据表与图表共用同一个模型时,过滤条件应当由代理模型统一承担,两边各写一份筛选逻辑会在条件变复杂后失去一致性。导出为 PDF 与打印排版属于第 7 章,本章只在格式对比表里给出适用面。性能的逐项拆解与实测数字属于《Qt 性能优化 · 现代详解》,本章给的是结论与判据。模型/视图机制本身属于《Qt 核心与 Widget · 现代详解》,本章不重复。</p>
+<p>本章与相邻章节的分工也在此明确。表格数据的可视化呈现属于图表两章,数据表与图表共用同一个模型时,过滤条件应当由代理模型统一承担,两边各写一份筛选逻辑会在条件变复杂后失去一致性。导出为 PDF 与打印排版属于第 7 章,本章只在格式对比表里给出适用面。性能的逐项拆解与实测数字属于《Qt 性能优化》,本章给的是结论与判据。模型/视图机制本身属于《Qt 核心与 Widget》,本章不重复。</p>
 <p>最后留一条实践上的建议。本章涉及的失效方式里,超过一半只在真实用户数据上出现——带逗号的备注、GBK 的上传文件、含换行的地址、十万行的历史记录。开发阶段的测试数据应当刻意包含这些形态,而不是等到线上收到反馈才补。做法是准备一份「畸形数据样本」放进测试资源目录,内容涵盖引号内的逗号与换行、连续两个引号、空字段、超长字段、GBK 编码的中文,以及一个只有表头没有数据的文件,每次改动导入导出代码都跑一遍。</p>
 </section>
 
@@ -7298,7 +7298,7 @@ src-&gt;setFont(mono);
 <tr><td class="nw">5.6 QtWebEngine</td><td>能力上限最高,代价是体积、独立进程、部署完整性与全异步的通信形态;判据是页面里的 JavaScript 是不是产品逻辑的一部分</td></tr>
 </tbody>
 </table>
-<p>最后留一条跨章的线索。本章处理的是「文字怎么显示与编辑」,与它相邻的两件事分别在别处:把富文本或者页面输出成 PDF、以及显示 PDF,在第 7 章;模型与视图那一套索引与角色语义,见《Qt 核心与 Widget · 现代详解》,本章不重复。这两条合在一起,才构成一个完整产品的文档处理链路。</p>
+<p>最后留一条跨章的线索。本章处理的是「文字怎么显示与编辑」,与它相邻的两件事分别在别处:把富文本或者页面输出成 PDF、以及显示 PDF,在第 7 章;模型与视图那一套索引与角色语义,见《Qt 核心与 Widget》,本章不重复。这两条合在一起,才构成一个完整产品的文档处理链路。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 57111px;--thin-h:57111px">
@@ -9177,7 +9177,7 @@ signals:
     <span class="kw">void</span> failed(<span class="kw">const</span> QString &amp;reason);
 };</code></pre>
 <p>进度信号的粒度要克制。每写一行发一次信号,十万行就是十万次跨线程投递,事件队列会被压满,界面反而更卡。常规做法是按百分点或按固定条数节流,例如每处理总量的百分之一发一次。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 把主线程的 QTextDocument 交给工作线程排版会随机崩溃</span><p>症状是导出偶发崩溃,栈回溯落在文本布局内部,复现概率随数据量和用户是否同时滚动界面而变。根因是同一个文档对象同时被两个线程访问:主线程在绘制它,工作线程在改它的布局。排查手段是在导出入口断言 <code>doc-&gt;thread() == QThread::currentThread()</code>。改法是工作线程自己构造一份文档,主线程只传纯数据;线程与对象亲和的机制见《Qt 核心与 Widget · 现代详解》,这里只取结论。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 把主线程的 QTextDocument 交给工作线程排版会随机崩溃</span><p>症状是导出偶发崩溃,栈回溯落在文本布局内部,复现概率随数据量和用户是否同时滚动界面而变。根因是同一个文档对象同时被两个线程访问:主线程在绘制它,工作线程在改它的布局。排查手段是在导出入口断言 <code>doc-&gt;thread() == QThread::currentThread()</code>。改法是工作线程自己构造一份文档,主线程只传纯数据;线程与对象亲和的机制见《Qt 核心与 Widget》,这里只取结论。</p></div>
 <h2 id="c7-pdfview">7.3 查看 PDF:QtPdf 模块与 Poppler</h2>
 <p>生成 PDF 之后,下一个需求通常是「在程序里直接看」:合同预览、发票核对、说明书内嵌。这一节要先纠正一个流传较广的认识——很多人还在为这个需求去找 Poppler,而 <strong>QtPdf 是 Qt 6 的官方模块,随 Qt 一起发布</strong>,不需要任何外部依赖。</p>
 <p>判据只有一条:需求是不是仅限于「看」。看,包括翻页、缩放、搜索、按大纲跳转、把某一页取成图像;不包括改。这条线两边的成本相差很大,选型时先把需求归到哪一边确定下来,再往下看方案。</p>
@@ -9690,10 +9690,10 @@ signals:
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 47099px;--thin-h:47099px">
+<section class="chapter" style="contain-intrinsic-size:auto 47098px;--thin-h:47098px">
 <h1 id="c8"><span class="part">第 8 章</span>网络:协议、服务端与异步</h1>
 <h2 id="c8-http">8.1 QNetworkAccessManager 之上该封装什么</h2>
-<p><code>QNetworkAccessManager</code> 的用法在姊妹书《Qt 核心与 Widget · 现代详解》里已经讲过:建请求、发出去、在 <code>finished</code> 里读回复。这一节不重复那部分,要回答的是紧接着的下一个问题——<strong>一个产品级的网络层,在这个类之上还要补什么</strong>。</p>
+<p><code>QNetworkAccessManager</code> 的用法在姊妹书《Qt 核心与 Widget》里已经讲过:建请求、发出去、在 <code>finished</code> 里读回复。这一节不重复那部分,要回答的是紧接着的下一个问题——<strong>一个产品级的网络层,在这个类之上还要补什么</strong>。</p>
 <p>判据来自需求本身。一个真实产品的网络层要交付的不是「能发请求」,而是七件事:连接复用、超时、重试、取消、鉴权、统一的错误模型、以及可测试性。裸用 <code>QNetworkAccessManager</code> 时这七件事全部散落在各个调用点上,每个页面各写一遍,写法还不一致。</p>
 <table style="contain-intrinsic-size:auto 287px">
 <thead><tr><th>做法</th><th>代码形状</th><th>与事件循环的关系</th><th>可测试性</th><th>什么规模下垮掉</th></tr></thead>
@@ -10338,7 +10338,7 @@ client.connectToHost();</code></pre>
     }, Qt::QueuedConnection);
     <span class="kw">return</span> 1;
 }</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 第三方库的回调里只做搬运,一律用队列调用回到 Qt 线程</span><p><code>QMetaObject::invokeMethod</code> 配 <code>Qt::QueuedConnection</code> 把 lambda 投递到目标对象所属线程的事件队列上,回调线程立即返回。lambda 里捕获的必须是值拷贝,不能是指向回调线程栈上数据的指针。这条模式适用于所有自带线程的第三方库,不限于 MQTT 客户端。线程亲和与队列连接的机制见《Qt 核心与 Widget · 现代详解》,这里只取用法。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 第三方库的回调里只做搬运,一律用队列调用回到 Qt 线程</span><p><code>QMetaObject::invokeMethod</code> 配 <code>Qt::QueuedConnection</code> 把 lambda 投递到目标对象所属线程的事件队列上,回调线程立即返回。lambda 里捕获的必须是值拷贝,不能是指向回调线程栈上数据的指针。这条模式适用于所有自带线程的第三方库,不限于 MQTT 客户端。线程亲和与队列连接的机制见《Qt 核心与 Widget》,这里只取用法。</p></div>
 <p>桥接层还要承担一件事:把那个库的连接状态映射成与 8.3 相同的状态枚举。界面上的连接指示、重试倒计时、错误提示因此可以复用同一套实现,不随底层协议而变。</p>
 <p>最后一行的方案在浏览器与桌面混合的产品里有实际价值:同一个代理同时开放原生端口与基于 WebSocket 的端口,网页端与桌面端用同一套主题和同一套消息格式。桌面侧选它的代价是要自己处理 MQTT 报文的编解码,或者找一个把编解码与传输分开的库。</p>
 <p>无论选哪一条,有三件事都要自己补齐,它们不随客户端库而变:断线重连的退避策略、重连后的订阅重放、以及业务侧的幂等处理。把这三件事做成与协议无关的一层,换客户端库时受影响的只有最底下的适配代码。</p>
@@ -10842,7 +10842,7 @@ target_link_libraries(sqldemo PRIVATE Qt6::Core Qt6::Sql)</code></pre>
 <div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 removeDatabase 之前要先销毁全部句柄与查询,否则连接静默失效</span><p>症状是控制台出现一句包含 connection is still in use 的警告,此后该连接上的所有查询都返回失败,而代码里看不出哪一步出错。原因是句柄还活着时删条目,Qt 只能把连接标记为不可用。正确形态是把句柄和查询对象放进一个内层作用域,离开作用域之后再调用 <code>removeDatabase()</code>。本节最后的 <code>ScopedConnection</code> 就是按这个顺序写的。</p></div>
 <h3>硬规矩:一个连接只能在创建它的线程里使用</h3>
 <p>这是 QtSql 最重要的一条约束:<strong>连接与创建它的线程绑定,不能跨线程共享</strong>。跨线程使用的后果不是编译错误,也不一定立即崩溃,而是随机的查询失败、结果错乱或者进程中止。</p>
-<p>这条约束的根源在于底层客户端库的线程模型。QtSql 不为连接加锁,也不做线程亲和迁移,它把这条约束原样交给了使用者。姊妹书《Qt 核心与 Widget · 现代详解》第 17 章讲过 <code>QObject</code> 的线程亲和;<code>QSqlDatabase</code> 不是 <code>QObject</code>,它不进对象树,也没有 <code>moveToThread()</code> 可以搬,所以那一套办法在这里用不上。</p>
+<p>这条约束的根源在于底层客户端库的线程模型。QtSql 不为连接加锁,也不做线程亲和迁移,它把这条约束原样交给了使用者。姊妹书《Qt 核心与 Widget》第 17 章讲过 <code>QObject</code> 的线程亲和;<code>QSqlDatabase</code> 不是 <code>QObject</code>,它不进对象树,也没有 <code>moveToThread()</code> 可以搬,所以那一套办法在这里用不上。</p>
 <p>具体到代码上,下面这几种写法都属于跨线程共享,即使它们看起来只是「传了一个值对象」。</p>
 <ul>
 <li><strong>把 <code>QSqlDatabase</code> 作为成员变量,在多个线程的槽函数里用。</strong>句柄是值类型,拷贝不产生新连接,拷到哪个线程都还是同一个连接。</li>
@@ -11009,7 +11009,7 @@ target_link_libraries(sqldemo PRIVATE Qt6::Core Qt6::Sql)</code></pre>
     }
     <span class="kw">return</span> db.commit();
 }</code></pre>
-<p>事务在这里不只是为了原子性,它同时是性能手段:<strong>SQLite 上每一条不在事务里的写入都要各自落盘一次</strong>,一万条逐条写与放进一个事务写,耗时能差两个数量级。这个数字随硬件和日志模式变化,量级关系是稳定的,细账见姊妹书《Qt 性能优化 · 现代详解》。</p>
+<p>事务在这里不只是为了原子性,它同时是性能手段:<strong>SQLite 上每一条不在事务里的写入都要各自落盘一次</strong>,一万条逐条写与放进一个事务写,耗时能差两个数量级。这个数字随硬件和日志模式变化,量级关系是稳定的,细账见姊妹书《Qt 性能优化》。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 凡是循环里的写入,一律套一个事务,这是 SQLite 上收益最大的一处改动</span><p>判据不需要测:只要写入条数超过十条并且在一个循环里,就套事务。写法是循环外 <code>transaction()</code>、循环内逐条 <code>exec()</code>、循环后 <code>commit()</code>,失败时 <code>rollback()</code>。要验证自己有没有漏掉,在代码里搜 <code>exec(</code> 所在的行,看它上面几行有没有 <code>for</code> 或 <code>while</code>,有循环而附近没有 <code>transaction()</code> 的就是候选。</p></div>
 <h2 id="c9-sqlite">9.2 SQLite 直连与它适合什么</h2>
 <p>SQLite 是本书里出现频率最高的一个第三方库,原因是它已经被编进了 Qt 自带的驱动,接入成本接近于零。这一节讲它的运行模型、经由 QtSql 能调到的配置项、它能承受什么样的负载,以及它在什么条件下不再是正确选择。</p>
@@ -11186,7 +11186,7 @@ target_link_libraries(sqldemo PRIVATE Qt6::Core Qt6::Sql)</code></pre>
 </svg>
 <figcaption>连接池的借还与线程归属:池管的是任务,不是连接（原创绘制）</figcaption>
 </figure>
-<p>图里有两处是设计的要点。<strong>连接从建立到销毁全程留在同一条线程上</strong>,跨越线程边界的只有任务对象和取好值的结果;以及<strong>队列是唯一的汇合点</strong>,所有并发控制都集中在它的互斥量上,业务代码里因此不再出现锁。这个结构与姊妹书《Qt 核心与 Widget · 现代详解》第 17 章讲的「工作线程加排队连接」是同一个骨架,区别只在于这里的工作线程额外持有一个不能移动的资源。</p>
+<p>图里有两处是设计的要点。<strong>连接从建立到销毁全程留在同一条线程上</strong>,跨越线程边界的只有任务对象和取好值的结果;以及<strong>队列是唯一的汇合点</strong>,所有并发控制都集中在它的互斥量上,业务代码里因此不再出现锁。这个结构与姊妹书《Qt 核心与 Widget》第 17 章讲的「工作线程加排队连接」是同一个骨架,区别只在于这里的工作线程额外持有一个不能移动的资源。</p>
 <h3>一份可用的实现:线程局部连接</h3>
 <p>先给最小形态。它解决的是「每个线程一个连接,并且线程退出时自动回收」,不控制连接总数,适合线程数固定的桌面程序。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1827px"><code><span class="cm">// dbconn.h —— 线程局部连接:每线程一个,线程退出时自动回收</span>
@@ -12561,7 +12561,7 @@ QImage loadThumbnail(<span class="kw">const</span> QString &amp;path, <span clas
 <tbody>
 <tr><td class="nw">对象树归属</td><td>播放与采集的类都是 <code>QObject</code></td><td><code>QAudioOutput</code>、<code>QCamera</code> 这些被挂进会话或播放器的对象,所有权不随挂接转移;统一做法是给它们同一个 parent,让生命周期一起结束</td></tr>
 <tr><td class="nw">信号槽桥接</td><td class="nw">位置、状态、错误都是信号</td><td><code>errorOccurred</code> 必须连,否则失败时界面没有任何反馈;高频信号要在槽里自行降频;<strong>不要假设帧回调在哪条线程上</strong>,回调里只做搬运</td></tr>
-<tr><td class="nw">样式与主题</td><td class="nw"><strong>视频画面不受样式表影响</strong></td><td><code>QVideoWidget</code> 承载的是一块由后端绘制的表面,给它设背景或圆角不生效;字幕与控制条要放在上层部件里,并注意原生表面的堆叠顺序问题(见姊妹书《Qt 核心与 Widget · 现代详解》第 9 章)</td></tr>
+<tr><td class="nw">样式与主题</td><td class="nw"><strong>视频画面不受样式表影响</strong></td><td><code>QVideoWidget</code> 承载的是一块由后端绘制的表面,给它设背景或圆角不生效;字幕与控制条要放在上层部件里,并注意原生表面的堆叠顺序问题(见姊妹书《Qt 核心与 Widget》第 9 章)</td></tr>
 <tr><td class="nw">高分屏与国际化</td><td class="nw">图像要按物理像素准备</td><td>缩略图按 <code>devicePixelRatio</code> 放大后解码,再给 <code>QImage</code> 设同样的比值,显示才清晰;时长与时间码用 <code>QLocale</code> 或固定格式,不要手工拼字符串</td></tr>
 </tbody>
 </table>
@@ -12601,7 +12601,7 @@ QImage image = loadThumbnail(path, logical * dpr, 40<span>'000'</span>000);
 </ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 37879px;--thin-h:37879px">
+<section class="chapter" style="contain-intrinsic-size:auto 37845px;--thin-h:37845px">
 <h1 id="c11"><span class="part">第 11 章</span>设备通信:串口、总线与蓝牙</h1>
 <h2 id="c11-serial">11.1 QtSerialPort:串口通信与它的坑</h2>
 <p>串口在消费类产品上已经很少见,在工业、医疗、检测、嵌入式调试这些领域仍然是主力通道。它的接口简单到只有「打开、读、写、关」,而工程上出问题的比例却不低,原因集中在一处:<strong>串口给的是字节流,不是消息</strong>。这一节把参数、分帧、热插拔、平台差异四件事讲完。</p>
@@ -13500,7 +13500,7 @@ signals:
 <span class="kw">private</span>:
     std::atomic&lt;<span class="kw">bool</span>&gt; m_stop{<span class="kw">false</span>};
 };</code></pre>
-<p>启动方式是标准的工作线程形态:把 worker 搬到一条 <code>QThread</code> 上,用排队连接调用它的槽,信号自动回到调用方的线程。这套结构在姊妹书《Qt 核心与 Widget · 现代详解》第 17 章有完整讲解,这里只强调两处与设备相关的要点。</p>
+<p>启动方式是标准的工作线程形态:把 worker 搬到一条 <code>QThread</code> 上,用排队连接调用它的槽,信号自动回到调用方的线程。这套结构在姊妹书《Qt 核心与 Widget》第 17 章有完整讲解,这里只强调两处与设备相关的要点。</p>
 <ul>
 <li><strong>阻塞调用一定要带超时。</strong>没有超时的读取会让线程永远停在那里,程序退不出去。超时值取两百毫秒左右,循环里因此能定期检查停止标志。</li>
 <li><strong>停止标志用原子变量,不用信号槽。</strong>工作线程正停在阻塞调用里,发给它的排队信号要等它回到事件循环才会被处理;而原子变量可以立即读到。</li>
@@ -17227,7 +17227,7 @@ set_tests_properties(pathnormalizer PROPERTIES
         p.parse(doc);          <span class="cm">// 块内代码会被重复执行,次数由框架决定</span>
     }
 }</code></pre>
-<p>基准结果只在同一台机器、同一次运行内可比。跨机器、跨时间的对比要用更稳的指标,详见《Qt 性能优化 · 现代详解》。</p>
+<p>基准结果只在同一台机器、同一次运行内可比。跨机器、跨时间的对比要用更稳的指标,详见《Qt 性能优化》。</p>
 <p>持续集成需要机器可读的结果。Qt Test 支持多种输出格式,同一次运行可以指定多个输出目标。</p>
 <pre style="contain-intrinsic-size:auto 277px"><code># 人读一份到终端,机器读一份到文件
 ./tst_parser -o -,txt -o results/tst_parser.xml,junitxml
@@ -17815,7 +17815,7 @@ QTEST_MAIN(TestFileTreeModel)
 <tr><td class="nw">角色语义是否合理</td><td class="nw"><strong>不能</strong></td><td>返回了什么角色、类型对不对要自己断言</td></tr>
 <tr><td class="nw"><code>dataChanged</code> 的角色参数是否准确</td><td class="nw"><strong>不能</strong></td><td>漏报角色不违反契约,但会让优化过的视图不刷新</td></tr>
 <tr><td class="nw">线程安全</td><td class="nw"><strong>不能</strong></td><td>跨线程访问要靠代码审查与线程消毒器</td></tr>
-<tr><td class="nw">性能</td><td class="nw">不能</td><td>大数据集下的行为见《Qt 性能优化 · 现代详解》</td></tr>
+<tr><td class="nw">性能</td><td class="nw">不能</td><td>大数据集下的行为见《Qt 性能优化》</td></tr>
 </tbody>
 </table>
 <p>结论是:<strong>检查器覆盖结构,业务断言覆盖语义</strong>,两者都要写。只挂检查器的测试能通过一个把所有数据都返回空字符串的模型。</p>
@@ -20578,7 +20578,7 @@ echo <span>"全部步骤通过。上传与开灰度由发布负责人在面板�
 <div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 把整条发布流水线做成可重放的脚本,不要依赖任何手工步骤</span><p>手工步骤有三个问题:发布负责人不在时没人能发;每次执行的细节可能不同,出问题后无法确定当时做了什么;紧急回滚时的操作压力最大而出错率最高。把构建、部署、归档、签名、打包、验证、上传全部写成脚本,由一次流水线运行串起来,并且让它可以用同一份输入重跑。签名因为密钥保管要求可能需要一次人工确认,这是唯一可以接受的例外,而且要把它做成流水线中的一个明确的暂停点,而不是一个写在文档里的步骤。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 16555px;--thin-h:16555px">
+<section class="chapter" style="contain-intrinsic-size:auto 16504px;--thin-h:16504px">
 <h1 id="c18"><span class="part">第 18 章</span>小结:选型速查与什么时候自己写</h1>
 <h2 id="c18-index">18.1 选型速查:按需求查方案</h2>
 <p>前面十八章按需求组织,每一章给出候选方案、同场对比、完整接入与失效边界。这一节把它们压成一张可以直接查的表:<strong>左边是要做的事,右边是从哪一章开始读</strong>。</p>
@@ -20866,13 +20866,13 @@ osv-scanner --sbom=build/sbom.cdx.json
 <p>三条主线可以合并成一句话:<strong>选型不是挑一个最好的,而是弄清每个候选在什么条件下成立,然后确认自己的条件落在哪一个的范围内</strong>。本书每一章的对比表都是按这个思路组织的——它不给排名,只给差异与边界。</p>
 <p>后五章与前面十四章的性质不同。前面回答「这个功能用什么做」,后五章回答「做出来之后怎么保证它在用户机器上还能用」:第 14 章解决与系统的接缝,第 15 章解决改动之后还对不对,第 16 章解决出问题时看不看得见,第 17 章解决怎么送到用户手里并保持更新。这四项没有一项是功能,但缺任何一项都会让功能在真实环境里失去价值。</p>
 <h3>四本书之间怎么配合</h3>
-<table style="contain-intrinsic-size:auto 287px">
+<table style="contain-intrinsic-size:auto 236px">
 <thead><tr><th>书</th><th>它回答的问题</th><th>什么时候翻它</th></tr></thead>
 <tbody>
-<tr><td class="nw">《Qt 核心与 Widget · 现代详解》</td><td>Qt 的对象系统、信号槽、事件、部件与模型视图怎么运作</td><td>本书假定这些已经掌握。遇到「为什么这个信号没到」一类的问题回去查</td></tr>
-<tr><td class="nw">《Qt Quick 与 QML · 现代详解》</td><td>声明式界面的引擎行为与 C++ 互操作</td><td>本书第 3 章与第 5 章涉及 QML 时的背景知识</td></tr>
+<tr><td class="nw">《Qt 核心与 Widget》</td><td>Qt 的对象系统、信号槽、事件、部件与模型视图怎么运作</td><td>本书假定这些已经掌握。遇到「为什么这个信号没到」一类的问题回去查</td></tr>
+<tr><td class="nw">《Qt Quick 与 QML》</td><td>声明式界面的引擎行为与 C++ 互操作</td><td>本书第 3 章与第 5 章涉及 QML 时的背景知识</td></tr>
 <tr><td class="nw">本书</td><td>每个需求有哪些方案,怎么接,什么时候垮</td><td>做一个完整产品的过程中,遇到「这块用什么做」时</td></tr>
-<tr><td class="nw">《Qt 性能优化 · 现代详解》</td><td>渲染、绑定、隐式共享这些开销怎么测、怎么改</td><td>本书各章提到「在什么规模下垮掉」而需要具体量级时</td></tr>
+<tr><td class="nw">《Qt 性能优化》</td><td>渲染、绑定、隐式共享这些开销怎么测、怎么改</td><td>本书各章提到「在什么规模下垮掉」而需要具体量级时</td></tr>
 </tbody>
 </table>
 <p>四本书的边界是按<strong>问题类型</strong>切的,不是按模块切的。同一个类可能在四本书里各出现一次:第一本讲它怎么运作,本书讲什么时候用它、什么时候换掉它,性能那本讲它的开销来自哪里。</p>
@@ -20880,9 +20880,9 @@ osv-scanner --sbom=build/sbom.cdx.json
 <table style="contain-intrinsic-size:auto 259px">
 <thead><tr><th>没有覆盖的</th><th>原因</th><th>去哪里找</th></tr></thead>
 <tbody>
-<tr><td class="nw">Qt 的基础机制</td><td class="nw">属于姊妹书的范围</td><td>《Qt 核心与 Widget · 现代详解》</td></tr>
+<tr><td class="nw">Qt 的基础机制</td><td class="nw">属于姊妹书的范围</td><td>《Qt 核心与 Widget》</td></tr>
 <tr><td class="nw">具体某个库的完整接口</td><td class="nw">随版本变化,且官方文档更准确</td><td>各库的官方文档。本书只给接入形态与边界</td></tr>
-<tr><td class="nw">性能数字与调优手段</td><td class="nw">需要配合剖析工具与实测</td><td>《Qt 性能优化 · 现代详解》</td></tr>
+<tr><td class="nw">性能数字与调优手段</td><td class="nw">需要配合剖析工具与实测</td><td>《Qt 性能优化》</td></tr>
 <tr><td class="nw">服务端的实现</td><td class="nw">与桌面开发是两个领域</td><td>本书只讲客户端一侧,并为服务端留出接口</td></tr>
 <tr><td class="nw">移动端与嵌入式</td><td class="nw">平台约束差异大,足以另成一本</td><td>本书的判据多数仍适用,但方案要重新评估</td></tr>
 <tr><td class="nw">证书价格、平台政策、库的当前状态</td><td class="nw">随时间变化</td><td>各章给出的是查证方法,不是结论</td></tr>

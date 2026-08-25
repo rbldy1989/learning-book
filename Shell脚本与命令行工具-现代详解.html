@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Shell 脚本与命令行工具 · 现代详解</title>
+<title>Shell 脚本与命令行工具</title>
 <script>
 /* 主题与目录开关的初值在这里定好：解析 <body> 之前完成，避免加载完再改 <html> 属性触发一次全量样式重算 */
 (function(){var r=document.documentElement;
@@ -197,7 +197,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">Shell 脚本与命令行工具</div>
 <details><summary><a class="ch" href="#b1">第 1 章 Shell 是什么：从登录到执行一条命令</a></summary>
-<a class="sec" href="#b1-open">1.0 开卷:锚定、定位与读法</a>
+<a class="sec" href="#b1-open">1.0 导读</a>
 <a class="sec" href="#b1-role">1.1 shell 的角色：你和内核之间的翻译官</a>
 <a class="sec" href="#b1-family">1.2 sh、bash、dash、zsh：一份家谱</a>
 <a class="sec" href="#b1-modes">1.3 交互式与非交互式、登录与非登录</a>
@@ -281,9 +281,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 27598px;--thin-h:27598px">
+<section class="chapter" style="contain-intrinsic-size:auto 27568px;--thin-h:27568px">
 <h1 id="b1"><span class="part">第 1 章</span>Shell 是什么：从登录到执行一条命令</h1>
-<h2 id="b1-open">1.0 开卷:锚定、定位与读法</h2>
+<h2 id="b1-open">1.0 导读</h2>
 <p>shell 的本职是<strong>编排进程</strong>：把命令连成管道、批量处理文件、把互不相识的工具粘在一起。它在这件事上无可替代，代价是几乎所有语言特性都围绕「文本」这一种数据展开，写错了不报错，只是悄悄换成另一种结果。<strong>本书讲清这套文本模型怎么运作，以及每一处展开与引用各在什么条件下失效。</strong></p>
 <p>「Shell 脚本」是个统称，动手时必须选一个具体的 shell。<strong>本书以 bash 为准</strong>，因为它是绝大多数 Linux 发行版的默认登录 shell，也是别人说「写个 shell 脚本」时默认指的那一个。数组、关联数组、<code>[[ ]]</code> 与大部分参数展开都是 bash 的能力，标准的 POSIX <code>sh</code> 并不具备，凡涉及可移植性之处书中逐处标注。</p>
 <h3>这个领域有哪些资料</h3>
@@ -333,13 +333,13 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </tbody>
 </table>
 <p>不讲的部分同样要说清楚，并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 415px">
+<table style="contain-intrinsic-size:auto 387px">
 <thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
 <tr><td>zsh、fish 的特有语法与配置框架</td><td class="nw">各自的官方文档</td><td>本书以 bash 为准，1.2 给了家谱与差异，交互体验的话题不展开</td></tr>
 <tr><td>Python 与其他通用语言</td><td class="nw">各自的文档</td><td>7.10 给出该换语言的信号与逐条迁移对照，换过去之后归那边</td></tr>
 <tr><td>系统调用与内核机制：<code>fork</code>、<code>exec</code>、文件描述符的实现</td><td class="nw">《Linux 系统编程手册》</td><td>本书讲怎么用管道与重定向，那本讲它们在内核里怎么实现</td></tr>
-<tr><td>Windows 上的 <code>cmd</code> 与 PowerShell</td><td>《CMD 批处理 · 现代详解》《PowerShell · 现代详解》</td><td>三本合起来覆盖三种壳，本书只负责 bash 这一侧</td></tr>
+<tr><td>Windows 上的 <code>cmd</code> 与 PowerShell</td><td>《CMD 批处理》《PowerShell》</td><td>三本合起来覆盖三种壳，本书只负责 bash 这一侧</td></tr>
 <tr><td>单个第三方工具的完整手册：git、docker、ffmpeg 等</td><td class="nw">各自的官方文档</td><td>第 6 章只收通用工具，给的是选型与最常用的几种形态</td></tr>
 <tr><td>发行版运维、容器与 CI 平台的配置</td><td class="nw">不在本书系范围</td><td>本书讲脚本本身，不讲它跑在哪、被谁调度</td></tr>
 </tbody>
@@ -456,7 +456,8 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 
 <p>你从网上抄了一段脚本，第一行写着 <code>#!/bin/sh</code>，在你的 CentOS 上跑得好好的；同事在 Ubuntu 上一跑，报 <code>Syntax error: "(" unexpected</code>。同一份代码、同一个 <code>/bin/sh</code>，为什么结果不同？</p>
 
-<p>因为 <b>sh 不是某个程序，而是一份规范</b>（POSIX shell）。哪个程序去实现它，由发行版自己决定。Debian/Ubuntu 把 <code>/bin/sh</code> 链接到 <b>dash</b>——它小、启动快，而开机时要跑几千个 shell 脚本，快一点点乘以几千就很可观；RHEL/Fedora 则链接到 <b>bash</b>。bash 如果以 <code>sh</code> 这个名字被启动，会自动进入「POSIX 兼容模式」，关掉一部分扩展，但它仍然不等于 dash，很多 bash 独有语法照样能用——于是你在 RHEL 上测不出问题。</p>
+<p>因为 <b>sh 不是某个程序，而是一份规范</b>（POSIX shell）。哪个程序去实现它，由发行版自己决定。Debian/Ubuntu 把 <code>/bin/sh</code> 链接到 <b>dash</b>——它小、启动快，而开机时要跑几千个 shell 脚本，快一点点乘以几千就很可观；RHEL/Fedora 则链接到 <b>bash</b>。</p>
+<p>bash 如果以 <code>sh</code> 这个名字被启动，会自动进入「POSIX 兼容模式」，关掉一部分扩展，但它仍然不等于 dash，很多 bash 独有语法照样能用——于是你在 RHEL 上测不出问题。</p>
 
 <pre style="contain-intrinsic-size:auto 304px"><code><span class="cm"># 先搞清楚你机器上的 /bin/sh 到底是谁</span>
 readlink -f /bin/sh
@@ -665,7 +666,8 @@ echo "我是 $0，进程号 $$，父进程 $PPID"</code></pre>
 
 <p>对 bash 来说，<code>#!</code> 那一行只是一句普通注释，它根本不在意。这也解释了一个现象：如果你用 <code>bash hello.sh</code> 的方式运行，shebang 写什么都无所谓——因为解释器是你在命令行上指定的，内核那条路径根本没走。</p>
 
-<p><b>那为什么不直接写 <code>#!/bin/bash</code>？</b>因为 shebang 里的路径<b>必须是绝对路径，不做 PATH 查找</b>。而 bash 的位置在不同系统上并不统一：macOS 上的现代 bash 在 <code>/opt/homebrew/bin/bash</code>，FreeBSD 在 <code>/usr/local/bin/bash</code>，NixOS 上甚至没有 <code>/bin/bash</code> 这个文件。<code>/usr/bin/env</code> 则几乎在所有 Unix 上都待在同一个位置，而它的本职工作就是「在 PATH 里找到某个程序并执行」。用它做一次跳板，脚本就跟着 PATH 走，你在哪个系统上都能跑。</p>
+<p><b>那为什么不直接写 <code>#!/bin/bash</code>？</b>因为 shebang 里的路径<b>必须是绝对路径，不做 PATH 查找</b>。而 bash 的位置在不同系统上并不统一：macOS 上的现代 bash 在 <code>/opt/homebrew/bin/bash</code>，FreeBSD 在 <code>/usr/local/bin/bash</code>，NixOS 上甚至没有 <code>/bin/bash</code> 这个文件。</p>
+<p><code>/usr/bin/env</code> 则几乎在所有 Unix 上都待在同一个位置，而它的本职工作就是「在 PATH 里找到某个程序并执行」。用它做一次跳板，脚本就跟着 PATH 走，你在哪个系统上都能跑。</p>
 
 <table style="contain-intrinsic-size:auto 367px">
 <thead><tr><th>shebang 写法</th><th>含义</th><th>评价</th></tr></thead>
@@ -1082,7 +1084,7 @@ $ ./check.sh /nope; echo "退出码=$?"
 
 <p>上一章你学会了让 shell 跑起来一条命令。这一章我们钻进命令行内部，看 shell 在真正执行之前，对你敲下的那串字符做了什么手脚。</p>
 
-<p>这一章是整本书里踩坑密度最高的一章。绝大多数「脚本在我机器上好好的，换个目录就炸了」的故事，根源都在这里：<strong>变量不是被「读出来」的，而是被「贴进去」的</strong>。贴进去之后，shell 会把这段文字当成你亲手敲的一样，重新按空格切一遍、把 <code>*</code> 再展开一遍。你以为传了一个文件名，实际传了三个。</p>
+<p>绝大多数「脚本在我机器上好好的，换个目录就炸了」的故事，根源都在这里：<strong>变量不是被「读出来」的，而是被「贴进去」的</strong>。贴进去之后，shell 会把这段文字当成你亲手敲的一样，重新按空格切一遍、把 <code>*</code> 再展开一遍。你以为传了一个文件名，实际传了三个。</p>
 
 <p>把这一章的机制吃透，你写脚本时的手会自动带上引号，这比背一百条规则都管用。</p>
 
@@ -2036,12 +2038,12 @@ IFS=$'\n\t'                <span class="cm"># 把空格从分隔符里去掉，�
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 31747px;--thin-h:31747px">
+<section class="chapter" style="contain-intrinsic-size:auto 31695px;--thin-h:31695px">
 <h1 id="b3"><span class="part">第 3 章</span>流程控制、函数与数组</h1>
 
 <p>前两章你学会了让 shell 把一条命令跑对：引号怎么加、展开什么时候发生、重定向往哪里去。但脚本之所以是脚本，而不是一串手敲的命令，靠的是它能<strong>做判断</strong>、能<strong>重复</strong>、能<strong>把逻辑收进一个名字里</strong>，还能在出事的时候<strong>体面地收场</strong>。</p>
 
-<p>这一章讲的就是这四件事。它也是整本书里最容易「写得能跑，但一遇到真实数据就崩」的一章——文件名里有空格、某一行是空的、管道中间的命令失败了、脚本被 Ctrl+C 打断留下一地临时文件。所以我们不只讲语法，更要讲每个坑长什么样、为什么会有这个坑、以及现代 Bash 给了你什么工具去躲开它。</p>
+<p>这四件事也是整本书里最容易「写得能跑，但一遇到真实数据就崩」的部分——文件名里有空格、某一行是空的、管道中间的命令失败了、脚本被 Ctrl+C 打断留下一地临时文件。所以我们不只讲语法，更要讲每个坑长什么样、为什么会有这个坑、以及现代 Bash 给了你什么工具去躲开它。</p>
 
 <h2 id="b3-test">3.1 test、[ ] 与 [[ ]]：为什么第三个才是你该用的</h2>
 
@@ -2169,8 +2171,6 @@ re=<span class="kw">'</span>^app\.([0-9]{4})-([0-9]{2})-([0-9]{2})\.log$<span cl
 <div class="note dead" style="contain-intrinsic-size:auto 168px"><span class="t">别再写：<code>[ ... -a ... ]</code> 与 <code>[ ... -o ... ]</code></span><p><code>-a</code> / <code>-o</code> 在 POSIX 中已被标记为「过时」，因为参数一多，<code>test</code> 无法可靠地区分「运算符」和「恰好长得像运算符的字符串」。<code>[ "$a" = -o ]</code> 这种输入就能让它彻底误判。改用 <code>[[ A &amp;&amp; B ]]</code>，或者在 sh 里写成两条命令 <code>[ A ] &amp;&amp; [ B ]</code>。</p></div>
 
 <h2 id="b3-compare">3.2 条件测试速查表：文件、字符串、数字</h2>
-
-<p>这一节是纯查表区。写脚本时忘了某个运算符，直接翻这里。</p>
 
 <h3>文件测试</h3>
 
@@ -5287,7 +5287,7 @@ on_error() {
 
 <h2 id="b7-shellcheck">7.3 shellcheck：把 bug 挡在运行之前</h2>
 
-<p>这一节只有一个结论：<strong>写 Shell 不用 shellcheck，等于写 C 不开编译器警告。</strong> <span class="badge new">现代提示</span> 它是本章里唯一一个「装上就立刻回本」的工具。</p>
+<p><strong>写 Shell 不用 shellcheck，等于写 C 不开编译器警告。</strong> <span class="badge new">现代提示</span> 它是本章里唯一一个「装上就立刻回本」的工具。</p>
 
 <p>shellcheck 是一个静态分析器：它读你的脚本，不执行，然后按行指出「这里的展开会出问题」。它认识 Shell 的展开规则、引号规则、各种内建命令的语义，能抓出人眼极难察觉的问题。</p>
 
@@ -5803,7 +5803,7 @@ main "$@"</code></pre>
 
 <h2 id="b7-python">7.10 什么时候该换成 Python</h2>
 
-<p>本章教了你一整套把 Bash 写稳的技术。最后一节要说的是：<strong>这套技术有天花板，而且比你以为的低。</strong></p>
+<p>写稳 Bash 的技术到此为止。<strong>这套技术有天花板，而且比你以为的低。</strong></p>
 
 <p>Bash 的设计目标是<em>编排进程</em>——把命令连成管道、批量处理文件、粘合工具。它在这件事上无可替代，二十行 Shell 能顶两百行 Python。但它不是一门通用编程语言：没有真正的数据结构（数组不能嵌套）、没有浮点数、没有异常、没有类型、没有模块系统、字符串处理靠外部命令。你越是往里塞业务逻辑，越是要靠本章这些技巧去对抗语言本身。</p>
 

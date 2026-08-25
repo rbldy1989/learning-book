@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CMD 批处理脚本 · 现代详解</title>
+<title>CMD 批处理脚本</title>
 <script>
 /* 主题与目录开关的初值在这里定好：解析 <body> 之前完成，避免加载完再改 <html> 属性触发一次全量样式重算 */
 (function(){var r=document.documentElement;
@@ -197,7 +197,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">CMD 批处理脚本</div>
 <details><summary><a class="ch" href="#m1">第 1 章 认识 CMD：它是什么，不是什么</a></summary>
-<a class="sec" href="#m1-open">1.0 开卷:锚定、定位与读法</a>
+<a class="sec" href="#m1-open">1.0 导读</a>
 <a class="sec" href="#m1-why">1.1 先看三个真实的麻烦</a>
 <a class="sec" href="#m1-history">1.2 从 COMMAND.COM 到 cmd.exe</a>
 <a class="sec" href="#m1-notwhat">1.3 它不是什么：三个常见误解</a>
@@ -259,13 +259,13 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 20742px;--thin-h:20742px">
+<section class="chapter" style="contain-intrinsic-size:auto 20708px;--thin-h:20708px">
 <h1 id="m1"><span class="part">第 1 章</span>认识 CMD：它是什么，不是什么</h1>
-<h2 id="m1-open">1.0 开卷:锚定、定位与读法</h2>
+<h2 id="m1-open">1.0 导读</h2>
 <p>批处理不是一门为写程序设计的语言，它是 <code>cmd.exe</code> 的命令解析器顺手提供的脚本能力。它的全部疑难都来自同一处：<strong>一行命令在真正执行之前，要先经过读入、转义、变量展开、括号块整体解析这几道加工</strong>。<strong>本书讲清这条流水线，以及每一道加工在什么条件下会把脚本改成你没写过的样子。</strong>凡涉及版本差异之处，给的是本机自查方式，不是写死的结论。</p>
 <h3>这个领域有哪些资料</h3>
 <p>批处理没有公认的圣经。成体系的书屈指可数且早已绝版，最准的是一手来源与几份在线速查，最细的实证记录散在问答站点里。下表按类型排开。<strong>锚定</strong>指本书的骨架或写法从它来，<strong>参考</strong>指写作时查证过但没有影响结构，<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 654px">
+<table style="contain-intrinsic-size:auto 729px">
 <thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
 <tbody>
 <tr><td>Tim Hill《Windows NT Shell Scripting》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>把解析器的展开时机与执行模型讲透的少数几本之一，本书解析流水线的思路从它来。局限：成书于 NT 时代，早已绝版，后来新增的命令与选项一概没有，只能当机制读、不能当手册查</td></tr>
@@ -276,7 +276,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td>Stack Overflow 上关于 <code>cmd</code> 解析行为的长篇答复</td><td class="nw">在线资料</td><td class="nw">参考</td><td>转义层数、延迟展开、<code>for /F</code> 分词这些边界行为最细的实证记录都在那里。局限：分散在数百个问答里，结论要自己在本机验证一遍</td></tr>
 <tr><td>Raymond Chen《The Old New Thing》</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>解释 Windows 的若干行为为什么保持成现在这样，读懂兼容性包袱的来源。局限：随笔性质，与批处理直接相关的只有零星几篇</td></tr>
 <tr><td>Microsoft Learn 的 PowerShell 文档</td><td class="nw">官方文档</td><td class="nw">推荐</td><td>判断「这件事还该不该用批处理写」时的对照面。局限：与 <code>cmd.exe</code> 的行为差异要自己比对，文档本身不做横向对照</td></tr>
-<tr><td>《PowerShell · 现代详解》与《Shell 脚本与命令行工具 · 现代详解》</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>同一套三本里的另外两本，同样的教材加速查结构。局限：不含批处理内容，只在互相调用的写法上与本书衔接</td></tr>
+<tr><td>《PowerShell》与《Shell 脚本与命令行工具》</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>同一套三本里的另外两本，同样的教材加速查结构。局限：不含批处理内容，只在互相调用的写法上与本书衔接</td></tr>
 </tbody>
 </table>
 <div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 批处理是维护语言，新脚本优先选 PowerShell</span><p>本书花五章讲清批处理的机制，目的是让你能读懂、改对、改稳手上那些已经存在的 <code>.bat</code> 与 <code>.cmd</code>，不是鼓励用它写新东西。要处理结构化数据、要错误分类、要写超过两百行的逻辑，第 1.4、1.5 两节给了明确的判据与去处。</p></div>
@@ -307,9 +307,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <table style="contain-intrinsic-size:auto 350px">
 <thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
-<tr><td>PowerShell 的语法、对象管道与模块</td><td class="nw">《PowerShell · 现代详解》</td><td>本书只讲两者互相调用的写法与退出码怎么接</td></tr>
-<tr><td>bash 语法与 Linux 命令行工具</td><td>《Shell 脚本与命令行工具 · 现代详解》</td><td>本书只讲通过 <code>wsl</code> 调用它们时的引号与路径规则</td></tr>
-<tr><td>Windows API、服务与注册表编程</td><td>《Windows API 手册》《Win32 程序设计 · 现代详解》</td><td>批处理只能经命令行工具间接碰这些，本书讲怎么调、不讲它们本身</td></tr>
+<tr><td>PowerShell 的语法、对象管道与模块</td><td class="nw">《PowerShell》</td><td>本书只讲两者互相调用的写法与退出码怎么接</td></tr>
+<tr><td>bash 语法与 Linux 命令行工具</td><td>《Shell 脚本与命令行工具》</td><td>本书只讲通过 <code>wsl</code> 调用它们时的引号与路径规则</td></tr>
+<tr><td>Windows API、服务与注册表编程</td><td>《Windows API 手册》《Win32 程序设计》</td><td>批处理只能经命令行工具间接碰这些，本书讲怎么调、不讲它们本身</td></tr>
 <tr><td>具体产品命令行工具的用法（git、docker、msbuild 等）</td><td class="nw">各自的官方文档</td><td>本书讲怎么在批处理里安全地调它们、怎么接住退出码</td></tr>
 <tr><td>用批处理承载复杂业务逻辑的写法</td><td class="nw">不建议做的事</td><td>第 1.4、1.5 两节给出边界，越过这条线换 PowerShell</td></tr>
 </tbody>
@@ -821,7 +821,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示：-ExecutionPolicy Bypass 的分寸</span><p>这个参数只对本次调用生效，不改系统设置，因此不算"降低全机安全性"。但它确实跳过了脚本来源校验，所以 <code>task.ps1</code> 必须放在<strong>普通用户没有写权限</strong>的目录里——否则任何人替换掉那个文件，你的启动器就会忠实地帮他执行。</p></div>
 
-<p>本章要点速查：</p>
+<p>要点速查：</p>
 
 <table style="contain-intrinsic-size:auto 529px">
 <thead><tr><th class="nw">概念</th><th>一句话</th></tr></thead>
@@ -896,7 +896,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <h2 id="m2-expand">2.2 %VAR% 展开：一次性文本替换</h2>
 
-<p>这一节是全章的地基。请先接受一个反直觉的事实：<strong><code>%VAR%</code> 不是「读取变量」，而是「在执行之前，把这一整行里的 <code>%VAR%</code> 用文本替换掉」。</strong></p>
+<p>请先接受一个反直觉的事实：<strong><code>%VAR%</code> 不是「读取变量」，而是「在执行之前，把这一整行里的 <code>%VAR%</code> 用文本替换掉」。</strong></p>
 
 <p>它更像 C 语言的 <code>#define</code> 宏，或者你在编辑器里按下的「全部替换」，而不是 Python 里的读变量。证据很直白：</p>
 
@@ -1607,7 +1607,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <p>CMD 的流程控制关键字只有三个：<code>if</code>、<code>for</code>、<code>goto</code>。没有 while，没有 switch，没有 try/catch，连一个像样的函数定义语法都没有。听上去寒酸，但这三样东西拼装起来几乎能表达任何逻辑——代价是每一个都背着三十多年的历史包袱，而且包袱都藏在语法的暗处。你写出来的第一个 <code>if</code> 十有八九会在带空格的变量上翻车，你写出来的第一个 <code>for</code> 循环十有八九会发现计数器永远是 0。</p>
 
-<p>这一章就是把这些包袱一个个摊开给你看：先讲清楚它为什么会这样，再告诉你怎么绕过去。</p>
+<p>每个包袱都会被一个个摊开：先讲清楚它为什么会这样，再告诉你怎么绕过去。</p>
 
 <div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 关于本章的示例</span><p>本章所有代码片段和"实测输出"都在 Windows 11 的 cmd.exe 上真实跑过。cmd 默认开启命令扩展（Command Extensions），本章大量特性（<code>goto :EOF</code>、<code>exit /b</code>、<code>if defined</code>、<code>for /F</code> 的多数选项、<code>%%~</code> 修饰符）都依赖它。如果你在某台机器上发现这些统统失效，先检查注册表里的 <code>EnableExtensions</code>，或在脚本开头写 <code>setlocal EnableExtensions</code>。</p></div>
 

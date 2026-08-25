@@ -209,7 +209,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">Windows API 手册</div>
 <details><summary><a class="ch" href="#a1">第 1 章 总览：核心 DLL、windows.h 与命名约定</a></summary>
-<a class="sec" href="#a1-open">1.0 开卷:锚定、定位与读法</a>
+<a class="sec" href="#a1-open">1.0 导读</a>
 <a class="sec" href="#a1-what-is-windows-h">1.1 windows.h 是什么</a>
 <a class="sec" href="#a1-subheaders">1.2 windows.h 拉进的子头文件</a>
 <a class="sec" href="#a1-three-dlls">1.3 三大核心 DLL 分工</a>
@@ -303,13 +303,13 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 16496px;--thin-h:16496px"><h1 id="a1"><span class="part">第 1 章</span>总览：核心 DLL、windows.h 与命名约定</h1>
-<h2 id="a1-open">1.0 开卷:锚定、定位与读法</h2>
+<section class="chapter" style="contain-intrinsic-size:auto 15623px;--thin-h:15623px"><h1 id="a1"><span class="part">第 1 章</span>总览：核心 DLL、windows.h 与命名约定</h1>
+<h2 id="a1-open">1.0 导读</h2>
 <p>这是一本速查手册,不是教材。Win32 API 表面上是成千上万个扁平的全局函数,实际有清晰的分层:一个 <code>#include &lt;windows.h&gt;</code> 背后是一整套子头文件、几个核心 DLL 的职责划分、A 版与 W 版的双版本机制,以及一套贯穿始终的命名约定。<strong>本手册按 DLL 分类收录函数,每一个都给完整原型、逐参数说明、返回值与失败判断,以及一段最小可编译示例。</strong>基线取 64 位、Unicode 与 Windows 10 以上。</p>
 
 <h3>这个领域有哪些资料</h3>
 <p>查 Win32 函数的一手来源只有两处:官方参考文档与 SDK 头文件。书籍的价值不在查,而在解释这些函数为什么这样设计、什么时候不该用。<strong>锚定</strong>指本手册的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本手册无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 1016px">
+<table style="contain-intrinsic-size:auto 940px">
 <thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
 <tbody>
 <tr><td class="nw">Microsoft Learn 的 Win32 API 参考</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>一手来源,最权威也最新。函数签名、参数语义、最低系统版本、线程与 DPI 要求都在这里。<strong>局限</strong>:每个函数一页,页与页之间的关系要自己接;示例常省略错误处理;中文页多为机器翻译</td></tr>
@@ -320,7 +320,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td>Russinovich 等《深入解析 Windows 操作系统》</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>句柄表与内核对象的语义描述,本手册讲句柄归属时的事实来源。<strong>局限</strong>:面向内核实现,与调用方关心的层次不同</td></tr>
 <tr><td>Spy++、Process Monitor 与 API Monitor</td><td class="nw">观察工具</td><td class="nw">参考</td><td>Spy++ 看窗口树与消息流,Process Monitor 看文件与注册表调用,API Monitor 看参数实际传了什么。文档说不清时用它们核对。<strong>局限</strong>:只呈现现象,不解释成因</td></tr>
 <tr><td>Raymond Chen 的 The Old New Thing</td><td class="nw">在线资料</td><td class="nw">参考</td><td>某个函数为什么留着一个看似多余的参数、某个标志为什么不能省——这类问题在别处查不到。<strong>局限</strong>:按篇发布,不成体系</td></tr>
-<tr><td class="nw">《Win32 程序设计 · 现代详解》(本书系)</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>本手册按函数查,那本讲机制:消息循环为什么这么写、GDI 对象为什么要换回去。<strong>局限</strong>:不逐个列参数</td></tr>
+<tr><td class="nw">《Win32 程序设计》(本书系)</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>本手册按函数查,那本讲机制:消息循环为什么这么写、GDI 对象为什么要换回去。<strong>局限</strong>:不逐个列参数</td></tr>
 <tr><td class="nw">《C 标准库 API 手册》(本书系)</td><td class="nw">参考手册</td><td class="nw">推荐</td><td>运行库那一侧的速查,与本手册按「函数由哪个 DLL 导出」分界。<strong>局限</strong>:不含任何 Windows 接口</td></tr>
 </tbody>
 </table>
@@ -353,13 +353,13 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </tbody>
 </table>
 <p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 1176px">
+<table style="contain-intrinsic-size:auto 489px">
 <thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
-<tr><td>机制的来龙去脉:消息循环为什么这么写、GDI 对象为什么要换回去</td><td class="nw">《Win32 程序设计 · 现代详解》</td><td>本手册给单个函数的用法与失败形态,不讲整段程序怎么组织</td></tr>
+<tr><td>机制的来龙去脉:消息循环为什么这么写、GDI 对象为什么要换回去</td><td class="nw">《Win32 程序设计》</td><td>本手册给单个函数的用法与失败形态,不讲整段程序怎么组织</td></tr>
 <tr><td>MFC 与 C++ 的封装</td><td class="nw">《深入浅出 MFC》与《VC++ 深入详解》两本</td><td>本手册只收扁平的 C 接口</td></tr>
 <tr><td>COM 接口族:<code>IFileDialog</code>、WIC、Direct2D、DirectWrite</td><td class="nw">不在本手册范围</td><td>它们是接口指针加引用计数,与本手册的函数表组织方式不同</td></tr>
-<tr><td>注册表(advapi32)与网络(ws2_32)的完整函数集</td><td class="nw">《Win32 程序设计 · 现代详解》第 15 章与《VC++ 深入详解 · 详解与现代批注》第 14、16 章</td><td>本手册这一版按五个模块组织,这两块只在相关处提到</td></tr>
+<tr><td>注册表(advapi32)与网络(ws2_32)的完整函数集</td><td class="nw">《Win32 程序设计》第 15 章与《VC++ 深入详解》第 14、16 章</td><td>本手册这一版按五个模块组织,这两块只在相关处提到</td></tr>
 <tr><td>C 运行库函数</td><td class="nw">《C 标准库 API 手册》</td><td>分界是这个函数由哪个模块导出</td></tr>
 <tr><td>内核实现</td><td class="nw">《深入解析 Windows 操作系统》</td><td>本手册讲到内核对象在用户态的语义为止</td></tr>
 </tbody>
@@ -728,7 +728,7 @@ typedef struct tagMSG {
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示</span><p>三点通则：①许多结构体首字段是 <code>cbSize</code> 或版本号，用前应 <code>ZeroMemory</code>(或 <code>{}</code>)清零并正确填写，系统据此判断版本；②带 <code>W</code>/<code>A</code> 后缀的结构体(如 <code>WNDCLASSEXW</code> vs <code>WNDCLASSEXA</code>)其字符串成员类型随之变宽窄，需与所调用的 <code>W</code>/<code>A</code> 函数一致；③<code>RECT</code> 的右/下边界是开区间，计算宽高、命中判定时切记不要多算或少算一像素。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 58245px;--thin-h:54589px">
+<section class="chapter" style="contain-intrinsic-size:auto 58368px;--thin-h:54711px">
 <h1 id="a3"><span class="part">第 3 章</span>kernel32：内存、文件、模块与 DLL</h1>
 
 <p>kernel32.dll 是 Win32 世界的地基：几乎所有进程都会加载它，几乎所有其他 API 最终都踩在它提供的句柄、内存和错误码机制上。本章按四大主题组织——内存、文件 I/O、模块/DLL、错误处理。每个主题先给一张速查表建立全景，再对最常用的函数逐一展开详解卡：完整签名、逐参数拆解、返回值约定和一段能直接抄走的最小示例。</p>
@@ -924,7 +924,8 @@ VirtualFree(base, 0, MEM_RELEASE);   <span class="cm">// 释放整块：dwSize �
 <tr><td class="nw">hMem</td><td class="nw">HGLOBAL</td><td>（Lock / Unlock / Free）GlobalAlloc 得到的内存句柄，贯穿锁定、解锁、释放全程。GlobalLock 令锁计数 +1 并返回指针，GlobalUnlock 令锁计数 −1，GlobalFree 要求已解锁到 0。</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
-<p>GlobalAlloc 成功返回内存句柄，失败返回 <code>NULL</code>。GlobalLock 成功返回可用指针、失败返回 NULL，每次调用令锁计数加一。GlobalUnlock 令锁计数减一：仍处于锁定（计数 &gt; 0）返回非零；计数归零则返回 0 而 <code>GetLastError()</code> 为 <code>NO_ERROR</code>——故判断失败要看 GetLastError，不能只看返回值。GlobalFree 成功返回 NULL，失败返回原句柄（可用 GetLastError 取原因），释放前须先解锁到计数为 0。</p>
+<p>GlobalAlloc 成功返回内存句柄，失败返回 <code>NULL</code>。GlobalLock 成功返回可用指针、失败返回 NULL，每次调用令锁计数加一。</p>
+<p>GlobalUnlock 令锁计数减一：仍处于锁定（计数 &gt; 0）返回非零；计数归零则返回 0 而 <code>GetLastError()</code> 为 <code>NO_ERROR</code>——故判断失败要看 GetLastError，不能只看返回值。GlobalFree 成功返回 NULL，失败返回原句柄（可用 GetLastError 取原因），释放前须先解锁到计数为 0。</p>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 148px"><code><span class="cl"><span class="kw">HGLOBAL</span> h = GlobalAlloc(GMEM_MOVEABLE, len);</span><span class="cl"><span class="cc" style="min-width:33.0ch"><span class="kw">char</span>* p = (<span class="kw">char</span>*)GlobalLock(h);</span><span class="cm">// 拿到指针</span></span><span class="cl">memcpy(p, text, len);</span><span class="cl"><span class="cc" style="min-width:33.0ch">GlobalUnlock(h);</span><span class="cm">// 用完解锁</span></span><span class="cl"><span class="cc" style="min-width:33.0ch">SetClipboardData(CF_TEXT, h);</span><span class="cm">// 交给系统，所有权转移，勿再 Free</span></span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
@@ -1312,7 +1313,8 @@ FindClose(hFind);        <span class="cm">// 正确：搜索句柄专用</span>
 
 <h2 id="a3-module">3.3 模块与 DLL</h2>
 
-<p>模块（module）指已映射进进程地址空间的 EXE 或 DLL，用 <code>HMODULE</code>（本质是模块基址）标识。这一族函数解决三件事：拿到模块句柄（GetModuleHandleW / LoadLibraryW）、从模块里找导出函数（GetProcAddress）、查模块自己的路径（GetModuleFileNameW）。“LoadLibrary + GetProcAddress”组合是运行时动态绑定的标准姿势——插件系统、按需加载、兼容旧系统的可选 API 全靠它。</p>
+<p>模块（module）指已映射进进程地址空间的 EXE 或 DLL，用 <code>HMODULE</code>（本质是模块基址）标识。这一族函数解决三件事：拿到模块句柄（GetModuleHandleW / LoadLibraryW）、从模块里找导出函数（GetProcAddress）、查模块自己的路径（GetModuleFileNameW）。</p>
+<p>“LoadLibrary + GetProcAddress”组合是运行时动态绑定的标准姿势——插件系统、按需加载、兼容旧系统的可选 API 全靠它。</p>
 
 <table style="contain-intrinsic-size:auto 310px"><thead><tr><th class="nw">名称</th><th class="nw">作用</th><th>备注</th></tr></thead><tbody>
 <tr><td class="nw">GetModuleHandleW</td><td class="nw">取<strong>已加载</strong>模块的句柄</td><td>不增加引用计数，得到的句柄不要 FreeLibrary；传 NULL 得到本 EXE 的句柄</td></tr>
@@ -1420,7 +1422,8 @@ FreeLibrary(hDll);                      <span class="cm">// 计数减一；之�
 <p>每次调用把模块引用计数减 1，归零时 DLL 才真正从进程地址空间卸载（触发其 <code>DLL_PROCESS_DETACH</code>）。卸载后原先从该模块取到的所有函数指针立即变成悬空指针，严禁再调用。LoadLibraryW 调几次就要对应 FreeLibrary 几次。</p></div>
 
 <h3>DllMain 与 loader lock:那把你看不见却天天路过的锁</h3>
-<p>每个 DLL 的 <code>DllMain</code> 会在四个时刻被系统回调:<code>PROCESS_ATTACH/DETACH</code>(加载/卸载)与 <code>THREAD_ATTACH/DETACH</code>(进程内每条线程出生/退出——注意是<strong>每条线程都通知每个 DLL</strong>)。要害在于:所有这些回调都发生在<strong>持有加载器锁(loader lock)</strong>的状态下——这是进程范围的一把锁,LoadLibrary/GetModuleHandle/线程创建收尾都要排队过它。由此推出 DllMain 的铁律清单:</p>
+<p>每个 DLL 的 <code>DllMain</code> 会在四个时刻被系统回调:<code>PROCESS_ATTACH/DETACH</code>(加载/卸载)与 <code>THREAD_ATTACH/DETACH</code>(进程内每条线程出生/退出——注意是<strong>每条线程都通知每个 DLL</strong>)。</p>
+<p>要害在于:所有这些回调都发生在<strong>持有加载器锁(loader lock)</strong>的状态下——这是进程范围的一把锁,LoadLibrary/GetModuleHandle/线程创建收尾都要排队过它。由此推出 DllMain 的铁律清单:</p>
 <table style="contain-intrinsic-size:auto 187px">
 <thead><tr><th>DllMain 里禁止</th><th>后果</th></tr></thead>
 <tbody>
@@ -1867,7 +1870,7 @@ BOOL IsDebuggerPresent(<span class="kw">void</span>);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 55089px;--thin-h:51039px">
+<section class="chapter" style="contain-intrinsic-size:auto 55176px;--thin-h:51126px">
 <h1 id="a4"><span class="part">第 4 章</span>kernel32：进程、线程、同步与时间</h1>
 
 <p>kernel32.dll 是 Win32 的"发动机舱"：进程与线程的创建销毁、内核对象的等待与同步、系统计时，全部从这里出发。本章先用速查表把每类 API 摆开，再对最常用的函数逐一给出详解卡（函数原型、参数表、返回值、最小示例）。徽章含义：<span class="badge ok">推荐</span> 首选常用、<span class="badge old">已过时</span> 谨慎使用或有更好替代、<span class="badge dead">禁用</span> 应弃用、<span class="badge new">现代提示</span> 补充提示。本书统一使用 W（宽字符）版本。</p>
@@ -2032,7 +2035,8 @@ HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE,
 <p>「杀掉子进程和它拉起的孙进程」在 Windows 上没有进程组信号可用,正解是 <strong>Job 对象</strong>:把进程装进 Job,它再创建的后代自动进同一个 Job;对 Job 一刀,全笼清场。除了收割,Job 还能立规矩——内存上限、CPU 速率、禁止访问剪贴板/创建窗口,是 Windows 上最接近 Linux cgroup 的东西(对照 Linux 手册 18 章)。</p>
 <pre style="contain-intrinsic-size:auto 241px"><code><span class="cl">HANDLE job = CreateJobObject(NULL, NULL);</span><span class="cl">JOBOBJECT_EXTENDED_LIMIT_INFORMATION li = {0};</span><span class="cl">li.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;</span><span class="cl">SetInformationJobObject(job, JobObjectExtendedLimitInformation, &amp;li, sizeof li);</span><span class="cl"><span class="cm">// 子进程挂起态创建 → 入笼 → 放行:保证「出生即在笼里」,无窗口期</span></span><span class="cl">CreateProcess(..., CREATE_SUSPENDED, ..., &amp;pi);</span><span class="cl">AssignProcessToJobObject(job, pi.hProcess);</span><span class="cl">ResumeThread(pi.hThread);</span><span class="cl"><span class="cm">// KILL_ON_JOB_CLOSE:job 句柄一关(含本进程崩溃),整笼被杀 —— 防孤儿的保险丝</span></span></code></pre>
 <h3>句柄继承:白名单,别全开</h3>
-<p>子进程能拿到父进程的句柄,要三个条件齐备:句柄本身可继承(创建时 <code>bInheritHandle=TRUE</code> 或 <code>SetHandleInformation</code> 补设)、<code>CreateProcess</code> 的 <code>bInheritHandles=TRUE</code>、子进程知道句柄值(通常经命令行或环境变量传数字)。全开继承的老写法会把父进程<strong>所有</strong>可继承句柄漏过去——文件占用解不开、管道 EOF 不到(对照 Linux 手册 O_CLOEXEC 一节,同一类事故)。Vista 起的正解是<strong>属性列表白名单</strong>:<code>InitializeProcThreadAttributeList</code> + <code>PROC_THREAD_ATTRIBUTE_HANDLE_LIST</code> 精确指定「只这几个」,配 <code>EXTENDED_STARTUPINFO_PRESENT</code> 使用。</p>
+<p>子进程能拿到父进程的句柄,要三个条件齐备:句柄本身可继承(创建时 <code>bInheritHandle=TRUE</code> 或 <code>SetHandleInformation</code> 补设)、<code>CreateProcess</code> 的 <code>bInheritHandles=TRUE</code>、子进程知道句柄值(通常经命令行或环境变量传数字)。</p>
+<p>全开继承的老写法会把父进程<strong>所有</strong>可继承句柄漏过去——文件占用解不开、管道 EOF 不到(对照 Linux 手册 O_CLOEXEC 一节,同一类事故)。Vista 起的正解是<strong>属性列表白名单</strong>:<code>InitializeProcThreadAttributeList</code> + <code>PROC_THREAD_ATTRIBUTE_HANDLE_LIST</code> 精确指定「只这几个」,配 <code>EXTENDED_STARTUPINFO_PRESENT</code> 使用。</p>
 <div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p>伪句柄要认识:<code>GetCurrentProcess()/GetCurrentThread()</code> 返回的是常量(-1/-2),<strong>不占句柄表、不能传给别的进程</strong>;要传真句柄先 <code>DuplicateHandle</code>。而「句柄值在子进程里数值相同」只对<strong>继承</strong>成立——运行中跨进程递句柄,DuplicateHandle 指定目标进程才是正路。</p></div>
 
 <h2 id="a4-thread">4.2 线程管理</h2>
@@ -2194,7 +2198,8 @@ DWORD ResumeThread(HANDLE hThread);</code></pre>
 </table>
 
 <h3>IOCP 完成端口:Windows 高并发服务的正门(对照 epoll 与 io_uring)</h3>
-<p>IOCP 的模型是<strong>完成通知</strong>:先把句柄(socket/文件/管道)关联到完成端口,然后发起<strong>重叠 I/O</strong>(带 OVERLAPPED 的 ReadFile/WSARecv,调用立即返回);内核做完后把「完成包」投进端口队列,一小队工作线程用 <code>GetQueuedCompletionStatus</code> 取包处理。对照你熟悉的 Linux 模型:<strong>epoll 是「可以读了,你自己来读」(就绪通知),IOCP 是「我读完了,给你数据」(完成通知)——Linux 直到 io_uring 才补上的模型,Windows 从 NT 3.5 就是它</strong>。</p>
+<p>IOCP 的模型是<strong>完成通知</strong>:先把句柄(socket/文件/管道)关联到完成端口,然后发起<strong>重叠 I/O</strong>(带 OVERLAPPED 的 ReadFile/WSARecv,调用立即返回);内核做完后把「完成包」投进端口队列,一小队工作线程用 <code>GetQueuedCompletionStatus</code> 取包处理。</p>
+<p>对照你熟悉的 Linux 模型:<strong>epoll 是「可以读了,你自己来读」(就绪通知),IOCP 是「我读完了,给你数据」(完成通知)——Linux 直到 io_uring 才补上的模型,Windows 从 NT 3.5 就是它</strong>。</p>
 <pre style="contain-intrinsic-size:auto 194px"><code><span class="cl"><span class="cm">// 骨架四步</span></span><span class="cl">HANDLE iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);  <span class="cm">// ① 建端口</span></span><span class="cl">CreateIoCompletionPort(hSock, iocp, (ULONG_PTR)pConn, 0);  <span class="cm">// ② 关联句柄,带上下文</span></span><span class="cl">WSARecv(hSock, &amp;buf, 1, NULL, &amp;flags, &amp;pIo-&gt;ov, NULL);      <span class="cm">// ③ 发起重叠读,立即返回</span></span><span class="cl"><span class="cm">// 工作线程(通常开 CPU 数条):</span></span><span class="cl">GetQueuedCompletionStatus(iocp, &amp;bytes, &amp;key, &amp;pov, INFINITE); <span class="cm">// ④ 等完成包</span></span><span class="cl"><span class="cm">// key = 关联时存的连接上下文;pov 定位到本次 I/O 的 OVERLAPPED(包进大结构取回详情)</span></span></code></pre>
 <p>两个设计点是它的精髓:<strong>①端口自带并发闸门</strong>——创建时指定「同时跑几条线程」(常设 CPU 数),某线程阻塞了内核会自动放下一条出闸,吞吐自适应;<strong>②上下文随包走</strong>——关联时的 key + 每次 I/O 的 OVERLAPPED 指针,完成包自带「哪条连接、哪次操作」,无需全局查表。生存期规矩由此而来:<strong>OVERLAPPED 及缓冲区必须活到完成包被取走</strong>——放栈上是必崩的经典错;每连接引用计数(在飞 I/O 数)是标准解。</p>
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示</span><p>Vista+ 的<strong>系统线程池</strong>把 IOCP 包得更省事:<code>CreateThreadpoolIo/StartThreadpoolIo</code> 托管 I/O 完成,<code>CreateThreadpoolWork/Timer/Wait</code> 顺手把「扔任务、定时器、等句柄」也线程池化——自己写 GetQueuedCompletionStatus 循环的理由只剩「要完全掌控调度」。老的 <code>QueueUserWorkItem</code> 一族已属过时;而裸 CreateThread 每连接一线程的服务器写法,在这套模型面前没有生存空间。</p></div>
@@ -2271,7 +2276,8 @@ DWORD ResumeThread(HANDLE hThread);</code></pre>
 <p>多个对象同时受信时，bWaitAll=FALSE 返回的是下标最小的那个——若各句柄的处理都要跑到，别只处理第一个就丢下其余的。句柄总数受 MAXIMUM_WAIT_OBJECTS(64) 硬限制，规模再大就该转向线程池等待（RegisterWaitForSingleObject）或 I/O 完成端口。</p></div>
 
 <h3>可警醒等待与 APC:定向塞给某条线程的回调</h3>
-<p>APC(异步过程调用)是一种「挂在<strong>指定线程</strong>名下的回调队列」:<code>QueueUserAPC(fn, hThread, ctx)</code> 把函数塞进目标线程的队列,但它<strong>不会打断</strong>目标——只有当那条线程进入<strong>可警醒等待</strong>(alertable wait:<code>SleepEx/WaitForSingleObjectEx/MsgWaitForMultipleObjectsEx</code> 最后一个参数传 TRUE)时,队列里的 APC 才被逐个执行,等待函数随后返回 <code>WAIT_IO_COMPLETION</code>。</p>
+<p>APC(异步过程调用)是一种「挂在<strong>指定线程</strong>名下的回调队列」:<code>QueueUserAPC(fn, hThread, ctx)</code> 把函数塞进目标线程的队列。</p>
+<p>但它<strong>不会打断</strong>目标——只有当那条线程进入<strong>可警醒等待</strong>(alertable wait:<code>SleepEx/WaitForSingleObjectEx/MsgWaitForMultipleObjectsEx</code> 最后一个参数传 TRUE)时,队列里的 APC 才被逐个执行,等待函数随后返回 <code>WAIT_IO_COMPLETION</code>。</p>
 <pre style="contain-intrinsic-size:auto 218px"><code><span class="cl"><span class="cm">// 向工作线程投递「在你方便时执行」的任务 —— 无锁、无队列自建</span></span><span class="cl">QueueUserAPC([](ULONG_PTR p){ Process((Ctx*)p); }, hWorker, (ULONG_PTR)ctx);</span><span class="cl"><span class="cm">// 工作线程主循环:</span></span><span class="cl">for (;;) {</span><span class="cl">    DWORD r = WaitForSingleObjectEx(hStop, INFINITE, TRUE);  <span class="cm">// TRUE = 可警醒</span></span><span class="cl">    if (r == WAIT_OBJECT_0) break;         <span class="cm">// 停止事件</span></span><span class="cl">    <span class="cm">// r == WAIT_IO_COMPLETION:APC 已在等待内部执行完,继续转</span></span><span class="cl">}</span></code></pre>
 <p>这套机制的两个正经用途:<strong>①「必须在特定线程执行」的操作</strong>——某些 API 有线程亲和(定时器、窗口、部分驱动接口),APC 是定向投递的系统级方案;<strong>②重叠 I/O 的完成回调</strong>——<code>ReadFileEx/WriteFileEx</code> 的完成例程就是以 APC 形式送达发起线程的。与 IOCP 的分工:APC 把完成送回<strong>发起线程</strong>(单线程模型),IOCP 把完成汇入<strong>公共池</strong>(多线程模型,见 4.2 线程池一节)。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 APC 只在警醒点执行,这既是特性也是坑</span><p>目标线程若从不进入 alertable 状态,队列里的 APC <strong>永远不执行</strong>——「投了却没反应」的第一检查点。反面坑更隐蔽:线程在你不知道的库代码里进了 alertable 等待,你的 APC 在<strong>意想不到的时机</strong>重入了线程正在用的数据。规矩:要么线程的警醒点由你自己完全掌控(如上面的主循环),要么别用 APC 改用自建队列+事件。另:<code>TerminateThread</code> 一类含糊死法与 APC 无关,线程退出时未执行的 APC 直接丢弃。</p></div>
@@ -3042,7 +3048,7 @@ CreateIoCompletionPort(hFile, iocp, (ULONG_PTR)pConnection, 0);
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 61814px;--thin-h:58433px">
+<section class="chapter" style="contain-intrinsic-size:auto 61954px;--thin-h:58433px">
 <h1 id="a5"><span class="part">第 5 章</span>user32：窗口与消息</h1>
 
 <p>user32.dll 是 Win32 图形程序的地基：注册窗口类、创建窗口、跑消息循环，三步缺一不可。本章按"窗口类 → 窗口 → 消息 → 定时器"四块组织，每块先给速查表总览，再对最常用的函数逐一展开详解卡。全部函数以 W（宽字符）版本为准——A 版本仅为兼容遗留代码存在，新代码一律用 W 版并以 <code>L"…"</code> 字面量传字符串。</p>
@@ -3357,7 +3363,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 }</code></pre>
 
 <div class="deep"><p><strong>其他说明</strong></p>
-<p>为何必须兜底：系统发给窗口的消息有几百种，你的窗口过程只挑自己关心的几种处理，<strong>其余全部必须原封不动交给 DefWindowProcW</strong>。窗口的全部"默认行为"都由它实现——非客户区绘制（标题栏、边框）、鼠标拖动与缩放、系统菜单、WM_CLOSE 时默认调用 DestroyWindow 等等。漏掉兜底的典型症状：窗口没有边框和标题栏、拖不动、关不掉。也不要对没处理的消息随手 return 0——那等于向系统谎报"我已处理"，默认行为就全丢了。</p></div>
+<p>为何必须兜底：系统发给窗口的消息有几百种，你的窗口过程只挑自己关心的几种处理，<strong>其余全部必须原封不动交给 DefWindowProcW</strong>。</p>
+<p>窗口的全部"默认行为"都由它实现——非客户区绘制（标题栏、边框）、鼠标拖动与缩放、系统菜单、WM_CLOSE 时默认调用 DestroyWindow 等等。漏掉兜底的典型症状：窗口没有边框和标题栏、拖不动、关不掉。也不要对没处理的消息随手 return 0——那等于向系统谎报"我已处理"，默认行为就全丢了。</p></div>
 
 <h3 id="fn-ShowWindow">ShowWindow</h3>
 
@@ -3414,7 +3421,8 @@ SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
 <pre style="contain-intrinsic-size:auto 79px"><code><span class="cl"><span class="cc" style="min-width:35.0ch">InvalidateRect(hwnd, NULL, TRUE);</span><span class="cm">// 整个客户区标脏，擦除背景</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">UpdateWindow(hwnd);</span><span class="cm">// 不等队列空闲，立刻触发 WM_PAINT</span></span></code></pre>
 
 <div class="deep"><p><strong>其他说明</strong></p>
-<p>与 Invalidate 的关系：InvalidateRect 只是把某块区域标成"脏"，真正的 WM_PAINT 要等消息队列里没有其他消息时才由系统合成发出——这是刻意的低优先级设计。UpdateWindow 则检查窗口的更新区域，只要非空，就<strong>绕过消息队列</strong>把 WM_PAINT 直接送进窗口过程，让重绘当场发生。它自己并不产生脏区，所以惯用搭配是：InvalidateRect 标脏 + UpdateWindow 立刷。不追求当帧刷新时，只调 InvalidateRect 让系统攒一攒反而更高效。</p></div>
+<p>与 Invalidate 的关系：InvalidateRect 只是把某块区域标成"脏"，真正的 WM_PAINT 要等消息队列里没有其他消息时才由系统合成发出——这是刻意的低优先级设计。</p>
+<p>UpdateWindow 则检查窗口的更新区域，只要非空，就<strong>绕过消息队列</strong>把 WM_PAINT 直接送进窗口过程，让重绘当场发生。它自己并不产生脏区，所以惯用搭配是：InvalidateRect 标脏 + UpdateWindow 立刷。不追求当帧刷新时，只调 InvalidateRect 让系统攒一攒反而更高效。</p></div>
 
 <h3 id="fn-MoveWindow">MoveWindow</h3>
 
@@ -3471,7 +3479,9 @@ BOOL GetClientRect(HWND   hWnd, LPRECT lpRect);</code></pre>
 <pre style="contain-intrinsic-size:auto 148px"><code><span class="cl">RECT wr, cr;</span><span class="cl"><span class="cc" style="min-width:45.0ch">GetWindowRect(hwnd, &amp;wr);</span><span class="cm">// 屏幕坐标，例如 (100,100)-(900,700)</span></span><span class="cl"><span class="cc" style="min-width:45.0ch">GetClientRect(hwnd, &amp;cr);</span><span class="cm">// 恒从 (0,0) 起，例如 (0,0)-(784,561)</span></span><span class="cl"><span class="cc" style="min-width:45.0ch"><span class="kw">int</span> ncW = (wr.right - wr.left) - cr.right;</span><span class="cm">// 左右边框的总宽度</span></span><span class="cl"><span class="cc" style="min-width:45.0ch"><span class="kw">int</span> ncH = (wr.bottom - wr.top) - cr.bottom;</span><span class="cm">// 标题栏+上下边框的总高度</span></span></code></pre>
 
 <div class="deep"><p><strong>其他说明</strong></p>
-<p>两者的区别要分清"量哪块"和"用哪套坐标"。<strong>GetWindowRect</strong> 量的是<strong>整个窗口</strong>——连标题栏、边框、滚动条都算——并且用<strong>屏幕坐标</strong>：left/top 是窗口左上角相对屏幕左上角的偏移，可直接拿去给 MoveWindow 定位顶层窗口。<strong>GetClientRect</strong> 量的是<strong>客户区</strong>（你能绘图的内部区域），用的是窗口<strong>自己的客户区坐标系</strong>：left 和 top 永远是 0，right/bottom 就是客户区的宽和高，适合布局子控件和计算绘图范围。两者宽高之差就是标题栏与边框占掉的开销；要在两套坐标系之间换算，用 ClientToScreen / ScreenToClient（批量点用 MapWindowPoints）。另外，GetWindowRect 的结果受进程 DPI 感知模式影响。</p></div>
+<p>两者的区别要分清"量哪块"和"用哪套坐标"。<strong>GetWindowRect</strong> 量的是<strong>整个窗口</strong>——连标题栏、边框、滚动条都算——并且用<strong>屏幕坐标</strong>：left/top 是窗口左上角相对屏幕左上角的偏移，可直接拿去给 MoveWindow 定位顶层窗口。</p>
+<p><strong>GetClientRect</strong> 量的是<strong>客户区</strong>（你能绘图的内部区域），用的是窗口<strong>自己的客户区坐标系</strong>：left 和 top 永远是 0，right/bottom 就是客户区的宽和高，适合布局子控件和计算绘图范围。</p>
+<p>两者宽高之差就是标题栏与边框占掉的开销；要在两套坐标系之间换算，用 ClientToScreen / ScreenToClient（批量点用 MapWindowPoints）。另外，GetWindowRect 的结果受进程 DPI 感知模式影响。</p></div>
 
 <h3 id="fn-SetWindowTextW">SetWindowTextW</h3>
 
@@ -4427,7 +4437,7 @@ BOOL    UnhookWindowsHookEx(HHOOK hhk);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 57183px;--thin-h:51436px">
+<section class="chapter" style="contain-intrinsic-size:auto 57236px;--thin-h:51436px">
 <h1 id="a6"><span class="part">第 6 章</span>user32：输入、绘制、菜单与对话框</h1>
 <p>user32.dll 是 Win32 图形程序的门面：窗口消息从这里进来，绘制请求从这里排队，菜单与对话框也由它统一调度。本章按五个功能族整理速查表，每族速查表之后紧跟该族高频函数的详解卡——函数原型、逐参数说明、返回值约定、可直接套用的最小示例。已被官方标记为"有更好替代"的接口在"其他说明"里给出现代替代方案。</p>
 
@@ -4529,7 +4539,8 @@ HDC hdc = GetDC(hwnd);
 SetPixel(hdc, x, y, RGB(220, 40, 40));
 ReleaseDC(hwnd, hdc);      <span class="cm">// 公共 DC 数量有限，用完立刻还</span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
-<p>这是"公共 DC"：用完必须立刻 ReleaseDC 归还，而且每次取到的都是默认属性——上次选入的字体、画笔、映射模式统统不保留（除非窗口类注册时带了 CS_OWNDC）。与 BeginPaint 的分工很清楚：<strong>WM_PAINT 里用 BeginPaint，其他一切时机用 GetDC</strong>；GetDC 不关心更新区，也不会清除它。另外要注意，这样画上去的内容不在"数据模型"里，窗口一重画就会消失；需要持久显示的图形应改成"改数据 + InvalidateRect"，统一在 WM_PAINT 里画。</p></div>
+<p>这是"公共 DC"：用完必须立刻 ReleaseDC 归还，而且每次取到的都是默认属性——上次选入的字体、画笔、映射模式统统不保留（除非窗口类注册时带了 CS_OWNDC）。</p>
+<p>与 BeginPaint 的分工很清楚：<strong>WM_PAINT 里用 BeginPaint，其他一切时机用 GetDC</strong>；GetDC 不关心更新区，也不会清除它。另外要注意，这样画上去的内容不在"数据模型"里，窗口一重画就会消失；需要持久显示的图形应改成"改数据 + InvalidateRect"，统一在 WM_PAINT 里画。</p></div>
 
 <h3 id="fn-ReleaseDC">ReleaseDC</h3>
 <p class="fsum">把 GetDC / GetWindowDC 借来的公共 DC 还回去，不还就会耗尽系统总量有限的 DC 资源。</p>
@@ -4768,7 +4779,8 @@ BOOL ClientToScreen(HWND    hWnd, LPPOINT lpPoint);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 171px"><code><span class="cl"><span class="cc" style="min-width:32.0ch"><span class="kw">case</span> WM_LBUTTONDOWN: {</span><span class="cm">// lParam 已是客户区坐标</span></span><span class="cl">    POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };</span><span class="cl"><span class="cc" style="min-width:32.0ch">    ClientToScreen(hwnd, &amp;pt);</span><span class="cm">// 弹出菜单要求屏幕坐标</span></span><span class="cl">    TrackPopupMenu(hMenu, 0, pt.x, pt.y, 0, hwnd, NULL);</span><span class="cl">    <span class="kw">break</span>;</span><span class="cl">}</span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
-<p>互为逆运算的一对坐标转换。何时需要转换：普通鼠标消息（WM_MOUSEMOVE、WM_LBUTTONDOWN 等）的 lParam 本来就是客户区坐标，直接用即可，<strong>不必转</strong>；但 WM_CONTEXTMENU、WM_NCHITTEST 携带的坐标以及 GetCursorPos 的结果是屏幕坐标，要与客户区内容对上就得过一遍 ScreenToClient。反过来，TrackPopupMenu、SetCursorPos 这类要求屏幕坐标的 API，手里只有客户区坐标时就得先 ClientToScreen。</p></div>
+<p>互为逆运算的一对坐标转换。何时需要转换：普通鼠标消息（WM_MOUSEMOVE、WM_LBUTTONDOWN 等）的 lParam 本来就是客户区坐标，直接用即可，<strong>不必转</strong>；但 WM_CONTEXTMENU、WM_NCHITTEST 携带的坐标以及 GetCursorPos 的结果是屏幕坐标，要与客户区内容对上就得过一遍 ScreenToClient。</p>
+<p>反过来，TrackPopupMenu、SetCursorPos 这类要求屏幕坐标的 API，手里只有客户区坐标时就得先 ClientToScreen。</p></div>
 
 <h2 id="a6-menu">6.3 菜单</h2>
 <p>菜单有两条来路：资源文件里画好、LoadMenuW 加载；或运行时用 CreatePopupMenu + AppendMenuW 现拼。右键菜单是后者的主战场，核心动作是 TrackPopupMenu。</p>
@@ -5359,7 +5371,8 @@ wc.hIconSm = (HICON)LoadImageW(hInst, MAKEINTRESOURCEW(IDI_MYAPP),
 HBITMAP hbm = (HBITMAP)LoadImageW(NULL, L"splash.bmp",
                                   IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
-<p><span class="badge ok">推荐</span>比 LoadIconW / LoadBitmap 灵活在两点：一是能指定尺寸——LoadIconW 只给固定的默认大图标，而窗口类的 16×16 小图标（hIconSm）就必须靠它；二是加 LR_LOADFROMFILE 能直接从磁盘的 .ico / .bmp / .cur 文件加载，不必事先编译进资源。未加 LR_SHARED 时用完要释放：图标 / 光标用 DestroyIcon / DestroyCursor，位图用 DeleteObject。</p></div>
+<p><span class="badge ok">推荐</span>比 LoadIconW / LoadBitmap 灵活在两点：一是能指定尺寸——LoadIconW 只给固定的默认大图标，而窗口类的 16×16 小图标（hIconSm）就必须靠它；二是加 LR_LOADFROMFILE 能直接从磁盘的 .ico / .bmp / .cur 文件加载，不必事先编译进资源。</p>
+<p>未加 LR_SHARED 时用完要释放：图标 / 光标用 DestroyIcon / DestroyCursor，位图用 DeleteObject。</p></div>
 
 <h2 id="a6-caret">6.6 插入符（文本光标）</h2>
 
@@ -6443,10 +6456,11 @@ DeleteObject(rgn);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 33511px;--thin-h:31558px">
+<section class="chapter" style="contain-intrinsic-size:auto 33581px;--thin-h:31628px">
 <h1 id="a8"><span class="part">第 8 章</span>gdi32：位图、文本与坐标</h1>
 
-<p>gdi32.dll 是 Windows 最古老的绘图引擎：所有绘制都围绕设备上下文（DC）展开，位图要先"选入"内存 DC 才能参与传输，文字颜色与背景是 DC 的状态而不是函数参数，坐标则先经过逻辑→设备的映射再落到像素上。本章按"位图 → 文本 → 坐标"三条线整理速查表，并为最常用的 10 个函数配详解卡。读本章时抓住一个心智模型即可：<strong>DC 是一台带状态的绘图机，你先调状态（颜色、模式、映射、选入的位图），再下指令（Blt、TextOut）。</strong></p>
+<p>gdi32.dll 是 Windows 最古老的绘图引擎：所有绘制都围绕设备上下文（DC）展开，位图要先"选入"内存 DC 才能参与传输，文字颜色与背景是 DC 的状态而不是函数参数，坐标则先经过逻辑→设备的映射再落到像素上。本章按"位图 → 文本 → 坐标"三条线整理速查表，并为最常用的 10 个函数配详解卡。</p>
+<p>读本章时抓住一个心智模型即可：<strong>DC 是一台带状态的绘图机，你先调状态（颜色、模式、映射、选入的位图），再下指令（Blt、TextOut）。</strong></p>
 
 <div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 GDI 还值得学吗</span><p>GDI 处于"永久维护"状态：不会删除，但也不再进化——没有硬件加速的抗锯齿、没有原生高 DPI 缩放。写新的富界面应用请评估 Direct2D + DirectWrite；但窗口截图、双缓冲、打印、以及维护存量 Win32 代码，GDI 仍是绕不开的基本功，而且它的位图/坐标概念可以直接迁移到任何图形 API。</p></div>
 
@@ -6776,7 +6790,8 @@ DeleteDC(hMem);</code></pre>
 
 <h2 id="a8-text">8.2 文本输出与测量</h2>
 
-<p>GDI 文字输出的三个状态开关都挂在 DC 上：前景色（SetTextColor）、背景色（SetBkColor）、背景模式（SetBkMode）。输出函数选两个就够用——定点画一行用 <code>TextOutW</code>，在矩形里排版（折行、居中、省略号）用 <code>DrawTextW</code>。排版之前先用 <code>GetTextExtentPoint32W</code> 量尺寸，是所有手绘控件的起手式。一律用 W 版：GDI 的 W 函数接收 UTF-16，A 版会经历代码页转换，中文环境下是乱码之源。</p>
+<p>GDI 文字输出的三个状态开关都挂在 DC 上：前景色（SetTextColor）、背景色（SetBkColor）、背景模式（SetBkMode）。</p>
+<p>输出函数选两个就够用——定点画一行用 <code>TextOutW</code>，在矩形里排版（折行、居中、省略号）用 <code>DrawTextW</code>。排版之前先用 <code>GetTextExtentPoint32W</code> 量尺寸，是所有手绘控件的起手式。一律用 W 版：GDI 的 W 函数接收 UTF-16，A 版会经历代码页转换，中文环境下是乱码之源。</p>
 
 <table style="contain-intrinsic-size:auto 610px"><thead><tr><th class="nw">名称</th><th>作用</th><th>备注</th></tr></thead><tbody>
 <tr><td class="nw"> TextOutW</td><td>在 (x, y) 处输出一行文字</td><td>必须显式传字符数，它不找字符串结尾的 NUL</td></tr>
@@ -7122,10 +7137,11 @@ DeleteDC(hdcPrn);            <span class="cm">// 打印机 DC 用 DeleteDC，不
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 17207px;--thin-h:17207px">
+<section class="chapter" style="contain-intrinsic-size:auto 17224px;--thin-h:17224px">
 <h1 id="a9"><span class="part">第 9 章</span>comctl32 与 comdlg32：通用控件、子类化与通用对话框</h1>
 
-<p>前面八章围着 kernel32 / user32 / gdi32 这三个"元老"转。但 Windows API 从来不只有它们三个——<strong>凡是随系统一起发布、有官方文档、可以直接链接调用的接口，都是 Windows API 的一部分</strong>。<code>comctl32.dll</code>（通用控件）与 <code>comdlg32.dll</code>（通用对话框）是其中最不该缺席的两个：一个提供了列表视图、树视图、工具栏，以及<strong>今天唯一正确的窗口子类化接口</strong>；另一个提供了"打开文件""选择颜色""打印设置"这些每个程序都要用的对话框。</p>
+<p>前面八章围着 kernel32 / user32 / gdi32 这三个"元老"转。但 Windows API 从来不只有它们三个——<strong>凡是随系统一起发布、有官方文档、可以直接链接调用的接口，都是 Windows API 的一部分</strong>。</p>
+<p><code>comctl32.dll</code>（通用控件）与 <code>comdlg32.dll</code>（通用对话框）是其中最不该缺席的两个：一个提供了列表视图、树视图、工具栏，以及<strong>今天唯一正确的窗口子类化接口</strong>；另一个提供了"打开文件""选择颜色""打印设置"这些每个程序都要用的对话框。</p>
 
 <p>它们与三大 DLL 有两点不同，值得先说清楚：</p>
 
@@ -7532,7 +7548,7 @@ cf.Flags      = CF_SCREENFONTS | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT;
 <section class="chapter" style="contain-intrinsic-size:auto 12119px;--thin-h:12119px">
 <h1 id="a10"><span class="part">第 10 章</span>速查表：常用消息 WM_ / 窗口风格 WS_ / 类样式 CS_</h1>
 
-<p>本章把窗口过程里最常打交道的三类"常量"整理成速查表：<strong>WM_ 消息</strong>（发生了什么）、<strong>WS_/WS_EX_ 风格</strong>（窗口长什么样、有什么能力）、<strong>CS_ 类样式</strong>（整个窗口类的绘制/输入策略）。消息表额外给出<strong>触发时机</strong>与 <code>wParam</code>/<code>lParam</code> 的含义要点——它们是解读消息的钥匙。带 🟢 者为高频必备项，🟡/🔴 为已过时或不推荐项（备注给现代替代），🔵 为现代实践提示。</p>
+<p>窗口过程里最常打交道的三类"常量"，速查表按此分列：<strong>WM_ 消息</strong>（发生了什么）、<strong>WS_/WS_EX_ 风格</strong>（窗口长什么样、有什么能力）、<strong>CS_ 类样式</strong>（整个窗口类的绘制/输入策略）。消息表额外给出<strong>触发时机</strong>与 <code>wParam</code>/<code>lParam</code> 的含义要点——它们是解读消息的钥匙。带 🟢 者为高频必备项，🟡/🔴 为已过时或不推荐项（备注给现代替代），🔵 为现代实践提示。</p>
 
 <h2 id="a10-msg-life">10.1 消息速查（一）：生命周期与创建</h2>
 <p>窗口从"非客户区建立"到"彻底销毁"的顺序大致为：<code>WM_NCCREATE</code> → <code>WM_CREATE</code> → …运行… → <code>WM_CLOSE</code> → <code>WM_DESTROY</code> → <code>WM_NCDESTROY</code>。</p>

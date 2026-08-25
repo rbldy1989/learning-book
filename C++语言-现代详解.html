@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>C++ 语言 · 现代详解</title>
+<title>C++ 语言</title>
 <script>
 /* 主题与目录开关的初值在这里定好：解析 <body> 之前完成，避免加载完再改 <html> 属性触发一次全量样式重算 */
 (function(){var r=document.documentElement;
@@ -197,9 +197,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <button id="depthBtn" title="薄/厚阅读:点一下只看主干(薄),再点一下看全部(厚)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
 <button id="navBtn" title="显示/隐藏目录"></button>
 <nav id="sidebar">
-<div class="booktitle">C++ 语言 · 现代详解</div>
+<div class="booktitle">C++ 语言</div>
 <details><summary><a class="ch" href="#c0">预备:C 程序员够用的 C++ 基础</a></summary>
-<a class="sec" href="#c0-open">0.0 开卷:锚定、定位与读法</a>
+<a class="sec" href="#c0-open">0.0 导读</a>
 <a class="sec" href="#c0-class">0.1 类与对象:从 struct 到 class</a>
 <a class="sec" href="#c0-basic">0.2 引用、重载、默认参数与运算符重载</a>
 <a class="sec" href="#c0-scope">0.3 作用域、生命周期与存储期</a>
@@ -388,7 +388,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <main><div class="inner">
 <section class="chapter" style="contain-intrinsic-size:auto 87186px;--thin-h:87186px">
 <h1 id="c0"><span class="part">第 0 章</span>预备:C 程序员够用的 C++ 基础</h1>
-<h2 id="c0-open">0.0 开卷:锚定、定位与读法</h2>
+<h2 id="c0-open">0.0 导读</h2>
 <p>本书面向<strong>已经写得动 C、C++ 只有零星经验</strong>的读者。讲法是从 C 的已知出发:先说清同一件事在两种语言里差在哪,再说清 C++ 多出来的那部分机制是为解决什么问题而存在的,最后给出它在什么条件下不成立。</p>
 <p>语言基线取 <strong>C++17</strong>——凡是没有标注版本的写法在 C++17 上都成立;C++20 与 C++23 的设施逐处标出最低版本。0.11 节给出的工程配置把标准直接开到 C++20,因为后面的示例用到了 <code>std::format</code> 与 ranges。编译器覆盖 GCC、Clang 与 MSVC,行为不一致处三家分别给出。</p>
 <p>手上只有旧编译器时有三条替代路线:<code>std::format</code> 换成 fmt 库,格式串语法相同;ranges 换成写全 <code>begin()</code> 与 <code>end()</code>;<code>std::span</code> 换成指针加长度两个参数。</p>
@@ -447,7 +447,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
 <tr><td class="nw">标准库各设施的接口清单、参数与复杂度保证</td><td>《C++ 标准库 API 编程手册》</td><td>本书讲机制与取舍,不讲某个容器有哪些成员函数</td></tr>
-<tr><td class="nw">性能的测量、剖析与调优流程</td><td>《C++ 性能优化 · 现代详解》</td><td>本书指出开销来自哪里,不给测量步骤与优化顺序</td></tr>
+<tr><td class="nw">性能的测量、剖析与调优流程</td><td>《C++ 性能优化》</td><td>本书指出开销来自哪里,不给测量步骤与优化顺序</td></tr>
 <tr><td class="nw">C 标准库函数的逐个用法</td><td class="nw">《C 标准库 API 手册》</td><td>本书只讲它在 C++ 里该换成什么</td></tr>
 <tr><td class="nw">系统调用、进程与文件系统的语义</td><td class="nw">《Linux 系统编程手册》</td><td>本书的边界停在标准设施</td></tr>
 <tr><td class="nw">Qt 的对象系统、信号槽与部件</td><td class="nw">Qt 四本</td><td>Qt 在 C++ 之上另有一套对象模型与生命周期规则</td></tr>
@@ -19721,7 +19721,7 @@ std::string render(<span class="kw">const</span> std::string&amp; pattern, <span
 <p>容器识别到 <code>allocator_type</code> 之后,在容器内部构造元素时会自动把自己的分配器传下去,这叫<strong>uses-allocator 构造</strong>。少了这个别名,<code>std::pmr::vector&lt;Record&gt;</code> 里的每个 <code>Record</code> 都会用默认的全局资源分配内存,内存池等于白建。</p>
 <p>这个失败是完全静默的:代码照编、结果照对,只是内存池里空空如也,而所有分配仍然走全局堆。<strong>确诊办法是给自定义的 <code>memory_resource</code> 加一个分配计数,跑一遍之后看它是不是零。</strong></p>
 <p>三个成员构造函数的形态也不能随意简化。带分配器的拷贝构造与移动构造必须显式写出来并把分配器逐个传给成员,否则成员会各自去取默认资源。<code>get_allocator</code> 不是硬性要求,但少了它,把这个类型再放进另一个分配器感知的容器时,外层就无法确认内层用的是哪块资源。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 pmr 容器的拷贝构造不会继承源容器的内存资源</span><p><code>std::pmr::vector&lt;int&gt; b = a;</code> 之后,<code>b</code> 用的是<strong>默认资源</strong>,不是 <code>a</code> 的资源。这是标准明确规定的行为——<code>polymorphic_allocator</code> 的 <code>select_on_container_copy_construction</code> 返回一个默认构造的分配器。同理,移动赋值也不传播分配器,两个资源不同的 pmr 容器互相移动赋值会<strong>退化成逐元素移动甚至拷贝</strong>。<strong>症状是内存池明明建好了,profiler 里却仍然看到全局 <code>operator new</code></strong>,或者「移动」操作的耗时与元素数量成正比。规矩:pmr 容器的拷贝与移动一律显式写出目标资源 <code>std::pmr::vector&lt;int&gt; b(a, &amp;pool);</code>。分配器的完整机制见《C++ 性能优化 · 现代详解》第 6 章。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 pmr 容器的拷贝构造不会继承源容器的内存资源</span><p><code>std::pmr::vector&lt;int&gt; b = a;</code> 之后,<code>b</code> 用的是<strong>默认资源</strong>,不是 <code>a</code> 的资源。这是标准明确规定的行为——<code>polymorphic_allocator</code> 的 <code>select_on_container_copy_construction</code> 返回一个默认构造的分配器。同理,移动赋值也不传播分配器,两个资源不同的 pmr 容器互相移动赋值会<strong>退化成逐元素移动甚至拷贝</strong>。<strong>症状是内存池明明建好了,profiler 里却仍然看到全局 <code>operator new</code></strong>,或者「移动」操作的耗时与元素数量成正比。规矩:pmr 容器的拷贝与移动一律显式写出目标资源 <code>std::pmr::vector&lt;int&gt; b(a, &amp;pool);</code>。分配器的完整机制见《C++ 性能优化》第 6 章。</p></div>
 <h3>把性能相关的性质写成断言</h3>
 <p>上面这些性质的共同特点是<strong>被破坏时没有任何提示</strong>:代码照编、测试照过、结果照样正确,只是慢了。唯一可靠的防线是把它们写成编译期断言,放在类型定义的正下方。下面是一份可以直接抄的清单。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 658px"><code><span class="kw">#include</span> &lt;concepts&gt;

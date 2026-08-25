@@ -209,7 +209,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">C 标准库 API 手册</div>
 <details><summary><a class="ch" href="#s1">stdio.h 输入输出</a></summary>
-<a class="sec" href="#s1-open">1.0 开卷:锚定、定位与读法</a>
+<a class="sec" href="#s1-open">1.0 导读</a>
 <a class="sec" href="#s1-overview">1.1 速览</a>
 <a class="sec" href="#s1-printf">1.2 printf</a>
 <a class="sec" href="#s1-fprintf">1.3 fprintf</a>
@@ -347,9 +347,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 27983px;--thin-h:26311px">
+<section class="chapter" style="contain-intrinsic-size:auto 27827px;--thin-h:26155px">
 <h1 id="s1"><span class="part">分类 1</span>stdio.h 输入输出</h1>
-<h2 id="s1-open">1.0 开卷:锚定、定位与读法</h2>
+<h2 id="s1-open">1.0 导读</h2>
 <p>本手册按<strong>头文件</strong>分类速查 C 标准库函数。每个条目回答同一组问题:这个函数做什么、原型长什么样、每个参数有什么约束、返回值怎么判、最小的正确写法是什么、以及它有哪些必踩的坑。</p>
 <p>标准基线取 <strong>C11 与 C17</strong>,C99 与 C23 引入或删除的设施逐处标明。平台上兼顾 Linux 与 Windows:凡是有 <code>_s</code> 后缀变体的函数,两者的参数差别与可移植性代价都写在条目里。</p>
 
@@ -404,14 +404,14 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </tbody>
 </table>
 <p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 491px">
+<table style="contain-intrinsic-size:auto 439px">
 <thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
 <tr><td>C 语言本身的语法:声明、指针、类型规则与控制流</td><td class="nw">K&amp;R 与语言教材</td><td>本手册只讲库函数,不教语言。第 9 章是唯一的例外,因为预处理指令在工程里出现得太频繁</td></tr>
-<tr><td>同一件事在 C++ 里该怎么写</td><td class="nw">《C++ 语言 · 现代详解》与《C++ 标准库 API 编程手册》</td><td>本手册在有类型安全替代时用蓝色批注指过去,不展开</td></tr>
+<tr><td>同一件事在 C++ 里该怎么写</td><td class="nw">《C++ 语言》与《C++ 标准库 API 编程手册》</td><td>本手册在有类型安全替代时用蓝色批注指过去,不展开</td></tr>
 <tr><td>系统调用、文件描述符、进程与信号</td><td class="nw">《Linux 系统编程手册》</td><td>分界是「C 标准保证的」与「操作系统提供的」</td></tr>
 <tr><td>Win32 的字符串、文件与注册表接口</td><td class="nw">《Windows API 手册》</td><td>本手册只讲 <code>wchar.h</code> 与 MSVC 的 <code>_s</code> 系列这两处 Windows 侧绕不开的内容</td></tr>
-<tr><td>函数的执行开销与优化手法</td><td class="nw">《C++ 性能优化 · 现代详解》</td><td>本手册给行为与陷阱,不给耗时数据</td></tr>
+<tr><td>函数的执行开销与优化手法</td><td class="nw">《C++ 性能优化》</td><td>本手册给行为与陷阱,不给耗时数据</td></tr>
 <tr><td>C11 可选线程附录(<code>threads.h</code>)与原子操作</td><td class="nw">《C++ 标准库 API 编程手册》</td><td>多数 C 实现把它列为可选,可移植性不足;并发在 C++ 侧才有完整且通用的设施</td></tr>
 </tbody>
 </table>
@@ -883,7 +883,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 19654px;--thin-h:18337px">
+<section class="chapter" style="contain-intrinsic-size:auto 19853px;--thin-h:18388px">
 <h1 id="s2"><span class="part">分类 2</span>stdlib.h 通用工具</h1>
 <p>&lt;stdlib.h&gt; 是 C 标准库的“杂物间”:动态内存、字符串转数值、伪随机数、排序查找、进程控制与环境变量都住在这里。本章按使用频率与危险程度逐一拆解——尤其是内存四件套(malloc/calloc/realloc/free)和转换函数的新旧两套接口,几乎每一条都藏着经典事故现场。</p>
 
@@ -921,7 +921,8 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <tr><td class="nw">size</td><td class="nw">size_t</td><td>要分配的字节数。惯用写法是 <code>n * sizeof *p</code>,这样改变元素类型时这行代码不用跟着改。分配得到的内存<strong>未初始化</strong>,内容是垃圾值,必须先写后读。<code>size</code> 传 0 时行为由实现定义</td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
-<p>成功返回指向已分配内存的指针(对齐满足任何基本类型的要求);失败返回 <code>NULL</code>,因此返回值<strong>必须判空</strong>后才能使用。<code>malloc(0)</code> 的返回值由实现定义,可能是 <code>NULL</code>,也可能是一个可以传给 <code>free</code> 的非空指针,但两种情况下都不得解引用。C 标准没有规定失败时设置 <code>errno</code>;POSIX 平台通常会置为 <code>ENOMEM</code>,可在失败分支用 <code>perror</code>/<code>strerror(errno)</code> 取错误详情,但不要把它当作可移植的判断依据——判空才是唯一可靠的失败检测手段。</p>
+<p>成功返回指向已分配内存的指针(对齐满足任何基本类型的要求);失败返回 <code>NULL</code>,因此返回值<strong>必须判空</strong>后才能使用。<code>malloc(0)</code> 的返回值由实现定义,可能是 <code>NULL</code>,也可能是一个可以传给 <code>free</code> 的非空指针,但两种情况下都不得解引用。</p>
+<p>C 标准没有规定失败时设置 <code>errno</code>;POSIX 平台通常会置为 <code>ENOMEM</code>,可在失败分支用 <code>perror</code>/<code>strerror(errno)</code> 取错误详情,但不要把它当作可移植的判断依据——判空才是唯一可靠的失败检测手段。</p>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 218px"><code><span class="cl"><span class="cc" style="min-width:35.0ch"><span class="kw">int</span> *p = malloc(100 * <span class="kw">sizeof</span> *p);</span><span class="cm">// sizeof *p:改类型时这行不用动</span></span><span class="cl"><span class="kw">if</span> (p == NULL) {</span><span class="cl">    <span class="cm">// 分配失败:报错并返回,不要硬着头皮往下走</span></span><span class="cl">    <span class="kw">return</span> -1;</span><span class="cl">}</span><span class="cl"><span class="cc" style="min-width:35.0ch">p[0] = 42;</span><span class="cm">// 内容是垃圾值,读之前必须先写</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">free(p);</span><span class="cm">// 用完归还</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">p = NULL;</span><span class="cm">// 顺手置空,避免悬空指针</span></span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
@@ -1109,7 +1110,13 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 171px"><code><span class="cl"><span class="kw">int</span> cmp_int(<span class="kw">const</span> <span class="kw">void</span> *pa, <span class="kw">const</span> <span class="kw">void</span> *pb) {</span><span class="cl"><span class="cc" style="min-width:31.0ch">    <span class="kw">int</span> a = *(<span class="kw">const</span> <span class="kw">int</span> *)pa;</span><span class="cm">// 第一步:void* 转回真实类型再解引用</span></span><span class="cl">    <span class="kw">int</span> b = *(<span class="kw">const</span> <span class="kw">int</span> *)pb;</span><span class="cl"><span class="cc" style="min-width:31.0ch">    <span class="kw">return</span> (a &gt; b) - (a &lt; b);</span><span class="cm">// 不要写 a - b:可能溢出(如 INT_MAX - (-1))</span></span><span class="cl">}</span><span class="cl">qsort(arr, n, <span class="kw">sizeof</span> arr[0], cmp_int);</span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
-<p>比较函数三要素——① 参数固定是两个 <code>const void *</code>,指向的是<em>数组元素本身</em>(排指针数组时它是“指向指针的指针”,要解引用两层);② 内部先转型回元素类型;③ 返回负/零/正,且必须构成严格弱序(自洽、可传递),否则行为未定义,某些实现会越界崩溃。排字符串数组的经典写法:<code>return strcmp(*(const char *const *)pa, *(const char *const *)pb);</code>。C++ 首选 <code>std::sort</code>——比较器可内联,通常明显快于 qsort 的函数指针调用。</p></div>
+<p>比较函数三要素——</p>
+<ol>
+<li>参数固定是两个 <code>const void *</code>,指向的是<em>数组元素本身</em>(排指针数组时它是“指向指针的指针”,要解引用两层)。</li>
+<li>内部先转型回元素类型。</li>
+<li>返回负/零/正,且必须构成严格弱序(自洽、可传递),否则行为未定义,某些实现会越界崩溃。</li>
+</ol>
+<p>排字符串数组的经典写法:<code>return strcmp(*(const char *const *)pa, *(const char *const *)pb);</code>。C++ 首选 <code>std::sort</code>——比较器可内联,通常明显快于 qsort 的函数指针调用。</p></div>
 
 <h2 id="s2-bsearch" class="fntarget">2.12 bsearch</h2>
 <p class="fsum">在已排好序的数组里二分查找,命中返回元素地址,落空返回 NULL。</p>
@@ -1218,9 +1225,10 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 16854px;--thin-h:15491px">
+<section class="chapter" style="contain-intrinsic-size:auto 16907px;--thin-h:15544px">
 <h1 id="s3"><span class="part">分类 3</span>string.h 字符串与内存</h1>
-<p>C 语言没有内建字符串类型,一切都建立在"以 <code>'\0'</code> 结尾的字符数组"这一约定之上。<code>&lt;string.h&gt;</code> 提供两族函数:<code>str*</code> 系列依赖结尾符工作,<code>mem*</code> 系列按字节数操作任意内存。本章逐一说明常用函数,并特别标注缓冲区溢出、未写结尾符、不可重入等经典陷阱。MSVC 下多数传统函数会触发 C4996 弃用警告,建议改用带边界检查的 <code>_s</code> 安全版本;在 C++ 项目里,能用 <code>std::string</code> / <code>std::string_view</code> 就不要手工摆弄裸字符数组。</p>
+<p>C 语言没有内建字符串类型,一切都建立在"以 <code>'\0'</code> 结尾的字符数组"这一约定之上。<code>&lt;string.h&gt;</code> 提供两族函数:<code>str*</code> 系列依赖结尾符工作,<code>mem*</code> 系列按字节数操作任意内存。本章逐一说明常用函数,并特别标注缓冲区溢出、未写结尾符、不可重入等经典陷阱。</p>
+<p>MSVC 下多数传统函数会触发 C4996 弃用警告,建议改用带边界检查的 <code>_s</code> 安全版本;在 C++ 项目里,能用 <code>std::string</code> / <code>std::string_view</code> 就不要手工摆弄裸字符数组。</p>
 
 <h2 id="s3-overview">3.1 速览</h2><p><strong>本章速览</strong>——字符串与内存操作是 C 里最常用、也最容易写出越界漏洞的一族函数，先用下表建立整体印象，再看各条目的详解。</p><table style="contain-intrinsic-size:auto 714px"><thead><tr><th class="nw">函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><code>strlen</code></td><td>数出字符串长度，不含结尾空字符</td><td>没有终止符就会一直读下去，先确保串是合法的</td></tr><tr><td class="nw"><code>strcpy</code> / <code>strcpy_s</code></td><td>把源字符串整个复制到目标缓冲区</td><td><span class="badge old">已过时</span> strcpy 不知道目标多大，写多少都不拦；<span class="badge ok">推荐</span> strcpy_s 需显式传入目标容量</td></tr><tr><td class="nw"><a class="fnlink" href="#s3-strncpy"><code>strncpy</code></a></td><td class="nw">最多复制 n 个字符到目标</td><td>源串够长时不会补结尾空字符，必须自己手动补上</td></tr><tr><td class="nw"><code>strcat</code> / <code>strcat_s</code></td><td class="nw">把源字符串接到目标串尾部</td><td><span class="badge old">已过时</span> strcat 同样不查容量，反复拼接极易溢出；<span class="badge ok">推荐</span> strcat_s</td></tr><tr><td class="nw"><a class="fnlink" href="#s3-strcmp"><code>strcmp</code></a> / <a class="fnlink" href="#s3-strcmp"><code>strncmp</code></a></td><td>按字典序比较整串或前 n 个字符</td><td>返回值只保证正负号和零，别当作字符差值来用</td></tr><tr><td class="nw"><a class="fnlink" href="#s3-strchr"><code>strchr</code></a> / <a class="fnlink" href="#s3-strchr"><code>strrchr</code></a></td><td>找某字符第一次、最后一次出现处</td><td>找不到返回空指针，用之前务必判空</td></tr><tr><td class="nw"><a class="fnlink" href="#s3-strstr"><code>strstr</code></a></td><td class="nw">在主串里定位子串首次出现位置</td><td>朴素匹配，长文本高频查找时另选算法</td></tr><tr><td class="nw"><code>strtok</code> / <code>strtok_s</code></td><td class="nw">按分隔符把字符串逐段切开</td><td><span class="badge old">已过时</span> strtok 靠内部静态状态，会改写原串且不可重入；<span class="badge ok">推荐</span> strtok_s 自带上下文指针</td></tr><tr><td class="nw"><code>memcpy</code></td><td class="nw">复制 n 个字节到另一块内存</td><td>两块内存重叠属未定义行为，此时改用 memmove</td></tr><tr><td class="nw"><a class="fnlink" href="#s3-memmove"><code>memmove</code></a></td><td class="nw">复制 n 字节，允许区域重叠</td><td><span class="badge ok">推荐</span> 不确定是否重叠时的稳妥选择</td></tr><tr><td class="nw"><a class="fnlink" href="#s3-memset"><code>memset</code></a></td><td class="nw">把一段内存按字节填成同一个值</td><td>填充值按字节生效，别指望它把数组填成非零整数</td></tr><tr><td class="nw"><a class="fnlink" href="#s3-memcmp"><code>memcmp</code></a></td><td class="nw">逐字节比较两块内存内容</td><td>结构体含填充字节，不能靠它判断是否相等</td></tr><tr><td class="nw"><a class="fnlink" href="#s3-memchr"><code>memchr</code></a></td><td class="nw">在指定长度内存中找某个字节</td><td>不看结尾空字符，适合处理二进制数据</td></tr><tr><td class="nw"><a class="fnlink" href="#s3-strerror"><code>strerror</code></a> / <a class="fnlink" href="#s3-strerror"><code>strerror_s</code></a></td><td class="nw">把错误码翻译成可读的描述文字</td><td><span class="badge old">已过时</span> strerror 返回共享静态缓冲区，多线程下会串；<span class="badge ok">推荐</span> strerror_s 写入自备缓冲区</td></tr></tbody></table>
 
@@ -1497,9 +1505,11 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <p><code>strerror</code> 返回的指针可能指向内部静态缓冲区,下一次调用会覆盖其内容,多线程下不安全(MSVC 触发 C4996);<code>strerror_s</code> 写入调用方缓冲区,无此问题。C++ 中可用 <code>std::system_error</code> / <code>std::generic_category().message(errnum)</code> 获得等价信息。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 16725px;--thin-h:15441px">
+<section class="chapter" style="contain-intrinsic-size:auto 16794px;--thin-h:15510px">
 <h1 id="s4"><span class="part">分类 4</span>wchar.h 宽字符(Windows 开发重点)</h1>
-<p>Windows 内核与 Win32 API 原生使用 UTF-16,<code>wchar_t</code> 在 MSVC 下固定为 16 位;而 Linux/macOS 上 <code>wchar_t</code> 是 32 位(通常存 UTF-32)。因此宽字符 API 在 Windows 开发中地位远高于其他平台:凡涉及中文路径、注册表、窗口标题,几乎都绕不开 <code>wchar_t</code> 与 <code>L"..."</code> 字面量。本章函数与 string.h/stdio.h 的窄字符版本一一对应,记住"str→wcs、printf→wprintf"的映射规律即可。MSVC 下不安全版本(如 <code>wcscpy</code>)同样触发 C4996 警告,应优先使用 <code>_s</code> 后缀版本。</p>
+<p>Windows 内核与 Win32 API 原生使用 UTF-16,<code>wchar_t</code> 在 MSVC 下固定为 16 位;而 Linux/macOS 上 <code>wchar_t</code> 是 32 位(通常存 UTF-32)。</p>
+<p>因此宽字符 API 在 Windows 开发中地位远高于其他平台:凡涉及中文路径、注册表、窗口标题,几乎都绕不开 <code>wchar_t</code> 与 <code>L"..."</code> 字面量。本章函数与 string.h/stdio.h 的窄字符版本一一对应,记住"str→wcs、printf→wprintf"的映射规律即可。</p>
+<p>MSVC 下不安全版本(如 <code>wcscpy</code>)同样触发 C4996 警告,应优先使用 <code>_s</code> 后缀版本。</p>
 
 <h2 id="s4-overview">4.1 速览</h2><p><strong>本章速览</strong>——宽字符版本的字符串与 I/O 工具集,重点在「以宽字符为单位计数」和「窄宽流不可混用」这两个坑。</p>
 <table style="contain-intrinsic-size:auto 591px">
@@ -1820,9 +1830,10 @@ fclose(fp);</code></pre>
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示</span><p>窄字符 <code>fopen("中文.txt", ...)</code> 在 Windows 上要经过 ANSI 代码页,遇到代码页外的字符(如简中系统上的日文文件名)会直接打不开;<code>_wfopen_s</code> 走 UTF-16 原生路径,是 Windows 打开任意 Unicode 路径的正解。它是 MSVC 扩展而非标准 C,跨平台代码需自行封装。C++17 可用 <code>std::filesystem::path</code> 配合 <code>std::fstream</code>,在 Windows 上同样走宽字符路径。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 13470px;--thin-h:12158px">
+<section class="chapter" style="contain-intrinsic-size:auto 13574px;--thin-h:12210px">
 <h1 id="s5"><span class="part">分类 5</span>ctype.h 与 wctype.h 字符分类</h1>
-<p>&lt;ctype.h&gt; 提供一组字符分类与大小写转换函数,是解析器、词法分析、输入校验代码的基石。所有 is*/to* 函数的参数类型都是 <code>int</code>,但合法取值只有两类:<strong>能表示为 unsigned char 的值(0~255)或宏 EOF</strong>——传入其他值(典型是负值的 char)是未定义行为,本章用单独一条讲透这个坑。&lt;wctype.h&gt; 则是对应的宽字符版本。这些函数的结果部分受当前 locale 影响(默认 "C" locale 下只按 ASCII 规则判定)。</p>
+<p>&lt;ctype.h&gt; 提供一组字符分类与大小写转换函数,是解析器、词法分析、输入校验代码的基石。所有 is*/to* 函数的参数类型都是 <code>int</code>,但合法取值只有两类:<strong>能表示为 unsigned char 的值(0~255)或宏 EOF</strong>——传入其他值(典型是负值的 char)是未定义行为,本章用单独一条讲透这个坑。</p>
+<p>&lt;wctype.h&gt; 则是对应的宽字符版本。这些函数的结果部分受当前 locale 影响(默认 "C" locale 下只按 ASCII 规则判定)。</p>
 
 <h2 id="s5-overview">5.1 速览</h2><p><strong>本章速览</strong>——这组函数看着简单,真正的坑几乎全在参数类型和当前 locale 上,先扫一遍再逐条细读。</p><table style="contain-intrinsic-size:auto 557px"><thead><tr><th>函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><a class="fnlink" href="#s5-isalpha"><code>isalpha</code></a></td><td class="nw">判断字符是否为字母</td><td>结果随 locale 变化,C locale 下只认 A-Z、a-z</td></tr><tr><td class="nw"><a class="fnlink" href="#s5-isdigit"><code>isdigit</code></a></td><td class="nw">判断字符是否为十进制数字</td><td>只认 '0'-'9',任何 locale 都不扩展;别用它做数值转换</td></tr><tr><td class="nw"><a class="fnlink" href="#s5-isalnum"><code>isalnum</code></a></td><td class="nw">判断是否为字母或数字</td><td>等价于 <a class="fnlink" href="#s5-isalpha"><code>isalpha</code></a> 或 <a class="fnlink" href="#s5-isdigit"><code>isdigit</code></a> 成立,下划线不算</td></tr><tr><td class="nw"><a class="fnlink" href="#s5-isspace"><code>isspace</code></a></td><td class="nw">判断是否为空白字符</td><td>含空格与 \t \n \v \f \r 六种,不止空格</td></tr><tr><td class="nw"><a class="fnlink" href="#s5-isupper"><code>isupper</code></a> / <a class="fnlink" href="#s5-isupper"><code>islower</code></a></td><td class="nw">判断字母是大写还是小写</td><td>非字母一律返回 0,两者同时为假很正常</td></tr><tr><td class="nw"><a class="fnlink" href="#s5-toupper"><code>toupper</code></a> / <a class="fnlink" href="#s5-toupper"><code>tolower</code></a></td><td class="nw">字母大小写互转</td><td>非字母原样返回;返回 <code>int</code>,存回 <code>char</code> 前先确认无截断</td></tr><tr><td class="nw"><a class="fnlink" href="#s5-isxdigit"><code>isxdigit</code></a></td><td class="nw">判断是否为十六进制数字</td><td>只管 0-9A-Fa-f,不认 "0x" 前缀</td></tr><tr><td class="nw"><a class="fnlink" href="#s5-ispunct"><code>ispunct</code></a></td><td class="nw">判断是否为标点或符号</td><td>定义为"可打印且非空格非字母数字",范围比直觉大</td></tr><tr><td><a class="fnlink" href="#s5-iscntrl"><code>iscntrl</code></a> / <a class="fnlink" href="#s5-iscntrl"><code>isprint</code></a> / <a class="fnlink" href="#s5-iscntrl"><code>isgraph</code></a></td><td>控制字符 / 可打印 / 可见字符</td><td><a class="fnlink" href="#s5-iscntrl"><code>isprint</code></a> 含空格,<a class="fnlink" href="#s5-iscntrl"><code>isgraph</code></a> 不含,这一格之差最常错</td></tr><tr><td class="nw"><code>isXXX((unsigned char)c)</code></td><td class="nw">传参前必须先转无符号</td><td><span class="badge dead">禁用</span> 直接传可能为负的 <code>char</code>,是未定义行为;<span class="badge ok">推荐</span> 一律套 <code>(unsigned char)</code>,仅 <code>EOF</code> 可为负</td></tr><tr><td><code>iswalpha</code> / <code>iswdigit</code> / <code>towupper</code></td><td class="nw">宽字符版的分类与转换</td><td>参数为 <code>wint_t</code>,处理多字节文本时用它替代窄字符版</td></tr></tbody></table>
 
@@ -2053,12 +2064,14 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 218px"><code><span class="cl">#include &lt;wchar.h&gt;</span><span class="cl">#include &lt;wctype.h&gt;</span><span class="cl">#include &lt;locale.h&gt;</span><span class="cl"> </span><span class="cl"><span class="cc" style="min-width:37.0ch">setlocale(LC_ALL, "");</span><span class="cm">// 启用环境 locale,宽字符分类才有意义</span></span><span class="cl"><span class="kw">wchar_t</span> w = L'é';</span><span class="cl"><span class="cc" style="min-width:37.0ch"><span class="kw">if</span> (iswalpha(w))</span><span class="cm">// 真:é 被识别为字母</span></span><span class="cl"><span class="cc" style="min-width:37.0ch">    wprintf(L"%lc\n", towupper(w));</span><span class="cm">// 输出 É</span></span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
-<p>这三个函数声明于 <code>&lt;wctype.h&gt;</code>,使用前需包含该头文件。其余窄字符函数几乎都有 isw*/tow* 对应版本(iswspace、iswpunct、towlower 等),规则同理。Windows 上 wchar_t 是 16 位(UTF-16 码元),对 BMP 之外的字符(如 emoji)按代理对处理会失真;Linux 上是 32 位没有此问题。需要严肃的 Unicode 分类(如判定汉字、按 Unicode 规则大小写折叠)时,标准库能力有限,<span class="badge ok">推荐</span> 用 ICU 或 utf8proc;C++ 项目也可考虑 std::wstring 之外直接以 UTF-8 存储、仅在边界转换。MSVC 的 <code>_istalpha</code> 系 tchar 宏 <span class="badge old">已过时</span> 是私有扩展,新代码不必使用。</p></div>
+<p>这三个函数声明于 <code>&lt;wctype.h&gt;</code>,使用前需包含该头文件。其余窄字符函数几乎都有 isw*/tow* 对应版本(iswspace、iswpunct、towlower 等),规则同理。Windows 上 wchar_t 是 16 位(UTF-16 码元),对 BMP 之外的字符(如 emoji)按代理对处理会失真;Linux 上是 32 位没有此问题。</p>
+<p>需要严肃的 Unicode 分类(如判定汉字、按 Unicode 规则大小写折叠)时,标准库能力有限,<span class="badge ok">推荐</span> 用 ICU 或 utf8proc;C++ 项目也可考虑 std::wstring 之外直接以 UTF-8 存储、仅在边界转换。MSVC 的 <code>_istalpha</code> 系 tchar 宏 <span class="badge old">已过时</span> 是私有扩展,新代码不必使用。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 15828px;--thin-h:15072px">
+<section class="chapter" style="contain-intrinsic-size:auto 15847px;--thin-h:15091px">
 <h1 id="s6"><span class="part">分类 6</span>math.h 数学</h1>
-<p>math.h 提供以 <code>double</code> 为中心的数学函数族:幂与开方、指数对数、三角反三角、取整与浮点余数,以及 C99 引入的 <code>hypot</code>、<code>cbrt</code>、<code>log2</code> 和 NaN/无穷判定宏。约定:三角函数一律使用<strong>弧度</strong>;定义域错误(如对负数开平方)通常返回 NaN 并可能设置 <code>errno = EDOM</code>。在 Linux/gcc 下需要链接 <code>-lm</code>;MSVC 则默认可用,但 <code>M_PI</code> 等常量宏需先定义 <code>_USE_MATH_DEFINES</code> 再包含头文件。C++ 中请改用 <code>&lt;cmath&gt;</code>,它按参数类型提供重载,无需记后缀。</p>
+<p>math.h 提供以 <code>double</code> 为中心的数学函数族:幂与开方、指数对数、三角反三角、取整与浮点余数,以及 C99 引入的 <code>hypot</code>、<code>cbrt</code>、<code>log2</code> 和 NaN/无穷判定宏。约定:三角函数一律使用<strong>弧度</strong>;定义域错误(如对负数开平方)通常返回 NaN 并可能设置 <code>errno = EDOM</code>。</p>
+<p>在 Linux/gcc 下需要链接 <code>-lm</code>;MSVC 则默认可用,但 <code>M_PI</code> 等常量宏需先定义 <code>_USE_MATH_DEFINES</code> 再包含头文件。C++ 中请改用 <code>&lt;cmath&gt;</code>,它按参数类型提供重载,无需记后缀。</p>
 
 <h2 id="s6-overview">6.1 速览</h2><p><strong>本章速览</strong>——math.h 里的函数都在和浮点数打交道，先扫一眼分工与坑点，再翻后面的逐条详解。</p><table style="contain-intrinsic-size:auto 492px"><thead><tr><th>函数</th><th class="nw">一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><a class="fnlink" href="#s6-fabs"><code>fabs</code></a></td><td class="nw">取浮点数的绝对值</td><td>整数取绝对值请用 abs/labs，别混着用</td></tr><tr><td class="nw"><a class="fnlink" href="#s6-sqrt"><code>sqrt</code></a></td><td class="nw">求非负数的平方根</td><td>传负数返回 NaN 并置 errno，调用前先判号</td></tr><tr><td class="nw"><a class="fnlink" href="#s6-pow"><code>pow</code></a></td><td class="nw">计算 x 的 y 次幂</td><td>开销大且有精度损失，平方直接写 x*x 更划算</td></tr><tr><td class="nw"><a class="fnlink" href="#s6-exp"><code>exp</code></a> / <a class="fnlink" href="#s6-exp"><code>log</code></a> / <a class="fnlink" href="#s6-exp"><code>log10</code></a> / <a class="fnlink" href="#s6-exp"><code>log2</code></a></td><td class="nw">自然指数与三种底的对数</td><td>log 是自然对数不是常用对数，常用对数要写 log10</td></tr><tr><td class="nw"><a class="fnlink" href="#s6-sin"><code>sin</code></a> / <a class="fnlink" href="#s6-sin"><code>cos</code></a> / <a class="fnlink" href="#s6-sin"><code>tan</code></a></td><td class="nw">弧度制下的三角函数</td><td>参数是弧度不是角度，角度需先乘 π/180</td></tr><tr><td class="nw"><a class="fnlink" href="#s6-asin"><code>asin</code></a> / <a class="fnlink" href="#s6-asin"><code>acos</code></a> / <a class="fnlink" href="#s6-asin"><code>atan</code></a></td><td class="nw">反三角函数，结果为弧度</td><td>asin/acos 定义域限 [-1,1]，越界即 NaN</td></tr><tr><td class="nw"><code>atan2</code></td><td class="nw">由 y、x 求全象限方位角</td><td><span class="badge ok">推荐</span> 优于 atan(y/x)：能定象限，x 为 0 也安全</td></tr><tr><td><code>ceil</code> / <code>floor</code> / <code>trunc</code> / <code>round</code></td><td class="nw">向上、向下、向零、就近取整</td><td>返回值仍是浮点数；round 对 .5 一律远离零</td></tr><tr><td class="nw"><a class="fnlink" href="#s6-fmod"><code>fmod</code></a></td><td class="nw">求浮点除法的余数</td><td>余数符号随被除数；要就近余数改用 remainder</td></tr><tr><td class="nw"><a class="fnlink" href="#s6-hypot"><code>hypot</code></a></td><td class="nw">由两直角边求斜边长度</td><td><span class="badge ok">推荐</span> 比 sqrt(x*x+y*y) 更抗中间溢出</td></tr><tr><td class="nw"><a class="fnlink" href="#s6-cbrt"><code>cbrt</code></a></td><td class="nw">求实数的立方根</td><td><span class="badge ok">推荐</span> 负数可直接算，pow(x,1.0/3) 会给 NaN</td></tr><tr><td class="nw"><code>isnan</code> / <code>isinf</code> / <code>isfinite</code></td><td class="nw">判断非数、无穷与有限值</td><td><span class="badge ok">推荐</span> NaN 与自身也不相等，切勿用 == 判断</td></tr></tbody></table>
 
@@ -2321,9 +2334,10 @@ wint_t towupper(wint_t wc);</code></pre>
 <p>对 float 变量调用 <code>sqrt</code> 会先提升为 double、算完再截回,既浪费时间又无精度收益;图形、音频、嵌入式等 float 密集场景应坚持用 f 版。C++ 中直接用 <code>&lt;cmath&gt;</code> 的 <code>std::sqrt</code>,重载会按参数类型自动选择,后缀就此退休。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 11426px;--thin-h:10188px">
+<section class="chapter" style="contain-intrinsic-size:auto 11444px;--thin-h:10206px">
 <h1 id="s7"><span class="part">分类 7</span>time.h 时间日期</h1>
-<p>&lt;time.h&gt; 提供两套时间表示:一是 <code>time_t</code> 表示的“日历时间”(通常是自 1970-01-01 00:00:00 UTC 起的秒数),二是 <code>struct tm</code> 表示的“拆分时间”(年月日时分秒各一个字段)。两者之间用 <code>mktime</code>/<code>localtime_s</code>/<code>gmtime_s</code> 互相转换,格式化输出交给 <code>strftime</code>。此外还有测 CPU 耗时的 <code>clock</code> 和 C11 引入的高精度 <code>timespec_get</code>。本章的两大经典陷阱——<code>tm_year</code> 要加 1900、<code>tm_mon</code> 从 0 起——请务必先看 <a href="#s7-struct-tm">struct tm</a> 一节。</p>
+<p>&lt;time.h&gt; 提供两套时间表示:一是 <code>time_t</code> 表示的“日历时间”(通常是自 1970-01-01 00:00:00 UTC 起的秒数),二是 <code>struct tm</code> 表示的“拆分时间”(年月日时分秒各一个字段)。</p>
+<p>两者之间用 <code>mktime</code>/<code>localtime_s</code>/<code>gmtime_s</code> 互相转换,格式化输出交给 <code>strftime</code>。此外还有测 CPU 耗时的 <code>clock</code> 和 C11 引入的高精度 <code>timespec_get</code>。本章的两大经典陷阱——<code>tm_year</code> 要加 1900、<code>tm_mon</code> 从 0 起——请务必先看 <a href="#s7-struct-tm">struct tm</a> 一节。</p>
 <div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">🔵 现代提示</span><p>C++ 项目请优先使用 <code>std::chrono</code>(C++11 起):类型安全的时长与时间点运算,C++20 还内建了日历与时区库,能从编译期杜绝“秒当毫秒用”这类单位错误。&lt;time.h&gt; 主要用于 C 代码和与旧接口交互。</p></div>
 
 <h2 id="s7-overview">7.1 速览</h2><p><strong>本章速览</strong>——时间只有三种形态:秒级的 time_t、拆开的 struct tm、给人看的字符串;本章函数做的全是它们之间的来回搬运。</p><table style="contain-intrinsic-size:auto 539px"><thead><tr><th class="nw">函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><a class="fnlink" href="#s7-time"><code>time</code></a></td><td class="nw">取当前日历时间,秒级时间戳</td><td>time_t 的内部编码由实现定义,别拿它直接做加减,失败时返回 (time_t)-1。</td></tr><tr><td class="nw"><a class="fnlink" href="#s7-clock"><code>clock</code></a></td><td class="nw">返回程序耗用的处理器时钟数</td><td>不是墙钟时间;须除以 CLOCKS_PER_SEC 才得到秒,多线程程序里含义会失真。</td></tr><tr><td class="nw"><a class="fnlink" href="#s7-difftime"><code>difftime</code></a></td><td class="nw">求两个时间点相差多少秒</td><td>唯一可移植的时间差算法,结果是 double <span class="badge ok">推荐</span>。</td></tr><tr><td class="nw"><code>struct tm</code></td><td class="nw">分解时间:年月日时分秒的结构</td><td>tm_year 以 1900 为起点、tm_mon 从 0 计,差一错误的重灾区。</td></tr><tr><td class="nw"><a class="fnlink" href="#s7-mktime"><code>mktime</code></a></td><td>分解时间归一化并转回 time_t</td><td>按本地时区解释,并就地修正越界字段;tm_isdst 置 -1 才让它自行判断夏令时。</td></tr><tr><td class="nw"><code>localtime_s</code> / <code>gmtime_s</code></td><td>时间戳转本地时区或 UTC 分解时间</td><td>取代返回静态缓冲、非线程安全的 <code>localtime</code>/<code>gmtime</code> <span class="badge old">已过时</span>;注意 C11 附录 K 与 MSVC 版参数顺序相反 <span class="badge ok">推荐</span>。</td></tr><tr><td class="nw"><a class="fnlink" href="#s7-strftime"><code>strftime</code></a></td><td class="nw">按格式把分解时间输出为字符串</td><td>返回 0 只代表缓冲区不足,必须检查;用它替代定长输出的 <code>asctime</code>/<code>ctime</code> <span class="badge old">已过时</span>。</td></tr><tr><td class="nw"><code>timespec_get</code></td><td class="nw">取带纳秒字段的当前时间</td><td>C11 起提供,基准传 TIME_UTC;实际精度取决于系统,别默认真有纳秒级分辨率 <span class="badge ok">推荐</span>。</td></tr></tbody></table>
@@ -2523,7 +2537,7 @@ printf("%.2f ms\n", ms);</code></pre>
 <p><code>time()</code> 只有秒级精度,<code>timespec_get</code>(C11)把分辨率提升到纳秒字段(实际精度取决于系统,通常微秒到百纳秒级),适合给日志打时间戳、测墙钟耗时。它测的是可能被对时调整的“真实时间”,做精密基准测试仍应选单调时钟(POSIX <code>clock_gettime(CLOCK_MONOTONIC)</code>,或 C++ 的 <code>std::chrono::steady_clock</code>)。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 14247px;--thin-h:13007px">
+<section class="chapter" style="contain-intrinsic-size:auto 14299px;--thin-h:13059px">
 <h1 id="s8"><span class="part">分类 8</span>其他常用头文件</h1>
 <p>除了字符串、输入输出、内存这些"大部头"之外,C 标准库还有一批短小精悍的头文件:断言、错误码、可变参数、固定宽度整数、各类极限常量。它们代码量不大,却是写出可移植、可调试 C 程序的基础设施。本章把这些零散但高频的设施集中讲清楚。</p>
 
@@ -2617,7 +2631,8 @@ errno</code></pre>
 <tr><td class="nw">EDOM</td><td class="nw">宏常量</td><td>数学函数定义域错误,如 <code>sqrt(-1.0)</code></td></tr>
 </tbody></table>
 <p><strong>返回值</strong></p>
-<p>不是函数,而是一个可修改的 <code>int</code> 左值。自 C11 起标准保证它是<strong>线程局部</strong>的,各线程互不干扰;主流实现(glibc、MSVC)早已如此。库函数只承诺"出错时设置 <code>errno</code>",从不承诺"成功时清零",所以读它之前必须先用函数自身的返回值判定"确实失败";对 <code>strtol</code>、数学函数这类靠 <code>errno</code> 区分结果的接口,必须<strong>调用前先清零、调用后再检查</strong>。取错误详情:用 <code>strerror(errno)</code> 转成文字,或用 <code>perror("上下文")</code> 直接打印到 <code>stderr</code>。</p>
+<p>不是函数,而是一个可修改的 <code>int</code> 左值。自 C11 起标准保证它是<strong>线程局部</strong>的,各线程互不干扰;主流实现(glibc、MSVC)早已如此。</p>
+<p>库函数只承诺"出错时设置 <code>errno</code>",从不承诺"成功时清零",所以读它之前必须先用函数自身的返回值判定"确实失败";对 <code>strtol</code>、数学函数这类靠 <code>errno</code> 区分结果的接口,必须<strong>调用前先清零、调用后再检查</strong>。取错误详情:用 <code>strerror(errno)</code> 转成文字,或用 <code>perror("上下文")</code> 直接打印到 <code>stderr</code>。</p>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 171px"><code><span class="cl"><span class="cc" style="min-width:45.4ch">errno = 0;</span><span class="cm">// 1. 调用前清零</span></span><span class="cl"><span class="kw">long</span> v = strtol(s, &amp;end, 10);</span><span class="cl"><span class="cc" style="min-width:45.4ch"><span class="kw">if</span> (errno == ERANGE)</span><span class="cm">// 2. 调用后检查</span></span><span class="cl">    fprintf(stderr, "数值溢出: %s\n", s);</span><span class="cl"><span class="kw">else</span> <span class="kw">if</span> (end == s)</span><span class="cl"><span class="cc" style="min-width:45.4ch">    fprintf(stderr, "不是数字: %s\n", s);</span><span class="cm">// 未消费任何字符</span></span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
@@ -2814,9 +2829,10 @@ static_assert(CHAR_BIT == 8, "本代码假定 8 位字节");</code></pre>
 <p>典型用途:锁定结构体大小与偏移(常与 <code>offsetof</code> 配合)、校验平台假设、检查数组长度与枚举个数同步。C11 的原生拼写是 <code>_Static_assert</code>,C23 与 C++11 起 <code>static_assert</code> 本身就是关键字,无需包含任何头文件。凡是编译期能验证的条件,都应从运行期 <code>assert</code> 前移到 <code>static_assert</code>——错误暴露得越早越便宜。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 11138px;--thin-h:10683px">
+<section class="chapter" style="contain-intrinsic-size:auto 11155px;--thin-h:10700px">
 <h1 id="s9"><span class="part">分类 9</span>预处理指令 #pragma</h1>
-<p>这一章讲的东西严格说来<strong>不属于标准库</strong>。C 标准分成两大块:语言(§6)与库(§7),<code>#include</code>、<code>#define</code>、<code>#pragma</code> 这些预处理指令住在<strong>语言</strong>那一半,所以在任何"标准库手册"里都查不到它们——这不是手册漏了,是分类使然。但 <code>#pragma</code> 在真实工程里的出现频率不亚于任何一个库函数:关警告、控制结构体对齐、指定链接库、防重复包含,全靠它。更麻烦的是,标准只规定了这个<strong>关键字</strong>,后面跟什么几乎全是各家编译器的私货。本章把标准规定的部分和 MSVC / GCC / Clang 的常用私有 pragma 一并收齐。</p>
+<p>预处理指令严格说来<strong>不属于标准库</strong>。C 标准分成两大块:语言(§6)与库(§7),<code>#include</code>、<code>#define</code>、<code>#pragma</code> 这些预处理指令住在<strong>语言</strong>那一半,所以在任何"标准库手册"里都查不到它们——这不是手册漏了,是分类使然。</p>
+<p>但 <code>#pragma</code> 在真实工程里的出现频率不亚于任何一个库函数:关警告、控制结构体对齐、指定链接库、防重复包含,全靠它。更麻烦的是,标准只规定了这个<strong>关键字</strong>,后面跟什么几乎全是各家编译器的私货。标准规定的部分和 MSVC / GCC / Clang 的常用私有 pragma 在此一并收齐。</p>
 
 <h2 id="s9-overview">9.1 速览</h2><p><strong>本章速览</strong>——同一个 <code>#pragma</code>,标准只画了个框,框里的内容各家自己填。分清哪些能跨编译器、哪些一换平台就失效,是用好它的前提。</p>
 <table style="contain-intrinsic-size:auto 444px"><thead><tr><th>指令</th><th class="nw">可移植性</th><th>用途</th></tr></thead>

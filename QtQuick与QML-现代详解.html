@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Qt Quick 与 QML · 现代详解</title>
+<title>Qt Quick 与 QML</title>
 <script>
 /* 主题与目录开关的初值在这里定好：解析 <body> 之前完成，避免加载完再改 <html> 属性触发一次全量样式重算 */
 (function(){var r=document.documentElement;
@@ -197,9 +197,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <button id="depthBtn" title="薄/厚阅读:点一下只看主干(薄),再点一下看全部(厚)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
 <button id="navBtn" title="显示/隐藏目录"></button>
 <nav id="sidebar">
-<div class="booktitle">Qt Quick 与 QML · 现代详解</div>
+<div class="booktitle">Qt Quick 与 QML</div>
 <details><summary><a class="ch" href="#q0">预备:Quick 工程、工具链与第一个 QML 程序</a></summary>
-<a class="sec" href="#q0-open">0.0 开卷:锚定、定位与读法</a>
+<a class="sec" href="#q0-open">0.0 导读</a>
 <a class="sec" href="#q0-setup">0.1 装配:模块、工具链与 Qt Creator 的 QML 支持</a>
 <a class="sec" href="#q0-cmake">0.2 用 CMake 组织一个 Quick 工程</a>
 <a class="sec" href="#q0-first">0.3 第一个 QML 程序:从 main.cpp 到窗口显示</a>
@@ -319,9 +319,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 50222px;--thin-h:50222px">
+<section class="chapter" style="contain-intrinsic-size:auto 50163px;--thin-h:50163px">
 <h1 id="q0"><span class="part">第 0 章</span>预备:Quick 工程、工具链与第一个 QML 程序</h1>
-<h2 id="q0-open">0.0 开卷:锚定、定位与读法</h2>
+<h2 id="q0-open">0.0 导读</h2>
 <p>QML 不是 C++ 界面之上的一层脚本。它有独立的类型系统、独立的对象创建与销毁规则,以及一套「写下关系、由引擎决定何时重算」的求值模型;界面的最终像素由一份场景描述在渲染线程上交给 GPU 产出,而不是由某个函数一笔一笔画出来。</p>
 <p><strong>本书讲清这套系统怎么运作,以及它在什么条件下不成立。</strong>基线取 Qt 6.5 以上,行为随版本变动处标出分界;构建以 CMake 与 <code>qt_add_qml_module</code> 为主,不使用 qmake;平台覆盖桌面的 Linux 与 Windows,移动端与嵌入式只在结论会变的地方提示。</p>
 <h3>这个领域有哪些资料</h3>
@@ -342,7 +342,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td>Qt 官方示例仓库(<code>qtdeclarative</code> 的 examples 目录)</td><td>在线资料</td><td>参考</td><td>与当前版本同步、能直接构建运行,是接口用法最可靠的对照物。局限:为展示单个功能而写,错误处理、模块划分与性能取舍普遍被简化,不能当工程模板</td></tr>
 <tr><td class="nw">Qt 官方博客与发布说明的 Quick 条目</td><td>在线资料</td><td>推荐</td><td>新接口、行为变更与已知问题最早出现在这里,发布说明还能反查某个行为是哪一版改的。局限:按时间排列,不成体系;结论的适用版本要自己从发表时间回推</td></tr>
 <tr><td class="nw">《JavaScript 语言手册》</td><td>相邻领域</td><td>推荐</td><td>QML 的表达式与函数用的是 JavaScript,语义边界在那里说得清楚。局限:面向浏览器环境,DOM、模块加载与部分定时器接口在 QML 里不存在</td></tr>
-<tr><td class="nw">《Qt 核心与 Widget · 现代详解》</td><td>相邻领域</td><td>参考</td><td><code>QObject</code>、对象树、信号槽与属性系统的机制在那本书里,本书第 9、13 章与它逐点对照过。局限:不含 QML 引擎与场景图,Quick 侧的问题在那里查不到</td></tr>
+<tr><td class="nw">《Qt 核心与 Widget》</td><td>相邻领域</td><td>参考</td><td><code>QObject</code>、对象树、信号槽与属性系统的机制在那本书里,本书第 9、13 章与它逐点对照过。局限:不含 QML 引擎与场景图,Quick 侧的问题在那里查不到</td></tr>
 </tbody>
 </table>
 <div class="note old" style="contain-intrinsic-size:auto 197px"><span class="t">🟡 Qt 5 时代的 QML 资料只取问题清单,写法要整体重来</span><p>它们提出的问题至今成立:界面为什么不更新、列表为什么卡、C++ 侧的数据怎么送进来。写法部分已经整段作废——导入语句带版本号、类型注册靠运行期调用注册函数、模块靠手写 <code>qmldir</code> 组织、着色器直接写图形接口的源码、嵌入部件的组件只能跑软件后端。这些写法多数仍能通过编译,代价推迟到运行期或者换一台机器时才暴露。</p></div>
@@ -377,12 +377,12 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <p>合计 15 章 87 节。四组之间是单向依赖:后三组都在用第一组的结论,第一组不用任何后面的内容。因此语言与机制这一组是唯一必须按顺序读完的部分,其余三组可以按手上的任务挑着读。</p>
 <p>有两章的位置与其余十三章不同。第 0 章交付的是一个能跑通的最小工程,读完能配置、构建、运行并看到窗口,它本身不承担机制;第 14 章不引入新知识,只把前面的结论按主题与症状各重排一遍。这两章任何时候单独读都成立,不受前后依赖约束。</p>
 <p>不讲的部分同样要说清楚,并且指明归谁。<strong>边界写成一句可以当场判断的话</strong>,遇到一个话题时能立刻知道该翻哪本书。</p>
-<table style="contain-intrinsic-size:auto 488px">
+<table style="contain-intrinsic-size:auto 462px">
 <thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
-<tr><td><code>QObject</code>、信号槽与属性系统的 C++ 侧机制,以及 <code>QWidget</code> 体系</td><td>《Qt 核心与 Widget · 现代详解》</td><td>本书讲一个 C++ 对象怎么被 QML 看见和使用,那本讲这个对象自身怎么运作</td></tr>
-<tr><td class="nw">第三方组件、图表、三维、数据库接入、打包与分发</td><td>《Qt 组件与生态 · 现代详解》</td><td>本书讲怎么自己画一个东西,那本讲什么时候不必自己画</td></tr>
-<tr><td class="nw">渲染与绑定的性能细账、剖析工具的用法</td><td>《Qt 性能优化 · 现代详解》</td><td>本书讲绑定为什么会重算,那本讲一次重算要多少微秒</td></tr>
+<tr><td><code>QObject</code>、信号槽与属性系统的 C++ 侧机制,以及 <code>QWidget</code> 体系</td><td>《Qt 核心与 Widget》</td><td>本书讲一个 C++ 对象怎么被 QML 看见和使用,那本讲这个对象自身怎么运作</td></tr>
+<tr><td class="nw">第三方组件、图表、三维、数据库接入、打包与分发</td><td>《Qt 组件与生态》</td><td>本书讲怎么自己画一个东西,那本讲什么时候不必自己画</td></tr>
+<tr><td class="nw">渲染与绑定的性能细账、剖析工具的用法</td><td>《Qt 性能优化》</td><td>本书讲绑定为什么会重算,那本讲一次重算要多少微秒</td></tr>
 <tr><td>JavaScript 语言本身:语法、原型、闭包与异步模型</td><td>《JavaScript 语言手册》</td><td>本书只讲 JavaScript 在 QML 里哪些能用、哪些被引擎改了语义</td></tr>
 <tr><td>移动端与嵌入式的平台适配,以及 Qt for MCUs</td><td class="nw">不在本书系范围</td><td>它们各有独立的运行时与受限的类型集合,本书的写法结论不能直接搬过去</td></tr>
 <tr><td>Qt Design Studio 的设计流程与设计师交接</td><td class="nw">不在本书系范围</td><td>本书写的是手写 QML 的工程,设计工具生成的文件另有一套组织约定</td></tr>
@@ -407,7 +407,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </table>
 <p>「学过 Widget」放在最好有这一档,<strong>是加分项而不是门槛</strong>。第 1 章与第 13 章都建立在与 Widget 的对照上,但两章的写法都不假定读者写过部件代码:第 1.2 节的六维对照表两侧各自写全,不靠读者补另一半;第 13 章面向已有 Widget 工程的迁移与混用,手上没有这类工程时可以整章放过,不影响其余十四章。</p>
 <p>两样明确不在前置里。<strong>不需要有 QML 或者其他声明式框架的经验</strong>,第 0 章从装配模块与配置构建开始,第 2 章从最小的对象声明开始。<strong>不需要懂图形学</strong>,第 10 章只用到二维坐标、矩形裁剪与「一批绘制」这个概念,不涉及矩阵推导与光照模型。</p>
-<p>前置缺了某一条时不必先补全再开始。缺 CMake 的从第 0.2 节读起,那一节把一个 Quick 工程用得到的部分讲全;缺信号槽机制的先读《Qt 核心与 Widget · 现代详解》的对应章节,再回到第 9 章;缺 JavaScript 的可以边读边补,第 4.3 节划出了 QML 里实际用得到的那一小块,范围比整门语言小得多。</p>
+<p>前置缺了某一条时不必先补全再开始。缺 CMake 的从第 0.2 节读起,那一节把一个 Quick 工程用得到的部分讲全;缺信号槽机制的先读《Qt 核心与 Widget》的对应章节,再回到第 9 章;缺 JavaScript 的可以边读边补,第 4.3 节划出了 QML 里实际用得到的那一小块,范围比整门语言小得多。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 跳过第 2、3 章直接读视图与互操作,问题会一律归错因</span><p>第 2 章讲清一个 <code>.qml</code> 文件就是一个类型、名字沿哪条链解析,第 3 章讲清绑定何时重算、何时被打断。缺了这两章,后面的现象都会被归到错误的原因上:列表不刷新被当成视图的问题,实际是模型没有发出变更通知;界面停在旧值被当成绑定失效,实际是一次命令式赋值把绑定拆掉了。表现是每一章都看得懂字面,遇到没见过的现象却推不出原因。</p></div>
 <h3>与那些资料相比,本书多给了什么</h3>
 <p>每一条特点都配了可以当场翻到的位置。不能指到具体节的特点无法核对,也就不必写。</p>
@@ -480,7 +480,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <p>表里 Controls 与 Templates 的分工先记一个结论,第 11 章展开:Templates 提供一个控件的行为与状态,Controls 提供它的画法,一个 <code>Button</code> 由这两层拼出来。因此装了 Controls 就必须同时有 Templates,少一个,控件能被解析成类型却建不出实例。</p>
 <p>与 Widget 那条路线相比,差别不在模块数量,在于<strong>这些模块是被运行期加载的</strong>。链接 <code>Qt6::Widgets</code> 之后,部件类的代码就在可执行文件的依赖里,<code>ldd</code> 与 <code>dumpbin</code> 都看得见;<code>import QtQuick.Controls</code> 则是一次运行期的目录查找,它查的是 Qt 安装前缀下的 <code>qml/</code> 目录与几条导入路径,与链接期毫无关系。这一条是本节后面全部事故形态的根。</p>
 <h3>四条装法与发行版的模块拆包</h3>
-<p>装法与姊妹书《Qt 核心与 Widget · 现代详解》里那四条相同,选哪一条仍然取决于这份依赖由谁来管。差别在最后一列:每条装法对 QML 模块的粒度控制不同,而粒度决定了会不会漏。</p>
+<p>装法与姊妹书《Qt 核心与 Widget》里那四条相同,选哪一条仍然取决于这份依赖由谁来管。差别在最后一列:每条装法对 QML 模块的粒度控制不同,而粒度决定了会不会漏。</p>
 <table style="contain-intrinsic-size:auto 236px">
 <thead><tr><th>装法</th><th>谁在管版本</th><th>QML 模块的粒度</th><th>主要代价</th></tr></thead>
 <tbody>
@@ -589,7 +589,7 @@ EOF</code></pre>
 </table>
 <p>最后一类装配事故与模块无关,与「同一台机器上有几份 Qt」有关。构建期要用到 <code>qmlcachegen</code>、<code>qmltyperegistrar</code>、<code>qmlimportscanner</code> 与 <code>qmllint</code>,它们由 <code>find_package(Qt6 ...)</code> 找到的那一份提供;运行期加载的是动态库与安装前缀下 <code>qml/</code> 目录里的模块,由 PATH 或者可执行文件的 RPATH 决定。这两条路径可以指向不同的 Qt,而且两处都不报错。</p>
 <p>症状分两种,都不指向原因。<code>qmlcachegen</code> 比运行时新时,字节码里出现引擎不认识的指令,引擎发现版本标记不匹配就丢弃缓存改走源码解析——功能完全正常,启动慢一截,几乎没有人会去查。反过来,<code>qml/</code> 目录下的模块比引擎新时,<code>import QtQuick</code> 落在一个引擎解析不了的 <code>qmldir</code> 上,报出来的是模块未安装或者某个类型不存在,与真正的成因隔着两层。</p>
-<p>Windows 上还有一个额外的成因:PATH 里同时存在两份 Qt 的 <code>bin</code> 目录。构建用的是 CMake 找到的那一份,运行时按 PATH 顺序加载 DLL,两者可以不同。这与姊妹书《Qt 核心与 Widget · 现代详解》里讲的 DLL 加载顺序是同一件事,只是 QML 侧多了一层 <code>qml/</code> 目录,后果更难看出来。</p>
+<p>Windows 上还有一个额外的成因:PATH 里同时存在两份 Qt 的 <code>bin</code> 目录。构建用的是 CMake 找到的那一份,运行时按 PATH 顺序加载 DLL,两者可以不同。这与姊妹书《Qt 核心与 Widget》里讲的 DLL 加载顺序是同一件事,只是 QML 侧多了一层 <code>qml/</code> 目录,后果更难看出来。</p>
 <pre style="contain-intrinsic-size:auto 223px"><code># Linux:三处一次问清楚——CMake 找到哪份、工具从哪来、运行期链接哪份
 cmake -B build -S . -DCMAKE_PREFIX_PATH=<span>"$HOME/Qt/6.8.1/gcc_64"</span> 2&gt;&amp;1 | grep -i <span>"Found Qt"</span>
 readlink -f <span>"$(command -v qml6)"</span>
@@ -1291,7 +1291,7 @@ qmlls -b build/linux-debug</code></pre>
 <li><strong>格式化判据。</strong>批量跑一遍格式化之后检查工作区是否干净,不干净就算失败,评审时不再讨论格式。</li>
 </ol>
 <p>还有一条不在持续集成里,但每次排查都用得上:<strong><code>qml</code> 工具与工程用的必须是同一份 Qt</strong>。用系统自带的那一份去跑针对官方安装器那份 Qt 写的组件,现象可能完全不同,而两边都不会提示版本不一致。做最小复现之前先把工具路径确认一遍,这一步的成本是一条命令。</p>
-<p><code>qmlprofiler</code> 在本书里只出现在这张表上。它采集的是绑定求值、对象创建与文档编译的耗时,属于性能工作的入口;测量方法、指标口径与优化流程见《Qt 性能优化 · 现代详解》,本书只在讲机制时指出开销来自哪里。</p>
+<p><code>qmlprofiler</code> 在本书里只出现在这张表上。它采集的是绑定求值、对象创建与文档编译的耗时,属于性能工作的入口;测量方法、指标口径与优化流程见《Qt 性能优化》,本书只在讲机制时指出开销来自哪里。</p>
 <h2 id="q0-sum">0.5 小结:环境自查清单</h2>
 <p>这一章的内容可以压成一句话:<strong>Quick 程序从「编过了」到「跑起来了」之间隔着一层运行期决议,而这层决议在默认配置下是安静的。</strong>模块在不在、图形后端起不起得来、模块身份是否成立、加载有没有成功,四件事全部在运行期确定,四件事出问题时构建都不会失败。</p>
 <p>因此这一章的收尾不是复述结论,而是一份能逐条执行的自查清单,加上一张按症状反查的定位表。</p>
@@ -1384,12 +1384,12 @@ cmake --build build --target all_qmllint</code></pre>
 <tr><td>把 Quick 场景嵌进 Widget 程序,或者反过来</td><td class="nw">第 13 章</td></tr>
 </tbody>
 </table>
-<p>三本姊妹书在这一章各出现过一次,结论都已经给过,不再展开:C++ 侧的对象模型、信号槽与事件循环见《Qt 核心与 Widget · 现代详解》;绑定与渲染的性能细账见《Qt 性能优化 · 现代详解》;第三方 QML 组件的选型与接入见《Qt 组件与生态 · 现代详解》;C++ 语言本身的规则见《C++ 语言 · 现代详解》。</p>
+<p>三本姊妹书在这一章各出现过一次,结论都已经给过,不再展开:C++ 侧的对象模型、信号槽与事件循环见《Qt 核心与 Widget》;绑定与渲染的性能细账见《Qt 性能优化》;第三方 QML 组件的选型与接入见《Qt 组件与生态》;C++ 语言本身的规则见《C++ 语言》。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 换机器、换镜像、换 Qt 版本之后清单要重跑,三条装配前提都会变</span><p>模块是按机器装的、图形设备是按机器给的、Qt 版本是按镜像定的,这三样在换环境时全部重新洗牌,而工程代码一个字都没有改。表现是同一个提交在开发机上正常、在新的持续集成节点上启动即退,或者在新一批用户机器上白屏,而版本控制里查不到任何相关改动。做法是把自查脚本接进镜像构建与发布前的冒烟环节,让它在换环境的那一刻失败,而不是等到有人报障之后再从头排查。</p></div>
 <p>下一章从一个问题开始:同一个界面,用 Widget 写与用 QML 写,差别不在语法上,而在「谁决定界面什么时候改」这件事上。这条分界决定了后面全部十三章的组织方式。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 40550px;--thin-h:40550px">
+<section class="chapter" style="contain-intrinsic-size:auto 40474px;--thin-h:40474px">
 <h1 id="q1"><span class="part">第 1 章</span>声明式 UI 的世界观:与 Widget 的分界在哪</h1>
 <h2 id="q1-what">1.1 声明式描述的是状态,不是步骤</h2>
 <p>声明式与命令式的分界不在语法,而在<strong>谁来维持界面与状态之间的一致</strong>。命令式里这件事由写代码的人逐条安排:哪个信号到了、该改哪个属性、改成什么值、还有哪些入口会改到同一个状态;声明式里只写下「界面的这个属性等于状态的这个表达式」,由引擎在依赖变化时重新求值并写回。</p>
@@ -1578,7 +1578,7 @@ target_link_libraries(gate_quick PRIVATE Qt6::Quick)</code></pre>
 <p>第一条的机制在于 QML 文档编译出来的东西不是一段依次执行的指令。引擎读到的是一棵对象树的描述:每个对象是什么类型、它有哪些子对象、每个属性的初值是一个常量还是一个表达式。运行期做的事是建树、求初值、登记绑定,没有「先执行这句再执行那句」这一层。</p>
 <p>第二条把绑定与一次性赋值分开。<code>enabled: 表达式</code> 与 <code>enabled = 表达式</code> 在 QML 里是两件不同的事:冒号形式建立一条持续的关系,等号形式只把当时算出的值写进去。这两种写法长得很像,后果差别很大,第 3 章会用一整节讲它们在引擎里各留下了什么。</p>
 <p>第三条最容易被误解。绑定的重算不发生在每一帧,也不发生在文档里那一行「被执行」的时刻,而发生在它读过的某个属性发出变更通知之后。引擎在首次求值时把自己挂到那些属性的通知上,形成一份依赖记录。这份记录怎么建立、哪些读取会被漏记,是第 3 章的主题。</p>
-<p>这条依赖记录的地基在 C++ 侧:QML 的绑定建立在 <code>Q_PROPERTY</code> 的 <code>NOTIFY</code> 信号之上,一个属性没有变更通知,引擎就无从得知它变了。属性系统与元对象的机制在《Qt 核心与 Widget · 现代详解》里讲过,本书第 3 章接着讲它在引擎一侧怎么被记录与触发。</p>
+<p>这条依赖记录的地基在 C++ 侧:QML 的绑定建立在 <code>Q_PROPERTY</code> 的 <code>NOTIFY</code> 信号之上,一个属性没有变更通知,引擎就无从得知它变了。属性系统与元对象的机制在《Qt 核心与 Widget》里讲过,本书第 3 章接着讲它在引擎一侧怎么被记录与触发。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 228px"><span class="t">🔴 C++ 属性缺 NOTIFY 信号,绑定只在创建时求值一次,不报任何错</span><p>症状是界面上的值停在初始状态,改动数据之后不更新,而运行期日志里干干净净。成因是引擎建立依赖记录时依据的是属性的变更通知,没有 NOTIFY 的属性登记不进这份记录,它在绑定里退化成一个常量。QML 内建类型的属性一律带通知,这条只在自己写的 C++ 类型上出问题。区分手段是把该属性改成常量字面量试一次:界面跟着变说明绑定链路本身是通的,问题在通知这一端。第 3 章给完整的排查步骤,第 9 章给注册 C++ 类型时的写法。</p></div>
 <h3>声明式表达不了顺序与副作用</h3>
 <p>绑定描述的是「在任意时刻都应当成立的关系」。有一类需求不是这个形状:「点了保存之后先校验输入、再写盘、再根据结果弹提示」,这里的三步有严格的先后,中间还有失败分支,每一步都改变了程序外部的状态。这类需求写不成绑定,只能命令式地写。</p>
@@ -1683,7 +1683,7 @@ qml -I . Main.qml</code></pre>
 <p>Quick 相对 Widget 多带两样运行期设施:一个 JavaScript 引擎,一套场景图与它下面的图形抽象层。这两样都要在程序启动时初始化,都要占内存,而 Widget 侧完全没有。</p>
 <p>启动阶段因此多出三段工作:JavaScript 引擎初始化、QML 文档的解析与编译、对象树建立并求出全部初值绑定。第三段的耗时与界面的复杂度直接相关,一个有几十个组件、几百条绑定的界面,这一段能到几十毫秒的量级。第二段可以由 <code>qmlcachegen</code> 在构建期完成,本章第四节展开。</p>
 <p>内存方面,场景图为每个可见元素持有节点与几何数据,纹理与着色器程序占显存。数量级上,一个中等复杂度的界面在 Quick 侧的常驻内存通常是同等 Widget 界面的两到三倍,但这个比值随界面内容变化很大,不能当成一条可以套用的结论。</p>
-<p>这一维度上唯一可靠的做法是<strong>在目标机器上量</strong>,不是查表。测量方法、要看哪些指标、每一段耗时怎么归因,在《Qt 性能优化 · 现代详解》第 10 章。本节只给一条判据:目标机器的内存或启动时间有硬指标时,把这项验证放在选型阶段,不要放在优化阶段。</p>
+<p>这一维度上唯一可靠的做法是<strong>在目标机器上量</strong>,不是查表。测量方法、要看哪些指标、每一段耗时怎么归因,在《Qt 性能优化》第 10 章。本节只给一条判据:目标机器的内存或启动时间有硬指标时,把这项验证放在选型阶段,不要放在优化阶段。</p>
 <h3>可测性与生态成熟度</h3>
 <p>Widget 侧的测试建立在 <code>QTest</code> 上:用 <code>QTest::mouseClick</code>、<code>QTest::keyClicks</code> 模拟输入,用 <code>findChild</code> 按 <code>objectName</code> 取到控件,断言写在 C++ 里,与被测代码在同一个编译单元体系内。界面逻辑与业务逻辑都是 C++,一套工具全覆盖。</p>
 <p>Quick 侧是 <code>QtQuickTest</code>。测试用例写成 QML 里的 <code>TestCase</code>,由一个极小的 C++ 入口启动;<code>objectName</code> 仍然可用,C++ 侧也能通过 <code>findChild</code> 取到 QML 对象。</p>
@@ -1710,7 +1710,7 @@ TestCase {
 }</code></pre>
 <p>关键的一条限制不在工具上:<strong>大量逻辑写在 QML 的 JavaScript 里,C++ 侧的单元测试就覆盖不到</strong>。写在处理器里的校验规则、写在函数里的数据变换、写在属性表达式里的业务判断,只能靠拉起一个真实界面再模拟操作来测,速度慢、依赖显示环境、失败时定位困难。</p>
 <p>这条限制推出了本书后面反复出现的一条规矩:<strong>逻辑下沉到 C++</strong>。界面的排布、状态与动画留在 QML,数据的组织、校验、持久化与网络交互放在 C++ 类型里,QML 只调用它们暴露出来的属性与方法。这样做的直接收益是这部分逻辑重新回到编译期检查与常规单元测试的覆盖范围内。第 4 章讲哪些代码适合留在 QML,第 9 章讲下沉之后的接口怎么设计。</p>
-<p>生态成熟度这一维要按控件清单来判断,不能笼统比较。Widget 侧成熟的是桌面办公形态的控件:可编辑表格、树形视图、停靠窗口、富文本编辑器、打印预览。Quick 侧这几项要么没有对应类型,要么只有基础版本,做到可用需要自己补相当多的工作。反过来,触摸交互、路径动画、非矩形界面、嵌入式设备上的 GPU 合成,Quick 侧是现成的。第三方组件的选型与接入在《Qt 组件与生态 · 现代详解》。</p>
+<p>生态成熟度这一维要按控件清单来判断,不能笼统比较。Widget 侧成熟的是桌面办公形态的控件:可编辑表格、树形视图、停靠窗口、富文本编辑器、打印预览。Quick 侧这几项要么没有对应类型,要么只有基础版本,做到可用需要自己补相当多的工作。反过来,触摸交互、路径动画、非矩形界面、嵌入式设备上的 GPU 合成,Quick 侧是现成的。第三方组件的选型与接入在《Qt 组件与生态》。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 选型前先列控件清单,逐个确认两侧有没有现成实现</span><p>做法是把界面原型里出现的每一类控件写成一行,逐个在两侧查有没有官方类型、有没有可靠的第三方实现、缺失的那几个自己实现要多少工作量。可编辑表格、停靠窗口、打印预览这三项在 Quick 侧的缺口最大,项目里只要有其中一项且不打算自己造,这一维度就足以定下选 Widget。</p></div>
 <h2 id="q1-arch">1.3 一个 Quick 程序由哪几层构成</h2>
 <p>一个 Quick 程序从 <code>.qml</code> 文本走到屏幕上的像素,中间经过四层。每一层有明确的输入与输出,层与层之间的接口是本章后面几节以及后续多个章节的坐标系。</p>
@@ -1792,7 +1792,7 @@ TestCase {
 <h3>QML 引擎层:从文本到对象树</h3>
 <p><code>QQmlEngine</code> 是这一层的核心。它持有一个 JavaScript 引擎、一份类型注册表、一份导入路径列表,以及全部由它创建的对象的上下文。<code>QQmlComponent</code> 表示一份编译好的 QML 文档,调用它的创建接口会得到一棵对象树。上一节用到的 <code>QQmlApplicationEngine</code> 是 <code>QQmlEngine</code> 的一个子类,附带了「加载一份文档并把根对象保管起来」这个常用流程。</p>
 <p>加载一份文档要经过四步:按导入语句解析出用到的模块并加载它们的类型;把文档编译成一份内部表示;按这份表示创建对象、设置属性初值;把写成表达式的属性登记成绑定并求一次初值。第二步的产物可以缓存,<code>qmlcachegen</code> 就是把它提前到构建期完成。</p>
-<p>这一层的输出是一棵 <code>QQuickItem</code> 对象树。这棵树同时也是一棵 <code>QObject</code> 树:父子关系决定生命周期,属性系统与信号槽照常工作。《Qt 核心与 Widget · 现代详解》里关于对象树与元对象的结论在这里全部成立,QML 只是给它加了一层描述语言与一套绑定机制。</p>
+<p>这一层的输出是一棵 <code>QQuickItem</code> 对象树。这棵树同时也是一棵 <code>QObject</code> 树:父子关系决定生命周期,属性系统与信号槽照常工作。《Qt 核心与 Widget》里关于对象树与元对象的结论在这里全部成立,QML 只是给它加了一层描述语言与一套绑定机制。</p>
 <p>C++ 侧介入这一层有三条路:用 <code>QML_ELEMENT</code> 注册一个类型让 QML 能实例化它;用 <code>QML_SINGLETON</code> 注册一个单例;或者在引擎的根上下文里放一个上下文属性。前两条是 Qt 6 的推荐写法,最后一条是 Qt 5 时期的常用形态,今天只在少数场合还合适。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1147px"><code><span class="cm">// backend.h —— 注册一个 C++ 类型给 QML 用</span>
 <span class="kw">#pragma</span> once
@@ -1888,7 +1888,7 @@ QSG_RHI_BACKEND=opengl ./gate_quick
 
 # 完全绕开 GPU,走软件渲染
 QT_QUICK_BACKEND=software ./gate_quick</code></pre>
-<p>这四条命令是排查渲染问题的第一组手段。崩溃在 <code>basic</code> 下重现不了,几乎可以确定与线程相关;界面在 <code>software</code> 下正常而在默认后端下异常,问题在驱动或着色器一侧。渲染循环的完整行为与各平台的默认值在第 10 章,性能测量在《Qt 性能优化 · 现代详解》第 9 章。</p>
+<p>这四条命令是排查渲染问题的第一组手段。崩溃在 <code>basic</code> 下重现不了,几乎可以确定与线程相关;界面在 <code>software</code> 下正常而在默认后端下异常,问题在驱动或着色器一侧。渲染循环的完整行为与各平台的默认值在第 10 章,性能测量在《Qt 性能优化》第 9 章。</p>
 <h3>RHI 与图形后端:一份场景图翻译成五套 API</h3>
 <p>RHI 是 Qt 6 引入的图形抽象层,位置在场景图之下、具体图形 API 之上。它的输入是渲染器发出的绘制命令与资源描述,输出是某一套后端 API 的调用。Qt 5 时期场景图直接调用 OpenGL,Qt 6 把这一层抽出来之后,同一套场景图代码可以跑在 OpenGL、Vulkan、Metal 与 Direct3D 11 上。</p>
 <p>着色器的处理方式随之改变。源码用一种受限的 GLSL 方言写,构建期由 <code>qsb</code> 工具编译成 <code>.qsb</code> 文件,里面同时包含面向各后端的中间表示;运行期 RHI 按当前后端取出对应的那一份。CMake 侧由 <code>qt_add_shaders()</code> 驱动这一步。</p>
@@ -1954,7 +1954,7 @@ windeployqt.exe --qmldir . build\gate_quick.exe</code></pre>
 
 # 关掉磁盘缓存,每次都重新解析与编译,两者相减就是这一段的耗时
 QML_DISABLE_DISK_CACHE=1 ./gate_quick</code></pre>
-<p>第三段的优化落在界面的组织方式上:把首屏不需要的部分放进 <code>Loader</code> 延后创建,把大列表交给视图按需实例化而不是用 <code>Repeater</code> 一次建完,减少首屏的绑定条数。这些手段各自的收益与适用条件在《Qt 性能优化 · 现代详解》第 10 章,本书第 8 章讲视图的按需实例化。</p>
+<p>第三段的优化落在界面的组织方式上:把首屏不需要的部分放进 <code>Loader</code> 延后创建,把大列表交给视图按需实例化而不是用 <code>Repeater</code> 一次建完,减少首屏的绑定条数。这些手段各自的收益与适用条件在《Qt 性能优化》第 10 章,本书第 8 章讲视图的按需实例化。</p>
 <div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 Qt 6.5 起还有 qmltc,能把 QML 组件直接编译成 C++ 类</span><p><code>qmlcachegen</code> 产出的是字节码,运行期仍由引擎解释执行并建立对象;<code>qmltc</code> 更进一步,把一个 QML 组件编译成一个 C++ 类,对象创建与部分绑定变成编译好的代码,省掉这一段的解释开销。它对 QML 的写法有额外约束,不是所有文档都能编译,适合把已经稳定的组件逐个转过去。第 12 章给启用方式与约束清单。</p></div>
 <h3>调试难度:错误推迟到运行期</h3>
 <p>Quick 的第三项代价与体积和时间不同,它没有一个可以调节的开关。C++ 的类型系统在编译期拦下的一整类错误,在 QML 里要等到运行期才暴露,而且暴露得并不整齐。</p>
@@ -2134,16 +2134,16 @@ ApplicationWindow {
 </table>
 <h3>按症状反查:现象、根因与去处</h3>
 <p>下面这张表按现象排列。用法是先在第一列找到与手上的现象最接近的一条,按第三列做一次确认,再去对应的章节。</p>
-<table style="contain-intrinsic-size:auto 848px">
+<table style="contain-intrinsic-size:auto 772px">
 <thead><tr><th>症状</th><th>可能的根因</th><th>第一步做什么</th><th>展开在哪一章</th></tr></thead>
 <tbody>
 <tr><td class="nw">一开始正确,交互过一次之后不再更新</td><td>处理器里的命令式赋值把绑定替换掉了</td><td>打开 <code>qt.qml.binding.removal.info</code> 日志跑一遍</td><td>第 3 章</td></tr>
 <tr><td class="nw">某个值从头到尾不变,日志里没有任何报错</td><td>C++ 属性缺少 <code>NOTIFY</code> 信号,绑定退化成常量</td><td>把该属性临时换成字面量,看界面跟不跟着变</td><td>第 3 章</td></tr>
 <tr><td class="nw">窗口起来了,里面一片空白</td><td>QML 模块没找到,根对象没建起来</td><td>看标准错误里有没有 module is not installed</td><td>第 12 章</td></tr>
-<tr><td class="nw">启动明显比预期慢</td><td>解析编译没走预编译,或首屏绑定条数过多</td><td>用 <code>QML_DISABLE_DISK_CACHE</code> 对照测一次</td><td>第 12 章与《Qt 性能优化 · 现代详解》第 10 章</td></tr>
+<tr><td class="nw">启动明显比预期慢</td><td>解析编译没走预编译,或首屏绑定条数过多</td><td>用 <code>QML_DISABLE_DISK_CACHE</code> 对照测一次</td><td>第 12 章与《Qt 性能优化》第 10 章</td></tr>
 <tr><td class="nw">远程桌面上黑窗口,或某些区域不显示</td><td>退到软件渲染,着色器与部分效果失效</td><td>本机用 <code>QT_QUICK_BACKEND=software</code> 复现</td><td>第 10 章</td></tr>
 <tr><td class="nw">同一个控件在不同平台上长得不一样</td><td>原生样式覆盖不全,未实现的控件回落到 Fusion</td><td>逐个控件在两个目标平台上截图对照</td><td>第 11 章</td></tr>
-<tr><td class="nw">界面卡在动画上</td><td>动画依赖 GUI 线程上的计算,或 sync 阶段过长</td><td>用 <code>QSG_INFO=1</code> 确认渲染循环形态</td><td>第 10 章与《Qt 性能优化 · 现代详解》第 9 章</td></tr>
+<tr><td class="nw">界面卡在动画上</td><td>动画依赖 GUI 线程上的计算,或 sync 阶段过长</td><td>用 <code>QSG_INFO=1</code> 确认渲染循环形态</td><td>第 10 章与《Qt 性能优化》第 9 章</td></tr>
 <tr><td class="nw">偶发崩溃,栈顶落在场景图里</td><td>渲染线程访问了 QML 对象</td><td>在 <code>QSG_RENDER_LOOP=basic</code> 下能否重现</td><td>第 10 章</td></tr>
 <tr><td class="nw">QML 里的逻辑没法写单元测试</td><td>逻辑写在处理器与 JavaScript 函数里</td><td>把这段逻辑下沉成 C++ 类型的方法</td><td>第 4 章与第 9 章</td></tr>
 <tr><td class="nw">拼错的属性名上线之后才暴露</td><td>那条分支在测试里没有被走到</td><td>把 <code>qmllint</code> 挂进构建,并为该分支补测试</td><td>第 12 章</td></tr>
@@ -2213,7 +2213,7 @@ ApplicationWindow {
 <li><strong>第 13 章 Quick 与 Widget。</strong>两条混用路线的完整限制清单、已有 Widget 工程的迁移顺序、以及分阶段替换的做法。</li>
 </ul>
 <p>除主线之外还有两条按需读的分支。界面做出来之后要处理布局与输入,走第 6 章与第 7 章;要显示列表与表格,走第 8 章;要发布产品,走第 12 章。自定义渲染的第 10 章与 Controls 的第 11 章在遇到具体需求时再读,它们与主线没有顺序依赖。</p>
-<p>三本姊妹书的分界在本章多处出现过,这里收拢一次:C++ 侧的对象模型、信号槽与属性系统的机制在《Qt 核心与 Widget · 现代详解》;启动时间、内存与帧率的测量方法与优化流程在《Qt 性能优化 · 现代详解》;第三方组件、图表与数据接入的选型在《Qt 组件与生态 · 现代详解》;C++ 语言本身的规则在《C++ 语言 · 现代详解》。本书只在这些话题与 QML 引擎的行为交界处给结论与指向。</p>
+<p>三本姊妹书的分界在本章多处出现过,这里收拢一次:C++ 侧的对象模型、信号槽与属性系统的机制在《Qt 核心与 Widget》;启动时间、内存与帧率的测量方法与优化流程在《Qt 性能优化》;第三方组件、图表与数据接入的选型在《Qt 组件与生态》;C++ 语言本身的规则在《C++ 语言》。本书只在这些话题与 QML 引擎的行为交界处给结论与指向。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 43372px;--thin-h:43372px">
@@ -2637,7 +2637,7 @@ Rectangle {
 <p>QML 对象的销毁由<strong>所有权</strong>决定,而所有权有三个来源,优先级从高到低。</p>
 <ol>
 <li><strong>显式设置。</strong>C++ 侧调用 <code>QQmlEngine::setObjectOwnership()</code> 指定 <code>CppOwnership</code> 或 <code>JavaScriptOwnership</code>,这一条压过其余所有规则。</li>
-<li><strong>有 QObject 父亲。</strong>有父亲的对象由父亲负责销毁,垃圾回收不会碰它。这与《Qt 核心与 Widget · 现代详解》里讲的对象树规则完全一致。</li>
+<li><strong>有 QObject 父亲。</strong>有父亲的对象由父亲负责销毁,垃圾回收不会碰它。这与《Qt 核心与 Widget》里讲的对象树规则完全一致。</li>
 <li><strong>没有父亲。</strong>由 JavaScript 垃圾回收管理:QML 侧不再有引用时,对象会在某一次垃圾回收里被删掉。</li>
 </ol>
 <p>第三条是 C++ 与 QML 交界处事故最多的地方。<strong>一个 <code>Q_INVOKABLE</code> 方法返回的裸 <code>QObject*</code>,如果它没有父亲,QML 会认为自己拥有它</strong>——即使 C++ 侧还持有这个指针并打算继续使用。</p>
@@ -2696,11 +2696,11 @@ Item {
         dumpTree(item.children[i], depth + 1)
 }</code></pre>
 <p>打印出来的第一列是对象的默认字符串形式,形如 <code>QQuickRectangle(0x55f1c8)</code>,括号里是地址。<strong>同一个地址在两次打印里出现,说明是同一个对象</strong>,这一点在排查委托是被复用还是被重建时很有用(第 8 章)。</p>
-<p>C++ 侧的入口是 <code>QQmlApplicationEngine::rootObjects()</code>,拿到根对象之后用 <code>findChild</code> 按 <code>objectName</code> 查找,与 Widget 侧完全一样,机制见《Qt 核心与 Widget · 现代详解》。要注意的是 <code>findChild</code> 走的是 <strong>QObject 对象树</strong>,所以它能找到 <code>resources</code> 里的非可视对象,而按 <code>children</code> 遍历找不到。</p>
+<p>C++ 侧的入口是 <code>QQmlApplicationEngine::rootObjects()</code>,拿到根对象之后用 <code>findChild</code> 按 <code>objectName</code> 查找,与 Widget 侧完全一样,机制见《Qt 核心与 Widget》。要注意的是 <code>findChild</code> 走的是 <strong>QObject 对象树</strong>,所以它能找到 <code>resources</code> 里的非可视对象,而按 <code>children</code> 遍历找不到。</p>
 <p>两条实用规矩:凡是需要被 C++ 或测试代码找到的对象都设 <code>objectName</code>;<code>objectName</code> 用稳定的、与界面文案无关的名字,界面改文案时不需要跟着改测试。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 需要被外部定位的对象一律设 objectName,并且与界面文案无关</span><p><code>objectName: "submitButton"</code> 这样的名字在 C++ 侧的 <code>findChild</code>、<code>QtQuickTest</code> 与自动化测试里都能用。用界面文案当名字,换一次措辞就要改一批测试;而不设名字时,只能靠遍历树按位置定位,插入一个元素就全错位。</p></div>
 <h3>与 Widget 侧对象树的对照</h3>
-<p>读过《Qt 核心与 Widget · 现代详解》的读者会发现,Widget 侧的父子关系同时承担了销毁、坐标系与绘制三件事,由一棵树承担。QML 把这三件事拆开了,拆的代价是要多记一层。</p>
+<p>读过《Qt 核心与 Widget》的读者会发现,Widget 侧的父子关系同时承担了销毁、坐标系与绘制三件事,由一棵树承担。QML 把这三件事拆开了,拆的代价是要多记一层。</p>
 <table style="contain-intrinsic-size:auto 189px">
 <thead><tr><th>维度</th><th>Widget 侧</th><th>QML 侧</th></tr></thead>
 <tbody>
@@ -3113,7 +3113,7 @@ Flow {
 </tbody>
 </table>
 <p>其中第 3 章与本章的关系最紧:本章讲了属性是什么、变化信号从哪来,第 3 章讲引擎怎么用这些信号把一个表达式变成会自动重算的东西,以及这套机制在哪些情况下不按预期工作。</p>
-<p>本章还有一条线索没有展开——从 C++ 侧看,这里讲的每一个 QML 对象都是一个 <code>QObject</code>,每一个属性都对应元对象系统里的一条记录。这套 C++ 侧的机制在《Qt 核心与 Widget · 现代详解》里讲透,本书只在两处用到它:第 3 章讲绑定对 <code>NOTIFY</code> 信号的依赖,第 9 章讲类型注册与所有权。读到那两章之前不需要回头补。</p>
+<p>本章还有一条线索没有展开——从 C++ 侧看,这里讲的每一个 QML 对象都是一个 <code>QObject</code>,每一个属性都对应元对象系统里的一条记录。这套 C++ 侧的机制在《Qt 核心与 Widget》里讲透,本书只在两处用到它:第 3 章讲绑定对 <code>NOTIFY</code> 信号的依赖,第 9 章讲类型注册与所有权。读到那两章之前不需要回头补。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 40933px;--thin-h:40933px">
@@ -3132,7 +3132,7 @@ Flow {
     implicitWidth: 50 * scale   <span class="cm">// 绑定:引用了 scale</span>
     implicitHeight: Math.max(20, scale * 10)   <span class="cm">// 绑定:引用了 scale 与全局对象 Math</span>
 }</code></pre>
-<p>区分这两类有实际用处:绑定对象要占内存、每次重算要过 JavaScript 引擎,而初值不占。一个界面里绑定的数量直接决定了它的创建开销,细账见《Qt 性能优化 · 现代详解》第 10 章。</p>
+<p>区分这两类有实际用处:绑定对象要占内存、每次重算要过 JavaScript 引擎,而初值不占。一个界面里绑定的数量直接决定了它的创建开销,细账见《Qt 性能优化》第 10 章。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 不会变的表达式写成初值,不要为了统一风格写成绑定</span><p><code>width: parent.width</code> 与 <code>width: 200</code> 看起来只差一个词,前者带来一个绑定对象与一条信号连接,后者什么都不带。在一个有几百个委托的列表里,这个差别是可以量出来的。</p></div>
 <h3>一个绑定由哪三部分构成</h3>
 <table style="contain-intrinsic-size:auto 149px">
@@ -3195,7 +3195,7 @@ button-&gt;setEnabled(!edit-&gt;text().isEmpty());   <span class="cm">// 手动�
 <tr><td class="nw">需要 JavaScript 引擎吗</td><td class="nw">需要</td><td>不需要</td></tr>
 </tbody>
 </table>
-<p>两者能协作:一个 C++ 类的属性同时提供 <code>NOTIFY</code> 与 <code>BINDABLE</code> 时,QML 侧可以正常绑定它,C++ 侧也可以对它建立 <code>QProperty</code> 绑定。协作的规则与注意事项在本章 C++ 一节,<code>QProperty</code> 本身的机制在《Qt 核心与 Widget · 现代详解》里讲透,本书不重复。</p>
+<p>两者能协作:一个 C++ 类的属性同时提供 <code>NOTIFY</code> 与 <code>BINDABLE</code> 时,QML 侧可以正常绑定它,C++ 侧也可以对它建立 <code>QProperty</code> 绑定。协作的规则与注意事项在本章 C++ 一节,<code>QProperty</code> 本身的机制在《Qt 核心与 Widget》里讲透,本书不重复。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 C++ 侧的 QProperty 绑定默认惰性求值,与 QML 绑定的同步语义不同</span><p>同一段逻辑从 QML 搬到 C++ 的 <code>QProperty</code> 上,求值时机会从「依赖一变就算」变成「有人读才算」。依赖变化后立刻去读别的属性做判断的代码,搬过去之后读到的可能还是旧值。两套机制的时机差别要在设计时就想清楚,不要靠试出来。</p></div>
 <h2 id="q3-when">3.2 什么时候重算:依赖是怎么被记录的</h2>
 <p>引擎不预先分析表达式的语法树来确定依赖,而是<strong>在求值的过程中动态记录</strong>:求值期间每读到一个能发出变化通知的属性,就把它记成一条依赖。求值结束后,引擎把这些属性的变化信号连到这个绑定上。</p>
@@ -3307,7 +3307,7 @@ Item {
 <p>链条越长,失效的可能性越大:每一环都可能是 <code>null</code>、可能是普通对象、可能是没有变化通知的 C++ 属性。实践中的规矩是把长链在中间截断成一个有明确类型的属性,既缩短了链,也让 <code>qmllint</code> 能检查。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 属性链中间只要有一个普通 JavaScript 对象,后面的读取全部不成为依赖</span><p><code>data.items[0].title</code> 里 <code>data</code> 是解析出来的 JSON 时,改任何一层都不会重算,而且没有任何提示。判据是「这一环是不是 QML 对象或值类型」。解析出来的数据要驱动界面时,应当放进 C++ 侧的模型或者带具体类型的属性,而不是留在 <code>var</code> 里。</p></div>
 <h3>重算是同步发生的</h3>
-<p>依赖属性发出变化信号时,依赖它的绑定<strong>在信号发出的过程中立即重算</strong>,不排队、不合并、不等到下一帧。这与 Qt 的直接连接语义一致,机制见《Qt 核心与 Widget · 现代详解》。</p>
+<p>依赖属性发出变化信号时,依赖它的绑定<strong>在信号发出的过程中立即重算</strong>,不排队、不合并、不等到下一帧。这与 Qt 的直接连接语义一致,机制见《Qt 核心与 Widget》。</p>
 <p>同步重算有三个可观察的后果。</p>
 <ul>
 <li><strong>一次属性赋值可能引发一长串重算。</strong>改一个属性,依赖它的绑定立即算,写回又发信号,再触发下一批。整条链在这一次赋值返回之前跑完。</li>
@@ -3329,7 +3329,7 @@ Item {
 <p>第三种是第 2 章提过的汇总写法在这里的应用:数组字面量每次求值都是新对象,所以整体赋值必然发出变化信号,处理器一定会被触发。</p>
 <p>还有一种反向的需求:让某个属性<strong>不</strong>成为依赖。表达式里需要读一个值但不希望它触发重算时,唯一可靠的办法是把这次读取挪出捕获窗口——先在别处把值取出来存进一个不带通知的地方,再在表达式里读那个地方。这种写法可读性差,而且容易读到过期的值,只在确实必要时用。</p>
 <p>更常见的做法是反过来:承认这个依赖存在,然后限制重算的代价。绑定表达式本身保持简单,把重的计算放进 C++ 侧的方法或者做成缓存,让重算只是一次取值。这条与第 4 章「什么该下沉到 C++」是同一条判据的两面。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 绑定表达式保持简单,重的计算放到 C++ 或缓存起来</span><p>绑定重算的次数由依赖的变化频率决定,不由你控制。表达式里塞进一次遍历、一次字符串拼接或者一次正则匹配,在依赖高频变化时会被放大成可观的开销。做法是让绑定只做取值与简单判断,计算结果由别处算好放进属性。量化的判据见《Qt 性能优化 · 现代详解》第 10 章。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 绑定表达式保持简单,重的计算放到 C++ 或缓存起来</span><p>绑定重算的次数由依赖的变化频率决定,不由你控制。表达式里塞进一次遍历、一次字符串拼接或者一次正则匹配,在依赖高频变化时会被放大成可观的开销。做法是让绑定只做取值与简单判断,计算结果由别处算好放进属性。量化的判据见《Qt 性能优化》第 10 章。</p></div>
 <h2 id="q3-break">3.3 绑定什么时候被打断</h2>
 <p>QML 里最常见的一类事故只有一句话:<strong>给一个有绑定的属性做一次命令式赋值,绑定被永久移除</strong>。不是暂停、不是覆盖一次、不是等下次依赖变化再恢复,是移除。之后这个属性只是一个普通的存储,再也不会自己更新。</p>
 <p>引擎不为此打印任何警告。代码照常运行,界面在赋值那一刻显示的是正确的值,问题在下一次依赖变化时才暴露——而那时现场已经过去了。</p>
@@ -3810,7 +3810,7 @@ signals:
     Q_OBJECT_BINDABLE_PROPERTY(Meter, <span class="kw">int</span>, m_value, &amp;Meter::valueChanged)
 };</code></pre>
 <p><code>Q_OBJECT_BINDABLE_PROPERTY</code> 的最后一个参数就是变化信号,存储本身负责在值改变时发出它。这样一来 C++ 侧可以对它建立 <code>QProperty</code> 绑定,QML 侧也能正常绑定它。</p>
-<p>需要注意的是两套机制的求值时机不同:C++ 侧默认惰性,QML 侧同步。同一个属性被两边同时绑定时,行为的推理成本很高。实践上应当只让一侧写、另一侧读。<code>QProperty</code> 本身的机制在《Qt 核心与 Widget · 现代详解》里讲透,本书不重复。</p>
+<p>需要注意的是两套机制的求值时机不同:C++ 侧默认惰性,QML 侧同步。同一个属性被两边同时绑定时,行为的推理成本很高。实践上应当只让一侧写、另一侧读。<code>QProperty</code> 本身的机制在《Qt 核心与 Widget》里讲透,本书不重复。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 同一个属性不要在 C++ 与 QML 两侧都建立绑定</span><p>两套绑定机制的求值时机不同,叠在同一个属性上时更新顺序难以推理,而且两边都会认为自己是这个属性的来源。规矩是选一侧作为写入方:C++ 计算的值由 C++ 绑定,界面派生的值由 QML 绑定,不要交叉。</p></div>
 <h3>值类型属性与列表属性的通知粒度</h3>
 <p>一个 C++ 属性的类型是值类型或者列表时,通知粒度会成为新的问题:属性本身有 <code>NOTIFY</code>,但改动发生在它内部,信号不会自动发出。</p>
@@ -3938,7 +3938,7 @@ signals:
 <tr><td class="nw">尺寸传播、隐含尺寸与布局系统怎么避免绑定循环</td><td class="nw">第 6 章</td></tr>
 <tr><td class="nw">委托里的绑定与模型角色的配合</td><td class="nw">第 8 章</td></tr>
 <tr><td>把 C++ 类型完整注册给 QML,属性、方法与所有权的全套规则</td><td class="nw">第 9 章</td></tr>
-<tr><td class="nw">绑定数量与重算频率对启动时间与帧率的影响</td><td>《Qt 性能优化 · 现代详解》第 10 章</td></tr>
+<tr><td class="nw">绑定数量与重算频率对启动时间与帧率的影响</td><td>《Qt 性能优化》第 10 章</td></tr>
 </tbody>
 </table>
 <p>第 4 章与本章是一对:本章讲「关系怎么被维持」,第 4 章讲「动作怎么被触发」。两者合起来构成 QML 的完整控制流,后面所有章节都建立在这两章之上。</p>
@@ -3946,11 +3946,11 @@ signals:
 <p>最后一条与工程习惯有关:绑定的可读性取决于表达式的长度。一个超过一行的绑定表达式,读的人要同时在脑子里维持它的依赖集合与它的计算逻辑。把中间结果提取成有名字的只读属性,依赖关系与计算逻辑就分开了,两者都变得可读。这条习惯的收益在维护阶段才显现,写的时候会觉得多余。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 35534px;--thin-h:35534px">
+<section class="chapter" style="contain-intrinsic-size:auto 35500px;--thin-h:35500px">
 <h1 id="q4"><span class="part">第 4 章</span>信号、处理器与 JavaScript 集成</h1>
 <h2 id="q4-signal">4.1 信号与处理器:on 前缀的由来</h2>
 <p>第 3 章讲的绑定负责维持关系,本章讲的信号负责触发动作。两者构成 QML 的全部控制流:界面上会变的东西由绑定算出来,会发生的事情由信号驱动。</p>
-<p>QML 的信号就是 Qt 的信号,没有另起一套。<code>moc</code> 处理过的 C++ 信号、QML 里 <code>signal</code> 声明的信号、以及属性自动生成的变化信号,三者在元对象系统里是同一种东西,机制见《Qt 核心与 Widget · 现代详解》。QML 加的是一套<strong>声明式的接法</strong>。</p>
+<p>QML 的信号就是 Qt 的信号,没有另起一套。<code>moc</code> 处理过的 C++ 信号、QML 里 <code>signal</code> 声明的信号、以及属性自动生成的变化信号,三者在元对象系统里是同一种东西,机制见《Qt 核心与 Widget》。QML 加的是一套<strong>声明式的接法</strong>。</p>
 <h3>on 前缀的构成规则</h3>
 <p>处理器的名字由信号名机械地推出来:<strong>信号名首字母大写,前面加 <code>on</code></strong>。这条规则没有例外,记住它就能从任何一个信号名推出它的处理器名,反过来也一样。</p>
 <table style="contain-intrinsic-size:auto 227px">
@@ -4021,7 +4021,7 @@ onSubmitted: function(keyword, immediate) {
 </ul>
 <p>这个限制来自 <code>on</code> 语法的本质:它是一个<strong>属性赋值</strong>,处理器是这个属性的值。一个属性只能有一个值,所以一个信号只能有一个 <code>on</code> 处理器。理解了这一点,后面 <code>Connections</code> 为什么是一个独立的对象也就清楚了。</p>
 <h3>处理器什么时候执行,以及重入</h3>
-<p>QML 里的信号连接是<strong>直接连接</strong>:发出信号就是同步调用全部处理器,调用返回之后信号那一行才结束。这与 Qt 的默认连接语义一致,机制见《Qt 核心与 Widget · 现代详解》。</p>
+<p>QML 里的信号连接是<strong>直接连接</strong>:发出信号就是同步调用全部处理器,调用返回之后信号那一行才结束。这与 Qt 的默认连接语义一致,机制见《Qt 核心与 Widget》。</p>
 <p>同步执行带来两条需要注意的性质。第一,处理器里做的事越重,发出信号的那一处就阻塞得越久;界面事件引发的信号处理器里跑一段长循环,界面就冻结那么久。第二,<strong>处理器里可以再发出信号,包括同一个信号</strong>,这时就是递归调用,没有任何机制阻止它。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code>Item {
     id: root
@@ -4246,9 +4246,9 @@ Item {
         <span class="kw">return</span> `共 ${rows.length} 条,合计 ${total},首条 ${first?.name ?? <span>"无"</span>}`
     }
 }</code></pre>
-<p>需要留意的是两处:<strong>严格模式的行为</strong>与<strong>类型转换的开销</strong>。QML 的绑定与处理器不是严格模式,但 <code>.js</code> 文件里可以写 <code>"use strict"</code>。跨 QML 与 JavaScript 的每一次属性读写都要做一次类型转换,在高频路径上这个开销是可测的,细账见《Qt 性能优化 · 现代详解》第 10 章。</p>
+<p>需要留意的是两处:<strong>严格模式的行为</strong>与<strong>类型转换的开销</strong>。QML 的绑定与处理器不是严格模式,但 <code>.js</code> 文件里可以写 <code>"use strict"</code>。跨 QML 与 JavaScript 的每一次属性读写都要做一次类型转换,在高频路径上这个开销是可测的,细账见《Qt 性能优化》第 10 章。</p>
 <p>另一件与语言无关但影响很大的事:<strong>JavaScript 在 GUI 线程上执行</strong>。一段跑一百毫秒的循环会让界面卡住一百毫秒,动画会掉帧。QML 没有提供在别的线程上跑 JavaScript 的机制,需要并行只能下沉到 C++。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 QML 里的 JavaScript 跑在 GUI 线程上,一次长循环会直接卡住界面</span><p>没有异步执行的机制可以绕开这一点,<code>Promise</code> 也不会让代码换个线程跑。症状是操作后界面冻结、动画卡顿。判据是「这段代码的最坏耗时有没有上界」;没有上界或者上界超过几毫秒,就必须下沉到 C++ 并用线程处理,做法见第 9 章与《Qt 核心与 Widget · 现代详解》。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 QML 里的 JavaScript 跑在 GUI 线程上,一次长循环会直接卡住界面</span><p>没有异步执行的机制可以绕开这一点,<code>Promise</code> 也不会让代码换个线程跑。症状是操作后界面冻结、动画卡顿。判据是「这段代码的最坏耗时有没有上界」;没有上界或者上界超过几毫秒,就必须下沉到 C++ 并用线程处理,做法见第 9 章与《Qt 核心与 Widget》。</p></div>
 <h3>JavaScript 里持有 QML 对象引用的后果</h3>
 <p>第 2 章讲过,没有 <code>QObject</code> 父亲的 QML 对象由 JavaScript 垃圾回收管理。这条规则的另一面是:<strong>JavaScript 里的一个引用就足以让对象活着</strong>,包括存在数组里的、存在闭包里的、以及注册进某个回调的。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 114px"><code><span class="cm">// helpers.js —— 这个数组会一直引着放进去的对象</span>
@@ -4491,7 +4491,7 @@ Item {
     xhr.open(<span>"GET"</span>, url)
     xhr.send()
 }</code></pre>
-<p>它缺少的东西包括:超时与重试的完整控制、请求取消、连接复用与并发限制、代理与证书的细粒度配置、以及大文件的流式处理。这些在 <code>QNetworkAccessManager</code> 上都有,网络层的完整做法见《Qt 组件与生态 · 现代详解》。</p>
+<p>它缺少的东西包括:超时与重试的完整控制、请求取消、连接复用与并发限制、代理与证书的细粒度配置、以及大文件的流式处理。这些在 <code>QNetworkAccessManager</code> 上都有,网络层的完整做法见《Qt 组件与生态》。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 超出「取一份 JSON」的网络需求一律下沉到 C++ 的网络类</span><p>QML 的 <code>XMLHttpRequest</code> 没有超时控制、没有取消、没有并发管理,而且解析与错误处理都在 GUI 线程上做。判据是「这次请求失败了要怎么办」——只要答案不是「什么都不做」,就应当在 C++ 侧实现并把结果通过属性与信号交给 QML。</p></div>
 <h3>Promise 与 async 函数</h3>
 <p>QML 的 JavaScript 引擎提供 <code>Promise</code>,可以用它把回调风格的接口包装成链式写法。这在有多步异步操作时能显著改善可读性。</p>
@@ -4568,7 +4568,7 @@ Item {
 
     Component.onCompleted: job.start(<span>"data.bin"</span>)
 }</code></pre>
-<p>这个形态把异步的复杂度全部留在 C++ 侧,QML 侧退化成绑定,前面讲的回调陷阱一个都不存在。线程与并发的做法见《Qt 核心与 Widget · 现代详解》,类型注册与所有权见第 9 章。</p>
+<p>这个形态把异步的复杂度全部留在 C++ 侧,QML 侧退化成绑定,前面讲的回调陷阱一个都不存在。线程与并发的做法见《Qt 核心与 Widget》,类型注册与所有权见第 9 章。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 异步操作在 C++ 侧实现,QML 侧只绑定进行状态与结果属性</span><p>把「进行中」「结果」「失败」三样做成属性与信号之后,QML 侧不写一行回调,生命周期与依赖捕获两类陷阱同时消失。这个形态适用于一切耗时操作,是 QML 与 C++ 分工的标准做法。</p></div>
 <h2 id="q4-sum">4.6 小结</h2>
 <p>第 3 章讲关系怎么被维持,本章讲动作怎么被触发。两者合起来就是 QML 的全部控制流:<strong>属性与绑定构成状态,信号与处理器构成状态之间的迁移。</strong></p>
@@ -4657,8 +4657,8 @@ Item {
 <tr><td class="nw">怎么在不打断绑定的前提下成组地改一批属性</td><td class="nw">第 5 章</td></tr>
 <tr><td class="nw">用户操作怎么变成信号,事件在对象树上怎么传播</td><td class="nw">第 7 章</td></tr>
 <tr><td>C++ 侧的类型、属性、方法与信号怎么完整地暴露给 QML</td><td class="nw">第 9 章</td></tr>
-<tr><td>JavaScript 与绑定的运行期开销有多大,什么时候值得优化</td><td>《Qt 性能优化 · 现代详解》第 10 章</td></tr>
-<tr><td class="nw">线程、并发与后台任务在 Qt 里的完整做法</td><td>《Qt 核心与 Widget · 现代详解》</td></tr>
+<tr><td>JavaScript 与绑定的运行期开销有多大,什么时候值得优化</td><td>《Qt 性能优化》第 10 章</td></tr>
+<tr><td class="nw">线程、并发与后台任务在 Qt 里的完整做法</td><td>《Qt 核心与 Widget》</td></tr>
 </tbody>
 </table>
 <p>读完前五章之后,一个 QML 程序里发生的事情应当都能归到某一条机制上:界面显示不对去查绑定,操作没反应去查信号,值不对去查名字解析。这三条覆盖了日常调试的绝大多数情形。</p>
@@ -5145,7 +5145,7 @@ Item {
 }</code></pre>
 <p>最后那条空的 <code>Transition</code> 值得解释:它匹配一切,但里面没有动画,因此所有条目都落进「未认领,立即赋值」。它的作用是<strong>挡住</strong>——防止将来新增一条通配过渡时,某个意料之外的切换也被套上动画。不需要这层保护时可以省掉。</p>
 <p>这段代码里 <code>panel</code> 的初始 <code>y</code> 是 <code>parent.height</code>,也就是屏幕外。基态里给出一个确定的屏幕外位置,而不是用 <code>visible: false</code> 藏起来,是有意的:<code>visible</code> 是布尔值,插值不了,用它做进出场就只能靠 <code>PropertyAction</code> 卡时机;用位置则天然可插值,并且离场动画结束时元素恰好停在屏幕外,不需要额外收尾。</p>
-<p>性能上要补一句:面板停在屏幕外时仍然参与场景图,只是被裁掉。子树很重时应当在离场动画结束后把 <code>visible</code> 置为假,或者把整个面板放进 <code>Loader</code> 里按需加载。这类取舍的细账在《Qt 性能优化 · 现代详解》里,结论是「屏幕外的元素不渲染但仍然占用节点与内存」。</p>
+<p>性能上要补一句:面板停在屏幕外时仍然参与场景图,只是被裁掉。子树很重时应当在离场动画结束后把 <code>visible</code> 置为假,或者把整个面板放进 <code>Loader</code> 里按需加载。这类取舍的细账在《Qt 性能优化》里,结论是「屏幕外的元素不渲染但仍然占用节点与内存」。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 入场与离场分开写两条过渡,时长与缓动通常不该相同</span><p>离场比入场快是界面动效的通行经验:入场需要让人看清新出现的内容,离场只需要交代「它走了」。分开写还有一个机制上的好处——两条过渡各自匹配,不需要在动画内部用条件表达式区分方向,而条件表达式在过渡里求值时机不易把握。</p></div>
 <h2 id="q5-anim">5.4 动画的种类与组合</h2>
 <p>前一节把动画当成过渡的零件来用。动画本身是独立的一套元素,过渡只是它的四种接入方式之一。这一节把这套元素整体讲清:有哪几族、怎么组合、接进属性系统时发生了什么。</p>
@@ -5299,7 +5299,7 @@ NumberAnimation {
 <div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 同一个属性只让一层动效管,两处同时动一个属性的结果由启动顺序决定</span><p><code>Behavior</code>、过渡里的动画与独立动画都能写同一个属性。同时存在时后启动的覆盖先启动的,而启动顺序取决于绑定求值与事件到达的先后,不稳定。按「变化由什么引起」分层,天然保证一个属性只归一层管。</p></div>
 <h2 id="q5-perf">5.5 动画的代价与该动什么属性</h2>
 <p>动画的开销不在「插值算了几次乘法」上。每帧写一次属性值只是起点,真正的代价是这次写入沿着属性系统、布局系统、场景图一路引发的连锁反应。同样是每秒六十次写入,写 <code>x</code> 与写 <code>width</code> 的代价可以差一个数量级。</p>
-<p>具体到某个平台、某个 Qt 版本的耗时细账在《Qt 性能优化 · 现代详解》里,那本书有完整的测量方法与实测数据。写代码时能直接用的判据只有一条:动画的开销取决于它跑在哪一侧,而不是取决于它动了多少个属性。</p>
+<p>具体到某个平台、某个 Qt 版本的耗时细账在《Qt 性能优化》里,那本书有完整的测量方法与实测数据。写代码时能直接用的判据只有一条:动画的开销取决于它跑在哪一侧,而不是取决于它动了多少个属性。</p>
 <h3>一帧里发生了什么</h3>
 <p>一次画面更新在 Qt Quick 里分成几个阶段,动画写入的属性值要走完全部阶段才变成屏幕上的像素。</p>
 <ol>
@@ -5426,7 +5426,7 @@ myapp.exe</code></pre>
 <li><strong>渲染阶段耗时高、合批数量大。</strong>问题在场景规模或透明度导致的合批断裂。用 <code>QSG_VISUALIZE=batches</code> 看断在哪里。</li>
 <li><strong>两个阶段都不高但仍然掉帧。</strong>问题多半不在动画,而在 GUI 线程上有别的耗时工作阻塞了帧循环,例如委托里的同步操作(第 8 章)。</li>
 </ul>
-<p>逐项的耗时基准、不同渲染后端的差异、以及怎么把这些数据接进持续集成,属于《Qt 性能优化 · 现代详解》的范围,这里不展开。</p>
+<p>逐项的耗时基准、不同渲染后端的差异、以及怎么把这些数据接进持续集成,属于《Qt 性能优化》的范围,这里不展开。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 先用 QSG_RENDER_TIMING 把问题归到同步还是渲染,再决定改什么</span><p>同步阶段慢对应「动错了属性」,渲染阶段慢对应「场景太复杂或合批断裂」,两者的修法完全不同。不做这一步区分就动手优化,常见结果是把动画时长调短、把元素数量减少,而真正的瓶颈原封不动。</p></div>
 <h3>实战形态:一份动效的选型清单</h3>
 <p>把上面的机制收成一张可以直接用的选型表。</p>
@@ -5519,7 +5519,7 @@ myapp.exe</code></pre>
 <li><strong>第 7 章的输入。</strong>状态的 <code>when</code> 条件最常见的来源就是输入元素的属性,例如 <code>hovered</code> 与 <code>pressed</code>。</li>
 <li><strong>第 8 章的视图。</strong>列表项的进出动画由视图自己的 <code>add</code>/<code>remove</code>/<code>displaced</code> 过渡负责,不要在委托里自己写状态动画——委托会被销毁,动画跑到一半元素就没了。</li>
 </ul>
-<p>性能方面,本章只给了「动什么属性」这一条选型判据。逐项耗时、不同渲染后端的差异、批处理的完整规则与实测方法,在《Qt 性能优化 · 现代详解》里有专门的章节。C++ 侧的动画框架(<code>QPropertyAnimation</code> 与 <code>QAnimationGroup</code>)与本章的 QML 动画共用同一套底层时间驱动,概念一一对应,在《Qt 核心与 Widget · 现代详解》里讲过。</p>
+<p>性能方面,本章只给了「动什么属性」这一条选型判据。逐项耗时、不同渲染后端的差异、批处理的完整规则与实测方法,在《Qt 性能优化》里有专门的章节。C++ 侧的动画框架(<code>QPropertyAnimation</code> 与 <code>QAnimationGroup</code>)与本章的 QML 动画共用同一套底层时间驱动,概念一一对应,在《Qt 核心与 Widget》里讲过。</p>
 <h3>一份可抄的骨架</h3>
 <p>把本章的结论合成一个可复用组件的完整骨架,新写组件时可以从它开始。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1528px"><code>import QtQuick
@@ -6011,7 +6011,7 @@ Column {
 <p>最后给一条与性能有关的结论。定位器的重排是在 C++ 里一次算完的批量操作,比用一串锚或一串绑定把项串起来快得多,项数上百时差距明显。但<strong>过渡会把这份优势抵消掉</strong>:每个移动的项都要跑一条动画,项数多时同时运行的动画数量与项数同阶。项数不确定的长列表不要用定位器加 <code>Repeater</code>,应当用 <code>ListView</code>——它只创建可见区域内的项,这部分属于第 8 章的内容。</p>
 <h2 id="q6-layout">6.3 布局:Layouts 模块与它和锚的分工</h2>
 <p>前两节的两套手段各自缺一块能力。锚能决定尺寸,但只能在两个项之间写关系,一排项之间的空间分配写不出来;定位器能排一组项,但只写坐标不写尺寸,分不了空间。<strong>Qt Quick Layouts 补的就是「一组项按各自的权重瓜分容器的剩余空间」这一块。</strong></p>
-<p>这个模块不在 <code>QtQuick</code> 里,要单独引:<code>import QtQuick.Layouts</code>。它的实现是一层 C++ 布局引擎,与 Widget 那边的 <code>QLayout</code> 同源但不是同一套代码,行为上的相似之处可以借用直觉,细节不要照搬。姊妹书《Qt 核心与 Widget · 现代详解》讲的是 <code>QLayout</code> 的尺寸策略与拉伸因子,结论在这里同样成立,机制不必重复。</p>
+<p>这个模块不在 <code>QtQuick</code> 里,要单独引:<code>import QtQuick.Layouts</code>。它的实现是一层 C++ 布局引擎,与 Widget 那边的 <code>QLayout</code> 同源但不是同一套代码,行为上的相似之处可以借用直觉,细节不要照搬。姊妹书《Qt 核心与 Widget》讲的是 <code>QLayout</code> 的尺寸策略与拉伸因子,结论在这里同样成立,机制不必重复。</p>
 <h3>四个布局类型与它们的共同机制</h3>
 <table style="contain-intrinsic-size:auto 266px">
 <thead><tr><th>类型</th><th>排列</th><th>等价形式</th><th>典型用途</th></tr></thead>
@@ -6351,7 +6351,7 @@ Window {
 <li><strong>给可疑项加一圈边框</strong>。尺寸为零的项连边框都不画,与「被别的项盖住」能立刻区分开。</li>
 <li><strong>打开布局引擎的日志</strong>:环境变量 <code>QT_LOGGING_RULES="qt.quick.layouts=true"</code>,它会把每次重排时每个项的三档尺寸打出来,能直接看到引擎认为这个项想要多宽。</li>
 </ol>
-<p>更进一步的可视化工具属于第 10 章的内容:场景图的调试可视化能显示每个项的边界与批次划分,对「项在哪、多大、有没有重叠」这类问题比打日志直观得多。量化的部分——一次重排要多少微秒、多深的嵌套开始拖慢帧率——在《Qt 性能优化 · 现代详解》里有完整的测量方法与阈值,本节给的是判据与修法。</p>
+<p>更进一步的可视化工具属于第 10 章的内容:场景图的调试可视化能显示每个项的边界与批次划分,对「项在哪、多大、有没有重叠」这类问题比打日志直观得多。量化的部分——一次重排要多少微秒、多深的嵌套开始拖慢帧率——在《Qt 性能优化》里有完整的测量方法与阈值,本节给的是判据与修法。</p>
 <h2 id="q6-resp">6.5 响应式:同一份界面适应不同尺寸</h2>
 <p>前四节的手段都在回答「这一份界面怎么排」。这一节回答另一个问题:<strong>同一份界面,在 13 英寸笔记本、27 英寸外接屏、以及被用户拖成一条窄缝的窗口里,怎么都能用。</strong>它不是一套新机制,而是把前面几节的手段按「尺寸是变量」这个前提重新组织一遍。</p>
 <p>立足点先说清楚:<strong>响应式的对象是窗口的可用尺寸,不是屏幕的尺寸,也不是设备的类别。</strong>把这一条搞错,后面所有判断都会跟着错。</p>
@@ -6768,10 +6768,10 @@ Window {
 <p>本章与第 3 章的接口是绑定。锚与 Layouts 的属性本身也是可绑定的,<code>anchors.leftMargin</code>、<code>Layout.preferredWidth</code> 都可以写成表达式,第 3 章讲的依赖登记与绑定循环在这里同样成立;而且本章多出一类环——几何值参与的环,报出来的可能是锚循环也可能是绑定循环,两条线索要一起看。</p>
 <p>本章与第 5 章的接口是状态。断点判断落在状态的 <code>when</code> 子句上,布局的结构性切换用状态表达;而单纯的数值随尺寸变化,用绑定比用状态更简单,不要为了统一而把所有变化都塞进状态。</p>
 <p>往后看,第 8 章的 <code>ListView</code>、<code>GridView</code> 与代理是本章的直接延伸:视图解决的是「项数不确定且很大」时定位器解决不了的问题,而代理内部的排版仍然靠本章的三套手段。第 9 章讲场景图与渲染,本章反复出现的「隐式尺寸变化触发重排」在那里会接上「重排之后产生多少绘制批次」这一段,两章合起来才是一次界面更新的完整链路。</p>
-<p>本章刻意没有讲量化:一次布局重排要多少微秒、嵌套多深开始拖慢帧率、几百个项的定位器与 <code>ListView</code> 的实际差距有多大。这些属于《Qt 性能优化 · 现代详解》的内容,那本书给的是量级与测量工具,本章给的是判据与改法。Widget 那边对应的 <code>QLayout</code> 尺寸策略与拉伸因子,在《Qt 核心与 Widget · 现代详解》里展开,机制不同但选型判据可以互相印证。</p>
+<p>本章刻意没有讲量化:一次布局重排要多少微秒、嵌套多深开始拖慢帧率、几百个项的定位器与 <code>ListView</code> 的实际差距有多大。这些属于《Qt 性能优化》的内容,那本书给的是量级与测量工具,本章给的是判据与改法。Widget 那边对应的 <code>QLayout</code> 尺寸策略与拉伸因子,在《Qt 核心与 Widget》里展开,机制不同但选型判据可以互相印证。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 42717px;--thin-h:42717px">
+<section class="chapter" style="contain-intrinsic-size:auto 42649px;--thin-h:42649px">
 <h1 id="q7"><span class="part">第 7 章</span>输入:指针、键盘、手势与焦点</h1>
 <h2 id="q7-mouse">7.1 指针输入:MouseArea 与 TapHandler 两代做法</h2>
 <p>第 4 章把信号处理器与 JavaScript 讲完之后,界面已经能对「值变了」作出反应。这一章补上另一半:界面怎么对「人做了什么」作出反应。Qt Quick 在这件事上有两代元素,选哪一代不是风格偏好,是由两者的机制差别决定的。</p>
@@ -7490,7 +7490,7 @@ Item {
 <tr><td class="nw">项与 Handler</td><td><code>MouseArea</code> 的信号、Handler 的判定、<code>Keys</code> 的处理器都在这一层</td></tr>
 </tbody>
 </table>
-<p>交付代理独立出来的原因值得一提:一个窗口里可以有多个二维场景——嵌在三维场景里的界面、离屏渲染的子场景各有一套坐标系,每套需要自己的一份命中测试与抓取记录。这个改动对纯二维的界面没有行为影响。<code>QEvent</code> 本身的机制、事件过滤器与事件循环,已在姊妹书《Qt 核心与 Widget · 现代详解》里讲清,这里只用它的结论。</p>
+<p>交付代理独立出来的原因值得一提:一个窗口里可以有多个二维场景——嵌在三维场景里的界面、离屏渲染的子场景各有一套坐标系,每套需要自己的一份命中测试与抓取记录。这个改动对纯二维的界面没有行为影响。<code>QEvent</code> 本身的机制、事件过滤器与事件循环,已在姊妹书《Qt 核心与 Widget》里讲清,这里只用它的结论。</p>
 <h3>一次按下的完整分发路径</h3>
 <p>一次按下事件走完整条路径要经过五步,顺序不能颠倒。</p>
 <ol>
@@ -7754,9 +7754,9 @@ Window {
 <p>这四处里第 6 章那一条最容易被低估。布局容器与锚都在替项决定位置,而拖动、吸附、越界回弹都要改位置,两者争的是同一组属性。写可拖动的元素时先确认它的位置由谁决定:由锚或布局决定就先解除那一层约束,不要在处理器里反复赋值去覆盖——绑定会在下一帧把值改回来,表现是项抖一下又弹回原处。</p>
 <p>输入这条链上的内容分在四本书里,本章之外的三本各管一段。</p>
 <ul>
-<li><strong>《Qt 核心与 Widget · 现代详解》</strong>:<code>QEvent</code> 的类型体系、事件过滤器、事件循环与投递队列。本章只用它的结论——交付代理拿到的已经是翻译好的 <code>QEvent</code>,后面的命中测试与抓取是 Qt Quick 自己的一层。</li>
-<li><strong>《Qt 性能优化 · 现代详解》</strong>:输入路径上的性能问题,委托里挂太多 Handler、悬停引发的整片重绘、<code>pressDelay</code> 与响应延迟的权衡。</li>
-<li><strong>《Qt 组件与生态 · 现代详解》</strong>:控件自带的交互行为,按钮的按下态、输入框的焦点样式、控件的 <code>focusPolicy</code>。</li>
+<li><strong>《Qt 核心与 Widget》</strong>:<code>QEvent</code> 的类型体系、事件过滤器、事件循环与投递队列。本章只用它的结论——交付代理拿到的已经是翻译好的 <code>QEvent</code>,后面的命中测试与抓取是 Qt Quick 自己的一层。</li>
+<li><strong>《Qt 性能优化》</strong>:输入路径上的性能问题,委托里挂太多 Handler、悬停引发的整片重绘、<code>pressDelay</code> 与响应延迟的权衡。</li>
+<li><strong>《Qt 组件与生态》</strong>:控件自带的交互行为,按钮的按下态、输入框的焦点样式、控件的 <code>focusPolicy</code>。</li>
 </ul>
 <p>最后一条留给取舍。这一章讲的每一个属性都在解决「同一次输入该归谁」这个问题,而这个问题在界面元素密集时无解的情形并不少见——一块区域上既要滚动、又要横向滑动、还要长按弹菜单,再加上多点缩放。遇到这种堆叠时,正确的动作不是继续调抓取许可,而是回到交互设计:把其中一个手势换成显式的按钮或菜单项。可以调的参数越多,越容易忘记有些冲突本来就不该存在。</p>
 </section>
@@ -8533,7 +8533,7 @@ ListView {
 <div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 写了 add 或 remove 过渡就必须配 displaced,否则其余条目会瞬移</span><p>新增或删除一条会让后面的全部条目改变位置。只给被增删的那一条做动画,其余条目瞬间跳到新位置,观感上比完全没有动画更突兀。<code>displaced</code> 用一个短时长的 <code>NumberAnimation</code> 动 <code>x</code> 与 <code>y</code> 即可,第 5 章讲过这两个属性不触发内容重建。</p></div>
 <h2 id="q8-perf">8.5 长列表的性能:缓存、异步与委托里不能放什么</h2>
 <p>长列表的性能问题有一个统一的形状:<strong>委托的单个成本乘以创建频率</strong>。静止时看不出问题,一滚动就掉帧,因为滚动期间每秒要创建和销毁几十个委托实例。</p>
-<p>视图性能的问题分两层。结构性做法能在写代码时定下来,是下面的内容;逐项的耗时数据、不同 Qt 版本与渲染后端的差异、以及怎么把这些指标接进持续集成,在《Qt 性能优化 · 现代详解》第 10 章有完整的测量方法与实测数字。</p>
+<p>视图性能的问题分两层。结构性做法能在写代码时定下来,是下面的内容;逐项的耗时数据、不同 Qt 版本与渲染后端的差异、以及怎么把这些指标接进持续集成,在《Qt 性能优化》第 10 章有完整的测量方法与实测数字。</p>
 <h3>成本的两个乘数</h3>
 <p>滚动一屏需要创建的委托数量,等于一屏能放下的条目数。这个数字由界面设计决定,基本上改不了。能改的是另一个乘数:<strong>创建一个委托实例要做多少事</strong>。</p>
 <p>创建一个委托实例的工作包括:构造 QML 对象树上的每一个元素、为每条绑定建立依赖关系并首次求值、执行 <code>Component.onCompleted</code>、创建对应的场景图节点。这些成本与委托里的元素个数和绑定条数大致成正比。</p>
@@ -8661,7 +8661,7 @@ ListView {
 <li><strong>用 <code>qmlprofiler</code> 采样。</strong>它能给出每个绑定的求值次数与耗时、每个组件的创建次数。这是定位「哪一条绑定在滚动时被反复求值」的唯一可靠手段。</li>
 </ul>
 <p>第一个手段最值得强调,因为它成本最低而区分力最强。把 <code>delegate</code> 整个换成一个只有固定尺寸和纯色的 <code>Rectangle</code>,滚动一遍:仍然卡,说明问题在模型的 <code>data()</code>、在视图配置、或者在数据量本身;流畅了,说明问题在委托内容,再把原委托的内容分块加回去,每加一块滚一遍。这个过程通常三五轮就能定位到具体是哪个元素。</p>
-<p>具体的判读方法、各项指标的合理区间、以及长列表的完整优化清单,在《Qt 性能优化 · 现代详解》第 10 章。结论只有一条:<strong>长列表的性能是委托设计问题,不是视图参数调优问题</strong>,先精简委托再调 <code>cacheBuffer</code>。</p>
+<p>具体的判读方法、各项指标的合理区间、以及长列表的完整优化清单,在《Qt 性能优化》第 10 章。结论只有一条:<strong>长列表的性能是委托设计问题,不是视图参数调优问题</strong>,先精简委托再调 <code>cacheBuffer</code>。</p>
 <h2 id="q8-sum">8.6 小结</h2>
 <p>这一章讲的是同一件事的三个面:数据从哪来(模型)、一条数据长什么样(委托)、谁负责把它们接起来并管理实例(视图)。三者的接口很窄,但接口两侧的行为差异是本章绝大多数问题的来源。</p>
 <h3>三件套的职责边界</h3>
@@ -8817,10 +8817,10 @@ Item {
 <li><strong>第 7 章的输入。</strong>委托里的指针处理优先用 <code>TapHandler</code> 一族;<code>MouseArea</code> 会独占区域,放在委托里容易吞掉视图的滑动手势。</li>
 <li><strong>第 9 章的互操作。</strong>C++ 模型怎么注册给 QML、怎么暴露 <code>Q_INVOKABLE</code> 方法、返回的对象归谁删,是下一章的内容。</li>
 </ul>
-<p>性能方面本章只给了结构性判据。完整的长列表优化清单、各项指标的测量方法与合理区间,在《Qt 性能优化 · 现代详解》第 10 章。C++ 侧模型/视图框架的完整机制(<code>QModelIndex</code> 的语义、树模型、代理模型的实现)在《Qt 核心与 Widget · 现代详解》里讲过,本章只用到它对 QML 暴露的那一面。</p>
+<p>性能方面本章只给了结构性判据。完整的长列表优化清单、各项指标的测量方法与合理区间,在《Qt 性能优化》第 10 章。C++ 侧模型/视图框架的完整机制(<code>QModelIndex</code> 的语义、树模型、代理模型的实现)在《Qt 核心与 Widget》里讲过,本章只用到它对 QML 暴露的那一面。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 53695px;--thin-h:53695px">
+<section class="chapter" style="contain-intrinsic-size:auto 53627px;--thin-h:53627px">
 <h1 id="q9"><span class="part">第 9 章</span>QML 与 C++ 互操作:注册类型、单例与上下文属性</h1>
 <h2 id="q9-why">9.1 什么该放 C++,什么该放 QML</h2>
 <p>前八章讲的全部在 QML 一侧:声明界面、写绑定、组织状态、接模型。但真实工程里 QML 从来不是全部——数据要从数据库或网络来,业务规则要能单独测试,耗时计算要放进线程。这些都在 C++ 一侧。</p>
@@ -8903,7 +8903,7 @@ session-&gt;setLastError(tr(<span>"连接超时"</span>));      <span class="cm"
 <li><strong>字符串转换有成本但可接受。</strong><code>QString</code> 与 JavaScript 字符串之间需要复制。单次调用无所谓,每帧几百次就要算账。</li>
 <li><strong>属性读取比方法调用便宜。</strong>属性读取走的是直接的读函数调用,不经过参数打包。因此频繁读的值应当做成属性,而不是做成一个无参方法。</li>
 </ul>
-<p>判据是:<strong>每帧都要执行的东西不要跨界</strong>。动画期间需要的值,应当在动画开始前一次性取过来放进 QML 属性;绑定表达式里不要调用 C++ 方法,因为绑定的重算次数不受控。逐项的耗时数据在《Qt 性能优化 · 现代详解》里。</p>
+<p>判据是:<strong>每帧都要执行的东西不要跨界</strong>。动画期间需要的值,应当在动画开始前一次性取过来放进 QML 属性;绑定表达式里不要调用 C++ 方法,因为绑定的重算次数不受控。逐项的耗时数据在《Qt 性能优化》里。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 频繁读取的值做成属性,不要做成无参的 Q_INVOKABLE 方法</span><p>属性读取直接调用读函数,方法调用要经过参数打包与返回值转换。更重要的是属性能参与绑定并在变化时通知,而方法调用的结果在 QML 看来是一个死值——绑定表达式里调一个方法,数据变化时表达式不会重算,界面停在旧值上。</p></div>
 <h3>一个功能的划分示例</h3>
 <p>抽象的判据落到具体功能上是什么样,用「导出选中的任务为文件」这个功能走一遍。它涉及界面、文件对话框、数据筛选、编码与写盘,跨越两侧。</p>
@@ -9310,7 +9310,7 @@ signals:
     <span class="kw">void</span> retriesChanged();
 };</code></pre>
 <p>它的收益是 C++ 侧不必手写「值变了就发信号」的样板代码,并且依赖关系由系统跟踪。<code>Q_OBJECT_BINDABLE_PROPERTY</code> 生成的存储自带相等判断与通知,前面讲的「写函数第一行要做相等判断」这条在这里由宏保证。</p>
-<p>代价是这套机制有自己的求值时序与循环检测规则,与信号槽的即时通知不同。C++ 侧的完整机制在《Qt 核心与 Widget · 现代详解》里,本书只用到它对 QML 暴露的这一面:<strong>带 <code>BINDABLE</code> 的属性在 QML 里与带 <code>NOTIFY</code> 的属性用法完全相同</strong>。</p>
+<p>代价是这套机制有自己的求值时序与循环检测规则,与信号槽的即时通知不同。C++ 侧的完整机制在《Qt 核心与 Widget》里,本书只用到它对 QML 暴露的这一面:<strong>带 <code>BINDABLE</code> 的属性在 QML 里与带 <code>NOTIFY</code> 的属性用法完全相同</strong>。</p>
 <div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 BINDABLE 属性在 QML 侧与 NOTIFY 属性用法相同</span><p><code>Q_OBJECT_BINDABLE_PROPERTY</code> 省掉了 C++ 侧的读写样板与手工发信号,QML 侧无感知。迁移可以逐个属性进行,不需要整类改。仍然要保留 <code>NOTIFY</code> 信号声明,因为其他 C++ 代码可能连接了它。</p></div>
 <h2 id="q9-model">9.4 把 C++ 模型接给视图</h2>
 <p>第 8 章讲清了视图对模型的要求:能报行数、能按角色取值、能在数据变化时发出精确的信号。这一节讲怎么把一个 C++ 模型接到 QML 的视图上,以及这条路径上的几处边界。</p>
@@ -9890,7 +9890,7 @@ var comp = Qt.createComponent(<span>"ConfirmDialog.qml"</span>)
 <li><strong>第 5 章的状态与动画。</strong>状态的 <code>when</code> 条件最适合绑定到 C++ 暴露的枚举属性,让界面的若干种样子与后端状态机由同一份定义驱动。动效的时长档位适合放进一个 QML 单例。</li>
 <li><strong>第 8 章的视图与模型。</strong>本章第四节把 C++ 模型接给视图的写法,是第 8 章那些规则的 C++ 侧实现:<code>roleNames()</code>、增量通知、线程约束。</li>
 </ul>
-<p>三本姊妹书在这里各有分工。<code>QObject</code> 的对象树、元对象系统、信号槽的完整机制,以及 <code>QProperty</code> 绑定求值系统的 C++ 侧细节,在《Qt 核心与 Widget · 现代详解》里。跨界调用与类型转换的逐项耗时、启动时间的构成与优化手段,在《Qt 性能优化 · 现代详解》里。把第三方 C++ 库包装成 QML 可用的类型时的具体做法,在《Qt 组件与生态 · 现代详解》里。</p>
+<p>三本姊妹书在这里各有分工。<code>QObject</code> 的对象树、元对象系统、信号槽的完整机制,以及 <code>QProperty</code> 绑定求值系统的 C++ 侧细节,在《Qt 核心与 Widget》里。跨界调用与类型转换的逐项耗时、启动时间的构成与优化手段,在《Qt 性能优化》里。把第三方 C++ 库包装成 QML 可用的类型时的具体做法,在《Qt 组件与生态》里。</p>
 <h3>一份接线检查单</h3>
 <p>新建一个 C++ 与 QML 的接缝时,按这份清单过一遍,可以避开本章的全部事故。</p>
 <ol>
@@ -9913,11 +9913,11 @@ cmake --build . --target all_qmllint</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 把 qmllint 接进构建,前三条检查项就不必靠人工</span><p><code>qt_add_qml_module</code> 会为模块生成 lint 目标,可以在持续集成里作为一步执行。它能查出绑定到没有 <code>NOTIFY</code> 的属性、访问不存在的属性名、以及一部分类型不匹配。这些正是本章最容易静默失效的几类问题,交给工具比靠评审可靠。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 43708px;--thin-h:43708px">
+<section class="chapter" style="contain-intrinsic-size:auto 43657px;--thin-h:43657px">
 <h1 id="q10"><span class="part">第 10 章</span>自定义渲染:Canvas、Shape、QQuickPaintedItem 与场景图节点</h1>
 <h2 id="q10-sg">10.1 场景图:三个阶段与渲染循环</h2>
 <p>前面九章里出现的每一个可见元素——<code>Rectangle</code>、<code>Text</code>、<code>Image</code>、<code>ListView</code> 里的每一个委托——最终都变成同一样东西:<strong>场景图里的一个或几个节点</strong>。场景图是一棵由 <code>QSGNode</code> 构成的树,描述「这一帧要画什么」,由渲染器遍历它、合并成批次、下发给图形 API。</p>
-<p>这与《Qt 核心与 Widget · 现代详解》第 14 章讲的 <code>QPainter</code> 模型是两种模型。<code>QPainter</code> 是<strong>命令式</strong>的:重绘时调用一串绘制函数,画完这一帧的信息就不存在了,下一帧从头再来。场景图是<strong>保留模式</strong>的:节点树在两帧之间一直存在,只有被标记为脏的部分才更新。这个差别决定了后面五节所有取舍的方向——凡是每帧都要重新生成一整块像素的做法,都在与保留模式对抗。</p>
+<p>这与《Qt 核心与 Widget》第 14 章讲的 <code>QPainter</code> 模型是两种模型。<code>QPainter</code> 是<strong>命令式</strong>的:重绘时调用一串绘制函数,画完这一帧的信息就不存在了,下一帧从头再来。场景图是<strong>保留模式</strong>的:节点树在两帧之间一直存在,只有被标记为脏的部分才更新。这个差别决定了后面五节所有取舍的方向——凡是每帧都要重新生成一整块像素的做法,都在与保留模式对抗。</p>
 <p>一帧被切成若干阶段,分别跑在 GUI 线程与渲染线程上,渲染循环模式决定了这个分工怎么切。<strong>其中「同步阶段会阻塞 GUI 线程」是全章最重要的一条事实</strong>,后面讲 <code>QQuickPaintedItem</code> 与自定义节点时会反复回到它。</p>
 <h3>场景图是一棵节点树,不是一串绘制命令</h3>
 <p>节点树的形状与 QML 的对象树相关但不相同。一个 <code>QQuickItem</code> 可以对应零个节点(纯容器,如 <code>Item</code>)、一个节点(如 <code>Rectangle</code> 的矩形几何节点)或者一小棵子树(如带边框与圆角的矩形)。<code>Item</code> 的 <code>x</code>、<code>y</code>、<code>scale</code>、<code>rotation</code> 变成变换节点,<code>opacity</code> 变成不透明度节点,<code>clip</code> 变成裁剪节点。</p>
@@ -10324,11 +10324,11 @@ Shape {
 <li><strong>每条 <code>ShapePath</code> 通常构成独立的绘制批次。</strong>同屏上百个各自独立的 <code>Shape</code> 实例,批次数会成为瓶颈;能合并成一个 <code>Shape</code> 里的多条路径就合并。</li>
 <li><strong>模块要显式导入,并且要一起部署。</strong><code>import QtQuick.Shapes</code> 对应一个独立的 QML 模块,部署时不能漏,否则运行期报模块找不到——第 12 章讲这类问题的排查。</li>
 </ul>
-<p>关于批次还有一点补充:批次合并的规则与材质、裁剪、变换层次都相关,场景图的合批机制本身属于性能主题,详细讨论见《Qt 性能优化 · 现代详解》第 9 章。本书只给出会影响写法的结论:同类图形尽量放进同一个 <code>Shape</code>,不要为每个小图形单独建实例。</p>
+<p>关于批次还有一点补充:批次合并的规则与材质、裁剪、变换层次都相关,场景图的合批机制本身属于性能主题,详细讨论见《Qt 性能优化》第 9 章。本书只给出会影响写法的结论:同类图形尽量放进同一个 <code>Shape</code>,不要为每个小图形单独建实例。</p>
 <h2 id="q10-painted">10.4 QQuickPaintedItem:把 QPainter 接进来</h2>
 <p><code>QQuickPaintedItem</code> 是一个 C++ 类,继承自 <code>QQuickItem</code>,派生类只需要重写一个纯虚函数 <code>paint(QPainter *)</code>,就能用 <code>QPainter</code> 的全套接口在条目上绘制。它解决的问题很具体:<strong>已有大量基于 <code>QPainter</code> 的绘制代码,需要在 Quick 界面里继续使用</strong>——从 Widget 工程迁过来的自绘控件、第三方库提供的 <code>QPainter</code> 绘制函数、需要完整文本布局能力的图表标注。</p>
 <p>它与 10.2 节的 <code>Canvas</code> 是同一条实现路线的两个入口:都是先在 CPU 上光栅化成位图,再上传成纹理。差别只在绘制代码写在哪一侧——<code>Canvas</code> 写 JavaScript,<code>QQuickPaintedItem</code> 写 C++。因此 10.2 节关于成本的全部结论在这里同样成立,并且多出一条 <code>Canvas</code> 没有的约束:<strong><code>paint()</code> 落在同步阶段里</strong>。</p>
-<p><code>QPainter</code> 本身的机制、坐标系、画笔画刷与合成模式,主场在《Qt 核心与 Widget · 现代详解》第 14 章,这里不重讲。本节只讲它接进场景图之后多出来的部分。</p>
+<p><code>QPainter</code> 本身的机制、坐标系、画笔画刷与合成模式,主场在《Qt 核心与 Widget》第 14 章,这里不重讲。本节只讲它接进场景图之后多出来的部分。</p>
 <h3>最小可用形态</h3>
 <p>一个可用的 <code>QQuickPaintedItem</code> 派生类需要三样东西:重写 <code>paint()</code>、把会影响绘制的属性的设值函数里加上 <code>update()</code>、以及用 <code>QML_ELEMENT</code> 让它能在 QML 里被使用。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 930px"><code><span class="cm">// ruleritem.h —— 一把刻度尺,刻度间隔由属性控制</span>
@@ -10956,20 +10956,20 @@ QSGNode *MyItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 <h3>接下来</h3>
 <p>本章讲的是自己画图形。相邻的问题是:不自己画的时候,现成的控件外观怎么改;自己写的条目类型怎么打包分发;以及在与 Widget 混用的工程里,本章的线程结论会发生什么变化。三个问题分别由后面三章回答。</p>
 <p>本章的内容与后面几章以及姊妹书的连接如下。</p>
-<table style="contain-intrinsic-size:auto 362px">
+<table style="contain-intrinsic-size:auto 311px">
 <thead><tr><th>往下读</th><th>在哪里</th><th>它解决什么</th></tr></thead>
 <tbody>
 <tr><td class="nw">Quick Controls 的外观定制</td><td class="nw">第 11 章</td><td>不自己画图形,而是替换控件的模板</td></tr>
 <tr><td class="nw">自定义条目的模块化与部署</td><td class="nw">第 12 章</td><td>自定义节点所在的 C++ 类型怎么注册、怎么打包</td></tr>
 <tr><td class="nw">Widget 与 Quick 的混用</td><td class="nw">第 13 章</td><td><code>QQuickWidget</code> 会强制单线程渲染循环,影响本章的结论</td></tr>
-<tr><td class="nw">场景图的批次合并与材质开销</td><td>《Qt 性能优化 · 现代详解》第 9 章</td><td>本章只给写法结论,量化分析在那里</td></tr>
-<tr><td class="nw">三维内容与模型加载</td><td>《Qt 组件与生态 · 现代详解》第 3 章</td><td>需要三维场景时不要自己造节点</td></tr>
-<tr><td class="nw"><code>QPainter</code> 的机制与坐标系</td><td>《Qt 核心与 Widget · 现代详解》第 14 章</td><td><code>QQuickPaintedItem</code> 里用到的全部绘制接口</td></tr>
+<tr><td class="nw">场景图的批次合并与材质开销</td><td>《Qt 性能优化》第 9 章</td><td>本章只给写法结论,量化分析在那里</td></tr>
+<tr><td class="nw">三维内容与模型加载</td><td>《Qt 组件与生态》第 3 章</td><td>需要三维场景时不要自己造节点</td></tr>
+<tr><td class="nw"><code>QPainter</code> 的机制与坐标系</td><td>《Qt 核心与 Widget》第 14 章</td><td><code>QQuickPaintedItem</code> 里用到的全部绘制接口</td></tr>
 </tbody>
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 32257px;--thin-h:32257px">
+<section class="chapter" style="contain-intrinsic-size:auto 32182px;--thin-h:32182px">
 <h1 id="q11"><span class="part">第 11 章</span>Quick Controls:主题、样式与自定义控件</h1>
 <h2 id="q11-ctrl">11.1 Quick Controls 的组成与它和 Widget 控件的差别</h2>
 <p>前面十章讲的是构成界面的基础材料:条目、绑定、布局、视图与自定义渲染。用这些材料可以拼出任何界面,但一个按钮、一个复选框、一个下拉框要从矩形和文本拼起,工作量不成比例。<code>QtQuick.Controls</code> 模块提供的就是这一层:<strong>一组已经处理好状态、焦点、键盘与无障碍的可交互控件</strong>。</p>
@@ -11757,19 +11757,19 @@ T.Button {
 }</code></pre>
 <p>模板里的颜色全部来自 11.4 节的 <code>Palette</code> 单例,因此这套样式自动支持深色主题——<strong>自定义样式与主题单例配合使用,是这一章两条主线的交点</strong>。样式负责结构与状态,单例负责取值,两者各自独立演进。</p>
 <h3>接下来</h3>
-<table style="contain-intrinsic-size:auto 298px">
+<table style="contain-intrinsic-size:auto 223px">
 <thead><tr><th>往下读</th><th>在哪里</th><th>它解决什么</th></tr></thead>
 <tbody>
 <tr><td class="nw">样式模块与自定义样式怎么打包</td><td class="nw">第 12 章</td><td>样式是一个 QML 模块,部署时不能漏</td></tr>
 <tr><td class="nw">Widget 与 Quick 的控件怎么并存</td><td class="nw">第 13 章</td><td>混用工程里两套控件的外观与焦点衔接</td></tr>
-<tr><td class="nw">控件的性能特征</td><td>《Qt 性能优化 · 现代详解》第 10 章</td><td>每个控件是若干个条目,数量大时的开销</td></tr>
-<tr><td class="nw"><code>QStyle</code> 与样式表</td><td>《Qt 核心与 Widget · 现代详解》第 15、16 章</td><td>Widget 侧的定制机制,与本章是两套</td></tr>
-<tr><td class="nw">高分屏与系统主题的处理</td><td>《Qt 核心与 Widget · 现代详解》第 16 章</td><td>缩放比例与系统度量的通用结论</td></tr>
+<tr><td class="nw">控件的性能特征</td><td>《Qt 性能优化》第 10 章</td><td>每个控件是若干个条目,数量大时的开销</td></tr>
+<tr><td class="nw"><code>QStyle</code> 与样式表</td><td>《Qt 核心与 Widget》第 15、16 章</td><td>Widget 侧的定制机制,与本章是两套</td></tr>
+<tr><td class="nw">高分屏与系统主题的处理</td><td>《Qt 核心与 Widget》第 16 章</td><td>缩放比例与系统度量的通用结论</td></tr>
 </tbody>
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 26774px;--thin-h:26774px">
+<section class="chapter" style="contain-intrinsic-size:auto 26740px;--thin-h:26740px">
 <h1 id="q12"><span class="part">第 12 章</span>模块、资源与部署:QML 模块系统与字节码编译</h1>
 <h2 id="q12-mod">12.1 QML 模块系统:URI、版本与目录结构</h2>
 <p>前面十一章里,<code>import QtQuick</code> 与 <code>import MyApp</code> 一直被当成理所当然的一行。这一行背后是一整套解析机制:引擎拿到一个 URI,要在若干个查找路径下定位到一个目录,读取目录里的 <code>qmldir</code>,按它的描述注册类型或加载插件,然后才能解析出 <code>Rectangle</code> 或 <code>Button</code> 这些名字。</p>
@@ -12312,7 +12312,7 @@ windeployqt --release --qmldir C:\src\acmeapp build\Release\acmeapp.exe</code></
 <tr><td class="nw">打包形态</td><td>目录树、AppImage 或系统包</td><td>目录树或安装程序</td></tr>
 </tbody>
 </table>
-<p>静态构建是另一条路:把 Qt 与 QML 模块全部静态链进可执行文件,交付物只有一个文件。代价是构建时间长、可执行文件体积大、许可条款需要单独确认,并且要在 CMake 里显式调用 <code>qt_import_qml_plugins()</code> 让用到的 QML 插件被链进来。打包、签名与自动更新这些上线阶段的问题,主场在《Qt 组件与生态 · 现代详解》第 13 章。</p>
+<p>静态构建是另一条路:把 Qt 与 QML 模块全部静态链进可执行文件,交付物只有一个文件。代价是构建时间长、可执行文件体积大、许可条款需要单独确认,并且要在 CMake 里显式调用 <code>qt_import_qml_plugins()</code> 让用到的 QML 插件被链进来。打包、签名与自动更新这些上线阶段的问题,主场在《Qt 组件与生态》第 13 章。</p>
 <h2 id="q12-sum">12.6 小结</h2>
 <p>这一章讲的是「代码怎么组织成模块、怎么被编译、怎么交付到用户机器上」。三个问题串在一条线上:模块决定类型怎么被找到,编译决定启动时要做多少工作,部署决定这些东西在不在用户机器上。</p>
 <p>本节把结论收拢成四份材料:要点回顾、症状反查、一份交付前的检查清单,以及与其他章节的连接。</p>
@@ -12388,15 +12388,15 @@ docker run --rm -it -v <span>"$PWD/dist:/app"</span> ubuntu:22.04 /app/bin/acmea
 <tbody>
 <tr><td class="nw">Widget 与 Quick 混用工程的构建</td><td class="nw">第 13 章</td><td>同一个工程里两套界面代码怎么组织</td></tr>
 <tr><td class="nw">全书的判据与陷阱索引</td><td class="nw">第 14 章</td><td>本章结论在全书索引里的位置</td></tr>
-<tr><td class="nw">打包、签名与自动更新</td><td>《Qt 组件与生态 · 现代详解》第 13 章</td><td>部署之后的上线环节</td></tr>
-<tr><td class="nw">启动时间与二进制体积</td><td>《Qt 性能优化 · 现代详解》第 5、12 章</td><td>本章只给做法,量化分析在那里</td></tr>
-<tr><td class="nw">QML 引擎的运行期开销</td><td>《Qt 性能优化 · 现代详解》第 10 章</td><td>编译优化能省掉哪一部分开销</td></tr>
-<tr><td class="nw">应用骨架、配置与国际化</td><td>《Qt 核心与 Widget · 现代详解》第 18 章</td><td>翻译文件的组织与加载</td></tr>
+<tr><td class="nw">打包、签名与自动更新</td><td>《Qt 组件与生态》第 13 章</td><td>部署之后的上线环节</td></tr>
+<tr><td class="nw">启动时间与二进制体积</td><td>《Qt 性能优化》第 5、12 章</td><td>本章只给做法,量化分析在那里</td></tr>
+<tr><td class="nw">QML 引擎的运行期开销</td><td>《Qt 性能优化》第 10 章</td><td>编译优化能省掉哪一部分开销</td></tr>
+<tr><td class="nw">应用骨架、配置与国际化</td><td>《Qt 核心与 Widget》第 18 章</td><td>翻译文件的组织与加载</td></tr>
 </tbody>
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 22044px;--thin-h:22044px">
+<section class="chapter" style="contain-intrinsic-size:auto 21968px;--thin-h:21968px">
 <h1 id="q13"><span class="part">第 13 章</span>Quick 与 Widget:怎么选、怎么混用、怎么迁移</h1>
 <h2 id="q13-mix">13.1 混用:QQuickWidget 与 createWindowContainer</h2>
 <p>Quick 与 Widget 是两套完整的界面体系:各有自己的对象模型、布局机制、绘制路径与输入分发。它们能在同一个进程里共存,但共存的方式只有两条,而且这两条的机制差别很大,选错之后表现出来的问题完全不同。</p>
@@ -12698,7 +12698,7 @@ Window {
 <tbody>
 <tr><td class="nw">纯 C++ 业务逻辑</td><td class="nw">能</td><td>不引用 <code>QtWidgets</code> 的部分完全不动</td></tr>
 <tr><td class="nw">网络、文件、数据库、序列化</td><td class="nw">能</td><td>与界面无关</td></tr>
-<tr><td class="nw">线程与并发</td><td class="nw">能</td><td>见《Qt 核心与 Widget · 现代详解》第 17 章</td></tr>
+<tr><td class="nw">线程与并发</td><td class="nw">能</td><td>见《Qt 核心与 Widget》第 17 章</td></tr>
 <tr><td class="nw"><code>QAbstractItemModel</code> 派生的模型</td><td class="nw">能,需补一步</td><td>必须实现 <code>roleNames()</code></td></tr>
 <tr><td class="nw">翻译文件</td><td class="nw">能</td><td><code>tr()</code> 与 <code>qsTr()</code> 使用同一套机制</td></tr>
 <tr><td class="nw">配置与设置</td><td class="nw">能</td><td><code>QSettings</code> 两侧通用</td></tr>
@@ -12828,7 +12828,7 @@ ListView {
 <li><strong>依赖多个第三方 widget 库且没有替代。</strong>这类依赖往往是迁移方案里最难估算的一块。</li>
 <li><strong>没有明确的迁移动因。</strong>「界面看起来旧了」不足以支撑一次迁移;要动画、要触控、要跨到移动端、要按设计稿做深度定制,这些才是动因。</li>
 </ul>
-<p>不迁不等于不做改进。Widget 侧同样可以改善外观与交互,并且第 11 章讲的深色主题在 Widget 侧也有对应做法,详见《Qt 核心与 Widget · 现代详解》第 16 章。</p>
+<p>不迁不等于不做改进。Widget 侧同样可以改善外观与交互,并且第 11 章讲的深色主题在 Widget 侧也有对应做法,详见《Qt 核心与 Widget》第 16 章。</p>
 <div class="note old" style="contain-intrinsic-size:auto 230px"><span class="t">🟡 QGraphicsView 在 Quick 里没有对应件,新界面不要从它起步</span><p><code>QGraphicsView</code> 与 <code>QGraphicsScene</code> 是 Widget 侧做可缩放、可拖动的图形界面的方案,机制上与场景图有相似之处:都是保留模式的对象树,都有变换与裁剪的层级。但两者没有任何迁移通道——图形项类型不同、坐标系不同、事件模型不同,场景里的每一个图形项都要按第 10 章的路线重新实现。已有的 <code>QGraphicsView</code> 界面继续维护没有问题,它仍然可用;新写的可缩放画布类界面则应当直接基于 Quick 的条目与自定义节点起步,不要先在 Widget 侧做一版再考虑迁移。这类界面往往是整个工程里迁移成本最高的一块,提前选对路线的收益最大。</p></div>
 <h2 id="q13-sum">13.4 小结</h2>
 <p>这一章回答三个问题:两套体系怎么在一个进程里共存、一个项目该选哪条路、以及已有的 Widget 工程要不要迁、怎么迁。三个问题共用同一组事实,本节把它们收拢起来。</p>
@@ -12892,21 +12892,21 @@ sort widgets-deps.txt | sed <span>'s#/[^/]*$##'</span> | uniq -c | sort -rn</cod
 <p>第二条命令按目录汇总,能看出剩余的依赖集中在哪一层。理想的形态是随着迁移推进,依赖逐步收缩到界面目录里,业务与数据目录先降到零;如果业务目录里的数字一直不降,说明第一步的分层没有做到位,应当先回去补,而不是继续替换界面。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 用「仍然依赖 QtWidgets 的文件数」作为迁移进度指标,每次提交都能量出来</span><p>迁移最容易出的管理问题是进度不可见:界面替换了几块看得见,但离「能去掉 QtWidgets 依赖」还有多远看不见。这个指标把它变成一个每次构建都能算出来的数字,而且它的下降与实际收益直接对应——只有降到零,才能把入口改成 <code>QGuiApplication</code>、才能不链 Widget 库、才能在没有 Widget 的目标平台上运行。配套的做法是把这个数字记进持续集成的输出,并要求它只降不升;新增代码引入新的 Widget 依赖时会立刻被发现,而不是等到最后一步才暴露。</p></div>
 <h3>接下来</h3>
-<table style="contain-intrinsic-size:auto 373px">
+<table style="contain-intrinsic-size:auto 297px">
 <thead><tr><th>往下读</th><th>在哪里</th><th>它解决什么</th></tr></thead>
 <tbody>
 <tr><td class="nw">全书判据索引与陷阱速查</td><td class="nw">第 14 章</td><td>把前面各章的结论集中起来</td></tr>
 <tr><td class="nw">自定义渲染的线程规则</td><td class="nw">第 10 章</td><td><code>QQuickWidget</code> 下这些规则的变化</td></tr>
 <tr><td class="nw">控件外观与主题</td><td class="nw">第 11 章</td><td>混用工程里两侧配色的统一</td></tr>
 <tr><td class="nw">模块与部署</td><td class="nw">第 12 章</td><td>混用工程同样按这一章组织</td></tr>
-<tr><td class="nw">Widget 侧的模型视图</td><td>《Qt 核心与 Widget · 现代详解》第 13 章</td><td>模型的完整机制,迁移前的基础</td></tr>
-<tr><td class="nw">Widget 侧的主题与高分屏</td><td>《Qt 核心与 Widget · 现代详解》第 16 章</td><td>不迁移时的外观改进路径</td></tr>
-<tr><td class="nw">第三方组件的选型</td><td>《Qt 组件与生态 · 现代详解》</td><td>判据四里「第三方库有没有替代」的答案在那里</td></tr>
+<tr><td class="nw">Widget 侧的模型视图</td><td>《Qt 核心与 Widget》第 13 章</td><td>模型的完整机制,迁移前的基础</td></tr>
+<tr><td class="nw">Widget 侧的主题与高分屏</td><td>《Qt 核心与 Widget》第 16 章</td><td>不迁移时的外观改进路径</td></tr>
+<tr><td class="nw">第三方组件的选型</td><td>《Qt 组件与生态》</td><td>判据四里「第三方库有没有替代」的答案在那里</td></tr>
 </tbody>
 </table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 16457px;--thin-h:16457px">
+<section class="chapter" style="contain-intrinsic-size:auto 16406px;--thin-h:16406px">
 <h1 id="q14"><span class="part">第 14 章</span>小结:全书判据索引与继续读什么</h1>
 <h2 id="q14-index">14.1 全书判据索引</h2>
 <p>前面十四章按机制组织:语言、绑定、事件、动画、布局、输入、视图、互操作、渲染、控件、部署、混用各占一章或几节。这样的组织便于理解,不便于回答一个具体的问题——<strong>我现在要做一个决定,这本书里有没有给过判据</strong>。</p>
@@ -13118,13 +13118,13 @@ qml Main.qml                                     # 直接运行,不经过构建<
 <h2 id="q14-next">14.3 继续读什么</h2>
 <p>这本书讲的是 Qt Quick 与 QML 本身:语言、绑定、界面构成、与 C++ 的接合、自定义渲染、控件、模块与部署。它刻意没有覆盖三类内容——Qt 的框架基础、现成组件的选型、以及性能的量化分析。这三类各有主场,分别在三本姊妹书里。</p>
 <h3>三本姊妹书</h3>
-<table style="contain-intrinsic-size:auto 415px">
+<table style="contain-intrinsic-size:auto 364px">
 <thead><tr><th>书</th><th>它讲什么</th><th>什么时候读</th><th>与本书的交界</th></tr></thead>
 <tbody>
-<tr><td class="nw">《Qt 核心与 Widget · 现代详解》</td><td><code>QObject</code>、对象树、信号槽、属性系统、事件循环、值类型,以及 Widget 的完整体系</td><td>本书之前应当已经读过;做混用与迁移时回头查 Widget 那部分</td><td>第 9 章的互操作建立在它的对象模型上;第 13 章的迁移以它为起点</td></tr>
-<tr><td class="nw">《Qt 组件与生态 · 现代详解》</td><td>图表、三维、表格、富文本、网络、数据库、日志与崩溃上报、打包与自动更新</td><td>需要一个现成组件而不想自己写时</td><td>第 10 章讲自己画,那本书讲什么时候不要自己画;第 12 章讲部署,那本书讲上线</td></tr>
-<tr><td class="nw">《Qt 性能优化 · 现代详解》</td><td>测量方法、Qt 特有的开销来源、场景图与 QML 引擎的量化分析、完整调优案例</td><td>界面已经跑起来但不够快时</td><td>第 10 章给写法结论,那本书给量化依据;第 8 章的长列表与第 12 章的启动时间同理</td></tr>
-<tr><td class="nw">《C++ 语言 · 现代详解》</td><td>语言本身</td><td>C++ 侧代码写得吃力时</td><td>第 9 章与第 10 章的 C++ 部分默认读者已具备</td></tr>
+<tr><td class="nw">《Qt 核心与 Widget》</td><td><code>QObject</code>、对象树、信号槽、属性系统、事件循环、值类型,以及 Widget 的完整体系</td><td>本书之前应当已经读过;做混用与迁移时回头查 Widget 那部分</td><td>第 9 章的互操作建立在它的对象模型上;第 13 章的迁移以它为起点</td></tr>
+<tr><td class="nw">《Qt 组件与生态》</td><td>图表、三维、表格、富文本、网络、数据库、日志与崩溃上报、打包与自动更新</td><td>需要一个现成组件而不想自己写时</td><td>第 10 章讲自己画,那本书讲什么时候不要自己画;第 12 章讲部署,那本书讲上线</td></tr>
+<tr><td class="nw">《Qt 性能优化》</td><td>测量方法、Qt 特有的开销来源、场景图与 QML 引擎的量化分析、完整调优案例</td><td>界面已经跑起来但不够快时</td><td>第 10 章给写法结论,那本书给量化依据;第 8 章的长列表与第 12 章的启动时间同理</td></tr>
+<tr><td class="nw">《C++ 语言》</td><td>语言本身</td><td>C++ 侧代码写得吃力时</td><td>第 9 章与第 10 章的 C++ 部分默认读者已具备</td></tr>
 </tbody>
 </table>
 <p>三本书与本书的边界可以用一句话概括:<strong>本书回答「怎么用 Quick 把界面做出来」,核心与 Widget 那本回答「Qt 这套框架怎么运作」,组件那本回答「哪些东西不用自己写」,性能那本回答「它为什么慢、慢在哪里」。</strong>同一个话题在两本书里出现时,分的是不同的问题,不是把内容切成两半。</p>
