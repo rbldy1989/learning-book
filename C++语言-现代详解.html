@@ -12232,7 +12232,7 @@ ClangBuildAnalyzer --analyze capture.bin</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 模板报错先看 required from here,不要从第一行开始读</span><p>模板报错的结构是固定的:开头几行是编译器在最深处发现的问题,中间是从调用点到出错点的整条实例化链,最后是具体的错误。<strong>有价值的信息在两头,中间那几十行只是路径。</strong>从第一行开始顺着读,读到的是标准库内部的实现细节,与自己的代码无关,读完也不知道该改哪里。正确顺序是:先找实例化链的<strong>第一环</strong>(那是自己写的代码,也是唯一能改的地方),再看<strong>最后一个</strong> <code>error:</code>(那是缺的具体东西),两者一对照通常就有答案。把这条当成机械流程执行,读模板报错的时间能缩短一大半。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 43356px;--thin-h:43356px">
+<section class="chapter" style="contain-intrinsic-size:auto 43355px;--thin-h:43355px">
 <h1 id="c10"><span class="part">第 10 章</span>模板进阶:元编程、SFINAE 与 concepts</h1>
 <h2 id="c10-traits">10.1 类型萃取:在编译期向类型提问</h2>
 <p>泛型代码经常需要根据类型的性质分岔:这个类型是不是整数?能不能默认构造?有没有 <code>size()</code> 成员?这些问题在运行期问不了——类型是编译期的东西。<strong>类型萃取</strong>就是在编译期提问并得到答案的机制,它是后面 SFINAE 与 concepts 的基础。</p>

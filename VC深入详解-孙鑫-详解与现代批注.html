@@ -876,7 +876,7 @@ w-&gt;doWork();
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 10948px;--thin-h:10948px">
+<section class="chapter" style="contain-intrinsic-size:auto 13025px;--thin-h:13025px">
 <h1 id="c3"><span class="part">第 3 章</span>MFC 框架程序剖析</h1>
 
 <h2 id="c3-what-is-mfc">3.1 MFC 到底是什么：给 Win32 穿上 C++ 外衣</h2>
@@ -1019,10 +1019,55 @@ END_MESSAGE_MAP()</code></pre>
     <span class="kw">static</span> <span class="kw">const</span> AFX_MSGMAP_ENTRY _messageEntries[];
     <span class="kw">static</span> <span class="kw">const</span> AFX_MSGMAP messageMap;
     <span class="kw">virtual</span> <span class="kw">const</span> AFX_MSGMAP* GetMessageMap() <span class="kw">const</span>;</code></pre>
-<p>而 BEGIN / ON / END 那一段，展开后就是把这张表填满，并让它<strong>指向基类的表</strong>：</p>
-<pre style="contain-intrinsic-size:auto 333px"><code><span class="cl"><span class="cm">// BEGIN/ON/END 在 .cpp 里展开成一张静态表:</span></span><span class="cl"><span class="kw">const</span> AFX_MSGMAP* CMyView::GetMessageMap() <span class="kw">const</span> {</span><span class="cl">    <span class="kw">return</span> &amp;CMyView::messageMap;</span><span class="cl">}</span><span class="cl"><span class="kw">const</span> AFX_MSGMAP CMyView::messageMap = {</span><span class="cl"><span class="cc" style="min-width:26.0ch">    &amp;CView::messageMap,</span><span class="cm">// 指向基类的表,串成一条链!</span></span><span class="cl">    &amp;CMyView::_messageEntries[0]</span><span class="cl">};</span><span class="cl"><span class="kw">const</span> AFX_MSGMAP_ENTRY CMyView::_messageEntries[] = {</span><span class="cl">    { WM_PAINT,   0, 0, ..., (AFX_PMSG)&amp;OnPaint    },</span><span class="cl">    { WM_COMMAND, 0, ID_FILE_OPEN, ..., (AFX_PMSG)&amp;OnFileOpen },</span><span class="cl"><span class="cc" style="min-width:26.0ch">    { 0, 0, 0, 0, 0, 0 }</span><span class="cm">// 结束哨兵</span></span><span class="cl">};</span></code></pre>
-<p>看清楚那个"指向基类的表"的指针没有？这是整个机制的灵魂。当一条消息到来，框架从<strong>当前类的表</strong>开始一行行找：找到匹配的消息号，就调对应的处理函数；<strong>找不到，就顺着指针爬到基类的表继续找</strong>，一直爬到 CObject。这条向上查找的链，效果上模拟了虚函数"派生类优先、否则用基类的"覆盖语义，却<strong>不需要真正的虚函数表</strong>。</p>
+<p>注意两个 <code>static</code>：表是<strong>类级别</strong>的知识，同一个类开出一万个窗口，也只有这一张表。真正随对象走的只有那个虚函数——每个对象的 vptr 指向自己类的 vtable，于是 <code>GetMessageMap()</code> 总能取回"我这个类的"表。这就是整套机制唯一用到虚函数的地方：<strong>用一个虚函数，换掉了成百上千个虚函数</strong>。</p>
+<p>接下来要看展开，得先知道"表格的一行"长什么样。整套机制只靠 <code>afxwin.h</code> 里两个朴素的结构体撑着，加起来八个字段：</p>
+<pre style="contain-intrinsic-size:auto 440px"><code><span class="cm">// 表里的一行:一条"什么消息 -&gt; 交给哪个函数"的登记</span>
+<span class="kw">struct</span> AFX_MSGMAP_ENTRY {
+    UINT     nMessage;  <span class="cm">// 消息号,如 WM_PAINT、WM_COMMAND</span>
+    UINT     nCode;     <span class="cm">// 通知码:控件通知与 WM_NOTIFY 用,普通消息填 0</span>
+    UINT     nID;       <span class="cm">// 命令 ID 或控件 ID;普通窗口消息填 0</span>
+    UINT     nLastID;   <span class="cm">// ID 区间的上界;不是区间就与 nID 相同</span>
+    UINT     nSig;      <span class="cm">// 签名码:pfn 真正的参数表长什么样(VC2005 后改 UINT_PTR)</span>
+    AFX_PMSG pfn;       <span class="cm">// 处理函数指针(全部被强转成这一种类型)</span>
+};
+
+<span class="cm">// 一张表 = 通往基类表的指针 + 表体首地址</span>
+<span class="kw">struct</span> AFX_MSGMAP {
+    <span class="kw">const</span> AFX_MSGMAP*       pBaseMap;   <span class="cm">// 往上一级</span>
+    <span class="kw">const</span> AFX_MSGMAP_ENTRY* lpEntries;  <span class="cm">// 本类自己的登记行</span>
+};</code></pre>
+<p>有了这八个字段，三个宏的展开就没有一点神秘可言了。下面把<strong>每个宏各自产出哪几行</strong>逐条标了出来，请对着本节开头那段源码一行行核对：</p>
+<pre style="contain-intrinsic-size:auto 685px"><code><span class="cm">/* ===== BEGIN_MESSAGE_MAP(CMyView, CView) 展开出这三样 ===== */</span>
+<span class="kw">const</span> AFX_MSGMAP* CMyView::GetMessageMap() <span class="kw">const</span> {
+    <span class="kw">return</span> &amp;CMyView::messageMap;         <span class="cm">// ① 取表虚函数,就地实现</span>
+}
+<span class="kw">const</span> AFX_MSGMAP CMyView::messageMap = {
+    &amp;CView::messageMap,                  <span class="cm">// ② 第二个宏参数落在这里!</span>
+    &amp;CMyView::_messageEntries[0]
+};
+<span class="kw">const</span> AFX_MSGMAP_ENTRY CMyView::_messageEntries[] = {  <span class="cm">// ③ 只开了左花括号</span>
+
+<span class="cm">/*    nMessage,   nCode,      nID,          nLastID,      nSig,        pfn  */</span>
+
+<span class="cm">/* ===== ON_WM_PAINT() 展开出这一行 ===== */</span>
+    { WM_PAINT,   0,          0,            0,
+      AfxSig_vv,   (AFX_PMSG)&amp;OnPaint },
+
+<span class="cm">/* ===== ON_COMMAND(ID_FILE_OPEN, &amp;CMyView::OnFileOpen) 展开出这一行 ===== */</span>
+    { WM_COMMAND, CN_COMMAND, ID_FILE_OPEN, ID_FILE_OPEN,
+      AfxSigCmd_v, (AFX_PMSG)&amp;CMyView::OnFileOpen },
+
+<span class="cm">/* ===== END_MESSAGE_MAP() 展开出这两行 ===== */</span>
+    { 0,          0,          0,            0,
+      AfxSig_end,  (AFX_PMSG)0 }                     <span class="cm">// 结束哨兵</span>
+};                                                   <span class="cm">// ④ 表体到此封口</span></code></pre>
+<p>对应关系一目了然了：<strong>这段"配置语法"其实是一个数组初始化被劈成了三截</strong>。BEGIN 写开头——顺带把数组的左花括号 ③ 也吐了出来，故意<strong>不封口</strong>；中间每个 <code>ON_XXX</code> 宏各吐出一个以逗号结尾的初始化项，也就是表里的一行；END 补上全零的结束哨兵，再用 ④ 那个 <code>};</code> 把表封上。C 语言的数组初始化列表允许这样一项一项拼起来，宏才有机会玩这一手。</p>
+<p>这也顺带解释了几条"你必须照做、否则报出莫名其妙错误"的规矩：三个宏<strong>必须成对成套</strong>，少了 END，编译器就困在一个没封口的花括号里，错误行号会指到十万八千里之外；<code>ON_XXX</code> <strong>只能待在 BEGIN 与 END 之间</strong>，因为它展开出来的不是语句而是一个初始化项，摆在别处根本不是合法的 C++；类声明里<strong>必须写 DECLARE_MESSAGE_MAP()</strong>，因为 BEGIN 展开出的是这三个成员的<em>定义</em>，没有先声明就无处可定义。</p>
+<p>再看 <code>ON_WM_PAINT()</code>：它<strong>一个参数都没有，函数名却凭空冒了出来</strong>——因为 <code>OnPaint</code> 这个名字是写死在宏定义里的。<code>ON_WM_</code> 开头的一整批宏对应的是标准窗口消息，MFC 早已替每个消息定好了处理函数的名字、参数表和签名码，你写个空括号，宏自己去拼 <code>&amp;OnPaint</code>（注意它连类名都不带也照样能编译：这个数组是 CMyView 的成员，定义体里的名字查找就发生在类作用域内）。代价是<strong>名字和签名必须一字不差</strong>：写成 <code>OnPaint2</code> 编译不过；VC6 里 <code>OnTimer(UINT)</code> 到 64 位改成了 <code>OnTimer(UINT_PTR)</code>，签名没跟着改就会静默失联——消息永远进不来，也不报错（9.7 节还会碰到）。而 <code>ON_COMMAND</code> 处理的是<strong>你自定的命令</strong>，命令 ID 和处理函数名宏都猜不到，所以两个都得你亲手传进去。</p>
+<p>表里最不直观的是第五格 <code>nSig</code>。留意 <code>pfn</code> 只有 <code>AFX_PMSG</code> 一种类型（说白了就是 <code>void (CCmdTarget::*)(void)</code>），可真实的处理函数五花八门：<code>OnPaint</code> 不收参数，<code>OnLButtonDown</code> 收两个，命令处理函数还可能要返回 BOOL。C++ 不允许把签名不同的成员函数指针塞进同一个数组，MFC 就<strong>一律强转成 AFX_PMSG</strong> 存进去——等于把类型信息抹掉了。抹掉的部分靠 <code>nSig</code> 补回来：真要调用时，框架先看这一行的签名码是哪一种（<code>AfxSig_vv</code> = 无参无返回、<code>AfxSigCmd_v</code> = 命令处理函数……），再把 <code>pfn</code> 强转<strong>回</strong>那个签名去调。<strong>"类型擦除 + 靠一个标记码还原"，这是整套机制最脏也最关键的一步</strong>：类型检查的责任从编译器手里被夺走，交给了宏——这正是消息映射写错了往往不报错、只是"没反应"的根源。</p>
+<p>现在回到展开里 ② 那一行——<code>&amp;CView::messageMap</code>，那个"指向基类的表"的指针，才是整个机制的灵魂。当一条消息到来，框架从<strong>当前类的表</strong>开始一行行找：找到匹配的消息号，就调对应的处理函数；<strong>找不到，就顺着指针爬到基类的表继续找</strong>，一直爬到 CObject。这条向上查找的链，效果上模拟了虚函数"派生类优先、否则用基类的"覆盖语义，却<strong>不需要真正的虚函数表</strong>。</p>
 <p>比方说：这就像查一本按部门分册的电话簿。先翻你自己部门那一册（当前类的表），没这个人，就翻上级部门那册（基类的表），层层上溯。代价是每次查表有一点点运行开销，换来的是 vtable 不爆炸、消息和函数的对应关系一目了然、还能被"类向导"这类工具自动读写。</p>
+<p>最后补一句版本差异，免得你翻现代 MFC 源码时对不上：VC6 的 <code>messageMap</code> 里直接放的是 <code>&amp;CView::messageMap</code>——基类那个静态对象的地址。这在跨 DLL 与静态对象初始化顺序上有隐患，所以 VC2005 之后 MFC 把这一格改成了<strong>函数指针</strong> <code>pfnGetBaseMap</code>（配套多出一个 <code>GetThisMessageMap()</code>），链还是同一条链，只是从"直接取地址"变成了"调一下函数再拿地址"。机制没变，别被表面写法晃到。</p>
 <div class="note new" style="contain-intrinsic-size:auto 229px"><span class="t">🔵 现代批注：宏是那个年代的无奈</span><p>用一大堆宏"造语法"，在 1990 年代的 C++ 里是没办法的办法——语言本身没有反射、没有属性（attribute）、没有源代码生成器。到了 2026 年，这类需求有了正经出路：C# 用特性 <code>[Command]</code> 加运行时反射、C++/WinRT 用编译期代码生成、Qt 用 moc 预处理器加信号槽（signal / slot）。它们都比"手写宏展开成隐藏的静态表"更透明、更好调试。你今天理解 MFC 消息映射的价值，主要在于看懂"没有反射的语言如何用宏和静态表模拟出动态分发"这一经典手法。</p></div>
 
 <h2 id="c3-handle-map">3.7 句柄与 C++ 对象：两个世界之间的桥</h2>
