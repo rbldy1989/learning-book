@@ -1,9 +1,9 @@
 # 现代编程书系 · AI 重构版
 
-> 一套由 AI 完整重写的编程教材与 API 手册：Windows 原生开发、Linux 系统编程、C/C++ 标准库、Web 前端、脚本与工程协作。
+> 一套由 AI 完整重写的编程教材、API 速查手册与开源项目源码精读：Windows 原生开发、Linux 系统编程、C/C++ 标准库、Web 前端、脚本与工程协作。
 > 沿用经典教材的知识脉络，剔除已废弃的技术，补上 2026 年的现代实践。
 
-**版本：2026-08-24**　·　**共 17 本**　·　**许可：CC BY-NC-SA 4.0**
+**版本：2026-08-24**　·　**共 22 本**　·　**许可：CC BY-NC-SA 4.0**
 
 ---
 
@@ -74,6 +74,18 @@ Petzold 的《Windows 程序设计》第 5 版停在 2000 年，仍在讲 16 位
 | **[CMD 批处理脚本 · 现代详解](CMD%E6%89%B9%E5%A4%84%E7%90%86-%E7%8E%B0%E4%BB%A3%E8%AF%A6%E8%A7%A3.html)** | 5 章 · 50 节 · 12 图 | 从 COMMAND.COM 的历史包袱讲起：变量展开时机、延迟展开、`for /F` 解析、转义与引号陷阱。附参数修饰符全表与十大陷阱速查 |
 | **[PowerShell 脚本 · 现代详解](PowerShell-%E7%8E%B0%E4%BB%A3%E8%AF%A6%E8%A7%A3.html)** | 6 章 · 60 节 · 17 图 | 核心观念是「管道里传对象而非文本」。涵盖类型与比较运算、对象管道、函数与参数、文件/注册表管理、错误处理与调试 |
 | **[Shell 脚本与命令行工具 · 现代详解](Shell%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7-%E7%8E%B0%E4%BB%A3%E8%AF%A6%E8%A7%A3.html)** | 7 章 · 68 节 · 20 图 | 以 bash 为准（并标注 POSIX 可移植性差异）。引号与展开、健壮脚本三件套 `set -euo pipefail`、重定向与进程替换；外加 grep/sed/awk 三剑客专章 |
+
+### 源码精读
+
+> 不讲抽象概念，逐函数读完一个真实开源项目，看骨架怎么长出来。文件在仓库之外的 `workshop-*` 目录，克隆本仓库不会带上
+
+| 书 | 规模 | 说明 |
+|---|---|---|
+| **[metapad 源码剖析 · 单文件 Win32 编辑器](../workshop-win32/metapad/metapad-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.html)** | 8 章 · 39 节 · 17 表 · 8 图 | 一个功能完整的记事本替代品，全部逻辑装在一个 C 文件里。窗口骨架、编码识别、换行归一化、控件子类化与配置双后端 |
+| **[WinDirStat 源码剖析 · 不用 Doc/View 的 MFC 应用](../workshop-mfc/windirstat/windirstat-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.html)** | 9 章 · 45 节 · 3 图 | 一个成熟的 MFC 程序，却完全没用 Document/View。骨架、CItem 树、扫描引擎与 Treemap 着色 |
+| **[HexEdit 源码剖析 · Doc/View 的完整形态](../workshop-mfc/HexEdit/HexEdit-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.html)** | 8 章 · 38 节 · 2 图 | WinDirStat 的反面：把 Doc/View 用到极致。编辑 10 GB 文件、五个后台线程、模板与表达式、完整撤销体系 |
+| **[KeePass 1.x 源码剖析 · 密码进了内存之后](../workshop-mfc/keepass/keepass-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.html)** | 8 章 · 37 节 · 2 图 | 系列里唯一的安全软件。密码在内存里怎么存、密钥派生转多少轮，外加 26,000 行自绘控件 |
+| **[MFCMAPI 源码剖析 · 现代 MFC 的分层实践](../workshop-mfc/mfcmapi/mfcmapi-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.html)** | 8 章 · 36 节 · 2 图 | 四个 MFC 项目里唯一仍在活跃维护的。core 与 UI 的分界线、MFC 与 COM 的接缝、33 个二进制解析器 |
 <!-- books:end -->
 
 ---
@@ -141,6 +153,8 @@ cd learning-book
 └── Shell脚本与命令行工具-现代详解.html
 ```
 <!-- tree:end -->
+
+> **源码精读**那一组的文件在仓库之外的 `workshop-win32/` 与 `workshop-mfc/` 目录里（各含被剖析项目的完整源码），克隆本仓库不会带上。
 
 ---
 
