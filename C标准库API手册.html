@@ -399,8 +399,8 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw"><code>%%</code></td><td class="nw">—</td><td>输出百分号本身</td></tr>
 </tbody>
 </table>
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">禁用写法</span><p>格式串与实参类型不匹配是未定义行为(如用 <code>%d</code> 打印 <code>long long</code>)。更危险的是把外部输入直接当格式串:<code>printf(user_input)</code> 是经典的格式串漏洞,必须写成 <code>printf("%s", user_input)</code>。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 100px"><span class="t">现代提示</span><p>C++ 中优先用类型安全的 <code>std::format</code>(C++20)/<code>std::print</code>(C++23),占位符写错在编译期即可发现。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 禁用写法</span><p>格式串与实参类型不匹配是未定义行为(如用 <code>%d</code> 打印 <code>long long</code>)。更危险的是把外部输入直接当格式串:<code>printf(user_input)</code> 是经典的格式串漏洞,必须写成 <code>printf("%s", user_input)</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 100px"><span class="t">🔵 现代提示</span><p>C++ 中优先用类型安全的 <code>std::format</code>(C++20)/<code>std::print</code>(C++23),占位符写错在编译期即可发现。</p></div>
 
 <h2 id="s1-fprintf" class="fntarget">1.3 fprintf</h2>
 <p class="fsum">和 printf 一样做格式化输出，但可以指定写到哪个流，写日志、往 stderr 报错都靠它。</p>
@@ -446,7 +446,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <span class="kw">else if</span> ((<span class="kw">size_t</span>)need &gt;= <span class="kw">sizeof</span> buf) { <span class="cm">/* 被截断,按需扩容重试 */</span> }</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p><span class="badge old">已过时</span> <code>sprintf</code> 不知道目标缓冲区多大,输出一旦超长即栈/堆溢出。<span class="badge ok">推荐</span> <code>snprintf</code> 用 <code>n</code> 封顶且必定以 <code>\0</code> 结尾,是格式化到缓冲区的唯一正确选择。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>MSVC 对 <code>sprintf</code> 报 C4996 弃用警告,并提供 <code>sprintf_s</code>(越界时直接终止而非静默截断)。C++ 里直接用 <code>std::string</code> + <code>std::format</code>,缓冲区大小问题整个消失。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>MSVC 对 <code>sprintf</code> 报 C4996 弃用警告,并提供 <code>sprintf_s</code>(越界时直接终止而非静默截断)。C++ 里直接用 <code>std::string</code> + <code>std::format</code>,缓冲区大小问题整个消失。</p></div>
 
 <h2 id="s1-sscanf" class="fntarget">1.5 sscanf</h2>
 <p class="fsum">从一段字符串里按格式抠出数字、单词等字段，常配合 fgets 用来逐行解析文本。</p>
@@ -494,7 +494,7 @@ sscanf(line, <span>"%19s"</span>, word);   <span class="cm">// %s 必须带宽�
     <span class="cm">// 输入不合法:坏数据仍留在 stdin 里,需读丢</span>
 }</code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">为何易出事</span><p>三大坑:① 无宽度的 <code>%s</code> 读多长写多长,直接缓冲区溢出;② 匹配失败时非法输入<strong>滞留在缓冲区</strong>,循环里不清理就是死循环;③ <code>%d</code>、<code>%s</code> 不消耗行尾换行,后续 <code>fgets</code>/<code>%c</code> 会读到残留的 <code>\n</code>。交互式输入优先改用 <code>fgets</code> + <code>sscanf</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 为何易出事</span><p>三大坑:① 无宽度的 <code>%s</code> 读多长写多长,直接缓冲区溢出;② 匹配失败时非法输入<strong>滞留在缓冲区</strong>,循环里不清理就是死循环;③ <code>%d</code>、<code>%s</code> 不消耗行尾换行,后续 <code>fgets</code>/<code>%c</code> 会读到残留的 <code>\n</code>。交互式输入优先改用 <code>fgets</code> + <code>sscanf</code>。</p></div>
 <p>MSVC 对 <code>scanf</code> 报 C4996,其 <code>scanf_s</code>(C11 附录 K)要求 <code>%s</code>/<code>%c</code> 后额外传缓冲区大小实参,如 <code>scanf_s("%s", name, (rsize_t)sizeof name)</code>;该扩展可移植性有限。C++ 等价物是 <code>std::cin &gt;&gt; x</code> 配合状态检查。</p>
 
 <h2 id="s1-fopen" class="fntarget">1.7 fopen / fopen_s</h2>
@@ -617,7 +617,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 }</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p><span class="badge ok">推荐</span> 读取一行文本的首选函数:长度受缓冲区限制,不会溢出。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">禁用</span><p>老教材里的 <code>gets</code> 无法限制读入长度,是教科书级溢出漏洞,已被 C11 从标准中<strong>删除</strong>,任何场合都不要用。C++ 等价物是 <code>std::getline(std::cin, s)</code>,自动扩容且不留换行。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 禁用</span><p>老教材里的 <code>gets</code> 无法限制读入长度,是教科书级溢出漏洞,已被 C11 从标准中<strong>删除</strong>,任何场合都不要用。C++ 等价物是 <code>std::getline(std::cin, s)</code>,自动扩容且不留换行。</p></div>
 
 <h2 id="s1-fputs" class="fntarget">1.12 fputs</h2>
 <p class="fsum">把一个字符串原样写到流里，既不做格式化，也不会自动补上换行符。</p>
@@ -656,7 +656,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 125px"><code><span class="cl"><span class="cc" style="min-width:20.0ch"><span class="kw">int</span> c;</span><span class="cm">// 必须是 int,不能是 char</span></span><span class="cl"><span class="kw">while</span> ((c = fgetc(in)) != EOF) {</span><span class="cl"><span class="cc" style="min-width:20.0ch">    fputc(c, out);</span><span class="cm">// 逐字符复制文件的最小实现</span></span><span class="cl">}</span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">经典错误</span><p>用 <code>char c</code> 接收 <code>fgetc</code> 的返回值:若 <code>char</code> 无符号,<code>c != EOF</code> 永远为真造成死循环;若有符号,字节 0xFF 会被误判成 <code>EOF</code> 提前退出。接收变量必须声明为 <code>int</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 经典错误</span><p>用 <code>char c</code> 接收 <code>fgetc</code> 的返回值:若 <code>char</code> 无符号,<code>c != EOF</code> 永远为真造成死循环;若有符号,字节 0xFF 会被误判成 <code>EOF</code> 提前退出。接收变量必须声明为 <code>int</code>。</p></div>
 
 <h2 id="s1-fseek" class="fntarget">1.14 fseek / ftell / rewind</h2>
 <p class="fsum">移动、查询和重置文件的读写位置，让文件可以随机访问，而不只是从头读到尾。</p>
@@ -696,7 +696,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 79px"><code><span class="cl"><span class="cc" style="min-width:26.0ch">printf(<span>"processing..."</span>);</span><span class="cm">// 没有 \n,行缓冲下不会立刻显示</span></span><span class="cl"><span class="cc" style="min-width:26.0ch">fflush(stdout);</span><span class="cm">// 强制刷出,进度提示即时可见</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">禁用写法</span><p><code>fflush(stdin)</code> 对输入流是<strong>未定义行为</strong>——MSVC 曾自行赋予其"清空输入缓冲"的含义,但这不可移植。要丢弃输入残留,老老实实循环 <code>fgetc</code> 直到读到 <code>\n</code> 或 <code>EOF</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 禁用写法</span><p><code>fflush(stdin)</code> 对输入流是<strong>未定义行为</strong>——MSVC 曾自行赋予其"清空输入缓冲"的含义,但这不可移植。要丢弃输入残留,老老实实循环 <code>fgetc</code> 直到读到 <code>\n</code> 或 <code>EOF</code>。</p></div>
 
 <h2 id="s1-feof" class="fntarget">1.16 feof / ferror</h2>
 <p class="fsum">读写失败之后查流的两个状态标志，用来区分是正常读到文件尾还是中途发生了 I/O 错误。</p>
@@ -782,7 +782,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 102px"><code><span class="cl">FILE *fp = fopen(<span>"big.log"</span>, <span>"w"</span>);</span><span class="cl"><span class="cc" style="min-width:37.0ch">setvbuf(fp, NULL, _IOFBF, 1 &lt;&lt; 16);</span><span class="cm">// 64KB 全缓冲,减少写小日志的系统调用</span></span><span class="cl"><span class="cc" style="min-width:37.0ch">setvbuf(stdout, NULL, _IONBF, 0);</span><span class="cm">// 调试时关掉 stdout 缓冲,输出即时可见</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>传入自备 <code>buf</code> 时,其生存期必须覆盖流的整个使用期——用函数内局部数组当缓冲区、函数返回后流还在用,是典型的悬空引用。拿不准就传 <code>NULL</code> 交给库管理。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>传入自备 <code>buf</code> 时,其生存期必须覆盖流的整个使用期——用函数内局部数组当缓冲区、函数返回后流还在用,是典型的悬空引用。拿不准就传 <code>NULL</code> 交给库管理。</p></div>
 
 </section>
 
@@ -851,7 +851,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <span class="cm">// 此处 arr[i] 全部为 0,可直接当计数器数组用</span>
 free(arr);</code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">推荐</span><p>calloc 相比 <code>malloc(n * size)</code> 有两个优势:一是内存清零,二是标准要求实现检查 <code>nmemb * size</code> 的乘法溢出。手写 <code>malloc(n * size)</code> 当 n 来自外部输入时,乘法回绕可能导致分配远小于预期的缓冲区——这是一类经典的堆溢出漏洞。注意:清的是“全零字节”,对指针和浮点数在个别古董平台上不等于 NULL/0.0,现代主流平台可放心。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 推荐</span><p>calloc 相比 <code>malloc(n * size)</code> 有两个优势:一是内存清零,二是标准要求实现检查 <code>nmemb * size</code> 的乘法溢出。手写 <code>malloc(n * size)</code> 当 n 来自外部输入时,乘法回绕可能导致分配远小于预期的缓冲区——这是一类经典的堆溢出漏洞。注意:清的是“全零字节”,对指针和浮点数在个别古董平台上不等于 NULL/0.0,现代主流平台可放心。</p></div>
 
 <h2 id="s2-realloc" class="fntarget">2.4 realloc</h2>
 <p class="fsum">把已分配的内存块改成新的总大小,可能整块搬家,原有数据会跟着迁过去。</p>
@@ -868,7 +868,7 @@ free(arr);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 171px"><code><span class="cl"><span class="cc" style="min-width:43.0ch"><span class="kw">int</span> *tmp = realloc(p, new_n * <span class="kw">sizeof</span> *p);</span><span class="cm">// 先接到临时变量</span></span><span class="cl"><span class="kw">if</span> (tmp == NULL) {</span><span class="cl"><span class="cc" style="min-width:43.0ch">    free(p);</span><span class="cm">// 失败:旧块还在,由你决定去留</span></span><span class="cl">    <span class="kw">return</span> -1;</span><span class="cl">}</span><span class="cl"><span class="cc" style="min-width:43.0ch">p = tmp;</span><span class="cm">// 成功后才覆盖 p</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">搬家陷阱</span><p>realloc 可能原地扩容,也可能“搬家”——把数据复制到新地址并释放旧块。因此:① 必须使用返回值,搬家后旧指针立即失效;② 绝不能写 <code>p = realloc(p, n)</code>,失败返回 NULL 会把唯一指向旧块的指针冲掉,造成内存泄漏;③ 其他指向该块内部的指针(别名、迭代位置)在搬家后全部作废,需按偏移量重建。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 搬家陷阱</span><p>realloc 可能原地扩容,也可能“搬家”——把数据复制到新地址并释放旧块。因此:① 必须使用返回值,搬家后旧指针立即失效;② 绝不能写 <code>p = realloc(p, n)</code>,失败返回 NULL 会把唯一指向旧块的指针冲掉,造成内存泄漏;③ 其他指向该块内部的指针(别名、迭代位置)在搬家后全部作废,需按偏移量重建。</p></div>
 
 <h2 id="s2-free" class="fntarget">2.5 free</h2>
 <p class="fsum">把 malloc 家族借来的内存还给堆;还完指针就作废,重复释放会砸坏堆结构。</p>
@@ -884,7 +884,7 @@ free(arr);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 102px"><code><span class="cl">free(p);</span><span class="cl"><span class="cc" style="min-width:11.0ch">p = NULL;</span><span class="cm">// 立即置空:双重释放变成无害的 free(NULL)</span></span><span class="cl"><span class="cc" style="min-width:11.0ch">free(p);</span><span class="cm">// 安全:free(NULL) 什么也不做</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">禁用行为</span><p>三大未定义行为:① <strong>双重释放</strong>——同一指针 free 两次,是堆破坏和安全漏洞的高发源;② <strong>悬空指针</strong>——free 之后继续读写(use-after-free);③ free 一个并非来自 malloc 家族的指针(栈变量、数组中间地址、字符串字面量)。防御性习惯是 free 后立刻把指针置 NULL,并在调试期启用 AddressSanitizer(<code>-fsanitize=address</code>)或 MSVC 的调试堆来抓现行。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 禁用行为</span><p>三大未定义行为:① <strong>双重释放</strong>——同一指针 free 两次,是堆破坏和安全漏洞的高发源;② <strong>悬空指针</strong>——free 之后继续读写(use-after-free);③ free 一个并非来自 malloc 家族的指针(栈变量、数组中间地址、字符串字面量)。防御性习惯是 free 后立刻把指针置 NULL,并在调试期启用 AddressSanitizer(<code>-fsanitize=address</code>)或 MSVC 的调试堆来抓现行。</p></div>
 
 <h2 id="s2-atoi" class="fntarget">2.6 atoi / atol / atof</h2>
 <span class="badge old">已过时</span>
@@ -903,7 +903,7 @@ free(arr);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 125px"><code><span class="cl"><span class="cc" style="min-width:30.0ch"><span class="kw">int</span> a = atoi(<span class="s">"0"</span>);</span><span class="cm">// 0:合法输入</span></span><span class="cl"><span class="cc" style="min-width:30.0ch"><span class="kw">int</span> b = atoi(<span class="s">"abc"</span>);</span><span class="cm">// 0:非法输入,返回值无法区分!</span></span><span class="cl"><span class="cc" style="min-width:30.0ch"><span class="kw">int</span> c = atoi(<span class="s">"99999999999"</span>);</span><span class="cm">// 溢出:未定义行为</span></span><span class="cl"><span class="cc" style="min-width:30.0ch"><span class="kw">double</span> d = atof(<span class="s">"3.14xyz"</span>);</span><span class="cm">// 3.14:尾部残留被静默忽略</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">缺陷</span><p>这一族函数<strong>没有任何错误报告机制</strong>:解析失败返回 0,与合法输入 "0" 不可区分;结果超出类型范围直接是未定义行为(不设置 errno)。它们只适合“输入已确认合法”的场景,任何面向外部数据的解析都应改用下一条的 strtol 家族。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 缺陷</span><p>这一族函数<strong>没有任何错误报告机制</strong>:解析失败返回 0,与合法输入 "0" 不可区分;结果超出类型范围直接是未定义行为(不设置 errno)。它们只适合“输入已确认合法”的场景,任何面向外部数据的解析都应改用下一条的 strtol 家族。</p></div>
 
 <h2 id="s2-strtol" class="fntarget">2.7 strtol / strtoul / strtod</h2>
 <span class="badge ok">推荐</span>
@@ -953,7 +953,7 @@ errno = 0;                             <span class="cm">// 调用前必须清零
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 102px"><code><span class="cl"><span class="cc" style="min-width:30.0ch">srand((<span class="kw">unsigned</span>)time(NULL));</span><span class="cm">// 整个程序只播种一次</span></span><span class="cl"><span class="cc" style="min-width:30.0ch"><span class="kw">int</span> dice = rand() % 6 + 1;</span><span class="cm">// 取模有偏差,随手用可以,严肃场合不行</span></span><span class="cl">printf(<span class="s">"%d\n"</span>, dice);</span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p>rand 的质量普遍很差:序列周期短、低位随机性弱、<code>rand() % n</code> 存在取模偏差,且绝不可用于任何密码学场景。C++ 请使用 &lt;random&gt;:<code>std::mt19937</code> 配 <code>std::uniform_int_distribution</code> 才是均匀分布的正确写法。纯 C 下,Windows 可用 <code>rand_s</code>/BCryptGenRandom,POSIX 可用 <code>getrandom</code>/<code>arc4random</code> 获取加密级随机数。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p>rand 的质量普遍很差:序列周期短、低位随机性弱、<code>rand() % n</code> 存在取模偏差,且绝不可用于任何密码学场景。C++ 请使用 &lt;random&gt;:<code>std::mt19937</code> 配 <code>std::uniform_int_distribution</code> 才是均匀分布的正确写法。纯 C 下,Windows 可用 <code>rand_s</code>/BCryptGenRandom,POSIX 可用 <code>getrandom</code>/<code>arc4random</code> 获取加密级随机数。</p></div>
 
 <h2 id="s2-abs" class="fntarget">2.9 abs / labs / llabs</h2>
 <p class="fsum">取整数的绝对值,三个版本分别对应 int、long、long long 三种宽度。</p>
@@ -1101,7 +1101,7 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
     <span class="cm">// 该系统上没有可用的命令解释器</span>
 }</code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">安全警告</span><p>system 把整串文本交给 shell 解释,任何拼入命令的外部输入(文件名、表单字段、环境变量)都可能携带 <code>;</code>、<code>|</code>、<code>&amp;&amp;</code>、反引号等元字符实现<strong>命令注入</strong>;它还继承当前环境的 PATH,可能被劫持执行同名恶意程序。需要启动子进程时,优先用不经过 shell 的接口:POSIX 的 <code>fork</code>+<code>execv</code>/<code>posix_spawn</code>,Windows 的 <code>CreateProcess</code>。在 setuid 程序中调用 system 应视为绝对禁区。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 安全警告</span><p>system 把整串文本交给 shell 解释,任何拼入命令的外部输入(文件名、表单字段、环境变量)都可能携带 <code>;</code>、<code>|</code>、<code>&amp;&amp;</code>、反引号等元字符实现<strong>命令注入</strong>;它还继承当前环境的 PATH,可能被劫持执行同名恶意程序。需要启动子进程时,优先用不经过 shell 的接口:POSIX 的 <code>fork</code>+<code>execv</code>/<code>posix_spawn</code>,Windows 的 <code>CreateProcess</code>。在 setuid 程序中调用 system 应视为绝对禁区。</p></div>
 
 <h2 id="s2-getenv" class="fntarget">2.16 getenv</h2>
 <p class="fsum">按名字取环境变量的值,拿到的是运行库的只读字符串,要长期留就自己拷贝。</p>
@@ -1117,7 +1117,7 @@ system(cmd);   <span class="cm">// 危险!user_input 若为 "x; rm -rf ~" 即命
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 102px"><code><span class="cl"><span class="cc" style="min-width:36.0ch"><span class="kw">const</span> <span class="kw">char</span> *home = getenv(<span class="s">"HOME"</span>);</span><span class="cm">// Windows 下常用 "USERPROFILE"</span></span><span class="cl"><span class="cc" style="min-width:36.0ch"><span class="kw">if</span> (home == NULL) home = <span class="s">"/tmp"</span>;</span><span class="cm">// 永远要处理不存在的情况</span></span><span class="cl"><span class="cc" style="min-width:36.0ch">printf(<span class="s">"home = %s\n"</span>, home);</span><span class="cm">// 只读使用,不要写回这块内存</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示</span><p>MSVC 对 getenv 报 C4996 警告,推荐 <code>_dupenv_s</code>——它返回一份需要调用者 free 的独立拷贝,避免了共享缓冲的生存期问题;C11 附录 K 的对应物是 <code>getenv_s</code>。环境变量的值来自进程外部,属于不可信输入:用于构造路径或命令前必须校验,切勿直接拼进 system 调用。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p>MSVC 对 getenv 报 C4996 警告,推荐 <code>_dupenv_s</code>——它返回一份需要调用者 free 的独立拷贝,避免了共享缓冲的生存期问题;C11 附录 K 的对应物是 <code>getenv_s</code>。环境变量的值来自进程外部,属于不可信输入:用于构造路径或命令前必须校验,切勿直接拼进 system 调用。</p></div>
 
 </section>
 
@@ -1160,7 +1160,7 @@ errno_t strcpy_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 102px"><code><span class="cl"><span class="kw">char</span> buf[16];</span><span class="cl"><span class="cc" style="min-width:37.0ch">strcpy(buf, user_input);</span><span class="cm">// 危险:input 超过 15 字符即溢出</span></span><span class="cl"><span class="cc" style="min-width:37.0ch">strcpy_s(buf, <span class="kw">sizeof</span> buf, "hello");</span><span class="cm">// 安全:超长会报错而不是越界写</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">禁用</span><p><code>strcpy</code> 完全不检查目标容量,是缓冲区溢出漏洞的头号来源。MSVC 会对其发出 C4996 警告;新代码请一律使用 <code>strcpy_s</code>(或明确长度后用 <code>memcpy</code>)。C++ 中直接用 <code>std::string</code> 赋值即可。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 禁用</span><p><code>strcpy</code> 完全不检查目标容量,是缓冲区溢出漏洞的头号来源。MSVC 会对其发出 C4996 警告;新代码请一律使用 <code>strcpy_s</code>(或明确长度后用 <code>memcpy</code>)。C++ 中直接用 <code>std::string</code> 赋值即可。</p></div>
 
 <h2 id="s3-strncpy" class="fntarget">3.4 strncpy</h2>
 <p class="fsum">最多只往目标里写 n 个字符，原本是为定长记录字段设计的；源串够长时不会补结尾符，并不是"安全版的 strcpy"。</p>
@@ -1178,7 +1178,7 @@ errno_t strcpy_s(<span class="kw">char</span> *dest, rsize_t destsz, <span class
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 102px"><code><span class="cl"><span class="kw">char</span> buf[8];</span><span class="cl"><span class="cc" style="min-width:39.0ch">strncpy(buf, "abcdefgh", <span class="kw">sizeof</span> buf);</span><span class="cm">// 恰好写满 8 字节,没有 '\0'!</span></span><span class="cl"><span class="cc" style="min-width:39.0ch">buf[<span class="kw">sizeof</span> buf - 1] = '\0';</span><span class="cm">// 必须手动补结尾符</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">经典陷阱</span><p><code>strncpy</code> 不是"安全版 strcpy":当 <code>src</code> 长度 ≥ <code>count</code> 时,它<strong>不会写结尾 <code>'\0'</code></strong>,后续对 <code>buf</code> 调用任何 <code>str*</code> 函数都是未定义行为;而当 <code>src</code> 较短时它又会用 <code>'\0'</code> 把剩余空间全部填满,白白浪费写入。它本是为定长记录字段设计的,做普通字符串复制请改用 <code>strcpy_s</code> 或 <code>snprintf</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 经典陷阱</span><p><code>strncpy</code> 不是"安全版 strcpy":当 <code>src</code> 长度 ≥ <code>count</code> 时,它<strong>不会写结尾 <code>'\0'</code></strong>,后续对 <code>buf</code> 调用任何 <code>str*</code> 函数都是未定义行为;而当 <code>src</code> 较短时它又会用 <code>'\0'</code> 把剩余空间全部填满,白白浪费写入。它本是为定长记录字段设计的,做普通字符串复制请改用 <code>strcpy_s</code> 或 <code>snprintf</code>。</p></div>
 
 <h2 id="s3-strcat">3.5 strcat / strcat_s <span class="badge old">已过时</span></h2>
 <p class="fsum">把一个字符串接到另一个串的末尾拼成一串；strcat_s 要求传入目标总容量，剩余空间不够时报错而不是越界。</p>
@@ -1275,7 +1275,7 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <pre style="contain-intrinsic-size:auto 194px"><code><span class="cl"><span class="cc" style="min-width:25.0ch"><span class="kw">char</span> line[] = "a,b,,c";</span><span class="cm">// 必须可写:strtok 会把分隔符改成 '\0'</span></span><span class="cl"><span class="kw">char</span> *ctx = NULL;</span><span class="cl"><span class="kw">char</span> *p = strtok_s(line, ",", &amp;ctx);</span><span class="cl"><span class="kw">while</span> (p) {</span><span class="cl"><span class="cc" style="min-width:25.0ch">    puts(p);</span><span class="cm">// 依次输出 a b c(空段被跳过)</span></span><span class="cl">    p = strtok_s(NULL, ",", &amp;ctx);</span><span class="cl">}</span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>上面的 <code>strtok_s</code> 采用的是 MSVC 版签名,等价于 POSIX 的 <code>strtok_r</code>。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">状态陷阱</span><p><code>strtok</code> 把切分进度存在一个隐藏的静态变量里,因此<strong>不可重入</strong>:不能在两个字符串上交替切分,不能在多线程中同时使用,也不能在回调里嵌套调用——后一次会悄悄冲掉前一次的进度。它还会就地改写原串(写入 <code>'\0'</code>),字符串字面量传进去直接崩溃。请改用把状态交给调用方的 <code>strtok_s</code>。另注意:C11 附录 K 的 <code>strtok_s</code> 比 MSVC 版多一个长度参数,两者签名不同,跨平台代码需留意。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 状态陷阱</span><p><code>strtok</code> 把切分进度存在一个隐藏的静态变量里,因此<strong>不可重入</strong>:不能在两个字符串上交替切分,不能在多线程中同时使用,也不能在回调里嵌套调用——后一次会悄悄冲掉前一次的进度。它还会就地改写原串(写入 <code>'\0'</code>),字符串字面量传进去直接崩溃。请改用把状态交给调用方的 <code>strtok_s</code>。另注意:C11 附录 K 的 <code>strtok_s</code> 比 MSVC 版多一个长度参数,两者签名不同,跨平台代码需留意。</p></div>
 
 <h2 id="s3-memcpy">3.10 memcpy <span class="badge ok">推荐</span></h2>
 <p class="fsum">按指定字节数把一块内存整体复制到另一处，不认结尾符，结构体和数组都能整块搬，前提是两块区域互不重叠。</p>
@@ -1295,7 +1295,7 @@ strcat_s(path, <span class="kw">sizeof</span> path, "\\app.txt");  <span class="
 <span class="kw">double</span> dst[4];
 memcpy(dst, src, <span class="kw">sizeof</span> dst);   <span class="cm">// 按字节整块复制,数组、结构体皆可</span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">区域不可重叠</span><p><code>memcpy</code> 的前提是源和目标<strong>互不重叠</strong>,重叠即未定义行为——实现可能按任意方向、任意块宽复制,重叠时部分数据会在被读取前就被覆盖。凡是"在同一缓冲区内挪动数据"(如数组元素前移),必须用 <code>memmove</code>。字节数按 <code>sizeof</code> 计算,复制含指针的结构体时复制的是指针值本身(浅拷贝)。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 区域不可重叠</span><p><code>memcpy</code> 的前提是源和目标<strong>互不重叠</strong>,重叠即未定义行为——实现可能按任意方向、任意块宽复制,重叠时部分数据会在被读取前就被覆盖。凡是"在同一缓冲区内挪动数据"(如数组元素前移),必须用 <code>memmove</code>。字节数按 <code>sizeof</code> 计算,复制含指针的结构体时复制的是指针值本身(浅拷贝)。</p></div>
 
 <h2 id="s3-memmove" class="fntarget">3.11 memmove</h2>
 <p class="fsum">同样是按字节复制内存，与 memcpy 的区别是允许源和目标重叠，在同一个缓冲区里挪动数据时只能用它。</p>
@@ -1332,7 +1332,7 @@ memmove(a, a + 1, 4 * <span class="kw">sizeof</span>(<span class="kw">int</span>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 148px"><code><span class="cl"><span class="kw">struct</span> Config cfg;</span><span class="cl"><span class="cc" style="min-width:30.0ch">memset(&amp;cfg, 0, <span class="kw">sizeof</span> cfg);</span><span class="cm">// 惯用法:整块清零结构体</span></span><span class="cl"> </span><span class="cl"><span class="kw">char</span> buf[256];</span><span class="cl"><span class="cc" style="min-width:30.0ch">memset(buf, 0, <span class="kw">sizeof</span> buf);</span><span class="cm">// 注意是 sizeof buf,不是 sizeof(char*)</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">现代提示</span><p>定义时初始化可直接写 <code>struct Config cfg = {0};</code>,更简洁且不易把参数顺序写反(<code>memset(&amp;cfg, sizeof cfg, 0)</code> 是常见笔误,编译不报错但什么也没清)。另注意 <code>memset</code> 按字节填充:想把 <code>int</code> 数组填成 1,填出来的是 <code>0x01010101</code>;清敏感数据(密码等)时编译器可能把"死后无人读"的 <code>memset</code> 优化掉,C11 提供 <code>memset_s</code> 保证不被删除。C++ 里对非平凡类型用 <code>= {}</code> 或构造函数,不要 <code>memset</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 现代提示</span><p>定义时初始化可直接写 <code>struct Config cfg = {0};</code>,更简洁且不易把参数顺序写反(<code>memset(&amp;cfg, sizeof cfg, 0)</code> 是常见笔误,编译不报错但什么也没清)。另注意 <code>memset</code> 按字节填充:想把 <code>int</code> 数组填成 1,填出来的是 <code>0x01010101</code>;清敏感数据(密码等)时编译器可能把"死后无人读"的 <code>memset</code> 优化掉,C11 提供 <code>memset_s</code> 保证不被删除。C++ 里对非平凡类型用 <code>= {}</code> 或构造函数,不要 <code>memset</code>。</p></div>
 
 <h2 id="s3-memcmp" class="fntarget">3.13 memcmp</h2>
 <p class="fsum">逐字节比较两块内存的前若干字节是否一致，不在结尾符处停下，常用于比对文件魔数等定长二进制数据。</p>
@@ -1463,7 +1463,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
     <span class="kw">return</span> -1;
 }</code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>最常见的错误是把 <code>sizeof(buf)</code>(字节数)当成 destsz 传入——宽字符版本必须传元素个数,统一用 <code>_countof(buf)</code> 可同时兼容窄/宽两种缓冲区。C++ 中直接用 <code>std::wstring</code> 赋值即可,无容量问题。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>最常见的错误是把 <code>sizeof(buf)</code>(字节数)当成 destsz 传入——宽字符版本必须传元素个数,统一用 <code>_countof(buf)</code> 可同时兼容窄/宽两种缓冲区。C++ 中直接用 <code>std::wstring</code> 赋值即可,无容量问题。</p></div>
 
 <h2 id="s4-wcscat_s" class="fntarget">4.4 wcscat_s</h2>
 <span class="badge ok">推荐</span>
@@ -1505,7 +1505,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
 <span class="kw">if</span> (wcscmp(ext, L".txt") == 0)         { <span class="cm">/* 精确匹配扩展名 */</span> }
 <span class="kw">if</span> (wcsncmp(url, L"https://", 8) == 0) { <span class="cm">/* 只看前 8 个宽字符,做前缀判断 */</span> }</code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>Windows 文件系统不区分大小写,比较路径应使用 <code>_wcsicmp</code>(MSVC 扩展)或 Win32 的 <code>CompareStringOrdinal</code>;需要按用户语言排序时用 <code>wcscoll</code> 或 Win32 <code>CompareStringEx</code>,不要用 <code>wcscmp</code> 做界面排序。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>Windows 文件系统不区分大小写,比较路径应使用 <code>_wcsicmp</code>(MSVC 扩展)或 Win32 的 <code>CompareStringOrdinal</code>;需要按用户语言排序时用 <code>wcscoll</code> 或 Win32 <code>CompareStringEx</code>,不要用 <code>wcscmp</code> 做界面排序。</p></div>
 
 <h2 id="s4-wcschr" class="fntarget">4.6 wcschr / wcsstr</h2>
 <p class="fsum">在宽字符串里查找某个宽字符或某段子串,找到返回指向该处的指针,找不到返回 NULL</p>
@@ -1634,7 +1634,7 @@ errno_t strerror_s(<span class="kw">char</span> *buf, rsize_t bufsz, <span class
     <span class="cm">// 一个数字都没读到,说明解析失败(而非值为 0)</span>
 }</code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>宽字符命令行(<code>wmain</code> 的 <code>argv</code>)转数字首选这一对,而不是 <code>_wtoi</code>——后者无法报告错误。C++ 中可先转窄串再用 <code>std::from_chars</code>,它无 locale 开销且错误处理更清晰。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>宽字符命令行(<code>wmain</code> 的 <code>argv</code>)转数字首选这一对,而不是 <code>_wtoi</code>——后者无法报告错误。C++ 中可先转窄串再用 <code>std::from_chars</code>,它无 locale 开销且错误处理更清晰。</p></div>
 
 <h2 id="s4-fgetws" class="fntarget">4.11 fgetws / fputws</h2>
 <p class="fsum">从文件流按行读入一行宽字符,或把一段宽字符串写出到流,是宽字符版的行读写</p>
@@ -1695,7 +1695,7 @@ errno_t wcstombs_s(
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 218px"><code><span class="cl"><span class="cc" style="min-width:51.0ch">setlocale(LC_ALL, "");</span><span class="cm">// 不调用则处于 "C" locale,中文必失败</span></span><span class="cl"><span class="kw">wchar_t</span> wbuf[260];</span><span class="cl">size_t converted = 0;</span><span class="cl">errno_t err = mbstowcs_s(&amp;converted, wbuf, _countof(wbuf),</span><span class="cl"><span class="cc" style="min-width:51.0ch">                         narrow_path, _TRUNCATE);</span><span class="cm">// 按当前 ANSI 代码页解释 narrow_path</span></span><span class="cl"><span class="kw">if</span> (err != 0) {</span><span class="cl">    <span class="cm">// EILSEQ:源串里有当前代码页无法解释的字节</span></span><span class="cl">}</span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">禁用场景</span><p><strong>locale 陷阱:</strong>这对函数按<em>当前 C locale 的代码页</em>解释窄串——程序默认的 "C" locale 下任何非 ASCII 字节都转换失败;调了 <code>setlocale</code> 后又取决于用户系统代码页(简中 GBK、日文 Shift-JIS……),同一份数据换台机器结果就不同,而且它们<strong>永远不能</strong>正确处理 UTF-8 输入(除非进程显式启用 UTF-8 代码页)。Windows 下做编码转换,应直接使用 Win32 的 <code>MultiByteToWideChar(CP_UTF8, ...)</code> / <code>WideCharToMultiByte</code>,编码由参数显式指定,与 locale 完全解耦。仅在必须保持纯标准 C 的可移植代码里才考虑本条函数。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 禁用场景</span><p><strong>locale 陷阱:</strong>这对函数按<em>当前 C locale 的代码页</em>解释窄串——程序默认的 "C" locale 下任何非 ASCII 字节都转换失败;调了 <code>setlocale</code> 后又取决于用户系统代码页(简中 GBK、日文 Shift-JIS……),同一份数据换台机器结果就不同,而且它们<strong>永远不能</strong>正确处理 UTF-8 输入(除非进程显式启用 UTF-8 代码页)。Windows 下做编码转换,应直接使用 Win32 的 <code>MultiByteToWideChar(CP_UTF8, ...)</code> / <code>WideCharToMultiByte</code>,编码由参数显式指定,与 locale 完全解耦。仅在必须保持纯标准 C 的可移植代码里才考虑本条函数。</p></div>
 
 <h2 id="s4-_wfopen_s" class="fntarget">4.13 _wfopen_s</h2>
 <span class="badge ok">推荐</span>
@@ -1720,7 +1720,7 @@ errno_t err = _wfopen_s(&amp;fp, L"D:\\资料\\报告①.md", L"rb");
 }
 fclose(fp);</code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示</span><p>窄字符 <code>fopen("中文.txt", ...)</code> 在 Windows 上要经过 ANSI 代码页,遇到代码页外的字符(如简中系统上的日文文件名)会直接打不开;<code>_wfopen_s</code> 走 UTF-16 原生路径,是 Windows 打开任意 Unicode 路径的正解。它是 MSVC 扩展而非标准 C,跨平台代码需自行封装。C++17 可用 <code>std::filesystem::path</code> 配合 <code>std::fstream</code>,在 Windows 上同样走宽字符路径。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示</span><p>窄字符 <code>fopen("中文.txt", ...)</code> 在 Windows 上要经过 ANSI 代码页,遇到代码页外的字符(如简中系统上的日文文件名)会直接打不开;<code>_wfopen_s</code> 走 UTF-16 原生路径,是 Windows 打开任意 Unicode 路径的正解。它是 MSVC 扩展而非标准 C,跨平台代码需自行封装。C++17 可用 <code>std::filesystem::path</code> 配合 <code>std::fstream</code>,在 Windows 上同样走宽字符路径。</p></div>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 13470px;--thin-h:12158px">
@@ -1817,7 +1817,7 @@ fclose(fp);</code></pre>
 <tr><td class="nw"><code>'\f'</code></td><td class="nw">0x0C</td><td>换页</td></tr>
 <tr><td class="nw"><code>'\r'</code></td><td class="nw">0x0D</td><td>回车</td></tr>
 </tbody></table>
-<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">现代提示</span><p>常见误区:以为空白只有空格和 \t。解析跨平台文本时,行尾残留的 \r 正是靠 isspace 顺手清掉的;反之,若只想匹配"空格或制表符"(不含换行),C11 起没有专门函数,POSIX 有 isblank(C99 标准化,只认 ' ' 和 '\t')。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">🔵 现代提示</span><p>常见误区:以为空白只有空格和 \t。解析跨平台文本时,行尾残留的 \r 正是靠 isspace 顺手清掉的;反之,若只想匹配"空格或制表符"(不含换行),C11 起没有专门函数,POSIX 有 isblank(C99 标准化,只认 ' ' 和 '\t')。</p></div>
 
 <h2 id="s5-isupper" class="fntarget">5.6 isupper / islower</h2>
 <p class="fsum">分别判断一个字母是大写还是小写;非字母时两者都返回 0,所以不能拿一个取反当另一个用。</p>
@@ -1938,7 +1938,7 @@ fclose(fp);</code></pre>
 <p><strong>正确姿势:</strong></p>
 <pre style="contain-intrinsic-size:auto 194px"><code><span class="cl"><span class="cm">// 1. 逐字符处理字符串:强转 unsigned char</span></span><span class="cl"><span class="kw">if</span> (isalpha((<span class="kw">unsigned char</span>)s[i])) { ... }</span><span class="cl"> </span><span class="cl"><span class="cm">// 2. 处理 getchar()/fgetc() 的返回值:保持 int,不要提前存进 char</span></span><span class="cl"><span class="cc" style="min-width:30.0ch"><span class="kw">int</span> ch;</span><span class="cm">// int 才能同时容纳 0~255 和 EOF</span></span><span class="cl"><span class="kw">while</span> ((ch = getchar()) != EOF)</span><span class="cl"><span class="cc" style="min-width:30.0ch">    <span class="kw">if</span> (isdigit(ch)) { ... }</span><span class="cm">// ch 本来就合法,无需强转</span></span></code></pre>
 <p>注意第 2 种情形恰好说明了为什么参数类型是 <code>int</code>:是为了容纳 EOF,而不是欢迎任意负数。EOF 传入是合法的且所有 is* 函数对它返回 0。</p>
-<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">现代提示</span><p>把 <code>isalpha((unsigned char)c)</code> 当成肌肉记忆;团队里可封装一层 <code>static inline int my_isalpha(char c) { return isalpha((unsigned char)c); }</code> 一劳永逸。C++ 同理:<code>std::isalpha</code> 的 &lt;cctype&gt; 版本继承同样的约束,给 <code>std::find_if</code> 传裸 <code>::isalpha</code> 处理 std::string 是经典错误;另外注意还存在 &lt;locale&gt; 中的模板重载 <code>std::isalpha(ch, loc)</code>,两者签名不同,混用会导致费解的编译错误。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 现代提示</span><p>把 <code>isalpha((unsigned char)c)</code> 当成肌肉记忆;团队里可封装一层 <code>static inline int my_isalpha(char c) { return isalpha((unsigned char)c); }</code> 一劳永逸。C++ 同理:<code>std::isalpha</code> 的 &lt;cctype&gt; 版本继承同样的约束,给 <code>std::find_if</code> 传裸 <code>::isalpha</code> 处理 std::string 是经典错误;另外注意还存在 &lt;locale&gt; 中的模板重载 <code>std::isalpha(ch, loc)</code>,两者签名不同,混用会导致费解的编译错误。</p></div>
 
 <h2 id="s5-iswalpha">5.12 iswalpha / iswdigit / towupper <span class="badge new">现代提示</span></h2>
 <p class="fsum">宽字符版的字母判定、数字判定与转大写,处理中文、法文等非 ASCII 文本时替代窄字符版,须先 setlocale。</p>
@@ -1980,7 +1980,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 125px"><code><span class="cl"><span class="kw">double</span> a = 0.1 + 0.2, b = 0.3;</span><span class="cl"><span class="cc" style="min-width:29.0ch"><span class="kw">if</span> (fabs(a - b) &lt; 1e-9)</span><span class="cm">// 浮点相等判断的惯用写法</span></span><span class="cl">    printf("a 与 b 近似相等\n");</span><span class="cl"><span class="cc" style="min-width:29.0ch">printf("%f\n", fabs(-3.5));</span><span class="cm">// 3.500000</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">禁用</span><p>不要对浮点数用 stdlib.h 的 <code>abs()</code>——它是 <code>int</code> 版,传入 <code>double</code> 会被截断成整数再取绝对值,编译器往往只给一个警告。C++ 的 <code>std::abs</code> 有完整重载,无此陷阱。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 禁用</span><p>不要对浮点数用 stdlib.h 的 <code>abs()</code>——它是 <code>int</code> 版,传入 <code>double</code> 会被截断成整数再取绝对值,编译器往往只给一个警告。C++ 的 <code>std::abs</code> 有完整重载,无此陷阱。</p></div>
 
 <h2 id="s6-sqrt" class="fntarget">6.3 sqrt</h2>
 <p><span class="badge ok">推荐</span> 平方根,通常由硬件指令实现,速度很快。</p>
@@ -2013,7 +2013,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 125px"><code><span class="cl"><span class="cc" style="min-width:36.0ch">printf("%f\n", pow(2.0, 10.0));</span><span class="cm">// 1024.000000</span></span><span class="cl"><span class="cc" style="min-width:36.0ch">printf("%f\n", pow(2.0, -1.0));</span><span class="cm">// 0.500000,负指数即倒数</span></span><span class="cl"><span class="cc" style="min-width:36.0ch">printf("%f\n", pow(8.0, 1.0/3.0));</span><span class="cm">// 2.000000;负底数则为 NaN,见 cbrt</span></span><span class="cl"><span class="cc" style="min-width:36.0ch"><span class="kw">double</span> sq = x * x;</span><span class="cm">// 求平方别写 pow(x, 2.0)</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p><strong>整数次幂性能:</strong><code>pow</code> 内部走对数—指数通路,比乘法慢一个数量级。求平方、立方请直接写 <code>x*x</code>、<code>x*x*x</code>;固定小整数次幂用连乘或快速幂。部分编译器仅在 <code>-ffast-math</code> 下才把 <code>pow(x, 2.0)</code> 优化成乘法,不要指望它。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p><strong>整数次幂性能:</strong><code>pow</code> 内部走对数—指数通路,比乘法慢一个数量级。求平方、立方请直接写 <code>x*x</code>、<code>x*x*x</code>;固定小整数次幂用连乘或快速幂。部分编译器仅在 <code>-ffast-math</code> 下才把 <code>pow(x, 2.0)</code> 优化成乘法,不要指望它。</p></div>
 
 <h2 id="s6-exp" class="fntarget">6.5 exp / log / log10 / log2</h2>
 <p>自然指数与三种常用底的对数。<code>log2</code> 为 C99 新增。</p>
@@ -2057,7 +2057,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 148px"><code><span class="cl"><span class="cc" style="min-width:35.0ch">#define PI 3.14159265358979323846</span><span class="cm">// MSVC 下 _USE_MATH_DEFINES 后有 M_PI</span></span><span class="cl"><span class="kw">double</span> deg = 30.0;</span><span class="cl"><span class="cc" style="min-width:35.0ch"><span class="kw">double</span> rad = deg * PI / 180.0;</span><span class="cm">// 角度 → 弧度</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">printf("%f\n", sin(rad));</span><span class="cm">// 0.500000</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">printf("%f\n", cos(0.0));</span><span class="cm">// 1.000000</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 132px"><span class="t">注意</span><p>传入非常大的参数(如 <code>sin(1e18)</code>)时,弧度规约会耗尽精度,结果几乎无意义。周期性场景应先自行把角度归约到一个周期内。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 132px"><span class="t">🟡 注意</span><p>传入非常大的参数(如 <code>sin(1e18)</code>)时,弧度规约会耗尽精度,结果几乎无意义。周期性场景应先自行把角度归约到一个周期内。</p></div>
 
 <h2 id="s6-asin" class="fntarget">6.7 asin / acos / atan</h2>
 <p>反三角函数,返回值是弧度。</p>
@@ -2124,7 +2124,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <tr><td class="nw">trunc</td><td class="nw">向 0</td><td>2、2、-2、-2</td></tr>
 <tr><td class="nw">round</td><td class="nw">就近,.5 远离零</td><td>2、3、-2、-3</td></tr>
 </tbody></table>
-<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">现代提示</span><p>正数时 <code>trunc</code> 与 <code>floor</code> 一样,负数时才分道扬镳。若需要"银行家舍入"(.5 取偶),用 <code>rint</code>/<code>nearbyint</code>,它们遵循当前浮点舍入模式。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">🔵 现代提示</span><p>正数时 <code>trunc</code> 与 <code>floor</code> 一样,负数时才分道扬镳。若需要"银行家舍入"(.5 取偶),用 <code>rint</code>/<code>nearbyint</code>,它们遵循当前浮点舍入模式。</p></div>
 
 <h2 id="s6-fmod" class="fntarget">6.10 fmod</h2>
 <p>浮点取余。<code>%</code> 运算符只接受整数,对 <code>double</code> 求余必须用它。</p>
@@ -2199,7 +2199,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 171px"><code><span class="cl"><span class="cc" style="min-width:30.0ch"><span class="kw">double</span> bad = sqrt(-1.0);</span><span class="cm">// NaN</span></span><span class="cl"><span class="cc" style="min-width:30.0ch"><span class="kw">double</span> big = 1.0 / 0.0;</span><span class="cm">// +INFINITY(浮点除零不崩溃)</span></span><span class="cl"><span class="cc" style="min-width:30.0ch">printf("%d\n", bad == bad);</span><span class="cm">// 0!NaN 不等于任何值,包括自己</span></span><span class="cl"><span class="kw">if</span> (isnan(bad))   puts("是 NaN");</span><span class="cl"><span class="kw">if</span> (isinf(big))   puts("是无穷");</span><span class="cl"><span class="cc" style="min-width:30.0ch"><span class="kw">if</span> (!isfinite(x)) <span class="kw">return</span> -1;</span><span class="cm">// 入口处拦截脏数据的惯用检查</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">禁用</span><p>不要写 <code>x == NAN</code> 来判断——由于 NaN 不等于任何值,该表达式恒为假。老代码里的 <code>x != x</code> 技巧虽然等价于 isnan,但在 <code>-ffast-math</code> 下会被优化掉,一律改用宏。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 禁用</span><p>不要写 <code>x == NAN</code> 来判断——由于 NaN 不等于任何值,该表达式恒为假。老代码里的 <code>x != x</code> 技巧虽然等价于 isnan,但在 <code>-ffast-math</code> 下会被优化掉,一律改用宏。</p></div>
 
 <h2 id="s6-fsuffix">6.14 f 后缀 float 版</h2>
 <p><span class="badge new">现代提示</span> C99 起,本章每个函数都有 <code>f</code> 后缀的 float 版与 <code>l</code> 后缀的 long double 版。</p>
@@ -2227,7 +2227,7 @@ wint_t towupper(wint_t wc);</code></pre>
 <section class="chapter" style="contain-intrinsic-size:auto 11426px;--thin-h:10188px">
 <h1 id="s7"><span class="part">分类 7</span>time.h 时间日期</h1>
 <p>&lt;time.h&gt; 提供两套时间表示:一是 <code>time_t</code> 表示的“日历时间”(通常是自 1970-01-01 00:00:00 UTC 起的秒数),二是 <code>struct tm</code> 表示的“拆分时间”(年月日时分秒各一个字段)。两者之间用 <code>mktime</code>/<code>localtime_s</code>/<code>gmtime_s</code> 互相转换,格式化输出交给 <code>strftime</code>。此外还有测 CPU 耗时的 <code>clock</code> 和 C11 引入的高精度 <code>timespec_get</code>。本章的两大经典陷阱——<code>tm_year</code> 要加 1900、<code>tm_mon</code> 从 0 起——请务必先看 <a href="#s7-struct-tm">struct tm</a> 一节。</p>
-<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">现代提示</span><p>C++ 项目请优先使用 <code>std::chrono</code>(C++11 起):类型安全的时长与时间点运算,C++20 还内建了日历与时区库,能从编译期杜绝“秒当毫秒用”这类单位错误。&lt;time.h&gt; 主要用于 C 代码和与旧接口交互。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">🔵 现代提示</span><p>C++ 项目请优先使用 <code>std::chrono</code>(C++11 起):类型安全的时长与时间点运算,C++20 还内建了日历与时区库,能从编译期杜绝“秒当毫秒用”这类单位错误。&lt;time.h&gt; 主要用于 C 代码和与旧接口交互。</p></div>
 
 <h2 id="s7-overview">7.1 速览</h2><p><strong>本章速览</strong>——时间只有三种形态:秒级的 time_t、拆开的 struct tm、给人看的字符串;本章函数做的全是它们之间的来回搬运。</p><table style="contain-intrinsic-size:auto 539px"><thead><tr><th class="nw">函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><a class="fnlink" href="#s7-time"><code>time</code></a></td><td class="nw">取当前日历时间,秒级时间戳</td><td>time_t 的内部编码由实现定义,别拿它直接做加减,失败时返回 (time_t)-1。</td></tr><tr><td class="nw"><a class="fnlink" href="#s7-clock"><code>clock</code></a></td><td class="nw">返回程序耗用的处理器时钟数</td><td>不是墙钟时间;须除以 CLOCKS_PER_SEC 才得到秒,多线程程序里含义会失真。</td></tr><tr><td class="nw"><a class="fnlink" href="#s7-difftime"><code>difftime</code></a></td><td class="nw">求两个时间点相差多少秒</td><td>唯一可移植的时间差算法,结果是 double <span class="badge ok">推荐</span>。</td></tr><tr><td class="nw"><code>struct tm</code></td><td class="nw">分解时间:年月日时分秒的结构</td><td>tm_year 以 1900 为起点、tm_mon 从 0 计,差一错误的重灾区。</td></tr><tr><td class="nw"><a class="fnlink" href="#s7-mktime"><code>mktime</code></a></td><td>分解时间归一化并转回 time_t</td><td>按本地时区解释,并就地修正越界字段;tm_isdst 置 -1 才让它自行判断夏令时。</td></tr><tr><td class="nw"><code>localtime_s</code> / <code>gmtime_s</code></td><td>时间戳转本地时区或 UTC 分解时间</td><td>取代返回静态缓冲、非线程安全的 <code>localtime</code>/<code>gmtime</code> <span class="badge old">已过时</span>;注意 C11 附录 K 与 MSVC 版参数顺序相反 <span class="badge ok">推荐</span>。</td></tr><tr><td class="nw"><a class="fnlink" href="#s7-strftime"><code>strftime</code></a></td><td class="nw">按格式把分解时间输出为字符串</td><td>返回 0 只代表缓冲区不足,必须检查;用它替代定长输出的 <code>asctime</code>/<code>ctime</code> <span class="badge old">已过时</span>。</td></tr><tr><td class="nw"><code>timespec_get</code></td><td class="nw">取带纳秒字段的当前时间</td><td>C11 起提供,基准传 TIME_UTC;实际精度取决于系统,别默认真有纳秒级分辨率 <span class="badge ok">推荐</span>。</td></tr></tbody></table>
 
@@ -2315,7 +2315,7 @@ printf("elapsed: %.0f s\n", secs);</code></pre>
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 148px"><code><span class="cl"><span class="cm">// 千年虫式经典 bug:直接打印 tm_year 得到 126</span></span><span class="cl">printf("%d-%02d-%02d\n",</span><span class="cl"><span class="cc" style="min-width:26.0ch">       t.tm_year + 1900,</span><span class="cm">// 正确:126 + 1900 = 2026</span></span><span class="cl"><span class="cc" style="min-width:26.0ch">       t.tm_mon  + 1,</span><span class="cm">// 正确:7 + 1 = 8 月</span></span><span class="cl"><span class="cc" style="min-width:26.0ch">       t.tm_mday);</span><span class="cm">// mday 本来就从 1 起,不加</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note old" style="contain-intrinsic-size:auto 132px"><span class="t">高频翻车点</span><p>“年份显示成 126”“日期总是差一个月”几乎全是忘了 <code>+1900</code> / <code>+1</code>。规律可以这样记:<em>凡是当“数组下标/偏移量”用的从 0 起(月、星期、年内天数),凡是人类日历上直接念出来的从 1 起(日)</em>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 132px"><span class="t">🟡 高频翻车点</span><p>“年份显示成 126”“日期总是差一个月”几乎全是忘了 <code>+1900</code> / <code>+1</code>。规律可以这样记:<em>凡是当“数组下标/偏移量”用的从 0 起(月、星期、年内天数),凡是人类日历上直接念出来的从 1 起(日)</em>。</p></div>
 
 <h2 id="s7-mktime" class="fntarget">7.6 mktime</h2>
 <p class="fsum">把填好的年月日按本地时区折算回时间戳,顺手把越界字段进位归一,做日期加减最省事的办法。</p>
@@ -2354,7 +2354,7 @@ errno_t gmtime_s(<span class="kw">struct</span> tm *result, <span class="kw">con
     printf("%d:%02d\n", local.tm_hour, local.tm_min);</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>为什么用 _s 版:老的 <code>localtime</code>/<code>gmtime</code> 返回<em>指向内部静态缓冲区</em>的指针——全程序共享一份。第二次调用会覆盖第一次的结果,多线程下更是直接竞态,拿到的字段可能是两次调用的混合体。<code>_s</code> 版让调用者自备缓冲,彻底消除该问题;MSVC 对旧版报 C4996 警告。POSIX 平台的等价物是 <code>localtime_r(&amp;timer, &amp;result)</code>(注意与 MSVC 的 <code>_s</code> 参数顺序又相反)。跨平台代码建议包一层薄封装。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 132px"><span class="t">禁用</span><p>不要保存 <code>localtime()</code> 返回的指针“稍后再用”——任何后续的 <code>localtime</code>/<code>gmtime</code>/<code>ctime</code> 调用都可能悄悄改写它指向的内容。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 132px"><span class="t">🔴 禁用</span><p>不要保存 <code>localtime()</code> 返回的指针“稍后再用”——任何后续的 <code>localtime</code>/<code>gmtime</code>/<code>ctime</code> 调用都可能悄悄改写它指向的内容。</p></div>
 
 <h2 id="s7-strftime" class="fntarget">7.8 strftime</h2>
 <p class="fsum">按 “%Y-%m-%d” 这类模板把分解时间渲染成字符串,是输出给人看的日期时间的标准做法。</p>
@@ -2502,7 +2502,7 @@ printf("%.2f ms\n", ms);</code></pre>
 <pre style="contain-intrinsic-size:auto 241px"><code><span class="cl"><span class="kw">double</span> safe_div(<span class="kw">double</span> a, <span class="kw">double</span> b) {</span><span class="cl"><span class="cc" style="min-width:44.6ch">    assert(b != 0.0 &amp;&amp; "除数不能为零");</span><span class="cm">// 与字符串字面量 &amp;&amp; 连用,失败时消息更可读</span></span><span class="cl">    <span class="kw">return</span> a / b;</span><span class="cl">}</span><span class="cl"> </span><span class="cl"><span class="kw">int</span> main(<span class="kw">void</span>) {</span><span class="cl"><span class="cc" style="min-width:44.6ch">    printf("%.2f\n", safe_div(6.0, 3.0));</span><span class="cm">// 正常路径:断言通过,输出 2.00</span></span><span class="cl">    <span class="kw">return</span> 0;</span><span class="cl">}</span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p><code>assert</code> 与 <code>NDEBUG</code> 宏联动:若在包含 <code>&lt;assert.h&gt;</code> <em>之前</em>定义了 <code>NDEBUG</code>(通常由发布版编译选项 <code>-DNDEBUG</code> / MSVC Release 配置注入),<code>assert(x)</code> 展开为 <code>((void)0)</code>,零开销消失。因此断言表达式绝不能带副作用——<code>assert(fclose(fp) == 0)</code> 在发布版里连文件都不会关。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示</span><p>断言哲学:<code>assert</code> 检查的是"程序员的错"(违反内部不变量、契约、不可能到达的分支),而不是"用户的错"(非法输入、文件不存在)。后者应当用正常的错误处理路径,因为发布版里断言会整体消失。编译期能判定的条件请改用下文的 <code>static_assert</code>;C++ 中运行期契约还可考虑异常。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p>断言哲学:<code>assert</code> 检查的是"程序员的错"(违反内部不变量、契约、不可能到达的分支),而不是"用户的错"(非法输入、文件不存在)。后者应当用正常的错误处理路径,因为发布版里断言会整体消失。编译期能判定的条件请改用下文的 <code>static_assert</code>;C++ 中运行期契约还可考虑异常。</p></div>
 
 <h2 id="s8-errno" class="fntarget">8.3 errno</h2>
 <p class="fsum">库函数出错时写进去的错误码左值,读它可以问出"到底哪儿失败了",再交给 strerror/perror 翻成人话。</p>
@@ -2552,7 +2552,7 @@ type va_arg(va_list ap, type);
 <pre style="contain-intrinsic-size:auto 287px"><code><span class="cl"><span class="cm">/* 完整示例:对 n 个 int 求和 */</span></span><span class="cl"><span class="kw">int</span> sum(<span class="kw">int</span> n, ...) {</span><span class="cl">    va_list ap;</span><span class="cl"><span class="cc" style="min-width:35.0ch">    va_start(ap, n);</span><span class="cm">// 从 n 之后开始取参</span></span><span class="cl">    <span class="kw">int</span> total = 0;</span><span class="cl">    <span class="kw">for</span> (<span class="kw">int</span> i = 0; i &lt; n; i++)</span><span class="cl"><span class="cc" style="min-width:35.0ch">        total += va_arg(ap, <span class="kw">int</span>);</span><span class="cm">// 每次前进一个 int</span></span><span class="cl"><span class="cc" style="min-width:35.0ch">    va_end(ap);</span><span class="cm">// 必须配对调用</span></span><span class="cl">    <span class="kw">return</span> total;</span><span class="cl">}</span><span class="cl"><span class="cm">/* 调用:sum(3, 10, 20, 30) == 60 */</span></span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>陷阱:可变参数经历<strong>默认实参提升</strong>——<code>char</code>/<code>short</code> 提升为 <code>int</code>,<code>float</code> 提升为 <code>double</code>,所以 <code>va_arg(ap, char)</code> 与 <code>va_arg(ap, float)</code> 是未定义行为,应写 <code>int</code> / <code>double</code>。参数个数与类型信息必须由调用者另行约定(计数参数或格式串),取多了、取错类型都是未定义行为。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>自己封装 printf 风格接口时,接受 <code>va_list</code> 并转发给 <code>vsnprintf</code> 是标准做法;若需二次遍历,用 <code>va_copy</code> 复制而不是重用。C++ 中优先用变参模板或 <code>std::format</code>,类型安全且无提升陷阱。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>自己封装 printf 风格接口时,接受 <code>va_list</code> 并转发给 <code>vsnprintf</code> 是标准做法;若需二次遍历,用 <code>va_copy</code> 复制而不是重用。C++ 中优先用变参模板或 <code>std::format</code>,类型安全且无提升陷阱。</p></div>
 
 <h2 id="s8-offsetof" class="fntarget">8.5 offsetof</h2>
 <p class="fsum">在编译期算出某个成员距结构体开头有多少字节,用来看清对齐填充、做二进制序列化,以及由成员指针反推外层对象。</p>
@@ -2598,7 +2598,7 @@ printf("len 位于偏移 %zu\n", off);   <span class="cm">// 通常输出 4:tag 
 <pre style="contain-intrinsic-size:auto 125px"><code><span class="cl"><span class="kw">int</span> a[100];</span><span class="cl"><span class="cc" style="min-width:36.0ch">size_t n = <span class="kw">sizeof</span> a / <span class="kw">sizeof</span> a[0];</span><span class="cm">// 元素个数用 size_t</span></span><span class="cl"><span class="cc" style="min-width:36.0ch">ptrdiff_t d = &amp;a[70] - &amp;a[20];</span><span class="cm">// 指针差用 ptrdiff_t,可以为负</span></span><span class="cl"><span class="cc" style="min-width:36.0ch">printf("n=%zu d=%td\n", n, d);</span><span class="cm">// 专用格式:%zu 与 %td</span></span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>陷阱:<code>size_t</code> 是无符号的,<code>for (size_t i = n - 1; i &gt;= 0; i--)</code> 是死循环(条件恒真);倒序遍历应写 <code>for (size_t i = n; i-- &gt; 0; )</code>。混合有符号/无符号比较会触发隐式转换,建议开启 <code>-Wconversion</code> 类警告。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>C23 引入了关键字 <code>nullptr</code> 与类型 <code>nullptr_t</code>,与 C++11 对齐;在旧标准里,C 惯用 <code>NULL</code>,而现代 C++ 一律用 <code>nullptr</code>(<code>NULL</code> 在 C++ 中可能只是整数 0,重载决议时有歧义)。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>C23 引入了关键字 <code>nullptr</code> 与类型 <code>nullptr_t</code>,与 C++11 对齐;在旧标准里,C 惯用 <code>NULL</code>,而现代 C++ 一律用 <code>nullptr</code>(<code>NULL</code> 在 C++ 中可能只是整数 0,重载决议时有歧义)。</p></div>
 
 <h2 id="s8-stdint" class="fntarget">8.7 int8_t ~ uint64_t 与 PRId64</h2>
 <span class="badge ok">推荐</span>
@@ -2658,7 +2658,7 @@ printf("big=%" PRId64 " mask=%08" PRIx32 "\n", big, mask);
     <span class="kw">return</span> true;
 }</code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>C23 起 <code>bool</code>、<code>true</code>、<code>false</code> 成为真正的关键字,<code>&lt;stdbool.h&gt;</code> 仅为兼容保留;C++ 从一开始就内建 <code>bool</code>,无需任何头文件。写接口时用 <code>bool</code> 而不是 <code>int</code> 表达真假,可读性与自文档性都更好。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>C23 起 <code>bool</code>、<code>true</code>、<code>false</code> 成为真正的关键字,<code>&lt;stdbool.h&gt;</code> 仅为兼容保留;C++ 从一开始就内建 <code>bool</code>,无需任何头文件。写接口时用 <code>bool</code> 而不是 <code>int</code> 表达真假,可读性与自文档性都更好。</p></div>
 
 <h2 id="s8-limits" class="fntarget">8.9 limits.h / float.h 常量</h2>
 <p class="fsum">查各种类型到底能装多大、精度到哪一位的编译期常量,用来在溢出发生前拦住它,并给浮点比较定一个靠谱的容差。</p>
@@ -2736,7 +2736,7 @@ static_assert(CHAR_BIT == 8, "本代码假定 8 位字节");</code></pre>
 <tr><td class="nw">#pragma GCC diagnostic</td><td class="nw">GCC/Clang</td><td>开关/升降级按名字指定的警告</td></tr>
 <tr><td class="nw">#pragma GCC poison</td><td class="nw">GCC/Clang</td><td>把某个标识符设为"一用就报错"</td></tr>
 </tbody></table>
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">现代提示</span><p>能用标准语法解决的,就别用 pragma。防重复包含有 include guard(完全可移植),固定布局有 <code>static_assert(sizeof(T)==N)</code> 兜底(见 <a href="#s8-static-assert">8.10</a>),警告策略更适合放在构建系统里统一管。pragma 的合理定位是"标准表达不了、又非用不可"的那一小撮场景。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示</span><p>能用标准语法解决的,就别用 pragma。防重复包含有 include guard(完全可移植),固定布局有 <code>static_assert(sizeof(T)==N)</code> 兜底(见 <a href="#s8-static-assert">8.10</a>),警告策略更适合放在构建系统里统一管。pragma 的合理定位是"标准表达不了、又非用不可"的那一小撮场景。</p></div>
 
 <h2 id="s9-pragma" class="fntarget">9.2 #pragma —— 标准怎么规定它</h2>
 <p class="fsum">标准只定义了这个关键字和"认不出就忽略"这一条规则,后面跟什么完全由编译器说了算。</p>
@@ -2751,7 +2751,7 @@ static_assert(CHAR_BIT == 8, "本代码假定 8 位字节");</code></pre>
 <span class="kw">int</span> main(<span class="kw">void</span>) { <span class="kw">return</span> 0; }   <span class="cm">// 照样编译通过、正常运行</span></code></pre>
 <p><strong>实测结果</strong></p>
 <p>用 MSVC 编上面这段,两行都只得到一个警告 <code>C4068: 未知的杂注</code>,退出码 0,程序正常运行。值得注意的是<strong>第二行是标准明文规定的 pragma,MSVC 同样不认</strong>——它用 <code>/fp:</code> 系列命令行开关替代了这套机制。这就是"由实现定义"在现实中的分量。</p>
-<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">为什么这样设计</span><p>C89 引入 <code>#pragma</code> 时,面对的是几十种互不兼容的编译器,每家都有自己的扩展需求。委员会的选择是留一个<strong>官方后门</strong>:给所有厂商一个统一的语法入口,同时用"未识别即忽略"保证含 pragma 的代码换编译器不会编不过,只是失去那项优化或检查。代价就是今天这种局面——语法统一,语义各说各话。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 为什么这样设计</span><p>C89 引入 <code>#pragma</code> 时,面对的是几十种互不兼容的编译器,每家都有自己的扩展需求。委员会的选择是留一个<strong>官方后门</strong>:给所有厂商一个统一的语法入口,同时用"未识别即忽略"保证含 pragma 的代码换编译器不会编不过,只是失去那项优化或检查。代价就是今天这种局面——语法统一,语义各说各话。</p></div>
 
 <h2 id="s9-stdc" class="fntarget">9.3 标准 pragma —— STDC 系列</h2>
 <p class="fsum">标准亲自定义的只有这几个,全部围绕浮点与复数运算的精度和优化权限。</p>
@@ -2779,7 +2779,7 @@ feclearexcept(FE_ALL_EXCEPT);
 }</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p>这几个 pragma 只能出现在两个位置:<strong>所有外部声明之外</strong>(文件作用域),或<strong>复合语句的开头</strong>(即 <code>{</code> 之后、任何语句之前),作用域到该块结束为止。写在别处是未定义行为。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">支持度陷阱</span><p>标准写了不等于编译器实现了。MSVC 对 <code>#pragma STDC FP_CONTRACT</code> 直接报 <code>C4068 未知的杂注</code>,它用 <code>/fp:precise</code>、<code>/fp:fast</code>、<code>/fp:strict</code> 这套命令行开关代替;<code>FENV_ACCESS</code> 在 MSVC 里的拼写是私有的 <code>#pragma fenv_access(on)</code>。GCC 长期只部分实现 <code>FP_CONTRACT</code>,实际靠 <code>-ffp-contract=</code> 控制。<strong>凡是涉及浮点严格性的项目,一律以命令行开关为准,不要指望这几个 pragma 生效。</strong></p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 支持度陷阱</span><p>标准写了不等于编译器实现了。MSVC 对 <code>#pragma STDC FP_CONTRACT</code> 直接报 <code>C4068 未知的杂注</code>,它用 <code>/fp:precise</code>、<code>/fp:fast</code>、<code>/fp:strict</code> 这套命令行开关代替;<code>FENV_ACCESS</code> 在 MSVC 里的拼写是私有的 <code>#pragma fenv_access(on)</code>。GCC 长期只部分实现 <code>FP_CONTRACT</code>,实际靠 <code>-ffp-contract=</code> 控制。<strong>凡是涉及浮点严格性的项目,一律以命令行开关为准,不要指望这几个 pragma 生效。</strong></p></div>
 
 <h2 id="s9-_pragma" class="fntarget">9.4 _Pragma 运算符</h2>
 <p class="fsum">C99 加的运算符形式,解决"#pragma 是指令,没法写进宏"这个死结。</p>
@@ -2825,7 +2825,7 @@ feclearexcept(FE_ALL_EXCEPT);
 <span class="cm">/* ...头文件内容... */</span>
 
 <span class="kw">#endif</span> <span class="cm">/* MYPROJ_FOO_H */</span></code></pre>
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">现代提示</span><p>MSVC、GCC、Clang、ICC 全部支持 <code>#pragma once</code>,实践中它已经足够安全,新项目直接用没问题。要发布给未知编译器使用的库,或者项目里存在符号链接/多份拷贝同一头文件的情况,加上 include guard 更保险。宏名建议带项目前缀,避免撞车。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示</span><p>MSVC、GCC、Clang、ICC 全部支持 <code>#pragma once</code>,实践中它已经足够安全,新项目直接用没问题。要发布给未知编译器使用的库,或者项目里存在符号链接/多份拷贝同一头文件的情况,加上 include guard 更保险。宏名建议带项目前缀,避免撞车。</p></div>
 
 <h2 id="s9-pack" class="fntarget">9.6 #pragma pack</h2>
 <p class="fsum">强制改变结构体成员的对齐方式,主要用于匹配二进制协议和文件格式的确切布局。</p>
@@ -2848,7 +2848,7 @@ feclearexcept(FE_ALL_EXCEPT);
 static_assert(<span class="kw">sizeof</span>(<span class="kw">struct</span> BmpFileHeader) == 14, <span class="s">"BMP 文件头必须是 14 字节"</span>);</code></pre>
 <div class="deep"><p><strong>其他说明</strong></p>
 <p><code>push</code>/<code>pop</code> 成对使用是硬性纪律。如果用裸的 <code>#pragma pack(1)</code> 而不恢复,后面所有 <code>#include</code> 进来的头文件都会被按 1 字节对齐编译——包括系统头文件,后果是同一个结构体在你的目标文件里和在库里布局不同,链接能过,运行时数据全乱,而且没有任何诊断信息。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">性能与可移植性代价</span><p>紧凑结构体里的成员会变成<strong>未对齐访问</strong>:x86/x64 上只是变慢,ARM、MIPS 等架构上可能直接触发总线错误或被内核以极高代价模拟。此外,取未对齐成员的地址得到的指针本身就是未对齐的,把它传给期望对齐指针的函数是未定义行为。<strong>正确用法只有一种:用于描述外部二进制布局的结构体,读进来之后立刻逐字段拷贝到普通对齐的结构体里再使用。</strong>务必配 <code>static_assert</code> 锁死尺寸(见 <a href="#s8-static-assert">8.10</a>)。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 性能与可移植性代价</span><p>紧凑结构体里的成员会变成<strong>未对齐访问</strong>:x86/x64 上只是变慢,ARM、MIPS 等架构上可能直接触发总线错误或被内核以极高代价模拟。此外,取未对齐成员的地址得到的指针本身就是未对齐的,把它传给期望对齐指针的函数是未定义行为。<strong>正确用法只有一种:用于描述外部二进制布局的结构体,读进来之后立刻逐字段拷贝到普通对齐的结构体里再使用。</strong>务必配 <code>static_assert</code> 锁死尺寸(见 <a href="#s8-static-assert">8.10</a>)。</p></div>
 
 <h2 id="s9-msvc" class="fntarget">9.7 MSVC 私有 pragma</h2>
 <p class="fsum">Visual C++ 的扩展集,Windows 开发里几乎无法回避,但换编译器全部失效。</p>
@@ -2882,7 +2882,7 @@ static_assert(<span class="kw">sizeof</span>(<span class="kw">struct</span> BmpF
 
 <span class="cm">// 3) 把容易漏看的 4 级警告升级成错误,强制处理</span>
 <span class="kw">#pragma</span> warning(error: 4211)     <span class="cm">// extern 被重定义为 static</span></code></pre>
-<div class="note new" style="contain-intrinsic-size:auto 198px"><span class="t">现代提示</span><p><code>#pragma comment(lib, ...)</code> 是 Windows 独有的便利,好处是"用了哪个 API 就在哪个文件里写清楚要哪个库",坏处是链接依赖散落在源码各处,CMake 等跨平台构建系统看不见它。库多了以后建议改回构建系统统一管理。警告策略同理:<code>#pragma warning(push/pop)</code> 适合精确包住第三方代码,全局策略应该放在 <code>/W4 /we4211</code> 这类命令行开关或工程属性里。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 198px"><span class="t">🔵 现代提示</span><p><code>#pragma comment(lib, ...)</code> 是 Windows 独有的便利,好处是"用了哪个 API 就在哪个文件里写清楚要哪个库",坏处是链接依赖散落在源码各处,CMake 等跨平台构建系统看不见它。库多了以后建议改回构建系统统一管理。警告策略同理:<code>#pragma warning(push/pop)</code> 适合精确包住第三方代码,全局策略应该放在 <code>/W4 /we4211</code> 这类命令行开关或工程属性里。</p></div>
 
 <h2 id="s9-gcc" class="fntarget">9.8 GCC / Clang 私有 pragma</h2>
 <p class="fsum">GCC 系的扩展集,Clang 为兼容大多沿用 <code>GCC</code> 前缀,另有少量自己的。</p>
@@ -2910,7 +2910,7 @@ static_assert(<span class="kw">sizeof</span>(<span class="kw">struct</span> BmpF
 
 <span class="cm">// 在团队里禁掉不安全函数——用了就编译不过,比 code review 靠谱</span>
 <span class="kw">#pragma</span> GCC poison strcpy strcat sprintf gets</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">推荐</span><p><code>#pragma GCC poison</code> 是个被低估的工具:把 <code>gets</code>、<code>strcpy</code> 这类不安全函数放进项目公共头文件的毒药名单,任何人用了都会得到明确的编译错误,比依赖评审或事后扫描有效得多。MSVC 没有对应物,可以用 <code>#pragma deprecated</code> 得到近似效果(只报警告,配合 <code>/we</code> 升级为错误)。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 推荐</span><p><code>#pragma GCC poison</code> 是个被低估的工具:把 <code>gets</code>、<code>strcpy</code> 这类不安全函数放进项目公共头文件的毒药名单,任何人用了都会得到明确的编译错误,比依赖评审或事后扫描有效得多。MSVC 没有对应物,可以用 <code>#pragma deprecated</code> 得到近似效果(只报警告,配合 <code>/we</code> 升级为错误)。</p></div>
 
 <h2 id="s9-portable">9.9 写可移植代码的套路</h2>
 <p class="fsum">既然各家语法互不兼容,唯一的办法是用条件编译把差异集中封装到一处。</p>
@@ -2940,7 +2940,7 @@ static_assert(<span class="kw">sizeof</span>(<span class="kw">struct</span> BmpF
 <tr><td class="nw">__clang__</td><td class="nw">Clang</td><td>要区分 Clang 与 GCC,必须先查这个</td></tr>
 <tr><td class="nw">__STDC_VERSION__</td><td class="nw">标准 C</td><td>判 C 版本:C99 是 199901L,C11 是 201112L,C17 是 201710L</td></tr>
 </tbody></table>
-<div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">现代提示</span><p>顺序有讲究:<code>__clang__</code> 必须放在 <code>__GNUC__</code> 之前判断,否则 Clang 会走进 GCC 分支。同理 Clang-cl 会同时定义 <code>_MSC_VER</code> 和 <code>__clang__</code>。<br>更根本的建议是<strong>少用 pragma</strong>:警告策略交给构建系统(<code>/W4 /we4211</code> 或 <code>-Wall -Werror=xxx</code>),结构体布局用 <code>static_assert</code> 验证而非 <code>pack</code> 强求,防重复包含用 include guard。剩下真正必须用 pragma 的场合,集中封装在一个 <code>compat.h</code> 里,不要散落全项目。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">🔵 现代提示</span><p>顺序有讲究:<code>__clang__</code> 必须放在 <code>__GNUC__</code> 之前判断,否则 Clang 会走进 GCC 分支。同理 Clang-cl 会同时定义 <code>_MSC_VER</code> 和 <code>__clang__</code>。<br>更根本的建议是<strong>少用 pragma</strong>:警告策略交给构建系统(<code>/W4 /we4211</code> 或 <code>-Wall -Werror=xxx</code>),结构体布局用 <code>static_assert</code> 验证而非 <code>pack</code> 强求,防重复包含用 include guard。剩下真正必须用 pragma 的场合,集中封装在一个 <code>compat.h</code> 里,不要散落全项目。</p></div>
 </section>
 </div></main>
 <script>

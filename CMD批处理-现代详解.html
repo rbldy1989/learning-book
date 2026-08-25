@@ -284,7 +284,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 
 <p>这三件事的答案都在本章。它们看起来是三个孤立的怪癖，其实指向同一件事：CMD 是一个有四十年历史包袱的命令解释器，它的每一处别扭都有来历。搞清楚来历，你就不用死记硬背了。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">现代提示：本书的立场</span><p>今天写<strong>新</strong>的自动化逻辑，默认选 PowerShell。CMD 的主要价值在于维护存量脚本、当"到处都能跑"的启动器，以及在没有 PowerShell 的环境里救急。这一章先把边界划清楚，后面各章再教你把存量脚本改对、改稳。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 现代提示：本书的立场</span><p>今天写<strong>新</strong>的自动化逻辑，默认选 PowerShell。CMD 的主要价值在于维护存量脚本、当"到处都能跑"的启动器，以及在没有 PowerShell 的环境里救急。这一章先把边界划清楚，后面各章再教你把存量脚本改对、改稳。</p></div>
 
 <h2 id="m1-history">1.2 从 COMMAND.COM 到 cmd.exe</h2>
 
@@ -309,7 +309,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 
 <p>顺带说一句：64 位 Windows 上已经没有 16 位子系统（NTVDM），真正的 <code>command.com</code> 在你的机器上根本不存在了。你今天见到的一切"DOS 命令"，跑的都是 <code>cmd.exe</code>。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">设计动机：兼容性压倒一切</span><p>批处理语法里所有让你恼火的地方——百分号要翻倍、<code>if errorlevel 2</code> 其实是"大于等于 2"、变量在括号里不按你想的展开——都不是设计者笨，而是他们不能推翻已经在几百万台机器上跑着的旧脚本。CMD 是一件被兼容性焊死的工具，这既是它的原罪，也是它三十年不变、你今天还能依赖它的原因。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 设计动机：兼容性压倒一切</span><p>批处理语法里所有让你恼火的地方——百分号要翻倍、<code>if errorlevel 2</code> 其实是"大于等于 2"、变量在括号里不按你想的展开——都不是设计者笨，而是他们不能推翻已经在几百万台机器上跑着的旧脚本。CMD 是一件被兼容性焊死的工具，这既是它的原罪，也是它三十年不变、你今天还能依赖它的原因。</p></div>
 
 <h2 id="m1-notwhat">1.3 它不是什么：三个常见误解</h2>
 
@@ -397,7 +397,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">现代提示：选壳的一句话原则</span><p>要处理"数据"（筛选、排序、导出 CSV/JSON、调 API）→ PowerShell。要处理"Linux 生态的工具"→ WSL。要"在任何一台 Windows 上、不做任何配置、双击就能跑起来"→ CMD。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">🔵 现代提示：选壳的一句话原则</span><p>要处理"数据"（筛选、排序、导出 CSV/JSON、调 API）→ PowerShell。要处理"Linux 生态的工具"→ WSL。要"在任何一台 Windows 上、不做任何配置、双击就能跑起来"→ CMD。</p></div>
 
 <h2 id="m1-usecase">1.5 今天仍然非 CMD 不可的场景</h2>
 
@@ -417,7 +417,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 
 <p>第四条值得多说一句。<code>.bat</code>/<code>.cmd</code> "双击就跑、不受执行策略限制"是它的最大优势，也正好是它最大的安全风险——PowerShell 的执行策略本来就是为了拦住"用户被骗着双击了一个脚本"，而批处理没有这道门。</p>
 
-<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">禁用：双击来路不明的 .bat / .cmd</span><p>双击一个批处理文件，等于同意它以你当前的用户权限做任何事——删文件、改注册表、下载并运行别的程序，全都不会有二次确认。收到的、下载的、别人发的批处理文件，先用记事本（或 <code>type 文件名</code>）看完内容再决定。这条对你自己适用，也请写进给同事的说明里。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 禁用：双击来路不明的 .bat / .cmd</span><p>双击一个批处理文件，等于同意它以你当前的用户权限做任何事——删文件、改注册表、下载并运行别的程序，全都不会有二次确认。收到的、下载的、别人发的批处理文件，先用记事本（或 <code>type 文件名</code>）看完内容再决定。这条对你自己适用，也请写进给同事的说明里。</p></div>
 
 <h2 id="m1-batcmd">1.6 .bat 与 .cmd：一个扩展名的实际差别</h2>
 
@@ -459,7 +459,7 @@ cmd /c exit 7
 <pre style="contain-intrinsic-size:auto 60px"><code>PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
 </code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">已过时：靠扩展名差异写逻辑</span><p>见过有人利用"<code>.cmd</code> 会清零"来"重置错误状态"。别这么写——换个扩展名行为就变，读代码的人看不出来。要重置状态就显式写 <code>cmd /c exit 0</code>；要传递结果就显式写 <code>exit /b N</code>。<span class="badge new">现代提示</span> 新写的脚本统一用 <code>.cmd</code>（它是 NT 时代的原生格式），只有当外部工具或文档明确要求 <code>.bat</code> 时才用 <code>.bat</code>。同一个目录里永远不要放同名的两份。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">🟡 已过时：靠扩展名差异写逻辑</span><p>见过有人利用"<code>.cmd</code> 会清零"来"重置错误状态"。别这么写——换个扩展名行为就变，读代码的人看不出来。要重置状态就显式写 <code>cmd /c exit 0</code>；要传递结果就显式写 <code>exit /b N</code>。<span class="badge new">现代提示</span> 新写的脚本统一用 <code>.cmd</code>（它是 NT 时代的原生格式），只有当外部工具或文档明确要求 <code>.bat</code> 时才用 <code>.bat</code>。同一个目录里永远不要放同名的两份。</p></div>
 
 <h2 id="m1-hello">1.7 第一个脚本：@echo off、echo、pause</h2>
 
@@ -514,7 +514,7 @@ D:\lab&gt;echo 结束
 结束
 </code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">仍适用：调试时把它关掉</span><p>脚本出问题时，把第一行的 <code>@echo off</code> 临时注释掉（前面加 <code>rem</code>），你就能逐行看到 cmd <em>实际</em>执行的是什么——尤其是变量展开之后的样子。这是批处理最有效的调试手段，比加一堆 <code>echo</code> 打印管用。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 仍适用：调试时把它关掉</span><p>脚本出问题时，把第一行的 <code>@echo off</code> 临时注释掉（前面加 <code>rem</code>），你就能逐行看到 cmd <em>实际</em>执行的是什么——尤其是变量展开之后的样子。这是批处理最有效的调试手段，比加一堆 <code>echo</code> 打印管用。</p></div>
 
 <h3>注释：rem 与 ::</h3>
 
@@ -533,7 +533,7 @@ D:\lab&gt;echo 结束
 
 <p><code>pause</code> 打印一行提示并等待按键。它存在的唯一理由是：双击运行时，脚本一结束窗口就关闭，你根本来不及看输出。</p>
 
-<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">禁用：无人值守脚本里留 pause</span><p>任务计划、CI、服务里跑的脚本绝对不能有 <code>pause</code>——没人按键，它会永远挂在那里，任务状态一直显示"正在运行"，还可能挡住下一次调度。同样的道理也适用于任何会弹窗、要交互的命令。写脚本时想清楚：它是给人双击的，还是给机器调度的。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 禁用：无人值守脚本里留 pause</span><p>任务计划、CI、服务里跑的脚本绝对不能有 <code>pause</code>——没人按键，它会永远挂在那里，任务状态一直显示"正在运行"，还可能挡住下一次调度。同样的道理也适用于任何会弹窗、要交互的命令。写脚本时想清楚：它是给人双击的，还是给机器调度的。</p></div>
 
 <h3>运行方式与它们的区别</h3>
 
@@ -551,7 +551,7 @@ D:\lab&gt;echo 结束
 
 <p>最后那两行的差别是批处理的经典陷阱：在脚本里调用另一个脚本，忘了写 <code>call</code>，后面的代码就被静默跳过了，没有任何报错。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 265px"><span class="t">仍适用：两个必踩的坑，提前躲开</span><p><strong>工作目录不等于脚本目录。</strong>双击时两者通常一致，但通过快捷方式、任务计划、或者"以管理员身份运行"启动时，工作目录可能是 <code>C:\Windows\System32</code>。脚本要访问自己旁边的文件，就用 <code>%~dp0</code>（脚本所在目录，带反斜杠结尾），或在开头写一句 <code>cd /d "%~dp0"</code>。<br><strong>文件编码。</strong>批处理文件存成"UTF-8 带 BOM"时，那三个 BOM 字节会被当成第一行命令的一部分，你会看到 <code>'∩╗┐@echo' 不是内部或外部命令</code>。中文内容存成 ANSI（GBK）最省事；一定要用 UTF-8 就存成<em>无 BOM</em>，并在脚本开头加 <code>chcp 65001 &gt;nul</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 265px"><span class="t">🟢 仍适用：两个必踩的坑，提前躲开</span><p><strong>工作目录不等于脚本目录。</strong>双击时两者通常一致，但通过快捷方式、任务计划、或者"以管理员身份运行"启动时，工作目录可能是 <code>C:\Windows\System32</code>。脚本要访问自己旁边的文件，就用 <code>%~dp0</code>（脚本所在目录，带反斜杠结尾），或在开头写一句 <code>cd /d "%~dp0"</code>。<br><strong>文件编码。</strong>批处理文件存成"UTF-8 带 BOM"时，那三个 BOM 字节会被当成第一行命令的一部分，你会看到 <code>'∩╗┐@echo' 不是内部或外部命令</code>。中文内容存成 ANSI（GBK）最省事；一定要用 UTF-8 就存成<em>无 BOM</em>，并在脚本开头加 <code>chcp 65001 &gt;nul</code>。</p></div>
 
 <h2 id="m1-interactive">1.8 命令行与批处理不是同一套规则</h2>
 
@@ -592,7 +592,7 @@ D:\lab&gt;echo 结束
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示：先试后写的正确姿势</span><p>调试复杂命令时，习惯是先在提示符下试通、再粘进脚本。粘完记得做三件事：<code>%i</code> 改成 <code>%%i</code>；确认所有变量都已定义（提示符下未定义变量原样保留，看着"正常"，进了脚本却变成空串导致语法崩坏）；把结尾的 <code>exit</code> 改成 <code>exit /b</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示：先试后写的正确姿势</span><p>调试复杂命令时，习惯是先在提示符下试通、再粘进脚本。粘完记得做三件事：<code>%i</code> 改成 <code>%%i</code>；确认所有变量都已定义（提示符下未定义变量原样保留，看着"正常"，进了脚本却变成空串导致语法崩坏）；把结尾的 <code>exit</code> 改成 <code>exit /b</code>。</p></div>
 
 <h2 id="m1-errorlevel">1.9 退出码与 ERRORLEVEL</h2>
 
@@ -739,7 +739,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <p>三个细节：<code>%~dp0</code> 保证不管从哪儿启动都能找到旁边的 <code>.ps1</code>；<code>%*</code> 把所有参数原样转发；最后一行把 PowerShell 的退出码继续往上传，任务计划才能正确判断成败。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">现代提示：-ExecutionPolicy Bypass 的分寸</span><p>这个参数只对本次调用生效，不改系统设置，因此不算"降低全机安全性"。但它确实跳过了脚本来源校验，所以 <code>task.ps1</code> 必须放在<strong>普通用户没有写权限</strong>的目录里——否则任何人替换掉那个文件，你的启动器就会忠实地帮他执行。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示：-ExecutionPolicy Bypass 的分寸</span><p>这个参数只对本次调用生效，不改系统设置，因此不算"降低全机安全性"。但它确实跳过了脚本来源校验，所以 <code>task.ps1</code> 必须放在<strong>普通用户没有写权限</strong>的目录里——否则任何人替换掉那个文件，你的启动器就会忠实地帮他执行。</p></div>
 
 <p>本章要点速查：</p>
 
@@ -792,7 +792,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <p><code>set "name=值"</code> 里的引号只起<strong>定界</strong>作用，不会进入变量的值。它带来两个好处：一是把值的边界写死，末尾多打的空格不会混进去；二是值里出现 <code>&amp;</code> <code>|</code> <code>&gt;</code> <code>&lt;</code> <code>^</code> 这些特殊字符时，引号能把它们保护住，不至于被当成命令分隔符或重定向。</p>
 
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">经典事故：赋值后面接了别的命令</span><p><code>set VAR=abc &amp; echo done</code> 会把 <code>VAR</code> 赋成 <code>abc </code>（注意尾随空格），后面拿它拼路径就会变成 <code>abc \file.txt</code>，找不到文件还查不出原因。写成 <code>set "VAR=abc" &amp; echo done</code> 就没事了。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 经典事故：赋值后面接了别的命令</span><p><code>set VAR=abc &amp; echo done</code> 会把 <code>VAR</code> 赋成 <code>abc </code>（注意尾随空格），后面拿它拼路径就会变成 <code>abc \file.txt</code>，找不到文件还查不出原因。写成 <code>set "VAR=abc" &amp; echo done</code> 就没事了。</p></div>
 
 <h3>set 的全部形态</h3>
 
@@ -812,7 +812,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <p>几条需要记住的性质：变量名<strong>不区分大小写</strong>（<code>%path%</code> 和 <code>%PATH%</code> 是同一个）；变量<strong>没有类型</strong>，一切都是字符串，<code>set "n=5"</code> 存的是字符 <code>5</code> 而不是数字；单个变量的长度上限约 8191 字符，整个环境块也有上限，别拿变量当数组塞几万行文本。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">现代提示</span><p>PowerShell 里 <code>$name = '张三'</code> 有真正的类型系统，空格随便打，还有数组、哈希表和对象。如果你的脚本已经开始用变量拼 JSON、算浮点、存列表，那说明它早就该是 PowerShell 脚本了。CMD 变量的定位是「给命令行拼参数的临时便签」，不是数据结构。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示</span><p>PowerShell 里 <code>$name = '张三'</code> 有真正的类型系统，空格随便打，还有数组、哈希表和对象。如果你的脚本已经开始用变量拼 JSON、算浮点、存列表，那说明它早就该是 PowerShell 脚本了。CMD 变量的定位是「给命令行拼参数的临时便签」，不是数据结构。</p></div>
 
 <h2 id="m2-expand">2.2 %VAR% 展开：一次性文本替换</h2>
 
@@ -875,7 +875,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <pre style="contain-intrinsic-size:auto 60px"><code><span class="kw">if</span> "%~1"=="stop" <span class="kw">goto</span> :end</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">记住这条肌肉记忆</span><p>凡是把变量或参数放进 <code>if</code> 比较，一律写成 <code>if "%~1"=="值"</code>。你在网上看到的裸写 <code>if %1==值</code> 全是隐患。判断变量存在则优先用 <code>if defined VAR</code>，它不做任何文本替换，最安全。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 记住这条肌肉记忆</span><p>凡是把变量或参数放进 <code>if</code> 比较，一律写成 <code>if "%~1"=="值"</code>。你在网上看到的裸写 <code>if %1==值</code> 全是隐患。判断变量存在则优先用 <code>if defined VAR</code>，它不做任何文本替换，最安全。</p></div>
 
 <h3>百分号本身怎么写</h3>
 
@@ -906,7 +906,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 </tbody>
 </table>
 <pre style="contain-intrinsic-size:auto 194px"><code><span class="cl"><span class="cm">:: 用流水线推演经典怪象:</span></span><span class="cl">set n=1</span><span class="cl">(</span><span class="cl">  set n=2</span><span class="cl"><span class="cc" style="min-width:24.0ch">  echo %n%</span><span class="cm">:: 打 1 —— ②阶段整块展开时 n 还是 1</span></span><span class="cl"><span class="cc" style="min-width:24.0ch">  echo !n!</span><span class="cm">:: 打 2 —— ⑤阶段执行到这行才取值</span></span><span class="cl">)</span></code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">排障时的用法</span><p>遇到解释不了的行为,按流水线逐阶段问:「这个符号在第几阶段被消费?」——<code>^!</code> 在延迟展开开启后行为诡异(^ 在③、! 在⑤,两层各吃一次);<code>%%</code> 写两个才出一个 %(②阶段吃一层);管道两侧各是一个新 cmd 实例(⑥阶段),所以 <code>set x=1 | echo ...</code> 改不了本环境变量。这个模型是 CMD 一切陷阱的总钥匙,第 5 章的坑逐个都能挂回这张表。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 排障时的用法</span><p>遇到解释不了的行为,按流水线逐阶段问:「这个符号在第几阶段被消费?」——<code>^!</code> 在延迟展开开启后行为诡异(^ 在③、! 在⑤,两层各吃一次);<code>%%</code> 写两个才出一个 %(②阶段吃一层);管道两侧各是一个新 cmd 实例(⑥阶段),所以 <code>set x=1 | echo ...</code> 改不了本环境变量。这个模型是 CMD 一切陷阱的总钥匙,第 5 章的坑逐个都能挂回这张表。</p></div>
 
 <h2 id="m2-calc">2.3 set /a：整数算术与它的边界</h2>
 
@@ -922,7 +922,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <p>三个要点藏在这四行里。第一，<code>7/2</code> 得 3 而不是 3.5，除法向零截断。第二，取模运算符 <code>%</code> 在批处理文件里必须写成 <code>%%</code>，否则会被当成变量定界符。第三，<code>1&lt;&lt;10</code> 里的 <code>&lt;</code> 是重定向符，必须用引号把整个表达式包起来，否则 CMD 会试图从一个叫 <code>&lt;</code> 的文件读输入。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">养成习惯</span><p>永远写 <code>set /a "表达式"</code>，把表达式整体加引号。凡是含 <code>&amp;</code> <code>|</code> <code>^</code> <code>&lt;</code> <code>&gt;</code> 的算式，不加引号必错；加了引号则一律安全，没有副作用。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 养成习惯</span><p>永远写 <code>set /a "表达式"</code>，把表达式整体加引号。凡是含 <code>&amp;</code> <code>|</code> <code>^</code> <code>&lt;</code> <code>&gt;</code> 的算式，不加引号必错；加了引号则一律安全，没有副作用。</p></div>
 
 <h3>运算符完整速查表（按优先级从高到低）</h3>
 
@@ -957,7 +957,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <p><strong>在批处理文件里 <code>set /a</code> 不回显结果</strong>，在命令行窗口里则会直接把结果打印出来。所以 <code>set /a 2+2</code> 在窗口里是个顺手的计算器，写进脚本里则悄无声息。</p>
 
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">不要用 set /a 算钱和平均值</span><p>没有浮点意味着 <code>set /a "avg=sum/n"</code> 会丢掉小数部分，金额、百分比、耗时统计全都会失真。要保留两位小数只能靠「先乘 100 再除」的定点小技巧，可读性极差。真要算数，把这一步交出去：<code>for /f %%v in ('powershell -NoProfile -Command "[math]::Round(7/2,2)"') do set "avg=%%v"</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 不要用 set /a 算钱和平均值</span><p>没有浮点意味着 <code>set /a "avg=sum/n"</code> 会丢掉小数部分，金额、百分比、耗时统计全都会失真。要保留两位小数只能靠「先乘 100 再除」的定点小技巧，可读性极差。真要算数，把这一步交出去：<code>for /f %%v in ('powershell -NoProfile -Command "[math]::Round(7/2,2)"') do set "avg=%%v"</code>。</p></div>
 
 <h2 id="m2-input">2.4 set /p：读一行输入，也能读文件</h2>
 
@@ -1005,9 +1005,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">安全警告：不要把输入直接拼进命令</span><p><code>set /p "f=文件名: "</code> 之后写 <code>del %f%</code>，用户输入 <code>a.txt &amp; del *.*</code> 就会真的执行两条命令。这是货真价实的命令注入。最低限度要写成 <code>del "%f%"</code>，更稳妥的做法是先校验：<code>if not exist "%f%" (echo 文件不存在 &amp; exit /b 1)</code>。任何来自外部的字符串，进命令行之前都要加引号。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 安全警告：不要把输入直接拼进命令</span><p><code>set /p "f=文件名: "</code> 之后写 <code>del %f%</code>，用户输入 <code>a.txt &amp; del *.*</code> 就会真的执行两条命令。这是货真价实的命令注入。最低限度要写成 <code>del "%f%"</code>，更稳妥的做法是先校验：<code>if not exist "%f%" (echo 文件不存在 &amp; exit /b 1)</code>。任何来自外部的字符串，进命令行之前都要加引号。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示</span><p>需要真正的交互（默认值、密码遮蔽、菜单选择、输入校验）时，PowerShell 的 <code>Read-Host</code>、<code>Read-Host -AsSecureString</code> 和 <code>$Host.UI.PromptForChoice</code> 才是正路。<code>set /p</code> 的定位是「一个 y/N 确认」，超出这个范围就该换工具了。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p>需要真正的交互（默认值、密码遮蔽、菜单选择、输入校验）时，PowerShell 的 <code>Read-Host</code>、<code>Read-Host -AsSecureString</code> 和 <code>$Host.UI.PromptForChoice</code> 才是正路。<code>set /p</code> 的定位是「一个 y/N 确认」，超出这个范围就该换工具了。</p></div>
 
 <h2 id="m2-scope">2.5 setlocal / endlocal：作用域与生命周期</h2>
 
@@ -1034,7 +1034,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">冷知识：当前目录也在快照里</span><p><code>setlocal</code> 保存的不只是环境变量，还包括当前驱动器和目录。也就是说脚本里 <code>cd</code> 到别处，一执行 <code>endlocal</code> 就自动跳回来了。这既是便利也是陷阱——如果你指望 <code>cd</code> 的效果延续到 <code>endlocal</code> 之后，那会落空。嵌套层数上限约 32 层，正常脚本远远用不到。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 冷知识：当前目录也在快照里</span><p><code>setlocal</code> 保存的不只是环境变量，还包括当前驱动器和目录。也就是说脚本里 <code>cd</code> 到别处，一执行 <code>endlocal</code> 就自动跳回来了。这既是便利也是陷阱——如果你指望 <code>cd</code> 的效果延续到 <code>endlocal</code> 之后，那会落空。嵌套层数上限约 32 层，正常脚本远远用不到。</p></div>
 
 <h3>怎么让一个值「活着穿过」endlocal</h3>
 
@@ -1069,7 +1069,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">绝对不要用 setx 改 PATH</span><p><code>setx PATH "%PATH%;C:\新目录"</code> 有两重毁灭性问题：一是 <code>setx</code> 在 1024 字符处截断，会把你的 PATH 拦腰砍断；二是 <code>%PATH%</code> 展开的是「用户 PATH + 系统 PATH」拼接后的结果，写回去会把系统 PATH 复制进用户 PATH，从此两份重复且无法同步。修 PATH 请用「系统属性 → 环境变量」对话框，或者 PowerShell 的 <code>[Environment]::SetEnvironmentVariable('Path', $v, 'User')</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 绝对不要用 setx 改 PATH</span><p><code>setx PATH "%PATH%;C:\新目录"</code> 有两重毁灭性问题：一是 <code>setx</code> 在 1024 字符处截断，会把你的 PATH 拦腰砍断；二是 <code>%PATH%</code> 展开的是「用户 PATH + 系统 PATH」拼接后的结果，写回去会把系统 PATH 复制进用户 PATH，从此两份重复且无法同步。修 PATH 请用「系统属性 → 环境变量」对话框，或者 PowerShell 的 <code>[Environment]::SetEnvironmentVariable('Path', $v, 'User')</code>。</p></div>
 
 <h2 id="m2-args">2.6 命令行参数 %0~%9 与 shift</h2>
 
@@ -1126,7 +1126,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <p>为什么这里非要用 <code>goto</code> 绕圈，而不是写个 <code>for</code> 循环？因为 <strong><code>shift</code> 的效果在同一个括号块内看不到</strong>。整个块在进入时就已经把 <code>%1</code> <code>%2</code> 全部替换成文本了，块里执行 <code>shift</code> 也改不了这些死文本。<code>goto</code> 会让 CMD 重新读取并重新解析，这才是 <code>shift</code> 生效的前提。这是本章展开时机主题的又一次现身。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">子程序里的参数</span><p><code>call :sub 参数1 参数2</code> 会给子程序一套<strong>全新的</strong> <code>%1</code> <code>%2</code>，主程序的参数在子程序里看不到。此时 <code>%0</code> 是标签名（如 <code>:sub</code>）而不是脚本名。子程序用 <code>goto :eof</code> 或 <code>exit /b</code> 返回，返回后主程序的 <code>%1</code> 自动恢复。要在子程序里用脚本路径，请在脚本开头就把 <code>%~dp0</code> 存进变量。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 子程序里的参数</span><p><code>call :sub 参数1 参数2</code> 会给子程序一套<strong>全新的</strong> <code>%1</code> <code>%2</code>，主程序的参数在子程序里看不到。此时 <code>%0</code> 是标签名（如 <code>:sub</code>）而不是脚本名。子程序用 <code>goto :eof</code> 或 <code>exit /b</code> 返回，返回后主程序的 <code>%1</code> 自动恢复。要在子程序里用脚本路径，请在脚本开头就把 <code>%~dp0</code> 存进变量。</p></div>
 
 <h2 id="m2-modifiers">2.7 参数修饰符完整速查表</h2>
 
@@ -1195,7 +1195,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">修饰符的适用范围</span><p>修饰符只能用在 <strong><code>%0</code>~<code>%9</code></strong> 和 <strong><code>for</code> 循环变量</strong>（写作 <code>%%~nxi</code>）上，<strong>不能</strong>用于普通环境变量——<code>%~dpMYVAR%</code> 是无效语法。想对一个变量用修饰符，绕一圈即可：<br><code>for %%a in ("%MYVAR%") do echo %%~nxa</code></p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 修饰符的适用范围</span><p>修饰符只能用在 <strong><code>%0</code>~<code>%9</code></strong> 和 <strong><code>for</code> 循环变量</strong>（写作 <code>%%~nxi</code>）上，<strong>不能</strong>用于普通环境变量——<code>%~dpMYVAR%</code> 是无效语法。想对一个变量用修饰符，绕一圈即可：<br><code>for %%a in ("%MYVAR%") do echo %%~nxa</code></p></div>
 
 <h3>%~dp0 的正确用法</h3>
 
@@ -1218,9 +1218,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 <pre style="contain-intrinsic-size:auto 87px"><code><span class="kw">for</span> %%a <span class="kw">in</span> ("%~dp0.") <span class="kw">do</span> <span class="kw">set</span> "ROOT=%%~fa"
 <span class="cm">rem ROOT = D:\tools\build   （末尾的 . 被 ~f 规范化掉了）</span></code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">UNC 路径的老限制</span><p>脚本放在网络共享 <code>\\server\share\tools\</code> 上时，<code>cd</code> 命令不支持 UNC 路径，会报「CMD 不支持将 UNC 路径作为当前目录」。<code>pushd "%~dp0"</code> 可以救场——它会自动映射一个临时盘符，<code>popd</code> 时再解除。这也是应该优先用 <code>pushd</code> 而不是 <code>cd</code> 的现实理由。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 UNC 路径的老限制</span><p>脚本放在网络共享 <code>\\server\share\tools\</code> 上时，<code>cd</code> 命令不支持 UNC 路径，会报「CMD 不支持将 UNC 路径作为当前目录」。<code>pushd "%~dp0"</code> 可以救场——它会自动映射一个临时盘符，<code>popd</code> 时再解除。这也是应该优先用 <code>pushd</code> 而不是 <code>cd</code> 的现实理由。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示</span><p>PowerShell 里 <code>%~dp0</code> 的对应物是 <code>$PSScriptRoot</code>（不带尾反斜杠），路径拆解则交给 <code>Split-Path</code> 和 <code>[System.IO.Path]</code>。但必须承认，<code>%~dp0</code> 这个记号的简洁程度至今没有对手——它是 CMD 少数几个设计得非常好的地方。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p>PowerShell 里 <code>%~dp0</code> 的对应物是 <code>$PSScriptRoot</code>（不带尾反斜杠），路径拆解则交给 <code>Split-Path</code> 和 <code>[System.IO.Path]</code>。但必须承认，<code>%~dp0</code> 这个记号的简洁程度至今没有对手——它是 CMD 少数几个设计得非常好的地方。</p></div>
 
 <h2 id="m2-delayed">2.8 延迟展开 !VAR!：CMD 最大的坑</h2>
 
@@ -1340,9 +1340,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">已过时的替代方案</span><p>延迟展开是 Windows 2000 才引入的。在那之前，人们用 <code>call echo %%count%%</code> 制造「二次展开」，或者把循环体拆成 <code>call :sub</code> 子程序来绕开。这两种写法在今天的脚本里仍能见到：前者每次都要启动一遍命令解析器，慢且对特殊字符极不友好；后者可读性尚可但啰嗦。除非你要兼容 Windows 9x（那就不必了），一律用 <code>setlocal enabledelayedexpansion</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">🟡 已过时的替代方案</span><p>延迟展开是 Windows 2000 才引入的。在那之前，人们用 <code>call echo %%count%%</code> 制造「二次展开」，或者把循环体拆成 <code>call :sub</code> 子程序来绕开。这两种写法在今天的脚本里仍能见到：前者每次都要启动一遍命令解析器，慢且对特殊字符极不友好；后者可读性尚可但啰嗦。除非你要兼容 Windows 9x（那就不必了），一律用 <code>setlocal enabledelayedexpansion</code>。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">设计动机与现代提示</span><p>为什么微软不干脆把 <code>%VAR%</code> 改成执行时求值？因为兼容性。<code>%</code> 的宏式展开从 DOS 时代就是这样，无数脚本依赖「变量里存命令」这类技巧。改掉它等于让存量脚本集体失效，于是只能新造一套 <code>!VAR!</code> 语法、默认关闭、由脚本自己声明启用。这就是所有长寿系统的宿命——新特性只能加在旧特性旁边。<br>PowerShell 从零设计，<code>$var</code> 就是执行时求值，根本不存在这个问题。如果你的脚本已经出现三层嵌套加延迟展开，那是它在告诉你：该换语言了。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">🔵 设计动机与现代提示</span><p>为什么微软不干脆把 <code>%VAR%</code> 改成执行时求值？因为兼容性。<code>%</code> 的宏式展开从 DOS 时代就是这样，无数脚本依赖「变量里存命令」这类技巧。改掉它等于让存量脚本集体失效，于是只能新造一套 <code>!VAR!</code> 语法、默认关闭、由脚本自己声明启用。这就是所有长寿系统的宿命——新特性只能加在旧特性旁边。<br>PowerShell 从零设计，<code>$var</code> 就是执行时求值，根本不存在这个问题。如果你的脚本已经出现三层嵌套加延迟展开，那是它在告诉你：该换语言了。</p></div>
 
 <h2 id="m2-substring">2.9 子串与替换：CMD 的字符串工具箱</h2>
 
@@ -1442,7 +1442,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <p>三个细节：<code>if defined s</code> 在<strong>执行时</strong>判断，所以每轮 <code>goto</code> 后重新解析都能看到最新值；<code>!s:~1!</code> 必须用感叹号，因为它读的正是本块内刚改过的变量；示例字符串<strong>刻意不含感叹号</strong>——延迟展开开着的时候，<code>set "s=Hello!"</code> 里的感叹号会被吃掉，这正是 <a href="#m2-delayed">2.8</a> 说的代价。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">现代提示</span><p>这些字符串技巧的天花板很低：没有正则、没有大小写敏感替换、不能按字符遍历、对 Unicode 支持取决于代码页。一旦需求超出「切个日期、补个零、换个斜杠」，直接 <code>powershell -NoProfile -Command "..."</code> 会让代码短十倍且不易出错。CMD 字符串操作的正确定位是：能一行解决的就用它，需要三行以上的就换工具。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示</span><p>这些字符串技巧的天花板很低：没有正则、没有大小写敏感替换、不能按字符遍历、对 Unicode 支持取决于代码页。一旦需求超出「切个日期、补个零、换个斜杠」，直接 <code>powershell -NoProfile -Command "..."</code> 会让代码短十倍且不易出错。CMD 字符串操作的正确定位是：能一行解决的就用它，需要三行以上的就换工具。</p></div>
 
 <h2 id="m2-cheatsheet">2.10 展开机制速查与踩坑清单</h2>
 
@@ -1478,7 +1478,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">获取可靠的时间戳</span><p><code>%DATE:~0,4%</code> 这类写法在中文简体系统上碰巧能用，换成英文或德文区域立刻输出乱七八糟的东西。过去常用 <code>wmic os get localdatetime</code> 替代，但 <strong>WMIC 在新版 Windows 中已被弃用并逐步移除</strong>。现在的正解是：<br><code>for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmmss"') do set "TS=%%i"</code></p></div>
+<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">🟡 获取可靠的时间戳</span><p><code>%DATE:~0,4%</code> 这类写法在中文简体系统上碰巧能用，换成英文或德文区域立刻输出乱七八糟的东西。过去常用 <code>wmic os get localdatetime</code> 替代，但 <strong>WMIC 在新版 Windows 中已被弃用并逐步移除</strong>。现在的正解是：<br><code>for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmmss"') do set "TS=%%i"</code></p></div>
 
 <h3>转义速查</h3>
 
@@ -1529,7 +1529,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0task.ps1" %*
 
 <p>这一章就是把这些包袱一个个摊开给你看：先讲清楚它为什么会这样，再告诉你怎么绕过去。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">关于本章的示例</span><p>本章所有代码片段和"实测输出"都在 Windows 11 的 cmd.exe 上真实跑过。cmd 默认开启命令扩展（Command Extensions），本章大量特性（<code>goto :EOF</code>、<code>exit /b</code>、<code>if defined</code>、<code>for /F</code> 的多数选项、<code>%%~</code> 修饰符）都依赖它。如果你在某台机器上发现这些统统失效，先检查注册表里的 <code>EnableExtensions</code>，或在脚本开头写 <code>setlocal EnableExtensions</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 关于本章的示例</span><p>本章所有代码片段和"实测输出"都在 Windows 11 的 cmd.exe 上真实跑过。cmd 默认开启命令扩展（Command Extensions），本章大量特性（<code>goto :EOF</code>、<code>exit /b</code>、<code>if defined</code>、<code>for /F</code> 的多数选项、<code>%%~</code> 修饰符）都依赖它。如果你在某台机器上发现这些统统失效，先检查注册表里的 <code>EnableExtensions</code>，或在脚本开头写 <code>setlocal EnableExtensions</code>。</p></div>
 
 <h2 id="m3-if-string">3.1 if 的本体：它比较的是字符串</h2>
 
@@ -1583,9 +1583,9 @@ set "NAME=Zhang San"
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">引号套引号的二次陷阱</span><p>如果变量的值本身已经带引号（最常见的来源是命令行参数，比如用户拖进来一个路径 <code>"C:\Program Files\App"</code>），你再套一层就变成 <code>""C:\Program Files\App""==...</code>，比较必然失败。规矩是：<strong>从 <code>%1</code> 取值时先用 <code>%~1</code> 剥掉外层引号，再统一由你自己加引号。</strong>写成 <code>set "ROOT=%~1"</code>，后面全程用 <code>"%ROOT%"</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 引号套引号的二次陷阱</span><p>如果变量的值本身已经带引号（最常见的来源是命令行参数，比如用户拖进来一个路径 <code>"C:\Program Files\App"</code>），你再套一层就变成 <code>""C:\Program Files\App""==...</code>，比较必然失败。规矩是：<strong>从 <code>%1</code> 取值时先用 <code>%~1</code> 剥掉外层引号，再统一由你自己加引号。</strong>写成 <code>set "ROOT=%~1"</code>，后面全程用 <code>"%ROOT%"</code>。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示</span><p><span class="badge new">现代提示</span> PowerShell 里 <code>-eq</code> 是真正的运算符，两侧先求值再比较，变量里有空格不会改变语法结构：<code>if ($name -eq 'Zhang San') { ... }</code>；而且字符串比较默认<em>忽略</em>大小写（要区分用 <code>-ceq</code>），和 cmd 正好相反，迁移时留意。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> PowerShell 里 <code>-eq</code> 是真正的运算符，两侧先求值再比较，变量里有空格不会改变语法结构：<code>if ($name -eq 'Zhang San') { ... }</code>；而且字符串比较默认<em>忽略</em>大小写（要区分用 <code>-ceq</code>），和 cmd 正好相反，迁移时留意。</p></div>
 
 <h2 id="m3-if-num">3.2 数字比较：EQU / NEQ / GTR 家族</h2>
 
@@ -1636,7 +1636,7 @@ set /a MM=1%MM% - 100
 
 <p>也就是说它用的是一种"字典序 + 同字母小写在前"的排列（a &lt; A &lt; b &lt; B），而 <code>EQU</code> 却是严格区分大小写的精确相等。两套规则不一致，非常容易写出自相矛盾的判断。</p>
 
-<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">结论</span><p><span class="badge old">已过时</span>用 <code>GTR</code>/<code>LSS</code> 对非数字字符串排序。不直观、不可移植、和 <code>EQU</code> 的大小写规则还打架。要保证走数值比较这条路，先用 <code>set /a</code> 把两边规范成纯十进制整数，并且<strong>不要加引号</strong>——引号是数值比较的天敌。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">🟡 结论</span><p><span class="badge old">已过时</span>用 <code>GTR</code>/<code>LSS</code> 对非数字字符串排序。不直观、不可移植、和 <code>EQU</code> 的大小写规则还打架。要保证走数值比较这条路，先用 <code>set /a</code> 把两边规范成纯十进制整数，并且<strong>不要加引号</strong>——引号是数值比较的天敌。</p></div>
 
 <pre style="contain-intrinsic-size:auto 114px"><code><span class="cm">rem 稳妥的数值比较模板</span>
 set /a LEFT=%~1, RIGHT=%~2
@@ -1697,7 +1697,7 @@ echo %errorlevel%              <span class="cm">rem 实测输出：-1</span>
 
 <p>也就是说，用 <code>if errorlevel 1</code> 当作"通用失败判断"，会静默漏掉所有返回负数的失败。</p>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">推荐写法</span><p><span class="badge old">已过时</span> <code>if errorlevel 1</code> 作为通用的"出错了吗"判断。<br /><span class="badge ok">仍适用</span> 改用 <code>if %errorlevel% NEQ 0</code>（数值比较，负数照样抓得住），或者 <code>if not "%errorlevel%"=="0"</code>。只有当你确实要表达"严重程度至少是 N"时，<code>if errorlevel N</code> 才是对的工具。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 推荐写法</span><p><span class="badge old">已过时</span> <code>if errorlevel 1</code> 作为通用的"出错了吗"判断。<br /><span class="badge ok">仍适用</span> 改用 <code>if %errorlevel% NEQ 0</code>（数值比较，负数照样抓得住），或者 <code>if not "%errorlevel%"=="0"</code>。只有当你确实要表达"严重程度至少是 N"时，<code>if errorlevel N</code> 才是对的工具。</p></div>
 
 <table style="contain-intrinsic-size:auto 151px">
 <thead><tr><th class="nw">探针</th><th>语法</th><th>判定内容</th><th>要点</th></tr></thead>
@@ -1792,7 +1792,7 @@ set M=0
 <pre style="contain-intrinsic-size:auto 87px"><code>The system cannot find the drive specified.
 正文</code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 100px"><span class="t">块内注释</span><p><span class="badge dead">禁用</span> 在 <code>( )</code> 块内使用 <code>::</code>。<span class="badge ok">仍适用</span> 老老实实用 <code>rem</code>，它是真正的命令，在任何位置都安全。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 100px"><span class="t">🔴 块内注释</span><p><span class="badge dead">禁用</span> 在 <code>( )</code> 块内使用 <code>::</code>。<span class="badge ok">仍适用</span> 老老实实用 <code>rem</code>，它是真正的命令，在任何位置都安全。</p></div>
 
 <h2 id="m3-for-basic">3.5 for 的本体：一个集合，一个变量，一段命令</h2>
 
@@ -1879,7 +1879,7 @@ echo 跳出来了
 <pre style="contain-intrinsic-size:auto 87px"><code><span class="kw">for</span> /L %%i <span class="kw">in</span> (1,2,7) <span class="kw">do</span> echo %%i    <span class="cm">rem 实测：1 3 5 7</span>
 <span class="kw">for</span> /L %%i <span class="kw">in</span> (3,-1,1) <span class="kw">do</span> echo %%i   <span class="cm">rem 实测：3 2 1</span></code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 132px"><span class="t">步长为 0</span><p><span class="badge dead">禁用</span> <code>for /L %%i in (1,0,10)</code>。步长为 0 时计数器永远不动，这是一个<strong>无法用 Ctrl+C 之外的方式停下来的死循环</strong>。如果步长来自变量或参数，务必先校验它不为 0。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 132px"><span class="t">🔴 步长为 0</span><p><span class="badge dead">禁用</span> <code>for /L %%i in (1,0,10)</code>。步长为 0 时计数器永远不动，这是一个<strong>无法用 Ctrl+C 之外的方式停下来的死循环</strong>。如果步长来自变量或参数，务必先校验它不为 0。</p></div>
 
 <h3 id="m3-for-ldr-d">for /D：只遍历目录</h3>
 
@@ -1918,7 +1918,7 @@ echo 跳出来了
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示</span><p><span class="badge new">现代提示</span> <code>for /R</code> 在大目录树上很慢，因为它对每一层都要重新枚举。老派提速办法是 <code>dir /s /b</code> 先一次性列出再用 <code>for /F</code> 逐行读。真要写新脚本，<code>Get-ChildItem -Recurse -Filter *.log</code> 又快又能直接拿到对象属性。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> <code>for /R</code> 在大目录树上很慢，因为它对每一层都要重新枚举。老派提速办法是 <code>dir /s /b</code> 先一次性列出再用 <code>for /F</code> 逐行读。真要写新脚本，<code>Get-ChildItem -Recurse -Filter *.log</code> 又快又能直接拿到对象属性。</p></div>
 
 <h2 id="m3-for-f">3.7 for /F：批处理自带的 awk</h2>
 
@@ -1947,7 +1947,7 @@ echo 跳出来了
 <span class="cm">rem 解析命令输出，命令里的管道要用 ^| 转义</span>
 <span class="kw">for</span> /F "usebackq tokens=2 delims=:" %%a <span class="kw">in</span> (`ipconfig ^| find "IPv4"`) <span class="kw">do</span> echo IP=%%a</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 215px"><span class="t">实测到的一个冷门坑</span><p><code>usebackq</code> 模式下的 <code>'字面字符串'</code> 依然要先过 cmd 的通用分词器，所以字符串里的 <code>,</code> <code>;</code> <code>=</code> 会被统统规范成空格：</p><p><code>for /F "usebackq delims=" %%a in ('a;b=c,d') do echo [%%a]</code> 实测输出 <code>[a b c d]</code>，逗号分号全没了。</p><p>而不带 <code>usebackq</code> 的 <code>"a;b=c,d"</code> 写法原样保留。<strong>要解析字面字符串，就用不带 usebackq 的双引号形式。</strong></p></div>
+<div class="note old" style="contain-intrinsic-size:auto 215px"><span class="t">🟡 实测到的一个冷门坑</span><p><code>usebackq</code> 模式下的 <code>'字面字符串'</code> 依然要先过 cmd 的通用分词器，所以字符串里的 <code>,</code> <code>;</code> <code>=</code> 会被统统规范成空格：</p><p><code>for /F "usebackq delims=" %%a in ('a;b=c,d') do echo [%%a]</code> 实测输出 <code>[a b c d]</code>，逗号分号全没了。</p><p>而不带 <code>usebackq</code> 的 <code>"a;b=c,d"</code> 写法原样保留。<strong>要解析字面字符串，就用不带 usebackq 的双引号形式。</strong></p></div>
 
 <h3 id="m3-for-f-options">选项速查表</h3>
 
@@ -1963,7 +1963,7 @@ echo 跳出来了
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">默认 eol=; 是个暗雷</span><p>你没写 <code>eol</code>，不代表没有 <code>eol</code>。任何以分号开头的行都会被 <code>for /F</code> 静默丢掉——INI 文件、某些日志、以及分号开头的 CSV 数据行都中招。要"什么都不跳过"，把 <code>eol</code> 设成一个数据里绝不会出现的字符，例如 <code>eol=|</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 默认 eol=; 是个暗雷</span><p>你没写 <code>eol</code>，不代表没有 <code>eol</code>。任何以分号开头的行都会被 <code>for /F</code> 静默丢掉——INI 文件、某些日志、以及分号开头的 CSV 数据行都中招。要"什么都不跳过"，把 <code>eol</code> 设成一个数据里绝不会出现的字符，例如 <code>eol=|</code>。</p></div>
 
 <h3 id="m3-for-f-tokens">tokens 与变量的自动排号</h3>
 
@@ -2069,7 +2069,7 @@ bob,41,Shanghai,Manager,2015</code></pre>
 <span class="kw">for</span> /F "tokens=1,2 delims=," %%a <span class="kw">in</span> (q.csv) <span class="kw">do</span> echo [%%a][%%b]
 <span class="cm">rem 实测输出：["Zhang][ San"]  —— 引号里的逗号照样挨了一刀，字段被劈成两半</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示</span><p><span class="badge old">已过时</span> 用 <code>for /F</code> 解析真实世界的 CSV（有空列、有带引号的字段、有换行嵌在字段里）。<span class="badge new">现代提示</span> 用 <code>Import-Csv</code> / <code>ConvertFrom-Csv</code>，它们按 RFC 4180 处理引号和空列，还能直接按列名取值：<code>Import-Csv users.csv | ForEach-Object { $_.city }</code>。<code>for /F</code> 适合的是格式简单、由你自己控制的文本，比如命令输出和固定格式的日志。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示</span><p><span class="badge old">已过时</span> 用 <code>for /F</code> 解析真实世界的 CSV（有空列、有带引号的字段、有换行嵌在字段里）。<span class="badge new">现代提示</span> 用 <code>Import-Csv</code> / <code>ConvertFrom-Csv</code>，它们按 RFC 4180 处理引号和空列，还能直接按列名取值：<code>Import-Csv users.csv | ForEach-Object { $_.city }</code>。<code>for /F</code> 适合的是格式简单、由你自己控制的文本，比如命令输出和固定格式的日志。</p></div>
 
 <h2 id="m3-goto">3.8 goto 与 :label：最原始也最耐用的跳转</h2>
 
@@ -2126,7 +2126,7 @@ exit /b 1</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">为什么 goto 在大脚本里会变慢</span><p>批处理是<strong>流式解释</strong>的：cmd 没有预编译，也没有跳转表。每次 <code>goto</code> 它都要在文件里重新定位——从当前位置往下扫，扫到文件尾还没找到就绕回开头再扫一遍。所以在一个几千行的批处理里高频 <code>goto</code>，开销是实打实的。这也解释了为什么老脚本喜欢把热点子过程放在文件靠前的位置。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 为什么 goto 在大脚本里会变慢</span><p>批处理是<strong>流式解释</strong>的：cmd 没有预编译，也没有跳转表。每次 <code>goto</code> 它都要在文件里重新定位——从当前位置往下扫，扫到文件尾还没找到就绕回开头再扫一遍。所以在一个几千行的批处理里高频 <code>goto</code>，开销是实打实的。这也解释了为什么老脚本喜欢把热点子过程放在文件靠前的位置。</p></div>
 
 <h2 id="m3-call">3.9 call 与 exit /b：把批处理写成有函数的程序</h2>
 
@@ -2253,7 +2253,7 @@ echo 构建返回码 %errorlevel%</code></pre>
 
 <p>为什么会有这么反直觉的默认行为？这是 DOS 时代的遗留：那时候内存极其紧张，"链式加载"（一个批处理跑完直接把控制权交给下一个，不保留返回地址）是常规做法，<code>call</code> 才是需要额外开销的特例。今天这个默认值只剩下坑人的作用。</p>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">规矩</span><p><span class="badge old">已过时</span> 在批处理里直接写 <code>other.cmd</code> 调用另一个批处理。<span class="badge ok">仍适用</span> <strong>调用 .bat / .cmd 一律加 <code>call</code></strong>。调用 .exe 不需要（可执行文件本来就会返回）。如果你确实想要"跑完就退出"，也请显式写成 <code>call other.cmd &amp; exit /b %errorlevel%</code>，让意图可见。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 规矩</span><p><span class="badge old">已过时</span> 在批处理里直接写 <code>other.cmd</code> 调用另一个批处理。<span class="badge ok">仍适用</span> <strong>调用 .bat / .cmd 一律加 <code>call</code></strong>。调用 .exe 不需要（可执行文件本来就会返回）。如果你确实想要"跑完就退出"，也请显式写成 <code>call other.cmd &amp; exit /b %errorlevel%</code>，让意图可见。</p></div>
 
 <table style="contain-intrinsic-size:auto 265px">
 <thead><tr><th class="nw">方式</th><th>会回来吗</th><th>在哪个进程</th><th>典型用途</th></tr></thead>
@@ -2267,12 +2267,12 @@ echo 构建返回码 %errorlevel%</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">call 的第三种用法</span><p><span class="badge old">已过时</span> <code>call set "VAR=%%%INNER%%%"</code> —— 利用 <code>call</code> 会把整行再解析一遍的特性做"二次展开"，这是延迟展开出现之前的间接寻址技巧。它慢（每次都要重新解析）、易错（百分号数量全靠数）、还会被值里的特殊字符打断。<span class="badge new">现代提示</span> 用 <code>setlocal EnableDelayedExpansion</code> 加 <code>!VAR!</code>，或者直接换 PowerShell 的哈希表。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 call 的第三种用法</span><p><span class="badge old">已过时</span> <code>call set "VAR=%%%INNER%%%"</code> —— 利用 <code>call</code> 会把整行再解析一遍的特性做"二次展开"，这是延迟展开出现之前的间接寻址技巧。它慢（每次都要重新解析）、易错（百分号数量全靠数）、还会被值里的特殊字符打断。<span class="badge new">现代提示</span> 用 <code>setlocal EnableDelayedExpansion</code> 加 <code>!VAR!</code>，或者直接换 PowerShell 的哈希表。</p></div>
 
 <h3>call 的隐藏代价:参数被二次展开</h3>
 <p><code>call</code> 让目标(子批处理或 :label)跑完还能回来,但它有一个少有人知的机制:<strong>call 的整条命令行会再过一遍 % 展开</strong>(解析流水线的②阶段跑了两次)。后果:参数里的 <code>%</code> 要活到目标里,得写 <code>%%</code>;带 <code>^</code> 转义的参数会被再剥一层;精心引好的参数可能在第二轮被拆开。传「含特殊字符的数据」给 call 目标,最稳的姿势是<strong>别走参数走变量</strong>:值放进环境变量,目标里用延迟展开取——绕开二次展开的整个雷区。</p>
 <pre style="contain-intrinsic-size:auto 218px"><code><span class="cl"><span class="cm">:: 演示:同一个值,两条通道的存活率</span></span><span class="cl">set "data=100%% 完成 ^&amp; 收工"</span><span class="cl"><span class="cc" style="min-width:30.0ch">call :work "%data%"</span><span class="cm">:: 参数通道:% 和 ^ 都要再挨一刀,写对极难</span></span><span class="cl"><span class="cc" style="min-width:30.0ch">call :work2</span><span class="cm">:: 变量通道:什么都不传,里面 !data! 原样拿到</span></span><span class="cl">exit /b</span><span class="cl">:work2</span><span class="cl">echo(!data!</span><span class="cl">exit /b 0</span></code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">exit /b 的返回值还有一个陷阱</span><p><code>exit /b N</code> 设置 ERRORLEVEL 为 N 返回——但如果 :label 段的<strong>最后一条命令</strong>本身失败而你没写 exit /b,返回的就是那条命令的退出码,时对时错全凭运气。规矩:<strong>每个 :label 子程序显式以 <code>exit /b 0</code>(或明确的错误码)收尾</strong>,把返回值当成接口的一部分来写,和函数必须 return 一个道理。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 exit /b 的返回值还有一个陷阱</span><p><code>exit /b N</code> 设置 ERRORLEVEL 为 N 返回——但如果 :label 段的<strong>最后一条命令</strong>本身失败而你没写 exit /b,返回的就是那条命令的退出码,时对时错全凭运气。规矩:<strong>每个 :label 子程序显式以 <code>exit /b 0</code>(或明确的错误码)收尾</strong>,把返回值当成接口的一部分来写,和函数必须 return 一个道理。</p></div>
 
 <h2 id="m3-cheatsheet">3.10 综合演练与陷阱速查</h2>
 
@@ -2329,7 +2329,7 @@ exit /b 0</code></pre>
 &gt; scan.cmd D:\demo zzz
 没有找到 *.zzz                       <span class="cm">rem 返回码 1</span></code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 230px"><span class="t">中文脚本的编码坑（顺带一提）</span><p>上面这个脚本里有中文提示文字。cmd 是按<strong>当前代码页</strong>去解释批处理文件字节流的，如果你把它存成 UTF-8 而系统代码页是 GBK，中文字符的字节会被错误地两两配对，多出来或少掉的那个字节可能正好啃掉一个引号或右括号——于是报错信息会指向一个和真正问题毫不相关的位置——本章这个示例脚本第一次跑就是这么翻车的，报的错离真正的问题隔了十几行。稳妥做法：含中文的 <code>.cmd</code> 存成 ANSI(GBK)；坚持用 UTF-8 就在首行写 <code>chcp 65001 &gt;nul</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 230px"><span class="t">🟡 中文脚本的编码坑（顺带一提）</span><p>上面这个脚本里有中文提示文字。cmd 是按<strong>当前代码页</strong>去解释批处理文件字节流的，如果你把它存成 UTF-8 而系统代码页是 GBK，中文字符的字节会被错误地两两配对，多出来或少掉的那个字节可能正好啃掉一个引号或右括号——于是报错信息会指向一个和真正问题毫不相关的位置——本章这个示例脚本第一次跑就是这么翻车的，报的错离真正的问题隔了十几行。稳妥做法：含中文的 <code>.cmd</code> 存成 ANSI(GBK)；坚持用 UTF-8 就在首行写 <code>chcp 65001 &gt;nul</code>。</p></div>
 
 <h3 id="m3-cheatsheet-traps">陷阱清单：症状 → 原因 → 解法</h3>
 
@@ -2374,7 +2374,7 @@ exit /b 0</code></pre>
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">本章要记住的三句话</span><p>一、<strong>cmd 先替换文字，再读语法</strong>——所以引号不是装饰，是把带空格的值拴在一起的绳子。<br />二、<strong>括号块是一次性印好的清单</strong>——块内要看见变化，就得开延迟展开用 <code>!VAR!</code>。<br />三、<strong><code>call</code> 才有返回，<code>goto</code> 没有</strong>——调批处理加 <code>call</code>，收尾用 <code>exit /b</code>，永远别用裸 <code>exit</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 本章要记住的三句话</span><p>一、<strong>cmd 先替换文字，再读语法</strong>——所以引号不是装饰，是把带空格的值拴在一起的绳子。<br />二、<strong>括号块是一次性印好的清单</strong>——块内要看见变化，就得开延迟展开用 <code>!VAR!</code>。<br />三、<strong><code>call</code> 才有返回，<code>goto</code> 没有</strong>——调批处理加 <code>call</code>，收尾用 <code>exit /b</code>，永远别用裸 <code>exit</code>。</p></div>
 
 </section>
 
@@ -2420,9 +2420,9 @@ exit /b 0</code></pre>
 <span class="kw">echo</span> ---- 2 号（stderr）----
 <span class="kw">type</span> err.txt</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">这是约定，不是强制</span><p>Windows 自带命令基本都遵守「结果走 1、诊断走 2」。但第三方 exe 不一定：有的把全部日志写进 2 号（于是 <code>&gt;log.txt</code> 抓到空文件），有的把错误写进 1 号（于是 <code>2&gt;nul</code> 屏蔽不掉噪音）。碰到行为诡异的工具，先用上面这个「分两个文件」的实验探一下它的脾气，再决定怎么接管子。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 这是约定，不是强制</span><p>Windows 自带命令基本都遵守「结果走 1、诊断走 2」。但第三方 exe 不一定：有的把全部日志写进 2 号（于是 <code>&gt;log.txt</code> 抓到空文件），有的把错误写进 1 号（于是 <code>2&gt;nul</code> 屏蔽不掉噪音）。碰到行为诡异的工具，先用上面这个「分两个文件」的实验探一下它的脾气，再决定怎么接管子。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">现代提示</span><p>PowerShell 把这套东西扩成了六个流：1 Success、2 Error、3 Warning、4 Verbose、5 Debug、6 Information，还有一个 <code>*&gt;</code> 表示「全都要」。理解了 cmd 的 1 和 2，PowerShell 那套只是同一个概念的加长版。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示</span><p>PowerShell 把这套东西扩成了六个流：1 Success、2 Error、3 Warning、4 Verbose、5 Debug、6 Information，还有一个 <code>*&gt;</code> 表示「全都要」。理解了 cmd 的 1 和 2，PowerShell 那套只是同一个概念的加长版。</p></div>
 
 <h2 id="m4-redirect">4.2 重定向速查表与四个经典陷阱</h2>
 
@@ -2539,7 +2539,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 
 <p>cmd 是先建立重定向、再执行命令的。建立失败就直接报错退出，命令本体一次都没运行。写日志前先确认目录存在且可写，或者退一步用 <code>2&gt;nul</code> 把重定向自身的报错也吞掉，再靠后续判断兜底。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">NUL 是设备名，不是文件名</span><p><code>NUL</code>（还有 <code>CON</code>、<code>PRN</code>、<code>AUX</code>、<code>COM1</code>～<code>LPT9</code>）在任何目录下都「存在」：<code>D:\anything\nul</code> 也是合法的黑洞。所以别写成 <code>&gt;nul.txt</code>——那会真的生成一个叫 nul.txt 的文件。反过来，你也永远无法在项目里创建名为 <code>nul</code>、<code>con</code> 的文件，Git 仓库跨平台时这是个著名的踩坑点。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 NUL 是设备名，不是文件名</span><p><code>NUL</code>（还有 <code>CON</code>、<code>PRN</code>、<code>AUX</code>、<code>COM1</code>～<code>LPT9</code>）在任何目录下都「存在」：<code>D:\anything\nul</code> 也是合法的黑洞。所以别写成 <code>&gt;nul.txt</code>——那会真的生成一个叫 nul.txt 的文件。反过来，你也永远无法在项目里创建名为 <code>nul</code>、<code>con</code> 的文件，Git 仓库跨平台时这是个著名的踩坑点。</p></div>
 
 <h3>顺手三招</h3>
 
@@ -2553,7 +2553,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">set /p 的空文件陷阱</span><p><code>set /p ver=&lt;version.txt</code> 在文件为空或第一行为空时，<strong>不会</strong>把变量清空，而是保持变量原有的值。所以务必先 <code>set "ver="</code> 再读，否则你可能在用上一次循环残留的旧值。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">🟡 set /p 的空文件陷阱</span><p><code>set /p ver=&lt;version.txt</code> 在文件为空或第一行为空时，<strong>不会</strong>把变量清空，而是保持变量原有的值。所以务必先 <code>set "ver="</code> 再读，否则你可能在用上一次循环残留的旧值。</p></div>
 
 <h2 id="m4-pipe">4.3 管道：把上一个命令的嘴接到下一个的耳朵</h2>
 
@@ -2639,7 +2639,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <pre style="contain-intrinsic-size:auto 87px"><code><span class="cm">:: 只有加了 2&gt;&amp;1，findstr 才看得见错误行</span>
 <span class="kw">robocopy</span> src dst /e 2&gt;&amp;1 | <span class="kw">findstr</span> /i /c:"ERROR"</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">echo y | 这类「喂答案」的写法</span><p><code>echo y | del *.tmp</code>、<code>echo A | format</code> 这种做法依赖命令提示语的具体文字，换成英文版系统或换个 Windows 版本就失效，而且一旦提问顺序变了，你喂的 <code>y</code> 可能答到别的问题上。凡是命令自带 <code>/Q</code>、<code>/Y</code> 开关的，一律用开关：<code>del /q</code>、<code>copy /y</code>、<code>xcopy /y</code>、<code>rd /s /q</code>。确实需要多行输入时，用 <code>命令 &lt;answers.txt</code> 而不是管道。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">🟡 echo y | 这类「喂答案」的写法</span><p><code>echo y | del *.tmp</code>、<code>echo A | format</code> 这种做法依赖命令提示语的具体文字，换成英文版系统或换个 Windows 版本就失效，而且一旦提问顺序变了，你喂的 <code>y</code> 可能答到别的问题上。凡是命令自带 <code>/Q</code>、<code>/Y</code> 开关的，一律用开关：<code>del /q</code>、<code>copy /y</code>、<code>xcopy /y</code>、<code>rd /s /q</code>。确实需要多行输入时，用 <code>命令 &lt;answers.txt</code> 而不是管道。</p></div>
 
 <p>几个高频管道范式，直接抄：</p>
 
@@ -2689,7 +2689,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">rd /s /q 与空变量：最容易造成真实事故的一行</span><p><code>rd /s /q "%ROOT%\%SUB%"</code> 在 <code>SUB</code> 因为拼写错误或上游失败而为空时，实际执行的是 <code>rd /s /q "C:\data\"</code>——把整个 ROOT 连根删掉，不进回收站，没有二次确认。同理 <code>del /q /s "%DIR%\*"</code> 在 <code>DIR</code> 为空时会从当前目录开刀。凡是删除，先做三件事：判变量非空、判路径存在、判它是不是你以为的那一层。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 rd /s /q 与空变量：最容易造成真实事故的一行</span><p><code>rd /s /q "%ROOT%\%SUB%"</code> 在 <code>SUB</code> 因为拼写错误或上游失败而为空时，实际执行的是 <code>rd /s /q "C:\data\"</code>——把整个 ROOT 连根删掉，不进回收站，没有二次确认。同理 <code>del /q /s "%DIR%\*"</code> 在 <code>DIR</code> 为空时会从当前目录开刀。凡是删除，先做三件事：判变量非空、判路径存在、判它是不是你以为的那一层。</p></div>
 
 <pre style="contain-intrinsic-size:auto 169px"><code><span class="cm">:: 删除前的最小安全检查，值得写成一个可复用的标签</span>
 <span class="kw">if</span> <span class="kw">not</span> <span class="kw">defined</span> TARGET (<span class="kw">echo</span> [ERR] TARGET 未设置 &amp; <span class="kw">exit</span> /b 1)
@@ -2699,9 +2699,9 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 
 <p><code>if exist "路径\."</code> 这个写法值得记住：结尾的 <code>\.</code> 让判断只对目录成立，同名文件不会误判。批处理没有 <code>if isdirectory</code>，这就是替代品。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">按时间批量清理，用 forfiles</span><p>「删除 30 天前的日志」用 <code>for</code> 拼日期非常痛苦（还要处理跨月跨年）。<code>forfiles</code> 一行就够：<code>forfiles /p "D:\logs" /s /m *.log /d -30 /c "cmd /c del @path"</code>。<code>/d -30</code> 表示「修改时间早于 30 天前」，<code>@path</code>、<code>@file</code>、<code>@fdate</code> 是它的内置变量，注意 <code>/c</code> 后面整串必须用双引号包起来。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 按时间批量清理，用 forfiles</span><p>「删除 30 天前的日志」用 <code>for</code> 拼日期非常痛苦（还要处理跨月跨年）。<code>forfiles</code> 一行就够：<code>forfiles /p "D:\logs" /s /m *.log /d -30 /c "cmd /c del @path"</code>。<code>/d -30</code> 表示「修改时间早于 30 天前」，<code>@path</code>、<code>@file</code>、<code>@fdate</code> 是它的内置变量，注意 <code>/c</code> 后面整串必须用双引号包起来。</p></div>
 
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">deltree</span><p>DOS 时代的 <code>deltree</code> 早就不存在了。如果你在网上抄到的脚本里出现它，说明那份材料至少是 20 世纪的产物，里面的其他做法也值得全盘怀疑。目录递归删除现在只有 <code>rd /s /q</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 deltree</span><p>DOS 时代的 <code>deltree</code> 早就不存在了。如果你在网上抄到的脚本里出现它，说明那份材料至少是 20 世纪的产物，里面的其他做法也值得全盘怀疑。目录递归删除现在只有 <code>rd /s /q</code>。</p></div>
 
 <h2 id="m4-robocopy">4.5 robocopy 为什么比 xcopy 值得你换过去</h2>
 
@@ -2774,11 +2774,11 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <span class="kw">echo</span> [OK] 同步完成，退出码 %RC% 属正常范围
 <span class="kw">exit</span> /b 0</code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">/MIR 会删除目标端的文件</span><p><code>/MIR</code> 等价于 <code>/E</code> + <code>/PURGE</code>：目标端凡是源里没有的东西，一律删除。如果源路径写错、源盘临时未挂载但路径仍解析成一个空目录，<code>/MIR</code> 会忠实地把目标端<strong>清空</strong>。上线前一律先加 <code>/L</code> 跑一遍预演，确认它打算删的东西确实该删。给备份目标做快照或版本控制也是必要的。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 /MIR 会删除目标端的文件</span><p><code>/MIR</code> 等价于 <code>/E</code> + <code>/PURGE</code>：目标端凡是源里没有的东西，一律删除。如果源路径写错、源盘临时未挂载但路径仍解析成一个空目录，<code>/MIR</code> 会忠实地把目标端<strong>清空</strong>。上线前一律先加 <code>/L</code> 跑一遍预演，确认它打算删的东西确实该删。给备份目标做快照或版本控制也是必要的。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示：PowerShell 里也照样调 robocopy</span><p><code>Copy-Item -Recurse</code> 没有重试、没有增量、没有多线程、没有日志。所以在 PowerShell 脚本里直接调用 <code>robocopy.exe</code> 至今仍是业界标准做法，只是判断条件要写成 <code>if ($LASTEXITCODE -ge 8) { throw }</code>。跨机同步量再大一级，就该看 DFS 复制或专门的同步服务了。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示：PowerShell 里也照样调 robocopy</span><p><code>Copy-Item -Recurse</code> 没有重试、没有增量、没有多线程、没有日志。所以在 PowerShell 脚本里直接调用 <code>robocopy.exe</code> 至今仍是业界标准做法，只是判断条件要写成 <code>if ($LASTEXITCODE -ge 8) { throw }</code>。跨机同步量再大一级，就该看 DFS 复制或专门的同步服务了。</p></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">xcopy 还能用吗</span><p>能。它随系统提供、语法短，临时拷一个小目录树时手敲 <code>xcopy /e /i /y src dst</code> 完全没问题。<span class="badge old">已过时</span> 指的是：<strong>不要再用它写新的、要长期跑的同步脚本</strong>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 xcopy 还能用吗</span><p>能。它随系统提供、语法短，临时拷一个小目录树时手敲 <code>xcopy /e /i /y src dst</code> 完全没问题。<span class="badge old">已过时</span> 指的是：<strong>不要再用它写新的、要长期跑的同步脚本</strong>。</p></div>
 
 <h2 id="m4-findstr">4.6 文本过滤：find、findstr 与那半套正则</h2>
 
@@ -2803,7 +2803,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">同一个字母，两个意思</span><p><code>find /c</code> 是「计数」，<code>findstr /c:</code> 是「把后面整串当字面量」。两者毫无关系，却是同一个字母。写 <code>findstr /c "abc"</code>（少了冒号）会被当成搜索 <code>c</code> 和 <code>abc</code> 两个模式，结果莫名其妙。<strong>findstr 的 /c 永远带冒号且紧跟字符串</strong>：<code>/c:"abc"</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 同一个字母，两个意思</span><p><code>find /c</code> 是「计数」，<code>findstr /c:</code> 是「把后面整串当字面量」。两者毫无关系，却是同一个字母。写 <code>findstr /c "abc"</code>（少了冒号）会被当成搜索 <code>c</code> 和 <code>abc</code> 两个模式，结果莫名其妙。<strong>findstr 的 /c 永远带冒号且紧跟字符串</strong>：<code>/c:"abc"</code>。</p></div>
 
 <h3>findstr 支持的正则元字符（就这么多）</h3>
 
@@ -2866,7 +2866,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
     <span class="kw">echo</span> [OK] 日志干净
 )</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">findstr 与中文编码</span><p>findstr 按当前代码页解释字节。对 UTF-8 无 BOM 的中文文本，它经常什么都匹配不到；对 UTF-16（很多 PowerShell 生成的文件默认就是）它会因为字节间的 <code>0x00</code> 而错乱。临时对策是先 <code>chcp 65001</code>，但更靠谱的做法是：涉及中文内容匹配时，换用下面提到的现代工具。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 findstr 与中文编码</span><p>findstr 按当前代码页解释字节。对 UTF-8 无 BOM 的中文文本，它经常什么都匹配不到；对 UTF-16（很多 PowerShell 生成的文件默认就是）它会因为字节间的 <code>0x00</code> 而错乱。临时对策是先 <code>chcp 65001</code>，但更靠谱的做法是：涉及中文内容匹配时，换用下面提到的现代工具。</p></div>
 
 <h3>sort 与 more：能力有限，别指望太多</h3>
 
@@ -2886,7 +2886,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 
 <span class="cm">:: 没有 /unique：要去重得自己来（先排序，再用 for 逐行比对上一行）</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p><code>Select-String</code> 支持完整的 .NET 正则（<code>+ ? | () {n,m} \d \w</code> 全都有）、正确处理 UTF-8/UTF-16、还能用 <code>-Context 2,2</code> 输出上下文行。<code>Sort-Object -Unique</code> 一步完成去重排序，<code>Group-Object</code> 直接做频次统计。当你发现自己在为 findstr 手写第四个 <code>[0-9]</code> 时，就是该换工具的信号。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p><code>Select-String</code> 支持完整的 .NET 正则（<code>+ ? | () {n,m} \d \w</code> 全都有）、正确处理 UTF-8/UTF-16、还能用 <code>-Context 2,2</code> 输出上下文行。<code>Sort-Object -Unique</code> 一步完成去重排序，<code>Group-Object</code> 直接做频次统计。当你发现自己在为 findstr 手写第四个 <code>[0-9]</code> 时，就是该换工具的信号。</p></div>
 
 <h2 id="m4-start">4.7 start：启动程序、等待与退出码</h2>
 
@@ -2926,9 +2926,9 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <span class="kw">start</span> /wait /b "" installer.exe /silent
 <span class="kw">echo</span> 安装程序退出码：%ERRORLEVEL%</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">/wait 也未必等得到</span><p>很多 GUI 安装器（尤其是包着 MSI 的 setup.exe）会自己再拉起一个真正干活的进程，然后主进程立刻退出。这时 <code>/wait</code> 等到的只是那个空壳。对策：能用 <code>msiexec /i x.msi /qn /norestart</code> 就直接用它（它是同步的），否则事后用 <code>tasklist</code> 轮询目标进程名，等它从列表里消失。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 /wait 也未必等得到</span><p>很多 GUI 安装器（尤其是包着 MSI 的 setup.exe）会自己再拉起一个真正干活的进程，然后主进程立刻退出。这时 <code>/wait</code> 等到的只是那个空壳。对策：能用 <code>msiexec /i x.msi /qn /norestart</code> 就直接用它（它是同步的），否则事后用 <code>tasklist</code> 轮询目标进程名，等它从列表里消失。</p></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">start 启动批处理会留下窗口</span><p>官方文档写得明白：如果 start 的目标是内部命令或批处理文件，它会用 <code>/K</code> 启动命令处理器——意思是命令跑完窗口<strong>不关</strong>。想让它跑完就消失，自己写清楚：<code>start "" cmd /c mytask.cmd</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 start 启动批处理会留下窗口</span><p>官方文档写得明白：如果 start 的目标是内部命令或批处理文件，它会用 <code>/K</code> 启动命令处理器——意思是命令跑完窗口<strong>不关</strong>。想让它跑完就消失，自己写清楚：<code>start "" cmd /c mytask.cmd</code>。</p></div>
 
 <h3>四种调用方式的区别</h3>
 
@@ -2976,7 +2976,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 
 <span class="kw">echo</span> 三个任务全部完成</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p>PowerShell 的 <code>Start-Process -Wait -NoNewWindow -PassThru</code> 一次解决窗口、等待、退出码三件事，返回的对象里直接有 <code>ExitCode</code>；并行汇合用 <code>Start-Job</code> + <code>Wait-Job</code>，或 PowerShell 7 的 <code>ForEach-Object -Parallel</code>。如果你的脚本里已经出现「标志文件轮询」这种结构，说明它长到该换语言了。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p>PowerShell 的 <code>Start-Process -Wait -NoNewWindow -PassThru</code> 一次解决窗口、等待、退出码三件事，返回的对象里直接有 <code>ExitCode</code>；并行汇合用 <code>Start-Job</code> + <code>Wait-Job</code>，或 PowerShell 7 的 <code>ForEach-Object -Parallel</code>。如果你的脚本里已经出现「标志文件轮询」这种结构，说明它长到该换语言了。</p></div>
 
 <h2 id="m4-proc">4.8 where、tasklist、taskkill、timeout：探测与节奏</h2>
 
@@ -3018,7 +3018,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 131px"><span class="t">tasklist 找不到进程时退出码仍是 0</span><p>不但如此，它还会往 stdout 打印一句「信息: 没有运行的任务匹配指定标准。」——所以你不能靠退出码，也不能靠「输出是否为空」来判断。正确写法是把结果再过一遍 findstr：</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 131px"><span class="t">🟡 tasklist 找不到进程时退出码仍是 0</span><p>不但如此，它还会往 stdout 打印一句「信息: 没有运行的任务匹配指定标准。」——所以你不能靠退出码，也不能靠「输出是否为空」来判断。正确写法是把结果再过一遍 findstr：</p></div>
 
 <pre style="contain-intrinsic-size:auto 223px"><code><span class="cm">:: 判断某进程是否在运行的可靠写法</span>
 <span class="kw">tasklist</span> /fi "imagename eq notepad.exe" /nh 2&gt;<span class="kw">nul</span> | <span class="kw">findstr</span> /i /c:"notepad.exe" &gt;<span class="kw">nul</span>
@@ -3047,7 +3047,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <span class="kw">taskkill</span> /f /t /im myapp.exe &gt;<span class="kw">nul</span> 2&gt;&amp;1
 <span class="kw">exit</span> /b 0</code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">别对系统进程动手</span><p><code>taskkill /f /im svchost.exe</code>、<code>lsass.exe</code>、<code>csrss.exe</code>、<code>wininit.exe</code> 之类会直接导致系统崩溃或强制重启，某些进程被终止时 Windows 会主动蓝屏。脚本里只终止<strong>你自己启动的、名字明确的</strong>进程；不要用通配符匹配映像名；能先试不带 <code>/f</code> 的温和终止就先试。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 别对系统进程动手</span><p><code>taskkill /f /im svchost.exe</code>、<code>lsass.exe</code>、<code>csrss.exe</code>、<code>wininit.exe</code> 之类会直接导致系统崩溃或强制重启，某些进程被终止时 Windows 会主动蓝屏。脚本里只终止<strong>你自己启动的、名字明确的</strong>进程；不要用通配符匹配映像名；能先试不带 <code>/f</code> 的温和终止就先试。</p></div>
 
 <h3>timeout：让脚本歇一会儿</h3>
 
@@ -3061,7 +3061,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">timeout 在无人值守环境里会直接报错</span><p>只要 stdin 被重定向——计划任务、CI 流水线、被别的程序以管道方式调用——<code>timeout</code> 就会打印 <code>ERROR: Input redirection is not supported</code> 然后退出，一秒都不等。因为它的实现依赖读控制台按键。这类场景改用 ping 当秒表：</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 timeout 在无人值守环境里会直接报错</span><p>只要 stdin 被重定向——计划任务、CI 流水线、被别的程序以管道方式调用——<code>timeout</code> 就会打印 <code>ERROR: Input redirection is not supported</code> 然后退出，一秒都不等。因为它的实现依赖读控制台按键。这类场景改用 ping 当秒表：</p></div>
 
 <pre style="contain-intrinsic-size:auto 169px"><code><span class="cm">:: 交互式场景</span>
 <span class="kw">timeout</span> /t 5 /nobreak &gt;<span class="kw">nul</span>
@@ -3069,7 +3069,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 <span class="cm">:: 无人值守 / 输入被重定向的场景：ping 自己 n 次，间隔 1 秒，实际等 n-1 秒</span>
 <span class="kw">ping</span> -n 6 127.0.0.1 &gt;<span class="kw">nul</span></code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">sleep.exe</span><p>老脚本里常见的 <code>sleep 5</code> 来自 Windows 2000/2003 资源工具包，早已不随系统提供。现在的选择只有上面两个，或者 PowerShell 的 <code>Start-Sleep -Seconds 5</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 sleep.exe</span><p>老脚本里常见的 <code>sleep 5</code> 来自 Windows 2000/2003 资源工具包，早已不随系统提供。现在的选择只有上面两个，或者 PowerShell 的 <code>Start-Sleep -Seconds 5</code>。</p></div>
 
 <h2 id="m4-recipes">4.9 组合起来：实战模板与现代替代对照</h2>
 
@@ -3222,7 +3222,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 
 <p>打个比方：cmd 像一间老式排版车间。工人先拿模板稿，把稿子上的 <code>%V1%</code> 之类占位符<strong>手工贴上实际文字</strong>，贴完再把整张稿子交给排版机。如果你贴上去的文字里正好有排版机的控制符号，排版机分不出那是「你贴的内容」还是「原稿的指令」——它只看最终这张纸上有什么。</p>
 
-<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">这个设计不是失误，是省内存</span><p>cmd 的语法继承自 COMMAND.COM，那是要在 64KB 内存里跑完的东西。「逐行做文本替换再执行」是当年最省内存的方案：不需要建语法树，不需要保存中间结构，扫一遍字符串就行。后来为了兼容三十年的存量脚本，这套规则被彻底冻结——包括它的全部怪癖。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 这个设计不是失误，是省内存</span><p>cmd 的语法继承自 COMMAND.COM，那是要在 64KB 内存里跑完的东西。「逐行做文本替换再执行」是当年最省内存的方案：不需要建语法树，不需要保存中间结构，扫一遍字符串就行。后来为了兼容三十年的存量脚本，这套规则被彻底冻结——包括它的全部怪癖。</p></div>
 
 <table style="contain-intrinsic-size:auto 265px">
 <thead><tr><th class="nw">工序</th><th>做了什么</th><th>你能用什么手段影响它</th></tr></thead>
@@ -3236,7 +3236,7 @@ mytool.exe 2&gt;&amp;1 &gt;all.log</code></pre>
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">现代提示</span><p>PowerShell 走的是完全相反的路线：先把整段脚本解析成抽象语法树，参数以对象形式传递，<strong>变量的值永远不会被重新当作语法解析</strong>。<code>$v = 'x&amp;y'; Write-Output $v</code> 一定输出 <code>x&amp;y</code>，没有任何转义顾虑。你在本章看到的每一个坑，基本都能在 PowerShell 的设计文档里找到对应的「我们为什么这么改」。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示</span><p>PowerShell 走的是完全相反的路线：先把整段脚本解析成抽象语法树，参数以对象形式传递，<strong>变量的值永远不会被重新当作语法解析</strong>。<code>$v = 'x&amp;y'; Write-Output $v</code> 一定输出 <code>x&amp;y</code>，没有任何转义顾虑。你在本章看到的每一个坑，基本都能在 PowerShell 的设计文档里找到对应的「我们为什么这么改」。</p></div>
 
 <h2 id="m5-caret">5.2 脱字符 ^：把语法降级成字符</h2>
 
@@ -3304,7 +3304,7 @@ robocopy "%SRC%" "%DST%" ^
 <span class="kw">for</span> /f "tokens=*" %%L <span class="kw">in</span> ('echo pipe-test ^| find "pipe"') <span class="kw">do</span> <span class="kw">echo</span> 命中: %%L
 <span class="cm">rem 输出：命中: pipe-test</span></code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">经验法则</span><p>数一数你的命令会被几个 cmd 读到，转义符就写几个 <code>^</code>。写到需要 <code>^^^&amp;</code> 的时候，停下来——那说明这段逻辑该换实现方式了（提取成独立脚本、或者用 PowerShell）。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 经验法则</span><p>数一数你的命令会被几个 cmd 读到，转义符就写几个 <code>^</code>。写到需要 <code>^^^&amp;</code> 的时候，停下来——那说明这段逻辑该换实现方式了（提取成独立脚本、或者用 PowerShell）。</p></div>
 
 <h2 id="m5-percent">5.3 百分号的两副面孔：%% 与延迟展开</h2>
 
@@ -3379,7 +3379,7 @@ robocopy "%SRC%" "%DST%" ^
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">现代提示</span><p>PowerShell 没有「展开时机」这个概念：<code>$c</code> 在任何位置都是同一个变量的当前值，循环里直接 <code>$c++</code> 即可。延迟展开这个开关的存在本身，就是「文本替换式解释器」的补丁。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">🔵 现代提示</span><p>PowerShell 没有「展开时机」这个概念：<code>$c</code> 在任何位置都是同一个变量的当前值，循环里直接 <code>$c++</code> 即可。延迟展开这个开关的存在本身，就是「文本替换式解释器」的补丁。</p></div>
 
 <h2 id="m5-quote">5.4 引号该加在哪：带空格路径的正确写法</h2>
 
@@ -3396,7 +3396,7 @@ copy C:\"Program Files"\app\a.txt D:\backup</code></pre>
 
 <p>第三种写法在很多情况下碰巧能跑，但它把参数拆成了 <code>C:\</code> + <code>Program Files</code> + <code>\app\...</code> 三段再拼回去，遇到 <code>for</code>、<code>%~</code> 修饰符、外部程序自己的参数解析器时就会翻车。<strong>引号要从头包到尾。</strong></p>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">已过时的绕法</span><p><span class="badge old">已过时</span> 用 8.3 短文件名规避空格（<code>C:\PROGRA~1\...</code>）。短名生成规则依赖创建顺序，同一路径在不同机器上可能是 <code>PROGRA~1</code> 也可能是 <code>PROGRA~2</code>；NTFS 卷还可以整卷关闭 8.3 名生成（<code>fsutil 8dot3name</code>），届时这类路径全部失效。老脚本里见到就该替换成带引号的长路径。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 已过时的绕法</span><p><span class="badge old">已过时</span> 用 8.3 短文件名规避空格（<code>C:\PROGRA~1\...</code>）。短名生成规则依赖创建顺序，同一路径在不同机器上可能是 <code>PROGRA~1</code> 也可能是 <code>PROGRA~2</code>；NTFS 卷还可以整卷关闭 8.3 名生成（<code>fsutil 8dot3name</code>），届时这类路径全部失效。老脚本里见到就该替换成带引号的长路径。</p></div>
 
 <h3>set 的标准写法：引号包住整个赋值</h3>
 
@@ -3445,7 +3445,7 @@ copy C:\"Program Files"\app\a.txt D:\backup</code></pre>
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">start 的第一个引号参数是窗口标题</span><p><code>start "C:\Program Files\a.exe"</code> 不会启动程序——<code>start</code> 把第一个带引号的参数当成新窗口的标题，然后发现没有要运行的命令。永远写成 <code>start "" "路径"</code>，那个空引号就是标题占位符。这个坑几乎人人踩过一次。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 start 的第一个引号参数是窗口标题</span><p><code>start "C:\Program Files\a.exe"</code> 不会启动程序——<code>start</code> 把第一个带引号的参数当成新窗口的标题，然后发现没有要运行的命令。永远写成 <code>start "" "路径"</code>，那个空引号就是标题占位符。这个坑几乎人人踩过一次。</p></div>
 
 <h3>%~ 修饰符速查</h3>
 
@@ -3521,7 +3521,7 @@ cmd /c <span class="kw">exit</span> 3
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">不是所有命令都好好设置退出码</span><p><code>&amp;&amp;</code> 和 <code>||</code> 完全依赖 <code>ERRORLEVEL</code>，但内部命令的表现参差不齐：<code>echo</code>、<code>set</code>（无 <code>/a</code> 时）基本不改动它；<code>for</code> 循环体内部的失败不会冒泡到 <code>for</code> 本身。所以 <code>for ... || echo 失败</code> 这种写法通常抓不到任何东西。判断关键步骤时，宁可显式检查产物：<code>if not exist "%OUT%" ( ... )</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 不是所有命令都好好设置退出码</span><p><code>&amp;&amp;</code> 和 <code>||</code> 完全依赖 <code>ERRORLEVEL</code>，但内部命令的表现参差不齐：<code>echo</code>、<code>set</code>（无 <code>/a</code> 时）基本不改动它；<code>for</code> 循环体内部的失败不会冒泡到 <code>for</code> 本身。所以 <code>for ... || echo 失败</code> 这种写法通常抓不到任何东西。判断关键步骤时，宁可显式检查产物：<code>if not exist "%OUT%" ( ... )</code>。</p></div>
 
 <h3>管道的隐藏代价：两个子进程</h3>
 
@@ -3536,7 +3536,7 @@ cmd /c <span class="kw">exit</span> 3
 <span class="kw">for</span> /f %%N <span class="kw">in</span> ('type data.txt ^| find /c /v ""') <span class="kw">do</span> <span class="kw">set</span> "N=%%N"
 <span class="kw">echo</span> 行数=%N%</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>PowerShell 的管道传的是对象且在同一进程内，<code>$n = (Get-Content data.txt).Count</code> 一行代码即可；错误处理有 <code>try/catch</code> 和 <code>$ErrorActionPreference</code>，不必去猜某个命令到底设不设置退出码。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>PowerShell 的管道传的是对象且在同一进程内，<code>$n = (Get-Content data.txt).Count</code> 一行代码即可；错误处理有 <code>try/catch</code> 和 <code>$ErrorActionPreference</code>，不必去猜某个命令到底设不设置退出码。</p></div>
 
 <h2 id="m5-paren">5.6 括号块：整块解析引出的连环坑</h2>
 
@@ -3744,9 +3744,9 @@ cmd /c <span class="kw">exit</span> 3
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">chcp 65001 的历史包袱</span><p><span class="badge old">已过时的认知</span> 「65001 会导致程序崩溃、<code>for /f</code> 读不到内容」——这些是 Windows 7/8 时代 conhost 的老 bug，在 Windows 10 之后的版本上已基本消失，本章的全部实测都在 65001 下完成。但仍有两个残留风险：一是某些老旧的第三方 exe 自己按 ANSI 代码页解释参数，收到 UTF-8 字节会认不出；二是 <code>chcp</code> 只改控制台，不改 Windows 的 ANSI 代码页（ACP），程序内部的文件名转换仍走 ACP。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">🟡 chcp 65001 的历史包袱</span><p><span class="badge old">已过时的认知</span> 「65001 会导致程序崩溃、<code>for /f</code> 读不到内容」——这些是 Windows 7/8 时代 conhost 的老 bug，在 Windows 10 之后的版本上已基本消失，本章的全部实测都在 65001 下完成。但仍有两个残留风险：一是某些老旧的第三方 exe 自己按 ANSI 代码页解释参数，收到 UTF-8 字节会认不出；二是 <code>chcp</code> 只改控制台，不改 Windows 的 ANSI 代码页（ACP），程序内部的文件名转换仍走 ACP。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">现代提示</span><p>Windows 10 1903 起，设置里有「Beta：使用 Unicode UTF-8 提供全球语言支持」，可把系统 ACP 直接设为 65001，从根上解决问题——但它会让部分老软件出现乱码，企业环境要先小范围验证。PowerShell 7 更彻底：脚本默认按 UTF-8 读取，<code>Out-File</code> 默认写 UTF-8 无 BOM，整条链路不再需要你手动对齐。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示</span><p>Windows 10 1903 起，设置里有「Beta：使用 Unicode UTF-8 提供全球语言支持」，可把系统 ACP 直接设为 65001，从根上解决问题——但它会让部分老软件出现乱码，企业环境要先小范围验证。PowerShell 7 更彻底：脚本默认按 UTF-8 读取，<code>Out-File</code> 默认写 UTF-8 无 BOM，整条链路不再需要你手动对齐。</p></div>
 
 <h2 id="m5-crlf">5.8 CRLF 与 BOM：看不见的字节</h2>
 
@@ -3821,7 +3821,7 @@ robocopy "%SRC%" "%DST%" /MIR
 <span class="cm">rem 单行前缀 @ 表示「这一行不回显」，与全局开关无关</span>
 @<span class="kw">set</span> "SECRET_PATH=%TEMP%\stage"</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">调试第一步永远是注释掉 @echo off</span><p>把首行改成 <code>rem @echo off</code>，重跑一遍。80% 的转义 / 引号 bug 会在展开后的回显里当场现形——你会亲眼看到 <code>echo hi Tom</code> 后面跟着一句孤零零的 <code>Jerry</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 调试第一步永远是注释掉 @echo off</span><p>把首行改成 <code>rem @echo off</code>，重跑一遍。80% 的转义 / 引号 bug 会在展开后的回显里当场现形——你会亲眼看到 <code>echo hi Tom</code> 后面跟着一句孤零零的 <code>Jerry</code>。</p></div>
 
 <h3>二、暂停：不让窗口一闪而过</h3>
 
@@ -3881,9 +3881,9 @@ robocopy "%SRC%" "%DST%" /MIR
 )
 <span class="kw">goto</span> :eof</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">日志里的 %errorlevel% 常常是假的</span><p>在 <code>if</code>/<code>for</code> 块里写 <code>echo 退出码=%errorlevel%</code>，打出来的是<strong>进块之前</strong>的值——又是工序②。要么用 <code>!errorlevel!</code>，要么改用 <code>if errorlevel N</code> 这种不做百分号展开的判断。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">🟡 日志里的 %errorlevel% 常常是假的</span><p>在 <code>if</code>/<code>for</code> 块里写 <code>echo 退出码=%errorlevel%</code>，打出来的是<strong>进块之前</strong>的值——又是工序②。要么用 <code>!errorlevel!</code>，要么改用 <code>if errorlevel N</code> 这种不做百分号展开的判断。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示</span><p>批处理没有 <code>tee</code>，想「既上屏又落盘」得绕一大圈。PowerShell 一句 <code>… | Tee-Object -FilePath build.log</code> 即可；它还有真正的调试器：<code>Set-PSBreakpoint</code>、VS Code 里 F5 单步、<code>$PSDebugContext</code>、<code>Write-Debug</code>／<code>-Verbose</code> 分级输出。如果一个脚本你已经需要靠加日志来定位问题，那它多半已经超出批处理的合理规模了。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示</span><p>批处理没有 <code>tee</code>，想「既上屏又落盘」得绕一大圈。PowerShell 一句 <code>… | Tee-Object -FilePath build.log</code> 即可；它还有真正的调试器：<code>Set-PSBreakpoint</code>、VS Code 里 F5 单步、<code>$PSDebugContext</code>、<code>Write-Debug</code>／<code>-Verbose</code> 分级输出。如果一个脚本你已经需要靠加日志来定位问题，那它多半已经超出批处理的合理规模了。</p></div>
 
 <h2 id="m5-pitfalls">5.10 十个最常见的坑（速查表）</h2>
 
@@ -3935,7 +3935,7 @@ robocopy "%SRC%" "%DST%" /MIR
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 228px"><span class="t">该在什么时候切换</span><p>批处理仍然有它无可替代的位置：<span class="badge ok">仍适用</span> 开机自启、安装程序的钩子、CI 里的一两行胶水、任何「保证在裸装 Windows 上能跑、无需执行策略」的场合。但只要你的脚本里出现了以下任意一条，就该考虑换成 PowerShell：需要循环里累加变量、需要解析结构化输出（JSON/CSV/XML）、需要可靠的错误处理、需要处理不确定编码的文本、或者超过 100 行。判断标准很朴素：<strong>当你开始为了对付 cmd 本身而写代码，而不是为了完成任务而写代码时，工具就选错了。</strong></p></div>
+<div class="note new" style="contain-intrinsic-size:auto 228px"><span class="t">🔵 该在什么时候切换</span><p>批处理仍然有它无可替代的位置：<span class="badge ok">仍适用</span> 开机自启、安装程序的钩子、CI 里的一两行胶水、任何「保证在裸装 Windows 上能跑、无需执行策略」的场合。但只要你的脚本里出现了以下任意一条，就该考虑换成 PowerShell：需要循环里累加变量、需要解析结构化输出（JSON/CSV/XML）、需要可靠的错误处理、需要处理不确定编码的文本、或者超过 100 行。判断标准很朴素：<strong>当你开始为了对付 cmd 本身而写代码，而不是为了完成任务而写代码时，工具就选错了。</strong></p></div>
 
 <p>下一章我们把视角拉高一层，看批处理如何与外部世界打交道：调用外部程序、传递参数、捕获输出、处理返回码，以及在 CI 和计划任务里长期稳定运行需要的那些约定。</p>
 

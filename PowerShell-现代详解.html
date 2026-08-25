@@ -323,7 +323,7 @@ explorer 2288 118.3</code></pre>
 
 <p>注意这里发生了什么：<code>WorkingSet</code> 是一个属性，值是 <code>Int64</code> 类型的字节数；<code>100MB</code> 是 PowerShell 内置的数字字面量，等于 104857600。两个数字直接比大小，没有解析、没有正则、没有列宽、没有语言问题。换个系统语言，这条命令一字不改照样跑。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">这就是全书最重要的一句话</span><p>CMD 和 Bash 的命令把「数据」渲染成「给人看的报表」再交给下一个命令，下游只能反向猜；PowerShell 的命令把数据本身交给下一个命令，渲染留到最后一刻才做。你省下的不是几行代码，而是一整类永远修不完的 bug。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 这就是全书最重要的一句话</span><p>CMD 和 Bash 的命令把「数据」渲染成「给人看的报表」再交给下一个命令，下游只能反向猜；PowerShell 的命令把数据本身交给下一个命令，渲染留到最后一刻才做。你省下的不是几行代码，而是一整类永远修不完的 bug。</p></div>
 
 <h2 id="p1-object">1.2 管道里流的是对象，不是文本</h2>
 
@@ -407,7 +407,7 @@ Get-Process | Format-Table Name, WorkingSet | Where-Object WorkingSet -gt 100MB
 <span class="cm"># 正确：先筛选，再渲染</span>
 Get-Process | Where-Object WorkingSet -gt 100MB | Format-Table Name, WorkingSet -AutoSize</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示　Write-Host 不入管道</span><p><code>Write-Host</code> 是「直接往屏幕上刷字」，它不产生对象，下游命令什么也收不到。要往管道里送数据请用 <code>Write-Output</code>（或者干脆什么都不写，表达式的结果会自动进入管道）。从 PowerShell 5.0 起 <code>Write-Host</code> 改走信息流（Information Stream，可被 <code>6&gt;</code> 重定向），但它依然不是数据输出。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示　Write-Host 不入管道</span><p><code>Write-Host</code> 是「直接往屏幕上刷字」，它不产生对象，下游命令什么也收不到。要往管道里送数据请用 <code>Write-Output</code>（或者干脆什么都不写，表达式的结果会自动进入管道）。从 PowerShell 5.0 起 <code>Write-Host</code> 改走信息流（Information Stream，可被 <code>6&gt;</code> 重定向），但它依然不是数据输出。</p></div>
 
 <h3>设计动机：Windows 的数据本来就是结构化的</h3>
 
@@ -431,7 +431,7 @@ Get-Process | Where-Object WorkingSet -gt 100MB | Format-Table Name, WorkingSet 
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">已过时的老习惯</span><p>把 PowerShell 输出丢给 <code>findstr</code>、或者用 <code>-split</code> 硬切 <code>Get-Service</code> 的屏幕输出。凡是你想「解析 PowerShell 命令的输出」，先停下来问一句：这个信息是不是本来就是一个属性？九成情况下是。用 <code>Get-Member</code> 找出属性名即可。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 已过时的老习惯</span><p>把 PowerShell 输出丢给 <code>findstr</code>、或者用 <code>-split</code> 硬切 <code>Get-Service</code> 的屏幕输出。凡是你想「解析 PowerShell 命令的输出」，先停下来问一句：这个信息是不是本来就是一个属性？九成情况下是。用 <code>Get-Member</code> 找出属性名即可。</p></div>
 
 <h2 id="p1-verb-noun">1.3 动词-名词：命令名本身就是文档</h2>
 
@@ -470,7 +470,7 @@ Get-Command -Verb Export</code></pre>
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">仍适用　Get 是安全动词</span><p>看到 <code>Get-</code> 开头就可以放心敲回车——按约定它不修改系统状态。看到 <code>Remove-</code>、<code>Stop-</code>、<code>Set-</code> 就先停一秒，加上 <code>-WhatIf</code> 试跑一遍：<code>Remove-Item .\temp\* -WhatIf</code> 会告诉你「将会删除什么」但不真删。这个习惯能救你很多次。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 仍适用　Get 是安全动词</span><p>看到 <code>Get-</code> 开头就可以放心敲回车——按约定它不修改系统状态。看到 <code>Remove-</code>、<code>Stop-</code>、<code>Set-</code> 就先停一秒，加上 <code>-WhatIf</code> 试跑一遍：<code>Remove-Item .\temp\* -WhatIf</code> 会告诉你「将会删除什么」但不真删。这个习惯能救你很多次。</p></div>
 
 <h3>别名：命令行里的方便，脚本里的隐患</h3>
 
@@ -490,7 +490,7 @@ Get-Command -Verb Export</code></pre>
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示　脚本里一律写全名</span><p>别名是给手指头省事的，不是给代码用的。团队脚本、CI 流水线、要给同事读的代码，请写 <code>Where-Object</code> 而不是 <code>?</code>；写 <code>Get-ChildItem</code> 而不是 <code>ls</code>。别名可以被用户重定义，也可能在别的平台不存在，写进脚本就是定时炸弹。参数名同理：交互时用 <code>-Rec</code> 简写没问题，脚本里写全 <code>-Recurse</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示　脚本里一律写全名</span><p>别名是给手指头省事的，不是给代码用的。团队脚本、CI 流水线、要给同事读的代码，请写 <code>Where-Object</code> 而不是 <code>?</code>；写 <code>Get-ChildItem</code> 而不是 <code>ls</code>。别名可以被用户重定义，也可能在别的平台不存在，写进脚本就是定时炸弹。参数名同理：交互时用 <code>-Rec</code> 简写没问题，脚本里写全 <code>-Recurse</code>。</p></div>
 
 <h2 id="p1-editions">1.4 5.1 与 7：两个 PowerShell，不是新旧关系</h2>
 
@@ -520,7 +520,7 @@ Get-Command -Verb Export</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 131px"><span class="t">已过时　PowerShell 6.x 与 ISE</span><p>PowerShell 6.x（Core）已停止支持，不要再装；直接上 7.x。PowerShell ISE 只支持 5.1、不支持 7、且不再开发，微软官方推荐迁到 VS Code。如果你现在还在 ISE 里写脚本，尽早换。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 131px"><span class="t">🟡 已过时　PowerShell 6.x 与 ISE</span><p>PowerShell 6.x（Core）已停止支持，不要再装；直接上 7.x。PowerShell ISE 只支持 5.1、不支持 7、且不再开发，微软官方推荐迁到 VS Code。如果你现在还在 ISE 里写脚本，尽早换。</p></div>
 
 <h3>那我该用哪个？</h3>
 
@@ -572,7 +572,7 @@ WSManStackVersion              3.0</code></pre>
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">禁用　别用 $host.Version 判断 PowerShell 版本</span><p><code>$host.Version</code> 是<strong>宿主程序</strong>的版本——控制台、ISE、VS Code 集成终端各不相同，和引擎版本不是一回事。判断脚本能不能跑，永远看 <code>$PSVersionTable.PSVersion</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 禁用　别用 $host.Version 判断 PowerShell 版本</span><p><code>$host.Version</code> 是<strong>宿主程序</strong>的版本——控制台、ISE、VS Code 集成终端各不相同，和引擎版本不是一回事。判断脚本能不能跑，永远看 <code>$PSVersionTable.PSVersion</code>。</p></div>
 
 <h3>在脚本里声明要求：#requires</h3>
 
@@ -598,7 +598,7 @@ Get-ChildItem -Path $Path -Recurse -File |
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 207px"><span class="t">现代提示　$IsWindows 在 5.1 里不存在</span><p>PowerShell 6+ 提供了 <code>$IsWindows</code> / <code>$IsLinux</code> / <code>$IsMacOS</code> 三个只读变量。但在 5.1 里它们<strong>根本没定义</strong>，取值为 <code>$null</code>——于是 <code>if (-not $IsWindows) { ... }</code> 在 5.1（必然是 Windows）上会误判成「不是 Windows」。要写跨版本判断，用：</p><p><code>$onWindows = $PSVersionTable.PSVersion.Major -lt 6 -or $IsWindows</code></p></div>
+<div class="note new" style="contain-intrinsic-size:auto 207px"><span class="t">🔵 现代提示　$IsWindows 在 5.1 里不存在</span><p>PowerShell 6+ 提供了 <code>$IsWindows</code> / <code>$IsLinux</code> / <code>$IsMacOS</code> 三个只读变量。但在 5.1 里它们<strong>根本没定义</strong>，取值为 <code>$null</code>——于是 <code>if (-not $IsWindows) { ... }</code> 在 5.1（必然是 Windows）上会误判成「不是 Windows」。要写跨版本判断，用：</p><p><code>$onWindows = $PSVersionTable.PSVersion.Major -lt 6 -or $IsWindows</code></p></div>
 
 <h2 id="p1-policy">1.6 执行策略：脚本跑不起来的头号原因</h2>
 
@@ -611,7 +611,7 @@ Get-ChildItem -Path $Path -Recurse -File |
 
 <p>这不是你的脚本有问题，是<strong>执行策略（ExecutionPolicy）</strong>拦住了。Windows 客户端版上，默认值是 <code>Restricted</code>——只允许交互式敲命令，不允许运行任何 <code>.ps1</code> 文件。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">先摆正认知：它不是安全边界</span><p>执行策略防的是「你不小心双击了一个来路不明的 ps1」，不是「恶意程序想执行 PowerShell 代码」。任何人都可以把脚本内容复制粘贴进控制台、或者用 <code>-Command</code> 参数传进去，执行策略一点都拦不住。微软自己的文档也明确说它是<strong>防误操作的护栏，不是安全控制</strong>。真正的防线是代码签名、AppLocker / WDAC 和受限语言模式。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 先摆正认知：它不是安全边界</span><p>执行策略防的是「你不小心双击了一个来路不明的 ps1」，不是「恶意程序想执行 PowerShell 代码」。任何人都可以把脚本内容复制粘贴进控制台、或者用 <code>-Command</code> 参数传进去，执行策略一点都拦不住。微软自己的文档也明确说它是<strong>防误操作的护栏，不是安全控制</strong>。真正的防线是代码签名、AppLocker / WDAC 和受限语言模式。</p></div>
 
 <h3>六个策略值</h3>
 
@@ -690,7 +690,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 <span class="cm"># 撤销某一层的设置，回落到上一级</span>
 Set-ExecutionPolicy -ExecutionPolicy Undefined -Scope CurrentUser</code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">禁用　别再这么干</span><p><code>Set-ExecutionPolicy Unrestricted -Scope LocalMachine</code>：给整台机器所有用户永久放行任意脚本，包括从互联网下载的。网上一半的教程都这么教，因为它「一次解决所有问题」。请改用 <code>RemoteSigned -Scope CurrentUser</code>——它同样让你自己写的脚本跑起来，但下载来的脚本仍需签名或手动解锁。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 禁用　别再这么干</span><p><code>Set-ExecutionPolicy Unrestricted -Scope LocalMachine</code>：给整台机器所有用户永久放行任意脚本，包括从互联网下载的。网上一半的教程都这么教，因为它「一次解决所有问题」。请改用 <code>RemoteSigned -Scope CurrentUser</code>——它同样让你自己写的脚本跑起来，但下载来的脚本仍需签名或手动解锁。</p></div>
 
 <h3>还有一种红字：文件被「标记为来自网络」</h3>
 
@@ -705,7 +705,7 @@ Unblock-File -Path .\downloaded.ps1
 <span class="cm"># 批量解锁某个目录</span>
 Get-ChildItem -Path .\scripts\ -Filter *.ps1 -Recurse | Unblock-File</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 247px"><span class="t">现代提示　自动化场景怎么办</span><p>CI 流水线、计划任务这类无人值守场景，不要去改机器策略，而是在<strong>调用时</strong>一次性指定：</p><p><code>pwsh -NoProfile -ExecutionPolicy Bypass -File .\build.ps1</code></p><p><code>-NoProfile</code> 同样重要：它跳过用户配置文件，保证脚本在干净环境里跑，不受某台机器上私人配置的影响。另外注意，在 Linux 和 macOS 上执行策略恒为 <code>Unrestricted</code>，<code>Set-ExecutionPolicy</code> 会直接报「平台不支持」——这是正常的，那些平台靠文件权限位来管。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 247px"><span class="t">🔵 现代提示　自动化场景怎么办</span><p>CI 流水线、计划任务这类无人值守场景，不要去改机器策略，而是在<strong>调用时</strong>一次性指定：</p><p><code>pwsh -NoProfile -ExecutionPolicy Bypass -File .\build.ps1</code></p><p><code>-NoProfile</code> 同样重要：它跳过用户配置文件，保证脚本在干净环境里跑，不受某台机器上私人配置的影响。另外注意，在 Linux 和 macOS 上执行策略恒为 <code>Unrestricted</code>，<code>Set-ExecutionPolicy</code> 会直接报「平台不支持」——这是正常的，那些平台靠文件权限位来管。</p></div>
 
 <h2 id="p1-discover">1.7 三大自省命令：学会它们就能自学一切</h2>
 
@@ -813,7 +813,7 @@ Get-Help about_Operators</code></pre>
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">读懂语法行里的方括号</span><p><code>Get-Help X -Syntax</code> 输出里：<code>[-Path] &lt;String[]&gt;</code> 表示参数名可省略（位置参数）、值必填、类型是字符串数组；<code>[-Force]</code> 整体加括号表示这是开关参数，写上即为真；<code>[&lt;CommonParameters&gt;]</code> 指所有 cmdlet 都有的通用参数（<code>-Verbose</code>、<code>-ErrorAction</code>、<code>-WhatIf</code> 等）。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 读懂语法行里的方括号</span><p><code>Get-Help X -Syntax</code> 输出里：<code>[-Path] &lt;String[]&gt;</code> 表示参数名可省略（位置参数）、值必填、类型是字符串数组；<code>[-Force]</code> 整体加括号表示这是开关参数，写上即为真；<code>[&lt;CommonParameters&gt;]</code> 指所有 cmdlet 都有的通用参数（<code>-Verbose</code>、<code>-ErrorAction</code>、<code>-WhatIf</code> 等）。</p></div>
 
 <h3>Get-Member：把对象拆开看</h3>
 
@@ -830,7 +830,7 @@ Get-Service -Name Spooler | Get-Member -MemberType Method</code></pre>
 
 <p>输出的第一行最关键——<code>TypeName: System.ServiceProcess.ServiceController</code>。拿这个类型名去搜索，你能查到该类型的全部官方文档。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 248px"><span class="t">现代提示　数组的陷阱</span><p><code>$files = Get-ChildItem; $files | Get-Member</code> 看到的是 <strong>数组里每个元素</strong> 的类型（<code>FileInfo</code>），因为管道会把数组拆开逐个传递。如果你想看<strong>数组本身</strong>有哪些成员（比如 <code>Count</code>、<code>Where()</code>、<code>ForEach()</code>），要用参数而不是管道：</p><p><code>Get-Member -InputObject $files</code></p><p>这个区别在调试「为什么 <code>.Count</code> 取不到值」时会救你一命。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 248px"><span class="t">🔵 现代提示　数组的陷阱</span><p><code>$files = Get-ChildItem; $files | Get-Member</code> 看到的是 <strong>数组里每个元素</strong> 的类型（<code>FileInfo</code>），因为管道会把数组拆开逐个传递。如果你想看<strong>数组本身</strong>有哪些成员（比如 <code>Count</code>、<code>Where()</code>、<code>ForEach()</code>），要用参数而不是管道：</p><p><code>Get-Member -InputObject $files</code></p><p>这个区别在调试「为什么 <code>.Count</code> 取不到值」时会救你一命。</p></div>
 
 <h3>一次完整的自学演练</h3>
 
@@ -915,7 +915,7 @@ Get-Service -Name Spooler | Set-Service -StartupType Manual -WhatIf</code></pre>
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">辨析　Where 减行，Select 减列</span><p>新手最常混的两个命令。记法：<code>Where-Object</code> 决定「留哪些<strong>行</strong>」，<code>Select-Object</code> 决定「留哪些<strong>列</strong>」（外加 <code>-First</code> / <code>-Last</code> / <code>-Skip</code> 也能减行）。一个筛对象，一个塑形对象。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 辨析　Where 减行，Select 减列</span><p>新手最常混的两个命令。记法：<code>Where-Object</code> 决定「留哪些<strong>行</strong>」，<code>Select-Object</code> 决定「留哪些<strong>列</strong>」（外加 <code>-First</code> / <code>-Last</code> / <code>-Skip</code> 也能减行）。一个筛对象，一个塑形对象。</p></div>
 
 <h2 id="p1-cheatsheet">1.9 本章速查与五个高频误区</h2>
 
@@ -949,9 +949,9 @@ Get-Service -Name Spooler | Set-Service -StartupType Manual -WhatIf</code></pre>
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示　本章之后请这样配环境</span><p>1）装 PowerShell 7（<code>winget install Microsoft.PowerShell</code>），与自带的 5.1 并存；2）用 VS Code + PowerShell 扩展替代 ISE；3）执行 <code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code>；4）执行一次 <code>Update-Help</code>；5）从今天起，看到任何陌生输出就顺手接一个 <code>| Get-Member</code>。这五步做完，后面每一章都会轻松很多。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示　本章之后请这样配环境</span><p>1）装 PowerShell 7（<code>winget install Microsoft.PowerShell</code>），与自带的 5.1 并存；2）用 VS Code + PowerShell 扩展替代 ISE；3）执行 <code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code>；4）执行一次 <code>Update-Help</code>；5）从今天起，看到任何陌生输出就顺手接一个 <code>| Get-Member</code>。这五步做完，后面每一章都会轻松很多。</p></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">本章一句话总纲</span><p>别问「这行输出的第三列是什么」，要问「这个对象有哪个属性」。把这句话背下来，你已经领先了大多数写了三年 PowerShell 却仍在切字符串的人。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 本章一句话总纲</span><p>别问「这行输出的第三列是什么」，要问「这个对象有哪个属性」。把这句话背下来，你已经领先了大多数写了三年 PowerShell 却仍在切字符串的人。</p></div>
 
 </section>
 
@@ -986,13 +986,13 @@ New-Variable -Name PI -Value 3.14159 -Option Constant<span class="cm">  # 常量
 
 <p>变量名<strong>不区分大小写</strong>：<code>$Name</code>、<code>$name</code>、<code>$NAME</code> 是同一个。名字里如果要用空格、连字符、冒号这类特殊字符，用花括号包起来：<code>${my var}</code>。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">通俗比方</span><p>把变量想成贴了标签的抽屉。PowerShell 允许你随手在任何一个空抽屉上贴新标签；而当你去拉一个从没贴过标签的抽屉，它不会报警，只会给你一手空气（<code>$null</code>）。这对交互式命令行是舒服的，对几百行的脚本是灾难性的——错别字会静悄悄地变成 <code>$null</code> 参与运算。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 通俗比方</span><p>把变量想成贴了标签的抽屉。PowerShell 允许你随手在任何一个空抽屉上贴新标签；而当你去拉一个从没贴过标签的抽屉，它不会报警，只会给你一手空气（<code>$null</code>）。这对交互式命令行是舒服的，对几百行的脚本是灾难性的——错别字会静悄悄地变成 <code>$null</code> 参与运算。</p></div>
 
 <h3>设计动机与现代解法</h3>
 
 <p>"不声明也能用"是 shell 血统带来的：命令行里没人愿意为了临时算一下就先写声明。但脚本需要相反的严格性，所以 PowerShell 提供了一个开关，让你在脚本顶部把宽松模式关掉。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">每个脚本第一行都该有的东西</span><p><code>Set-StrictMode -Version 3.0</code>（或 <code>-Version Latest</code>）会让：引用未初始化的变量报错、访问对象上不存在的属性报错、数组越界索引报错、用函数调用语法 <code>f(1,2)</code> 调用命令报错。它只影响当前作用域及其子作用域，不会污染用户的会话。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 每个脚本第一行都该有的东西</span><p><code>Set-StrictMode -Version 3.0</code>（或 <code>-Version Latest</code>）会让：引用未初始化的变量报错、访问对象上不存在的属性报错、数组越界索引报错、用函数调用语法 <code>f(1,2)</code> 调用命令报错。它只影响当前作用域及其子作用域，不会污染用户的会话。</p></div>
 
 <h3>速查表：变量语法与作用域</h3>
 
@@ -1012,7 +1012,7 @@ New-Variable -Name PI -Value 3.14159 -Option Constant<span class="cm">  # 常量
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">关于作用域的一条经验</span><p>PowerShell 的作用域是"动态可读、静态可写"：子作用域<strong>能读</strong>父作用域的变量，但直接赋值只会在子作用域里新建一个同名变量，父作用域不受影响。想改父作用域的值，要么用 <code>$script:</code>／<code>$global:</code> 前缀，要么用 <code>Set-Variable -Scope</code>。靠"函数里改了外面就变"的写法在 PowerShell 里是行不通的。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 关于作用域的一条经验</span><p>PowerShell 的作用域是"动态可读、静态可写"：子作用域<strong>能读</strong>父作用域的变量，但直接赋值只会在子作用域里新建一个同名变量，父作用域不受影响。想改父作用域的值，要么用 <code>$script:</code>／<code>$global:</code> 前缀，要么用 <code>Set-Variable -Scope</code>。靠"函数里改了外面就变"的写法在 PowerShell 里是行不通的。</p></div>
 
 <h2 id="p2-type">2.2 类型：动态但不弱，[int]$x 约束了什么</h2>
 
@@ -1034,7 +1034,7 @@ $a = 'hello'<span class="cm">        # 完全合法，$a 现在是字符串</spa
 $b = '7'<span class="cm">            # $b 变成整数 7（自动转换）</span>
 $b = 'hello'<span class="cm">        # 报错：无法将值 "hello" 转换为类型 System.Int32</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">通俗比方</span><p><code>[int]$b</code> 是给抽屉装了一个只收硬币的投币口——你塞纸币进去，它会当场帮你换成硬币，塞不进去的东西直接弹回来。而 <code>[int]'42'</code> 只是你这一次把手里的纸条折成了硬币形状，抽屉本身照单全收。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 通俗比方</span><p><code>[int]$b</code> 是给抽屉装了一个只收硬币的投币口——你塞纸币进去，它会当场帮你换成硬币，塞不进去的东西直接弹回来。而 <code>[int]'42'</code> 只是你这一次把手里的纸条折成了硬币形状，抽屉本身照单全收。</p></div>
 
 <p>类型约束在脚本里价值很高：它把"错误的数据"拦在赋值那一刻，而不是等到几十行之后某个运算得出诡异结果。函数参数上的 <code>[int]$Count</code> 用的正是同一套机制。</p>
 
@@ -1059,7 +1059,7 @@ $b = 'hello'<span class="cm">        # 报错：无法将值 "hello" 转换为�
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 172px"><span class="t">变量上也能挂验证特性</span><p>类型不是唯一能贴在变量上的东西。参数验证特性同样适用于普通变量：</p><p><code>[ValidateRange(1,100)][int]$Percent = 50</code> —— 之后任何把它赋成 0 或 101 的尝试都会当场报错。这在长脚本里比事后检查更早、更准。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 172px"><span class="t">🟢 变量上也能挂验证特性</span><p>类型不是唯一能贴在变量上的东西。参数验证特性同样适用于普通变量：</p><p><code>[ValidateRange(1,100)][int]$Percent = 50</code> —— 之后任何把它赋成 0 或 101 的尝试都会当场报错。这在长脚本里比事后检查更早、更准。</p></div>
 
 <h2 id="p2-auto">2.3 自动变量速查表</h2>
 
@@ -1093,7 +1093,7 @@ $b = 'hello'<span class="cm">        # 报错：无法将值 "hello" 转换为�
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 277px"><span class="t">$? 和 $LASTEXITCODE 不是一回事</span><p><code>$?</code> 说的是"上一条命令有没有往错误流写东西 / 有没有失败"，<code>$LASTEXITCODE</code> 说的是"上一个 .exe 返回了几"。判断外部程序结果时请看退出码：</p><pre style="contain-intrinsic-size:auto 83px"><code>git push
+<div class="note dead" style="contain-intrinsic-size:auto 277px"><span class="t">🔴 $? 和 $LASTEXITCODE 不是一回事</span><p><code>$?</code> 说的是"上一条命令有没有往错误流写东西 / 有没有失败"，<code>$LASTEXITCODE</code> 说的是"上一个 .exe 返回了几"。判断外部程序结果时请看退出码：</p><pre style="contain-intrinsic-size:auto 83px"><code>git push
 <span class="kw">if</span> ($LASTEXITCODE -ne 0) { <span class="kw">throw</span> "git push 失败，退出码 $LASTEXITCODE" }</code></pre><p>反例：<code>$ok = $?</code> 之后再 <code>if ($?)</code>——第二个 <code>$?</code> 已经是"赋值语句是否成功"了，永远为真。</p></div>
 
 <h3>路径与环境</h3>
@@ -1110,7 +1110,7 @@ $b = 'hello'<span class="cm">        # 报错：无法将值 "hello" 转换为�
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 273px"><span class="t">求脚本目录的新旧写法</span><pre style="contain-intrinsic-size:auto 186px"><code><span class="cm"># 旧：PowerShell 2.0 时代的惯用法</span>
+<div class="note old" style="contain-intrinsic-size:auto 273px"><span class="t">🟡 求脚本目录的新旧写法</span><pre style="contain-intrinsic-size:auto 186px"><code><span class="cm"># 旧：PowerShell 2.0 时代的惯用法</span>
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 <span class="cm"># 新：3.0 起直接用自动变量，dot-source 和模块中语义也更清晰</span>
@@ -1141,7 +1141,7 @@ $config = Join-Path $PSScriptRoot 'config.json'</code></pre></div>
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">7 和 5.1 的配置文件是分开的</span><p>Windows PowerShell 5.1 用 <code>Documents\WindowsPowerShell\</code>，PowerShell 7 用 <code>Documents\PowerShell\</code>。两边互不影响——这是有意为之，让你可以给新旧版本配置不同的行为。想确认当前实际路径，直接 <code>$PROFILE | Select-Object *</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 7 和 5.1 的配置文件是分开的</span><p>Windows PowerShell 5.1 用 <code>Documents\WindowsPowerShell\</code>，PowerShell 7 用 <code>Documents\PowerShell\</code>。两边互不影响——这是有意为之，让你可以给新旧版本配置不同的行为。想确认当前实际路径，直接 <code>$PROFILE | Select-Object *</code>。</p></div>
 
 <h2 id="p2-string">2.4 字符串：单引号与双引号的分水岭</h2>
 
@@ -1214,7 +1214,7 @@ $arr = 'a','b','c'
 "第一项 $arr[0]"<span class="cm">             # 错：输出 a b c[0]</span>
 "第一项 $($arr[0])"<span class="cm">          # 对</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">通俗比方</span><p>单引号是复印机——你放进去什么，出来就是什么。双引号是朗读者——它会一边念一边把 <code>$</code> 开头的部分替换成"当前实际的值"，遇到 <code>$( )</code> 还会停下来先把里面的活干完再接着念。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 通俗比方</span><p>单引号是复印机——你放进去什么，出来就是什么。双引号是朗读者——它会一边念一边把 <code>$</code> 开头的部分替换成"当前实际的值"，遇到 <code>$( )</code> 还会停下来先把里面的活干完再接着念。</p></div>
 
 <h3>速查表：转义与特殊序列（仅双引号内有效）</h3>
 
@@ -1251,7 +1251,7 @@ Remove-Variable OFS<span class="cm">      # 用完记得清掉，它是全局生
 <span class="cm"># 更可控的写法，不依赖隐式状态</span>
 "值：$($a -join ', ')"</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 287px"><span class="t">拼接的三种正经方式</span><pre style="contain-intrinsic-size:auto 134px"><code>$n = 'Ada'; $c = 3
+<div class="note ok" style="contain-intrinsic-size:auto 287px"><span class="t">🟢 拼接的三种正经方式</span><pre style="contain-intrinsic-size:auto 134px"><code>$n = 'Ada'; $c = 3
 "用户 $n 有 $c 条记录"<span class="cm">                        # 插值：最易读，首选</span>
 '用户 {0} 有 {1} 条记录' -f $n, $c<span class="cm">            # 格式化：适合模板、对齐、数字格式</span>
 '{0,-10}{1,8:N2}' -f $n, 1234.5<span class="cm">              # 左对齐 10 位 + 右对齐 8 位两位小数</span></code></pre><p>字符串比较默认<strong>不区分大小写</strong>（<code>'ABC' -eq 'abc'</code> 为真），需要区分时用 <code>-ceq</code>。这与 .NET 的默认相反，是为了迁就 shell 用户的直觉。</p></div>
@@ -1281,7 +1281,7 @@ Remove-Variable OFS<span class="cm">      # 用完记得清掉，它是全局生
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 346px"><span class="t">缩进陷阱的真实样子</span><pre style="contain-intrinsic-size:auto 160px"><code><span class="kw">function</span> New-Report {
+<div class="note dead" style="contain-intrinsic-size:auto 346px"><span class="t">🔴 缩进陷阱的真实样子</span><pre style="contain-intrinsic-size:auto 160px"><code><span class="kw">function</span> New-Report {
     $body = @"
     标题：$title
     "@          <span class="cm"># 这里缩进了 → PowerShell 不认为字符串结束了</span>
@@ -1304,7 +1304,7 @@ $mail = @"
 本月账单为 `$128.00，请于 $((Get-Date).AddDays(7).ToString('yyyy-MM-dd')) 前支付。
 "@</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 275px"><span class="t">别用 here-string 拼 JSON</span><p>手拼 JSON 意味着你要自己负责转义、逗号和引号。有现成工具就别手拼：</p><pre style="contain-intrinsic-size:auto 83px"><code>$cfg = [ordered]@{ name = 'build'; retries = 3; tags = @('ci','nightly') }
+<div class="note new" style="contain-intrinsic-size:auto 275px"><span class="t">🔵 别用 here-string 拼 JSON</span><p>手拼 JSON 意味着你要自己负责转义、逗号和引号。有现成工具就别手拼：</p><pre style="contain-intrinsic-size:auto 83px"><code>$cfg = [ordered]@{ name = 'build'; retries = 3; tags = @('ci','nightly') }
 $cfg | ConvertTo-Json -Depth 5 | Set-Content .\config.json -Encoding utf8</code></pre><p>Here-string 更适合那些确实"就是一整块死文本"的场景。另外注意换行符：here-string 里的换行取决于源文件本身是 CRLF 还是 LF，跨平台脚本对此敏感。</p></div>
 
 <h2 id="p2-array">2.6 数组：定长的真相与 += 的代价</h2>
@@ -1367,7 +1367,7 @@ $cfg | ConvertTo-Json -Depth 5 | Set-Content .\config.json -Encoding utf8</code>
 <figcaption>+= 的隐藏成本与两种替代写法（原创绘制）</figcaption>
 </figure>
 
-<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">通俗比方</span><p>数组是一个格数固定的鸡蛋托。每加一个蛋，你就得换一个大一号的托盘，然后把原来的蛋一个一个搬过去。十个蛋无所谓，十万个蛋就完全无法接受。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">🔵 通俗比方</span><p>数组是一个格数固定的鸡蛋托。每加一个蛋，你就得换一个大一号的托盘，然后把原来的蛋一个一个搬过去。十个蛋无所谓，十万个蛋就完全无法接受。</p></div>
 
 <h3>两种正确写法</h3>
 
@@ -1379,7 +1379,7 @@ $list = [System.Collections.Generic.List[int]]::new()
 <span class="kw">foreach</span> ($i <span class="kw">in</span> 1..100000) { $list.Add($i * 2) }
 $list.AddRange(@(1,2,3))</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">ArrayList 是上一代的答案</span><p>老脚本里常见 <code>$a = New-Object System.Collections.ArrayList</code> 加 <code>[void]$a.Add(...)</code>。它能用，但是非泛型的、需要用 <code>[void]</code> 吞掉返回的索引值。现在一律用 <code>[System.Collections.Generic.List[T]]</code>：类型安全、<code>Add()</code> 无返回值、性能更好。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 ArrayList 是上一代的答案</span><p>老脚本里常见 <code>$a = New-Object System.Collections.ArrayList</code> 加 <code>[void]$a.Add(...)</code>。它能用，但是非泛型的、需要用 <code>[void]</code> 吞掉返回的索引值。现在一律用 <code>[System.Collections.Generic.List[T]]</code>：类型安全、<code>Add()</code> 无返回值、性能更好。</p></div>
 
 <h3>速查表：数组操作</h3>
 
@@ -1402,7 +1402,7 @@ $list.AddRange(@(1,2,3))</code></pre>
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">函数返回"可能是一个元素"的集合时</span><p>PowerShell 会把单元素集合在管道里自动"拆包"成标量，于是调用方拿到的可能不是数组，<code>.Count</code>、索引全部失效。两个稳妥做法：调用方用 <code>@(...)</code> 包一层，或者被调方用 <code>return ,$items</code> 返回。前者更常用，因为它不要求你控制被调方。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 函数返回"可能是一个元素"的集合时</span><p>PowerShell 会把单元素集合在管道里自动"拆包"成标量，于是调用方拿到的可能不是数组，<code>.Count</code>、索引全部失效。两个稳妥做法：调用方用 <code>@(...)</code> 包一层，或者被调方用 <code>return ,$items</code> 返回。前者更常用，因为它不要求你控制被调方。</p></div>
 
 <h2 id="p2-hash">2.7 哈希表：字典、有序表与 splatting</h2>
 
@@ -1437,7 +1437,7 @@ $row = [pscustomobject][ordered]@{
     状态 = 'OK'
 }</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 384px"><span class="t">遍历哈希表的正确姿势</span><pre style="contain-intrinsic-size:auto 264px"><code><span class="cm"># 键值对一起拿</span>
+<div class="note ok" style="contain-intrinsic-size:auto 384px"><span class="t">🟢 遍历哈希表的正确姿势</span><pre style="contain-intrinsic-size:auto 264px"><code><span class="cm"># 键值对一起拿</span>
 <span class="kw">foreach</span> ($kv <span class="kw">in</span> $h.GetEnumerator()) {
     "{0} = {1}" -f $kv.Key, $kv.Value
 }
@@ -1532,14 +1532,14 @@ Get-ChildItem -Path C:\Logs `
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 307px"><span class="t">最高频误用：把 -contains 当"包含子串"</span><pre style="contain-intrinsic-size:auto 186px"><code>'hello world' -contains 'world'<span class="cm">     # $false！左边是字符串，不是集合</span>
+<div class="note dead" style="contain-intrinsic-size:auto 307px"><span class="t">🔴 最高频误用：把 -contains 当"包含子串"</span><pre style="contain-intrinsic-size:auto 186px"><code>'hello world' -contains 'world'<span class="cm">     # $false！左边是字符串，不是集合</span>
 
 <span class="cm"># 判断子串的三种正确写法</span>
 'hello world' -like '*world*'<span class="cm">       # 通配符</span>
 'hello world' -match 'world'<span class="cm">        # 正则</span>
 'hello world'.Contains('world')<span class="cm">     # .NET 方法，区分大小写</span></code></pre><p><code>-contains</code> 问的是"这个<strong>集合</strong>里有没有这个<strong>元素</strong>"。字符串在 PowerShell 里是标量，不是字符集合。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 237px"><span class="t">第二高频误用：左操作数决定比较类型</span><pre style="contain-intrinsic-size:auto 83px"><code>'10' -gt 9<span class="cm">      # $false —— 左边是字符串，右边被转成 '9'，按字符串比 '1' &lt; '9'</span>
+<div class="note old" style="contain-intrinsic-size:auto 237px"><span class="t">🟡 第二高频误用：左操作数决定比较类型</span><pre style="contain-intrinsic-size:auto 83px"><code>'10' -gt 9<span class="cm">      # $false —— 左边是字符串，右边被转成 '9'，按字符串比 '1' &lt; '9'</span>
 10 -gt '9'<span class="cm">      # $true  —— 左边是整数，右边被转成 9，按数字比</span></code></pre><p>从 <code>Get-Content</code>、<code>Read-Host</code>、CSV、JSON 里读出来的东西经常是字符串。要比大小，先把它转成数字：<code>[int]$size -gt 1024</code>，或者在变量上加类型约束。</p></div>
 
 <h2 id="p2-collection">2.9 数组在左边：比较会变成过滤器</h2>
@@ -1628,7 +1628,7 @@ $files.Length -gt 1MB<span class="cm">               # 得到符合条件的长�
 <span class="cm"># 安全：$null 是标量，比较必然返回布尔</span>
 <span class="kw">if</span> ($null -eq $x) { ... }</code></pre><p>PSScriptAnalyzer 有专门的规则 <code>PSPossibleIncorrectComparisonWithNull</code> 检查这一点。把它接进 CI，比靠人眼审查可靠。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 299px"><span class="t">附带的一个坑：集合在左时 $Matches 不填充</span><pre style="contain-intrinsic-size:auto 212px"><code>$lines = 'ID-1','ID-2'
+<div class="note old" style="contain-intrinsic-size:auto 299px"><span class="t">🟡 附带的一个坑：集合在左时 $Matches 不填充</span><pre style="contain-intrinsic-size:auto 212px"><code>$lines = 'ID-1','ID-2'
 $lines -match 'ID-(\d)'<span class="cm">     # 返回两行，但 $Matches 保持不变（甚至是上一次的残留）</span>
 
 <span class="cm"># 需要捕获组就逐项处理</span>
@@ -1678,7 +1678,7 @@ $lines -match 'ID-(\d)'<span class="cm">     # 返回两行，但 $Matches 保�
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 340px"><span class="t">配置文件里的 "false" 会出问题</span><pre style="contain-intrinsic-size:auto 186px"><code>$cfg = Get-Content .\app.ini | ConvertFrom-StringData
+<div class="note dead" style="contain-intrinsic-size:auto 340px"><span class="t">🔴 配置文件里的 "false" 会出问题</span><pre style="contain-intrinsic-size:auto 186px"><code>$cfg = Get-Content .\app.ini | ConvertFrom-StringData
 <span class="kw">if</span> ($cfg.EnableCache) { ... }<span class="cm">    # 值是字符串 'false' → 恒为真！</span>
 
 <span class="cm"># 正确：显式解析</span>
@@ -1723,7 +1723,7 @@ $lines -match 'ID-(\d)'<span class="cm">     # 返回两行，但 $Matches 保�
 [int]$out = 0
 <span class="kw">if</span> ([int]::TryParse($input, [ref]$out)) { $out }</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 307px"><span class="t">本章要记住的六条</span><p>1. <code>Set-StrictMode -Version 3.0</code> 写进每个脚本的开头。</p><p>2. 要插值就用双引号，属性和索引一律包 <code>$( )</code>；不需要插值就用单引号。</p><p>3. Here-String 的结束符必须顶格；含 <code>$</code> 的内容用 <code>@'…'@</code>。</p><p>4. 循环里不要 <code>+=</code> 数组；用 <code>$a = foreach (…) { … }</code> 或 <code>List[T]</code>。</p><p>5. 比较用 <code>-eq</code> 家族；集合在左会变成过滤器，判断存在性用 <code>-contains</code> / <code>-in</code>。</p><p>6. <code>$null</code> 永远放在比较的左边。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 307px"><span class="t">🟢 本章要记住的六条</span><p>1. <code>Set-StrictMode -Version 3.0</code> 写进每个脚本的开头。</p><p>2. 要插值就用双引号，属性和索引一律包 <code>$( )</code>；不需要插值就用单引号。</p><p>3. Here-String 的结束符必须顶格；含 <code>$</code> 的内容用 <code>@'…'@</code>。</p><p>4. 循环里不要 <code>+=</code> 数组；用 <code>$a = foreach (…) { … }</code> 或 <code>List[T]</code>。</p><p>5. 比较用 <code>-eq</code> 家族；集合在左会变成过滤器，判断存在性用 <code>-contains</code> / <code>-in</code>。</p><p>6. <code>$null</code> 永远放在比较的左边。</p></div>
 
 <p>下一章我们会离开单个值，进入 PowerShell 真正的主场：管道，以及"一切皆对象"这句话在实操中到底意味着什么。本章的比较运算符和集合语义会在那里反复出现——<code>Where-Object</code> 的过滤条件、<code>Sort-Object</code> 的比较逻辑，用的都是这一套规则。</p>
 
@@ -1840,7 +1840,7 @@ tasklist | findstr chrome
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p>PowerShell 7 引入的 <code>&amp;&amp;</code> 和 <code>||</code> 叫「管道链操作符」，它们按上一条命令的成功/失败决定要不要执行下一条，<strong>不传递对象</strong>，和 <code>|</code> 不是一回事。例如 <code>dotnet build &amp;&amp; dotnet test</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>PowerShell 7 引入的 <code>&amp;&amp;</code> 和 <code>||</code> 叫「管道链操作符」，它们按上一条命令的成功/失败决定要不要执行下一条，<strong>不传递对象</strong>，和 <code>|</code> 不是一回事。例如 <code>dotnet build &amp;&amp; dotnet test</code>。</p></div>
 
 <h3>ETS:每个对象都被 PSObject 包了一层,所以你能给任何东西加属性</h3>
 <p>管道里流的其实不是裸 .NET 对象,而是包着一层 <strong>PSObject</strong> 的对象:这层「外套」可以携带<strong>额外的成员</strong>——这就是扩展类型系统(ETS)。<code>Get-Member</code> 列出的成员里,<code>MemberType</code> 为 <code>NoteProperty/ScriptProperty/AliasProperty</code> 的都是外套上的,C# 里的原类型根本没有:</p>
@@ -1853,7 +1853,7 @@ tasklist | findstr chrome
 <tr><td class="nw"><code>AliasProperty</code></td><td class="nw">转发到另一属性</td><td>给生态惯用名搭桥(Name→ProcessName)</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">看穿两件日常怪事</span><p>①<code>$obj.PSObject</code> 能进这层外套(<code>.PSObject.Properties</code> 枚举全部成员——写通用导出/对比工具靠它);裸值要看真身用 <code>$obj.GetType()</code>。②对象经过远程/作业回来变成 <code>Deserialized.*</code> 类型、方法全没了(5.9 讲过)——那正是「只有外套被序列化传回来」:属性值还在,方法(活代码)留在了对面。ETS 解释了 PowerShell 一半的「魔法」。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 看穿两件日常怪事</span><p>①<code>$obj.PSObject</code> 能进这层外套(<code>.PSObject.Properties</code> 枚举全部成员——写通用导出/对比工具靠它);裸值要看真身用 <code>$obj.GetType()</code>。②对象经过远程/作业回来变成 <code>Deserialized.*</code> 类型、方法全没了(5.9 讲过)——那正是「只有外套被序列化传回来」:属性值还在,方法(活代码)留在了对面。ETS 解释了 PowerShell 一半的「魔法」。</p></div>
 
 <h2 id="p3-where">3.2 Where-Object：管道上的筛子</h2>
 
@@ -1895,9 +1895,9 @@ tasklist | findstr chrome
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">易错：-contains 不是「包含子串」</span><p><code>'PowerShell' -contains 'Power'</code> 得到 <code>$False</code>——<code>-contains</code> 问的是「集合里有没有这个元素」。判断子串请用 <code>-like '*Power*'</code>、<code>-match 'Power'</code> 或 <code>.Contains('Power')</code>。另外，条件里写 <code>=</code> 是赋值不是比较，PowerShell 不会报错，只会让你困惑一下午。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 易错：-contains 不是「包含子串」</span><p><code>'PowerShell' -contains 'Power'</code> 得到 <code>$False</code>——<code>-contains</code> 问的是「集合里有没有这个元素」。判断子串请用 <code>-like '*Power*'</code>、<code>-match 'Power'</code> 或 <code>.Contains('Power')</code>。另外，条件里写 <code>=</code> 是赋值不是比较，PowerShell 不会报错，只会让你困惑一下午。</p></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">性能原则：筛选靠左</span><p><code>Where-Object</code> 是在<em>本地</em>逐个过滤，数据已经被取回来了。只要上游命令自带筛选参数，就优先用它，让服务端或文件系统先把量降下来：<code>Get-ChildItem -Filter '*.log'</code>、<code>Get-WinEvent -FilterHashtable @{LogName='System'; Level=2}</code>、<code>Get-ADUser -Filter "Department -eq 'IT'"</code>。管道越靠左筛掉的数据越多，整条链就越快。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 性能原则：筛选靠左</span><p><code>Where-Object</code> 是在<em>本地</em>逐个过滤，数据已经被取回来了。只要上游命令自带筛选参数，就优先用它，让服务端或文件系统先把量降下来：<code>Get-ChildItem -Filter '*.log'</code>、<code>Get-WinEvent -FilterHashtable @{LogName='System'; Level=2}</code>、<code>Get-ADUser -Filter "Department -eq 'IT'"</code>。管道越靠左筛掉的数据越多，整条链就越快。</p></div>
 
 <h2 id="p3-foreach">3.3 ForEach-Object：对每个对象动手</h2>
 
@@ -1931,7 +1931,7 @@ tasklist | findstr chrome
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示：并行处理</span><p>PowerShell 7.0 起支持 <code>ForEach-Object -Parallel</code>，每个对象在独立 runspace 中跑：<br><code>1..50 | ForEach-Object -Parallel { Test-Connection $using:target -Count 1 } -ThrottleLimit 10</code><br>注意三点：脚本块里访问外部变量必须加 <code>$using:</code> 前缀；各线程不共享变量，累加计数器会出错；输出顺序不保证。任务本身很轻时，并行的开销反而更大。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示：并行处理</span><p>PowerShell 7.0 起支持 <code>ForEach-Object -Parallel</code>，每个对象在独立 runspace 中跑：<br><code>1..50 | ForEach-Object -Parallel { Test-Connection $using:target -Count 1 } -ThrottleLimit 10</code><br>注意三点：脚本块里访问外部变量必须加 <code>$using:</code> 前缀；各线程不共享变量，累加计数器会出错；输出顺序不保证。任务本身很轻时，并行的开销反而更大。</p></div>
 
 <h2 id="p3-select">3.4 Select-Object：裁剪、取样与计算列</h2>
 
@@ -1963,7 +1963,7 @@ tasklist | findstr chrome
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">类型会变</span><p>只要用了 <code>-Property</code> 或计算列，<code>Select-Object</code> 就<strong>造了一批新的 PSCustomObject</strong>，原类型和它的方法全部丢失。所以 <code>Get-Process | Select-Object Name | Stop-Process</code> 会失败——下游要的是 Process 对象，你给的是一个只有 Name 属性的自定义对象。需要保留原对象时，别过早 <code>Select</code>，把它留到管道末尾。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 类型会变</span><p>只要用了 <code>-Property</code> 或计算列，<code>Select-Object</code> 就<strong>造了一批新的 PSCustomObject</strong>，原类型和它的方法全部丢失。所以 <code>Get-Process | Select-Object Name | Stop-Process</code> 会失败——下游要的是 Process 对象，你给的是一个只有 Name 属性的自定义对象。需要保留原对象时，别过早 <code>Select</code>，把它留到管道末尾。</p></div>
 
 <h2 id="p3-expand">3.5 取属性的四种写法与 -ExpandProperty</h2>
 
@@ -1997,7 +1997,7 @@ $names -join ', '
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">-ExpandProperty 还能带上下文</span><p><code>-ExpandProperty</code> 可以和 <code>-Property</code> 同时用：展开的对象上会被附加所选的其他属性。例如把每个进程的模块展开、同时保留进程名：<br><code>Get-Process pwsh | Select-Object -Property Name -ExpandProperty Modules</code><br>另外，被展开的属性若为空或不存在，该对象会被静默跳过，别把这当成筛选手段。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 -ExpandProperty 还能带上下文</span><p><code>-ExpandProperty</code> 可以和 <code>-Property</code> 同时用：展开的对象上会被附加所选的其他属性。例如把每个进程的模块展开、同时保留进程名：<br><code>Get-Process pwsh | Select-Object -Property Name -ExpandProperty Modules</code><br>另外，被展开的属性若为空或不存在，该对象会被静默跳过，别把这当成筛选手段。</p></div>
 
 <h2 id="p3-stats">3.6 排序与统计三件套：Sort / Group / Measure</h2>
 
@@ -2063,7 +2063,7 @@ $byStatus['Running'].Count
     <span class="kw">Select-Object</span> -First 5
 </code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">排序稳定性</span><p>历史上 <code>Sort-Object</code> 不保证「值相同的元素保持原有相对顺序」。PowerShell 6.2 起提供 <code>-Stable</code> 开关；需要可复现结果时（例如先按时间排、再按名字排的两段式排序）记得加上它，或干脆在一次调用里写多个排序字段。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 排序稳定性</span><p>历史上 <code>Sort-Object</code> 不保证「值相同的元素保持原有相对顺序」。PowerShell 6.2 起提供 <code>-Stable</code> 开关；需要可复现结果时（例如先按时间排、再按名字排的两段式排序）记得加上它，或干脆在一次调用里写多个排序字段。</p></div>
 
 <h2 id="p3-convert">3.7 数据出口：ConvertTo-* 与 Export-* / Import-*</h2>
 
@@ -2092,14 +2092,14 @@ $byStatus['Running'].Count
 $data = <span class="kw">Get-Content</span> .\proc.json -Raw | <span class="kw">ConvertFrom-Json</span>
 </code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 405px"><span class="t">四个必踩的坑</span><ul>
+<div class="note old" style="contain-intrinsic-size:auto 405px"><span class="t">🟡 四个必踩的坑</span><ul>
 <li><strong>Export-Csv 只会平铺一层。</strong>属性若是集合或复杂对象，落到 CSV 里就是 <code>System.Object[]</code> 这样的类型名——先用计算列把它压成字符串。</li>
 <li><strong>Import-Csv 出来的全是字符串。</strong><code>Import-Csv .\sales.csv | Where-Object Amount -gt 1000</code> 做的是字符串比较，而 <code>'99' -gt '1000'</code> 为真，你会筛出一堆错的。正确写法：<code>Where-Object { [double]$_.Amount -gt 1000 }</code>。</li>
 <li><strong>ConvertTo-Json 默认 <code>-Depth 2</code>。</strong>PowerShell 7 会给出截断警告，Windows PowerShell 5.1 默默截断。习惯性写上 <code>-Depth</code>。</li>
 <li><strong>编码。</strong>Windows PowerShell 5.1 的默认编码不是 UTF-8，中文很容易变问号；PowerShell 6+ 默认 UTF-8 无 BOM。跨版本脚本一律显式写 <code>-Encoding utf8</code>。</li>
 </ul></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p><code>-NoTypeInformation</code> <span class="badge old">已过时</span>：它在 PowerShell 6 及以上是默认行为，只有为兼容 5.1 才需要写。PowerShell 7 另有 <code>Export-Csv -UseQuotes AsNeeded</code>（少加引号）、<code>ConvertTo-Json -AsArray -Compress -EnumsAsStrings</code>、<code>ConvertFrom-Json -AsHashtable</code> 等更趁手的开关。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p><code>-NoTypeInformation</code> <span class="badge old">已过时</span>：它在 PowerShell 6 及以上是默认行为，只有为兼容 5.1 才需要写。PowerShell 7 另有 <code>Export-Csv -UseQuotes AsNeeded</code>（少加引号）、<code>ConvertTo-Json -AsArray -Compress -EnumsAsStrings</code>、<code>ConvertFrom-Json -AsHashtable</code> 等更趁手的开关。</p></div>
 
 <p>还有一个专供 PowerShell 内部使用的格式：<code>Export-Clixml</code>。它保真度最高（保留类型和嵌套结构），但只有 PowerShell 读得懂，而且读回来的对象是「反序列化版」——属性都在，方法没了。</p>
 
@@ -2109,7 +2109,7 @@ $old[0].psobject.TypeNames[0]
 <span class="cm"># Deserialized.System.Diagnostics.Process   ← 只是数据快照，Kill() 已不存在</span>
 </code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">禁用：把凭据明文写进导出文件</span><p><span class="badge dead">禁用</span> 不要把包含密码的对象随手 <code>Export-Csv</code> / <code>ConvertTo-Json</code>——那是明文落盘。<code>Export-Clixml</code> 保存 <code>PSCredential</code> 时用 DPAPI 加密，但只能在<em>同一台机器的同一个用户</em>下解回，不能当作跨机分发的方案。凭据管理见第 9 章。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 禁用：把凭据明文写进导出文件</span><p><span class="badge dead">禁用</span> 不要把包含密码的对象随手 <code>Export-Csv</code> / <code>ConvertTo-Json</code>——那是明文落盘。<code>Export-Clixml</code> 保存 <code>PSCredential</code> 时用 DPAPI 加密，但只能在<em>同一台机器的同一个用户</em>下解回，不能当作跨机分发的方案。凭据管理见第 9 章。</p></div>
 
 <h2 id="p3-format">3.8 格式化命令为什么必须放在管道最后</h2>
 
@@ -2176,9 +2176,9 @@ $old[0].psobject.TypeNames[0]
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">一条冷知识，解释了很多「为什么突然变竖排」</span><p>当对象没有内置格式定义时，PowerShell 的默认规则是：要显示的属性不超过 4 个就排成表格，超过 4 个就自动改用列表。所以 <code>Select-Object</code> 多挑一个属性，输出形态可能突变——这不是 bug，显式加 <code>| Format-Table -AutoSize</code> 即可。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 一条冷知识，解释了很多「为什么突然变竖排」</span><p>当对象没有内置格式定义时，PowerShell 的默认规则是：要显示的属性不超过 4 个就排成表格，超过 4 个就自动改用列表。所以 <code>Select-Object</code> 多挑一个属性，输出形态可能突变——这不是 bug，显式加 <code>| Format-Table -AutoSize</code> 即可。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 232px"><span class="t">现代提示：三条替代路线</span><p>想继续处理数据 → 用 <code>Select-Object</code>，不要用 <code>Format-*</code>。<br>想要一段可保存的纯文本 → 用 <code>Out-String</code>（配 <code>-Width</code>；加 <code>-Stream</code> 可按行拆开继续流）。<br>想交互式挑选 → Windows 上的 <code>Out-GridView</code>，或 PowerShell 7 的 <code>Out-ConsoleGridView</code>（来自 Microsoft.PowerShell.ConsoleGuiTools 模块）。<br>另外 PowerShell 7.2+ 的 <code>$PSStyle</code> 可以统一控制输出配色，不必再往数据里塞转义序列。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 232px"><span class="t">🔵 现代提示：三条替代路线</span><p>想继续处理数据 → 用 <code>Select-Object</code>，不要用 <code>Format-*</code>。<br>想要一段可保存的纯文本 → 用 <code>Out-String</code>（配 <code>-Width</code>；加 <code>-Stream</code> 可按行拆开继续流）。<br>想交互式挑选 → Windows 上的 <code>Out-GridView</code>，或 PowerShell 7 的 <code>Out-ConsoleGridView</code>（来自 Microsoft.PowerShell.ConsoleGuiTools 模块）。<br>另外 PowerShell 7.2+ 的 <code>$PSStyle</code> 可以统一控制输出配色，不必再往数据里塞转义序列。</p></div>
 
 <h2 id="p3-alias">3.9 别名：交互式的糖，脚本里的债</h2>
 
@@ -2228,7 +2228,7 @@ gps | ? cpu -gt 10 | % name
 <span class="kw">Get-Alias</span> -Definition Where-Object
 </code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">同样的道理适用于参数</span><p><span class="badge old">已过时</span> 脚本里不要依赖参数名的<em>部分匹配</em>（<code>-Rec</code> 代表 <code>-Recurse</code>）和位置参数的隐式顺序。上游命令将来新增一个 <code>-Recursive</code> 参数，你的 <code>-Rec</code> 立刻变成歧义错误。<span class="badge new">现代提示</span> 装上 PSScriptAnalyzer，规则 <code>PSAvoidUsingCmdletAliases</code> 会自动把这些位置标出来：<code>Invoke-ScriptAnalyzer -Path .\deploy.ps1</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 同样的道理适用于参数</span><p><span class="badge old">已过时</span> 脚本里不要依赖参数名的<em>部分匹配</em>（<code>-Rec</code> 代表 <code>-Recurse</code>）和位置参数的隐式顺序。上游命令将来新增一个 <code>-Recursive</code> 参数，你的 <code>-Rec</code> 立刻变成歧义错误。<span class="badge new">现代提示</span> 装上 PSScriptAnalyzer，规则 <code>PSAvoidUsingCmdletAliases</code> 会自动把这些位置标出来：<code>Invoke-ScriptAnalyzer -Path .\deploy.ps1</code>。</p></div>
 
 <h2 id="p3-recipes">3.10 管道配方与本章速查</h2>
 
@@ -2274,7 +2274,7 @@ $ids = <span class="kw">Get-Process</span> notepad | <span class="kw">Select-Obj
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">本章三句话</span><p>第一，管道传的是对象不是文本，所以你永远可以按属性名提问，不必再切字符串。<br>第二，每个命令都会改变管道里数据的「形状」——数量、顺序、类型三者变了哪个，心里要有数。<br>第三，<code>Format-*</code> 是终点站，<code>Select-Object</code> 才是中途站；把这一条记牢，能省下你此后无数次「为什么筛不出来」的困惑。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 本章三句话</span><p>第一，管道传的是对象不是文本，所以你永远可以按属性名提问，不必再切字符串。<br>第二，每个命令都会改变管道里数据的「形状」——数量、顺序、类型三者变了哪个，心里要有数。<br>第三，<code>Format-*</code> 是终点站，<code>Select-Object</code> 才是中途站；把这一条记牢，能省下你此后无数次「为什么筛不出来」的困惑。</p></div>
 
 </section>
 
@@ -2326,7 +2326,7 @@ $logs = Get-ChildItem C:\Logs -Filter *.log
 
 <p>打个比方：PowerShell 的 <code>if</code> 像海关，不管你带的是数字、字符串还是一箱子对象，都要先盖一个 <code>[bool]</code> 章。盖章规则只有一句话——<strong>「空的、零的、没有的」是假，其余都是真</strong>。字符串 <code>"0"</code> 不空，所以它是真；空哈希表虽然「看着空」，但它是一个实实在在的对象，所以是真。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 100px"><span class="t">现代提示</span><p>不确定的时候别猜，直接问它：<code>[bool]$x</code> 会当场给你答案。写脚本时把这行塞进调试输出，比读文档快。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 100px"><span class="t">🔵 现代提示</span><p>不确定的时候别猜，直接问它：<code>[bool]$x</code> 会当场给你答案。写脚本时把这行塞进调试输出，比读文档快。</p></div>
 
 <h3>条件里最常用的比较运算符</h3>
 
@@ -2368,7 +2368,7 @@ $null -eq $a          <span class="cm"># 返回 False，这才是你要的判断
 <pre style="contain-intrinsic-size:auto 60px"><code><span class="s">"10"</span> -gt 9        <span class="cm"># True  —— "10" 是字符串？不，左边是字符串，右边 9 转成 "9"，字符串比较 "10" &lt; "9"</span>
 </code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">上面这行的真实结果是 False</span><p>左边是字符串 <code>"10"</code>，于是右边的 <code>9</code> 被转成字符串 <code>"9"</code>，按字典序 <code>"10"</code> 排在 <code>"9"</code> 前面，所以是 False。凡是可能收到字符串的地方，先显式转换：<code>[int]$x -gt 9</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">🟡 上面这行的真实结果是 False</span><p>左边是字符串 <code>"10"</code>，于是右边的 <code>9</code> 被转成字符串 <code>"9"</code>，按字典序 <code>"10"</code> 排在 <code>"9"</code> 前面，所以是 False。凡是可能收到字符串的地方，先显式转换：<code>[int]$x -gt 9</code>。</p></div>
 
 <h3>设计动机与现代替代</h3>
 
@@ -3046,7 +3046,7 @@ Get-ChildItem C:\Logs -Filter *.log | Measure-LogSize -Verbose
 </tbody>
 </table>
 <pre style="contain-intrinsic-size:auto 148px"><code><span class="cl"><span class="cm"># 诊断利器:让绑定器把决策过程一步步吐出来</span></span><span class="cl">Trace-Command -Name ParameterBinding -PSHost -Expression {</span><span class="cl">    Get-Process pwsh | Stop-Process -WhatIf</span><span class="cl">}</span><span class="cl"><span class="cm"># 输出里能看到每一轮 BIND 尝试、成功/失败与最终落点 —— 别猜,看判决书</span></span></code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">写自己的管道函数,怎么选 ByValue 还是 ByPropertyName</span><p>规则很简单:<strong>「本命参数」(命令主要操作的那个对象)用 ByValue;「从对象上取一个字段」的参数用 ByPropertyName 并起与生态一致的名字</strong>(Name、Id、Path、ComputerName)。两者可以同时标在一个参数上(先试 ByValue 再试 ByPropertyName)。名字与生态对齐,你的函数就自动接得住 Get-* 家族的输出——这是 PowerShell「命令之间天然咬合」的全部秘密。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 写自己的管道函数,怎么选 ByValue 还是 ByPropertyName</span><p>规则很简单:<strong>「本命参数」(命令主要操作的那个对象)用 ByValue;「从对象上取一个字段」的参数用 ByPropertyName 并起与生态一致的名字</strong>(Name、Id、Path、ComputerName)。两者可以同时标在一个参数上(先试 ByValue 再试 ByPropertyName)。名字与生态对齐,你的函数就自动接得住 Get-* 家族的输出——这是 PowerShell「命令之间天然咬合」的全部秘密。</p></div>
 
 <h2 id="p4-script">4.9 脚本参数、.ps1 调用、点源与作用域</h2>
 
@@ -3225,7 +3225,7 @@ Get-Foo                                        <span class="cm"># 现在能调�
 <pre style="contain-intrinsic-size:auto 102px"><code><span class="cl">$area = { param($w, $h) $w * $h }</span><span class="cl">&amp; $area 3 4          <span class="cm"># 12 —— &amp; 在新作用域执行</span></span><span class="cl">. { $x = 42 }; $x    <span class="cm"># 42 —— . 在当前作用域执行,内部赋值会留下来</span></span></code></pre>
 <p><strong>变量捕获是 PowerShell 与多数语言分岔的地方</strong>:scriptblock 默认<strong>不捕获</strong>定义处的变量,执行时按「动态作用域」现场查找——谁调用它,就用谁当时的变量环境。要「定义时的值锁进去」,必须显式 <code>GetNewClosure()</code>:</p>
 <pre style="contain-intrinsic-size:auto 171px"><code><span class="cl">$n = 1</span><span class="cl">$sb  = { $n }</span><span class="cl">$cls = { $n }.GetNewClosure()   <span class="cm"># 闭包:拷走此刻的 $n</span></span><span class="cl">$n = 2</span><span class="cl">&amp; $sb    <span class="cm"># 2 —— 动态查找,看到的是现在的 $n</span></span><span class="cl">&amp; $cls   <span class="cm"># 1 —— 锁住了定义那一刻</span></span></code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">两个高频事故:循环变量与跨 runspace</span><p>①循环里造一批 scriptblock 回调(比如注册事件),不 GetNewClosure 的话,它们最后全看到<strong>循环结束时的变量值</strong>——各语言闭包坑的 PS 版,解法就是每次迭代 <code>.GetNewClosure()</code>。②scriptblock 传进另一个 runspace(<code>Start-ThreadJob</code>、<code>ForEach-Object -Parallel</code>)时,外面的变量<strong>一概不可见</strong>——那边是全新会话;要带数据进去用 <code>$using:varName</code> 语法显式打包(远程 Invoke-Command 同理,见 5.9)。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 两个高频事故:循环变量与跨 runspace</span><p>①循环里造一批 scriptblock 回调(比如注册事件),不 GetNewClosure 的话,它们最后全看到<strong>循环结束时的变量值</strong>——各语言闭包坑的 PS 版,解法就是每次迭代 <code>.GetNewClosure()</code>。②scriptblock 传进另一个 runspace(<code>Start-ThreadJob</code>、<code>ForEach-Object -Parallel</code>)时,外面的变量<strong>一概不可见</strong>——那边是全新会话;要带数据进去用 <code>$using:varName</code> 语法显式打包(远程 Invoke-Command 同理,见 5.9)。</p></div>
 
 <h2 id="p4-module">4.10 模块基础：从 .psm1 到 .psd1</h2>
 
@@ -3332,7 +3332,7 @@ $script:cache = @{}
 <tr><td class="nw">热重载</td><td><strong>差</strong>:类型进了会话就换不掉,改类定义要开新会话</td><td>无此问题</td></tr>
 </tbody>
 </table>
-<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">class 的两个工程性坑</span><p>①<strong>模块里的类不好导出</strong>:Import-Module 拿不到类,要 <code>using module</code> 语句才能在调用方使用类型名——脚本头写 <code>using module .\MyMod.psm1</code>,而且它是解析期指令,必须在文件最前。②<strong>开发迭代痛</strong>:改了类定义,旧类型仍钉在会话里,行为诡异——规矩是改类=重开会话(VSCode 里重启集成终端)。这两条不改性质,只划边界:class 适合稳定成型的模块内核,探索期用函数+PSCustomObject。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 class 的两个工程性坑</span><p>①<strong>模块里的类不好导出</strong>:Import-Module 拿不到类,要 <code>using module</code> 语句才能在调用方使用类型名——脚本头写 <code>using module .\MyMod.psm1</code>,而且它是解析期指令,必须在文件最前。②<strong>开发迭代痛</strong>:改了类定义,旧类型仍钉在会话里,行为诡异——规矩是改类=重开会话(VSCode 里重启集成终端)。这两条不改性质,只划边界:class 适合稳定成型的模块内核,探索期用函数+PSCustomObject。</p></div>
 
 </section>
 
@@ -3465,7 +3465,7 @@ Get-ChildItem</code></pre>
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示：并不是所有 provider 都支持所有参数</span><p><code>Get-PSProvider</code> 输出里的 <em>Capabilities</em> 列告诉你每个 provider 支持什么。<code>Filter</code> 只有 FileSystem 有，所以 <code>Get-ChildItem HKLM:\SOFTWARE -Filter 'Micro*'</code> 会直接报「提供程序不支持筛选器」。在非文件系统的 provider 上要过滤，用 <code>-Include</code> 或管道到 <code>Where-Object</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示：并不是所有 provider 都支持所有参数</span><p><code>Get-PSProvider</code> 输出里的 <em>Capabilities</em> 列告诉你每个 provider 支持什么。<code>Filter</code> 只有 FileSystem 有，所以 <code>Get-ChildItem HKLM:\SOFTWARE -Filter 'Micro*'</code> 会直接报「提供程序不支持筛选器」。在非文件系统的 provider 上要过滤，用 <code>-Include</code> 或管道到 <code>Where-Object</code>。</p></div>
 
 <h2 id="p5-path">5.2 路径与项：Test-Path、New-Item 和 Item 命令族</h2>
 
@@ -3508,7 +3508,7 @@ Test-Path 'D:\work\a.txt' -PathType Leaf      <span class="cm"># 必须是文件
 Test-Path 'D:\a|b.txt' -IsValid               <span class="cm"># 只检查语法合不合法，不看存在性</span>
 Test-Path 'D:\logs\*.log' -NewerThan (Get-Date).AddDays(-1)  <span class="cm"># 有没有一天内改过的日志</span></code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">陷阱：Test-Path 返回 $false 不等于「不存在」</span><p>没有读取权限、路径超长、网络共享断开，都会让 <code>Test-Path</code> 老老实实返回 <code>$false</code>。它把「不存在」和「看不见」混为一谈了。关键脚本里，与其信 <code>Test-Path</code>，不如直接 <code>Get-Item -ErrorAction Stop</code> 然后 <code>try/catch</code>，这样你能拿到真实的错误原因。另外，注册表里 <code>Test-Path</code> 只能测「项」，测不了「值」——测值要用 <code>Get-ItemPropertyValue ... -ErrorAction SilentlyContinue</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">🟡 陷阱：Test-Path 返回 $false 不等于「不存在」</span><p>没有读取权限、路径超长、网络共享断开，都会让 <code>Test-Path</code> 老老实实返回 <code>$false</code>。它把「不存在」和「看不见」混为一谈了。关键脚本里，与其信 <code>Test-Path</code>，不如直接 <code>Get-Item -ErrorAction Stop</code> 然后 <code>try/catch</code>，这样你能拿到真实的错误原因。另外，注册表里 <code>Test-Path</code> 只能测「项」，测不了「值」——测值要用 <code>Get-ItemPropertyValue ... -ErrorAction SilentlyContinue</code>。</p></div>
 
 <h3>New-Item：一个参数两种脾气</h3>
 
@@ -3528,9 +3528,9 @@ Rename-Item 'D:\a.txt' -NewName 'b.txt'          <span class="cm"># -NewName 只
 Remove-Item 'D:\temp\*' -Recurse -WhatIf
 Remove-Item 'D:\temp\*' -Recurse -Force -Confirm:$false</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 232px"><span class="t">仍适用：-WhatIf 是你的安全带</span><p>凡是支持 <code>ShouldProcess</code> 的命令（<code>Remove-Item</code>、<code>Stop-Process</code>、<code>Set-ItemProperty</code>、<code>Restart-Service</code>…）都认 <code>-WhatIf</code> 和 <code>-Confirm</code>。写破坏性脚本的标准动作：先带 <code>-WhatIf</code> 跑一遍看输出，再去掉它。整段脚本要空跑，可以设 <code>$WhatIfPreference = $true</code>。自己写函数时，加上 <code>[CmdletBinding(SupportsShouldProcess)]</code> 和 <code>if ($PSCmdlet.ShouldProcess($target)) {...}</code>，你的函数也就自动有了这条安全带。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 232px"><span class="t">🟢 仍适用：-WhatIf 是你的安全带</span><p>凡是支持 <code>ShouldProcess</code> 的命令（<code>Remove-Item</code>、<code>Stop-Process</code>、<code>Set-ItemProperty</code>、<code>Restart-Service</code>…）都认 <code>-WhatIf</code> 和 <code>-Confirm</code>。写破坏性脚本的标准动作：先带 <code>-WhatIf</code> 跑一遍看输出，再去掉它。整段脚本要空跑，可以设 <code>$WhatIfPreference = $true</code>。自己写函数时，加上 <code>[CmdletBinding(SupportsShouldProcess)]</code> 和 <code>if ($PSCmdlet.ShouldProcess($target)) {...}</code>，你的函数也就自动有了这条安全带。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">陷阱：-Include / -Exclude 在 Remove-Item 上经常「不生效」</span><p><code>Remove-Item 'D:\temp' -Include '*.log'</code> 什么也删不掉。因为 <code>-Include</code> 是作用在<em>被枚举出来的子项</em>上的，而这条命令的目标只有 <code>D:\temp</code> 这一个项。正确写法是让路径本身带通配符，或者加上递归：<code>Remove-Item 'D:\temp\*' -Include '*.log'</code>，或 <code>Remove-Item 'D:\temp' -Include '*.log' -Recurse</code>。更稳妥的习惯是先 <code>Get-ChildItem</code> 选出来，确认列表没问题，再管道给 <code>Remove-Item</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">🟡 陷阱：-Include / -Exclude 在 Remove-Item 上经常「不生效」</span><p><code>Remove-Item 'D:\temp' -Include '*.log'</code> 什么也删不掉。因为 <code>-Include</code> 是作用在<em>被枚举出来的子项</em>上的，而这条命令的目标只有 <code>D:\temp</code> 这一个项。正确写法是让路径本身带通配符，或者加上递归：<code>Remove-Item 'D:\temp\*' -Include '*.log'</code>，或 <code>Remove-Item 'D:\temp' -Include '*.log' -Recurse</code>。更稳妥的习惯是先 <code>Get-ChildItem</code> 选出来，确认列表没问题，再管道给 <code>Remove-Item</code>。</p></div>
 
 <h2 id="p5-content">5.3 读写文件内容：Get/Set/Add-Content 与编码陷阱</h2>
 
@@ -3591,7 +3591,7 @@ Remove-Item 'D:\temp\*' -Recurse -Force -Confirm:$false</code></pre>
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">禁用：在 5.1 里用 Export-Csv 导出含中文的数据而不指定编码</span><p><code>Export-Csv</code> 在 5.1 的默认编码是 ASCII，所有非 ASCII 字符会被替换成 <code>?</code>，这是<strong>数据丢失</strong>，事后无法恢复。必须写成 <code>Export-Csv -Encoding UTF8</code>（5.1 会带 BOM，Excel 正好靠这个 BOM 认出 UTF-8，反而是好事）。在 7.x 上如果要给 Excel 看，用 <code>-Encoding utf8BOM</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 禁用：在 5.1 里用 Export-Csv 导出含中文的数据而不指定编码</span><p><code>Export-Csv</code> 在 5.1 的默认编码是 ASCII，所有非 ASCII 字符会被替换成 <code>?</code>，这是<strong>数据丢失</strong>，事后无法恢复。必须写成 <code>Export-Csv -Encoding UTF8</code>（5.1 会带 BOM，Excel 正好靠这个 BOM 认出 UTF-8，反而是好事）。在 7.x 上如果要给 Excel 看，用 <code>-Encoding utf8BOM</code>。</p></div>
 
 <h3>-Encoding 取值速查</h3>
 
@@ -3610,7 +3610,7 @@ Remove-Item 'D:\temp\*' -Recurse -Force -Confirm:$false</code></pre>
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 322px"><span class="t">现代提示：一劳永逸的两行 profile</span><p>把下面两行写进你的 profile（<code>$PROFILE</code>），本机所有脚本的编码问题一次解决大半：</p><pre style="contain-intrinsic-size:auto 160px"><code><span class="cm"># 所有命令的 -Encoding 参数默认为 utf8</span>
+<div class="note new" style="contain-intrinsic-size:auto 322px"><span class="t">🔵 现代提示：一劳永逸的两行 profile</span><p>把下面两行写进你的 profile（<code>$PROFILE</code>），本机所有脚本的编码问题一次解决大半：</p><pre style="contain-intrinsic-size:auto 160px"><code><span class="cm"># 所有命令的 -Encoding 参数默认为 utf8</span>
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 <span class="cm"># 让控制台按 UTF-8 读写外部程序的输出（5.1 尤其需要）</span>
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
@@ -3632,7 +3632,7 @@ Get-Content .\app.log -TotalCount 100     <span class="cm"># 只读前 100 行�
 
 <p><strong>坑三：Set-Content 和 Out-File 不是一回事。</strong><code>Set-Content</code> 对每个对象调 <code>ToString()</code>；<code>Out-File</code> 走的是<em>格式化引擎</em>——也就是把你在屏幕上看到的那个表格原样存进去，包括表头、对齐空格，以及超出宽度就截断成 <code>…</code>。</p>
 
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">禁用：用 Out-File 保存对象数据</span><p><code>Get-Process | Out-File p.txt</code> 存下来的是一张给人看的表，列会被截断，数据不可再解析。要保存<em>数据</em>请用 <code>Export-Csv</code>（表格型）、<code>ConvertTo-Json</code>（层次型）或 <code>Export-Clixml</code>（要完整还原 PowerShell 对象时）。<code>Out-File</code> 只适合保存「本来就是文本」的内容，或者存一份人肉查看的快照。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 禁用：用 Out-File 保存对象数据</span><p><code>Get-Process | Out-File p.txt</code> 存下来的是一张给人看的表，列会被截断，数据不可再解析。要保存<em>数据</em>请用 <code>Export-Csv</code>（表格型）、<code>ConvertTo-Json</code>（层次型）或 <code>Export-Clixml</code>（要完整还原 PowerShell 对象时）。<code>Out-File</code> 只适合保存「本来就是文本」的内容，或者存一份人肉查看的快照。</p></div>
 
 <h2 id="p5-childitem">5.4 遍历与筛选：-Recurse、-Filter 和三种过滤法</h2>
 
@@ -3655,7 +3655,7 @@ Get-Content .\app.log -TotalCount 100     <span class="cm"># 只读前 100 行�
     Select-Object -First 10 FullName,
         @{ Name = 'MB'; Expression = { [math]::Round($_.Length / 1MB, 2) } }</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 240px"><span class="t">陷阱：-Filter '*.doc' 会连 .docx 一起捞出来</span><p>这不是 PowerShell 的锅，是 Windows 文件系统通配符的历史包袱：匹配时会同时拿长文件名和 8.3 短名去比。<code>report.docx</code> 的短名是 <code>REPORT~1.DOC</code>，于是 <code>*.doc</code> 命中了它。同理 <code>*.htm</code> 会命中 <code>.html</code>，<code>*.xls</code> 会命中 <code>.xlsx</code>。三字符扩展名尤其容易中招。</p><p>修法二选一：用 <code>-Include '*.doc'</code>（PowerShell 自己的通配符引擎，没有这个怪癖），或者过滤完再补一刀 <code>Where-Object { $_.Extension -eq '.doc' }</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 240px"><span class="t">🟡 陷阱：-Filter '*.doc' 会连 .docx 一起捞出来</span><p>这不是 PowerShell 的锅，是 Windows 文件系统通配符的历史包袱：匹配时会同时拿长文件名和 8.3 短名去比。<code>report.docx</code> 的短名是 <code>REPORT~1.DOC</code>，于是 <code>*.doc</code> 命中了它。同理 <code>*.htm</code> 会命中 <code>.html</code>，<code>*.xls</code> 会命中 <code>.xlsx</code>。三字符扩展名尤其容易中招。</p><p>修法二选一：用 <code>-Include '*.doc'</code>（PowerShell 自己的通配符引擎，没有这个怪癖），或者过滤完再补一刀 <code>Where-Object { $_.Extension -eq '.doc' }</code>。</p></div>
 
 <h3>Get-ChildItem 常用参数速查</h3>
 
@@ -3674,7 +3674,7 @@ Get-Content .\app.log -TotalCount 100     <span class="cm"># 只读前 100 行�
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">现代提示：不要急于把结果塞进变量</span><p><code>$all = Get-ChildItem D:\ -Recurse</code> 会把几十万个对象全部装进内存，然后你才开始过滤。改成一条管道，让对象流过去、用完就丢，内存占用是常数级：<code>Get-ChildItem D:\ -Recurse -File | Where-Object … | Select-Object -First 10</code>。如果只需要路径字符串、追求极致速度，可以下沉到 .NET：<code>[System.IO.Directory]::EnumerateFiles('D:\', '*.log', 'AllDirectories')</code>——它是惰性枚举，但遇到无权限目录会直接抛异常，需要自己 <code>try/catch</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">🔵 现代提示：不要急于把结果塞进变量</span><p><code>$all = Get-ChildItem D:\ -Recurse</code> 会把几十万个对象全部装进内存，然后你才开始过滤。改成一条管道，让对象流过去、用完就丢，内存占用是常数级：<code>Get-ChildItem D:\ -Recurse -File | Where-Object … | Select-Object -First 10</code>。如果只需要路径字符串、追求极致速度，可以下沉到 .NET：<code>[System.IO.Directory]::EnumerateFiles('D:\', '*.log', 'AllDirectories')</code>——它是惰性枚举，但遇到无权限目录会直接抛异常，需要自己 <code>try/catch</code>。</p></div>
 
 <h2 id="p5-registry">5.5 注册表读写：项是文件夹，值是属性</h2>
 
@@ -3723,13 +3723,13 @@ Remove-Item -Path 'HKCU:\Software\MyApp' -Recurse</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">陷阱一：Get-ItemProperty 返回的对象里混着五个噪声属性</span><p><code>PSPath</code>、<code>PSParentPath</code>、<code>PSChildName</code>、<code>PSDrive</code>、<code>PSProvider</code> 是 provider 自动附加的，不是注册表里真实存在的值。你要遍历「这个项下所有值」时它们会捣乱。干净的做法：<code>(Get-Item $key).GetValueNames()</code> 拿到真实的值名列表，或者用 <code>Get-ItemPropertyValue</code>（PowerShell 5.0 起）直接取单个值。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 陷阱一：Get-ItemProperty 返回的对象里混着五个噪声属性</span><p><code>PSPath</code>、<code>PSParentPath</code>、<code>PSChildName</code>、<code>PSDrive</code>、<code>PSProvider</code> 是 provider 自动附加的，不是注册表里真实存在的值。你要遍历「这个项下所有值」时它们会捣乱。干净的做法：<code>(Get-Item $key).GetValueNames()</code> 拿到真实的值名列表，或者用 <code>Get-ItemPropertyValue</code>（PowerShell 5.0 起）直接取单个值。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 302px"><span class="t">陷阱二：读 REG_EXPAND_SZ 时会被自动展开</span><p><code>Get-ItemPropertyValue HKCU:\Environment Path</code> 读到的是 <code>%USERPROFILE%</code> 已经被替换成实际路径之后的结果。如果你打算「读出来、改一改、再写回去」，这一步会把变量永久固化成当前值——换台机器就废了。要拿原始字符串，得下沉到 .NET：</p><pre style="contain-intrinsic-size:auto 109px"><code>$k = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment')
+<div class="note old" style="contain-intrinsic-size:auto 302px"><span class="t">🟡 陷阱二：读 REG_EXPAND_SZ 时会被自动展开</span><p><code>Get-ItemPropertyValue HKCU:\Environment Path</code> 读到的是 <code>%USERPROFILE%</code> 已经被替换成实际路径之后的结果。如果你打算「读出来、改一改、再写回去」，这一步会把变量永久固化成当前值——换台机器就废了。要拿原始字符串，得下沉到 .NET：</p><pre style="contain-intrinsic-size:auto 109px"><code>$k = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment')
 $k.GetValue('Path', $null, 'DoNotExpandEnvironmentNames')
 $k.Close()</code></pre></div>
 
-<div class="note dead" style="contain-intrinsic-size:auto 240px"><span class="t">危险：32 位视图重定向，以及 HKLM 的不可逆操作</span><p>在 32 位 PowerShell 里访问 <code>HKLM:\SOFTWARE\X</code>，系统会悄悄把你重定向到 <code>HKLM:\SOFTWARE\WOW6432Node\X</code>。同一段脚本在 <code>powershell.exe</code>（64 位）和 <code>SysWOW64\powershell.exe</code>（32 位）下读到的是两个不同的地方。计划任务里尤其容易踩，因为你不一定知道它启的是哪个。</p><p>另外：<code>Remove-Item HKLM:\SYSTEM\CurrentControlSet -Recurse -Force</code> 这类操作没有回收站，执行完系统可能起不来。改 <code>HKLM:</code> 之前先导出备份：<code>reg export "HKLM\SOFTWARE\X" backup.reg</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 240px"><span class="t">🔴 危险：32 位视图重定向，以及 HKLM 的不可逆操作</span><p>在 32 位 PowerShell 里访问 <code>HKLM:\SOFTWARE\X</code>，系统会悄悄把你重定向到 <code>HKLM:\SOFTWARE\WOW6432Node\X</code>。同一段脚本在 <code>powershell.exe</code>（64 位）和 <code>SysWOW64\powershell.exe</code>（32 位）下读到的是两个不同的地方。计划任务里尤其容易踩，因为你不一定知道它启的是哪个。</p><p>另外：<code>Remove-Item HKLM:\SYSTEM\CurrentControlSet -Recurse -Force</code> 这类操作没有回收站，执行完系统可能起不来。改 <code>HKLM:</code> 之前先导出备份：<code>reg export "HKLM\SOFTWARE\X" backup.reg</code>。</p></div>
 
 <h3>顺带说说 Env:：三个作用域，别搞混</h3>
 
@@ -3786,13 +3786,13 @@ $p.ExitCode</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 321px"><span class="t">陷阱：Stop-Process 不给对方「保存」的机会</span><p>对有界面的程序（记事本、Office），<code>Stop-Process</code> 会丢掉未保存的内容。想礼貌一点，先发关闭消息、再等一会儿、实在不行才强杀：</p><pre style="contain-intrinsic-size:auto 160px"><code>$p = Get-Process notepad -ErrorAction SilentlyContinue
+<div class="note old" style="contain-intrinsic-size:auto 321px"><span class="t">🟡 陷阱：Stop-Process 不给对方「保存」的机会</span><p>对有界面的程序（记事本、Office），<code>Stop-Process</code> 会丢掉未保存的内容。想礼貌一点，先发关闭消息、再等一会儿、实在不行才强杀：</p><pre style="contain-intrinsic-size:auto 160px"><code>$p = Get-Process notepad -ErrorAction SilentlyContinue
 <span class="kw">if</span> ($p) {
     $p.CloseMainWindow() | Out-Null       <span class="cm"># 相当于点右上角的叉</span>
     <span class="kw">if</span> (-not $p.WaitForExit(5000)) { $p | Stop-Process -Force }
 }</code></pre></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 276px"><span class="t">现代提示：Get-Process 看不到命令行参数</span><p>想知道「这个 java.exe 到底跑的是哪个 jar」，<code>Get-Process</code> 帮不上忙——它的对象里没有命令行。这时就该请出 CIM：</p><pre style="contain-intrinsic-size:auto 83px"><code>Get-CimInstance Win32_Process -Filter "Name='java.exe'" |
+<div class="note new" style="contain-intrinsic-size:auto 276px"><span class="t">🔵 现代提示：Get-Process 看不到命令行参数</span><p>想知道「这个 java.exe 到底跑的是哪个 jar」，<code>Get-Process</code> 帮不上忙——它的对象里没有命令行。这时就该请出 CIM：</p><pre style="contain-intrinsic-size:auto 83px"><code>Get-CimInstance Win32_Process -Filter "Name='java.exe'" |
     Select-Object ProcessId, CommandLine</code></pre><p>这也是下一节要讲的：CIM 是常规 cmdlet 覆盖不到时的兜底查询口。</p></div>
 
 <h3>服务</h3>
@@ -3819,7 +3819,7 @@ Stop-Service  -Name 'Spooler' -WhatIf
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 245px"><span class="t">陷阱：Get-Service 看不到服务的可执行路径和登录账户</span><p>排查「服务起不来」时你最想知道的两件事——它到底执行哪个 exe、用什么账户跑——<code>Get-Service</code> 恰好都不给。这两项在 <code>Win32_Service</code> 里：</p><pre style="contain-intrinsic-size:auto 83px"><code>Get-CimInstance Win32_Service -Filter "Name='Spooler'" |
+<div class="note old" style="contain-intrinsic-size:auto 245px"><span class="t">🟡 陷阱：Get-Service 看不到服务的可执行路径和登录账户</span><p>排查「服务起不来」时你最想知道的两件事——它到底执行哪个 exe、用什么账户跑——<code>Get-Service</code> 恰好都不给。这两项在 <code>Win32_Service</code> 里：</p><pre style="contain-intrinsic-size:auto 83px"><code>Get-CimInstance Win32_Service -Filter "Name='Spooler'" |
     Select-Object Name, State, StartMode, StartName, PathName</code></pre></div>
 
 <h2 id="p5-schtask">5.7 计划任务：让脚本自己跑起来</h2>
@@ -3874,7 +3874,7 @@ Unregister-ScheduledTask -TaskName 'NightlyBackup' -TaskPath '\Ops\' -Confirm:$f
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 391px"><span class="t">现代提示：脚本第一行就开日志</span><p>计划任务里没有控制台，你看不到任何输出。养成习惯：</p><pre style="contain-intrinsic-size:auto 264px"><code>Start-Transcript -Path "D:\ops\logs\backup-$(Get-Date -f yyyyMMdd).log" -Append
+<div class="note new" style="contain-intrinsic-size:auto 391px"><span class="t">🔵 现代提示：脚本第一行就开日志</span><p>计划任务里没有控制台，你看不到任何输出。养成习惯：</p><pre style="contain-intrinsic-size:auto 264px"><code>Start-Transcript -Path "D:\ops\logs\backup-$(Get-Date -f yyyyMMdd).log" -Append
 <span class="kw">try</span> {
     <span class="cm"># 正事写在这里</span>
 } <span class="kw">catch</span> {
@@ -3884,7 +3884,7 @@ Unregister-ScheduledTask -TaskName 'NightlyBackup' -TaskPath '\Ops\' -Confirm:$f
 }
 Stop-Transcript</code></pre></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">已过时：schtasks.exe 与 at.exe</span><p><code>schtasks.exe</code> 仍能用，但它吐字符串、参数语法晦涩、XML 拼接痛苦，只在需要兼容 Windows 7/2008 这类老系统时才考虑。<code>at.exe</code> 更早已被移除，别再写进新脚本。现代做法一律是 <code>ScheduledTasks</code> 模块；需要跨机器批量部署时，用 <code>Export-ScheduledTask</code> 导出 XML，再在目标机上 <code>Register-ScheduledTask -Xml</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 已过时：schtasks.exe 与 at.exe</span><p><code>schtasks.exe</code> 仍能用，但它吐字符串、参数语法晦涩、XML 拼接痛苦，只在需要兼容 Windows 7/2008 这类老系统时才考虑。<code>at.exe</code> 更早已被移除，别再写进新脚本。现代做法一律是 <code>ScheduledTasks</code> 模块；需要跨机器批量部署时，用 <code>Export-ScheduledTask</code> 导出 XML，再在目标机上 <code>Register-ScheduledTask -Xml</code>。</p></div>
 
 <h2 id="p5-cim">5.8 WMI/CIM：系统信息的万能查询口</h2>
 
@@ -3922,7 +3922,7 @@ Get-CimInstance Win32_Process -Filter "Name='notepad.exe'" |
 
 <h3>从 WMI 命令迁移到 CIM 命令</h3>
 
-<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">已过时：Get-WmiObject 及其整个命令族</span><p><code>*-WmiObject</code> 系列在 PowerShell 6 及以后<strong>已经完全不存在</strong>——不是不推荐，是命令没了。它走的是 DCOM/RPC，需要 135 端口加一段动态端口范围，在有防火墙的环境里几乎必然被挡。新脚本一律用 CIM 命令。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 已过时：Get-WmiObject 及其整个命令族</span><p><code>*-WmiObject</code> 系列在 PowerShell 6 及以后<strong>已经完全不存在</strong>——不是不推荐，是命令没了。它走的是 DCOM/RPC，需要 135 端口加一段动态端口范围，在有防火墙的环境里几乎必然被挡。新脚本一律用 CIM 命令。</p></div>
 
 <table style="contain-intrinsic-size:auto 431px">
 <thead><tr><th>旧写法 <span class="badge old">已过时</span></th><th>新写法 <span class="badge ok">仍适用</span></th></tr></thead>
@@ -3939,10 +3939,10 @@ Get-CimInstance Win32_Process -Filter "Name='notepad.exe'" |
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 277px"><span class="t">陷阱：WQL 的引号与反斜杠</span><p><code>-Filter</code> 里的字符串必须用<strong>单引号</strong>括起来（因为整个筛选表达式通常已经在双引号里了），并且反斜杠要写两遍——WQL 把反斜杠当转义符：</p><pre style="contain-intrinsic-size:auto 83px"><code>Get-CimInstance Win32_Service -Filter "PathName LIKE '%%\\\\java.exe%%'"   <span class="cm"># 注意双写</span>
+<div class="note old" style="contain-intrinsic-size:auto 277px"><span class="t">🟡 陷阱：WQL 的引号与反斜杠</span><p><code>-Filter</code> 里的字符串必须用<strong>单引号</strong>括起来（因为整个筛选表达式通常已经在双引号里了），并且反斜杠要写两遍——WQL 把反斜杠当转义符：</p><pre style="contain-intrinsic-size:auto 83px"><code>Get-CimInstance Win32_Service -Filter "PathName LIKE '%%\\\\java.exe%%'"   <span class="cm"># 注意双写</span>
 Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"</code></pre><p>另外 WQL 的模糊匹配用 <code>LIKE</code> 加 <code>%</code>，不是 <code>*</code>。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示：先找专用 cmdlet，CIM 只作兜底</span><p>近十年微软给常见场景都补上了专用模块，输出更干净、参数更好记：磁盘用 <code>Get-Volume</code> / <code>Get-Disk</code>，网卡用 <code>Get-NetAdapter</code> / <code>Get-NetIPAddress</code>，防火墙用 <code>Get-NetFirewallRule</code>，机器概况用 <code>Get-ComputerInfo</code>（信息全但很慢，别放在循环里）。查不到时再退回 <code>Get-CimInstance</code>。还要记住：CIM 命令在 PowerShell 7 里依然是 <strong>Windows 专属</strong>，Linux 上没有 WMI。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示：先找专用 cmdlet，CIM 只作兜底</span><p>近十年微软给常见场景都补上了专用模块，输出更干净、参数更好记：磁盘用 <code>Get-Volume</code> / <code>Get-Disk</code>，网卡用 <code>Get-NetAdapter</code> / <code>Get-NetIPAddress</code>，防火墙用 <code>Get-NetFirewallRule</code>，机器概况用 <code>Get-ComputerInfo</code>（信息全但很慢，别放在循环里）。查不到时再退回 <code>Get-CimInstance</code>。还要记住：CIM 命令在 PowerShell 7 里依然是 <strong>Windows 专属</strong>，Linux 上没有 WMI。</p></div>
 
 <h2 id="p5-remoting">5.9 远程执行一瞥：Invoke-Command 与序列化边界</h2>
 
@@ -4032,10 +4032,10 @@ Invoke-Command srv01 { Get-Process notepad | Stop-Process -Force }</code></pre>
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 276px"><span class="t">现代提示：PowerShell 7 支持基于 SSH 的远程</span><p>WinRM 是 Windows 专属、配置繁琐。PowerShell 7 起可以直接走 SSH，同一套命令还能连 Linux：</p><pre style="contain-intrinsic-size:auto 83px"><code>Invoke-Command -HostName 'alice@srv01.example.com' -SSHTransport -ScriptBlock { Get-Date }
+<div class="note new" style="contain-intrinsic-size:auto 276px"><span class="t">🔵 现代提示：PowerShell 7 支持基于 SSH 的远程</span><p>WinRM 是 Windows 专属、配置繁琐。PowerShell 7 起可以直接走 SSH，同一套命令还能连 Linux：</p><pre style="contain-intrinsic-size:auto 83px"><code>Invoke-Command -HostName 'alice@srv01.example.com' -SSHTransport -ScriptBlock { Get-Date }
 $s = New-PSSession -HostName 'alice@srv01' -KeyFilePath ~/.ssh/id_ed25519</code></pre><p>另外别把远程并行和本地并行搞混：<code>ForEach-Object -Parallel</code>（PowerShell 7+）是在<em>本机</em>开多个运行空间，跟远程没关系。</p></div>
 
-<div class="note dead" style="contain-intrinsic-size:auto 231px"><span class="t">禁用：TrustedHosts 设成 *</span><p>非域环境里配远程时，网上大量教程会让你执行 <code>Set-Item WSMan:\localhost\Client\TrustedHosts -Value '*'</code>。这等于宣布「任何主机都可信」，中间人可以冒充目标机器骗走你的凭据。正确做法是只列出你真正要连的主机名（<code>-Value 'srv01,srv02' -Concatenate</code>），生产环境则应配置 HTTPS 监听器（5986）并使用证书。同理，<strong>CredSSP 不要随手打开</strong>——它会把你的明文凭据交给远程机器，一旦对方被攻陷，凭据直接失守。解决「双跳」问题应优先考虑基于资源的约束委派。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 231px"><span class="t">🔴 禁用：TrustedHosts 设成 *</span><p>非域环境里配远程时，网上大量教程会让你执行 <code>Set-Item WSMan:\localhost\Client\TrustedHosts -Value '*'</code>。这等于宣布「任何主机都可信」，中间人可以冒充目标机器骗走你的凭据。正确做法是只列出你真正要连的主机名（<code>-Value 'srv01,srv02' -Concatenate</code>），生产环境则应配置 HTTPS 监听器（5986）并使用证书。同理，<strong>CredSSP 不要随手打开</strong>——它会把你的明文凭据交给远程机器，一旦对方被攻陷，凭据直接失守。解决「双跳」问题应优先考虑基于资源的约束委派。</p></div>
 
 <h2 id="p5-cheatsheet">5.10 本章速查与版本差异</h2>
 
@@ -4212,7 +4212,7 @@ Get-Item 'C:\不存在的目录\a.txt'
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">外部程序不会替你报错</span><p><code>git push</code> 失败了，PowerShell 眼里它只是"一个进程正常结束了"。<code>$?</code> 会是 <code>False</code>，但没有任何错误记录产生，<code>try/catch</code> 也接不到。经典陷阱：<code>robocopy</code> 退出码 1 表示"复制成功且有文件被复制"，退出码小于 8 都算正常 —— 别一看非零就抛。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 外部程序不会替你报错</span><p><code>git push</code> 失败了，PowerShell 眼里它只是"一个进程正常结束了"。<code>$?</code> 会是 <code>False</code>，但没有任何错误记录产生，<code>try/catch</code> 也接不到。经典陷阱：<code>robocopy</code> 退出码 1 表示"复制成功且有文件被复制"，退出码小于 8 都算正常 —— 别一看非零就抛。</p></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示 <span class="badge new">现代提示</span></span><p>PowerShell 7.3 起引入 <code>$PSNativeCommandUseErrorActionPreference = $true</code>（7.4 起默认开启）：外部命令返回非零退出码时会产生一条真正的 PowerShell 错误，从此 <code>-ErrorAction Stop</code> 和 <code>try/catch</code> 对 exe 也生效了。5.1 上没有这个开关，请用本章"实战片段"里的 <code>Invoke-Native</code> 包装函数。</p></div>
 
@@ -4263,7 +4263,7 @@ Get-Content $path -ErrorAction Stop</code></pre>
     }
 }</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">一个例外：模块</span><p>写在模块（.psm1）里的函数<strong>不会</strong>继承调用方作用域的偏好变量 —— 模块有自己的会话状态。所以你在控制台里设 <code>$ErrorActionPreference='Stop'</code>，模块内部的命令未必听你的。模块作者应当显式写 <code>-ErrorAction Stop</code>，而不是指望调用者的环境。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 一个例外：模块</span><p>写在模块（.psm1）里的函数<strong>不会</strong>继承调用方作用域的偏好变量 —— 模块有自己的会话状态。所以你在控制台里设 <code>$ErrorActionPreference='Stop'</code>，模块内部的命令未必听你的。模块作者应当显式写 <code>-ErrorAction Stop</code>，而不是指望调用者的环境。</p></div>
 
 <h3>与错误处理有关的通用参数</h3>
 
@@ -4400,7 +4400,7 @@ $Error.Clear()                        <span class="cm"># 排查前先清零，�
 <pre style="contain-intrinsic-size:auto 87px"><code>cmd /c "exit 3" | Out-Null
 "LASTEXITCODE=$LASTEXITCODE  `$?=$?"    <span class="cm"># 实测输出：LASTEXITCODE=3  $?=False</span></code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">$? 很脆</span><p><code>$?</code> 只反映紧挨着的上一条命令，而且你一旦在中间插入任何一条命令（哪怕是 <code>Write-Host</code>），它就被刷新了。要判断就立刻判断，或者干脆改用 <code>try/catch</code> + <code>-ErrorAction Stop</code>。另外，对非终止型错误 <code>$?</code> 也会是 <code>False</code>，别把它当"脚本整体成功"的标志。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 $? 很脆</span><p><code>$?</code> 只反映紧挨着的上一条命令，而且你一旦在中间插入任何一条命令（哪怕是 <code>Write-Host</code>），它就被刷新了。要判断就立刻判断，或者干脆改用 <code>try/catch</code> + <code>-ErrorAction Stop</code>。另外，对非终止型错误 <code>$?</code> 也会是 <code>False</code>，别把它当"脚本整体成功"的标志。</p></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 208px"><span class="t">PowerShell 7 的两件利器 <span class="badge new">现代提示</span></span><p><code>Get-Error</code>：把最近一条错误的<strong>全部</strong>字段（含 InnerException 层层展开）漂亮地打印出来，排查复杂错误时比手动点属性快十倍，还能 <code>Get-Error -Newest 5</code>。</p><p><code>$ErrorView</code>：7.0 起默认是 <code>ConciseView</code>（一行简报，脚本错误还带波浪线定位）；想看回老式的大段红字就设 <code>'NormalView'</code>，想一次看全就设 <code>'DetailedView'</code>。5.1 只有 NormalView 和 CategoryView。</p></div>
 
@@ -4694,7 +4694,7 @@ Get-PSBreakpoint | Remove-PSBreakpoint     <span class="cm"># 清干净</span></
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">一个被低估的排错习惯</span><p>拿不准某个对象到底是什么，别猜，直接问它：<code>$x | Get-Member</code> 看有哪些属性方法，<code>$x.GetType().FullName</code> 看真实类型，<code>$x | Format-List *</code> 看全部属性值。PowerShell 是可自省的，这三招能解决一大半"为什么取不到值"的疑问。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 一个被低估的排错习惯</span><p>拿不准某个对象到底是什么，别猜，直接问它：<code>$x | Get-Member</code> 看有哪些属性方法，<code>$x.GetType().FullName</code> 看真实类型，<code>$x | Format-List *</code> 看全部属性值。PowerShell 是可自省的，这三招能解决一大半"为什么取不到值"的疑问。</p></div>
 
 <h2 id="p6-performance">6.8 性能要点：别再用 += 拼数组</h2>
 
@@ -4809,7 +4809,7 @@ Get-ChildItem D:\logs -Recurse -File |
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">别为了快牺牲可读性</span><p>上面三者差 11 倍，听起来吓人，但绝对值是 0.7 秒 vs 0.07 秒 —— 处理几百条数据时你根本感觉不到。<strong>只在真正的热点循环里换写法</strong>。而 <code>+=</code> 不一样：它是算法复杂度问题，任何规模下都应该避免，这不叫过早优化，叫别写错。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 别为了快牺牲可读性</span><p>上面三者差 11 倍，听起来吓人，但绝对值是 0.7 秒 vs 0.07 秒 —— 处理几百条数据时你根本感觉不到。<strong>只在真正的热点循环里换写法</strong>。而 <code>+=</code> 不一样：它是算法复杂度问题，任何规模下都应该避免，这不叫过早优化，叫别写错。</p></div>
 
 <h3>其他高频性能坑速查表</h3>
 
@@ -5015,7 +5015,7 @@ $ErrorActionPreference = 'Stop'       <span class="cm"># 入口脚本：宁可�
     Write-Verbose '清理完成'          <span class="cm"># 即使上面 exit 了，这里也会先执行</span>
 }</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">注意 $ErrorActionPreference 的两副面孔</span><p>本章前面把"脚本顶部一刀切"标成了禁用，这里却在骨架里写 <code>$ErrorActionPreference = 'Stop'</code> —— 不矛盾。被禁的是 <code>SilentlyContinue</code>（把错误藏起来），而 <code>Stop</code> 是把错误放大：宁可当场停在第一个问题上，也不要带着半截错误状态跑完全程、留下一个更难收拾的现场。<strong>入口脚本用 Stop，可复用的函数库则老老实实逐条写 <code>-ErrorAction Stop</code>，别去改调用者的环境。</strong></p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 注意 $ErrorActionPreference 的两副面孔</span><p>本章前面把"脚本顶部一刀切"标成了禁用，这里却在骨架里写 <code>$ErrorActionPreference = 'Stop'</code> —— 不矛盾。被禁的是 <code>SilentlyContinue</code>（把错误藏起来），而 <code>Stop</code> 是把错误放大：宁可当场停在第一个问题上，也不要带着半截错误状态跑完全程、留下一个更难收拾的现场。<strong>入口脚本用 Stop，可复用的函数库则老老实实逐条写 <code>-ErrorAction Stop</code>，别去改调用者的环境。</strong></p></div>
 
 <h2 id="p6-summary">6.10 本章小结与自查清单</h2>
 

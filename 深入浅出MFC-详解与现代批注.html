@@ -202,7 +202,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#ch0-classics">0.0 相关经典书籍</a>
 <a class="sec" href="#ch0-map">0.1 全书路线图</a>
 <a class="sec" href="#ch0-verdict">0.2 2026 该不该学 MFC</a>
-<a class="sec" href="#ch0-legend">0.3 四种状态标记</a>
+<a class="sec" href="#ch0-legend">0.3 四种批注框</a>
 </details>
 
 <div class="part">第一篇 · 勿在浮砂筑高台（基础）</div>
@@ -418,7 +418,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </section>
 
 <!-- ===================== 第 0 章 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 3242px;--thin-h:3242px">
+<section class="chapter" style="contain-intrinsic-size:auto 3306px;--thin-h:3306px">
 <h1 id="ch0"><span class="part">第 0 章</span>你一定要知道（导读）</h1>
 <h2 id="ch0-classics">0.0 相关经典书籍</h2>
 <p>本书对标侯捷原典。围绕 MFC 与其背后的 Win32,下面是这条线上的经典。</p>
@@ -494,18 +494,18 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <p>顺序别反:<strong>先懂 Win32 的裸消息机制(第 1 章/《Win32》书),再看 MFC 怎么包装它</strong>。反过来先学 MFC,每个宏都是黑盒,只能死记;正过来学,每个宏都是「哦,它把我上周手写的那段封起来了」——同样的内容,理解成本差数倍。这也是本书把第 1 章放在最前的原因。</p>
 </div>
 
-<h2 id="ch0-legend">0.3 四种状态标记</h2>
-<p>全书凡涉及技术演进之处，都用下面四种批注框标出。它们在正文里长什么样，这里各给一个真样例——认色即可，不必记文字：</p>
+<h2 id="ch0-legend">0.3 四种批注框</h2>
+<p>全书的提醒都装在四种颜色的批注框里，<strong>颜色本身就是分类</strong>。下面各给一个真样例，正文里见到的就是这个样子：</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 99px"><span class="t">🟢 仍适用</span><p>概念或技术今天依然有效，可以照着学、照着用。这一类占全书主体，尤其是原书讲透的那些机制。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 推荐 / 正解</span><p>正面结论：该这么写、判据是什么、一条能闭眼执行的经验。原书讲透而今天依然成立的机制，也归在这一类，它们占全书主体。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 99px"><span class="t">🟡 已过时</span><p>还能用，但不推荐——有更好的替代。见到它说明这段是历史脉络，读懂即可，新代码别再走这条路。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 131px"><span class="t">🟡 历史包袱</span><p>能用，但别选：有短板、有更好的替代，留着只为读懂旧代码。见到它说明这段是历史脉络，读懂即可，新代码别再走这条路。</p></div>
 
-<div class="note dead" style="contain-intrinsic-size:auto 131px"><span class="t">🔴 已废弃</span><p>已被移除，或微软明确不建议使用。原书里此类内容占了不少篇幅（VC++ 5.0 的 IDE、ClassWizard 的 .clw 等），本书保留其历史坐标，但会写清楚今天不能用。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 131px"><span class="t">🔴 陷阱 / 事故</span><p>不知道这条<strong>会出事</strong>：崩溃、数据不对、安全问题，或者接口已被移除。原书里此类内容占了不少篇幅（VC++ 5.0 的 IDE、ClassWizard 的 .clw 等），本书保留其历史坐标，同时写清楚今天为什么不能用。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 99px"><span class="t">🔵 现代更新</span><p>2026 年的替代方案：今天该用什么、怎么迁移、代价是什么。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 99px"><span class="t">🔵 现代替代</span><p>今天有新东西可以换：2026 年该用什么、怎么迁移、代价是什么。</p></div>
 
-<p class="updated">最后更新：2026-08-14。有新变化会补进「🔵 现代更新」框。</p>
+<p class="updated">最后更新：2026-08-14。有新变化会补进「🔵 现代替代」框。</p>
 </section>
 
 <!-- ===================== 第 1 章 ===================== -->

@@ -353,7 +353,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 
 <p><b>为什么这么设计。</b>Unix 从一开始就没把命令解释器塞进内核，而是做成一个可替换的普通程序。好处立竿见影：任何人都能写自己的 shell，你可以把登录 shell 换成 zsh、fish，甚至一个自己写的一百行程序，内核完全不关心。这是 Unix「机制与策略分离」最经典的一个例子——内核只提供「怎么创建进程」的机制，「用什么语法描述要创建哪个进程」是策略，交给用户态。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">现代提示</span><p>shell 有两副身份：它既是命令行界面，也是一门完整的编程语言（有变量、条件、循环、函数）。本书前半讲「界面」，后半讲「语言」。你现在敲的每一条交互命令，都是一行合法的脚本。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 131px"><span class="t">🔵 现代提示</span><p>shell 有两副身份：它既是命令行界面，也是一门完整的编程语言（有变量、条件、循环、函数）。本书前半讲「界面」，后半讲「语言」。你现在敲的每一条交互命令，都是一行合法的脚本。</p></div>
 
 <p>下面这张表把 shell 每读到一行要做的事拆开，本书后续章节基本就是按这张表展开的。</p>
 
@@ -416,9 +416,9 @@ echo "${BASH_VERSION:-我不是 bash}"</code></pre>
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示：选一个，写清楚</span><p>不要纠结「要不要写得可移植」。做个决定并在 shebang 里说明：需要跑在容器 / 路由器 / 初始化脚本里，就老老实实写 POSIX 加 <code>#!/bin/sh</code>；否则大方写 <code>#!/usr/bin/env bash</code>，享受数组和 <code>[[ ]]</code>。真正的错误是「写着 sh 的头，用着 bash 的语法」。装一个 <code>shellcheck</code>，它会按你的 shebang 逐条指出越界用法。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示：选一个，写清楚</span><p>不要纠结「要不要写得可移植」。做个决定并在 shebang 里说明：需要跑在容器 / 路由器 / 初始化脚本里，就老老实实写 POSIX 加 <code>#!/bin/sh</code>；否则大方写 <code>#!/usr/bin/env bash</code>，享受数组和 <code>[[ ]]</code>。真正的错误是「写着 sh 的头，用着 bash 的语法」。装一个 <code>shellcheck</code>，它会按你的 shebang 逐条指出越界用法。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">macOS 用户注意</span><p>macOS 自带的 <code>/bin/bash</code> 永远停留在 <b>3.2</b>（2007 年，因为之后 bash 改用 GPLv3 协议），没有关联数组、没有 <code>${var^^}</code>、没有 <code>readarray</code>。而系统默认登录 shell 早已是 zsh。要用现代 bash 就 <code>brew install bash</code>，它装在 <code>/opt/homebrew/bin/bash</code>——这正是下文推荐 <code>#!/usr/bin/env bash</code> 的直接原因。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 macOS 用户注意</span><p>macOS 自带的 <code>/bin/bash</code> 永远停留在 <b>3.2</b>（2007 年，因为之后 bash 改用 GPLv3 协议），没有关联数组、没有 <code>${var^^}</code>、没有 <code>readarray</code>。而系统默认登录 shell 早已是 zsh。要用现代 bash 就 <code>brew install bash</code>，它装在 <code>/opt/homebrew/bin/bash</code>——这正是下文推荐 <code>#!/usr/bin/env bash</code> 的直接原因。</p></div>
 
 <h3>写给 /bin/sh 的可移植清单</h3>
 <p>脚本第一行写 <code>#!/bin/sh</code>,就等于承诺只用 POSIX 特性——而 Debian/Ubuntu 的 /bin/sh 是 dash,bash 专属语法会<strong>真实地在别人的机器上崩</strong>。高频 bashism 对照表:</p>
@@ -433,7 +433,7 @@ echo "${BASH_VERSION:-我不是 bash}"</code></pre>
 <tr><td class="nw"><code>==</code>(test 里)</td><td class="nw"><code>=</code></td><td>单等号才是标准</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">决策一句话 + 验证一条命令</span><p>先选阵营再动笔:<strong>要发行给未知环境(安装脚本、容器入口、CI 步骤)→ 老实写 POSIX,shebang 写 /bin/sh;只在自己可控的环境跑 → 大方写 bash,但 shebang 必须诚实地写 #!/usr/bin/env bash</strong>。最怕的是写着 sh 的头、用着 bash 的身。验证:<code>shellcheck --shell=sh 脚本</code> 会把每一处 bashism 点名(SC2039/SC3xxx 系),或直接拿 dash 跑一遍测试。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 决策一句话 + 验证一条命令</span><p>先选阵营再动笔:<strong>要发行给未知环境(安装脚本、容器入口、CI 步骤)→ 老实写 POSIX,shebang 写 /bin/sh;只在自己可控的环境跑 → 大方写 bash,但 shebang 必须诚实地写 #!/usr/bin/env bash</strong>。最怕的是写着 sh 的头、用着 bash 的身。验证:<code>shellcheck --shell=sh 脚本</code> 会把每一处 bashism 点名(SC2039/SC3xxx 系),或直接拿 dash 跑一遍测试。</p></div>
 
 <h2 id="b1-modes">1.3 交互式与非交互式、登录与非登录</h2>
 
@@ -478,7 +478,7 @@ echo "$0"        <span class="cm"># -bash（登录） 或 bash（非登录）</s
 
 <p><b>为什么要分。</b>两种场景的目标是冲突的：交互式要「对人友好」——别名、补全、彩色、历史、纠错；脚本要「可预测」——同样的输入永远产生同样的输出。如果你的个人别名 <code>alias rm='rm -i'</code> 也在脚本里生效，别人跑你的脚本时会莫名其妙卡在确认提示上。所以 bash 干脆规定：非交互式下别名默认失效。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">现代提示：脚本里别用别名，用函数</span><p>别名只是一层文本替换，不接受参数、不参与作用域，在脚本里还默认关闭。要在脚本里封装一段逻辑，一律用函数：<code>deploy() { ... }</code>。函数在交互式和非交互式下行为一致，能收参数，还能有局部变量。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">🔵 现代提示：脚本里别用别名，用函数</span><p>别名只是一层文本替换，不接受参数、不参与作用域，在脚本里还默认关闭。要在脚本里封装一段逻辑，一律用函数：<code>deploy() { ... }</code>。函数在交互式和非交互式下行为一致，能收参数，还能有局部变量。</p></div>
 
 <h2 id="b1-lifecycle">1.4 从回车到进程退出：一条命令的一生</h2>
 
@@ -558,9 +558,9 @@ $ command -v ls                <span class="cm"># 只吐路径，最适合脚本
 
 <p><b>一个关键的推论：为什么 <code>cd</code> 必须是内建？</b>因为进程的当前工作目录是<b>每个进程各自的属性</b>。如果 <code>cd</code> 是 <code>/bin/cd</code> 这样一个外部程序，shell 会 fork 出一个子进程来跑它，子进程把自己的目录换掉，然后退出——你的 shell 一动没动。同理，<code>export</code>、<code>read</code>、<code>ulimit</code>、<code>umask</code> 也都必须是内建。这条「子进程改不了父进程」的铁律，正是下一节 <code>source</code> 存在的全部理由。</p>
 
-<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">别再用 which</span><p><code>which</code> 是一个外部程序（有些系统上是 csh 脚本），它不知道你的函数和内建，各发行版行为还不一致。<span class="badge old">已过时</span> 交互时想看清楚用 <code>type -a</code>；脚本里判断命令是否存在，用 POSIX 标准的 <code>command -v</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">🟡 别再用 which</span><p><code>which</code> 是一个外部程序（有些系统上是 csh 脚本），它不知道你的函数和内建，各发行版行为还不一致。<span class="badge old">已过时</span> 交互时想看清楚用 <code>type -a</code>；脚本里判断命令是否存在，用 POSIX 标准的 <code>command -v</code>。</p></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 100px"><span class="t">「我明明装了新版，跑的还是旧的」</span><p>第 5 步那个 hash 缓存干的好事：bash 记住了旧路径。<code>hash -r</code> 清空缓存即可，不必重开终端。<span class="badge ok">仍适用</span></p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 100px"><span class="t">🟢 「我明明装了新版，跑的还是旧的」</span><p>第 5 步那个 hash 缓存干的好事：bash 记住了旧路径。<code>hash -r</code> 清空缓存即可，不必重开终端。<span class="badge ok">仍适用</span></p></div>
 
 <h2 id="b1-first">1.5 第一个脚本，以及 shebang 为什么这么写</h2>
 
@@ -609,9 +609,9 @@ echo "我是 $0，进程号 $$，父进程 $PPID"</code></pre>
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 247px"><span class="t">Windows 编辑器最经典的一个坑</span><p>脚本若以 CRLF（<code>\r\n</code>）换行保存，shebang 行末尾会多一个不可见的 <code>\r</code>，内核于是去找一个叫 <code>bash\r</code> 的程序：</p><p><code>bash: ./deploy.sh: /usr/bin/env: bad interpreter: No such file or directory</code></p><p>修复：<code>dos2unix deploy.sh</code>，或 <code>sed -i 's/\r$//' deploy.sh</code>。在 Git 里配 <code>* text=auto eol=lf</code> 可以根治。<span class="badge dead">禁用</span> 用 CRLF 保存 shell 脚本。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 247px"><span class="t">🔴 Windows 编辑器最经典的一个坑</span><p>脚本若以 CRLF（<code>\r\n</code>）换行保存，shebang 行末尾会多一个不可见的 <code>\r</code>，内核于是去找一个叫 <code>bash\r</code> 的程序：</p><p><code>bash: ./deploy.sh: /usr/bin/env: bad interpreter: No such file or directory</code></p><p>修复：<code>dos2unix deploy.sh</code>，或 <code>sed -i 's/\r$//' deploy.sh</code>。在 Git 里配 <code>* text=auto eol=lf</code> 可以根治。<span class="badge dead">禁用</span> 用 CRLF 保存 shell 脚本。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">现代提示：第二行几乎总是它</span><p><code>set -euo pipefail</code>——遇错即停、用未定义变量即报错、管道里任何一段失败都算失败。因为 shebang 带不了参数，这三个开关只能写在脚本里。它的细节和例外见本章最后一节。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">🔵 现代提示：第二行几乎总是它</span><p><code>set -euo pipefail</code>——遇错即停、用未定义变量即报错、管道里任何一段失败都算失败。因为 shebang 带不了参数，这三个开关只能写在脚本里。它的细节和例外见本章最后一节。</p></div>
 
 <h2 id="b1-exec">1.6 chmod +x 与三种执行方式</h2>
 
@@ -634,7 +634,7 @@ echo "我是 $0，进程号 $$，父进程 $PPID"</code></pre>
 
 <p><b>然后是那个恼人的 <code>./</code>。</b>为什么不能直接敲 <code>run.sh</code>？因为 PATH 里<b>故意</b>不包含当前目录。设想一下：如果当前目录在 PATH 里，有人往 <code>/tmp</code> 丢一个名叫 <code>ls</code> 的恶意程序，你 <code>cd /tmp</code> 后随手敲个 <code>ls</code>，就以自己的身份把它跑起来了。写 <code>./run.sh</code> 是在明确地说「我要的就是这个文件，不是 PATH 里某个同名的东西」。</p>
 
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">永远不要把当前目录加进 PATH</span><p><code>export PATH="$PATH:."</code> 或者更糟的 <code>PATH=".:$PATH"</code>——这是一条经典的提权路径，任何一个你 cd 进去的可写目录都可能变成陷阱。<span class="badge dead">禁用</span> 多敲两个字符 <code>./</code> 就好。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 永远不要把当前目录加进 PATH</span><p><code>export PATH="$PATH:."</code> 或者更糟的 <code>PATH=".:$PATH"</code>——这是一条经典的提权路径，任何一个你 cd 进去的可写目录都可能变成陷阱。<span class="badge dead">禁用</span> 多敲两个字符 <code>./</code> 就好。</p></div>
 
 <p>现在看核心区别。同一个脚本，三种跑法，结果完全不同：</p>
 
@@ -722,11 +722,11 @@ hello</code></pre>
 source /etc/os-release        <span class="cm"># 把文件里的键值对读成当前 shell 的变量</span>
 echo "$PRETTY_NAME"</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">source 和 . 是一回事</span><p><code>.</code>（一个点加空格）是 POSIX 标准写法，任何 shell 都认；<code>source</code> 是 bash/zsh 的别名，可读性更好。写 sh 脚本用 <code>.</code>，写 bash 脚本随意。<span class="badge ok">仍适用</span></p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 source 和 . 是一回事</span><p><code>.</code>（一个点加空格）是 POSIX 标准写法，任何 shell 都认；<code>source</code> 是 bash/zsh 的别名，可读性更好。写 sh 脚本用 <code>.</code>，写 bash 脚本随意。<span class="badge ok">仍适用</span></p></div>
 
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">source 一个不可信的脚本，等于把 shell 交出去</span><p>被 source 的代码就是你本人：它能改你的 <code>PATH</code>、定义与 <code>sudo</code> 同名的函数、装 <code>trap</code> 钩子、读你的历史。<code>curl ... | bash</code> 至少还是子进程，<code>source &lt;(curl ...)</code> 则是直接开门。<span class="badge dead">禁用</span> source 任何你没读过的远程内容。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 source 一个不可信的脚本，等于把 shell 交出去</span><p>被 source 的代码就是你本人：它能改你的 <code>PATH</code>、定义与 <code>sudo</code> 同名的函数、装 <code>trap</code> 钩子、读你的历史。<code>curl ... | bash</code> 至少还是子进程，<code>source &lt;(curl ...)</code> 则是直接开门。<span class="badge dead">禁用</span> source 任何你没读过的远程内容。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示：想让子脚本影响父 shell，正确姿势是什么</span><p>不要试图从子进程「反向」修改父 shell，这在设计上就不可能。两条正路：一是让子脚本把结果打印到标准输出，父 shell 用 <code>eval "$(tool init bash)"</code> 消化（<code>direnv</code>、<code>ssh-agent</code>、<code>zoxide</code> 都是这个套路）；二是干脆把它写成函数放进 <code>~/.bashrc</code>，函数天生就在当前 shell 里跑。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示：想让子脚本影响父 shell，正确姿势是什么</span><p>不要试图从子进程「反向」修改父 shell，这在设计上就不可能。两条正路：一是让子脚本把结果打印到标准输出，父 shell 用 <code>eval "$(tool init bash)"</code> 消化（<code>direnv</code>、<code>ssh-agent</code>、<code>zoxide</code> 都是这个套路）；二是干脆把它写成函数放进 <code>~/.bashrc</code>，函数天生就在当前 shell 里跑。</p></div>
 
 <h2 id="b1-startup">1.7 启动文件：环境变量为什么设了不生效</h2>
 
@@ -824,7 +824,7 @@ export EDITOR=vim</code></pre>
       *) <span class="kw">return</span> ;;         <span class="cm"># 非交互式，到此为止</span>
 <span class="kw">esac</span></code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">经典事故：.bashrc 里的欢迎语搞坏了 scp</span><p><code>ssh</code> 能连，<code>scp</code> / <code>sftp</code> / <code>rsync</code> 却报 <code>protocol error</code> 或干脆卡死——十有八九是 <code>~/.bashrc</code> 里有 <code>echo "欢迎回来"</code>、<code>fortune</code>、<code>neofetch</code> 之类的输出。远程非交互 bash 会读 <code>.bashrc</code>，而 scp 把标准输出当作二进制协议数据，多出来的那几个字节直接把协议撞歪了。<span class="badge dead">禁用</span> 在启动文件里无条件打印任何东西；要打印，请放在上面那道交互守卫之后。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 经典事故：.bashrc 里的欢迎语搞坏了 scp</span><p><code>ssh</code> 能连，<code>scp</code> / <code>sftp</code> / <code>rsync</code> 却报 <code>protocol error</code> 或干脆卡死——十有八九是 <code>~/.bashrc</code> 里有 <code>echo "欢迎回来"</code>、<code>fortune</code>、<code>neofetch</code> 之类的输出。远程非交互 bash 会读 <code>.bashrc</code>，而 scp 把标准输出当作二进制协议数据，多出来的那几个字节直接把协议撞歪了。<span class="badge dead">禁用</span> 在启动文件里无条件打印任何东西；要打印，请放在上面那道交互守卫之后。</p></div>
 
 <table style="contain-intrinsic-size:auto 314px">
 <thead><tr><th class="nw">症状</th><th>多半原因</th><th>怎么查</th></tr></thead>
@@ -846,7 +846,7 @@ PS4='+ ${BASH_SOURCE}:${LINENO}: ' bash -lixc exit 2&gt;&amp;1 | head -40
 <span class="cm"># 只检查语法，不执行</span>
 bash -n ~/.bashrc</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示：systemd 与 CI 根本不看这些文件</span><p>systemd 服务、cron、GitHub Actions、Docker 的 <code>RUN</code> 一律不读 <code>.bashrc</code> / <code>.bash_profile</code>。别指望在那里靠 shell 配置注入环境变量，正确做法是 systemd 的 <code>Environment=</code> / <code>EnvironmentFile=</code>、CI 的 <code>env:</code> 段，或者在脚本内部显式设置。<span class="badge new">现代提示</span></p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示：systemd 与 CI 根本不看这些文件</span><p>systemd 服务、cron、GitHub Actions、Docker 的 <code>RUN</code> 一律不读 <code>.bashrc</code> / <code>.bash_profile</code>。别指望在那里靠 shell 配置注入环境变量，正确做法是 systemd 的 <code>Environment=</code> / <code>EnvironmentFile=</code>、CI 的 <code>env:</code> 段，或者在脚本内部显式设置。<span class="badge new">现代提示</span></p></div>
 
 <h2 id="b1-exit">1.8 退出码 $? 与 exit</h2>
 
@@ -880,7 +880,7 @@ $ echo $?
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">$? 只有一瞬间的寿命</span><p>它保存的是<b>最近一条</b>命令的退出码，连你刚敲的 <code>echo</code> 都会覆盖它。要用就立刻存：<code>rc=$?</code>，然后再去判断 <code>$rc</code>。<span class="badge ok">仍适用</span></p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 $? 只有一瞬间的寿命</span><p>它保存的是<b>最近一条</b>命令的退出码，连你刚敲的 <code>echo</code> 都会覆盖它。要用就立刻存：<code>rc=$?</code>，然后再去判断 <code>$rc</code>。<span class="badge ok">仍适用</span></p></div>
 
 <p>围绕退出码，shell 给了一整套语法：</p>
 
@@ -930,9 +930,9 @@ $ ./check.sh /nope; echo "退出码=$?"
 
 <p>注意两个细节：错误信息用 <code>&gt;&amp;2</code> 写到标准错误（这样调用方 <code>./check.sh f &gt; result.txt</code> 时，报错仍然看得见）；不同的失败原因用不同的退出码，调用方就能区分「文件不存在」和「文件为空」。这就是退出码的意义——它是脚本之间唯一通用的、无需解析文本的沟通协议。</p>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">set -e 不是安全带，别把命交给它</span><p><code>set -e</code> 有一长串失效场景，几乎每个人都被坑过：命令出现在 <code>if</code>/<code>while</code> 条件里、在 <code>&amp;&amp;</code> 或 <code>||</code> 左边、在 <code>!</code> 后面时，失败都<b>不会</b>触发退出；<code>local x=$(cmd)</code> 里 <code>local</code> 的退出码会盖掉 <code>cmd</code> 的；管道默认只看最后一段。<span class="badge old">已过时</span> 「加了 set -e 就万事大吉」的想法。关键步骤请显式检查退出码。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 set -e 不是安全带，别把命交给它</span><p><code>set -e</code> 有一长串失效场景，几乎每个人都被坑过：命令出现在 <code>if</code>/<code>while</code> 条件里、在 <code>&amp;&amp;</code> 或 <code>||</code> 左边、在 <code>!</code> 后面时，失败都<b>不会</b>触发退出；<code>local x=$(cmd)</code> 里 <code>local</code> 的退出码会盖掉 <code>cmd</code> 的；管道默认只看最后一段。<span class="badge old">已过时</span> 「加了 set -e 就万事大吉」的想法。关键步骤请显式检查退出码。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 216px"><span class="t">现代提示：脚本开头三件套</span><p><code>set -Eeuo pipefail</code> 配一个 ERR 陷阱，出问题时直接告诉你哪一行崩的：</p><p><code>trap 'echo "脚本在第 $LINENO 行失败（退出码 $?）" &gt;&amp;2' ERR</code></p><p>其中 <code>-E</code> 让函数和子 shell 也继承这个 ERR 陷阱，<code>-u</code> 让引用未定义变量直接报错——它能挡住 <code>rm -rf "$PREFIX/"</code> 里 <code>PREFIX</code> 拼错这类事故。<span class="badge new">现代提示</span></p></div>
+<div class="note new" style="contain-intrinsic-size:auto 216px"><span class="t">🔵 现代提示：脚本开头三件套</span><p><code>set -Eeuo pipefail</code> 配一个 ERR 陷阱，出问题时直接告诉你哪一行崩的：</p><p><code>trap 'echo "脚本在第 $LINENO 行失败（退出码 $?）" &gt;&amp;2' ERR</code></p><p>其中 <code>-E</code> 让函数和子 shell 也继承这个 ERR 陷阱，<code>-u</code> 让引用未定义变量直接报错——它能挡住 <code>rm -rf "$PREFIX/"</code> 里 <code>PREFIX</code> 拼错这类事故。<span class="badge new">现代提示</span></p></div>
 
 <h2 id="b1-cheat">1.9 本章速查与自测</h2>
 
@@ -973,7 +973,7 @@ $ ./check.sh /nope; echo "退出码=$?"
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">$SHELL 不等于「我现在跑的 shell」</span><p><code>$SHELL</code> 来自 <code>/etc/passwd</code> 里给你登记的登录 shell，你在 zsh 里敲 <code>bash</code> 之后，<code>$SHELL</code> 还是 <code>/bin/zsh</code>。想知道当前进程是谁，用 <code>ps -p $$ -o comm=</code>。<span class="badge ok">仍适用</span></p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 $SHELL 不等于「我现在跑的 shell」</span><p><code>$SHELL</code> 来自 <code>/etc/passwd</code> 里给你登记的登录 shell，你在 zsh 里敲 <code>bash</code> 之后，<code>$SHELL</code> 还是 <code>/bin/zsh</code>。想知道当前进程是谁，用 <code>ps -p $$ -o comm=</code>。<span class="badge ok">仍适用</span></p></div>
 
 <p>最后，用这几个问题检验一下这一章是否真的读进去了。答不上来的，回到对应小节再看一遍。</p>
 
@@ -991,7 +991,7 @@ $ ./check.sh /nope; echo "退出码=$?"
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">动手做：把本章串成一次实验</span><p>写一个 <code>env-probe.sh</code>，打印 <code>$$</code>、<code>$0</code>、<code>$-</code>、<code>$PWD</code>、<code>$PATH</code>、<code>shopt login_shell</code> 的结果。然后分别用 <code>./env-probe.sh</code>、<code>bash env-probe.sh</code>、<code>source env-probe.sh</code>、<code>ssh localhost './env-probe.sh'</code>、以及一条 cron 任务去跑它，把五份输出并排对比。你会亲眼看到本章讲的每一条规则。<span class="badge new">现代提示</span> 再顺手 <code>shellcheck env-probe.sh</code>，让静态检查替你挑毛病。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 动手做：把本章串成一次实验</span><p>写一个 <code>env-probe.sh</code>，打印 <code>$$</code>、<code>$0</code>、<code>$-</code>、<code>$PWD</code>、<code>$PATH</code>、<code>shopt login_shell</code> 的结果。然后分别用 <code>./env-probe.sh</code>、<code>bash env-probe.sh</code>、<code>source env-probe.sh</code>、<code>ssh localhost './env-probe.sh'</code>、以及一条 cron 任务去跑它，把五份输出并排对比。你会亲眼看到本章讲的每一条规则。<span class="badge new">现代提示</span> 再顺手 <code>shellcheck env-probe.sh</code>，让静态检查替你挑毛病。</p></div>
 
 </section>
 
@@ -1019,7 +1019,7 @@ $ ./check.sh /nope; echo "退出码=$?"
 
 <p>只有当一个词整体长成 <code>名字=值</code> 的形状、并且出现在命令名<strong>之前</strong>时，shell 才把它识别为赋值。中间插一个空格，这个词就被劈成三半，赋值的形状也就没了。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">打个比方</span><p>在 Python 里 <code>=</code> 是一个运算符，两边留空格只是排版风格。在 bash 里 <code>=</code> 是<strong>词内部的一个字符</strong>，就像电话号码里的数字：<code>13800138000</code> 中间断开一格，它就不再是一个号码，而是两串数字。你不能指望它还能拨通。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 打个比方</span><p>在 Python 里 <code>=</code> 是一个运算符，两边留空格只是排版风格。在 bash 里 <code>=</code> 是<strong>词内部的一个字符</strong>，就像电话号码里的数字：<code>13800138000</code> 中间断开一格，它就不再是一个号码，而是两串数字。你不能指望它还能拨通。</p></div>
 
 <h3>设计动机</h3>
 
@@ -1067,7 +1067,7 @@ TZ=UTC LC_ALL=C date</code></pre>
 
 <p>为什么要区分大小写？因为环境变量是<strong>共享命名空间</strong>——你的脚本里随手写一个 <code>PATH=./bin</code>，后面所有命令都会找不到。小写变量名等于给自己划了一块不会跟系统撞车的地盘。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示：给未定义变量装上保险</span><p>bash 默认把未定义的变量当成空串，不报错。于是 <code>rm -rf "$dir/build"</code> 在 <code>dir</code> 拼错时会变成 <code>rm -rf /build</code>。在脚本开头加上 <code>set -u</code>（或写全 <code>set -euo pipefail</code>），引用未定义变量会直接报错退出。这是现代 bash 脚本的标准开场白。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示：给未定义变量装上保险</span><p>bash 默认把未定义的变量当成空串，不报错。于是 <code>rm -rf "$dir/build"</code> 在 <code>dir</code> 拼错时会变成 <code>rm -rf /build</code>。在脚本开头加上 <code>set -u</code>（或写全 <code>set -euo pipefail</code>），引用未定义变量会直接报错退出。这是现代 bash 脚本的标准开场白。</p></div>
 
 <h2 id="b2-brace">2.2 取值：$VAR 与 ${VAR} 的边界问题</h2>
 
@@ -1083,7 +1083,7 @@ echo ${file}_bak    <span class="cm"># 输出 report_bak</span></code></pre>
 
 <p>花括号的作用只有一个：<strong>画出变量名的边界</strong>。<code>${file}_bak</code> 明确告诉 shell「名字到这里为止，后面的 <code>_bak</code> 是普通字符」。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">打个比方</span><p><code>${}</code> 就像写地址时的括号：「北京市（朝阳区）望京」。不加括号，读的人不知道行政层级到哪一层结束；加了括号，边界一目了然。它和引号解决的是<strong>完全不同</strong>的两个问题——花括号管「名字读到哪」，引号管「结果要不要再切开」。两者正交，经常要同时用：<code>"${file}_bak"</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 打个比方</span><p><code>${}</code> 就像写地址时的括号：「北京市（朝阳区）望京」。不加括号，读的人不知道行政层级到哪一层结束；加了括号，边界一目了然。它和引号解决的是<strong>完全不同</strong>的两个问题——花括号管「名字读到哪」，引号管「结果要不要再切开」。两者正交，经常要同时用：<code>"${file}_bak"</code>。</p></div>
 
 <h3>什么时候必须用 ${}</h3>
 
@@ -1105,7 +1105,7 @@ echo $dir/app.log        <span class="cm"># 可以：/ 不是名字字符，边�
 echo ${dir}/app.log      <span class="cm"># 同样的结果，更保险</span>
 echo "$file.txt"         <span class="cm"># 可以：. 不是名字字符</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">现代提示：风格选一种，别混着来</span><p>两种流派都有人用：一派「只在必要时加花括号」，理由是噪声少；另一派「一律加」，理由是不用每次判断、复制粘贴不出事。团队里挑一种写进规范就行，最忌讳同一个文件里两种混用——读的人会以为加了花括号的地方有什么特殊含义。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 现代提示：风格选一种，别混着来</span><p>两种流派都有人用：一派「只在必要时加花括号」，理由是噪声少；另一派「一律加」，理由是不用每次判断、复制粘贴不出事。团队里挑一种写进规范就行，最忌讳同一个文件里两种混用——读的人会以为加了花括号的地方有什么特殊含义。</p></div>
 
 <h2 id="b2-quotes">2.3 引号四兄弟：单引号、双引号、反引号与 $()</h2>
 
@@ -1151,7 +1151,7 @@ echo "a\$b"      <span class="cm"># a$b     —— 转义生效</span>
 echo "a\\b"      <span class="cm"># a\b     —— 转义生效，两个反斜杠得到一个</span>
 printf 'a\tb\n'  <span class="cm"># a	b     —— 制表符要靠 printf 解释，不是引号</span></code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">容易记错的一点</span><p><code>echo</code> 对反斜杠的处理各系统不一致（有的默认解释 <code>\t</code>，有的要加 <code>-e</code>）。要输出转义序列，一律用 <code>printf</code>，行为在所有系统上一致。这是可移植脚本的基本功。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">🟡 容易记错的一点</span><p><code>echo</code> 对反斜杠的处理各系统不一致（有的默认解释 <code>\t</code>，有的要加 <code>-e</code>）。要输出转义序列，一律用 <code>printf</code>，行为在所有系统上一致。这是可移植脚本的基本功。</p></div>
 
 <h3>单引号里怎么放单引号</h3>
 
@@ -1190,7 +1190,7 @@ echo "上级目录共 $(ls -1 "$(dirname "$PWD")" | wc -l) 项"
 <span class="cm"># 旧写法：同样的逻辑，反引号要层层转义，越写越乱</span>
 echo "上级目录共 `ls -1 \`dirname "$PWD"\` | wc -l` 项"</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 132px"><span class="t">已过时：反引号</span><p>反引号并没有「坏掉」，POSIX 至今保留它，老脚本里遍地都是，你必须看得懂。但<strong>新代码不要再写</strong>。<code>$()</code> 在所有 POSIX shell 里都可用，没有任何兼容性理由继续用反引号。ShellCheck 会以 SC2006 提醒你。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 132px"><span class="t">🟡 已过时：反引号</span><p>反引号并没有「坏掉」，POSIX 至今保留它，老脚本里遍地都是，你必须看得懂。但<strong>新代码不要再写</strong>。<code>$()</code> 在所有 POSIX shell 里都可用，没有任何兼容性理由继续用反引号。ShellCheck 会以 SC2006 提醒你。</p></div>
 
 <h3>第五种引号：$'…'</h3>
 
@@ -1334,7 +1334,7 @@ echo 找 $pattern          <span class="cm"># 找 app.log err.log … —— 意
 [ -n "$v" ] &amp;&amp; echo "非空"
 <span class="cm"># 正确：没有输出</span></code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">打个比方</span><p>不加引号的变量，像是把一张纸条上的内容<strong>念给</strong> shell 听；shell 按听到的声音重新断句。加了双引号，像是把纸条<strong>整张递过去</strong>，上面写什么就是什么，不再重新断句。数据里有空格，念出来就串了行。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 打个比方</span><p>不加引号的变量，像是把一张纸条上的内容<strong>念给</strong> shell 听；shell 按听到的声音重新断句。加了双引号，像是把纸条<strong>整张递过去</strong>，上面写什么就是什么，不再重新断句。数据里有空格，念出来就串了行。</p></div>
 
 <h3>设计动机：这曾经是特性</h3>
 
@@ -1372,9 +1372,9 @@ ls "${opts[@]}" /tmp</code></pre>
 
 <p>注意最后两类的区别：<strong>引号是给「变量的值」用的，不是给「你亲手写的通配符」用的。</strong></p>
 
-<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">现代提示：让工具替你盯着</span><p>装一个 <code>shellcheck</code>，把它接进编辑器或 CI。漏掉引号会报 SC2086（Double quote to prevent globbing and word splitting），是它最高频的一条提示。人会疲劳，静态检查不会。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 132px"><span class="t">🔵 现代提示：让工具替你盯着</span><p>装一个 <code>shellcheck</code>，把它接进编辑器或 CI。漏掉引号会报 SC2086（Double quote to prevent globbing and word splitting），是它最高频的一条提示。人会疲劳，静态检查不会。</p></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">一条可以闭眼执行的规则</span><p>写 <code>$</code> 的时候，手指顺带把双引号打上。极少数确实需要分词的场合，你会主动想起来去掉——而想不起来的场合，加着引号才是对的。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 一条可以闭眼执行的规则</span><p>写 <code>$</code> 的时候，手指顺带把双引号打上。极少数确实需要分词的场合，你会主动想起来去掉——而想不起来的场合，加着引号才是对的。</p></div>
 
 <h2 id="b2-param">2.5 参数展开速查：一套内建的字符串工具</h2>
 
@@ -1440,7 +1440,7 @@ grep ${verbose:+-v} "pattern" file.txt</code></pre>
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">怎么记住 # 和 %</span><p>看美式键盘的数字行：<code>#</code> 在 <code>3</code> 上，<code>$</code> 在 <code>4</code> 上，<code>%</code> 在 <code>5</code> 上。<code>#</code> 在 <code>$</code> <strong>左边</strong>，所以砍左边（前缀）；<code>%</code> 在 <code>$</code> <strong>右边</strong>，所以砍右边（后缀）。符号写一个是「客气一点，砍最短」，写两个是「狠一点，砍最长」。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 怎么记住 # 和 %</span><p>看美式键盘的数字行：<code>#</code> 在 <code>3</code> 上，<code>$</code> 在 <code>4</code> 上，<code>%</code> 在 <code>5</code> 上。<code>#</code> 在 <code>$</code> <strong>左边</strong>，所以砍左边（前缀）；<code>%</code> 在 <code>$</code> <strong>右边</strong>，所以砍右边（后缀）。符号写一个是「客气一点，砍最短」，写两个是「狠一点，砍最长」。</p></div>
 
 <pre style="contain-intrinsic-size:auto 304px"><code>p=/home/liam/docs/report.tar.gz
 
@@ -1453,7 +1453,7 @@ echo "${p%%.*}"      <span class="cm"># /home/liam/docs/report       贪婪，�
 f="${p##*/}"
 echo "${f%%.*}"      <span class="cm"># report               纯文件名（去掉所有扩展名）</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示：模式是通配符，不是正则</span><p><code>#</code> <code>%</code> <code>/</code> 后面跟的是 <strong>glob 模式</strong>（<code>*</code> <code>?</code> <code>[…]</code>），不是正则表达式。<code>*</code> 表示「任意长度的任意字符」，不是「前一项重复」。写 <code>${f%.*}</code> 而不是 <code>${f%\.[a-z]+}</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示：模式是通配符，不是正则</span><p><code>#</code> <code>%</code> <code>/</code> 后面跟的是 <strong>glob 模式</strong>（<code>*</code> <code>?</code> <code>[…]</code>），不是正则表达式。<code>*</code> 表示「任意长度的任意字符」，不是「前一项重复」。写 <code>${f%.*}</code> 而不是 <code>${f%\.[a-z]+}</code>。</p></div>
 
 <h3>查找替换</h3>
 
@@ -1492,7 +1492,7 @@ echo "${msg^^}"       <span class="cm"># HELLO WORLD</span>
 path="my file.txt"
 echo "${path@Q}"      <span class="cm"># 'my file.txt' —— 适合写进日志或生成脚本</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示：参数展开是「零成本」的</span><p><code>basename</code>、<code>dirname</code>、<code>sed</code>、<code>cut</code> 都是外部命令，每次调用都要 fork + exec 一个进程。参数展开完全在 bash 内部完成。单次差别只有几毫秒，但放进一个处理一万个文件的循环里，就是几十秒和零点几秒的区别。能用 <code>${}</code> 解决的字符串操作，不要起子进程。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示：参数展开是「零成本」的</span><p><code>basename</code>、<code>dirname</code>、<code>sed</code>、<code>cut</code> 都是外部命令，每次调用都要 fork + exec 一个进程。参数展开完全在 bash 内部完成。单次差别只有几毫秒，但放进一个处理一万个文件的循环里，就是几十秒和零点几秒的区别。能用 <code>${}</code> 解决的字符串操作，不要起子进程。</p></div>
 
 <h2 id="b2-positional">2.6 位置参数与 "$@" 和 "$*" 的关键区别</h2>
 
@@ -1622,7 +1622,7 @@ join_by ' | ' x y           <span class="cm"># x | y   注意：只取分隔符�
 <span class="cm"># 剩下的位置参数就是文件列表，用 "$@" 访问</span>
 echo "共 $# 个文件"</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">函数里的位置参数是函数自己的</span><p>调用函数时，函数内部的 <code>$1</code> <code>$2</code> <code>$#</code> <code>"$@"</code> 指的是<strong>传给函数的参数</strong>，不是脚本的参数。唯一的例外是 <code>$0</code>——它在函数里仍然是脚本名。要拿函数名，用 <code>$FUNCNAME</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 函数里的位置参数是函数自己的</span><p>调用函数时，函数内部的 <code>$1</code> <code>$2</code> <code>$#</code> <code>"$@"</code> 指的是<strong>传给函数的参数</strong>，不是脚本的参数。唯一的例外是 <code>$0</code>——它在函数里仍然是脚本名。要拿函数名，用 <code>$FUNCNAME</code>。</p></div>
 
 <h2 id="b2-env">2.7 环境变量、export 与函数里的 local</h2>
 
@@ -1677,7 +1677,7 @@ bash -c 'echo "[$greet]"'      <span class="cm"># [hi]</span></code></pre>
 <figcaption>shell 变量、环境变量与进程继承（原创绘制）</figcaption>
 </figure>
 
-<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">打个比方</span><p>环境变量像父母交给孩子出门时的一份<strong>复印件</strong>清单。孩子在自己那份上涂改，父母手里的原件毫无变化；父母出门后改了原件，已经出门的孩子也不知道。<code>export</code> 决定的是「哪几条会被复印进清单」。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 打个比方</span><p>环境变量像父母交给孩子出门时的一份<strong>复印件</strong>清单。孩子在自己那份上涂改，父母手里的原件毫无变化；父母出门后改了原件，已经出门的孩子也不知道。<code>export</code> 决定的是「哪几条会被复印进清单」。</p></div>
 
 <h3>三个重要推论</h3>
 
@@ -1728,7 +1728,7 @@ bash -c 'echo "[$greet]"'      <span class="cm"># [hi]</span></code></pre>
 </tbody>
 </table>
 
-<div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">禁用：把密钥 export 进全局环境</span><p>不要在 <code>~/.bashrc</code> 里写 <code>export AWS_SECRET_KEY=…</code>。环境会被<strong>所有</strong>子进程继承，而且在 Linux 上可以通过 <code>ps eww</code> 或 <code>/proc/PID/environ</code> 被同用户的其它进程读到。更别把密钥写成命令行参数（<code>curl -H "token: abc"</code>），<code>ps</code> 里全世界都看得见。用一次性前缀 <code>API_KEY=$(pass show api) ./deploy.sh</code>、配置文件加 <code>chmod 600</code>，或系统的密钥管理服务。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 禁用：把密钥 export 进全局环境</span><p>不要在 <code>~/.bashrc</code> 里写 <code>export AWS_SECRET_KEY=…</code>。环境会被<strong>所有</strong>子进程继承，而且在 Linux 上可以通过 <code>ps eww</code> 或 <code>/proc/PID/environ</code> 被同用户的其它进程读到。更别把密钥写成命令行参数（<code>curl -H "token: abc"</code>），<code>ps</code> 里全世界都看得见。用一次性前缀 <code>API_KEY=$(pass show api) ./deploy.sh</code>、配置文件加 <code>chmod 600</code>，或系统的密钥管理服务。</p></div>
 
 <h3>local：函数里的变量默认是全局的</h3>
 
@@ -1763,10 +1763,10 @@ echo "$counter"  <span class="cm"># 0   ——  全局那个没被动过</span><
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 245px"><span class="t">现代提示：local 会吞掉退出码</span><p><code>local out=$(risky_cmd)</code> 里，<code>$?</code> 是 <code>local</code> 这条<strong>命令本身</strong>的退出码（永远是 0），<code>risky_cmd</code> 的失败被吞了。<code>set -e</code> 也救不了你。正确写法是拆成两行：</p><pre style="contain-intrinsic-size:auto 83px"><code><span class="kw">local</span> out
+<div class="note new" style="contain-intrinsic-size:auto 245px"><span class="t">🔵 现代提示：local 会吞掉退出码</span><p><code>local out=$(risky_cmd)</code> 里，<code>$?</code> 是 <code>local</code> 这条<strong>命令本身</strong>的退出码（永远是 0），<code>risky_cmd</code> 的失败被吞了。<code>set -e</code> 也救不了你。正确写法是拆成两行：</p><pre style="contain-intrinsic-size:auto 83px"><code><span class="kw">local</span> out
 out=$(risky_cmd) || <span class="kw">return</span> 1</code></pre></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">可移植性</span><p><code>local</code> 不在 POSIX 标准里，但 bash、dash、ash、ksh、zsh、busybox sh 全都支持，实践中可以放心用。真正要严格 POSIX 的场合（极少），只能靠命名约定加手工 <code>unset</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 可移植性</span><p><code>local</code> 不在 POSIX 标准里，但 bash、dash、ash、ksh、zsh、busybox sh 全都支持，实践中可以放心用。真正要严格 POSIX 的场合（极少），只能靠命名约定加手工 <code>unset</code>。</p></div>
 
 <h2 id="b2-arith">2.8 算术展开 $(( )) 与 let 的今昔</h2>
 
@@ -1946,11 +1946,11 @@ echo $(( 3 * 4 ))    <span class="cm"># 现代写法：不起进程，不用转�
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 302px"><span class="t">现代脚本开场白</span><p>把下面三行放在每个新脚本的开头，本章讲的一半坑会在运行时立刻暴露，而不是在生产环境里静悄悄地做错事：</p><pre style="contain-intrinsic-size:auto 109px"><code><span class="kw">#!/usr/bin/env bash</span>
+<div class="note new" style="contain-intrinsic-size:auto 302px"><span class="t">🔵 现代脚本开场白</span><p>把下面三行放在每个新脚本的开头，本章讲的一半坑会在运行时立刻暴露，而不是在生产环境里静悄悄地做错事：</p><pre style="contain-intrinsic-size:auto 109px"><code><span class="kw">#!/usr/bin/env bash</span>
 <span class="kw">set</span> -euo pipefail          <span class="cm"># 出错即停 / 未定义变量报错 / 管道任一段失败即失败</span>
 IFS=$'\n\t'                <span class="cm"># 把空格从分隔符里去掉，减少意外分词</span></code></pre><p>再配上 <code>shellcheck</code>，你在这一章学到的规则就有了自动化的守门员。</p></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">本章要点回顾</span><p>一，赋值是<strong>一个词</strong>，等号两边不能有空格。二，花括号管边界，引号管分词，两件事互不替代。三，变量展开之后<strong>还会</strong>经过词分割和通配符展开，双引号是唯一的刹车。四，转发参数只有 <code>"$@"</code> 是对的。五，环境只向下传，所以 <code>cd</code> 是内建、配置要 <code>source</code>。六，能用 <code>${}</code> 做的字符串处理，别起子进程。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 本章要点回顾</span><p>一，赋值是<strong>一个词</strong>，等号两边不能有空格。二，花括号管边界，引号管分词，两件事互不替代。三，变量展开之后<strong>还会</strong>经过词分割和通配符展开，双引号是唯一的刹车。四，转发参数只有 <code>"$@"</code> 是对的。五，环境只向下传，所以 <code>cd</code> 是内建、配置要 <code>source</code>。六，能用 <code>${}</code> 做的字符串处理，别起子进程。</p></div>
 
 </section>
 
@@ -2082,7 +2082,7 @@ re=<span class="kw">'</span>^app\.([0-9]{4})-([0-9]{2})-([0-9]{2})\.log$<span cl
   echo <span class="kw">"</span>年=${BASH_REMATCH[1]} 月=${BASH_REMATCH[2]} 日=${BASH_REMATCH[3]}<span class="kw">"</span>
 <span class="kw">fi</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p>把「脚本第一行是什么」当成选择依据：写 <code>#!/usr/bin/env bash</code> 就放心用 <code>[[ ]]</code> 和 <code>(( ))</code>；只有当你确实要在 dash、BusyBox ash、Alpine 容器的 <code>/bin/sh</code> 下运行时，才退回 <code>[ ]</code>，并且每个变量都老老实实加引号。用 <code>shellcheck</code> 检查脚本，它会自动按 shebang 判断你用错没有。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p>把「脚本第一行是什么」当成选择依据：写 <code>#!/usr/bin/env bash</code> 就放心用 <code>[[ ]]</code> 和 <code>(( ))</code>；只有当你确实要在 dash、BusyBox ash、Alpine 容器的 <code>/bin/sh</code> 下运行时，才退回 <code>[ ]</code>，并且每个变量都老老实实加引号。用 <code>shellcheck</code> 检查脚本，它会自动按 shebang 判断你用错没有。</p></div>
 
 <div class="note dead" style="contain-intrinsic-size:auto 168px"><span class="t">别再写：<code>[ ... -a ... ]</code> 与 <code>[ ... -o ... ]</code></span><p><code>-a</code> / <code>-o</code> 在 POSIX 中已被标记为「过时」，因为参数一多，<code>test</code> 无法可靠地区分「运算符」和「恰好长得像运算符的字符串」。<code>[ "$a" = -o ]</code> 这种输入就能让它彻底误判。改用 <code>[[ A &amp;&amp; B ]]</code>，或者在 sh 里写成两条命令 <code>[ A ] &amp;&amp; [ B ]</code>。</p></div>
 
@@ -2144,7 +2144,7 @@ re=<span class="kw">'</span>^app\.([0-9]{4})-([0-9]{2})-([0-9]{2})\.log$<span cl
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">最经典的一个 bug：数字用错了运算符</span><p><code>[[ 10 &gt; 9 ]]</code> 的结果是<strong>假</strong>。因为在 <code>[[ ]]</code> 里 <code>&gt;</code> 是<strong>字符串</strong>比较，字典序上 <code>"10"</code> 排在 <code>"9"</code> 前面。要比大小，要么用 <code>[[ 10 -gt 9 ]]</code>，要么用 <code>(( 10 &gt; 9 ))</code>。养成习惯：<strong>凡数字，一律进 <code>(( ))</code></strong>，它读起来也最像人话。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 最经典的一个 bug：数字用错了运算符</span><p><code>[[ 10 &gt; 9 ]]</code> 的结果是<strong>假</strong>。因为在 <code>[[ ]]</code> 里 <code>&gt;</code> 是<strong>字符串</strong>比较，字典序上 <code>"10"</code> 排在 <code>"9"</code> 前面。要比大小，要么用 <code>[[ 10 -gt 9 ]]</code>，要么用 <code>(( 10 &gt; 9 ))</code>。养成习惯：<strong>凡数字，一律进 <code>(( ))</code></strong>，它读起来也最像人话。</p></div>
 
 <div class="note ok" style="contain-intrinsic-size:auto 201px"><span class="t"><code>(( ))</code> 的退出码是反的，别被绕晕</span><p><code>(( expr ))</code> 在表达式结果<strong>非 0</strong> 时返回退出码 0（真），结果<strong>为 0</strong> 时返回退出码 1（假）。这跟 C 语言的真值观一致，但和「退出码 0 表示成功」叠在一起容易反直觉。后果之一：<code>((count++))</code> 在 <code>count</code> 原值为 0 时会返回 1，在 <code>set -e</code> 下直接把脚本干掉。安全写法是 <code>((count++)) || true</code>，或者干脆用前缀形式 <code>((++count))</code>，或者 <code>count=$(( count + 1 ))</code>。</p></div>
 
@@ -2223,7 +2223,7 @@ f=<span class="kw">"</span>report.tar.gz<span class="kw">"</span>
 <span class="kw">esac</span>
 <span class="cm"># 三行都会打印</span></code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">大小写不敏感匹配</span><p><code>shopt -s nocasematch</code> 会让 <code>case</code> 和 <code>[[ ]]</code> 的 <code>==</code> 同时变成大小写不敏感。它是全局开关，用完记得 <code>shopt -u nocasematch</code> 关掉。更局部、更可控的做法是先转小写：<code>case "${1,,}" in</code>（Bash 4.0+ 的 <code>,,</code> 参数展开）。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 大小写不敏感匹配</span><p><code>shopt -s nocasematch</code> 会让 <code>case</code> 和 <code>[[ ]]</code> 的 <code>==</code> 同时变成大小写不敏感。它是全局开关，用完记得 <code>shopt -u nocasematch</code> 关掉。更局部、更可控的做法是先转小写：<code>case "${1,,}" in</code>（Bash 4.0+ 的 <code>,,</code> 参数展开）。</p></div>
 
 <h2 id="b3-for">3.5 for 的三副面孔，以及遍历文件的唯一正确姿势</h2>
 
@@ -2405,7 +2405,7 @@ count=0
   some_command <span class="kw">"</span>$host<span class="kw">"</span>
 <span class="kw">done</span> 3&lt; hosts.txt</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">现代提示：文件不大就别循环了</span><p>Bash 4.0 起有 <code>mapfile</code>（别名 <code>readarray</code>），一步把整个文件读成数组：<code>mapfile -t lines &lt; input.txt</code>。<code>-t</code> 去掉每行末尾的换行符。之后你就能用普通的 <code>for</code>、用 <code>${#lines[@]}</code> 取行数、用索引随机访问。代价是全部内容进内存，所以只适合中小文件（几十万行以内很轻松）。<br>另外提醒一句：如果你的逐行处理逻辑本质上是「过滤 + 提取字段 + 求和」，那 <code>awk</code> 一行就能写完，而且快一个数量级。shell 循环适合「对每一行调用外部命令」，不适合做数据加工。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">🔵 现代提示：文件不大就别循环了</span><p>Bash 4.0 起有 <code>mapfile</code>（别名 <code>readarray</code>），一步把整个文件读成数组：<code>mapfile -t lines &lt; input.txt</code>。<code>-t</code> 去掉每行末尾的换行符。之后你就能用普通的 <code>for</code>、用 <code>${#lines[@]}</code> 取行数、用索引随机访问。代价是全部内容进内存，所以只适合中小文件（几十万行以内很轻松）。<br>另外提醒一句：如果你的逐行处理逻辑本质上是「过滤 + 提取字段 + 求和」，那 <code>awk</code> 一行就能写完，而且快一个数量级。shell 循环适合「对每一行调用外部命令」，不适合做数据加工。</p></div>
 
 <h2 id="b3-until-break">3.7 until、break 与 continue：控制循环的进出</h2>
 
@@ -2456,7 +2456,7 @@ echo <span class="kw">"</span>服务已就绪（等待 ${attempt}s）<span class
   <span class="kw">done</span>
 <span class="kw">done</span></code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">循环自己的退出码</span><p>循环的退出码是<strong>最后一条被执行的命令</strong>的退出码；一次都没循环时退出码是 0。这意味着 <code>while … done</code> 后面接 <code>&amp;&amp;</code> 时行为可能出乎意料。如果循环里的一次失败需要传递出去，用一个显式变量记录：<code>failed=0; … || failed=1; …; return "$failed"</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 循环自己的退出码</span><p>循环的退出码是<strong>最后一条被执行的命令</strong>的退出码；一次都没循环时退出码是 0。这意味着 <code>while … done</code> 后面接 <code>&amp;&amp;</code> 时行为可能出乎意料。如果循环里的一次失败需要传递出去，用一个显式变量记录：<code>failed=0; … || failed=1; …; return "$failed"</code>。</p></div>
 
 <h2 id="b3-func">3.8 函数：参数、局部变量与「return 只能给退出码」</h2>
 
@@ -2557,7 +2557,7 @@ split_path() {
 split_path <span class="kw">"</span>/var/log/app/error.log<span class="kw">"</span> d b
 echo <span class="kw">"</span>$d | $b<span class="kw">"</span>              <span class="cm"># /var/log/app | error.log</span></code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">函数里的日志要走 stderr</span><p>只要一个函数的结果会被 <code>$( )</code> 捕获，它的<strong>标准输出就成了返回通道</strong>，任何调试信息、进度提示都必须打到 stderr（<code>&gt;&amp;2</code>），否则会混进返回值里。这就是本节开头 <code>log()</code> 函数末尾那个 <code>&gt;&amp;2</code> 的原因。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 函数里的日志要走 stderr</span><p>只要一个函数的结果会被 <code>$( )</code> 捕获，它的<strong>标准输出就成了返回通道</strong>，任何调试信息、进度提示都必须打到 stderr（<code>&gt;&amp;2</code>），否则会混进返回值里。这就是本节开头 <code>log()</code> 函数末尾那个 <code>&gt;&amp;2</code> 的原因。</p></div>
 
 <h3>其他实用点</h3>
 
@@ -2641,7 +2641,7 @@ echo <span class="kw">"</span>${#port[@]}<span class="kw">"</span>            <s
   echo <span class="kw">"</span>$ip<span class="kw">"</span>
 <span class="kw">done</span> &lt; ips.txt</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 252px"><span class="t">macOS 自带的 bash 是 3.2，没有关联数组</span><p>Apple 因为许可证原因把系统 bash 停在 2007 年的 3.2 版。<code>declare -A</code>、<code>mapfile</code>、<code>${var,,}</code>、<code>;;&amp;</code>、<code>${arr[-1]}</code> 在那上面全部不可用。<strong>现代做法</strong>：脚本 shebang 写 <code>#!/usr/bin/env bash</code>（而不是 <code>#!/bin/bash</code>），并让用户 <code>brew install bash</code> 装新版；或者在脚本开头加一道版本闸：</p>
+<div class="note old" style="contain-intrinsic-size:auto 252px"><span class="t">🟡 macOS 自带的 bash 是 3.2，没有关联数组</span><p>Apple 因为许可证原因把系统 bash 停在 2007 年的 3.2 版。<code>declare -A</code>、<code>mapfile</code>、<code>${var,,}</code>、<code>;;&amp;</code>、<code>${arr[-1]}</code> 在那上面全部不可用。<strong>现代做法</strong>：脚本 shebang 写 <code>#!/usr/bin/env bash</code>（而不是 <code>#!/bin/bash</code>），并让用户 <code>brew install bash</code> 装新版；或者在脚本开头加一道版本闸：</p>
 <pre style="contain-intrinsic-size:auto 57px"><code>(( BASH_VERSINFO[0] &gt;= 4 )) || { echo <span class="kw">"</span>需要 Bash 4 或更高版本<span class="kw">"</span> &gt;&amp;2; exit 1; }</code></pre></div>
 
 <h3>数组与函数：怎么传进去</h3>
@@ -2674,7 +2674,7 @@ raw=(b a b c a)
 dedupe_into raw uniq
 <span class="kw">declare</span> -p uniq            <span class="cm"># declare -a uniq=([0]="b" [1]="a" [2]="c")</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示：nameref 的命名约定</span><p>nameref 是动态作用域下的别名，如果局部变量名和调用方传进来的变量名<strong>撞了</strong>，会出现 <code>circular name reference</code> 错误。惯例是给函数内部的 nameref 和临时变量加下划线前缀（<code>_src</code>、<code>_seen</code>），大幅降低撞名概率。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示：nameref 的命名约定</span><p>nameref 是动态作用域下的别名，如果局部变量名和调用方传进来的变量名<strong>撞了</strong>，会出现 <code>circular name reference</code> 错误。惯例是给函数内部的 nameref 和临时变量加下划线前缀（<code>_src</code>、<code>_seen</code>），大幅降低撞名概率。</p></div>
 
 <h2 id="b3-strict">3.10 set -euo pipefail 与 trap：健壮脚本的标配</h2>
 
@@ -2751,7 +2751,7 @@ echo $?          <span class="cm"># 1 —— 现在能看见了</span>
 <span class="cm"># 每一环的退出码都在 PIPESTATUS 数组里（必须紧跟着读）</span>
 <span class="kw">declare</span> -p PIPESTATUS</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">pipefail 的副作用：SIGPIPE</span><p><code>producer | head -n 5</code> 里，<code>head</code> 读够 5 行就关掉管道，<code>producer</code> 收到 SIGPIPE 被杀，退出码 141。开了 <code>pipefail</code> + <code>set -e</code> 后，这个「正常」的行为会让脚本退出。遇到时明确豁免：<code>{ producer | head -n 5; } || true</code>，或者用 <code>head -n 5 &lt; &lt;(producer)</code> 绕开管道。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 pipefail 的副作用：SIGPIPE</span><p><code>producer | head -n 5</code> 里，<code>head</code> 读够 5 行就关掉管道，<code>producer</code> 收到 SIGPIPE 被杀，退出码 141。开了 <code>pipefail</code> + <code>set -e</code> 后，这个「正常」的行为会让脚本退出。遇到时明确豁免：<code>{ producer | head -n 5; } || true</code>，或者用 <code>head -n 5 &lt; &lt;(producer)</code> 绕开管道。</p></div>
 
 <h3>trap：给脚本装上「无论如何都会执行」的收尾</h3>
 
@@ -2954,9 +2954,9 @@ main() {
 
 main <span class="kw">"</span>$@<span class="kw">"</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 295px"><span class="t">现代提示：三条建议收尾</span><p><strong>一，写完就过 <code>shellcheck</code>。</strong>本章讲的坑（缺引号、<code>for f in $(ls)</code>、<code>local x=$(cmd)</code>、<code>[[ 10 &gt; 9 ]]</code>）它几乎全能查出来，还会给出规则编号和解释链接。把它接进 CI，比记住所有规则更可靠。<br><strong>二，用 <code>bats</code> 给关键函数写测试。</strong>把逻辑收进函数、脚本末尾只留 <code>main "$@"</code>，就是为了能 <code>source</code> 进测试文件单独调用它们。<br><strong>三，知道什么时候该收手。</strong>当你开始用关联数组做嵌套结构、开始手写 JSON 解析、脚本超过 300 行时，Bash 已经不是合适的工具了。换 Python 不是失败，是判断力。Bash 最擅长的永远是「按顺序调用一串外部命令，并且把错误处理干净」——本章教的就是把这件事做到位。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 295px"><span class="t">🔵 现代提示：三条建议收尾</span><p><strong>一，写完就过 <code>shellcheck</code>。</strong>本章讲的坑（缺引号、<code>for f in $(ls)</code>、<code>local x=$(cmd)</code>、<code>[[ 10 &gt; 9 ]]</code>）它几乎全能查出来，还会给出规则编号和解释链接。把它接进 CI，比记住所有规则更可靠。<br><strong>二，用 <code>bats</code> 给关键函数写测试。</strong>把逻辑收进函数、脚本末尾只留 <code>main "$@"</code>，就是为了能 <code>source</code> 进测试文件单独调用它们。<br><strong>三，知道什么时候该收手。</strong>当你开始用关联数组做嵌套结构、开始手写 JSON 解析、脚本超过 300 行时，Bash 已经不是合适的工具了。换 Python 不是失败，是判断力。Bash 最擅长的永远是「按顺序调用一串外部命令，并且把错误处理干净」——本章教的就是把这件事做到位。</p></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 267px"><span class="t">本章要记住的六句话</span><p>1. <code>[</code> 是命令，<code>[[</code> 是语法；bash 脚本里一律用 <code>[[ ]]</code>，数字一律用 <code>(( ))</code>。<br>2. 遍历文件用 glob 配 <code>nullglob</code>，绝不用 <code>$(ls)</code>；来自 <code>find</code> 的用 <code>-print0</code>。<br>3. 逐行读文件的完整咒语是 <code>while IFS= read -r line; do … done &lt; file</code>，一个字都不能少。<br>4. 函数里每个变量都写 <code>local</code>，且 <code>local</code> 与命令替换赋值必须分两行。<br>5. <code>return</code> 只传 0–255 的退出码，数据靠 <code>echo</code> 或 nameref。<br>6. 每个生产脚本开头 <code>set -Eeuo pipefail</code>，每个创建临时资源的脚本都要有 <code>trap cleanup EXIT</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 267px"><span class="t">🟢 本章要记住的六句话</span><p>1. <code>[</code> 是命令，<code>[[</code> 是语法；bash 脚本里一律用 <code>[[ ]]</code>，数字一律用 <code>(( ))</code>。<br>2. 遍历文件用 glob 配 <code>nullglob</code>，绝不用 <code>$(ls)</code>；来自 <code>find</code> 的用 <code>-print0</code>。<br>3. 逐行读文件的完整咒语是 <code>while IFS= read -r line; do … done &lt; file</code>，一个字都不能少。<br>4. 函数里每个变量都写 <code>local</code>，且 <code>local</code> 与命令替换赋值必须分两行。<br>5. <code>return</code> 只传 0–255 的退出码，数据靠 <code>echo</code> 或 nameref。<br>6. 每个生产脚本开头 <code>set -Eeuo pipefail</code>，每个创建临时资源的脚本都要有 <code>trap cleanup EXIT</code>。</p></div>
 
 </section>
 
@@ -3002,7 +3002,7 @@ $ cat out.txt
 <span class="cm"># 判断 stdout 是不是终端：决定要不要上色 / 画进度条</span>
 <span class="kw">if</span> [ -t 1 ]; <span class="kw">then</span> COLOR=1; <span class="kw">else</span> COLOR=0; <span class="kw">fi</span></code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">快速分辨一行输出走的是哪个流</span><p>用排除法：<code>cmd 2&gt;/dev/null</code> 之后还剩下的，是 stdout；<code>cmd &gt;/dev/null</code> 之后还剩下的，是 stderr。两条都跑一遍，什么归什么一目了然。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 快速分辨一行输出走的是哪个流</span><p>用排除法：<code>cmd 2&gt;/dev/null</code> 之后还剩下的，是 stdout；<code>cmd &gt;/dev/null</code> 之后还剩下的，是 stderr。两条都跑一遍，什么归什么一目了然。</p></div>
 
 <figure style="contain-intrinsic-size:auto 389px">
 <svg viewBox="0 -1 720 294" role="img" aria-label="文件描述符与重定向的指向关系">
@@ -3182,7 +3182,7 @@ bash: important.txt: 无法覆盖已存在的文件
 $ <span class="kw">echo</span> hi &gt;| important.txt  <span class="cm"># 明确表示"我就是要覆盖"</span>
 $ <span class="kw">set</span> +o noclobber</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">现代提示</span><p><code>noclobber</code> 适合放进交互式 <code>~/.bashrc</code>，但<strong>不要</strong>放进脚本 —— 脚本里的 <code>&gt;</code> 通常就是想要覆盖语义，开了它反而制造随机失败。另外它只防 <code>&gt;</code>，防不住 <code>tee</code>、<code>cp</code>、<code>dd</code>。真正的防线是备份和版本控制。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p><code>noclobber</code> 适合放进交互式 <code>~/.bashrc</code>，但<strong>不要</strong>放进脚本 —— 脚本里的 <code>&gt;</code> 通常就是想要覆盖语义，开了它反而制造随机失败。另外它只防 <code>&gt;</code>，防不住 <code>tee</code>、<code>cp</code>、<code>dd</code>。真正的防线是备份和版本控制。</p></div>
 
 <h2 id="b4-devnull">4.3 /dev/null、特殊设备与自定义文件描述符</h2>
 
@@ -3301,7 +3301,7 @@ bc &lt;&lt;&lt; '2^16'
 <span class="kw">echo</span> "alice 42" | <span class="kw">read</span> -r u r
 <span class="kw">echo</span> "$u"          <span class="cm"># 空！见第 5 节</span></code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">here-string 会补一个换行</span><p>bash 在传给命令前会给内容末尾追加一个 <code>\n</code>。所以 <code>wc -l &lt;&lt;&lt; ""</code> 输出 1 而不是 0，<code>wc -c &lt;&lt;&lt; "ab"</code> 输出 3。需要精确字节时改用 <code>printf '%s' "$v" | cmd</code>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 here-string 会补一个换行</span><p>bash 在传给命令前会给内容末尾追加一个 <code>\n</code>。所以 <code>wc -l &lt;&lt;&lt; ""</code> 输出 1 而不是 0，<code>wc -c &lt;&lt;&lt; "ab"</code> 输出 3。需要精确字节时改用 <code>printf '%s' "$v" | cmd</code>。</p></div>
 
 <h2 id="b4-pipe">4.5 管道：把进程串成流水线</h2>
 
@@ -3386,7 +3386,7 @@ count=0
 
 <div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">为什么 <code>tail -f x | grep E | awk ...</code> 半天没反应</span><p>C 标准库有个规矩：stdout 连着终端时行缓冲，连着管道时改成 4 KiB 全缓冲。中间那个 grep 攒够 4 KiB 才吐一次，你就以为卡住了。解法是让中间环节改回行缓冲：<code>grep --line-buffered E</code>、<code>awk '{print; fflush()}'</code>、<code>sed -u</code>，或者通用的 <code>stdbuf -oL cmd</code>。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">UUOC：无谓的 cat</span><p><code>cat access.log | grep 404</code> 多起了一个进程、多了一次数据拷贝，还让 grep 丢掉了"文件名"这个上下文。直接写 <code>grep 404 access.log</code>。真正需要 <code>cat</code> 的场合只有两个：拼接多个文件，或者命令确实只认 stdin。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">🟡 UUOC：无谓的 cat</span><p><code>cat access.log | grep 404</code> 多起了一个进程、多了一次数据拷贝，还让 grep 丢掉了"文件名"这个上下文。直接写 <code>grep 404 access.log</code>。真正需要 <code>cat</code> 的场合只有两个：拼接多个文件，或者命令确实只认 stdin。</p></div>
 
 <h2 id="b4-procsub">4.6 进程替换与命令替换</h2>
 
@@ -3423,7 +3423,7 @@ make 2&gt; &gt;(sed 's/^/[ERR] /' &gt;&amp;2)</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">进程替换的两个真实限制</span><p>其一，返回的是管道而非普通文件，<strong>不能 seek</strong>。所以 <code>sort &lt;(...)</code> 这种需要回头读的命令在极端情况下会有问题，而 <code>tail -c 100 &lt;(cmd)</code> 干脆无法工作。其二，<code>&gt;(cmd)</code> 里的进程是异步的，主命令返回时它可能还在写文件；脚本里紧接着读那个文件会读到半截。稳妥做法是加一句 <code>wait</code>，或者老老实实用临时文件。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 进程替换的两个真实限制</span><p>其一，返回的是管道而非普通文件，<strong>不能 seek</strong>。所以 <code>sort &lt;(...)</code> 这种需要回头读的命令在极端情况下会有问题，而 <code>tail -c 100 &lt;(cmd)</code> 干脆无法工作。其二，<code>&gt;(cmd)</code> 里的进程是异步的，主命令返回时它可能还在写文件；脚本里紧接着读那个文件会读到半截。稳妥做法是加一句 <code>wait</code>，或者老老实实用临时文件。</p></div>
 
 <h3>命令替换与嵌套</h3>
 
@@ -3449,7 +3449,7 @@ make 2&gt; &gt;(sed 's/^/[ERR] /' &gt;&amp;2)</code></pre>
 content=$(cat config.ini)
 content=$(&lt;config.ini)</code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">忘了加引号 = 隐蔽的 bug</span><p><code>$(...)</code> 的结果如果不加引号，会经历<strong>分词</strong>和<strong>通配符展开</strong>。<code>rm $(cat list.txt)</code> 遇到含空格的文件名就会删错东西，遇到内容为 <code>*</code> 的行会删光当前目录。永远写成 <code>"$(...)"</code>；需要按行处理就用 <code>while read -r</code> 或 <code>mapfile -t</code>。另外记住 <code>$()</code> 会<strong>吃掉结尾的所有换行符</strong>，做二进制或精确文本处理时要留意。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 忘了加引号 = 隐蔽的 bug</span><p><code>$(...)</code> 的结果如果不加引号，会经历<strong>分词</strong>和<strong>通配符展开</strong>。<code>rm $(cat list.txt)</code> 遇到含空格的文件名就会删错东西，遇到内容为 <code>*</code> 的行会删光当前目录。永远写成 <code>"$(...)"</code>；需要按行处理就用 <code>while read -r</code> 或 <code>mapfile -t</code>。另外记住 <code>$()</code> 会<strong>吃掉结尾的所有换行符</strong>，做二进制或精确文本处理时要留意。</p></div>
 
 <h2 id="b4-jobs">4.7 后台运行与作业控制</h2>
 
@@ -3515,7 +3515,7 @@ nohup ./import.sh &gt; import.log 2&gt;&amp;1 &lt; /dev/null &amp;
 bg %1
 disown -h %1</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示：别再拿 nohup 当运维方案</span><p><code>nohup</code> 能让进程活下来，但你之后既看不到它的界面，也没法优雅重启，崩了也不会自动拉起。今天的推荐是：临时的交互式长任务用 <code>tmux</code> / <code>screen</code>（随时能贴回去看）；需要长期驻留的用户级服务用 <code>systemd-run --user --unit=myjob ./import.sh</code> 或写一个 user unit，日志自动进 journal，还带重启策略。<code>nohup</code> 留给"临时救急，五分钟后就忘"的场合。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示：别再拿 nohup 当运维方案</span><p><code>nohup</code> 能让进程活下来，但你之后既看不到它的界面，也没法优雅重启，崩了也不会自动拉起。今天的推荐是：临时的交互式长任务用 <code>tmux</code> / <code>screen</code>（随时能贴回去看）；需要长期驻留的用户级服务用 <code>systemd-run --user --unit=myjob ./import.sh</code> 或写一个 user unit，日志自动进 journal，还带重启策略。<code>nohup</code> 留给"临时救急，五分钟后就忘"的场合。</p></div>
 
 <h3>用 wait -n 控制并发数</h3>
 
@@ -3580,7 +3580,7 @@ find . -name '*.bak' -print0 | xargs -0 -t rm</code></pre>
 
 <div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">经典事故：<code>ls | xargs rm</code></span><p>目录里有个文件叫 <code>notes 2024.txt</code>，<code>xargs</code> 按空白切词，于是变成 <code>rm notes 2024.txt</code> —— 删掉了两个根本不存在或不该删的目标。更糟的是文件名里带换行或引号时的行为完全不可预测。凡是自动化删除，一律走 <code>-print0</code> / <code>-0</code>，或者直接用 <code>find ... -delete</code>。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">xargs 会抢走 stdin</span><p><code>xargs</code> 把 stdin 让给了被调用的命令，所以 <code>find . -name '*.txt' | xargs -I{} ssh host "cat &gt; {}"</code> 里的 <code>ssh</code> 会顺手把剩下的文件列表当成自己的输入吃掉，循环只跑一次。解法：给 ssh 加 <code>-n</code>，或者给 xargs 加 <code>-a 文件名</code> 把输入源挪开。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 xargs 会抢走 stdin</span><p><code>xargs</code> 把 stdin 让给了被调用的命令，所以 <code>find . -name '*.txt' | xargs -I{} ssh host "cat &gt; {}"</code> 里的 <code>ssh</code> 会顺手把剩下的文件列表当成自己的输入吃掉，循环只跑一次。解法：给 ssh 加 <code>-n</code>，或者给 xargs 加 <code>-a 文件名</code> 把输入源挪开。</p></div>
 
 <h2 id="b4-pipestatus">4.9 退出码在管道里的传递：PIPESTATUS 与 pipefail</h2>
 
@@ -3605,7 +3605,7 @@ curl -sS https://example.com/release.tgz | tar xz
 <span class="kw">set</span> -o pipefail
 curl -fsS https://example.com/release.tgz | tar xz || { <span class="kw">echo</span> "下载或解包失败" &gt;&amp;2; <span class="kw">exit</span> 1; }</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">PIPESTATUS 的保鲜期极短</span><p>它在<strong>下一条命令执行完</strong>就被刷新了 —— 包括你用来打印它的那个 <code>echo</code>。所以要么当场用，要么立刻整体拷走：<code>st=("${PIPESTATUS[@]}")</code>。注意必须是数组拷贝，写成 <code>st=$PIPESTATUS</code> 只会拿到第 0 个元素。另外 <code>PIPESTATUS</code> 是 bash 专有的，zsh 里叫 <code>pipestatus</code>（小写），<code>dash</code> 里干脆没有。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 PIPESTATUS 的保鲜期极短</span><p>它在<strong>下一条命令执行完</strong>就被刷新了 —— 包括你用来打印它的那个 <code>echo</code>。所以要么当场用，要么立刻整体拷走：<code>st=("${PIPESTATUS[@]}")</code>。注意必须是数组拷贝，写成 <code>st=$PIPESTATUS</code> 只会拿到第 0 个元素。另外 <code>PIPESTATUS</code> 是 bash 专有的，zsh 里叫 <code>pipestatus</code>（小写），<code>dash</code> 里干脆没有。</p></div>
 
 <pre style="contain-intrinsic-size:auto 196px"><code><span class="cm"># 逐段检查，精确定位是哪一环坏了</span>
 gzip -dc app.log.gz | grep -c ERROR | tee count.txt
@@ -3676,7 +3676,7 @@ st=("${PIPESTATUS[@]}")
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">本章的一条主线</span><p>重定向、管道、进程替换、作业控制，表面上是四组不相干的语法，底层其实是同一件事：<strong>shell 在进程启动之前，替它把 fd 表布置好</strong>。<code>&gt;</code> 是把 fd 接到文件，<code>|</code> 是把上下游的 fd 接到同一个内核缓冲区，<code>&lt;(...)</code> 是把 fd 起个名字塞进参数，<code>&amp;</code> 是把 fd 布置好之后不等它。想不清某个组合会发生什么时，就画一遍前面那张 fd 指向表 —— 从左到右，一步一步改，答案自然浮出来。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 本章的一条主线</span><p>重定向、管道、进程替换、作业控制，表面上是四组不相干的语法，底层其实是同一件事：<strong>shell 在进程启动之前，替它把 fd 表布置好</strong>。<code>&gt;</code> 是把 fd 接到文件，<code>|</code> 是把上下游的 fd 接到同一个内核缓冲区，<code>&lt;(...)</code> 是把 fd 起个名字塞进参数，<code>&amp;</code> 是把 fd 布置好之后不等它。想不清某个组合会发生什么时，就画一遍前面那张 fd 指向表 —— 从左到右，一步一步改，答案自然浮出来。</p></div>
 
 </section>
 
@@ -3756,7 +3756,7 @@ st=("${PIPESTATUS[@]}")
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">现代提示</span><p>2026 年了，这三个工具依然是每台 Linux/macOS/WSL 上都有的最小公约数——这正是它们最大的价值：你不能保证生产机器上装了 <code>rg</code> 或 <code>jq</code>，但你几乎可以保证有 grep/sed/awk。本章会在每一节末尾给出对应的现代替代工具，但先把这三样学扎实，因为它们是唯一「到哪儿都能用」的那一套。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 现代提示</span><p>2026 年了，这三个工具依然是每台 Linux/macOS/WSL 上都有的最小公约数——这正是它们最大的价值：你不能保证生产机器上装了 <code>rg</code> 或 <code>jq</code>，但你几乎可以保证有 grep/sed/awk。本章会在每一节末尾给出对应的现代替代工具，但先把这三样学扎实，因为它们是唯一「到哪儿都能用」的那一套。</p></div>
 
 <h2 id="b5-grep">5.2 grep：先定位，再动手</h2>
 
@@ -3866,7 +3866,7 @@ docker logs web | <span class="kw">grep</span> 'timeout'
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示：能加 -E 就加 -E</span><p>除非你在写必须跑在极老系统上的 POSIX 脚本，否则一律用 <code>grep -E</code> / <code>sed -E</code>。理由很实际：ERE 的语法和你在 Python、JavaScript、Go 里写的正则最接近，脑子里只需要维护一套规则。<code>sed -E</code> 在 GNU sed 4.2+ 和 macOS/BSD sed 上都可用，兼容性早就不是问题了（老脚本里的 <code>sed -r</code> 是 GNU 专属写法，改成 <code>-E</code> 更通用）。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示：能加 -E 就加 -E</span><p>除非你在写必须跑在极老系统上的 POSIX 脚本，否则一律用 <code>grep -E</code> / <code>sed -E</code>。理由很实际：ERE 的语法和你在 Python、JavaScript、Go 里写的正则最接近，脑子里只需要维护一套规则。<code>sed -E</code> 在 GNU sed 4.2+ 和 macOS/BSD sed 上都可用，兼容性早就不是问题了（老脚本里的 <code>sed -r</code> 是 GNU 专属写法，改成 <code>-E</code> 更通用）。</p></div>
 
 <h3>元字符速查</h3>
 
@@ -4200,7 +4200,7 @@ docker logs web | <span class="kw">grep</span> 'timeout'
 
 <p>最后那行值得盯着看几秒：<code>!seen[$0]++</code> 是一个纯模式、没有动作的规则。第一次遇到某行时 <code>seen[$0]</code> 是 0（未定义即 0），取反为真 → 打印整行；同时 <code>++</code> 把它变成 1。第二次再遇到，1 取反为假 → 不打印。八个字符实现了「保序去重」。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 173px"><span class="t">现代提示：用 -v 传参，别拼字符串</span><p>需要把 shell 变量传进 awk 时，<strong>永远</strong>用 <code>-v</code>，不要把 awk 程序拼成字符串：</p><p><code>awk -v th="$THRESHOLD" '$3 &gt; th { print }' data.txt</code>　——这样值里有引号、空格、反斜杠都不会破坏程序结构。用双引号拼接是注入漏洞，也是最难调试的一类 bug。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 173px"><span class="t">🔵 现代提示：用 -v 传参，别拼字符串</span><p>需要把 shell 变量传进 awk 时，<strong>永远</strong>用 <code>-v</code>，不要把 awk 程序拼成字符串：</p><p><code>awk -v th="$THRESHOLD" '$3 &gt; th { print }' data.txt</code>　——这样值里有引号、空格、反斜杠都不会破坏程序结构。用双引号拼接是注入漏洞，也是最难调试的一类 bug。</p></div>
 
 <h2 id="b5-choose">5.6 什么时候用哪个：判断表</h2>
 
@@ -4357,7 +4357,7 @@ echo
 echo "===== 按小时 ====="
 <span class="kw">awk</span> -F'[:[]' '{ h[$3]++ } END { for (i in h) printf "  %s时 %6d\n", i, h[i] }' "$LOG" | sort</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示：三剑客之外的第四件武器</span><p>如果日志已经是结构化 JSON（现在多数框架的默认输出），别再用 awk 数第几列了：<code>jq -r 'select(.status &gt;= 500) | .path' app.log | sort | uniq -c | sort -rn</code> 更短也更可靠。如果你在做的是 CSV/TSV 报表，<code>mlr</code>（Miller）提供了 <code>stats1</code>、<code>sort</code>、<code>join</code> 等动词，一条命令顶一段 awk。判断标准很简单：<strong>数据有 schema 就用懂 schema 的工具，数据是自由文本才轮到三剑客。</strong></p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示：三剑客之外的第四件武器</span><p>如果日志已经是结构化 JSON（现在多数框架的默认输出），别再用 awk 数第几列了：<code>jq -r 'select(.status &gt;= 500) | .path' app.log | sort | uniq -c | sort -rn</code> 更短也更可靠。如果你在做的是 CSV/TSV 报表，<code>mlr</code>（Miller）提供了 <code>stats1</code>、<code>sort</code>、<code>join</code> 等动词，一条命令顶一段 awk。判断标准很简单：<strong>数据有 schema 就用懂 schema 的工具，数据是自由文本才轮到三剑客。</strong></p></div>
 
 <h2 id="b5-perf">5.8 管道顺序与性能：先缩量，再精加工</h2>
 
@@ -4454,7 +4454,7 @@ echo "===== 按小时 ====="
 
 <p>说到底，这些新工具都在解决同一类问题：三剑客的语法承载了五十年的向后兼容包袱，而它们可以从零设计。但它们没有解决、也不打算解决的是「无处不在」——当你 ssh 进一台十年前部署、只有基础镜像的机器时，能陪你的还是 grep、sed、awk。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 230px"><span class="t">本章要点回顾</span><p>三剑客共享「逐行流式处理」的模型，区别在关注点：grep 关注<strong>行的存在性</strong>，sed 关注<strong>行内的字符</strong>，awk 关注<strong>字段与跨行状态</strong>。正则分 BRE/ERE 两种方言，能加 <code>-E</code> 就加。sed 的一切行为都源于「读一行→匹配地址→执行命令→自动打印」这个周期，<code>-n</code> 关掉的是最后一步。awk 的统计能力全部建立在关联数组和 BEGIN/END 之上。管道顺序上先用 grep 缩量再交给 awk 精加工。数据一旦有正式结构，就交给懂结构的工具。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 230px"><span class="t">🔵 本章要点回顾</span><p>三剑客共享「逐行流式处理」的模型，区别在关注点：grep 关注<strong>行的存在性</strong>，sed 关注<strong>行内的字符</strong>，awk 关注<strong>字段与跨行状态</strong>。正则分 BRE/ERE 两种方言，能加 <code>-E</code> 就加。sed 的一切行为都源于「读一行→匹配地址→执行命令→自动打印」这个周期，<code>-n</code> 关掉的是最后一步。awk 的统计能力全部建立在关联数组和 BEGIN/END 之上。管道顺序上先用 grep 缩量再交给 awk 精加工。数据一旦有正式结构，就交给懂结构的工具。</p></div>
 
 </section>
 
@@ -4551,9 +4551,9 @@ rm <span class="kw">--</span> -weird-file.txt
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示：查文档的三级火箭</span><p>先 <code>命令 --help</code>（几秒钟，看选项列表）；不够就 <code>man 命令</code>（按 <code>/</code> 搜索、<code>q</code> 退出）；只想看例子就装 <code>tldr</code>，它给的是「五条最常用的写法」而不是完整手册。想确认一个名字到底是外部程序、内建命令还是别名，用 <code>type -a 名字</code>；只要路径就用 <code>command -v 名字</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示：查文档的三级火箭</span><p>先 <code>命令 --help</code>（几秒钟，看选项列表）；不够就 <code>man 命令</code>（按 <code>/</code> 搜索、<code>q</code> 退出）；只想看例子就装 <code>tldr</code>，它给的是「五条最常用的写法」而不是完整手册。想确认一个名字到底是外部程序、内建命令还是别名，用 <code>type -a 名字</code>；只要路径就用 <code>command -v 名字</code>。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">别再用 which</span><p><span class="badge old">已过时</span> <code>which</code> 是外部程序，看不见 shell 的函数和别名，各发行版行为还不一致。POSIX 规定的做法是 <code>command -v</code>，交互排查时用 bash/zsh 内建的 <code>type -a</code> 信息更全。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 133px"><span class="t">🟡 别再用 which</span><p><span class="badge old">已过时</span> <code>which</code> 是外部程序，看不见 shell 的函数和别名，各发行版行为还不一致。POSIX 规定的做法是 <code>command -v</code>，交互排查时用 bash/zsh 内建的 <code>type -a</code> 信息更全。</p></div>
 
 <h2 id="b6-fs">6.2 文件与目录：ls / cp / mv / rm / find / du / df / ln</h2>
 
@@ -4599,9 +4599,9 @@ lsof +L1 2&gt;/dev/null | head
 
 <p><code>ln</code> 的两种链接常被混淆：硬链接是给同一份数据加了第二个门牌号（同一个 inode，删掉任一个另一个照常用，但不能跨文件系统、不能指向目录）；符号链接是一张写着地址的便条（指向路径，目标删了就成断链，可以跨文件系统）。日常九成场景用 <code>-s</code>。</p>
 
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">rm 的三条铁律</span><p><span class="badge dead">禁用</span> 不要写 <code>rm -rf $DIR/</code> 而不检查 <code>$DIR</code> 是否为空——变量为空时它会展开成 <code>rm -rf /</code>。脚本里加 <code>set -u</code>，删除前先把命令换成 <code>echo</code> 跑一遍。别在 <code>sudo</code> 下用通配符 <code>rm</code>，你看到的展开结果和 shell 的可能不同（隐藏文件、奇怪文件名）。日常交互建议 <code>alias rm='rm -I'</code>，比 <code>-i</code> 少烦人得多。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 rm 的三条铁律</span><p><span class="badge dead">禁用</span> 不要写 <code>rm -rf $DIR/</code> 而不检查 <code>$DIR</code> 是否为空——变量为空时它会展开成 <code>rm -rf /</code>。脚本里加 <code>set -u</code>，删除前先把命令换成 <code>echo</code> 跑一遍。别在 <code>sudo</code> 下用通配符 <code>rm</code>，你看到的展开结果和 shell 的可能不同（隐藏文件、奇怪文件名）。日常交互建议 <code>alias rm='rm -I'</code>，比 <code>-i</code> 少烦人得多。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p><span class="badge new">现代提示</span> 桌面环境可以装 <code>trash-cli</code>，用 <code>trash-put</code> 代替 <code>rm</code>，误删还能捞回来。查找文件时 <code>fd</code> 比 <code>find</code> 语法短、默认跳过 <code>.gitignore</code> 里的路径；<code>eza</code> 可以替代 <code>ls</code> 显示 git 状态。但记住：脚本里仍然写 <code>find</code> 和 <code>ls</code>，因为它们哪台机器上都有。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> 桌面环境可以装 <code>trash-cli</code>，用 <code>trash-put</code> 代替 <code>rm</code>，误删还能捞回来。查找文件时 <code>fd</code> 比 <code>find</code> 语法短、默认跳过 <code>.gitignore</code> 里的路径；<code>eza</code> 可以替代 <code>ls</code> 显示 git 状态。但记住：脚本里仍然写 <code>find</code> 和 <code>ls</code>，因为它们哪台机器上都有。</p></div>
 
 <h2 id="b6-view">6.3 查看与分页：cat / less / head / tail -f / wc</h2>
 
@@ -4640,9 +4640,9 @@ tail <span class="kw">-F</span> /var/log/app.log
 wc -l &lt; data.csv
 </code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">无用的 cat</span><p><span class="badge old">已过时</span> <code>cat file | grep pattern</code> 白白多起一个进程。直接写 <code>grep pattern file</code>，或者在需要重定向时写 <code>grep pattern &lt; file</code>。这个坏习惯有个专门的绰号叫 UUOC（useless use of cat）。真正需要 <code>cat</code> 的场合是：拼接多个文件、或者把 here-document 写进文件。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 无用的 cat</span><p><span class="badge old">已过时</span> <code>cat file | grep pattern</code> 白白多起一个进程。直接写 <code>grep pattern file</code>，或者在需要重定向时写 <code>grep pattern &lt; file</code>。这个坏习惯有个专门的绰号叫 UUOC（useless use of cat）。真正需要 <code>cat</code> 的场合是：拼接多个文件、或者把 here-document 写进文件。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示</span><p><span class="badge new">现代提示</span> <code>bat</code> 是带语法高亮和行号的 <code>cat</code>，看配置文件很舒服。如果服务是 systemd 管的，不要去猜日志文件在哪，直接 <code>journalctl -u 服务名 -f</code>（见后文）。看 JSON 日志则应该交给 <code>jq</code>，而不是用眼睛在一行两千字符里找逗号。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> <code>bat</code> 是带语法高亮和行号的 <code>cat</code>，看配置文件很舒服。如果服务是 systemd 管的，不要去猜日志文件在哪，直接 <code>journalctl -u 服务名 -f</code>（见后文）。看 JSON 日志则应该交给 <code>jq</code>，而不是用眼睛在一行两千字符里找逗号。</p></div>
 
 <h2 id="b6-text">6.4 文本处理：sort / uniq / cut / paste / tr / join / column / diff / comm</h2>
 
@@ -4675,9 +4675,9 @@ comm <span class="kw">-23</span> &lt;(sort a.txt) &lt;(sort b.txt)
 column -s',' -t report.csv | less -S
 </code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">排序结果和同事的不一样？</span><p><span class="badge old">已过时</span> 依赖默认排序顺序是个陷阱：<code>sort</code> 受 locale 影响，中文环境下大小写和标点的次序可能与 ASCII 顺序不同，导致 <code>comm</code>、<code>join</code> 认为两个「明明排过序」的文件没对齐。脚本里需要确定性时，统一加 <code>LC_ALL=C</code>：<code>LC_ALL=C sort file</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 排序结果和同事的不一样？</span><p><span class="badge old">已过时</span> 依赖默认排序顺序是个陷阱：<code>sort</code> 受 locale 影响，中文环境下大小写和标点的次序可能与 ASCII 顺序不同，导致 <code>comm</code>、<code>join</code> 认为两个「明明排过序」的文件没对齐。脚本里需要确定性时，统一加 <code>LC_ALL=C</code>：<code>LC_ALL=C sort file</code>。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">现代提示</span><p><span class="badge new">现代提示</span> <code>cut</code> 不会把连续空格当成一个分隔符，日志字段对不齐时它就废了——这种场合用 <code>awk '{print $1}'</code>（awk 默认按空白切分并合并连续空白）。结构化数据（CSV/JSON/YAML）不要用这些行工具硬切，交给 <code>jq</code>、<code>yq</code>、<code>csvkit</code> 这类懂格式的工具，否则一个带引号的逗号就能让你的统计全错。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> <code>cut</code> 不会把连续空格当成一个分隔符，日志字段对不齐时它就废了——这种场合用 <code>awk '{print $1}'</code>（awk 默认按空白切分并合并连续空白）。结构化数据（CSV/JSON/YAML）不要用这些行工具硬切，交给 <code>jq</code>、<code>yq</code>、<code>csvkit</code> 这类懂格式的工具，否则一个带引号的逗号就能让你的统计全错。</p></div>
 
 <h2 id="b6-archive">6.5 压缩与归档：tar / gzip / zip / unzip</h2>
 
@@ -4716,9 +4716,9 @@ tar <span class="kw">-tzf</span> site.tar.gz | head
 mkdir -p /tmp/restore &amp;&amp; tar <span class="kw">-xzf</span> site.tar.gz <span class="kw">-C</span> /tmp/restore
 </code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">解压前先看，不是洁癖</span><p><span class="badge dead">禁用</span> 直接在家目录 <code>tar -xzf 陌生包</code> 有两种风险：一是「tar 炸弹」——包里几百个文件平铺在顶层，和你的文件混成一团难以清理；二是路径穿越——包里含 <code>../</code> 或绝对路径，覆盖归档之外的文件（zip 的同类问题叫 Zip Slip）。GNU tar 默认会剥掉绝对路径的斜杠并拒绝 <code>../</code>，但不要把安全寄托在实现细节上：<strong>先 <code>-t</code> 看清单，再解到空目录</strong>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 解压前先看，不是洁癖</span><p><span class="badge dead">禁用</span> 直接在家目录 <code>tar -xzf 陌生包</code> 有两种风险：一是「tar 炸弹」——包里几百个文件平铺在顶层，和你的文件混成一团难以清理；二是路径穿越——包里含 <code>../</code> 或绝对路径，覆盖归档之外的文件（zip 的同类问题叫 Zip Slip）。GNU tar 默认会剥掉绝对路径的斜杠并拒绝 <code>../</code>，但不要把安全寄托在实现细节上：<strong>先 <code>-t</code> 看清单，再解到空目录</strong>。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">现代提示</span><p><span class="badge new">现代提示</span> 新版 GNU tar 支持 <code>-xaf</code>，按扩展名自动选择解压器，你不必再纠结是 <code>z</code>（gzip）、<code>j</code>（bzip2）还是 <code>J</code>（xz）。追求速度与压缩比可以用 zstd：<code>tar --zstd -cf out.tar.zst dir/</code>，同等体积下解压比 gzip 快数倍。中文文件名的 zip 在 Linux 上乱码，是因为包里用的是 GBK 而非 UTF-8，可试 <code>unzip -O CP936</code> 或改用 <code>bsdtar -xf</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> 新版 GNU tar 支持 <code>-xaf</code>，按扩展名自动选择解压器，你不必再纠结是 <code>z</code>（gzip）、<code>j</code>（bzip2）还是 <code>J</code>（xz）。追求速度与压缩比可以用 zstd：<code>tar --zstd -cf out.tar.zst dir/</code>，同等体积下解压比 gzip 快数倍。中文文件名的 zip 在 Linux 上乱码，是因为包里用的是 GBK 而非 UTF-8，可试 <code>unzip -O CP936</code> 或改用 <code>bsdtar -xf</code>。</p></div>
 
 <h2 id="b6-net">6.6 网络：curl / wget / ssh / scp / rsync / ping / ss</h2>
 
@@ -4763,11 +4763,11 @@ ss <span class="kw">-tulpn</span> | grep ':8080'
 
 <p>为什么 <code>rsync</code> 值得取代 <code>scp</code>？因为它做的是「差异同步」：先比对两端的文件清单（大小、时间戳，必要时按块校验），只传不同的部分，断了还能续。发布静态站点、备份大目录、跨机迁移，它都比「整个重传」经济得多。</p>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">两个该换掉的老朋友</span><p><span class="badge old">已过时</span> <code>netstat</code> 在多数发行版里已不默认安装，请用 <code>ss</code>（用法几乎一样，快得多）；同理 <code>ifconfig</code>/<code>route</code> 应换成 <code>ip addr</code>/<code>ip route</code>。<code>scp</code> 的命令行语义（远端会做一次 shell 展开）历来是安全隐患，OpenSSH 新版已改为底层走 SFTP 协议并建议改用 <code>sftp</code> 或 <code>rsync</code>；单个文件传传无妨，成批同步请用 <code>rsync</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 两个该换掉的老朋友</span><p><span class="badge old">已过时</span> <code>netstat</code> 在多数发行版里已不默认安装，请用 <code>ss</code>（用法几乎一样，快得多）；同理 <code>ifconfig</code>/<code>route</code> 应换成 <code>ip addr</code>/<code>ip route</code>。<code>scp</code> 的命令行语义（远端会做一次 shell 展开）历来是安全隐患，OpenSSH 新版已改为底层走 SFTP 协议并建议改用 <code>sftp</code> 或 <code>rsync</code>；单个文件传传无妨，成批同步请用 <code>rsync</code>。</p></div>
 
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">两条不要敲的命令</span><p><span class="badge dead">禁用</span> <code>curl ... | sudo bash</code>：你把「下载什么」和「以 root 执行什么」合成了一步，中途看不见内容，服务端还能按 User-Agent 给你不同脚本。正确做法是 <code>curl -fsSL URL -o setup.sh</code>，读一遍，再 <code>bash setup.sh</code>。同样，<code>ssh -o StrictHostKeyChecking=no</code> 和 <code>wget --no-check-certificate</code> 是在关掉中间人攻击的唯一防线，只能在你完全掌控的一次性测试环境里用。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 两条不要敲的命令</span><p><span class="badge dead">禁用</span> <code>curl ... | sudo bash</code>：你把「下载什么」和「以 root 执行什么」合成了一步，中途看不见内容，服务端还能按 User-Agent 给你不同脚本。正确做法是 <code>curl -fsSL URL -o setup.sh</code>，读一遍，再 <code>bash setup.sh</code>。同样，<code>ssh -o StrictHostKeyChecking=no</code> 和 <code>wget --no-check-certificate</code> 是在关掉中间人攻击的唯一防线，只能在你完全掌控的一次性测试环境里用。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">现代提示：把连接参数写进配置</span><p><span class="badge new">现代提示</span> 别再每次敲 <code>ssh -p 2222 -i ~/.ssh/xx deploy@1.2.3.4</code>。在 <code>~/.ssh/config</code> 里写一段：<code>Host web</code> / <code>HostName 1.2.3.4</code> / <code>Port 2222</code> / <code>User deploy</code> / <code>IdentityFile ~/.ssh/xx</code>，此后 <code>ssh web</code>、<code>rsync ... web:/path</code> 全部生效。需要经过跳板机时加 <code>ProxyJump bastion</code>。<code>curl</code> 之外，调试接口时 <code>httpie</code>（<code>http GET url</code>）输出更易读，但脚本里仍推荐 <code>curl</code>，因为它无处不在。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 现代提示：把连接参数写进配置</span><p><span class="badge new">现代提示</span> 别再每次敲 <code>ssh -p 2222 -i ~/.ssh/xx deploy@1.2.3.4</code>。在 <code>~/.ssh/config</code> 里写一段：<code>Host web</code> / <code>HostName 1.2.3.4</code> / <code>Port 2222</code> / <code>User deploy</code> / <code>IdentityFile ~/.ssh/xx</code>，此后 <code>ssh web</code>、<code>rsync ... web:/path</code> 全部生效。需要经过跳板机时加 <code>ProxyJump bastion</code>。<code>curl</code> 之外，调试接口时 <code>httpie</code>（<code>http GET url</code>）输出更易读，但脚本里仍推荐 <code>curl</code>，因为它无处不在。</p></div>
 
 <h2 id="b6-proc">6.7 进程与系统：ps / top / htop / kill / systemctl / journalctl / free / uptime</h2>
 
@@ -4815,11 +4815,11 @@ journalctl <span class="kw">-u</span> nginx <span class="kw">-f</span>
 
 <p><strong>负载（load average）到底是什么？</strong>可以想成超市收银台前的排队人数：它统计的是「正在被 CPU 服务 + 正在排队等 CPU（Linux 上还包括等磁盘 I/O）」的任务数。所以判断高低必须除以核数——8 核机器上负载 4 很闲，2 核机器上负载 4 已经堵了。<code>uptime</code> 给出 1/5/15 分钟三个数，看的是趋势：如果 1 分钟远高于 15 分钟，说明问题刚刚发生。</p>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">free 里「剩余内存很少」通常不是问题</span><p><span class="badge ok">仍适用</span> Linux 会主动把空闲内存拿去做文件缓存（buff/cache），这是收益，不是浪费——需要时立刻能还回来。所以别盯着 <code>free</code> 那一列，要看 <strong>available</strong>：它才是「新程序还能拿到多少」。真正的内存告警信号是 swap 持续增长，以及 <code>journalctl -k | grep -i oom</code> 里出现 OOM killer 的记录。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 free 里「剩余内存很少」通常不是问题</span><p><span class="badge ok">仍适用</span> Linux 会主动把空闲内存拿去做文件缓存（buff/cache），这是收益，不是浪费——需要时立刻能还回来。所以别盯着 <code>free</code> 那一列，要看 <strong>available</strong>：它才是「新程序还能拿到多少」。真正的内存告警信号是 swap 持续增长，以及 <code>journalctl -k | grep -i oom</code> 里出现 OOM killer 的记录。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">kill -9 别当第一选择</span><p><span class="badge old">已过时</span> 上来就 <code>kill -9</code> 意味着进程没机会刷盘、没机会释放锁、没机会通知下游，可能留下损坏的数据文件或残留的 pid/socket 文件。顺序应该是：<code>kill PID</code>（TERM）→ 等几秒 → 还在就 <code>kill -9</code>。同理，systemd 管的服务用 <code>systemctl restart</code>，别绕过去手工杀，否则守护进程会按自己的策略又把它拉起来，你以为杀掉了其实换了个 PID。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">🟡 kill -9 别当第一选择</span><p><span class="badge old">已过时</span> 上来就 <code>kill -9</code> 意味着进程没机会刷盘、没机会释放锁、没机会通知下游，可能留下损坏的数据文件或残留的 pid/socket 文件。顺序应该是：<code>kill PID</code>（TERM）→ 等几秒 → 还在就 <code>kill -9</code>。同理，systemd 管的服务用 <code>systemctl restart</code>，别绕过去手工杀，否则守护进程会按自己的策略又把它拉起来，你以为杀掉了其实换了个 PID。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">现代提示</span><p><span class="badge new">现代提示</span> <code>btop</code>/<code>htop</code> 交互体验远好于 <code>top</code>，值得装在常用机器上。<code>systemctl</code> 改过 unit 文件后必须先 <code>systemctl daemon-reload</code> 再 restart。<code>journalctl</code> 默认按分页器输出，加 <code>--no-pager</code> 才适合写进脚本；想看上一次开机的日志用 <code>-b -1</code>。<code>service</code> 和 <code>chkconfig</code> 在 systemd 系统上只是兼容外壳，新写的文档请直接用 <code>systemctl</code>。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> <code>btop</code>/<code>htop</code> 交互体验远好于 <code>top</code>，值得装在常用机器上。<code>systemctl</code> 改过 unit 文件后必须先 <code>systemctl daemon-reload</code> 再 restart。<code>journalctl</code> 默认按分页器输出，加 <code>--no-pager</code> 才适合写进脚本；想看上一次开机的日志用 <code>-b -1</code>。<code>service</code> 和 <code>chkconfig</code> 在 systemd 系统上只是兼容外壳，新写的文档请直接用 <code>systemctl</code>。</p></div>
 
 <h2 id="b6-json">6.8 JSON 处理：jq 常用表达式</h2>
 
@@ -4869,9 +4869,9 @@ name=demo
 jq <span class="kw">--arg</span> n "$name" '.items[] | select(.name == $n)' data.json
 </code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">不要用 grep 解析 JSON</span><p><span class="badge old">已过时</span> <code>grep '"id"' resp.json | cut -d'"' -f4</code> 这类写法在压缩成一行的 JSON、嵌套同名字段、值里含转义引号时全部失效，而且失效方式是「安静地给出错误答案」。同理别用正则改 JSON——用 <code>jq</code> 生成新 JSON 再整体写回。<code>jq</code> 处理不了的超大流式数据，再考虑专门的流式解析器。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 不要用 grep 解析 JSON</span><p><span class="badge old">已过时</span> <code>grep '"id"' resp.json | cut -d'"' -f4</code> 这类写法在压缩成一行的 JSON、嵌套同名字段、值里含转义引号时全部失效，而且失效方式是「安静地给出错误答案」。同理别用正则改 JSON——用 <code>jq</code> 生成新 JSON 再整体写回。<code>jq</code> 处理不了的超大流式数据，再考虑专门的流式解析器。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">现代提示</span><p><span class="badge new">现代提示</span> jq 1.7 起提供了 <code>pick(.a.b)</code>、<code>abs</code>、<code>ltrimstr</code> 等便利函数，并改进了 <code>--args</code>/<code>--jsonargs</code> 传参。<code>gojq</code> 是兼容的 Go 实现，报错信息更友好、数字精度处理更稳。YAML 用 <code>yq</code>（语法与 jq 几乎一致），Kubernetes 场景里 <code>kubectl -o json ... | jq</code> 是标配组合。表达式写复杂了就存成 <code>.jq</code> 文件用 <code>jq -f</code> 调用，比塞在一行引号里可维护得多。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> jq 1.7 起提供了 <code>pick(.a.b)</code>、<code>abs</code>、<code>ltrimstr</code> 等便利函数，并改进了 <code>--args</code>/<code>--jsonargs</code> 传参。<code>gojq</code> 是兼容的 Go 实现，报错信息更友好、数字精度处理更稳。YAML 用 <code>yq</code>（语法与 jq 几乎一致），Kubernetes 场景里 <code>kubectl -o json ... | jq</code> 是标配组合。表达式写复杂了就存成 <code>.jq</code> 文件用 <code>jq -f</code> 调用，比塞在一行引号里可维护得多。</p></div>
 
 <h2 id="b6-perm">6.9 权限：chmod / chown / umask</h2>
 
@@ -4972,9 +4972,9 @@ find /srv/app <span class="kw">-type</span> d <span class="kw">-exec</span> chmo
 find /srv/app <span class="kw">-type</span> f <span class="kw">-exec</span> chmod 644 {} +
 </code></pre>
 
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">chmod -R 777 是在拆门</span><p><span class="badge dead">禁用</span> 它意味着机器上任何用户都能修改甚至替换你的程序文件——包括被攻破的低权限服务。真正该做的是让文件属于正确的用户/组：<code>chown -R appuser:appgroup /srv/app</code>，然后按上面的方式给 755/644。另外，<code>sudo chmod -R</code> 或 <code>sudo chown -R</code> 打错路径（比如多一个空格变成 <code>/ usr</code>）可能让系统无法启动，敲之前先把路径 <code>echo</code> 一遍。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 chmod -R 777 是在拆门</span><p><span class="badge dead">禁用</span> 它意味着机器上任何用户都能修改甚至替换你的程序文件——包括被攻破的低权限服务。真正该做的是让文件属于正确的用户/组：<code>chown -R appuser:appgroup /srv/app</code>，然后按上面的方式给 755/644。另外，<code>sudo chmod -R</code> 或 <code>sudo chown -R</code> 打错路径（比如多一个空格变成 <code>/ usr</code>）可能让系统无法启动，敲之前先把路径 <code>echo</code> 一遍。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">现代提示</span><p><span class="badge new">现代提示</span> 需要「让某个特定用户能读，但不改动属主/属组」时，用 ACL：<code>setfacl -m u:nginx:rx /srv/app</code>，<code>getfacl</code> 查看，比放宽 <code>o</code> 位精确得多（<code>ls -l</code> 里权限末尾出现 <code>+</code> 就表示有 ACL）。安装文件时用 <code>install -m 640 src dst</code> 可以一步到位地拷贝并设权限。共享目录可以给组加 setgid（<code>chmod g+s dir</code>），新建文件自动继承目录的组；<code>/tmp</code> 上的 <code>t</code>（sticky bit）保证只有属主能删自己的文件。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> 需要「让某个特定用户能读，但不改动属主/属组」时，用 ACL：<code>setfacl -m u:nginx:rx /srv/app</code>，<code>getfacl</code> 查看，比放宽 <code>o</code> 位精确得多（<code>ls -l</code> 里权限末尾出现 <code>+</code> 就表示有 ACL）。安装文件时用 <code>install -m 640 src dst</code> 可以一步到位地拷贝并设权限。共享目录可以给组加 setgid（<code>chmod g+s dir</code>），新建文件自动继承目录的组；<code>/tmp</code> 上的 <code>t</code>（sticky bit）保证只有属主能删自己的文件。</p></div>
 
 <h2 id="b6-recipes">6.10 组合技与危险动作清单</h2>
 
@@ -5012,7 +5012,7 @@ find /srv/app <span class="kw">-type</span> f <span class="kw">-exec</span> chmo
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">本章怎么用</span><p><span class="badge ok">仍适用</span> 不必背表。遇到问题时先问自己属于哪一类——文件、文本、传输、进程、结构化数据、权限——翻到那一节，看一句话说明确认工具选对了，再抄那一两个选项。真正需要记牢的只有三件事：<strong>处理文件名一律走 <code>-print0</code>／<code>-0</code>；破坏性操作先空跑或先 <code>echo</code>；解析结构化数据用懂格式的工具。</strong>这三条能挡掉你未来九成的事故。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 本章怎么用</span><p><span class="badge ok">仍适用</span> 不必背表。遇到问题时先问自己属于哪一类——文件、文本、传输、进程、结构化数据、权限——翻到那一节，看一句话说明确认工具选对了，再抄那一两个选项。真正需要记牢的只有三件事：<strong>处理文件名一律走 <code>-print0</code>／<code>-0</code>；破坏性操作先空跑或先 <code>echo</code>；解析结构化数据用懂格式的工具。</strong>这三条能挡掉你未来九成的事故。</p></div>
 
 </section>
 
@@ -5099,7 +5099,7 @@ greet "$name"</code></pre>
 
 <p>注意 Bash 自动给带空格的值加上了引号——这正是你需要的信息：它确实把 <code>Ada Lovelace</code> 当成了<em>一个</em>参数。如果哪天你看到 <code>greet Ada Lovelace</code>（没引号、两个词），那就是引号丢了。</p>
 
-<div class="note new" style="contain-intrinsic-size:auto 173px"><span class="t">现代提示　把 trace 隔离到单独的文件</span><p>trace 混在 stderr 里会把真正的错误信息淹没。Bash 4.1 起支持 <code>BASH_XTRACEFD</code>，配合自动分配的文件描述符，可以让调试轨迹单独成流，stdout 与 stderr 都保持干净：</p><p><code>exec {tfd}&gt;&gt;"/tmp/deploy.trace"; BASH_XTRACEFD=$tfd; set -x</code></p></div>
+<div class="note new" style="contain-intrinsic-size:auto 173px"><span class="t">🔵 现代提示　把 trace 隔离到单独的文件</span><p>trace 混在 stderr 里会把真正的错误信息淹没。Bash 4.1 起支持 <code>BASH_XTRACEFD</code>，配合自动分配的文件描述符，可以让调试轨迹单独成流，stdout 与 stderr 都保持干净：</p><p><code>exec {tfd}&gt;&gt;"/tmp/deploy.trace"; BASH_XTRACEFD=$tfd; set -x</code></p></div>
 
 <h3>调试开关速查表</h3>
 
@@ -5181,7 +5181,7 @@ fetch_version_ok() {
   <span class="kw">echo</span> "版本: $v"
 }</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">仍适用　把「预期可能失败」写明白</span><p>严格模式下，凡是你<em>允许</em>失败的命令，都要显式表态，否则脚本会突然死掉：<code>grep -q pat file || true</code>。反过来，凡是<em>不允许</em>失败的命令，与其依赖 <code>-e</code>，不如自己写 <code>|| die "..."</code>——错误信息里能带上上下文，比一句冷冰冰的静默退出有用得多。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 仍适用　把「预期可能失败」写明白</span><p>严格模式下，凡是你<em>允许</em>失败的命令，都要显式表态，否则脚本会突然死掉：<code>grep -q pat file || true</code>。反过来，凡是<em>不允许</em>失败的命令，与其依赖 <code>-e</code>，不如自己写 <code>|| die "..."</code>——错误信息里能带上上下文，比一句冷冰冰的静默退出有用得多。</p></div>
 
 <h3>ERR trap：出错时留下现场</h3>
 
@@ -5256,7 +5256,7 @@ shellcheck -S warning $(git ls-files '*.sh')
 <span class="cm"># 顺手做格式化检查（shfmt 是 shellcheck 的好搭档）</span>
 shfmt -d -i 2 -ci .</code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 171px"><span class="t">现代提示　三道防线</span><p>编辑器插件（写的时候就红波浪线）→ pre-commit 钩子（提交时挡住）→ CI（合并前挡住）。三道都接上，你会发现本章下一节讲的那些陷阱，绝大多数根本没机会进入你的仓库。</p><p>但要清醒：shellcheck 检查的是<strong>语言层面的用法</strong>，不检查<strong>你的逻辑</strong>。它不会告诉你备份路径写错了目录。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 171px"><span class="t">🔵 现代提示　三道防线</span><p>编辑器插件（写的时候就红波浪线）→ pre-commit 钩子（提交时挡住）→ CI（合并前挡住）。三道都接上，你会发现本章下一节讲的那些陷阱，绝大多数根本没机会进入你的仓库。</p><p>但要清醒：shellcheck 检查的是<strong>语言层面的用法</strong>，不检查<strong>你的逻辑</strong>。它不会告诉你备份路径写错了目录。</p></div>
 
 <h2 id="b7-pitfalls">7.4 常见陷阱速查表：能毁掉一天的那几个坑</h2>
 
@@ -5358,7 +5358,7 @@ bash: ./deploy.sh: /bin/bash^M: bad interpreter: No such file or directory
 <tr><td class="nw">Git 全局设置</td><td><code>git config --global core.autocrlf input</code>（Windows 端）</td></tr>
 </tbody></table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">仍适用　跨平台协作的正确姿势</span><p>在 Windows 上开发 Linux 脚本，不要靠「每次记得转换」。在仓库里放一份 <code>.gitattributes</code>，把 <code>*.sh</code>、<code>Dockerfile</code>、<code>Makefile</code> 全部钉死为 <code>eol=lf</code>，再在编辑器里把默认行尾设成 LF。这类问题一次配置，终身免疫。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 仍适用　跨平台协作的正确姿势</span><p>在 Windows 上开发 Linux 脚本，不要靠「每次记得转换」。在仓库里放一份 <code>.gitattributes</code>，把 <code>*.sh</code>、<code>Dockerfile</code>、<code>Makefile</code> 全部钉死为 <code>eol=lf</code>，再在编辑器里把默认行尾设成 LF。这类问题一次配置，终身免疫。</p></div>
 
 <h2 id="b7-tmp">7.5 临时文件：mktemp 与 trap 清理</h2>
 
@@ -5442,7 +5442,7 @@ workdir=$(mktemp -d "${TMPDIR:-/tmp}/demo.XXXXXXXX")
 <tr><td class="nw"><code>KILL</code>（9）</td><td class="nw">—</td><td><span class="badge dead">无法捕获</span> 进程被直接抹掉，任何清理都不会跑</td></tr>
 </tbody></table>
 
-<div class="note new" style="contain-intrinsic-size:auto 239px"><span class="t">现代提示　清理函数必须自己是幂等的</span><p><code>cleanup</code> 有可能被调用不止一次（比如你在别处也调了它，或者信号连来两次）。所以它内部的每一步都要能重复执行而不报错：用 <code>rm -rf</code> 而不是 <code>rm</code>，先判断存在性再删除，并且绝不在清理函数里做可能失败并触发新一轮 trap 的事情。</p><p>另外记住 <code>SIGKILL</code> 与断电一样不可拦截。真正重要的清理（比如释放数据库中的一行锁）不能只靠 trap，要在下次启动时做过期检查。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 239px"><span class="t">🔵 现代提示　清理函数必须自己是幂等的</span><p><code>cleanup</code> 有可能被调用不止一次（比如你在别处也调了它，或者信号连来两次）。所以它内部的每一步都要能重复执行而不报错：用 <code>rm -rf</code> 而不是 <code>rm</code>，先判断存在性再删除，并且绝不在清理函数里做可能失败并触发新一轮 trap 的事情。</p><p>另外记住 <code>SIGKILL</code> 与断电一样不可拦截。真正重要的清理（比如释放数据库中的一行锁）不能只靠 trap，要在下次启动时做过期检查。</p></div>
 
 <h2 id="b7-idempotent">7.6 幂等性：让脚本可以重复跑</h2>
 
@@ -5488,7 +5488,7 @@ flock -n 9 || { <span class="kw">echo</span> "另一个实例正在运行，跳�
 <span class="cm"># 到这里说明锁是我们的了；进程一退出，fd 关闭，锁自动释放</span>
 do_the_work</code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 239px"><span class="t">已过时　用文件存在与否当锁</span><p><code>[[ -f $lock ]] &amp;&amp; exit; touch "$lock"</code> 这种写法有两个老问题：一是「检查」和「创建」之间有时间窗口（TOCTOU 竞态），两个进程可能同时通过检查；二是进程被 <code>kill -9</code> 后锁文件永远留着，下次启动直接卡死。</p><p>现代替代：<code>flock</code>（Linux/util-linux 自带），或退一步用 <code>mkdir "$lock"</code>——目录创建是原子的，比 <code>touch</code> 安全，但仍需处理残留问题。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 239px"><span class="t">🟡 已过时　用文件存在与否当锁</span><p><code>[[ -f $lock ]] &amp;&amp; exit; touch "$lock"</code> 这种写法有两个老问题：一是「检查」和「创建」之间有时间窗口（TOCTOU 竞态），两个进程可能同时通过检查；二是进程被 <code>kill -9</code> 后锁文件永远留着，下次启动直接卡死。</p><p>现代替代：<code>flock</code>（Linux/util-linux 自带），或退一步用 <code>mkdir "$lock"</code>——目录创建是原子的，比 <code>touch</code> 安全，但仍需处理残留问题。</p></div>
 
 <h2 id="b7-getopts">7.7 参数解析：getopts 与长选项</h2>
 
@@ -5549,7 +5549,7 @@ usage() { <span class="kw">printf</span> '用法: %s [-v] [-n] [-o FILE] FILE...
   <span class="kw">shift</span>
 <span class="kw">done</span></code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 239px"><span class="t">已过时　外部命令 getopt(1)</span><p>传统 <code>getopt</code> 通过重排字符串来传递参数，无法正确处理含空格或引号的值，属于<span class="badge dead">禁用</span>级别。GNU 增强版 <code>getopt</code>（带 <code>-o/-l</code> 和 <code>--</code> 输出）确实支持长选项且能正确转义，但 macOS 自带的是 BSD 版本，行为完全不同——写跨平台脚本时会翻车。</p><p>结论：短选项用内建 <code>getopts</code>，长选项手写 <code>case</code> 循环。真需要复杂 CLI（子命令、互斥组、类型校验、自动帮助），那是本章最后一节的信号。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 239px"><span class="t">🟡 已过时　外部命令 getopt(1)</span><p>传统 <code>getopt</code> 通过重排字符串来传递参数，无法正确处理含空格或引号的值，属于<span class="badge dead">禁用</span>级别。GNU 增强版 <code>getopt</code>（带 <code>-o/-l</code> 和 <code>--</code> 输出）确实支持长选项且能正确转义，但 macOS 自带的是 BSD 版本，行为完全不同——写跨平台脚本时会翻车。</p><p>结论：短选项用内建 <code>getopts</code>，长选项手写 <code>case</code> 循环。真需要复杂 CLI（子命令、互斥组、类型校验、自动帮助），那是本章最后一节的信号。</p></div>
 
 <h2 id="b7-log">7.8 日志与错误输出规范</h2>
 
@@ -5612,9 +5612,9 @@ warn  "目标目录不为空，将覆盖"
 <tr><td class="nw">&gt;255</td><td class="nw">—</td><td><span class="badge dead">不可用</span> 退出码按 256 取模，<code>exit 256</code> 会变成 0</td></tr>
 </tbody></table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 214px"><span class="t">仍适用　错误信息的三要素</span><p>好的错误信息包含：<strong>做什么失败了</strong>、<strong>具体是哪个对象</strong>、<strong>下一步怎么办</strong>。对比一下：</p><p><code>ERROR: failed</code>　　对比　　<code>ERROR 无法读取配置 /etc/app/conf.yml: 权限不足（请检查文件属主，或用 sudo 运行）</code></p><p>半夜被叫起来的那个人会感谢你。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 214px"><span class="t">🟢 仍适用　错误信息的三要素</span><p>好的错误信息包含：<strong>做什么失败了</strong>、<strong>具体是哪个对象</strong>、<strong>下一步怎么办</strong>。对比一下：</p><p><code>ERROR: failed</code>　　对比　　<code>ERROR 无法读取配置 /etc/app/conf.yml: 权限不足（请检查文件属主，或用 sudo 运行）</code></p><p>半夜被叫起来的那个人会感谢你。</p></div>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">现代提示　交给 systemd 和 journald</span><p>脚本作为 systemd 服务或定时器运行时，不要自己写日志文件轮转。直接把日志打到 stderr，journald 会自动采集、带上时间戳与单元名，用 <code>journalctl -u your.service</code> 就能查。要写进传统 syslog 则用 <code>logger -t myscript "message"</code>。自己实现日志切割是 2010 年的活。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示　交给 systemd 和 journald</span><p>脚本作为 systemd 服务或定时器运行时，不要自己写日志文件轮转。直接把日志打到 stderr，journald 会自动采集、带上时间戳与单元名，用 <code>journalctl -u your.service</code> 就能查。要写进传统 syslog 则用 <code>logger -t myscript "message"</code>。自己实现日志切割是 2010 年的活。</p></div>
 
 <h2 id="b7-template">7.9 脚本模板：可直接复用的健壮骨架</h2>
 
@@ -5717,7 +5717,7 @@ main "$@"</code></pre>
 <tr><td class="nw"><code>main "$@"</code> 放最后一行</td><td>脚本被完整读入后才开始执行；即使传输中断也不会执行半个脚本</td></tr>
 </tbody></table>
 
-<div class="note new" style="contain-intrinsic-size:auto 214px"><span class="t">现代提示　让脚本可测试</span><p>把入口换成条件调用，脚本就既能直接跑，也能被 <code>source</code> 进测试框架，只加载函数而不执行主流程：</p><p><code>[[ ${BASH_SOURCE[0]} == "$0" ]] &amp;&amp; main "$@"</code></p><p>配合 <a>bats</a>（Bash Automated Testing System）就能给关键函数写单元测试。当你开始觉得「这些函数值得写测试」时，往往也是下一节该考虑的时候了。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 214px"><span class="t">🔵 现代提示　让脚本可测试</span><p>把入口换成条件调用，脚本就既能直接跑，也能被 <code>source</code> 进测试框架，只加载函数而不执行主流程：</p><p><code>[[ ${BASH_SOURCE[0]} == "$0" ]] &amp;&amp; main "$@"</code></p><p>配合 <a>bats</a>（Bash Automated Testing System）就能给关键函数写单元测试。当你开始觉得「这些函数值得写测试」时，往往也是下一节该考虑的时候了。</p></div>
 
 <h2 id="b7-python">7.10 什么时候该换成 Python</h2>
 
@@ -5753,7 +5753,7 @@ main "$@"</code></pre>
 <tr><td class="nw">并发</td><td class="nw"><code>xargs -P</code></td><td><code>concurrent.futures</code></td></tr>
 </tbody></table>
 
-<div class="note new" style="contain-intrinsic-size:auto 439px"><span class="t">现代提示　让 Python 脚本像 Shell 脚本一样单文件即跑</span><p>过去不愿意换 Python，理由常常是「还得建虚拟环境、装依赖，太麻烦」。这个理由现在不成立了。PEP 723 允许把依赖声明内联在脚本里，配合 <code>uv</code> 可以直接执行、自动准备环境：</p><pre style="contain-intrinsic-size:auto 212px"><code>#!/usr/bin/env -S uv run --script
+<div class="note new" style="contain-intrinsic-size:auto 439px"><span class="t">🔵 现代提示　让 Python 脚本像 Shell 脚本一样单文件即跑</span><p>过去不愿意换 Python，理由常常是「还得建虚拟环境、装依赖，太麻烦」。这个理由现在不成立了。PEP 723 允许把依赖声明内联在脚本里，配合 <code>uv</code> 可以直接执行、自动准备环境：</p><pre style="contain-intrinsic-size:auto 212px"><code>#!/usr/bin/env -S uv run --script
 <span class="cm"># /// script</span>
 <span class="cm"># requires-python = "&gt;=3.11"</span>
 <span class="cm"># dependencies = ["httpx"]</span>
@@ -5761,7 +5761,7 @@ main "$@"</code></pre>
 <span class="kw">import</span> httpx
 print(httpx.get("https://example.com").status_code)</code></pre><p><code>chmod +x</code> 之后 <code>./fetch.py</code> 就能跑，和 Shell 脚本的体验完全一致。「单文件、免安装」不再是 Bash 的专属优势。</p></div>
 
-<div class="note ok" style="contain-intrinsic-size:auto 276px"><span class="t">仍适用　别走极端</span><p>反过来说，也别把十行的胶水脚本改写成 Python。下面这些场景，Bash 依然是最短、最清晰的路径：</p><p>CI 里串起几条构建命令；批量重命名文件；给一串日志做管道过滤统计；容器的 entrypoint；给复杂命令包一层记得住的别名。</p><p>判断标准很朴素：<strong>如果这个脚本主要在「调用别的程序」，用 Bash；如果它主要在「处理数据和状态」，用 Python。</strong>当你发现自己在 Bash 里模拟字典的字典、手写 JSON 解析、或者第五次调试引号问题时——那就是语言在告诉你，它已经到极限了。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 276px"><span class="t">🟢 仍适用　别走极端</span><p>反过来说，也别把十行的胶水脚本改写成 Python。下面这些场景，Bash 依然是最短、最清晰的路径：</p><p>CI 里串起几条构建命令；批量重命名文件；给一串日志做管道过滤统计；容器的 entrypoint；给复杂命令包一层记得住的别名。</p><p>判断标准很朴素：<strong>如果这个脚本主要在「调用别的程序」，用 Bash；如果它主要在「处理数据和状态」，用 Python。</strong>当你发现自己在 Bash 里模拟字典的字典、手写 JSON 解析、或者第五次调试引号问题时——那就是语言在告诉你，它已经到极限了。</p></div>
 
 <h3>本章要点回顾</h3>
 
