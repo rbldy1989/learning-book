@@ -197,7 +197,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">C++ 标准库 API 编程手册</div>
 <details><summary><a class="ch" href="#c1">序列容器</a></summary>
-<a class="sec" href="#c1-classics">1.0 相关经典书籍</a>
+<a class="sec" href="#c1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#c1-overview">1.1 速览:为什么复杂度表会骗人</a>
 <a class="sec" href="#c1-vector">1.2 vector</a>
 <a class="sec" href="#c1-array">1.3 array</a>
@@ -326,19 +326,119 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 33821px;--thin-h:31155px">
+<section class="chapter" style="contain-intrinsic-size:auto 38664px;--thin-h:36031px">
 <h1 id="c1"><span class="part">分类 1</span>序列容器</h1>
-<h2 id="c1-classics">1.0 相关经典书籍</h2>
-<p>本手册以 C++17 为底、逐条标注 C++20/23 的现代写法。标准库与现代 C++ 的顶级读物:</p>
-<table style="contain-intrinsic-size:auto 262px">
-<thead><tr><th>书</th><th class="nw">定位</th><th>特点(含局限)</th></tr></thead>
+<h2 id="c1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>本手册按<strong>机制</strong>分组速查 C++ 标准库,不按字母序排列。每个条目回答同一组问题:这个设施解决什么问题、内部怎么组织内存、接口怎么用、复杂度与异常保证是什么、迭代器与引用什么时候失效、以及什么时候不该用它。</p>
+<p>标准基线取 <strong>C++17</strong>,C++20 与 C++23 的设施逐处标出最低版本,并在有更好写法时给出对照。实现覆盖 libstdc++、libc++ 与 MSVC STL,三家行为不同处分别说明。</p>
+
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>标准库的资料有一个共同的时间问题:成体系的书大多停在 C++11,而 C++17 与 C++20 恰好改动了最常用的那几块——字符串、算法、并发与错误处理。下表先给全景。<strong>锚定</strong>指本手册的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本手册无直接关系、读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 938px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">与本书的关系</th><th>特点与局限</th></tr></thead>
 <tbody>
-<tr><td class="nw">Josuttis《C++ 标准库》(第 2 版)</td><td class="nw">查阅·首选</td><td>标准库最全最权威的参考。<strong>局限</strong>:第 2 版止于 C++11,14/17/20 要另查。</td></tr>
-<tr><td>Scott Meyers《Effective Modern C++:改善 C++11 与 C++14 的 42 个具体做法》</td><td class="nw">进阶·必读</td><td>现代 C++ 精要,条款式,回报极高。<strong>局限</strong>:以 C++11/14 为主,非入门书。</td></tr>
-<tr><td class="nw">侯捷《STL 源码剖析》</td><td class="nw">进阶</td><td>从实现看容器与迭代器,机制层。<strong>局限</strong>:基于老版 SGI STL,与现代实现有出入。</td></tr>
-<tr><td>Bjarne Stroustrup《C++ 程序设计语言》(第 4 版)</td><td class="nw">查阅</td><td>语言之父的大全。<strong>局限</strong>:极厚,止于 C++11。</td></tr>
+<tr><td>Josuttis《C++ 标准库》(第 2 版)</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>标准库最全的参考,逐个设施给出接口、行为与用法。<strong>局限</strong>:第 2 版止于 C++11,此后新增的部分要另查</td></tr>
+<tr><td>Stroustrup《C++ 程序设计语言》(第 4 版)</td><td class="nw">经典教材</td><td class="nw">推荐</td><td>标准库那几章给出设计意图,回答「为什么接口长这样」。<strong>局限</strong>:极厚,内容止于 C++11</td></tr>
+<tr><td>Meyers《Effective STL》与《Effective Modern C++》</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>前者讲容器与算法「该选哪个」,后者讲智能指针、移动与 lambda 的现代用法。<strong>局限</strong>:前者成书于 C++03 之前,涉及分配器与拷贝的结论要用移动语义修正;后者不覆盖 ranges 与 concepts</td></tr>
+<tr><td>侯捷《STL 源码剖析》</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>从实现看容器与迭代器是怎么搭出来的。<strong>局限</strong>:基于早期的 SGI STL,与现在三家实现的差别不小</td></tr>
+<tr><td>Josuttis 的 C++17 与 C++20 专题书</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>逐个新特性讲清语义与边界情形,补的正是老书缺的那几年。<strong>局限</strong>:按特性组织,不成体系,不适合当速查手册</td></tr>
+<tr><td>Williams《C++ Concurrency in Action》(第 2 版)</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>标准线程库与内存模型,含无锁数据结构。<strong>局限</strong>:内存序部分需要反复读,与容器、算法无交集</td></tr>
+<tr><td>cppreference</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>签名、复杂度保证、异常保证与版本差异查得最快,随标准更新。<strong>局限</strong>:给规则不给取舍,不回答「两个设施该选哪个」;中文版更新滞后</td></tr>
+<tr><td>ISO C++ 标准工作草案</td><td class="nw">官方文档与规范</td><td class="nw">锚定</td><td>复杂度、异常保证与迭代器失效规则的原始出处,实现之间有分歧时的仲裁依据。<strong>局限</strong>:不是顺序阅读用的,只能按条款号查</td></tr>
+<tr><td>libstdc++、libc++ 与 MSVC STL 的源码</td><td class="nw">官方文档与规范</td><td class="nw">锚定</td><td>标准没规定的那部分行为,只能从这里读出来。<strong>局限</strong>:实现细节随版本改动,读出的结论不能当接口承诺</td></tr>
+<tr><td>C++ Core Guidelines</td><td class="nw">官方文档与规范</td><td class="nw">参考</td><td>每条带编号的使用规矩,适合作团队规范的依据。<strong>局限</strong>:是清单不是教材,不解释背景</td></tr>
+<tr><td>Compiler Explorer</td><td class="nw">在线资料</td><td class="nw">参考</td><td>看一次调用生成了什么代码、三家实现各走了哪条分支。<strong>局限</strong>:看得到生成代码,测不出真实耗时</td></tr>
+<tr><td>在线微基准平台</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>两种写法的耗时对比,不用在本地搭环境。<strong>局限</strong>:云端机器噪声大,结论只能看量级,不能当准确数字</td></tr>
 </tbody>
 </table>
+<div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">🟡 经典的选型判据仍然成立,涉及拷贝与分配器的结论要修正</span><p>《Effective STL》里「按迭代器稳定性选容器」「优先用算法而不是手写循环」这类判据至今成立。要修正的是三类:凡是为了避免拷贝而设计的写法,在移动语义之后多数不再必要;老式分配器的用法已被 <code>pmr</code> 取代(第 18 章);「不要用 <code>vector&lt;bool&gt;</code>」的理由没有变,替代仍然是 <code>vector&lt;char&gt;</code> 或 <code>bitset</code>(1.8 节)。本手册在需要修正处会明确标出。</p></div>
+
+<h3>锚定的五样各借鉴了什么</h3>
+<p>借鉴的都是具体手法,不是笼统的风格。</p>
+<table style="contain-intrinsic-size:auto 350px">
+<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">Josuttis《C++ 标准库》</td><td>条目的字段划分:声明、常用操作、复杂度、异常保证、示例;以及按设施分组的章节主线——容器、迭代器、算法、字符串、内存、工具类型</td></tr>
+<tr><td class="nw">Meyers</td><td>「该选哪个」的写法:先给一句判据,再给理由与反例。区别在于不逐条对应条款号,而是聚合进各章开头的速览节,让选型判据出现在读者查具体接口之前</td></tr>
+<tr><td class="nw">cppreference</td><td>接口事实与版本标注的准绳。每个设施标出最低标准版本,复杂度与异常保证按它的口径写;二手资料与它冲突时以它为准</td></tr>
+<tr><td class="nw">ISO C++ 标准工作草案</td><td>「标准保证的」与「某家实现恰好如此」这条分界线。复杂度、异常保证与迭代器失效规则一律按标准原文核对,两者在书里分开写,不混为一谈</td></tr>
+<tr><td class="nw">三家实现的源码</td><td>标准没规定处的事实来源:小字符串优化的阈值、<code>shared_ptr</code> 控制块的布局、<code>deque</code> 的分段大小、无序容器的桶策略。三家不一致的地方逐项列出,并注明这是实现细节而非承诺</td></tr>
+</tbody>
+</table>
+
+<h3>讲什么、不讲什么</h3>
+<p>本手册覆盖 <strong>C++ 标准库的常用部分</strong>,20 章 87 节按机制分组。</p>
+<table style="contain-intrinsic-size:auto 370px">
+<thead><tr><th class="nw">章</th><th>它回答的问题</th></tr></thead>
+<tbody>
+<tr><td class="nw">第 1、2 章</td><td>按内存布局选容器,以及迭代器、指针、引用各自什么时候失效</td></tr>
+<tr><td class="nw">第 3、4 章</td><td>算法要求哪一级迭代器,ranges 与惰性视图改变了什么</td></tr>
+<tr><td class="nw">第 5 章</td><td>字符串这一块的四个设施各管哪一段:存储、只读视图、格式化、数值转换</td></tr>
+<tr><td class="nw">第 6、7 章</td><td>所有权怎么表达,以及怎么把「可能没有值」「可能失败」写进类型</td></tr>
+<tr><td class="nw">第 8 到 10 章</td><td>时间、文件系统与输入输出流:各自的抽象是什么,今天还剩什么用</td></tr>
+<tr><td class="nw">第 11 章</td><td>并发的三个层次与选择顺序,一直到原子量与内存序</td></tr>
+<tr><td class="nw">第 12 到 15 章</td><td>类型工具与错误处理、随机数、可调用对象、位运算与浮点</td></tr>
+<tr><td class="nw">第 16 到 18 章</td><td>比较与排序语义、运行期类型设施、内存资源与分配器</td></tr>
+<tr><td class="nw">第 19、20 章</td><td>协程与惰性序列,以及异常安全的三级保证与 RAII</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚,并指明归谁。</p>
+<table style="contain-intrinsic-size:auto 386px">
+<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td>语言机制本身:值类别、模板实例化、重载决议、对象布局</td><td class="nw">《C++ 语言 · 现代详解》</td><td>本手册讲接口与用法,只在接口的行为由某条语言规则决定时提一句</td></tr>
+<tr><td>性能的测量、剖析与调优流程</td><td class="nw">《C++ 性能优化 · 现代详解》</td><td>本手册给复杂度与代价来源,不给测量步骤与优化顺序</td></tr>
+<tr><td>C 标准库函数的逐个用法</td><td class="nw">《C 标准库 API 手册》</td><td>只在与 C 接口混用时给出分界与转换写法</td></tr>
+<tr><td>系统调用与平台专有接口</td><td class="nw">《Linux 系统编程手册》与《Windows API 手册》</td><td>本手册的边界停在标准保证的设施</td></tr>
+<tr><td>第三方库</td><td class="nw">不在本手册范围</td><td>只在标准里尚无对应设施、而某个库已成事实标准时提一句</td></tr>
+<tr><td>冷门设施与完整清单</td><td class="nw">cppreference</td><td>本手册收日常会用到的部分,查完整清单去在线参考</td></tr>
+</tbody>
+</table>
+
+<h3>读之前要会什么</h3>
+<p>前置分两档,每条都给自测方式——「熟悉 C++」无法自测,也就无法用来判断该不该现在读。</p>
+<table style="contain-intrinsic-size:auto 462px">
+<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>读得懂模板代码</td><td>说出 <code>template&lt;class T&gt; void f(const T&amp;)</code> 在调用 <code>f("abc")</code> 时 <code>T</code> 被推导成什么</td></tr>
+<tr><td class="nw">必须</td><td>说得清移动与拷贝的差别</td><td>说出 <code>std::move</code> 做了什么、没做什么,以及一个被移动之后的 <code>string</code> 处于什么状态</td></tr>
+<tr><td class="nw">必须</td><td>知道 RAII 与析构的时机</td><td>说出一个局部对象在函数中途抛出异常时会不会被析构,并解释依据</td></tr>
+<tr><td class="nw">必须</td><td>读得懂模板报错</td><td>拿到一段几十行的模板错误,能指出第一条真正有用的信息在哪一行,以及它指向哪个类型不满足要求</td></tr>
+<tr><td class="nw">最好有</td><td>用过迭代器与范围 <code>for</code></td><td>说出 <code>begin()</code> 与 <code>end()</code> 各指向哪里,以及为什么 <code>end()</code> 不能解引用</td></tr>
+<tr><td class="nw">最好有</td><td>对堆分配的代价有量级概念</td><td>说出一次 <code>new</code> 大致是哪个量级,以及 <code>vector</code> 为什么要成倍扩容而不是每次加一</td></tr>
+<tr><td class="nw">最好有</td><td>写过一次多线程代码</td><td>说出数据竞争与死锁各自的成因,并举一个加了锁仍然出错的例子</td></tr>
+<tr><td class="nw">最好有</td><td>听说过异常安全的分级</td><td>说出「基本保证」与「强保证」的差别,以及哪一级更贵</td></tr>
+</tbody>
+</table>
+
+<h3>与那些资料相比,本手册多给了什么</h3>
+<ul>
+<li><strong>按机制分组,不按字母序。</strong>容器一章按内存布局排:连续、分段连续、链式;并发一章按抽象层次排:任务、锁、原子量。查一个设施时,它的替代品就在相邻小节。</li>
+<li><strong>每个设施都给复杂度之外的四样东西。</strong>实际内存布局、迭代器与引用的失效规则、异常保证、线程安全边界——这四样决定了它能不能用在你的场景里,而复杂度表决定不了。</li>
+<li><strong>二十八张原创图。</strong>凡是「谁指向谁」「为什么会失效」「两种结构差在哪」的地方一律配图,包括 <code>vector</code> 扩容、<code>shared_ptr</code> 的两块内存、协程栈帧在堆上这类只靠文字说不清的结构。</li>
+<li><strong>批注以失效与误用为主。</strong>两百二十条以上的批注里红色接近一半,写的是具体事故:比较器写成 <code>&lt;=</code> 会让排序越界写内存、<code>map</code> 的下标访问会插入元素、<code>string_view</code> 指向的临时量已经销毁。</li>
+<li><strong>四百段以上的示例都是最小可编译形态。</strong>每段配预期输出或注释说明关键一行,可以直接抄进工程再改。</li>
+</ul>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 先按迭代器与引用的稳定性选容器,复杂度表放第二位</span><p>复杂度只算「操作本身」那一步,不算走到位置的代价,也不体现连续内存与指针跳转在缓存上的差距(1.1 节)。可靠的选型顺序是:先确定别处会不会长期持有指向元素的迭代器、指针或引用,这一条直接决定能不能用 <code>vector</code>;再看访问模式是顺序遍历还是随机查找;最后才用复杂度排除明显不合适的。说不出理由时默认 <code>vector</code>,换掉它要拿实测数据。</p></div>
+
+<h3>两条读法:按需查与顺读前七章</h3>
+<p>手上有具体设施要查走按需查,系统补一遍标准库走顺读。</p>
+<table style="contain-intrinsic-size:auto 259px">
+<thead><tr><th>你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
+<tbody>
+<tr><td>要选一个容器或算法</td><td>该章开头的速览节,再点进具体条目</td><td class="nw">—</td><td class="nw">—</td></tr>
+<tr><td>系统补一遍标准库</td><td>第 1 章顺读到第 7 章,其余按需取</td><td class="nw">第 1、3、4、6、7 章</td><td class="nw">第 13 到 19 章</td></tr>
+<tr><td>写多线程代码</td><td>第 11 章,配 17.2 与 20.2</td><td class="nw">第 11 章</td><td class="nw">第 8、9 章</td></tr>
+<tr><td>处理文本、解析与输出</td><td>第 5 章,配 15.3 的浮点</td><td class="nw">第 5 章</td><td class="nw">第 10 章</td></tr>
+<tr><td>写库或对分配敏感</td><td>第 6、18 章,配 1.1 与 14.1</td><td class="nw">第 6、18 章</td><td class="nw">第 10、13 章</td></tr>
+<tr><td>维护用旧写法的代码</td><td>第 10 章与 20.3</td><td class="nw">—</td><td class="nw">第 19 章</td></tr>
+</tbody>
+</table>
+<p><strong>顺读时第 1、3、4 章不能跳,也不能颠倒顺序。</strong>第 1 章确立「按内存布局理解容器」这个视角,后面所有选型判据都从它推出来;第 3 章的迭代器类别决定了一个算法能不能作用于某个容器,也解释了为什么 <code>list</code> 用不了 <code>std::sort</code>;第 4 章的算法建立在前两章之上。第 6、7 章是现代 C++ 的日常写法,写任何新代码都会用到。</p>
+<p>其余各章按需取用。第 8、9 章在处理时间或路径时读,第 12 章在写模板约束或设计错误处理时读,第 16 章在自定义比较器时必须读——比较器写错不是排序结果不对,而是未定义行为。第 10 章的流只在维护旧代码时读,第 13 章随机数、第 18 章内存资源、第 19 章协程都属于确有需要时才翻的专题。</p>
+<div class="note new" style="contain-intrinsic-size:auto 198px"><span class="t">🔵 有更好写法的地方逐处给出 C++20 与 C++23 的对照</span><p>本手册以 C++17 打底,凡是新标准提供了更安全或更直接写法的地方都用蓝色批注给出对照:格式化用 <code>std::format</code> 代替流操纵符,算法用 <code>ranges</code> 版本代替成对迭代器,失败结果用 <code>std::expected</code> 代替错误码加输出参数,线程用 <code>jthread</code> 代替手工汇合。项目基线达不到时,条目里同时给出等价的 C++17 写法与它多付出的代价。</p></div>
+<p>读完之后应当能做到三件事:面对一个存储需求,说得出该选哪个容器以及理由,而不是默认全用 <code>map</code> 与 <code>vector</code>;拿到一段用了标准库的代码,能指出其中哪几处存在迭代器失效、悬垂视图或异常安全的隐患;写新代码时能在 C++17 与更新标准的写法之间做出取舍,并说清这次取舍换来了什么。</p>
+
 <p>序列容器是标准库里被误用最多的一块,原因是大多数教程只给了一张复杂度表,而复杂度表在现代硬件上<strong>会误导人</strong>。这一章按「内存布局」而不是「渐进复杂度」来组织:连续(<code>vector</code>、<code>array</code>)、分段连续(<code>deque</code>)、链式(<code>list</code>、<code>forward_list</code>)。理解了布局,选型和性能问题就都有了依据。</p>
 <h2 id="c1-overview">1.1 速览:为什么复杂度表会骗人</h2>
 <h3>那个 O(1) 不包含找到位置的代价</h3>
@@ -457,7 +557,7 @@ std::erase(v, 42);                     <span class="cm">// 按值删除</span>
     <span class="kw">if</span> (bad(*it)) it = v.erase(it);    <span class="cm">// erase 返回下一个有效位置</span>
     <span class="kw">else</span>          ++it;                <span class="cm">// 只有不删时才自己递增</span>
 }</code></pre>
-<div class="deep"><p><strong>其他说明</strong></p><p><code>clear()</code> 不归还内存,<code>capacity</code> 原封不动——这在「反复装满再清空」的循环里其实是优点(不用重复分配),但在「用完一大批数据后长期驻留」的场景里就是内存泄漏般的观感。真想把内存交回去,要么 <code>shrink_to_fit()</code>(标准允许实现无视),要么用 <code>std::vector&lt;T&gt;().swap(v)</code> 这个老办法,它靠交换一个空容器保证释放。</p></div>
+<div class="deep"><p><strong>其他说明</strong></p><p><code>clear()</code> 不归还内存,<code>capacity</code> 原封不动——这在「反复装满再清空」的循环里是优点(不用重复分配),但在「用完一大批数据后长期驻留」的场景里就是内存泄漏般的观感。真想把内存交回去,要么 <code>shrink_to_fit()</code>(标准允许实现无视),要么用 <code>std::vector&lt;T&gt;().swap(v)</code> 这个老办法,它靠交换一个空容器保证释放。</p></div>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code>v.clear();                             <span class="cm">// size=0,capacity 不变</span>
 v.shrink_to_fit();                     <span class="cm">// 建议释放,不保证</span>
 std::vector&lt;<span class="kw">int</span>&gt;().swap(v);            <span class="cm">// 老办法:保证释放</span>
@@ -521,11 +621,11 @@ v = std::vector&lt;<span class="kw">int</span>&gt;();</code></pre>
 <tr><td class="nw"><code>swap</code></td><td>交换</td><td>交换</td><td><strong>不失效</strong>(但归属换了)</td></tr>
 </tbody>
 </table>
-<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 clear() 不释放内存,这经常是「内存只涨不跌」的原因</span><p><code>v.clear()</code> 只把 <code>size</code> 置 0 并析构元素,<strong><code>capacity</code> 一点不变</strong>。一个峰值装过一百万元素的 <code>vector</code>,<code>clear</code> 之后仍然占着那块内存不放。在「循环里复用同一个容器」的模式下这其实是<strong>优点</strong>(避免反复分配),但如果那个 vector 是长期存活的成员变量,就是实实在在的内存占用。真要还给系统,用 <code>std::vector&lt;T&gt;().swap(v)</code> 这个惯用法。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 clear() 不释放内存,这经常是「内存只涨不跌」的原因</span><p><code>v.clear()</code> 只把 <code>size</code> 置 0 并析构元素,<strong><code>capacity</code> 一点不变</strong>。一个峰值装过一百万元素的 <code>vector</code>,<code>clear</code> 之后仍然占着那块内存不放。在「循环里复用同一个容器」的模式下这是<strong>优点</strong>(避免反复分配),但如果那个 vector 是长期存活的成员变量,就是实实在在的内存占用。真要还给系统,用 <code>std::vector&lt;T&gt;().swap(v)</code> 这个惯用法。</p></div>
 <h2 id="c1-array">1.3 array</h2>
 <p><code>std::array</code> 是「带 <code>size()</code> 的原生数组」:零运行期开销,不碰堆,元素直接躺在对象内部。它存在的意义不是提供新功能,而是<strong>把原生数组的坑填掉</strong>——让数组成为一个行为正常的 C++ 类型。</p>
 <h3>它修好了原生数组的三个毛病</h3>
-<p>第一,<strong>传参不再退化</strong>。<code>void f(int a[10])</code> 里的 <code>a</code> 其实是 <code>int*</code>,长度信息在调用的一瞬间就丢了,函数内 <code>sizeof(a)</code> 得到的是指针大小。<code>std::array</code> 传参时长度写在类型里,永远丢不了。</p>
+<p>第一,<strong>传参不再退化</strong>。<code>void f(int a[10])</code> 里的 <code>a</code> 是 <code>int*</code>,长度信息在调用的一瞬间就丢了,函数内 <code>sizeof(a)</code> 得到的是指针大小。<code>std::array</code> 传参时长度写在类型里,永远丢不了。</p>
 <p>第二,<strong>可以整体拷贝和返回</strong>。原生数组不能赋值、不能当返回值、不能直接放进 <code>vector</code>;<code>std::array</code> 三样都行,而且拷贝就是逐元素拷贝,语义清晰。</p>
 <p>第三,<strong>有正经的容器接口</strong>:<code>begin()</code>/<code>end()</code>/<code>size()</code>/<code>at()</code>,能直接喂给标准算法和 range-for,也能用结构化绑定拆开。</p>
 <p><strong>声明</strong></p><pre style="contain-intrinsic-size:auto 87px"><code><span class="kw">template</span>&lt;<span class="kw">class</span> T, std::<span class="kw">size_t</span> N&gt;
@@ -2205,7 +2305,7 @@ std::rotate(v.begin(), it, it + 1);    <span class="cm">// 把 it 指向的元�
 
 <span class="cm">// transform 双输入:逐元素相加</span>
 std::transform(a.begin(), a.end(), b.begin(), out.begin(), std::plus&lt;&gt;{});</code></pre>
-<p><code>std::rotate</code> 是这一组里被严重低估的一个。它把区间 <code>[first, last)</code> 循环左移,使 <code>middle</code> 成为新的开头,复杂度 O(n) 且不分配内存。很多看起来需要临时容器的操作其实是一次 rotate:把某个元素移到最前、把一段子区间整体前移、实现「撤销/重做」栈的滑动。它还是 <code>std::stable_partition</code> 和 <code>inplace_merge</code> 内部的基础操作。</p>
+<p><code>std::rotate</code> 是这一组里被严重低估的一个。它把区间 <code>[first, last)</code> 循环左移,使 <code>middle</code> 成为新的开头,复杂度 O(n) 且不分配内存。很多看起来需要临时容器的操作是一次 rotate:把某个元素移到最前、把一段子区间整体前移、实现「撤销/重做」栈的滑动。它还是 <code>std::stable_partition</code> 和 <code>inplace_merge</code> 内部的基础操作。</p>
 <p>另一个高频需求是「去重」。<code>std::unique</code> 只去掉<strong>相邻</strong>的重复项,所以标准写法是先 <code>sort</code> 再 <code>unique</code> 再 <code>erase</code> 三步。但如果不需要保持有序,用 <code>unordered_set</code> 过一遍往往更快也更清楚;如果需要<strong>保持原有顺序</strong>去重,则两种方法都不行,得自己配一个 <code>unordered_set</code> 做「见过没有」的判断,边扫边写。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 remove 不删除任何东西</span><p>它把「要保留的元素」依次搬到前面,返回<strong>新的逻辑结尾</strong>,而容器的 <code>size()</code> 一点没变,尾部残留着未指定的值。只写 <code>std::remove(v.begin(), v.end(), 42);</code> 而不接 <code>erase</code>,容器看起来毫无变化,是新手最常见的困惑。C++20 起直接用 <code>std::erase</code>/<code>std::erase_if</code>,把这个陷阱彻底绕过去。</p></div>
 <figure style="contain-intrinsic-size:auto 270px">
@@ -2490,7 +2590,7 @@ std::transform(std::execution::par_unseq, in.begin(), in.end(), out.begin(), f);
 <div class="deep"><p><strong>其他说明</strong></p><p><code>par_unseq</code> 的约束比 <code>par</code> 严得多:向量化意味着同一条指令同时处理多个元素,<strong>元素之间的操作可能交错执行</strong>。在这种模式下调用 <code>std::mutex::lock</code> 会死锁(同一线程内交错加锁),调用 <code>new</code> 也可能出问题。传给 <code>par_unseq</code> 的函数体必须是纯计算。</p></div>
 <p>还有一个容易忽略的前提:<strong>并行版本要求迭代器至少是 forward</strong>,而且元素类型必须能被安全地并发访问。传 <code>par</code> 给一个写入 <code>std::vector&lt;bool&gt;</code> 的算法就是数据竞争——它的代理对象会读改写同一个字节里的多个位。同理,<code>std::execution::par</code> 下的 lambda 捕获了共享状态并修改它,编译器不会有任何提示,但结果是未定义的。</p>
 <p>实际选型上有个简单判据:<strong>元素数量在十万以下、或每个元素的处理时间在纳秒级,就别用并行</strong>。线程池唤醒、任务切分、结果合并这些固定开销通常在几微秒量级,数据量不够时它们会完全淹没收益。真正划算的场景是「元素少但每个都很贵」——比如对几千个文件各做一次解析。</p>
-<div class="note old" style="contain-intrinsic-size:auto 132px"><span class="t">🟡 并行策略不总是更快</span><p>线程调度本身有开销,小数据量上 <code>par</code> 可能比 <code>seq</code> 慢几倍。更严重的是 libstdc++ <strong>需要链接 TBB</strong>(<code>-ltbb</code>)才真正并行,否则会悄悄退化成顺序执行——你以为开了并行,其实什么也没发生。用之前先测,并确认链接配置。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 132px"><span class="t">🟡 并行策略不总是更快</span><p>线程调度本身有开销,小数据量上 <code>par</code> 可能比 <code>seq</code> 慢几倍。更严重的是 libstdc++ <strong>需要链接 TBB</strong>(<code>-ltbb</code>)才真正并行,否则会悄悄退化成顺序执行——你以为开了并行,实际上什么也没发生。用之前先测,并确认链接配置。</p></div>
 <h3>并行策略的实际收益与陷阱</h3>
 <table style="contain-intrinsic-size:auto 189px">
 <thead><tr><th class="nw">策略</th><th class="nw">语义</th><th>对 lambda 的要求</th></tr></thead>
@@ -2559,7 +2659,7 @@ std::for_each(std::execution::par_unseq, v.begin(), v.end(), [&amp;](<span class
 <tr><td class="nw">GCC 上的前提</td><td><strong>必须链接 TBB</strong>(<code>-ltbb</code>),否则退化为串行</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 加 par 之前先测,而且要测真实数据规模</span><p>并行算法最反直觉的一点是:<strong>小数据上加 par 会明显变慢</strong>——线程池唤醒、任务分割、结果归并的固定开销在几千个元素上完全盖过收益。更麻烦的是,开发时用小测试数据<strong>感觉不出差别</strong>,上线后数据量大了才「看起来对了」,中间那段时间你其实一直在付线程开销。判断标准很简单:<strong>把 par 加上和去掉各跑一次,用生产规模的数据</strong>。如果差别小于 20%,就不要加——并行带来的调试难度和异常语义变化不值这个价。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 加 par 之前先测,而且要测真实数据规模</span><p>并行算法最反直觉的一点是:<strong>小数据上加 par 会明显变慢</strong>——线程池唤醒、任务分割、结果归并的固定开销在几千个元素上完全盖过收益。更麻烦的是,开发时用小测试数据<strong>感觉不出差别</strong>,上线后数据量大了才「看起来对了」,中间那段时间你一直在付线程开销。判断标准很简单:<strong>把 par 加上和去掉各跑一次,用生产规模的数据</strong>。如果差别小于 20%,就不要加——并行带来的调试难度和异常语义变化不值这个价。</p></div>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 27775px;--thin-h:26233px">
@@ -2579,7 +2679,7 @@ std::for_each(std::execution::par_unseq, v.begin(), v.end(), [&amp;](<span class
 </tbody>
 </table>
 <h3>小字符串优化</h3>
-<p>主流实现会把十几个字符以内的短串<strong>直接存在 string 对象内部</strong>,不碰堆——这叫 SSO(small string optimization)。libstdc++ 的阈值是 15 个字符,MSVC 也是 15。这意味着短串的拷贝其实相当便宜,别为了「避免一次拷贝」把代码写得七拐八绕。</p>
+<p>主流实现会把十几个字符以内的短串<strong>直接存在 string 对象内部</strong>,不碰堆——这叫 SSO(small string optimization)。libstdc++ 的阈值是 15 个字符,MSVC 也是 15。这意味着短串的拷贝相当便宜,别为了「避免一次拷贝」把代码写得七拐八绕。</p>
 <p>但它也有代价:<code>sizeof(std::string)</code> 是 32 字节(libstdc++),不是一个指针的大小。把大量 string 放进容器时,这个固定开销值得算一算——一百万个短串就是 32 MB,哪怕每个只存 3 个字符。</p>
 <p>还有一个常被忽略的成员:<code>std::string</code> 的比较是<strong>按字节</strong>的,不是按语言习惯。<code>"apple" &lt; "Banana"</code> 为假,因为大写字母的码点更小;中文字符串的比较结果也只反映 UTF-8 字节序,与拼音或笔画顺序无关。要做面向人的排序,得用 <code>std::locale</code> 的 <code>collate</code> facet,或者更实际地,用 ICU 这类专门的库。标准库在国际化文本处理上的能力相当有限,这一点最好早知道。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 133px"><span class="t">🟢 判断该用哪个的三个问题</span><p>一、这个字符串需要活得比当前作用域久吗?需要就用 <code>string</code>。二、我需要修改它吗?需要就用 <code>string</code>。三、我要把它传给一个只读它的函数吗?那参数写 <code>string_view</code>。这三问覆盖了 95% 的场景。</p></div>
@@ -3160,7 +3260,7 @@ std::regex re(R<span>"(\d{4}-\d{2}-\d{2})"</span>);   <span class="cm">// ★ �
 <tr><td class="nw"><code>const shared_ptr&lt;T&gt;&amp;</code></td><td><span class="badge dead">别这么写</span> 既没转移所有权又付了模板代价</td></tr>
 </tbody>
 </table>
-<p>还有一类常见误用是<strong>把智能指针当成「更安全的指针」到处传</strong>。智能指针表达的是所有权,不是空安全,也不是「更好的指针」。一个只在函数内部用一下的对象,最好的写法是直接放栈上;一个由容器持有的对象,容器已经管好了生命周期,取出来用引用就够。<code>unique_ptr</code> 真正的适用场景其实不多:多态基类指针、pImpl、需要延迟构造或可为空的成员、以及所有权要跨作用域转移的资源。</p>
+<p>还有一类常见误用是<strong>把智能指针当成「更安全的指针」到处传</strong>。智能指针表达的是所有权,不是空安全,也不是「更好的指针」。一个只在函数内部用一下的对象,最好的写法是直接放栈上;一个由容器持有的对象,容器已经管好了生命周期,取出来用引用就够。<code>unique_ptr</code> 真正的适用场景不多:多态基类指针、pImpl、需要延迟构造或可为空的成员、以及所有权要跨作用域转移的资源。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 大多数函数都该接引用</span><p>一个常见的过度设计是「所有参数都用智能指针」。如果函数只是读一下对象、算个东西就返回,它<strong>不关心所有权</strong>,参数就该是 <code>const T&amp;</code>。这样调用方无论持有的是 <code>unique_ptr</code>、<code>shared_ptr</code>、栈对象还是容器元素,都能直接传进来。</p></div>
 <figure style="contain-intrinsic-size:auto 328px">
 <svg viewBox="0 40 720 239" xmlns="http://www.w3.org/2000/svg" font-size="13"><defs><marker id="ar-c5" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs><rect x="20" y="50" width="210" height="120" rx="8" fill="var(--ok-bg)" stroke="var(--ok-fg)"/><text class="svgtext" x="125" y="75" text-anchor="middle">unique_ptr</text><text class="svgmuted" x="125" y="100" text-anchor="middle" font-size="11">独占，零开销</text><text class="svgmuted" x="125" y="122" text-anchor="middle" font-size="11">和裸指针一样大</text><text class="svgmuted" x="125" y="148" text-anchor="middle" font-size="11">默认就选它</text><rect x="255" y="50" width="210" height="120" rx="8" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="360" y="75" text-anchor="middle">shared_ptr</text><text class="svgmuted" x="360" y="100" text-anchor="middle" font-size="11">共享，引用计数</text><text class="svgmuted" x="360" y="122" text-anchor="middle" font-size="11">两个指针大 + 原子加减</text><text class="svgmuted" x="360" y="148" text-anchor="middle" font-size="11">确实要共享才用</text><rect x="490" y="50" width="210" height="120" rx="8" fill="var(--svg-soft2)" stroke="var(--old-fg)"/><text class="svgtext" x="595" y="75" text-anchor="middle">weak_ptr</text><text class="svgmuted" x="595" y="100" text-anchor="middle" font-size="11">观察，不延长寿命</text><text class="svgmuted" x="595" y="122" text-anchor="middle" font-size="11">用前要 lock()</text><text class="svgmuted" x="595" y="148" text-anchor="middle" font-size="11">专治循环引用</text><rect x="160" y="200" width="400" height="45" rx="8" fill="var(--dead-bg)" stroke="var(--dead-fg)"/><text class="svgtext" x="360" y="221" text-anchor="middle" font-size="12">两个 shared_ptr 互指 → 计数永远不到 0 → 内存永不释放</text><text class="svgmuted" x="360" y="239" text-anchor="middle" font-size="10">把其中一个方向改成 weak_ptr 就解开了</text><text class="svgmuted" x="360" y="265" text-anchor="middle" font-size="11">裸指针不是禁用的：表示「只是借来看看，不管生命周期」时它最合适</text></svg>
@@ -3384,7 +3484,7 @@ std::pmr::vector&lt;std::pmr::string&gt; lines(&amp;pool);
 <span class="kw">for</span> (<span class="kw">auto</span>&amp; l : input) lines.emplace_back(l);   <span class="cm">// 全部从 buf 里切,零 malloc</span>
 <span class="cm">// pool 析构时整块回收,不逐个 free —— 这是它最快的原因</span></code></pre>
 <div class="deep"><p><strong>其他说明</strong></p><p><code>monotonic_buffer_resource</code> 的语义是「<strong>只分配,不回收</strong>」:释放操作是空操作,所有内存在资源析构时一次性归还。这对「短生命周期、大量小对象」的场景(解析一个请求、渲染一帧)极其高效——省掉了所有 <code>free</code> 调用和内存碎片管理。它可以挂在栈缓冲上,也可以挂在另一个上游资源上做级联。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 优先考虑的其实是别分配</span><p>在动手换分配器之前,先看看能不能干脆减少分配:<code>reserve</code> 消掉容器扩容、用 <code>string_view</code> 代替 <code>substr</code>、用 <code>emplace</code> 代替 <code>insert</code>、小对象直接放栈上。这些改动的收益通常比换分配器更大,风险也小得多。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 优先考虑的是别分配</span><p>在动手换分配器之前,先看看能不能干脆减少分配:<code>reserve</code> 消掉容器扩容、用 <code>string_view</code> 代替 <code>substr</code>、用 <code>emplace</code> 代替 <code>insert</code>、小对象直接放栈上。这些改动的收益通常比换分配器更大,风险也小得多。</p></div>
 <h3>分配器与容器的交互点</h3>
 <p>容器什么时候调分配器,调多少次,直接决定了内存行为。这几个点值得记住。</p>
 <table style="contain-intrinsic-size:auto 227px">
@@ -3546,7 +3646,7 @@ ob.emplace(a, b, c);                   <span class="cm">// 就地构造,不先�
           .and_then([](<span class="kw">const</span> User&amp; u)    { <span class="kw">return</span> u.profile(); })   <span class="cm">// 返回 optional</span>
           .transform([](<span class="kw">const</span> Profile&amp; p){ <span class="kw">return</span> p.displayName; }) <span class="cm">// 返回值</span>
           .value_or(<span>"匿名"</span>);</code></pre>
-<div class="deep"><p><strong>其他说明</strong></p><p><code>value_or(d)</code> 有个容易忽略的性能陷阱:<strong>参数 <code>d</code> 无论有没有值都会被求值</strong>。写成 <code>opt.value_or(expensiveDefault())</code> 时,即使 <code>opt</code> 有值,那个昂贵的函数照样会被调用。需要惰性求默认值时用 C++23 的 <code>or_else</code>,或者老实写 <code>if</code>。</p></div>
+<div class="deep"><p><strong>其他说明</strong></p><p><code>value_or(d)</code> 有个容易忽略的性能陷阱:<strong>参数 <code>d</code> 无论有没有值都会被求值</strong>。写成 <code>opt.value_or(expensiveDefault())</code> 时,即使 <code>opt</code> 有值,那个昂贵的函数照样会被调用。需要惰性求默认值时用 C++23 的 <code>or_else</code>,或者写 <code>if</code>。</p></div>
 <div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 transform 里别传数据成员指针</span><p>写成 <code>.transform(&amp;Profile::displayName)</code> 看着简洁,实际编译不过:对右值调用数据成员指针得到的是 <code>std::string&amp;&amp;</code>,而 <code>std::optional</code> 不允许存引用类型,于是推导出非法的 <code>optional&lt;string&amp;&amp;&gt;</code>。用 lambda <strong>按值返回</strong>即可绕开。成员<strong>函数</strong>指针传给 <code>and_then</code> 则没问题。</p></div>
 <div class="note old" style="contain-intrinsic-size:auto 132px"><span class="t">🟡 optional 说不出「为什么没有」</span><p>它只能表达「没有」。查找类接口用它正合适;会因为多种原因失败的操作(解析、IO、网络)应该用 <code>expected</code>,否则调用方拿到一个空 optional 只能猜是超时、格式错还是权限不足。</p></div>
 <p><strong>参数</strong></p><table style="contain-intrinsic-size:auto 151px">
@@ -3601,7 +3701,7 @@ std::optional&lt;Addr&gt;  get_addr(<span class="kw">const</span> User&amp;);
 <tr><td class="nw"><code>value_or(v)</code></td><td class="nw">普通值</td><td><strong><code>v</code> 总会被求值</strong></td></tr>
 </tbody>
 </table>
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 value_or 的参数无论如何都会被求值</span><p><code>o.value_or(expensive())</code> 里的 <code>expensive()</code> 是<strong>函数参数</strong>,在调用 <code>value_or</code> 之前就被求值了——即使 <code>o</code> 有值、根本用不上它。这和 <code>||</code> 的短路行为完全不同,是很多人的直觉错误。默认值昂贵时应该用 <code>or_else</code>(它接受的是<strong>可调用物</strong>,只在需要时才调),或者老老实实写 <code>if</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 value_or 的参数无论如何都会被求值</span><p><code>o.value_or(expensive())</code> 里的 <code>expensive()</code> 是<strong>函数参数</strong>,在调用 <code>value_or</code> 之前就被求值了——即使 <code>o</code> 有值、根本用不上它。这和 <code>||</code> 的短路行为完全不同,是很多人的直觉错误。默认值昂贵时应该用 <code>or_else</code>(它接受的是<strong>可调用物</strong>,只在需要时才调),或者写 <code>if</code>。</p></div>
 <h2 id="c7-variant">7.3 variant</h2>
 <p>类型安全的联合体:同一时刻持有候选类型中的<strong>恰好一个</strong>,并且<strong>记住当前是哪一个</strong>。与 C 的 <code>union</code> 相比,它会正确调用构造和析构函数(<code>union</code> 里放 <code>std::string</code> 需要手动 placement new 和显式析构),取值时类型不对会被拦下而不是悄悄按错误类型解释内存。</p>
 <p><strong>声明</strong></p><pre style="contain-intrinsic-size:auto 60px"><code><span class="kw">template</span>&lt;<span class="kw">class</span>... Types&gt; <span class="kw">class</span> variant;    <span class="cm">// &lt;variant&gt;，C++17</span></code></pre>
@@ -5241,7 +5341,7 @@ lk.unlock();                               <span class="cm">// 可以提前解</
 <tr><td class="nw"><code>shared_mutex</code>(C++17)</td><td class="nw"><strong>读写锁</strong></td><td>读远多于写</td></tr>
 </tbody>
 </table>
-<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 需要 recursive_mutex 通常说明设计有问题</span><p>它的典型用法是「公共方法加锁,内部又调了另一个加锁的公共方法」。这看似方便,但掩盖了一个真实问题:<strong>你的类不知道自己什么时候持有锁</strong>,这让推理不变量变得困难——中间那次「解锁」其实没发生,别的线程看不到中间状态,但代码读起来像是可以。更好的做法是<strong>拆成「加锁的公共接口」和「假定已持锁的私有实现」</strong>:公共方法加锁后调私有的 <code>xxx_locked()</code>,私有之间互相调不再加锁。这样每个函数的锁前提都是明确的。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 需要 recursive_mutex 通常说明设计有问题</span><p>它的典型用法是「公共方法加锁,内部又调了另一个加锁的公共方法」。这看似方便,但掩盖了一个真实问题:<strong>你的类不知道自己什么时候持有锁</strong>,这让推理不变量变得困难——中间那次「解锁」没发生,别的线程看不到中间状态,但代码读起来像是可以。更好的做法是<strong>拆成「加锁的公共接口」和「假定已持锁的私有实现」</strong>:公共方法加锁后调私有的 <code>xxx_locked()</code>,私有之间互相调不再加锁。这样每个函数的锁前提都是明确的。</p></div>
 <div class="deep"><p><strong>其他说明</strong></p><p><strong>读写锁经常不如互斥量快,这一点反直觉但有据可查。</strong><code>shared_mutex</code> 内部要维护读者计数,加锁解锁的原子操作比 <code>mutex</code> 多;而且多个读者同时递增同一个计数器会造成<strong>缓存行乒乓</strong>——本来只是「读」的操作,却变成了对同一条缓存行的高频写。所以只有当<strong>读临界区足够长</strong>(几微秒以上,让并行读的收益超过这些开销)时它才划算。短临界区上 <code>mutex</code> 几乎总是更快。真正读极多写极少的场景,更好的方案是 RCU 或者「写时复制整个数据结构 + 原子换指针」。</p></div>
 <h3>锁竞争的诊断与缓解</h3>
 <table style="contain-intrinsic-size:auto 186px">
@@ -5296,7 +5396,7 @@ lk.unlock();                               <span class="cm">// 可以提前解</
 <p>条件变量解决的是「<strong>等某个条件成立</strong>」这个需求。轮询加睡眠既浪费 CPU 又有延迟;条件变量让线程真正挂起,直到别人通知它。</p>
 <h3>为什么必须带谓词</h3>
 <p><code>wait</code> 有两个重载,不带谓词的那个<strong>几乎总是错的</strong>,原因有两个。</p>
-<p>第一,<strong>虚假唤醒</strong>:没有任何人 <code>notify</code>,<code>wait</code> 也可能返回。这是操作系统层面的现实,标准明确允许。第二,<strong>丢失通知</strong>:如果 <code>notify</code> 发生在你进入 <code>wait</code> 之前,那次通知就永远丢了,而条件其实已经成立。</p>
+<p>第一,<strong>虚假唤醒</strong>:没有任何人 <code>notify</code>,<code>wait</code> 也可能返回。这是操作系统层面的现实,标准明确允许。第二,<strong>丢失通知</strong>:如果 <code>notify</code> 发生在你进入 <code>wait</code> 之前,那次通知就永远丢了,而条件已经成立。</p>
 <p>带谓词的重载等价于 <code>while (!pred()) wait(lk);</code>,两个问题一起解决:进入前先查一次条件(解决丢失通知),每次醒来重新查(解决虚假唤醒)。</p>
 <h3>为什么必须配 unique_lock</h3>
 <p><code>wait</code> 的实现要做三件事:<strong>解锁、挂起、被唤醒后重新加锁</strong>。中间那段挂起期间锁必须是放开的,否则通知者根本拿不到锁去修改条件——这就是死锁。</p>
@@ -5453,7 +5553,7 @@ ready.notify_all();</code></pre>
 <div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 atomic<T> 对大类型会静默退化成「内部加锁」</span><p><code>std::atomic&lt;T&gt;</code> 对任意平凡可复制类型都能实例化,但只有<strong>不超过机器字长(通常 8 或 16 字节)</strong>的类型才有硬件原子指令支持。更大的类型,实现会<strong>内部藏一把锁</strong>——它仍然「正确」,但:<strong>不能在信号处理函数里用</strong>(可能死锁)、<strong>不能放在共享内存里跨进程用</strong>(锁是进程内的)、性能也和你的预期完全不同。用 <code>is_always_lock_free</code> 加个 <code>static_assert</code> 就能在编译期挡住这个意外。</p></div>
 <div class="deep"><p><strong>其他说明</strong></p><p><strong>x86 上 acquire/release 几乎是免费的,这掩盖了很多内存序错误。</strong>x86 的内存模型本身就很强(TSO,只允许 store-load 重排),所以 <code>acquire</code> 和 <code>release</code> 编译出来<strong>就是普通的 mov 指令</strong>,一条屏障都不需要。结果是:<strong>内存序写错的代码在 x86 上跑得好好的</strong>,一移植到 ARM 或 POWER(弱内存模型)就出现无法复现的诡异 bug。所以在 x86 上开发时,不能靠「跑起来没问题」来验证内存序——要么用 <code>seq_cst</code> 保守一点,要么在 ARM 上也跑一遍测试,要么用形式化工具(如 CDSChecker)验证。</p></div>
 <h2 id="c11-volatile">11.6 atomic 与 volatile:两个被混为一谈的关键字</h2>
-<p><code>volatile</code> 和 <code>std::atomic</code> 常被当成一回事,其实解决<strong>完全不同</strong>的两个问题,几乎没有交集。混用是并发 bug 的一大来源——尤其从别的语言(Java/C# 的 volatile 确实有线程语义)转来的人。</p>
+<p><code>volatile</code> 和 <code>std::atomic</code> 常被当成一回事,实际上解决<strong>完全不同</strong>的两个问题,几乎没有交集。混用是并发 bug 的一大来源——尤其从别的语言(Java/C# 的 volatile 确实有线程语义)转来的人。</p>
 <table style="contain-intrinsic-size:auto 250px">
 <thead><tr><th class="nw"></th><th><code>volatile</code></th><th><code>std::atomic</code></th></tr></thead>
 <tbody>
@@ -6620,7 +6720,7 @@ assert(std::has_single_bit(cap));</code></pre>
 <div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 bit 系列只接受无符号类型,传有符号是编译错误</span><p>这是刻意的设计:<strong>有符号整数的位模式由实现定义</strong>(虽然 C++20 起规定了补码,但移位等操作仍有 UB 的角落)。<code>std::popcount(-1)</code> 编译不过,必须写成 <code>std::popcount(uint32_t(-1))</code> 或 <code>std::popcount(0xFFFFFFFFu)</code>。这个限制看起来烦人,但它把「位运算的类型必须明确」这件事强制成了编译期检查——而这正是无数位运算 bug 的根源。</p></div>
 <div class="deep"><p><strong>其他说明</strong></p><p><strong><code>mask &amp;= mask - 1</code> 是一个值得记住的技巧:它清掉最低位的那个 1。</strong>原理很简单:<code>mask - 1</code> 会把最低位的 1 变成 0、并把它右边的所有 0 变成 1;再与原值相与,就只剩下更高位的部分。配合 <code>countr_zero</code> 可以<strong>只遍历置位的比特</strong>,复杂度从 O(位宽) 降到 O(置位数)。稀疏位掩码(比如 64 位里只有三个置位)上这是二十倍的差别。同族的还有 <code>mask &amp; -mask</code>(只保留最低位的 1)和 <code>mask | (mask + 1)</code>(置上最低位的 0)。</p></div>
 <h2 id="c15-float">15.3 浮点:为什么 0.1 + 0.2 != 0.3</h2>
-<p>浮点数是<strong>二进制</strong>科学计数法。0.1 在二进制里是无限循环小数,跟 1/3 在十进制里一样存不下。存进 <code>double</code> 的其实是 0.1000000000000000055511151231257827…,三个这样的近似值相加,结果自然不等于 0.3 的那个近似值。</p>
+<p>浮点数是<strong>二进制</strong>科学计数法。0.1 在二进制里是无限循环小数,跟 1/3 在十进制里一样存不下。存进 <code>double</code> 的是 0.1000000000000000055511151231257827…,三个这样的近似值相加,结果自然不等于 0.3 的那个近似值。</p>
 <p>结论:<strong>浮点数永远不要用 <code>==</code> 比较</strong>。但「用一个小的 epsilon」这个常见建议也是错的——它只在数值接近 1 时勉强能用。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 332px"><code><span class="cm">// 错：绝对误差在大数上完全失效</span>
 <span class="kw">bool</span> eq(<span class="kw">double</span> a, <span class="kw">double</span> b) { <span class="kw">return</span> std::abs(a - b) &lt; 1e-9; }
@@ -7047,7 +7147,7 @@ std::string n = real; std::free(real);         <span class="cm">// 必须 free</
 <div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 typeid 对非多态类型返回静态类型</span><p><code>Base* p = new Derived; typeid(*p)</code> —— 如果 <code>Base</code> 有虚函数,得到 <code>Derived</code>;如果没有,得到 <code>Base</code>,而且<strong>没有任何警告</strong>。给基类加一个虚析构函数是应该做的事,顺带也让 RTTI 正确工作。另外注意 <code>typeid(p)</code>(不解引用)永远是 <code>Base*</code>,与多态无关——少写一个 <code>*</code> 就完全变了意思。</p></div>
 <div class="deep"><p><strong>其他说明</strong></p><p><strong><code>dynamic_cast</code> 出现在代码里,通常是设计有问题的信号。</strong>「如果是 A 类型就这样,是 B 类型就那样」——这正是虚函数要解决的问题。它的合理用途只有几个:实现跨越继承层次的<strong>横向转换</strong>、与不能改的第三方类型体系打交道、以及在插件边界上做类型检查。频繁用它还有性能代价:GCC 的实现要走字符串比较来匹配类型名,比虚调用慢得多。 <span class="badge dead">易误用</span></p></div>
 <h3>用 type_traits 在编译期回答同样的问题</h3>
-<p><code>dynamic_cast</code> 是运行期的类型询问,代价是虚表查找加字符串比较。绝大多数「这是什么类型」的问题其实<strong>在编译期就能回答</strong>,那才是 C++ 的强项。</p>
+<p><code>dynamic_cast</code> 是运行期的类型询问,代价是虚表查找加字符串比较。绝大多数「这是什么类型」的问题<strong>在编译期就能回答</strong>,那才是 C++ 的强项。</p>
 <table style="contain-intrinsic-size:auto 227px">
 <thead><tr><th class="nw">问题</th><th>编译期设施</th><th>运行期设施</th></tr></thead>
 <tbody>
@@ -7267,7 +7367,7 @@ sync.wait(std::move(token));              <span class="cm">// 现在才等</span
     <span class="kw">for</span> (<span class="kw">auto</span>&amp; x : v) out &lt;&lt; <span>"  "</span> &lt;&lt; x &lt;&lt; <span>'\n'</span>;
     out &lt;&lt; <span>"结束\n"</span>;
 }                                      <span class="cm">// 离开作用域才整体刷出</span></code></pre>
-<div class="deep"><p><strong>其他说明</strong></p><p>C++20 之前的常见做法是<strong>自己加一把 <code>mutex</code></strong>,或者<strong>先拼成一个 <code>string</code> 再一次 <code>&lt;&lt;</code></strong>。后者其实也不完全可靠——一次 <code>&lt;&lt;</code> 插入长字符串仍然可能被 <code>std::endl</code> 之类的操作打断。<code>osyncstream</code> 是标准给出的正确答案,而且它<strong>不需要全局锁</strong>:每个 <code>osyncstream</code> 有自己的缓冲区,只在最后刷出的那一瞬间同步。</p></div>
+<div class="deep"><p><strong>其他说明</strong></p><p>C++20 之前的常见做法是<strong>自己加一把 <code>mutex</code></strong>,或者<strong>先拼成一个 <code>string</code> 再一次 <code>&lt;&lt;</code></strong>。后者也不完全可靠——一次 <code>&lt;&lt;</code> 插入长字符串仍然可能被 <code>std::endl</code> 之类的操作打断。<code>osyncstream</code> 是标准给出的正确答案,而且它<strong>不需要全局锁</strong>:每个 <code>osyncstream</code> 有自己的缓冲区,只在最后刷出的那一瞬间同步。</p></div>
 <div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 顺手记住:endl 几乎总是错的</span><p><code>std::endl</code> 等于「输出 <code>\n</code> <strong>再强制刷新</strong>」。在循环里用它,每一行都触发一次系统调用,吞吐可能差<strong>几十倍</strong>。绝大多数情况下应该用 <code>'\n'</code>,让流自己决定何时刷。只有在<strong>确实需要立刻看到输出</strong>(交互提示、崩溃前的日志)时才用 <code>endl</code>,或者显式调 <code>std::flush</code>。配合 <code>osyncstream</code> 时更不该用 <code>endl</code>——刷出时机已经由析构决定了。</p></div>
 <h3>为什么 cout 「线程安全」却仍然会乱</h3>
 <p>标准对 <code>cout</code> 的保证是:<strong>并发插入不产生数据竞争</strong>,也就是不会崩溃、不会写坏内部状态。但它<strong>没有</strong>保证一条语句里的多次插入是一个整体。<code>out &lt;&lt; a &lt;&lt; b</code> 编译后是两次独立的函数调用,线程可以在中间被切走。</p>
@@ -7341,8 +7441,8 @@ std::vector&lt;<span class="kw">int</span>, MyAlloc&gt;   b;
 std::pmr::vector&lt;<span class="kw">int</span>&gt; c{&amp;pool1};
 std::pmr::vector&lt;<span class="kw">int</span>&gt; d{&amp;pool2};
 c = d;                           <span class="cm">// 可以 —— 类型一样，只是内存来源不同</span></code></pre>
-<div class="deep"><p><strong>其他说明</strong></p><p><code>std::pmr::vector&lt;T&gt;</code> 其实就是 <code>std::vector&lt;T, std::pmr::polymorphic_allocator&lt;T&gt;&gt;</code> 的别名。技巧在于 <code>polymorphic_allocator</code> <strong>本身是一个固定的类型</strong>,它内部只存一个 <code>memory_resource*</code> 指针,真正的分配行为通过<strong>虚函数</strong>转发出去。所以「换分配器」变成了「换那个指针指向谁」,类型完全不受影响——代价就是每次分配多一次虚调用。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 pmr 容器不会自动传播内存资源给元素</span><p><code>std::pmr::vector&lt;std::pmr::string&gt;</code> 里,<strong>元素的内存资源默认继承容器的</strong>——这是对的。但 <code>std::pmr::vector&lt;std::string&gt;</code>(注意是普通 <code>string</code>)里,字符串仍然用全局 <code>new</code>,你以为都走池了,其实只有 vector 本身走。混用 pmr 和非 pmr 容器是最常见的错误,而且<strong>看不出任何症状</strong>,只是池没起作用。</p></div>
+<div class="deep"><p><strong>其他说明</strong></p><p><code>std::pmr::vector&lt;T&gt;</code> 就是 <code>std::vector&lt;T, std::pmr::polymorphic_allocator&lt;T&gt;&gt;</code> 的别名。技巧在于 <code>polymorphic_allocator</code> <strong>本身是一个固定的类型</strong>,它内部只存一个 <code>memory_resource*</code> 指针,真正的分配行为通过<strong>虚函数</strong>转发出去。所以「换分配器」变成了「换那个指针指向谁」,类型完全不受影响——代价就是每次分配多一次虚调用。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 pmr 容器不会自动传播内存资源给元素</span><p><code>std::pmr::vector&lt;std::pmr::string&gt;</code> 里,<strong>元素的内存资源默认继承容器的</strong>——这是对的。但 <code>std::pmr::vector&lt;std::string&gt;</code>(注意是普通 <code>string</code>)里,字符串仍然用全局 <code>new</code>,你以为都走池了,实际上只有 vector 本身走。混用 pmr 和非 pmr 容器是最常见的错误,而且<strong>看不出任何症状</strong>,只是池没起作用。</p></div>
 <figure style="contain-intrinsic-size:auto 355px">
 <svg viewBox="0 5 720 263" xmlns="http://www.w3.org/2000/svg" font-size="13"><defs><marker id="ar-e1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs><text class="svgmuted" x="30" y="28" text-anchor="start" font-size="11">C++98：分配器写在模板参数里</text><rect x="30" y="42" width="250" height="44" rx="8" fill="var(--dead-bg)" stroke="var(--dead-fg)"/><text class="svgtext" x="155" y="70" text-anchor="middle" font-size="12">vector&lt;int, MyAlloc&gt;</text><text class="svgmuted" x="300" y="70" text-anchor="start" font-size="12">≠  vector&lt;int&gt;   —— 两个类型，互不兼容</text><text class="svgmuted" x="30" y="125" text-anchor="start" font-size="11">C++17 PMR：分配器是构造参数</text><rect x="30" y="140" width="250" height="44" rx="8" fill="var(--ok-bg)" stroke="var(--ok-fg)"/><text class="svgtext" x="155" y="168" text-anchor="middle" font-size="12">pmr::vector&lt;int&gt;</text><path d="M285,162 L345,162" stroke="var(--accent)" fill="none" marker-end="url(#ar-e1)"/><rect x="350" y="140" width="150" height="44" rx="8" fill="var(--svg-fill)" stroke="var(--accent)"/><text class="svgtext" x="425" y="168" text-anchor="middle" font-size="11">memory_resource*</text><path d="M505,162 L555,140" stroke="var(--accent)" fill="none" marker-end="url(#ar-e1)"/><path d="M505,162 L555,184" stroke="var(--accent)" fill="none" marker-end="url(#ar-e1)"/><rect x="560" y="120" width="140" height="30" rx="8" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="630" y="140" text-anchor="middle" font-size="11">monotonic</text><rect x="560" y="172" width="140" height="30" rx="8" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="630" y="192" text-anchor="middle" font-size="11">pool</text><text class="svgmuted" x="360" y="232" text-anchor="middle" font-size="11">类型始终是 pmr::vector&lt;int&gt; —— 换池不换类型，接口不受污染</text><text class="svgmuted" x="360" y="254" text-anchor="middle" font-size="11">代价：每次分配多一次虚调用</text></svg>
 <figcaption>PMR:分配器从模板参数挪到运行期指针,类型不再被污染（原创绘制）</figcaption>
@@ -7917,7 +8017,7 @@ std::generator&lt;<span class="kw">const</span> Node&amp;&gt; walk(<span class="
 <figcaption>强保证怎么来的:先备好新的,全部成功才切换（原创绘制）</figcaption>
 </figure>
 <h3>强保证的三种实现手法</h3>
-<table style="contain-intrinsic-size:auto 150px">
+<table style="contain-intrinsic-size:auto 149px">
 <thead><tr><th class="nw">手法</th><th>做法</th><th>适合</th></tr></thead>
 <tbody>
 <tr><td class="nw"><strong>copy-and-swap</strong></td><td>先做一份副本改好,<code>swap</code> 进去</td><td>赋值运算符</td></tr>

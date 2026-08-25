@@ -199,6 +199,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">TypeScript 手册</div>
 <details><summary><a class="ch" href="#c1">从 JavaScript 到 TypeScript</a></summary>
+<a class="sec" href="#c1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#f9-basics">1.1 类型标注、接口与联合类型</a>
 <a class="sec" href="#f9-basics-fn">1.2 函数的类型:签名写在变量上,重载排在前面</a>
 <a class="sec" href="#f9-basics-any">1.3 any、unknown、never 与给一段 JS 加类型</a>
@@ -256,10 +257,109 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 45254px;--thin-h:25071px">
+<section class="chapter" style="contain-intrinsic-size:auto 50632px;--thin-h:30450px">
 <h1 id="c1"><span class="part">入门</span>从 JavaScript 到 TypeScript</h1>
 <p>JavaScript 的类型只在运行时存在:变量此刻装着什么,要跑到那一行才知道;函数要什么参数,要么翻文档,要么读实现,要么等它抛 <code>TypeError</code>。TypeScript 只做一件事——把这些本来只在你脑子里的约定写成代码,让编译器在保存文件的那一刻替你查一遍;类型在构建时被整个抹掉,产物是普通 JavaScript,运行时的行为与性能一个字都不变。这一章是从「会写 JS」到「会写 TS」的第一段路:<a href="#f9-basics">1.1</a> 过一遍描述形状的语法——标注写在哪、<code>interface</code> 与 <code>type</code> 怎么选、可选与只读、索引签名的三个替代、字面量类型与 <code>as const</code>,以及 <code>enum</code> 为什么该让位给联合字面量;<a href="#f9-basics-fn">1.2</a> 接着讲行为的形状:四种签名写法、把类型一次性写在函数变量上,以及重载自上而下解析这条不知道就会踩的规则;<a href="#f9-basics-any">1.3</a> 把 <code>any</code>、<code>unknown</code>、<code>never</code>、<code>void</code> 这四个不描述任何具体形状的类型摆在一起对照,再拿一段有真实 bug 的 JS,从改后缀开始一条报错一条报错地加类型,直到全绿;<a href="#f9-basics-errors">1.4</a> 把「一条报错一条报错」这件事本身做成工具——十个最常撞见的编号、它们的报错模板与典型成因,外加 <code>@ts-expect-error</code> 三兄弟各自的代价;<a href="#f9-basics-lib">1.5</a> 收尾,讲清 TS 5.x 这几年放宽了哪些语法、标准库多了哪些方法,以及它们各自卡在哪个 <code>lib</code> 级别上。</p>
 <p>这个顺序不能反:先有「怎么把形状写出来」,才谈得上「形状之外还剩什么」。本章给的是语法和手感,不是原理——联合类型上为什么只能访问共有成员、对象字面量多写一个键为什么报错而先存进变量就不报,答案都在 <a href="#f9-mental">2.1</a> 的一句话里:类型是值的集合。拿到联合之后怎么把它拆开用见 <a href="#f9-narrow">3.1</a>,把类型本身变成参数见 <a href="#f9-generics">4.1</a>,本章反复出现的 <code>strict</code> 一族开关各自管什么见 <a href="#f9-config">8.1</a>。五节里前三节必读,后两节是查得多、读得少的那种——<a href="#f9-basics-errors">1.4</a> 建议在第一次被一条读不懂的报错卡住时回来翻,<a href="#f9-basics-lib">1.5</a> 建议在升级编译器或者发现某个标准库方法「类型上没有」时回来翻。</p>
+<h2 id="c1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>本书讲 <strong>TypeScript 的类型系统本身</strong>:类型怎么描述值的集合、编译器怎么推断与收窄、怎么把类型当程序写、怎么设计出「非法状态无法表示」的类型,以及类型在哪些地方不保证安全。判断一段内容归不归本书只看一条——<strong>把类型标注全部删掉,它还剩不剩下</strong>。剩下的归《JavaScript 语言手册》,删干净就没有的才归本书。</p>
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>TypeScript 没有独立的标准化组织,语言本身就是一个持续演进的实现,所以<strong>官方手册与版本发布说明是唯一的一手来源</strong>,书只能提供组织方式。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 764px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<tbody>
+<tr><td>TypeScript 官方手册</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>语言特性的一手说明,与编译器同步更新。局限:按特性分页组织,示例短,不解释设计取舍,也不说哪些写法在真实项目里会出问题</td></tr>
+<tr><td>TypeScript 版本发布说明</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>每一版新增了什么、哪条行为改了、哪些写法开始报错,是唯一准确的版本线。局限:只讲增量,读它拼不出全局</td></tr>
+<tr><td>Dan Vanderkam《Effective TypeScript》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>条款式写法,每条给「该怎么做、为什么、不这么做会怎样」,工程取舍讲得实在。局限:假定读者已会基础语法,条款之间不构成连续推导</td></tr>
+<tr><td>Boris Cherny《Programming TypeScript》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>从「类型是值的集合」讲起:类型层级、赋值兼容与变体、错误处理的四种模式、与 JavaScript 的互操作。局限:成书较早,模板字面量类型、<code>satisfies</code>、新装饰器要另补,命名空间那类章节今天用不上</td></tr>
+<tr><td>Gabriel Vergnaud《Type-Level TypeScript》</td><td class="nw">进阶专题</td><td class="nw">锚定</td><td>把类型系统当一门函数式语言来教:类型即函数、条件类型作分支、递归作循环、<code>infer</code> 作模式匹配,以及分配律与深度上限这两个坑。局限:只讲类型层,不碰工程与运行时;英文</td></tr>
+<tr><td>type-challenges</td><td class="nw">在线练习</td><td class="nw">参考</td><td>按难度分级的类型题库,题解与讨论都在仓库里,练类型层编程最快。局限:题目偏竞技,不少解法在生产代码里不该用</td></tr>
+<tr><td>DefinitelyTyped</td><td class="nw">仓库</td><td class="nw">参考</td><td>数万个库的类型定义,写声明文件时最好的样本库,8.3 的写法从它归纳。局限:质量参差,一个库的定义可能落后于实际版本,照抄前先看提交时间</td></tr>
+<tr><td>TypeScript 编译器源码与 issue 区</td><td class="nw">源码</td><td class="nw">锚定</td><td>文档没写明边界时的仲裁者:推断的实际顺序、某个写法「为什么不这样设计」通常都有官方答复。局限:内部实现随版本改动,读出的结论不能当承诺,而且散在长讨论里</td></tr>
+<tr><td>tsconfig 官方选项参考</td><td class="nw">官方文档</td><td class="nw">参考</td><td>每个编译选项的默认值、作用与建议值,8.2 的全表以它为准。局限:选项之间的相互影响要自己拼</td></tr>
+<tr><td>《JavaScript 语言手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>本书的运行时基础:值与类型转换、原型与类、模块与异步。局限:不含任何静态检查</td></tr>
+</tbody>
+</table>
+<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 版本相关的结论都会过期,判断办法是切版本跑一遍</span><p>编译器每隔几个月发一版,推断能力持续变宽。「这里必须自己写类型谓词」「这个位置推不出来」这类结论,过一两版就可能不再成立。可靠的判断方式只有一个:把那段代码贴进官方 Playground,切换编译器版本各跑一遍,看报错在哪一版消失。</p></div>
+<h3>锚定的五样各借鉴了什么</h3>
+<p>下表只收标为「锚定」的,借鉴的内容具体到手法。</p>
+<table style="contain-intrinsic-size:auto 376px">
+<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td>官方手册与版本发布说明</td><td>事实层的唯一准绳,语法与语义一律以它为准,版本线逐条照发布说明核对。1.5、3.2、3.3、8.2 四节按版本线组织:哪一版放宽了语法、哪一版让某个守卫不用再自己写、哪个选项从哪一版起默认开启</td></tr>
+<tr><td>《Programming TypeScript》</td><td>全书的第一性原理:类型是值的集合。2.1 直接拿这句话作标题,赋值兼容、联合与交叉、收窄、变体都从它推出来;错误处理四种模式的对照也照它的分法</td></tr>
+<tr><td>《Effective TypeScript》</td><td>条款的形式:一句能直接执行的规矩,加上不遵守时的失效症状。落到本书是每节末的判据与绿色批注,第 6 章整章按这个形状组织</td></tr>
+<tr><td>《Type-Level TypeScript》</td><td>第 5 章的组织顺序:类型即函数、条件类型作分支、递归作循环、<code>infer</code> 作模式匹配;分配律、尾递归与深度上限三个坑单独成段,不混在示例里</td></tr>
+<tr><td>编译器源码与 issue 区</td><td>文档没写明边界的地方,结论从实际行为与官方答复读出来再写。6.3 的不健全性清单逐条对应一个已知的设计取舍,并写明它是有意为之还是实现限制</td></tr>
+</tbody>
+</table>
+<p>这个领域有一条别处没有的情况必须写清:<strong>语言就是编译器的当前实现,而它每隔几个月发一版,书出版即滞后</strong>。所以本书系把事实层与组织层分开——书提供推导路径与组织方式,而「这个写法当前成不成立」一律以官方手册、发布说明与 Playground 的实测为准。</p>
+<h3>讲什么、不讲什么</h3>
+<p>本书覆盖<strong>把类型系统用到能设计、能推导、能兜住一个真实项目</strong>所需要的全部内容,六部分各回答一个问题。</p>
+<table style="contain-intrinsic-size:auto 285px">
+<thead><tr><th class="nw">部分</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
+<tbody>
+<tr><td class="nw">入门</td><td class="nw">第 1 章,6 节</td><td>形状怎么写出来:标注、接口与联合、函数签名、四个特殊类型、报错怎么反查、版本给了什么</td></tr>
+<tr><td class="nw">类型系统</td><td class="nw">第 2 到 3 章,8 节</td><td>类型到底是什么、结构类型与两个空间、推断从哪来、拿到联合之后怎么拆开用</td></tr>
+<tr><td class="nw">类型运算</td><td class="nw">第 4 到 5 章,9 节</td><td>类型参数在哪里被确定、条件与映射怎么算、把类型当程序写时如何调试</td></tr>
+<tr><td class="nw">类型设计</td><td class="nw">第 6 章,5 节</td><td>怎么让非法状态无法表示,以及编译器在哪几处不保证安全</td></tr>
+<tr><td class="nw">运行时</td><td class="nw">第 7 章,5 节</td><td>类型与运行时的边界:校验、可擦除语法、装饰器的产物、异步与消息的类型</td></tr>
+<tr><td class="nw">工程</td><td class="nw">第 8 章,6 节</td><td>配置怎么写、声明文件从哪来又怎么发出去、存量项目怎么迁移、检查慢了怎么办</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚,并指明归谁。分界线只有一条:把类型标注删掉之后还剩下的,不归本书。</p>
+<table style="contain-intrinsic-size:auto 412px">
+<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td>JavaScript 语言本体:类型转换、闭包、原型与类、模块、异步</td><td class="nw">《JavaScript 语言手册》</td><td>本书假定这些已经会;只在类型与运行时行为冲突处做对照</td></tr>
+<tr><td>DOM 与 Web API 的行为</td><td class="nw">《浏览器 API 与工作原理手册》</td><td>本书只讲怎么给它们的返回值与事件对象标类型,不讲这些接口本身做什么</td></tr>
+<tr><td>组件与 JSX 的类型写法、框架自带的类型工具</td><td class="nw">《前端框架与工程化手册》</td><td>本书给通用规则,框架特有的类型形态在那本;7.4 只讲跨线程消息这类与框架无关的部分</td></tr>
+<tr><td>打包、转译、产物格式与构建流水线</td><td class="nw">《前端框架与工程化手册》</td><td>本书 8.1 只讲编译器这一环:什么时候用它产出声明文件、什么时候只做检查不出产物</td></tr>
+<tr><td>编译器 API、自定义转换器与语言服务插件</td><td class="nw">不展开</td><td>5.4 给类型层的调试手段与测试,不进入编译器的编程接口</td></tr>
+<tr><td>其他给 JavaScript 加类型的方案</td><td class="nw">只在 8.4 给对照</td><td>注释形式的类型标注在迁移一节里作为过渡手段出现;把类型写进语言本身的提案指向 TC39</td></tr>
+</tbody>
+</table>
+<h3>读之前要会什么</h3>
+<p>前置分两档,每条给自测方式。门槛不在语法,而在 JavaScript 的熟练度:类型描述的是值,值这一层没盘清,类型就只能靠背。</p>
+<table style="contain-intrinsic-size:auto 452px">
+<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>会写 JavaScript,不只是能读</td><td>说清 <code>==</code> 与 <code>===</code> 的差别,以及闭包捕获的是变量还是它当时的值</td></tr>
+<tr><td class="nw">必须</td><td>知道值与变量的关系</td><td>说出 <code>const</code> 保证了什么、没保证什么,并举一个 <code>const</code> 声明的对象仍然被改掉的例子</td></tr>
+<tr><td class="nw">必须</td><td>会用命令行装包并跑一个脚本</td><td>新建目录装上编译器,把一个 <code>.ts</code> 文件编成 <code>.js</code> 并跑起来</td></tr>
+<tr><td class="nw">必须</td><td>能口述一段嵌套数据的形状</td><td>给一段三层嵌套的 JSON,说出每个字段的类型、哪些可选、哪些可能为 <code>null</code></td></tr>
+<tr><td class="nw">最好有</td><td>写过带泛型的代码,任何语言都行</td><td>说出在那门语言里,泛型参数是在什么时候、由谁确定下来的</td></tr>
+<tr><td class="nw">最好有</td><td>了解子类型与赋值兼容</td><td>回答两问:接受 <code>Animal</code> 的函数能不能传 <code>Dog</code>、返回 <code>Dog</code> 的函数能不能当返回 <code>Animal</code> 用,并说清两问为什么不对称</td></tr>
+<tr><td class="nw">最好有</td><td>读过《JavaScript 语言手册》第 3、4 章</td><td>说清 <code>class</code> 与原型的关系,以及模块的导入拿到的是绑定还是拷贝</td></tr>
+</tbody>
+</table>
+<h3>与那些资料相比,本书多给了什么</h3>
+<ul>
+<li><strong>类型系统当一门语言教,不是标注速查。</strong>2.1 用「类型是值的集合」这一句把后面所有规则串起来:联合类型上为什么只能访问共有成员、对象字面量多写一个键为什么报错而先存进变量就不报,两个现象在这句话里是同一件事。</li>
+<li><strong>37 个「完整示例」都可运行,并给编译器的实际报错原文。</strong>报错连编号一起写出来,可以在自己的编辑器里对上号,而不是只看到一句「这里会报错」。</li>
+<li><strong>1.4 把「一条报错一条报错地改」做成了工具。</strong>十个最常撞见的错误编号,每个给报错模板、典型成因与改法,外加三种抑制手段各自的代价。别的资料很少单独整理这一块。</li>
+<li><strong>6.3 是一份不健全性清单。</strong>编译器在哪几处会给出它并不保证的结论,逐条给触发条件、失效症状与规避写法。多数资料说一句「它不是健全的」就停了。</li>
+<li><strong>76 个批注按四色分工。</strong>26 个红色写会写错的地方并配报错形态,36 个绿色写成一句能直接执行的判据,11 个蓝色写现代替代,3 个黄色写历史包袱。</li>
+<li><strong>版本线单独成节,不写死在正文里。</strong>1.5 讲这几年放宽了哪些语法、标准库多了哪些方法、各自卡在哪个 lib 级别;3.3 讲控制流分析新拿到的地盘;8.2 的选项全表带版本列。</li>
+<li><strong>88 个「深入」块把编译器的实现细节分了出去。</strong>推断的内部顺序、规则的历史成因与 issue 区的讨论结论都折进去,顺读时不打断主线。</li>
+</ul>
+<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 类型在构建时被抹掉,边界数据不另外校验等于没校验</span><p>编译器保证的是你写的代码内部自洽,不保证外部进来的数据符合声明。接口返回、表单输入、本地存储读出的值,类型上写成什么都成立,运行时却可能是任何形状,症状是报错出现在离边界很远的一行。做法见 7.1 与 7.3:在边界处用运行时校验挡一道,再让类型从校验结果推出来。</p></div>
+<h3>两条读法:顺读与按需查</h3>
+<p>第一次学这门语言走顺读,手上已经有具体问题走按需查。</p>
+<table style="contain-intrinsic-size:auto 248px">
+<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
+<tbody>
+<tr><td class="nw">会 JavaScript,第一次学 TypeScript</td><td>第 1 章顺读,接着第 2、3 章,再进第 4 章</td><td class="nw">第 1、2、3、4 章</td><td class="nw">第 5、7 章</td></tr>
+<tr><td class="nw">写过一些 TypeScript,常与编译器较劲</td><td>直接读 2.1 与 2.2,再读第 3 章与第 6 章</td><td class="nw">2.1、3.1、6.3</td><td class="nw">第 1 章</td></tr>
+<tr><td class="nw">要读懂或写出复杂的工具类型</td><td>第 4 章打底,再整章读第 5 章,配 type-challenges 练</td><td class="nw">4.2、4.3、5.1、5.2</td><td class="nw">第 7、8 章</td></tr>
+<tr><td class="nw">给存量 JavaScript 项目上类型</td><td>从 8.4 的迁移路线起步,配 1.3 与 8.3</td><td class="nw">8.1、8.3、8.4</td><td class="nw">第 5 章</td></tr>
+<tr><td class="nw">手上有一条读不懂的报错</td><td>1.4 按编号反查,再顺着它指的章节读</td><td class="nw">—</td><td class="nw">—</td></tr>
+</tbody>
+</table>
+<p><strong>2.1 是全书的枢纽,它之前的是准备,之后的是推论。</strong>第 1 章给的是语法与手感,不是原理;从 2.1 起类型被定义成值的集合,赋值兼容、收窄、泛型、条件类型全部由这一句推出来。第 3、4、5 章要按顺序:第 4 章讲类型参数在哪个位置被确定,第 5 章的条件类型与 <code>infer</code> 建立在这个位置上。</p>
+<p>第 1 章的后两节与第 8 章是查得多、读得少的那种,第一遍不必啃:1.4 在被读不懂的报错卡住时回来翻,1.5 在升级编译器或发现某个方法「类型上没有」时回来翻,8.2 在配新项目时照抄再逐项核对。</p>
+<p>读完第 1 到 3 章,能给一段既有 JavaScript 加上类型并让严格模式全绿;读完第 4、5 章,能读懂并写出带条件类型与 <code>infer</code> 的工具类型;读完第 6 章,能把一组状态设计成非法组合表示不出来,并说得出编译器在哪几处不保证安全;读完第 7、8 章,能给既有库写出最小的声明文件,并把存量项目一档一档收紧。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 先读 2.1 再挑章节,全书的规则都由那一句推出来</span><p>跳过 2.1 的表现是每条规则单看都记得住,合起来却互相矛盾:为什么联合类型上取不到某个属性、为什么多写一个键有时报错有时不报、为什么函数参数的兼容方向与返回值相反。这三个问题在「类型是值的集合」这句话下是同一件事,分开背则是三条无关的规矩。</p></div>
 <h2 id="f9-basics">1.1 类型标注、接口与联合类型</h2>
 <p>类型标注(type annotation)是 TypeScript 最表层的语法:在变量、参数、返回值后面加一个冒号和类型。它解决的痛点很具体——一个函数被改了参数顺序,所有调用点要靠全文搜索和肉眼找;一个对象缺了字段,要到页面白屏时才发现;一个 API 响应的字段名拼错,要到线上日志里才看到 <code>undefined</code>。有了标注,这三件事都在保存文件的那一刻由编辑器标出来。更重要的是,TypeScript 会<strong>推断</strong>:大多数局部变量不需要写类型,<code>const n = 1</code> 的 <code>n</code> 自动是 <code>number</code>,<code>[1, "a"]</code> 自动是 <code>(string | number)[]</code>;真正需要手写的,是函数参数、对象形状、以及跨模块的边界。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 522px"><code><span class="cm">// 标注的位置:冒号 + 类型</span>
@@ -353,7 +453,7 @@ scores.bob = <span>"A"</span>;     <span class="cm">// error TS2322: Type 'strin
 <p><code>email?: string</code> 的含义是「这个键可以不存在,存在时是 string」;在类型上它读出来是 <code>string | undefined</code>,所以直接 <code>user.email.toLowerCase()</code> 会被 <code>strictNullChecks</code> 拦住,要先判空或用 <code>?.</code>。<code>readonly</code> 只管这一层的赋值:<code>readonly tags: string[]</code> 禁止 <code>user.tags = []</code>,但不禁止 <code>user.tags.push("x")</code>——要连元素也锁住得写 <code>readonly tags: readonly string[]</code>。</p>
 <p>联合 <code>A | B</code> 是「A 或 B」:值只要满足其中一个就能赋进来,但<strong>用的时候只能用两者共有的成员</strong>——这正是 <a href="#f9-narrow">3.1</a> 整节要讲的收窄的出发点。交叉 <code>A &amp; B</code> 是「既是 A 又是 B」:两个对象类型交叉得到合并的形状;两个没有交集的原始类型交叉得到 <code>never</code>(<code>string &amp; number</code>)。把联合和交叉当成集合运算来记,后面所有工具类型都是这两个运算的组合。</p>
 <h3>readonly 只锁一层,而且只在编译期</h3>
-<p><code>readonly</code> 有两条边界,漏掉任何一条都会写出「以为锁住了其实没锁」的类型。第一条:<strong>它只管声明它的那一层</strong>。<code>readonly opts: { retry: number }</code> 禁止 <code>c.opts = {…}</code>,不禁止 <code>c.opts.retry = 9</code>;<code>readonly tags: string[]</code> 禁止换掉整个数组,不禁止 <code>c.tags.push("x")</code>。想连里面一起锁,得逐层写:<code>readonly tags: readonly string[]</code>,嵌套对象则要给内层类型自己加 <code>readonly</code>,或者写一个递归的 <code>DeepReadonly</code>(<a href="#f9-advanced-tpl">5.2</a> 里有做法)。内置的 <code>Readonly&lt;T&gt;</code> 同样只包一层,名字很容易让人以为它是深的。</p>
+<p><code>readonly</code> 有两条边界,漏掉任何一条都会写出「以为锁住了,实际没锁」的类型。第一条:<strong>它只管声明它的那一层</strong>。<code>readonly opts: { retry: number }</code> 禁止 <code>c.opts = {…}</code>,不禁止 <code>c.opts.retry = 9</code>;<code>readonly tags: string[]</code> 禁止换掉整个数组,不禁止 <code>c.tags.push("x")</code>。想连里面一起锁,得逐层写:<code>readonly tags: readonly string[]</code>,嵌套对象则要给内层类型自己加 <code>readonly</code>,或者写一个递归的 <code>DeepReadonly</code>(<a href="#f9-advanced-tpl">5.2</a> 里有做法)。内置的 <code>Readonly&lt;T&gt;</code> 同样只包一层,名字很容易让人以为它是深的。</p>
 <p>第二条:<strong>它是编译期的约定,不是运行时的保护</strong>。产物里没有任何对应的代码,一个标了 <code>readonly</code> 的对象跑起来和普通对象一模一样,<code>Object.freeze</code> 才是运行时的冻结。两者的用途也不同:<code>readonly</code> 防的是<strong>自己人手滑</strong>(在编辑器里就报),<code>Object.freeze</code> 防的是<strong>拿到这个对象的任何代码</strong>(包括第三方库,代价是运行时开销和静默失败/抛错的行为差异)。给外部数据加 <code>readonly</code> 不会阻止它被别的模块改掉,只会阻止<strong>你这份代码</strong>去改。</p>
 <table style="contain-intrinsic-size:auto 227px">
 <thead><tr><th class="nw">写法</th><th>挡住</th><th>挡不住</th><th>报错</th></tr></thead>
@@ -618,7 +718,7 @@ f3.ts(14,7): error TS2322: Type <span>'number | undefined'</span> is not assigna
 f3.ts(16,4): error TS2339: Property <span>'push'</span> does not exist on type <span>'readonly Row[]'</span>.</code></pre>
 <p>五处错法只有四条报错——第 11 行那个拼错的列名 <code>"nmae"</code> 静静地通过了。原因就是漏掉的那个 <code>as const</code>:没有它,<code>COLUMNS</code> 里的 <code>key</code> 被宽化成 <code>string</code>,<code>ColumnKey</code> 跟着塌成 <code>string</code>,于是任何字符串都是合法列名。补上 <code>as const</code> 之后同一行立刻报 <code>TS2345</code>,而且报错文本直接把三个合法值列出来。<strong>这是全节最值得记住的一处对照</strong>:常量表少一个 <code>as const</code>,类型系统在这个维度上就完全下线了,而且不会有任何提示——它不报错,只是不再替你检查。</p></div>
 <div class="deep"><h3 class="deep">四种签名写法,以及重载是自上而下解析的</h3>
-<p>「函数类型」在 TypeScript 里其实有四种写法,它们表达的能力不同,不是风格之争。<strong>简写</strong> <code>(a: T) =&gt; R</code> 只说「能被调用」,90% 的场合够用。<strong>完整调用签名</strong> <code>{ (a: T): R; prop: P }</code> 写在对象类型里,能同时描述「能被调用」和「身上挂着属性」——jQuery 的 <code>$</code>、带 <code>cache</code> 的记忆化函数、带 <code>displayName</code> 的 React 组件都是这个形状。<strong>构造签名</strong> <code>new (a: T) =&gt; R</code>(完整形式 <code>{ new (a: T): R }</code>)说的是「能被 <code>new</code>」,工厂函数、依赖注入容器、把类当参数传的地方都要用它。<strong>抽象构造签名</strong> <code>abstract new (…) =&gt; R</code>(TS 4.2 起)接受抽象类本身:抽象类不能被 <code>new</code>,所以它<strong>不</strong>满足普通构造签名,但完全可以被继承、可以拿来读静态成员,注册表、装饰器、mixin 的参数该用这一种。</p>
+<p>「函数类型」在 TypeScript 里有四种写法,它们表达的能力不同,不是风格之争。<strong>简写</strong> <code>(a: T) =&gt; R</code> 只说「能被调用」,90% 的场合够用。<strong>完整调用签名</strong> <code>{ (a: T): R; prop: P }</code> 写在对象类型里,能同时描述「能被调用」和「身上挂着属性」——jQuery 的 <code>$</code>、带 <code>cache</code> 的记忆化函数、带 <code>displayName</code> 的 React 组件都是这个形状。<strong>构造签名</strong> <code>new (a: T) =&gt; R</code>(完整形式 <code>{ new (a: T): R }</code>)说的是「能被 <code>new</code>」,工厂函数、依赖注入容器、把类当参数传的地方都要用它。<strong>抽象构造签名</strong> <code>abstract new (…) =&gt; R</code>(TS 4.2 起)接受抽象类本身:抽象类不能被 <code>new</code>,所以它<strong>不</strong>满足普通构造签名,但完全可以被继承、可以拿来读静态成员,注册表、装饰器、mixin 的参数该用这一种。</p>
 <p>Item 12 说的「给整个函数表达式一次性上类型」建立在第一种写法上:与其在箭头函数里逐个标参数和返回值,不如把类型写在<strong>变量</strong>上,让参数类型从上下文流下去。<code>const myFetch: Fetcher = (url, init) =&gt; fetch(url, init)</code> 里 <code>url</code> 与 <code>init</code> 一个字都没标,类型却齐全,而且一旦实现的形状和 <code>Fetcher</code> 对不上,报错落在<strong>整个函数上</strong>并指出是哪个参数不兼容,比逐参数标注时那种「某一行类型不匹配」的报错好定位得多。这也是给一族回调统一签名的标准做法:类型只写一次,所有实现都对着它检查。</p>
 <table style="contain-intrinsic-size:auto 189px">
 <thead><tr><th class="nw">写法</th><th>形态</th><th>能表达什么</th><th>典型用途</th></tr></thead>
@@ -784,7 +884,7 @@ console.log(pickAdults([
 <p>解读:整个过程里没有改任何运行逻辑以外的东西——interface 和标注在产物里一个字节都不留,<code>step2.js</code> 和手写的 JS 一样。真正起作用的是两条规则:<code>noImplicitAny</code> 逼你把形状写出来,<code>strictNullChecks</code> 逼你处理「可能没有」。把 <code>email?: string</code> 改成 <code>email: string | undefined</code>,含义会变:后者要求键必须出现(值可以是 undefined),<code>{ name: "Bob", age: 19 }</code> 就会报缺少属性。把 <code>--strict</code> 去掉,step1 的三条报错只剩 TS2561 一条——前两条都是 strict 族的功劳,这也是为什么 <a href="#f9-design">6.1</a> 会说 strict 不是可选项。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 从 JS 迁移的顺序</span><p>先改后缀、开 <code>strict</code>,让 <code>noImplicitAny</code> 把所有需要类型的边界列出来;先给数据形状写 interface(请求/响应、配置、状态),再给导出的函数写参数和返回值;局部变量交给推断。中途可以用 <code>any</code> 止血,但每一处都该是临时的——<code>// @ts-expect-error</code> 比 <code>// @ts-ignore</code> 好,因为前者在问题被修好后会反过来报错提醒你删掉它。</p></div></div>
 <h3>satisfies、as const 与类型标注:同一个字面量的四种写法</h3>
-<p>一个配置对象写下来,给它加类型有四种方式:什么都不写、写类型标注 <code>const c: Theme = {…}</code>、加 <code>as const</code>、加 <code>satisfies Theme</code>(TS 4.9)。四者常被当成风格偏好,其实它们是在两个互相独立的开关上取值:<strong>这个字面量要不要按某个类型检查一遍</strong>,以及<strong>变量最后拿到的类型是宽的还是窄的</strong>。把两个开关拆开看,选哪一个就没有含糊的余地了。</p>
+<p>一个配置对象写下来,给它加类型有四种方式:什么都不写、写类型标注 <code>const c: Theme = {…}</code>、加 <code>as const</code>、加 <code>satisfies Theme</code>(TS 4.9)。四者常被当成风格偏好,实际上它们是在两个互相独立的开关上取值:<strong>这个字面量要不要按某个类型检查一遍</strong>,以及<strong>变量最后拿到的类型是宽的还是窄的</strong>。把两个开关拆开看,选哪一个就没有含糊的余地了。</p>
 <table style="contain-intrinsic-size:auto 507px">
 <thead><tr><th>写法</th><th>字面量受检查吗</th><th>变量的类型</th><th class="nw">值锁成字面量吗</th><th>用在哪</th></tr></thead>
 <tbody>
@@ -1005,9 +1105,9 @@ ann,cid | Map: 1
 xyzw yz x</code></pre>
 <p>解读:<code>Level[l]</code> 拿到 <code>"Error"</code> 这个名字,靠的是数字枚举的反向映射——这也是 enum 唯一一件联合字面量做不到的事。<code>new Temp().celsius</code> 读出来是 <code>0</code> 且类型为 <code>number</code>,而赋值时可以传字符串,读写两条类型各走各的。<code>noop()</code> 打印 <code>undefined</code>,函数体是空的却满足了 <code>() =&gt; undefined</code>。<code>byDept.eng</code> 后面那个 <code>?.</code> 不是保险起见——去掉它就报 <code>TS18048: 'byDept.eng' is possibly 'undefined'</code>,这正是 <code>Object.groupBy</code> 返回 <code>Partial</code> 的直接后果。最后一行三个集合运算的结果 <code>xyzw</code> / <code>yz</code> / <code>x</code> 分别是并、交、差,和把它们写成类型层的 <code>|</code>、<code>&amp;</code> 是同一套语义。</p></div>
 <div class="deep"><h3 class="deep">把 target 与 lib 分开想:一个管语法产出,一个管类型声明</h3>
-<p>这两个选项经常被一起改,其实管的是完全不同的两件事,分不清就会写出「编译通过但运行时报错」的配置。<strong><code>target</code> 决定产出的 JavaScript 语法版本</strong>:设成 <code>es2015</code> 时 <code>async</code>/<code>await</code> 会被降级成状态机,<code>??</code> 会被展开成三元表达式,类字段会被搬进构造函数。<strong><code>lib</code> 决定编译器认为运行时有哪些内置对象和方法</strong>:它加载的是一组 <code>.d.ts</code>(<code>lib.es2024.object.d.ts</code> 之类),只影响类型检查,对产出的代码一个字都不改。</p>
-<p>不显式写 <code>lib</code> 时,它会跟着 <code>target</code> 取一个默认值(<code>target: es2022</code> 就默认 <code>lib: es2022</code> 加上 <code>dom</code>),这个默认在多数项目里是对的,所以很多人从来没注意过它们的区别。区别在两种情况下会出问题:一是<strong>想用比 target 新的 API</strong>——面向老浏览器编译(<code>target: es2015</code>)但运行时其实有 <code>Object.groupBy</code>(比如用了 polyfill),就得单独把 <code>lib</code> 抬到 <code>es2024</code>;二是<strong>非浏览器环境</strong>——Node 项目应该显式去掉默认带上的 <code>dom</code>,否则 <code>document</code>、<code>localStorage</code> 这些在 Node 里根本不存在的全局变量在编辑器里有补全、写出来编译也通过,跑起来才炸。</p>
-<p>有一条经验规则能覆盖绝大多数场景:<strong><code>lib</code> 按「代码实际会跑在哪」定,<code>target</code> 按「谁来做降级」定</strong>。用 Vite、webpack、esbuild 这类打包器时,降级由打包器负责,<code>target</code> 可以直接设成 <code>esnext</code>(让 tsc 少做无用功);而 <code>lib</code> 必须老老实实按最低支持的浏览器或 Node 版本填。直接 <code>tsc</code> 产出并交付时两者才需要保持一致。相关选项的完整取值与配套开关见 <a href="#f9-config">8.1</a>。</p>
+<p>这两个选项经常被一起改,实际上管的是完全不同的两件事,分不清就会写出「编译通过但运行时报错」的配置。<strong><code>target</code> 决定产出的 JavaScript 语法版本</strong>:设成 <code>es2015</code> 时 <code>async</code>/<code>await</code> 会被降级成状态机,<code>??</code> 会被展开成三元表达式,类字段会被搬进构造函数。<strong><code>lib</code> 决定编译器认为运行时有哪些内置对象和方法</strong>:它加载的是一组 <code>.d.ts</code>(<code>lib.es2024.object.d.ts</code> 之类),只影响类型检查,对产出的代码一个字都不改。</p>
+<p>不显式写 <code>lib</code> 时,它会跟着 <code>target</code> 取一个默认值(<code>target: es2022</code> 就默认 <code>lib: es2022</code> 加上 <code>dom</code>),这个默认在多数项目里是对的,所以很多人从来没注意过它们的区别。区别在两种情况下会出问题:一是<strong>想用比 target 新的 API</strong>——面向老浏览器编译(<code>target: es2015</code>)但运行时有 <code>Object.groupBy</code>(比如用了 polyfill),就得单独把 <code>lib</code> 抬到 <code>es2024</code>;二是<strong>非浏览器环境</strong>——Node 项目应该显式去掉默认带上的 <code>dom</code>,否则 <code>document</code>、<code>localStorage</code> 这些在 Node 里根本不存在的全局变量在编辑器里有补全、写出来编译也通过,跑起来才炸。</p>
+<p>有一条经验规则能覆盖绝大多数场景:<strong><code>lib</code> 按「代码实际会跑在哪」定,<code>target</code> 按「谁来做降级」定</strong>。用 Vite、webpack、esbuild 这类打包器时,降级由打包器负责,<code>target</code> 可以直接设成 <code>esnext</code>(让 tsc 少做无用功);而 <code>lib</code> 必须按最低支持的浏览器或 Node 版本填。直接 <code>tsc</code> 产出并交付时两者才需要保持一致。相关选项的完整取值与配套开关见 <a href="#f9-config">8.1</a>。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 232px"><span class="t">🟢 Things to Remember</span><p>一,TS 的更新分「编译器行为」和「lib 声明」两类:前者升级即生效,后者要把 <code>lib</code> 调到对应级别。二,截至 TS 5.9.3 的三条门槛记住——<code>symbol</code> 作弱键要 <code>es2023</code>,<code>groupBy</code> 要 <code>es2024</code>,<code>Set</code> 集合运算要 <code>esnext</code>。三,<code>Object.groupBy</code> 返回的是 <code>Partial&lt;Record&lt;K, T[]&gt;&gt;</code>,每个分组都得判空;要非字符串键就用 <code>Map.groupBy</code>。四,<code>Symbol.for()</code> 出来的注册符号不能当弱键,类型上查不出来,运行时抛 <code>TypeError</code>。五,<code>lib</code> 只发类型不发 polyfill,它必须跟着真实运行环境走,不是「调高一点报错少一点」的开关。</p></div></div>
 <h2 id="c1-sum">1.6 小结:本章要点与易错清单</h2>
 <p>这一章五节走的是同一条线:<strong>把「这个值可能是什么」从你的脑子里搬进代码,搬不动的地方就用最诚实的类型标出来</strong>。<a href="#f9-basics">1.1</a> 与 <a href="#f9-basics-fn">1.2</a> 负责前半句——标注、<code>interface</code>、可选与只读、联合与交叉、字面量与 <code>as const</code>、函数类型与重载,全是在回答「这个值长什么形状」;<a href="#f9-basics-any">1.3</a> 负责后半句——形状说不清的时候,是关掉检查(<code>any</code>)还是承认不知道、要求先证明(<code>unknown</code>),这一个选择决定了边界上还剩多少保护,也决定了那段「给一段 JS 逐步加类型」的演练最后是真绿还是假绿。</p>
@@ -1044,7 +1144,7 @@ xyzw yz x</code></pre>
 <tr><td class="nw">重载解析顺序</td><td>自上而下,第一个匹配就停,更具体的必须写在前面</td><td>把宽签名写在前面,调用方永远拿到那条宽的返回类型</td></tr>
 <tr><td class="nw">可选参数 vs 联合 undefined</td><td><code>x?: T</code> 允许不传,<code>x: T &#124; undefined</code> 必须传</td><td>当同义词换写法,调用点全线报 <code>TS2554: Expected 1 arguments, but got 0</code></td></tr>
 <tr><td class="nw">报错编号是稳定的</td><td>文本会改会翻译,编号不会,先看编号再读文本</td><td>拿整句报错去搜,被自己项目的类型名污染,搜不到东西</td></tr>
-<tr><td class="nw">嵌套报错</td><td class="nw">缩进最深的那行才是真正的原因</td><td>只读第一行,以为是「整个对象不兼容」,其实是少了一个字段</td></tr>
+<tr><td class="nw">嵌套报错</td><td class="nw">缩进最深的那行才是真正的原因</td><td>只读第一行,以为是「整个对象不兼容」,实际上是少了一个字段</td></tr>
 <tr><td class="nw">抑制指令</td><td>只用 <code>@ts-expect-error</code>,它会在问题修好后报 <code>TS2578</code> 提醒删</td><td>用 <code>@ts-ignore</code> 一劳永逸,几年后没人知道那行还需不需要</td></tr>
 <tr><td class="nw">lib 只发类型</td><td>调到 <code>esnext</code> 只是让编译器相信方法存在,不发 polyfill</td><td>为了消 <code>TS2550</code> 把 <code>lib</code> 一路调高,上线后 <code>TypeError: … is not a function</code></td></tr>
 </tbody>
@@ -1066,13 +1166,13 @@ v.toString();                              <span class="cm">// 4. error TS18046:
 <p>接下来往两个方向走。想知道这些规则为什么长这样——为什么联合上只能访问共有成员、为什么 <code>never</code> 谁都能接、为什么多余属性检查只在字面量上生效——去 <a href="#f9-mental">2.1</a>,那里用「类型是值的集合」一条定义把本章所有规则重新推一遍,读完之后遇到没见过的报错也有下手的方向。想立刻把联合类型用起来,去 <a href="#f9-narrow">3.1</a>;想让类型跟着数据走而不是每个形状手写一遍,去 <a href="#f9-generics">4.1</a>。<code>strict</code> 这一族开关各自管什么、存量项目按什么顺序迁移,在 <a href="#f9-config">8.1</a> 与 <a href="#f9-decl-migrate">8.4</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 36653px;--thin-h:20027px">
+<section class="chapter" style="contain-intrinsic-size:auto 36652px;--thin-h:20026px">
 <h1 id="c2"><span class="part">类型系统</span>类型系统的心智模型</h1>
 <p>上一章教的是「怎么写」,这一章问的是「凭什么」。TypeScript 的规则单看是一堆互不相干的条款:联合类型上不能取单边属性,<code>never</code> 谁都能接,<code>unknown</code> 什么都不能干,对象字面量多写一个键会报错、同样的数据先存进变量再传就不报,<code>let x = "a"</code> 推成 <code>string</code> 而 <code>const x = "a"</code> 推成 <code>"a"</code>。背下来并不解决问题——换个场景就失效,遇到没见过的报错依然没有下手的方向。这一章只给一条能把它们全部推出来的定义:<strong>类型是值的集合,类型之间的关系就是集合之间的关系</strong>。</p>
 <p>三节按「定义、形状、来源」推进。<a href="#f9-mental">2.1</a> 建立模型:赋值兼容读成子集判断,<code>|</code> 是并集、<code>&amp;</code> 是交集、<code>never</code> 是空集、<code>unknown</code> 是全集,再从这几条推出一串平时靠死记的结论,顺便把顶类型/底类型/子类型这几个术语和它们的中文说法对上号,并解释「一个变量只该装一种东西」为什么是集合模型的直接推论。<a href="#f9-mental-struct">2.2</a> 回答「一个对象类型的集合里到底装着哪些值」——只看形状不看名字,由此解释多余属性检查为什么只对字面量生效、品牌类型怎么在结构类型里造出名义类型,以及同一个标识符为什么在两个空间里是两个东西。<a href="#f9-mental-infer">2.3</a> 补上最后一环:绝大多数类型不是你写的而是推出来的,宽化与上下文类型决定推断给你宽的还是窄的。有了这套模型,<a href="#f9-narrow">3.1</a> 的收窄、<a href="#f9-generics">4.1</a> 的约束都只是同一套集合运算的不同写法;而模型解释不了的那部分——类型系统明知不健全仍然放行的地方——留给 <a href="#f9-design-unsound">6.3</a>。</p>
 <h2 id="f9-mental">2.1 类型系统的心智模型:类型是值的集合</h2>
 <p>学 TypeScript 最容易走进的死胡同,是把它当成一堆彼此无关、需要死记的规则:联合类型上不能直接取属性;<code>never</code> 谁都能接;<code>unknown</code> 什么都不能干;对象字面量多写一个键会报错,同样的对象先存进变量再传就不报;<code>let x = "a"</code> 推成 <code>string</code> 而 <code>const x = "a"</code> 推成 <code>"a"</code>。这些规则记住了也用不熟,换个场景就失效,更糟的是遇到没见过的报错完全没有下手的方向,只能靠删代码试。</p>
-<p>其实它们全部来自同一个定义:<strong>一个类型就是一组值的集合,类型之间的关系就是集合之间的关系</strong>。<code>number</code> 是「所有 JavaScript 数字」这个集合;<code>"asc"</code> 是只装了一个值的单元素集;<code>never</code> 是空集;<code>unknown</code> 是全集。赋值兼容不是别的,就是子集关系——「<code>T</code> 能赋给 <code>U</code>」等价于「<code>T</code> 这个集合是 <code>U</code> 这个集合的子集」。<code>|</code> 是并集,<code>&amp;</code> 是交集。有了这条定义,前面那些规则不必硬记,现推就行;后面几节的泛型、收窄、条件类型,也都是在集合上做运算。这一节把这个模型建起来:定义、集合运算的化简规则,以及从它们推出来的一串结论;<a href="#f9-mental-struct">2.2</a> 接着用它解释结构类型与两个空间,<a href="#f9-mental-infer">2.3</a> 用它解释推断为什么有时候给你 <code>string</code>、有时候给你 <code>"asc"</code>。</p>
+<p>它们全部来自同一个定义:<strong>一个类型就是一组值的集合,类型之间的关系就是集合之间的关系</strong>。<code>number</code> 是「所有 JavaScript 数字」这个集合;<code>"asc"</code> 是只装了一个值的单元素集;<code>never</code> 是空集;<code>unknown</code> 是全集。赋值兼容不是别的,就是子集关系——「<code>T</code> 能赋给 <code>U</code>」等价于「<code>T</code> 这个集合是 <code>U</code> 这个集合的子集」。<code>|</code> 是并集,<code>&amp;</code> 是交集。有了这条定义,前面那些规则不必硬记,现推就行;后面几节的泛型、收窄、条件类型,也都是在集合上做运算。这一节把这个模型建起来:定义、集合运算的化简规则,以及从它们推出来的一串结论;<a href="#f9-mental-struct">2.2</a> 接着用它解释结构类型与两个空间,<a href="#f9-mental-infer">2.3</a> 用它解释推断为什么有时候给你 <code>string</code>、有时候给你 <code>"asc"</code>。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 413px"><code><span class="cm">// 集合视角下的对照</span>
 type Never   = never;              <span class="cm">// 空集       { }</span>
 type Unknown = unknown;            <span class="cm">// 全集       { 一切值 }</span>
@@ -1181,7 +1281,7 @@ sets.ts(22,7): error TS2322: Type <span>'{ x: number; }'</span> is not assignabl
 sets.ts(26,5): error TS2322: Type <span>'null'</span> is not assignable to type <span>'{}'</span>.
 sets.ts(27,5): error TS2322: Type <span>'undefined'</span> is not assignable to type <span>'{}'</span>.</code></pre>
 <p>逐条对照:第 3、4 行没有报错,证明 <code>never</code> 能同时赋给 <code>string</code> 和 <code>number</code>;第 14 行的 TS2339 把推导过程写在了第二行——「<code>a</code> 不存在于 <code>B</code>」,并集只要有一边缺就整体不安全;第 18、19 行的报错文本直接把 <code>keyof</code> 的结果念了出来,一个是 <code>"shared"</code>(交),一个是 <code>"a" | "b" | "shared"</code>(并),这两行是「交叉与并集在键上刚好反过来」最干净的证据;第 22 行说明交叉后 <code>y</code> 是<strong>必需</strong>的,交集不是「取两边都有的属性」;最后两行说明 <code>{}</code> 只挡 <code>null</code> 和 <code>undefined</code>,第 24、25 行的数字和函数它照收不误。</p>
-<p>对象交叉「属性变多」这件事第一次见都会觉得反直觉,值得单独说清:类型是<strong>值</strong>的集合,不是<strong>属性</strong>的集合。<code>{x: number}</code> 这个集合装的是「所有带 number 型 x 属性的值」,它其实非常大——任何多带几个属性的对象也在里面。加上 <code>&amp; {y: number}</code> 之后,要求变成两条,能同时满足的值<strong>更少</strong>了,集合确实变小了;但集合里那些值每一个都同时带着 x 和 y,所以从「一个值能拿出什么属性」的角度看,属性变多了。集合变小与属性变多是同一件事的两面。同样的道理反过来解释联合:<code>{x:number} | {y:number}</code> 的集合更大,而你能安全拿出来的属性反而一个都没有。</p>
+<p>对象交叉「属性变多」这件事第一次见都会觉得反直觉,值得单独说清:类型是<strong>值</strong>的集合,不是<strong>属性</strong>的集合。<code>{x: number}</code> 这个集合装的是「所有带 number 型 x 属性的值」,它非常大——任何多带几个属性的对象也在里面。加上 <code>&amp; {y: number}</code> 之后,要求变成两条,能同时满足的值<strong>更少</strong>了,集合确实变小了;但集合里那些值每一个都同时带着 x 和 y,所以从「一个值能拿出什么属性」的角度看,属性变多了。集合变小与属性变多是同一件事的两面。同样的道理反过来解释联合:<code>{x:number} | {y:number}</code> 的集合更大,而你能安全拿出来的属性反而一个都没有。</p>
 <figure style="contain-intrinsic-size:auto 408px">
 <svg viewBox="0 15 720 311" xmlns="http://www.w3.org/2000/svg" font-size="13">
 <defs>
@@ -1293,7 +1393,7 @@ m1.ts(28,7): error TS2322: Type <span>'"x"'</span> is not assignable to type <sp
 </tbody>
 </table></div>
 <div class="deep"><h3 class="deep">evolving any:let x = [] 之后类型会自己长出来</h3>
-<p><code>const out = []</code> 在开了 <code>noImplicitAny</code> 的项目里居然不报错,这件事很多人以为是漏网,其实是编译器一条专门的规则:<strong>演化的 any(evolving any)</strong>。声明时没有类型信息的空数组与未初始化的 <code>let</code>,不会立刻被定成 <code>any</code>,而是先挂起来,然后<strong>沿着控制流把每次赋值/push 的类型并进去</strong>,在读它的地方给出到那一刻为止累积出来的类型。这条规则让「先建一个空数组,循环里往里塞」这种最常见的 JavaScript 写法不用写类型标注就能得到准确类型,是 TypeScript 少数「照顾习惯写法」的设计。</p>
+<p><code>const out = []</code> 在开了 <code>noImplicitAny</code> 的项目里居然不报错,这件事很多人以为是漏网,实际上是编译器一条专门的规则:<strong>演化的 any(evolving any)</strong>。声明时没有类型信息的空数组与未初始化的 <code>let</code>,不会立刻被定成 <code>any</code>,而是先挂起来,然后<strong>沿着控制流把每次赋值/push 的类型并进去</strong>,在读它的地方给出到那一刻为止累积出来的类型。这条规则让「先建一个空数组,循环里往里塞」这种最常见的 JavaScript 写法不用写类型标注就能得到准确类型,是 TypeScript 少数「照顾习惯写法」的设计。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 903px"><code><span class="cm">// m2.ts —— evolving any:类型会跟着赋值长出来</span>
 function collect(rows: string[]) {
   <span class="kw">const</span> out = [];            <span class="cm">// 此刻是「演化中的 any[]」,不是 any[] 也不报 noImplicitAny</span>
@@ -1337,10 +1437,10 @@ m2.ts(28,9): error TS7034: Variable <span>'out'</span> implicitly has type <span
 m2.ts(30,9): error TS2322: Type <span>'any[]'</span> is not assignable to type <span>'boolean'</span>.
 m2.ts(30,27): error TS7005: Variable <span>'out'</span> implicitly has an <span>'any[]'</span> type.
 m2.ts(31,10): error TS7005: Variable <span>'out'</span> implicitly has an <span>'any[]'</span> type.</code></pre>
-<p>每一条探针都说明一件事。<code>collect</code> 里 <code>out</code> 长成了 <code>(string | number)[]</code>——两次 <code>push</code> 的类型被并起来,而不是取第一次的。<code>step</code> 里 <code>v</code> 在赋值前读出来是 <code>undefined</code>,赋成 <code>3</code> 之后是 <code>number</code>,经过一个可能执行的 <code>v = "x"</code> 之后变成 <code>string | number</code>:演化是<strong>沿控制流</strong>累积的,不是把全函数的赋值一次性并起来。<code>explicit</code> 说明这条规则只对「没写类型」的声明生效,一旦写了 <code>any[]</code> 就老老实实是 <code>any[]</code>。最后 <code>leak</code> 是这条规则的失败模式:一次都没赋值,编译器无从演化,于是在<strong>读它的地方</strong>补报 <code>TS7034</code> 与 <code>TS7005</code>——注意报错点在读取处而不是声明处,这也是这两条编号看起来很陌生的原因。</p>
+<p>每一条探针都说明一件事。<code>collect</code> 里 <code>out</code> 长成了 <code>(string | number)[]</code>——两次 <code>push</code> 的类型被并起来,而不是取第一次的。<code>step</code> 里 <code>v</code> 在赋值前读出来是 <code>undefined</code>,赋成 <code>3</code> 之后是 <code>number</code>,经过一个可能执行的 <code>v = "x"</code> 之后变成 <code>string | number</code>:演化是<strong>沿控制流</strong>累积的,不是把全函数的赋值一次性并起来。<code>explicit</code> 说明这条规则只对「没写类型」的声明生效,一旦写了 <code>any[]</code> 就是 <code>any[]</code>。最后 <code>leak</code> 是这条规则的失败模式:一次都没赋值,编译器无从演化,于是在<strong>读它的地方</strong>补报 <code>TS7034</code> 与 <code>TS7005</code>——注意报错点在读取处而不是声明处,这也是这两条编号看起来很陌生的原因。</p>
 <p>实用推论有三条。第一,<strong>别为了消 <code>TS7034</code> 而写 <code>const out: any[] = []</code></strong>,那等于把编译器本来能推出来的类型换成了 any;正确做法是写出真实的元素类型(<code>const out: Line[] = []</code>),或者干脆改用 <code>rows.map(...)</code>/<code>rows.filter(...)</code> 让类型从数据流里出来。第二,演化出来的类型是<strong>累积并集</strong>,所以在循环里往同一个数组里塞两种东西,会静默得到一个联合数组,后面每次取元素都要收窄——这正是上面「一个变量一个集合」那条规则在数组上的版本。第三,演化只在<strong>同一个函数体内</strong>有效,把这个数组传出去或者存进对象属性,类型就在那一刻定死,后面再 push 别的东西会报错而不是继续演化。</p></div>
 <h2 id="f9-mental-struct">2.2 结构类型、品牌类型与两个空间</h2>
-<p>集合模型还欠一个答案:<code>{ x: number }</code> 这个集合里到底装着哪些值?TypeScript 的回答是<strong>只看形状,不看名字,也不看这个值是怎么造出来的</strong>,这一节把这个回答推到底。先看它的直接推论——「多出来的属性不影响子集关系」,以及为什么与之矛盾的多余属性检查其实根本不是类型检查;再看它的代价——两个都叫 id 的字符串别名互相通用,以及怎么用品牌类型把它们分开;最后是同一件事在标识符层面的样子:一个名字在 <code>const p: Point</code> 里是类型、在 <code>new Point()</code> 里是值,类型空间与值空间是住在同一份源码里的两套语言,一套编译后整个消失。认不清这条界线,<code>TS2749</code> 与 <code>TS2693</code> 这两条报错就永远只能靠猜。</p>
+<p>集合模型还欠一个答案:<code>{ x: number }</code> 这个集合里到底装着哪些值?TypeScript 的回答是<strong>只看形状,不看名字,也不看这个值是怎么造出来的</strong>,这一节把这个回答推到底。先看它的直接推论——「多出来的属性不影响子集关系」,以及为什么与之矛盾的多余属性检查根本不是类型检查;再看它的代价——两个都叫 id 的字符串别名互相通用,以及怎么用品牌类型把它们分开;最后是同一件事在标识符层面的样子:一个名字在 <code>const p: Point</code> 里是类型、在 <code>new Point()</code> 里是值,类型空间与值空间是住在同一份源码里的两套语言,一套编译后整个消失。认不清这条界线,<code>TS2749</code> 与 <code>TS2693</code> 这两条报错就永远只能靠猜。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 495px"><code><span class="cm">// 结构类型:两个类型只要形状兼容就能互赋,名字与声明位置都不参与判断</span>
 interface Point { x: number; y: number }
 <span class="kw">class</span> Vec { constructor(<span class="kw">public</span> x: number, <span class="kw">public</span> y: number) {} }
@@ -1662,7 +1762,7 @@ export function parseRangeB(text: string): { from: number; to: number } {
 <pre style="contain-intrinsic-size:auto 129px"><code>$ npx tsc --strict --noEmit --target es2022 drift.ts
 drift.ts(9,12): error TS2322: Type <span>'string'</span> is not assignable to type <span>'number'</span>.
 drift.ts(12,41): error TS2363: The right-hand side of an arithmetic operation must be of type <span>'any'</span>, <span>'number'</span>, <span>'bigint'</span> or an <span class="kw">enum</span> type.</code></pre>
-<p>两条报错,一条来自 B 一条来自 A,位置差得很远。B 版的错误报在第 9 行,也就是它自己的 <code>return</code> 那一行,文本是 <code>Type 'string' is not assignable to type 'number'</code>,原因和修法都在眼前;A 版整个函数体不报错,因为推断老老实实跟着实现走,把 <code>from</code> 推成了 <code>string</code>——在 A 自己看来没有任何矛盾,错误一直漂到第 12 行的调用点,才以「减法右边不是数字」这种离现场很远的形式(TS2363)爆出来。真实项目里这两处可能隔着几个文件,而且如果调用点恰好只是把这个值透传下去,报错还会继续漂。这就是「导出的函数标返回类型」的全部理由:<strong>它把实现的漂移锁在函数边界内,让报错出现在写错的那一行</strong>。反过来,模块内部的小函数不标更灵活,重构时类型自动跟随。</p>
+<p>两条报错,一条来自 B 一条来自 A,位置差得很远。B 版的错误报在第 9 行,也就是它自己的 <code>return</code> 那一行,文本是 <code>Type 'string' is not assignable to type 'number'</code>,原因和修法都在眼前;A 版整个函数体不报错,因为推断跟着实现走,把 <code>from</code> 推成了 <code>string</code>——在 A 自己看来没有任何矛盾,错误一直漂到第 12 行的调用点,才以「减法右边不是数字」这种离现场很远的形式(TS2363)爆出来。真实项目里这两处可能隔着几个文件,而且如果调用点恰好只是把这个值透传下去,报错还会继续漂。这就是「导出的函数标返回类型」的全部理由:<strong>它把实现的漂移锁在函数边界内,让报错出现在写错的那一行</strong>。反过来,模块内部的小函数不标更灵活,重构时类型自动跟随。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 标注的三条规矩</span><p>一,<strong>函数参数必标</strong>——它是类型信息进入系统的入口,不标就等于开了一个 <code>any</code> 的口子。二,<strong>局部变量默认不标</strong>,让推断干活;需要精度就用 <code>as const</code> 或 <code>satisfies</code>,而不是手写一个宽类型把精度抹掉。三,<strong>跨模块的边界标返回类型</strong>(导出的函数、hooks、API 客户端),模块内部的私有函数不标。判断标准不是「写得多严谨」,而是「这条标注能不能让报错出现在更靠近错误的地方」。</p></div>
 <div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 as const 不是 as</span><p>两者名字像,作用完全相反。<code>as T</code> 是断言,告诉编译器「别管你怎么想,当成 T」,它可能是谎话,风险见 <a href="#f9-design">6.1</a>。<code>as const</code> 是推断指令,只是要求编译器<strong>别做宽化</strong>,得到的类型永远是那个值真实的、最窄的类型,不会说谎。它还有一个副作用容易忘:所有属性会变成 <code>readonly</code>,于是 <code>as const</code> 出来的数组不能 <code>push</code>,传给要 <code>string[]</code>(非 <code>readonly</code>)的函数会报 TS4104,这时候要么把参数改成 <code>readonly string[]</code>,要么用展开复制一份。</p></div></div>
 <div class="deep"><h3 class="deep">赋值兼容与变体:三条方向规则</h3>
@@ -1682,7 +1782,7 @@ type FnMethod = { handle(x: Animal): <span class="kw">void</span> };
 var.ts(10,26): error TS2322: Type <span>'(d: Dog) =&gt; void'</span> is not assignable to type <span>'(x: Animal) =&gt; void'</span>.
   Types of parameters <span>'d'</span> and <span>'x'</span> are incompatible.
     Property <span>'bark'</span> is missing in type <span>'Animal'</span> but required in type <span>'Dog'</span>.</code></pre>
-<p>只有第 10 行报错,而第 11 行完全一样的赋值却放行了——差别仅仅是 <code>handle: (x) =&gt; void</code>(属性写法)和 <code>handle(x): void</code>(方法写法)。<code>strictFunctionTypes</code> 只对属性写法做严格的逆变检查,方法写法保留了历史上的<strong>双变</strong>(bivariance):两个方向都放行,也就是说 <code>byMethod</code> 这一行在运行时确实会在传进一只猫时崩溃,而编译器不管。这不是 bug 而是有意的取舍,原因和 <code>Array&lt;T&gt;</code> 的 <code>push</code>、DOM 事件处理器这类内置签名的历史包袱有关;完整的原因、以及数组协变本身其实也是不健全的(第 5 行那个赋值同样能在运行时出事),留到 <a href="#f9-design-unsound">6.3</a> 展开。这里只需要记住两件事:<strong>写回调类型时优先用属性写法</strong>,它才受严格检查;以及类型系统在这几处是「尽力而为」,不是数学证明。</p></div>
+<p>只有第 10 行报错,而第 11 行完全一样的赋值却放行了——差别仅仅是 <code>handle: (x) =&gt; void</code>(属性写法)和 <code>handle(x): void</code>(方法写法)。<code>strictFunctionTypes</code> 只对属性写法做严格的逆变检查,方法写法保留了历史上的<strong>双变</strong>(bivariance):两个方向都放行,也就是说 <code>byMethod</code> 这一行在运行时确实会在传进一只猫时崩溃,而编译器不管。这不是 bug 而是有意的取舍,原因和 <code>Array&lt;T&gt;</code> 的 <code>push</code>、DOM 事件处理器这类内置签名的历史包袱有关;完整的原因、以及数组协变本身也是不健全的(第 5 行那个赋值同样能在运行时出事),留到 <a href="#f9-design-unsound">6.3</a> 展开。这里只需要记住两件事:<strong>写回调类型时优先用属性写法</strong>,它才受严格检查;以及类型系统在这几处是「尽力而为」,不是数学证明。</p></div>
 <h2 id="c2-sum">2.4 小结:本章要点与易错清单</h2>
 <p>这一章三节只做一件事:把 TypeScript 从「一堆要背的规则」变成「一条能现推的定义」。<a href="#f9-mental">2.1</a> 给出定义本身——<strong>类型是值的集合,能不能赋值就是是不是子集</strong>,并集、交集、空集、全集各对应一个关键字;<a href="#f9-mental-struct">2.2</a> 用它回答「集合里装着哪些值」,得到结构类型,以及结构类型的两个副产品:多余属性检查(一条语法层的启发式,不是类型检查)和品牌类型(在结构世界里手工造名义类型);<a href="#f9-mental-infer">2.3</a> 回答「这些类型是谁写的」,答案是大部分由推断给出,而推断的宽窄由宽化与上下文类型两条规则决定。</p>
 <p>一句能记住的话:<strong>看到 <code>Type 'X' is not assignable to type 'Y'</code>,别读成「X 和 Y 不兼容」,读成「X 这个集合不是 Y 的子集」,然后去找那个反例值</strong>。多数时候那个值就是 bug 本身——可能是 <code>undefined</code>,可能是被宽化掉的字面量,也可能是某个没处理的联合分支。这条习惯把「看不懂报错」变成「找那个不在里面的值」,而后者是可以动手做的。</p>
@@ -1716,7 +1816,7 @@ var.ts(10,26): error TS2322: Type <span>'(d: Dog) =&gt; void'</span> is not assi
 <tr><td class="nw">顶类型 / 底类型</td><td><code>unknown</code> 是全集,<code>never</code> 是空集,<code>any</code> 两个都不是</td><td>把 <code>any</code> 当成顶类型,以为它和 <code>unknown</code> 只差一点严格</td></tr>
 <tr><td class="nw">子类型的方向</td><td>子类型更具体、值更少;超类型更宽泛、值更多</td><td>方向记反,读别人的类型体操时把协变逆变全看拧</td></tr>
 <tr><td class="nw">一个变量一个集合</td><td>变量的声明类型 = 它一生能装的值的集合</td><td>一个 <code>let id</code> 先装字符串后装数字,类型宽成 <code>string &#124; number</code>,后面每次用都要收窄</td></tr>
-<tr><td class="nw">freshness</td><td>对象字面量「新鲜」时才触发多余属性检查,传一手就没了</td><td>以为报错消失是问题解决了,其实只是字面量不新鲜了</td></tr>
+<tr><td class="nw">freshness</td><td>对象字面量「新鲜」时才触发多余属性检查,传一手就没了</td><td>以为报错消失是问题解决了,实际上只是字面量不新鲜了</td></tr>
 <tr><td class="nw">evolving any</td><td><code>const out = []</code> 会沿控制流把每次 push 的类型并进去</td><td>为了消 <code>TS7034</code> 写成 <code>const out: any[] = []</code>,把编译器本来推得出的类型换成了 any</td></tr>
 <tr><td class="nw">演化是累积并集</td><td>循环里往同一个数组塞两种东西,静默得到联合数组</td><td>后面取元素时才发现要收窄,回头改类型已经牵连一片</td></tr>
 </tbody>
@@ -1829,7 +1929,7 @@ function greet(name?: string) {
 }</code></pre>
 <p>收窄是<strong>按控制流</strong>传播的:<code>return</code>、<code>throw</code>、<code>continue</code> 之后,剩下的代码自动拿到「排除掉已处理分支」的类型,所以 <code>len</code> 里第三行不需要再判断。早返回(early return)风格与收窄配合得最好,层层嵌套的 if/else 反而让类型难以追踪。</p>
 <h3>自定义类型守卫:x is T</h3>
-<p>内置手段只认识原始类型、类和属性存在性,「这个 unknown 是不是 <code>User</code>」这类判断得自己写。类型守卫是一个返回布尔值的普通函数,只是返回类型写成 <code>参数名 is 类型</code>:<code>function isCat(a: Cat | Dog): a is Cat</code>。调用处 <code>if (isCat(a))</code> 为真的分支里,<code>a</code> 就是 <code>Cat</code>,否则是剩下的 <code>Dog</code>。函数体里怎么判断完全由你负责——编译器<strong>只相信你的签名,不验证你的逻辑</strong>:写成 <code>return true</code> 也能通过编译,然后在运行时出事。所以守卫体要老老实实检查每个用到的字段,尤其是给 <code>unknown</code> 写守卫时(<code>JSON.parse</code> 的结果、<code>postMessage</code> 收到的数据)。断言函数是守卫的变体:<code>function assertIsUser(x: unknown): asserts x is User</code>,不满足就 <code>throw</code>,调用之后的代码里 <code>x</code> 直接是 <code>User</code>,省掉一层 if。</p>
+<p>内置手段只认识原始类型、类和属性存在性,「这个 unknown 是不是 <code>User</code>」这类判断得自己写。类型守卫是一个返回布尔值的普通函数,只是返回类型写成 <code>参数名 is 类型</code>:<code>function isCat(a: Cat | Dog): a is Cat</code>。调用处 <code>if (isCat(a))</code> 为真的分支里,<code>a</code> 就是 <code>Cat</code>,否则是剩下的 <code>Dog</code>。函数体里怎么判断完全由你负责——编译器<strong>只相信你的签名,不验证你的逻辑</strong>:写成 <code>return true</code> 也能通过编译,然后在运行时出事。所以守卫体要检查每个用到的字段,尤其是给 <code>unknown</code> 写守卫时(<code>JSON.parse</code> 的结果、<code>postMessage</code> 收到的数据)。断言函数是守卫的变体:<code>function assertIsUser(x: unknown): asserts x is User</code>,不满足就 <code>throw</code>,调用之后的代码里 <code>x</code> 直接是 <code>User</code>,省掉一层 if。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 169px"><code><span class="cm">// 类型谓词:返回 true 时参数是 T</span>
 function isT(x: unknown): x is T { … }
 <span class="cm">// 断言函数:不抛就说明 x 是 T;也可以只断言条件为真</span>
@@ -1859,7 +1959,7 @@ function speak(a: Cat | Dog) {
 <p><code>as</code> 是类型断言(type assertion):告诉编译器「把这个值当成那个类型」。它<strong>不做任何运行时转换或检查</strong>,只是让类型检查按你说的来——所以文档里特地不叫它 cast。合法的断言要求两个类型「足够重叠」(一个能赋给另一个),<code>"123" as number</code> 会报 <code>error TS2352: Conversion of type 'string' to type 'number' may be a mistake because neither type sufficiently overlaps with the other</code>;而 <code>x as unknown as T</code> 能绕过这条检查,这是最该警惕的写法。<code>!</code> 是非空断言:<code>el!</code> 把类型里的 <code>null | undefined</code> 去掉,同样零运行时成本、零运行时保护。两者共同的风险是<strong>把错误从编译期推迟到运行期,而且推迟到离原因很远的地方</strong>:<code>document.getElementById("app")!</code> 在 id 写错时不会在这一行炸,而是在后面第一次 <code>.innerHTML</code> 时抛 <code>TypeError: Cannot set properties of null</code>。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 什么时候 as 是诚实的,什么时候是在撒谎</span><p>诚实的 <code>as</code>:你确实比编译器多知道一点运行时事实,且这点事实不会变——<code>document.querySelector("#app") as HTMLDivElement</code>(HTML 是你写的)、<code>JSON.parse(s) as Config</code>(紧跟着运行时校验)、给 <code>as const</code> 用。撒谎的 <code>as</code>:为了消掉一条报错而加,尤其是 <code>as any</code>、<code>as unknown as X</code>、或在 <a href="#f9-generics">4.1</a> 那种封装之外到处出现的 <code>as T</code>。排查线索:grep 一下代码里 <code>as </code> 和 <code>!.</code> 的数量,每一处都应该能用一句话说出「我为什么确定」;说不出的换成收窄或守卫。</p></div>
 <h3>satisfies:检查形状但保留推导</h3>
-<p><code>satisfies</code>(TS 4.9)解决的是 <code>as</code> 和标注都解决不了的一个两难。写 <code>const theme: Theme = { accent: [255, 128, 0] }</code>,<code>theme.accent</code> 的类型是 <code>Theme</code> 里声明的宽类型 <code>string | [number, number, number]</code>,丢掉了「它其实是元组」的信息,后面 <code>theme.accent[0]</code> 要先收窄;不写标注,<code>accent</code> 被推成 <code>number[]</code> 而且拼错键也没人查。<code>{ … } satisfies Theme</code> 两头都要:<strong>检查</strong>字面量符合 <code>Theme</code>(多余键、错类型都报),但变量的类型仍然是<strong>推导出来的窄类型</strong>(<code>accent</code> 保持元组)。配置对象、路由表、主题表这类「既要约束形状又要保留每个具体值」的场景,它是正确工具;与 <code>as const</code> 合用(<code>{ … } as const satisfies Theme</code>)还能把值也锁成字面量。</p>
+<p><code>satisfies</code>(TS 4.9)解决的是 <code>as</code> 和标注都解决不了的一个两难。写 <code>const theme: Theme = { accent: [255, 128, 0] }</code>,<code>theme.accent</code> 的类型是 <code>Theme</code> 里声明的宽类型 <code>string | [number, number, number]</code>,丢掉了「它是元组」的信息,后面 <code>theme.accent[0]</code> 要先收窄;不写标注,<code>accent</code> 被推成 <code>number[]</code> 而且拼错键也没人查。<code>{ … } satisfies Theme</code> 两头都要:<strong>检查</strong>字面量符合 <code>Theme</code>(多余键、错类型都报),但变量的类型仍然是<strong>推导出来的窄类型</strong>(<code>accent</code> 保持元组)。配置对象、路由表、主题表这类「既要约束形状又要保留每个具体值」的场景,它是正确工具;与 <code>as const</code> 合用(<code>{ … } as const satisfies Theme</code>)还能把值也锁成字面量。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code>type Theme = Record&lt;string, string | [number, number, number]&gt;;
 <span class="kw">const</span> theme = {
   primary: <span>"#36c"</span>,
@@ -1871,7 +1971,7 @@ theme.accent[0].toFixed();            <span class="cm">// OK:accent 仍是 [numb
 theme2.accent[0].toFixed();
 <span class="cm">// error TS2339: Property 'toFixed' does not exist on type 'string | number'.</span></code></pre>
 <div class="deep"><h3 class="deep">收窄什么时候会丢</h3>
-<p>收窄是对<strong>某个引用</strong>在<strong>某段控制流</strong>里的结论,离开这两个条件它就不成立。第一种丢失:回调。<code>if (typeof y === "string") setTimeout(() =&gt; y.toUpperCase())</code>——回调在将来执行,那时 <code>y</code> 可能已经被改了,所以闭包里 <code>y</code> 回到声明类型。TS 5.4 起放宽了一点:如果变量是 <code>const</code>、参数、或 <code>let</code> 但在回调创建之后<strong>没有再被赋值</strong>,收窄会保留进闭包;一旦后面有 <code>y = 42</code>,闭包里就报错。修法是在 if 里先 <code>const s = y</code>,用新的 const 引用。第二种丢失:属性访问链。<code>if (obj.a.b)</code> 之后 <code>obj.a.b</code> 确实被收窄,但中间调用了任何函数,TypeScript 不会假设函数没改它(它也没法知道),收窄仍保留——这其实是「不够保守」的一面,属性可能已经被那个函数改成 null。第三种:解构出来的变量在 TS 4.6 之前不参与可辨识联合的收窄,现在 <code>const { status, data } = r</code> 后判 <code>status</code> 也能收窄 <code>data</code>,前提是解构的是 const 且没有默认值。</p>
+<p>收窄是对<strong>某个引用</strong>在<strong>某段控制流</strong>里的结论,离开这两个条件它就不成立。第一种丢失:回调。<code>if (typeof y === "string") setTimeout(() =&gt; y.toUpperCase())</code>——回调在将来执行,那时 <code>y</code> 可能已经被改了,所以闭包里 <code>y</code> 回到声明类型。TS 5.4 起放宽了一点:如果变量是 <code>const</code>、参数、或 <code>let</code> 但在回调创建之后<strong>没有再被赋值</strong>,收窄会保留进闭包;一旦后面有 <code>y = 42</code>,闭包里就报错。修法是在 if 里先 <code>const s = y</code>,用新的 const 引用。第二种丢失:属性访问链。<code>if (obj.a.b)</code> 之后 <code>obj.a.b</code> 确实被收窄,但中间调用了任何函数,TypeScript 不会假设函数没改它(它也没法知道),收窄仍保留——这是「不够保守」的一面,属性可能已经被那个函数改成 null。第三种:解构出来的变量在 TS 4.6 之前不参与可辨识联合的收窄,现在 <code>const { status, data } = r</code> 后判 <code>status</code> 也能收窄 <code>data</code>,前提是解构的是 const 且没有默认值。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 359px"><code>function outer(x: string | number) {
   <span class="kw">if</span> (typeof x === <span>"string"</span>) {
     [1].forEach(() =&gt; x.toUpperCase());   <span class="cm">// OK:x 是参数且从未被重新赋值(TS 5.4+)</span>
@@ -2035,7 +2135,7 @@ p1.ts(36,7): error TS2322: Type <span>'(User | null)[]'</span> is not assignable
 <h3>推不出来时的三种修法</h3>
 <p>第一种,<strong>把判断挪回参数本身</strong>。<code>row =&gt; row.v !== null</code> 推不出谓词,是因为谓词只能形如「参数 is 某类型」,而这里被细化的是 <code>row.v</code>。想让结果类型变成「<code>v</code> 一定有值」的那一支,得让 <code>row</code> 整体被细化:把它建模成可辨识联合(<code>{ ok: true; v: number } | { ok: false }</code>)再判 <code>row.ok</code>,或者退回手写 <code>(row): row is Loaded =&gt; row.v !== null</code>。这不是编译器的疏漏,是类型谓词这个语法本身只描述参数。</p>
 <p>第二种,<strong>把复合条件拆成两次 filter</strong>。<code>u =&gt; u !== null &amp;&amp; u.id &gt; 0</code> 里前半截是细化、后半截不是,整体就不算细化表达式;写成 <code>.filter(u =&gt; u !== null).filter(u =&gt; u.id &gt; 0)</code>,第一次拿到 <code>User[]</code>,第二次的回调里 <code>u</code> 已经是 <code>User</code>,两次都编译得过,而且第二个回调里不用再写 <code>u!</code>。多一次遍历换掉一个非空断言,这笔账在前端常见的数据量下是划算的。</p>
-<p>第三种,<strong>老老实实写 <code>x is T</code></strong>。守卫要被<strong>复用</strong>(导出给别的模块、放进一张检查表)、要判的是 <code>unknown</code>(<code>JSON.parse</code> 的结果、<code>postMessage</code> 收到的数据)、或者体内的检查本来就有好几步,这三种情况都该显式写。显式谓词还有一个推断永远给不了的好处:它是<strong>签名的一部分</strong>,读签名的人立刻知道这是个守卫;推断出来的谓词只有把鼠标悬上去才看得见。</p>
+<p>第三种,<strong>显式写 <code>x is T</code></strong>。守卫要被<strong>复用</strong>(导出给别的模块、放进一张检查表)、要判的是 <code>unknown</code>(<code>JSON.parse</code> 的结果、<code>postMessage</code> 收到的数据)、或者体内的检查本来就有好几步,这三种情况都该显式写。显式谓词还有一个推断永远给不了的好处:它是<strong>签名的一部分</strong>,读签名的人立刻知道这是个守卫;推断出来的谓词只有把鼠标悬上去才看得见。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 显式谓词与推断谓词并不等价,别为了「统一风格」批量删 is</span><p>推断只发生在编译器<strong>看得见函数体</strong>的时候。守卫写在另一个模块里、经过一层 <code>.d.ts</code>、被存进一个标了类型的变量(<code>const f: (x: unknown) =&gt; boolean = …</code>)、或者作为参数传进高阶函数,函数体都不参与调用点的推断,这时没有显式 <code>is</code> 就一定拿不到收窄。判断方法很直接:把结果赋给 <code>number</code> 跑一遍 <code>tsc</code>,报错文本里如果还带着 <code>| null</code>,那条 <code>is</code> 就删不得。</p></div>
 <div class="deep"><h3>完整示例:一条清洗管道里删掉四处多余的守卫</h3>
 <p>一个真实场景:后端返回的行里数量是字符串或 null,前端要解析成数字、丢掉解析不出来的行、再按事件类型分组求和。TS 5.5 之前这条链上每一步要么带一个 <code>is</code>,要么在后面补 <code>!</code>;现在四处全都不用写。检查与运行:<code>npx tsc --strict --target es2022 p2.ts &amp;&amp; node p2.js</code>。</p>
@@ -2297,7 +2397,7 @@ function f4(y: string | number) {
 }</code></pre>
 <p>对答案:1 的修法是 <code>x &amp;&amp; typeof x === "object"</code>,不是加 <code>!</code>;2 是本章最常见的线上 bug,想判「传没传」该写 <code>count !== undefined</code>;3 正是穷尽检查在干活——报错点名了漏掉的那个成员,补一条 <code>case "b"</code> 就消失,这条报错是资产不是麻烦;4 的罪魁是最后那行赋值,把它删掉闭包里的收窄就保住了(TS 5.4 起的规则),要在有赋值的情况下也保住,就在 <code>if</code> 里先 <code>const s = y</code>。</p>
 <p>这一章的两节新内容各有一条自测:说得出「加一个 <code>: boolean</code> 返回标注为什么会让 <code>filter</code> 的结果类型退回去」,以及「<code>if (/re/)</code> 为什么是编译错误而 <code>const r = /re/; if (r)</code> 不是」,就说明 <a href="#f9-narrow-infer">3.2</a> 与 <a href="#f9-narrow-5x">3.3</a> 读到位了。</p>
-<p>接下来:<a href="#f9-generics">4.1</a> 把类型本身变成参数,那里的 <code>T extends X</code> 与这一章的收窄看起来像,其实一个是约束上界、一个是切小集合,混淆它们会撞上一整类难懂的报错;<a href="#f9-design">6.1</a> 讲怎么把类型设计成「非法状态根本表达不出来」,让需要收窄的分支从一开始就少;守卫体里那些手写的 <code>typeof</code> 检查怎么换成声明式的校验库,在 <a href="#f9-runtime">7.1</a>。</p>
+<p>接下来:<a href="#f9-generics">4.1</a> 把类型本身变成参数,那里的 <code>T extends X</code> 与这一章的收窄看起来像,实际上一个是约束上界、一个是切小集合,混淆它们会撞上一整类难懂的报错;<a href="#f9-design">6.1</a> 讲怎么把类型设计成「非法状态根本表达不出来」,让需要收窄的分支从一开始就少;守卫体里那些手写的 <code>typeof</code> 检查怎么换成声明式的校验库,在 <a href="#f9-runtime">7.1</a>。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 32283px;--thin-h:12537px">
@@ -2590,7 +2690,7 @@ eng,ops,eng
 6
 eng:2 ops:1</code></pre>
 <p>第三行输出 <code>6</code> 是 <code>1+2+3</code>——<code>t.pluck("id")</code> 的返回类型是 <code>number[]</code> 而不是 <code>(number | string)[]</code>,说明 <code>K</code> 被推成了 <code>"id"</code> 这个字面量、<code>T[K]</code> 因而解成 <code>number</code>,<code>reduce</code> 里的加法才编译得过。<code>groupBy</code> 的 <code>Map&lt;T[K], T[]&gt;</code> 同理:按 <code>"dept"</code> 分组时键类型是 <code>string</code>,按 <code>"id"</code> 分组时键类型会是 <code>number</code>,一个签名覆盖两种。<code>forType&lt;Row&gt;()</code> 那一版每次都要重写 <code>&lt;Row&gt;</code>,而 <code>new Table(rows)</code> 连一次都不用写——<code>T</code> 从构造实参推出来之后就留在实例上了。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 233px"><span class="t">🔴 类型参数只出现在返回值上,基本等于 as</span><p><code>function get&lt;T&gt;(url: string): Promise&lt;T&gt;</code> 这种签名读起来很像「类型安全的请求」,其实调用方写 <code>get&lt;User&gt;(url)</code> 时编译器不做任何验证——它只是把 <code>T</code> 换成 <code>User</code> 然后相信你,和 <code>(await fetch(url).then(r =&gt; r.json())) as User</code> 一模一样。这类 API 不是不能写,而是必须<strong>明确它的定位是断言</strong>:要么在函数里接一个运行时校验器(<code>get(url, isUser)</code>,让 <code>T</code> 从守卫的类型谓词里推出来,做法见 <a href="#f9-runtime">7.1</a>),要么老老实实叫它 <code>getUnsafe</code>。判断一个泛型 API 是真泛型还是假泛型,就看它的类型参数在<strong>形参</strong>里出不出现。</p></div></div>
+<div class="note dead" style="contain-intrinsic-size:auto 233px"><span class="t">🔴 类型参数只出现在返回值上,基本等于 as</span><p><code>function get&lt;T&gt;(url: string): Promise&lt;T&gt;</code> 这种签名读起来很像「类型安全的请求」,实际上调用方写 <code>get&lt;User&gt;(url)</code> 时编译器不做任何验证——它只是把 <code>T</code> 换成 <code>User</code> 然后相信你,和 <code>(await fetch(url).then(r =&gt; r.json())) as User</code> 一模一样。这类 API 不是不能写,而是必须<strong>明确它的定位是断言</strong>:要么在函数里接一个运行时校验器(<code>get(url, isUser)</code>,让 <code>T</code> 从守卫的类型谓词里推出来,做法见 <a href="#f9-runtime">7.1</a>),要么叫它 <code>getUnsafe</code>。判断一个泛型 API 是真泛型还是假泛型,就看它的类型参数在<strong>形参</strong>里出不出现。</p></div></div>
 <div class="deep"><h3 class="deep">推断点越多,报错就越靠近原因</h3>
 <p>造推断点还有一个和「能不能推出来」无关的收益:<strong>报错的位置</strong>。把 <code>T</code> 拆到外层调用之后,如果 <code>Row</code> 和 <code>rows</code> 的形状对不上,报错会落在 <code>forType&lt;Row&gt;()(rows, …)</code> 的第二次调用上,并且直接说「<code>Row[]</code> 与 <code>rows</code> 的类型不匹配」;而两个类型参数一起推时,编译器会先从 <code>rows</code> 推出一个 <code>T</code>,再拿它去检查 <code>key</code>,于是最终的报错常常落在 <code>key</code> 上,说的是「<code>"name"</code> 不能赋给 <code>never</code>」这种离原因很远的话——<code>never</code> 从哪来的?从 <code>keyof T</code> 而 <code>T</code> 被推成了某个空对象类型。<strong>类型参数推错时,后续的每一步都在错误的基础上继续推,报错点会一路漂</strong>,这是泛型报错难读的根本原因。</p>
 <p>同一条道理也解释了「为什么给泛型函数多加几个约束反而更好读」。<code>&lt;T extends object&gt;</code> 比裸 <code>&lt;T&gt;</code> 好,是因为一个不合法的实参会在<strong>推断的那一步</strong>就被约束挡下(报 <code>TS2345</code>,指着实参),而不是推成一个奇怪的 <code>T</code> 之后在三行开外爆炸。约束在这里的作用不是「限制能传什么」,而是<strong>把报错钉在推断点上</strong>。这条经验和 <a href="#f9-generics-infer">4.3</a> 里「约束不是收窄」并不矛盾:约束确实不会让函数体内的 <code>T</code> 变具体,但它会让调用点的错误暴露得更早。</p>
@@ -2913,7 +3013,7 @@ pick([<span>"red"</span>, <span>"green"</span>], <span>"bleu"</span>);
 <p>接下来:<a href="#f9-advanced-tpl">5.2</a> 把条件类型、映射类型、模板字面量类型推到递归与类型层编程,读完能看懂路由库、ORM 那些「从字符串推出对象类型」的签名;<a href="#f9-design">6.1</a> 讲怎么用这些能力把非法状态设计成表达不出来,以及类型系统在哪些地方仍然会骗你;把类型接到运行时校验、代码生成上,在 <a href="#f9-runtime-ex">7.3</a>。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46188px;--thin-h:22057px">
+<section class="chapter" style="contain-intrinsic-size:auto 46189px;--thin-h:22057px">
 <h1 id="c5"><span class="part">类型运算</span>条件、映射、模板字面量与类型层编程</h1>
 <p><a href="#f9-generics">4.1</a> 把类型变换讲到了内置工具类型这一层:<code>Partial</code>、<code>Pick</code>、<code>ReturnType</code> 这几十个名字够应付日常。这一章讲它们的来处——类型层本身是一门可以编程的小语言:条件类型是 if,<code>infer</code> 是解构,递归是循环,映射类型是对对象的 map,模板字面量类型让字符串也能参与运算。读完这一章,你应该能打开 React、zod、TanStack Query 的 <code>.d.ts</code> 一层层读下去,说得出每一层「把什么变成了什么」,并且在类型推不出来时判断是哪条规则在起作用。</p>
 <p>四节按「规则 → 关系 → 改别人的 → 调自己的」排。先是条件类型的分配律、<code>infer</code> 的候选合并与映射类型的同态和键重映射,这两组规则是后面一切的地基,附带三条边界(any 走两支、没有高阶类型、没有局部变量);再是模板字面量的拼接与解析、递归的两个深度上限、<code>this</code> 与变体——它们描述的不是形状而是<strong>关系</strong>,各自都有一条会撞上的上限或不健全点;然后是改造别人类型的四把工具(声明合并、模块扩充、全局扩充、mixin);最后是把类型当程序来读写的方法论、三种调试手段、类型层单元测试,以及一条「什么时候停手」的边界线。整章的形态在运行时一个字节都不留,代价全在编译期,所以每讲完一种形态都会顺手交代它的上限与事故形态。类型该设计成什么样、编译器什么时候会骗你,见 <a href="#f9-design-unsound">6.3</a>;把这些类型接进工程之后的配置与检查性能,见 <a href="#f9-config">8.1</a> 与 <a href="#f9-decl">8.3</a>。</p>
@@ -3593,7 +3693,7 @@ $ npx tsc --strict --target es2022 --module esnext --outDir out routes.ts &amp;&
 /users/42/posts/7%208</code></pre>
 <p>解读:<code>ParamNames</code> 的第一支匹配「冒号后到下一个斜杠」,把名字并进结果后对剩余部分递归(前面补一个 <code>/</code> 让下一轮的模式仍能匹配),第二支处理最后一段,第三支在没有冒号时返回 never——并进联合里被吸收,所以 <code>"/about"</code> 得到 never,映射成空对象 <code>{}</code>。第一条报错 TS2344 来自 <code>_t3</code>:<code>Equal</code> 算出 false,不满足 <code>Expect</code> 的 <code>extends true</code> 约束——类型层测试失败的形态就是这一条,把 <code>number</code> 改回 <code>string</code> 它就消失。后三条报错是这套类型在调用点上的收益:键名拼错、漏参数、路径不在表里,全部在编辑器里亮起来。<code>Equal</code> 那个「两个泛型函数互相赋值」的写法是社区通行的严格相等判断,它能区分 <code>{ a: string }</code> 与 <code>{ a: string } &amp; {}</code> 这类普通 <code>extends</code> 分不开的情况,读不懂没关系,知道它是「类型相等」的断言即可。整个示例的运行时部分只有一个 <code>replace</code>,类型层的所有工作在 <code>node</code> 跑起来的那一刻都已经不存在了——这也把话题引向 <a href="#f9-runtime">7.1</a>:类型擦除之后,运行时到底还剩什么。</p></div>
 <div class="deep"><h3 class="deep">类型层编程的方法论:把类型当程序读</h3>
-<p>前面几个小节各自讲了一种形态,合起来其实是一门小语言。把它和值层的 JavaScript 逐项对上,读别人的 <code>.d.ts</code> 就从「猜」变成了「读」:<strong>类型别名是函数</strong>,类型参数是形参,别名右边是函数体,<code>Foo&lt;X&gt;</code> 是调用;<strong>条件类型是 if</strong>,<code>T extends U ? A : B</code> 就是三元运算符;<strong>递归是循环</strong>,没有 for,只能靠别名调用自己,循环变量写成额外的类型参数;<strong>infer 是解构</strong>,在一个结构模式里挖坑,匹配成功就把对应位置绑给坑里的名字;<strong>分配律是 map</strong>,裸类型参数遇到联合会自动逐成员求值再并起来,<code>[T] extends [U]</code> 就是这个 map 的<strong>关闭开关</strong>;<strong>映射类型是对对象的 map</strong>,而 <code>as</code> 子句同时充当 map 和 filter(返回 <code>never</code> 就是滤掉)。</p>
+<p>前面几个小节各自讲了一种形态,合起来是一门小语言。把它和值层的 JavaScript 逐项对上,读别人的 <code>.d.ts</code> 就从「猜」变成了「读」:<strong>类型别名是函数</strong>,类型参数是形参,别名右边是函数体,<code>Foo&lt;X&gt;</code> 是调用;<strong>条件类型是 if</strong>,<code>T extends U ? A : B</code> 就是三元运算符;<strong>递归是循环</strong>,没有 for,只能靠别名调用自己,循环变量写成额外的类型参数;<strong>infer 是解构</strong>,在一个结构模式里挖坑,匹配成功就把对应位置绑给坑里的名字;<strong>分配律是 map</strong>,裸类型参数遇到联合会自动逐成员求值再并起来,<code>[T] extends [U]</code> 就是这个 map 的<strong>关闭开关</strong>;<strong>映射类型是对对象的 map</strong>,而 <code>as</code> 子句同时充当 map 和 filter(返回 <code>never</code> 就是滤掉)。</p>
 <table style="contain-intrinsic-size:auto 443px">
 <thead><tr><th class="nw">值层的写法</th><th>类型层的对应物</th><th>注意</th></tr></thead>
 <tbody>
@@ -3782,7 +3882,7 @@ toolbox.ts(13,18): error TS2344: Type <span>'false'</span> does not satisfy the 
 
 <section class="chapter" style="contain-intrinsic-size:auto 56663px;--thin-h:28064px">
 <h1 id="c6"><span class="part">类型设计</span>类型设计与不健全性</h1>
-<p>类型写得出来不等于写得对。<a href="#f9-basics">1.1</a> 到 <a href="#f9-advanced">5.1</a> 讲的是「能怎么写」,这一章回答两个更实际的问题:同一份数据有很多种类型写法,哪一种才是对的;以及类型检查通过之后,编译器到底担保了什么、没担保什么。两件事看着无关,其实是同一枚硬币的两面——类型设计得越紧,能被编译器挡住的错就越多;而无论设计得多紧,总有一批错误 TypeScript 结构性地挡不住,你得知道它们叫什么、长什么样、拿什么兜底。</p>
+<p>类型写得出来不等于写得对。<a href="#f9-basics">1.1</a> 到 <a href="#f9-advanced">5.1</a> 讲的是「能怎么写」,这一章回答两个更实际的问题:同一份数据有很多种类型写法,哪一种才是对的;以及类型检查通过之后,编译器到底担保了什么、没担保什么。两件事看着无关,实际上是同一枚硬币的两面——类型设计得越紧,能被编译器挡住的错就越多;而无论设计得多紧,总有一批错误 TypeScript 结构性地挡不住,你得知道它们叫什么、长什么样、拿什么兜底。</p>
 <p>四节按这个顺序排。<a href="#f9-design">6.1</a> 给一条可操作的标准:<strong>写错的代码还能不能被写出来</strong>;围绕它展开的是让非法状态无法表示、优先联合而非一堆可选字段、对输入宽容对输出严格、错误处理的四种模式,每条都配一个能跑的对照示例。<a href="#f9-design-items">6.2</a> 把这条标准落成十条能当场照做的条款,从「别把 null 塞进类型别名」到「用 <code>Record</code> 让值跟着类型走」,每条都是反例一行、正例一行。<a href="#f9-design-unsound">6.3</a> 是这条标准的天花板:TypeScript 的设计目标里明确写着不追求可证明的类型安全,于是留下一批可以逐条列举的口子——数组越界、方法参数双变、可选属性、<code>any</code> 的传染、<code>as</code> 与 <code>!</code>;<a href="#f9-design-assert">6.4</a> 接着列更难防的一批:收窄失效、<code>Object.keys</code>、结构类型的例外、第三方声明说谎。每个口子都给一段编译通过、一跑就崩的代码,再给能上锁的开关或写法。想清楚类型该长什么样之后,把它接到外部数据上的运行时校验在 <a href="#f9-runtime-ex">7.3</a>,能落到 tsconfig 上的那些开关在 <a href="#f9-config">8.1</a>。</p>
 <h2 id="f9-design">6.1 类型设计:让非法状态无法表示</h2>
 <p>前面几章讲的是「类型系统提供了什么」。这一节讲一件更实际的事:同一份数据有很多种类型写法,哪一种才是对的。判断标准只有一个,而且可操作:<strong>写错的代码还能不能被写出来</strong>。如果一段不该存在的状态在类型层面根本拼不出来,那么围绕它的所有防御式判断都可以删掉;如果能拼出来,那么每一个消费这份数据的地方都得自己防一遍,而且总有一处会忘。</p>
@@ -3910,7 +4010,7 @@ x
 <p>解读:编译零报错,派生出的三个类型都没有手写一个字段名。给 <code>Row</code> 加一个 <code>createdAt: number</code>,<code>NewRow</code> 自动多一个字段、<code>RowKey</code> 自动多一个成员,而 <code>nr</code> 那行会立刻报「缺少属性 createdAt」——这正是你想要的提醒。如果 <code>NewRow</code> 是手抄的,加字段后一切照常编译,漏填要到运行时才发现。</p>
 <div class="deep"><h3 class="deep">用可选 never 建模互斥:XOR 型的字段</h3>
 <p>判别联合要求有一个显式的判别字段(<code>status</code>、<code>kind</code>、<code>mode</code>),但有一类需求没有这个字段可用:两个属性<strong>必须二选一</strong>,而调用方习惯直接写 <code>href</code> 或 <code>onClick</code>,不想额外写一个 <code>kind: "link"</code>。做法是给联合的每一支<strong>显式禁掉另一支的字段</strong>——写 <code>onClick?: never</code>。<code>never</code> 是空类型,只有 <code>undefined</code>(因为带 <code>?</code>)能赋进去,于是「同时给两个」在两支上都不成立,报 TS2322;「一个都不给」也在两支上都不成立,报缺属性。收窄靠的是 <code>l.href !== undefined</code> 这样的普通判断,不需要判别字段。</p>
-<p>这个写法的代价要看清楚:每加一支,所有其它支都要多写一行 <code>never</code>,支数一多就是 n² 条声明——所以它只适合<strong>两三支</strong>的互斥。超过这个规模,老实加一个判别字段更划算,报错信息也短得多(<code>?: never</code> 的失败报错会把所有支都列出来)。type-fest 里的 <code>MergeExclusive</code> 是这个模式的通用版,原理一样。React 组件的 props 是最常见的用武之地:<code>as="a"</code> 时要 <code>href</code>、<code>as="button"</code> 时要 <code>onClick</code>,不想让使用者两个都传。</p>
+<p>这个写法的代价要看清楚:每加一支,所有其它支都要多写一行 <code>never</code>,支数一多就是 n² 条声明——所以它只适合<strong>两三支</strong>的互斥。超过这个规模,加一个判别字段更划算,报错信息也短得多(<code>?: never</code> 的失败报错会把所有支都列出来)。type-fest 里的 <code>MergeExclusive</code> 是这个模式的通用版,原理一样。React 组件的 props 是最常见的用武之地:<code>as="a"</code> 时要 <code>href</code>、<code>as="button"</code> 时要 <code>onClick</code>,不想让使用者两个都传。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 646px"><code><span class="cm">// xor.ts —— Item 63:用可选 never 属性建模互斥</span>
 export {};
 
@@ -3957,7 +4057,7 @@ function move(p: Point, d: Vector): Point { <span class="kw">return</span> { x: 
 <span class="cm">// 等价于:声明 x/y 两个字段 + 在构造函数里 this.x = x; this.y = y;</span></code></pre>
 <pre style="contain-intrinsic-size:auto 87px"><code>$ npx tsc --noEmit --strict --erasableSyntaxOnly point.ts
 point.ts:2:15 - error TS1294: This syntax is not allowed when <span>'erasableSyntaxOnly'</span> is enabled.</code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 参数属性是「会产出运行时代码」的 TS 私有语法</span><p>它擦不掉——编译器要生成赋值语句,所以只剥类型的转译器(Node 的 <code>--experimental-strip-types</code>、部分 bundler 配置)会直接拒绝,<code>erasableSyntaxOnly</code> 打开后报 TS1294(见 <a href="#f9-runtime">7.1</a>)。写库、写要在 Node 里直接跑的 <code>.ts</code>,或者想保留换转译器的自由,就<strong>老实写字段声明加赋值</strong>;只在已经吃定 <code>tsc</code>/Babel 的应用代码里用它。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 参数属性是「会产出运行时代码」的 TS 私有语法</span><p>它擦不掉——编译器要生成赋值语句,所以只剥类型的转译器(Node 的 <code>--experimental-strip-types</code>、部分 bundler 配置)会直接拒绝,<code>erasableSyntaxOnly</code> 打开后报 TS1294(见 <a href="#f9-runtime">7.1</a>)。写库、写要在 Node 里直接跑的 <code>.ts</code>,或者想保留换转译器的自由,就<strong>写字段声明加赋值</strong>;只在已经吃定 <code>tsc</code>/Babel 的应用代码里用它。</p></div>
 <h3>对输入宽容,对输出严格</h3>
 <p>这条规矩说的是同一个函数的两端应该用不同的宽严标准。<strong>参数尽量宽</strong>:只声明你真正用到的那部分形状,别要求整个实体;数组参数标 <code>readonly T[]</code>,对象参数标 <code>readonly</code> 属性,这样调用方传可变的也行、传不可变的也行,而且签名同时承诺了「我不会改你的东西」。上面例子里的 <code>firstTag</code> 就是这么写的:它不关心 <code>id</code> 和 <code>name</code>,于是不要求。<strong>返回值尽量窄</strong>:别为了「以后可能变」而返回 <code>string | undefined</code>——如果这个函数当下不可能返回 <code>undefined</code>,就返回 <code>string</code>,让调用方少写一层判断;别返回 <code>any</code>,也别返回宽到需要调用方立刻收窄的联合。</p>
 <p>一个常见的反向操作是「返回值用 <code>readonly</code>、参数用可变」,那正好把两端都搞反了:调用方拿到只读结果反而不好用,而可变参数意味着函数保留了改调用方数据的权利。判断办法是看数据流向——进来的东西你只读,出去的东西读者要用,所以进来的类型放宽、出去的类型收紧。</p>
@@ -4246,7 +4346,7 @@ sync.ts(10,7): error TS2741: Property <span>'onClick'</span> is missing in type 
 <tr><td class="nw">Item 32 别名里塞 null</td><td><code>type User = {…} &#124; null</code></td><td>别名不含 null,用处写 <code>User &#124; null</code></td><td>每处都要判空,包括已经判过的</td></tr>
 <tr><td class="nw">Item 33 把 null 推到边缘</td><td><code>[number &#124; undefined, number &#124; undefined]</code></td><td><code>[number, number] &#124; null</code></td><td>4 种组合里 2 种是垃圾状态</td></tr>
 <tr><td class="nw">Item 36 哨兵值</td><td><code>indexOf</code> 的 <code>-1</code> 直接往下传</td><td>边界上翻译成 <code>number &#124; null</code></td><td><code>-1</code> 当下标用,类型系统零反应</td></tr>
-<tr><td class="nw">Item 17 数字索引签名</td><td><code>{ [k: number]: T }</code></td><td>数组、元组、<code>Record&lt;string, T&gt;</code> 或 <code>Map</code></td><td><code>for...in</code> 的键其实是 string,类型对不上</td></tr>
+<tr><td class="nw">Item 17 数字索引签名</td><td><code>{ [k: number]: T }</code></td><td>数组、元组、<code>Record&lt;string, T&gt;</code> 或 <code>Map</code></td><td><code>for...in</code> 的键是 string,类型对不上</td></tr>
 <tr><td class="nw">Item 21 分步拼装</td><td><code>const p = {} as Pt</code> 再逐个赋</td><td>一次写全,或中间态标 <code>Partial&lt;Pt&gt;</code></td><td><code>as</code> 把整个对象的字段检查跳过了</td></tr>
 <tr><td class="nw">Item 37 可选属性太多</td><td>三个可选字段 = 8 种组合</td><td>相关字段包一层 / 拆判别联合 / 给默认值改必填</td><td>组合里绝大多数没人测过</td></tr>
 <tr><td class="nw">Item 38 同类型重复参数</td><td><code>drawRect(x, y, w, h)</code></td><td><code>drawRect({ origin, size })</code></td><td>顺序传反,类型全对得上</td></tr>
@@ -4869,7 +4969,7 @@ lock.ts(5,13): error TS18048: <span>'first'</span> is possibly <span>'undefined'
 lock.ts(9,5): error TS2379: Argument of type <span>'{ timeout: undefined; }'</span> is not assignable to parameter of type <span>'Options'</span> with <span>'exactOptionalPropertyTypes: true'</span>. Consider adding <span>'undefined'</span> to the types of the target<span>'s properties.</span>
 lock.ts(12,17): error TS4111: Property <span>'NODE_ENV'</span> comes from an index signature, so it must be accessed with [<span>'NODE_ENV'</span>].</code></pre>
 <p>解读:同一份代码,两次编译的差别就是这一章后半段的价值——三个真实存在的运行时风险(越界的 undefined、被显式 undefined 冲掉的默认值、拼错也不报的环境变量名)在默认配置下全部静默。新项目第一天就把这三个开关加上,代价接近零;老项目一次开会得到成百上千条报错,正确做法是先只在新代码目录里开(第二份 tsconfig 或 project references,见 <a href="#f9-decl">8.3</a>),存量目录排期慢慢清。注意这三个开关只管你自己写的代码——<code>lock.ts</code> 里的 <code>env</code> 如果换成从网络拿回来的 JSON,任何编译选项都救不了它,那是 <a href="#f9-runtime">7.1</a> 的事。</p>
-<p>这一章学到什么程度算够,有两个可检验的标志。一是<strong>看到一个类型定义能立刻说出它松在哪</strong>:给你一个 <code>interface</code>,你能指出哪两个字段其实是绑定的、哪个 <code>string</code> 其实只有五个取值、哪个可选字段其实该是联合的一支。二是<strong>看到一处崩溃能猜到是哪个口子</strong>:<code>Cannot read properties of undefined</code> 先想下标和可选属性,<code>x.foo is not a function</code> 先想 <code>as</code> 和第三方声明,<code>NaN</code> 先想 any 从哪里进来的,<code>this</code> 是 undefined 先想方法被摘下来当回调传了。这两件事都不需要背,把这一章的两个完整示例(两版请求状态、四种错误处理)自己敲一遍,再把速查表当 checklist 用在自己项目的一个模块上,基本就有感觉了。</p>
+<p>这一章学到什么程度算够,有两个可检验的标志。一是<strong>看到一个类型定义能立刻说出它松在哪</strong>:给你一个 <code>interface</code>,你能指出哪两个字段是绑定的、哪个 <code>string</code> 只有五个取值、哪个可选字段该是联合的一支。二是<strong>看到一处崩溃能猜到是哪个口子</strong>:<code>Cannot read properties of undefined</code> 先想下标和可选属性,<code>x.foo is not a function</code> 先想 <code>as</code> 和第三方声明,<code>NaN</code> 先想 any 从哪里进来的,<code>this</code> 是 undefined 先想方法被摘下来当回调传了。这两件事都不需要背,把这一章的两个完整示例(两版请求状态、四种错误处理)自己敲一遍,再把速查表当 checklist 用在自己项目的一个模块上,基本就有感觉了。</p>
 <p>接下来去 <a href="#f9-runtime">7.1</a>。这一章反复出现的那句「进程边界上的数据任何编译选项都救不了」,在那一章有正面回答:类型擦除之后产物里到底剩什么,zod 这类校验库怎么让类型从 schema 推出来而不是手写两遍,OpenAPI 怎么让服务端契约直接变成前端类型。等这道防线也建起来,再回到 <a href="#f9-config">8.1</a> 把开关一次配齐,这一章列出的口子就锁得差不多了。</p></div>
 </section>
 
@@ -5769,7 +5869,7 @@ hash -&gt; a9993e36</code></pre>
 <tr><td class="nw"><code>import type</code></td><td>整行删除,运行时根本不会去加载那个模块</td><td>导入纯类型不写 <code>type</code>,打包器留下一个空模块引用;开 <code>verbatimModuleSyntax</code> 后必须显式写</td></tr>
 <tr><td class="nw">schema 优先</td><td>先写 zod schema,类型用 <code>z.infer&lt;typeof S&gt;</code> 推出来,校验与类型只有一个来源</td><td>interface 和类型守卫各写一份,改一处忘一处,守卫悄悄放行脏数据</td></tr>
 <tr><td class="nw"><code>parse</code> 与 <code>safeParse</code></td><td>前者失败抛 <code>ZodError</code>,后者返回 <code>{ success }</code> 可辨识联合</td><td>在渲染路径上用 <code>parse</code> 让整页崩;或者拿到 <code>safeParse</code> 结果不判 <code>success</code> 就取 <code>data</code></td></tr>
-<tr><td class="nw">输入类型与输出类型</td><td>有 <code>.default()</code>/<code>z.coerce</code>/<code>.transform()</code> 时两者不同,<code>z.input</code> 与 <code>z.infer</code> 分别取</td><td>把 <code>z.infer</code> 当成请求体的类型,漏掉了那些其实可以省略的字段</td></tr>
+<tr><td class="nw">输入类型与输出类型</td><td>有 <code>.default()</code>/<code>z.coerce</code>/<code>.transform()</code> 时两者不同,<code>z.input</code> 与 <code>z.infer</code> 分别取</td><td>把 <code>z.infer</code> 当成请求体的类型,漏掉了那些可以省略的字段</td></tr>
 <tr><td class="nw">从 OpenAPI 生成</td><td>openapi-typescript 把 YAML 变成 <code>paths</code>/<code>components</code>,openapi-fetch 让路径与参数受查</td><td>手抄一遍后端契约;生成的文件不进 CI 校验,悄悄和文档脱节</td></tr>
 <tr><td class="nw">装饰器有两套且不兼容</td><td>标准装饰器 <code>(value, context)</code> 免开关;旧的 <code>(target, key, descriptor)</code> 要 <code>experimentalDecorators</code></td><td>一个项目里混用两套;以为标准装饰器也有参数装饰器和 <code>emitDecoratorMetadata</code></td></tr>
 <tr><td class="nw">装饰器没有原生实现</td><td>截至 TypeScript 7 / Node 24 没有引擎原生支持,一律要过转译器</td><td>把带 <code>@</code> 的代码直接交给 Node 原生运行 <code>.ts</code>,拿到 SyntaxError</td></tr>
@@ -6789,7 +6889,7 @@ index.d.ts  index.d.ts.map  index.js</code></pre>
 </table>
 <div class="note ok" style="contain-intrinsic-size:auto 294px"><span class="t">🟢 类型检查和单元测试各管什么</span><p>两者不是替代关系,分工很清楚。<strong>类型检查管「形状对不对」</strong>:参数少传了、字段名拼错了、返回值形状变了、某个分支忘了处理——这类错误不需要构造数据、不需要跑,保存文件就知道,而且覆盖的是<strong>所有</strong>调用点。<strong>单元测试管「算得对不对」</strong>:边界值、算法正确性、副作用顺序、错误路径的实际行为——这些类型一个都表达不了。实践上的推论有两条:一,别写「测试参数类型不对时会怎样」这种测试,那是编译器的活,而且在 TS 里根本调用不到;二,类型能表达的约束就别写成运行时断言,把 <code>if (typeof x !== "string") throw</code> 这类校验留给<strong>边界</strong>(<a href="#f9-runtime">7.1</a>),内部函数信任类型。一个好用的判据:这个测试如果因为「类型改了」而失败,它就该是类型测试;因为「行为改了」而失败,才是单元测试。</p></div>
 <h3>类型测试:@ts-expect-error、expect-type 与 CI</h3>
-<p>类型也是代码,也会被改坏,尤其是库导出的泛型签名和工具类型。测它们的手段有两层。第一层是 <code>@ts-expect-error</code>:它断言「下一行<strong>必须</strong>有类型错误」,如果那行其实没错,编译器报 <code>TS2578: Unused '@ts-expect-error' directive</code>。这就把「不该编译通过的代码」变成了可执行的断言,而且是零依赖的。</p>
+<p>类型也是代码,也会被改坏,尤其是库导出的泛型签名和工具类型。测它们的手段有两层。第一层是 <code>@ts-expect-error</code>:它断言「下一行<strong>必须</strong>有类型错误」,如果那行没错,编译器报 <code>TS2578: Unused '@ts-expect-error' directive</code>。这就把「不该编译通过的代码」变成了可执行的断言,而且是零依赖的。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code><span class="cm">// src/tsx1.ts</span>
 export function <span class="kw">double</span>(n: number): number {
   <span class="kw">return</span> n * 2;
@@ -6849,7 +6949,7 @@ export interface CsvBuffer {          <span class="cm">// 名字随便起,结构
 export declare function parseCsv(contents: string | CsvBuffer): Row[];</code></pre>
 <pre style="contain-intrinsic-size:auto 87px"><code>$ npx tsc --noEmit --strict consumer.ts     # 使用者传真正的 Buffer
 （无输出:Buffer 有 toString(encoding?: string),结构上满足 CsvBuffer)</code></pre>
-<p>判断标准:<strong>你用到的成员少、平台类型包很大,就镜像;你用到的是整个结构、或者本来就是 Node 专用库,就老实依赖</strong>。镜像的代价是使用者传错东西时报错信息里出现的是你的 <code>CsvBuffer</code> 而不是 <code>Buffer</code>,以及真实类型改了你不会知道——所以只镜像稳定的老接口。</p>
+<p>判断标准:<strong>你用到的成员少、平台类型包很大,就镜像;你用到的是整个结构、或者本来就是 Node 专用库,就直接依赖</strong>。镜像的代价是使用者传错东西时报错信息里出现的是你的 <code>CsvBuffer</code> 而不是 <code>Buffer</code>,以及真实类型改了你不会知道——所以只镜像稳定的老接口。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 判断一个 .d.ts 有没有拖别人下水</span><p>装上你的库之后跑 <code>npx @arethetypeswrong/cli --pack .</code> 看类型解析,再翻一遍产出的 <code>.d.ts</code> 里的 <code>import</code>:凡是指向 <code>node:*</code>、<code>@types/*</code> 的,问一句「使用者非装不可吗」。库的 <code>package.json</code> 里,真正必需的类型包要放 <code>dependencies</code>(不是 <code>devDependencies</code>),否则使用者装完你的库仍然报 TS2307;能镜像掉的就不该出现在任何一边。</p></div></div>
 <h2 id="f9-sum">8.6 小结:本章要点与易错清单</h2>
 <p>这一章的五节把 TypeScript 从「一门语言」变成「一条能进 CI 的流水线」。<a href="#f9-config">8.1</a> 管一个项目此刻的配置,主线是<strong>检查与产出是两条分开的流水线</strong>:<code>tsc</code> 和编辑器语言服务读整个项目、建类型图、只报错不产文件;esbuild/Oxc 逐文件把类型语法剥掉、根本不看类型、有错也照样产出。想明白这一条,「本地 dev 一切正常、CI 的 <code>npm run build</code> 挂在第一步」就不再是玄学,<code>tsc &amp;&amp; vite build</code> 这个脚本的存在意义也就清楚了。<a href="#f9-decl">8.3</a> 管类型跨过包的边界:编译器解析 <code>import "lib"</code> 的类型侧走的是另一套规则,先看 <code>exports</code> 里命中条件下的 <code>types</code>,再看顶层 <code>types</code>,再看同名 <code>.d.ts</code>,最后才是 <code>@types/*</code>;这条链只要断在任何一环,就是那条见得最多的 TS7016。<a href="#f9-config-ref">8.2</a> 是那份配置的完整参考:按用途分组的补充选项、按 TypeScript 版本入场的新选项与新检查、被弃用的老选项,以及用数组 <code>extends</code> 加 <code>${configDir}</code> 组织多包配置的写法。<a href="#f9-decl-migrate">8.4</a> 管一段时间里的演进:存量 JS 一档一档收紧到 <code>strict</code>;<a href="#f9-decl-perf">8.5</a> 管长大之后的成本:检查慢了先量再改,类型工具要有测试、any 的比例要有阈值。</p>
@@ -6858,8 +6958,8 @@ export declare function parseCsv(contents: string | CsvBuffer): Row[];</code></p
 <thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
 <tbody>
 <tr><td class="nw">两条流水线</td><td><code>tsc</code>/语言服务做检查不产出;esbuild/Oxc 逐文件剥类型不检查</td><td>「dev 页面能跑所以没错」,到 CI 的 <code>tsc &amp;&amp; vite build</code> 才炸</td></tr>
-<tr><td class="nw"><code>strict</code></td><td>一次打开八个开关(<code>noImplicitAny</code>、<code>strictNullChecks</code> 等);TypeScript 6.0 起默认 true,5.x 必须显式写</td><td>5.x 项目没写 <code>strict</code>,「全部通过」其实什么都没查</td></tr>
-<tr><td class="nw"><code>target</code> 与 <code>lib</code></td><td><code>target</code> 只降<strong>语法</strong>不补 API;<code>lib</code> 决定编译器认识哪些全局名字</td><td><code>toSorted</code> 报「不存在」,其实是 <code>lib</code> 里少了 ES2023;以为 <code>target</code> 会帮你 polyfill</td></tr>
+<tr><td class="nw"><code>strict</code></td><td>一次打开八个开关(<code>noImplicitAny</code>、<code>strictNullChecks</code> 等);TypeScript 6.0 起默认 true,5.x 必须显式写</td><td>5.x 项目没写 <code>strict</code>,「全部通过」什么都没查</td></tr>
+<tr><td class="nw"><code>target</code> 与 <code>lib</code></td><td><code>target</code> 只降<strong>语法</strong>不补 API;<code>lib</code> 决定编译器认识哪些全局名字</td><td><code>toSorted</code> 报「不存在」,实际上是 <code>lib</code> 里少了 ES2023;以为 <code>target</code> 会帮你 polyfill</td></tr>
 <tr><td><code>module</code> / <code>moduleResolution</code></td><td>打包器项目用 <code>ESNext</code> + <code>bundler</code>;直接跑在 Node 上用 <code>nodenext</code></td><td>还留着 <code>moduleResolution: node</code>,编辑器一片 Cannot find module 而 Vite 跑得好好的</td></tr>
 <tr><td class="nw"><code>paths</code></td><td>只影响类型解析,对运行时零作用</td><td>打包器那边忘了配同样的 alias,类型能过、运行时找不到模块</td></tr>
 <tr><td class="nw"><code>tsc</code> 的退出码</td><td><code>noEmitOnError</code> 默认 false,有错也照样产出 JS</td><td>看到生成了文件就以为检查通过;判断标准只有退出码</td></tr>
@@ -6879,7 +6979,7 @@ export declare function parseCsv(contents: string | CsvBuffer): Row[];</code></p
 <tr><td class="nw">barrel 文件</td><td>一个 <code>index.ts</code> re-export 全部子模块,引一个就把全部拉进程序</td><td>仓库内部互相引用走 barrel,<code>Files</code> 从 66 涨到 365,几千模块的仓库就是几十秒</td></tr>
 <tr><td class="nw">增量与 monorepo</td><td><code>incremental</code> + <code>tsBuildInfoFile</code>;多包用 <code>composite</code> + project references</td><td>每次全量重跑;或者明明只有编辑器慢,却去调命令行的配置</td></tr>
 <tr><td class="nw">类型测试进 CI</td><td>把 <code>*.test-d.ts</code> 纳入 <code>include</code>,<code>tsc --noEmit</code> 就是执行器</td><td>类型工具没有测试,某天「本该报错的地方不报了」也没人发现</td></tr>
-<tr><td class="nw">编辑器与命令行不一致</td><td>VS Code 默认用自带的 TypeScript,要切到「使用工作区版本」</td><td>两边报错对不上,来回猜是谁的问题,其实是两个版本</td></tr>
+<tr><td class="nw">编辑器与命令行不一致</td><td>VS Code 默认用自带的 TypeScript,要切到「使用工作区版本」</td><td>两边报错对不上,来回猜是谁的问题,实际上是两个版本</td></tr>
 </tbody>
 </table>
 <div class="deep"><h3>完整示例:一份起步用的 tsconfig 与三条检查命令</h3>

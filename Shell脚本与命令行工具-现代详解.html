@@ -197,7 +197,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">Shell 脚本与命令行工具</div>
 <details><summary><a class="ch" href="#b1">第 1 章 Shell 是什么：从登录到执行一条命令</a></summary>
-<a class="sec" href="#b1-classics">1.0 相关经典书籍</a>
+<a class="sec" href="#b1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#b1-role">1.1 shell 的角色：你和内核之间的翻译官</a>
 <a class="sec" href="#b1-family">1.2 sh、bash、dash、zsh：一份家谱</a>
 <a class="sec" href="#b1-modes">1.3 交互式与非交互式、登录与非登录</a>
@@ -281,31 +281,113 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 23160px;--thin-h:23160px">
+<section class="chapter" style="contain-intrinsic-size:auto 27598px;--thin-h:27598px">
 <h1 id="b1"><span class="part">第 1 章</span>Shell 是什么：从登录到执行一条命令</h1>
-<h2 id="b1-classics">1.0 相关经典书籍</h2>
-<p>Shell 脚本与命令行的经典,涵盖「可移植脚本 / 文本处理 / 命令行入门」:</p>
-<table style="contain-intrinsic-size:auto 287px">
-<thead><tr><th>书</th><th class="nw">定位</th><th>特点(含局限)</th></tr></thead>
+<h2 id="b1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>shell 的本职是<strong>编排进程</strong>：把命令连成管道、批量处理文件、把互不相识的工具粘在一起。它在这件事上无可替代，代价是几乎所有语言特性都围绕「文本」这一种数据展开，写错了不报错，只是悄悄换成另一种结果。<strong>本书讲清这套文本模型怎么运作，以及每一处展开与引用各在什么条件下失效。</strong></p>
+<p>「Shell 脚本」是个统称，动手时必须选一个具体的 shell。<strong>本书以 bash 为准</strong>，因为它是绝大多数 Linux 发行版的默认登录 shell，也是别人说「写个 shell 脚本」时默认指的那一个。数组、关联数组、<code>[[ ]]</code> 与大部分参数展开都是 bash 的能力，标准的 POSIX <code>sh</code> 并不具备，凡涉及可移植性之处书中逐处标注。</p>
+<h3>这个领域有哪些资料</h3>
+<p>shell 的资料多而杂，难点不在找不到，而在过时的写法和现行的写法混在一起，且都能跑通。下表按类型排开。<strong>锚定</strong>指本书的骨架或写法从它来，<strong>参考</strong>指写作时查证过但没有影响结构，<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 913px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
 <tbody>
-<tr><td>Robbins & Beebe《经典 Shell 脚本编程》(Classic Shell Scripting)</td><td class="nw">进阶·首选</td><td>可移植 shell 脚本的正统,工程化讲得最正。<strong>局限</strong>:偏传统 UNIX 工具,不含 ripgrep/fd 等现代替代。</td></tr>
-<tr><td>Dougherty & Robbins《sed 与 awk》(第 2 版)</td><td class="nw">进阶</td><td>文本处理双雄的专著,awk 当小语言学的正源。<strong>局限</strong>:窄而深,只讲这两个工具。</td></tr>
-<tr><td>William Shotts《Linux 命令行大全》(第 2 版)</td><td class="nw">入门·免费</td><td>命令行整体入门最佳,官网有免费 PDF。<strong>局限</strong>:入门向,脚本工程化较浅。</td></tr>
-<tr><td>Daniel Barrett《高效 Linux 命令行》</td><td class="nw">进阶</td><td>2022 新书,讲命令组合思维而非罗列。<strong>局限</strong>:重效率技巧,非参考手册。</td></tr>
+<tr><td>Robbins 与 Beebe《经典 Shell 脚本编程》（Classic Shell Scripting）</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>可移植脚本的正统：POSIX 工具集与工程化写法讲得最正。局限：偏传统 UNIX 工具，bash 独有能力讲得少，不含现代替代工具</td></tr>
+<tr><td>Newham 与 Rosenblatt《Learning the bash Shell》</td><td class="nw">经典教材</td><td class="nw">参考</td><td>bash 语法的系统入门，交互式用法与脚本用法都覆盖。局限：成书较早，数组与关联数组、新版本特性覆盖不全</td></tr>
+<tr><td>Dougherty 与 Robbins《sed 与 awk》</td><td class="nw">进阶专题</td><td class="nw">锚定</td><td>把 awk 当一门小语言讲的正源，sed 的执行周期讲得最清楚。局限：窄而深，只讲这两个工具，与 shell 本身的配合要自己接</td></tr>
+<tr><td>Shotts《Linux 命令行大全》</td><td class="nw">经典教材</td><td class="nw">推荐</td><td>命令行整体入门里最好的一本，官网有免费电子版。局限：入门向，脚本工程化偏浅</td></tr>
+<tr><td>Barrett《高效 Linux 命令行》</td><td class="nw">进阶专题</td><td class="nw">推荐</td><td>讲命令的组合思维而不是逐条罗列，补的是「怎么把工具串起来想问题」。局限：重技巧，不是参考手册</td></tr>
+<tr><td>Cooper《Advanced Bash-Scripting Guide》</td><td class="nw">在线资料</td><td class="nw">参考</td><td>例子极多，冷门语法几乎都能查到。局限：部分写法已过时，反引号、单方括号测试、遍历 <code>ls</code> 输出这类例子照抄会出问题</td></tr>
+<tr><td>GNU Bash 官方手册（Bash Reference Manual）</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>一手来源：展开顺序、引用规则、内建命令的语义以它为准，并标出各版本新增。局限：体例像法条，只给定义不给场景</td></tr>
+<tr><td>POSIX.1 的 Shell 与 Utilities 卷</td><td class="nw">规范</td><td class="nw">锚定</td><td>判定「这个写法在 dash、busybox 上还成不成立」的唯一依据。局限：只定义最小公共集，bash 的大部分便利语法都不在其中</td></tr>
+<tr><td>GNU coreutils 与各工具的 man / info 文档</td><td class="nw">参考手册</td><td class="nw">参考</td><td>选项的准绳，GNU 与 BSD 的差异靠它比对。局限：按工具切片，不讲工具之间怎么配合</td></tr>
+<tr><td>ShellCheck</td><td class="nw">工具与在线资料</td><td class="nw">锚定</td><td>既是静态检查工具，也是一份带解释的写法规范：每条告警都有独立的说明页，写清了什么输入会触发问题。局限：只查得出模式化的问题，逻辑错误查不出来</td></tr>
+<tr><td>Raymond《UNIX 编程艺术》</td><td class="nw">进阶专题</td><td class="nw">推荐</td><td>解释命令行工具为什么长成这样，读懂管道与小工具背后的取舍。局限：讲设计取向，不给具体写法</td></tr>
+<tr><td>Google Shell Style Guide</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>团队协作时可以直接采用的一份现成约定。局限：是约定不是规范，个别条款与本书取舍不同，采用前要统一口径</td></tr>
 </tbody>
 </table>
-
-<div class="note ok" style="contain-intrinsic-size:auto 274px">
-<span class="t">先说清本书的立场：以 bash 为准</span>
-<p>「Shell 脚本」是个统称。真正动手时你必须选一个具体的 shell，本书选 <strong>bash</strong>——因为它是绝大多数 Linux 发行版的默认登录 shell，也是别人说「写个 shell 脚本」时默认指的那一个。书中的数组、关联数组、<code>[[ ]]</code>、以及大部分参数展开语法，都是 bash 的能力，标准的 POSIX <code>sh</code> 并不具备。</p>
-<p>凡是涉及<strong>可移植性</strong>的地方，本书会明确标注。最值得先记住的一条：<strong>Ubuntu 上的 <code>/bin/sh</code> 其实是 dash，不是 bash</strong>——所以脚本开头写 <code>#!/bin/sh</code> 就只能用 POSIX 语法，一旦用了数组或 <code>[[ ]]</code> 就会报错。想用 bash 的能力，开头必须写 <code>#!/usr/bin/env bash</code>。这个坑下一节还会展开。</p>
-</div>
-
+<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 旧教程里解析 ls 输出的写法，遇到含空格的文件名就出错</span><p>网上的 shell 资料横跨三十年，过时的写法与现行的写法混在一起，而且在简单输入下都能跑通。最常见的三类是：用 <code>for f in $(ls)</code> 遍历文件、用反引号做命令替换、用单方括号做字符串测试。它们在文件名带空格、变量为空、内容含通配符时才暴露，暴露的形态往往是删错文件或改错内容。照抄之前过一遍 <code>shellcheck</code> 是成本最低的拦截手段，第 7.3 节讲怎么把它接进编辑器与 CI。</p></div>
+<h3>锚定的五样各借鉴了什么</h3>
+<p>借鉴的都是具体手法，不是笼统的风格。</p>
+<table style="contain-intrinsic-size:auto 476px">
+<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">Robbins 与 Beebe《经典 Shell 脚本编程》</td><td>「先把脚本写对，再谈写巧」这条主线：引用、退出码与错误处理排在语法技巧之前。第 7 章的组织顺序也从它来，先调试手段、再严格模式、再陷阱清单、最后给可复用的骨架</td></tr>
+<tr><td class="nw">Dougherty 与 Robbins《sed 与 awk》</td><td>第 5 章的切法：先给三种工具各自的数据模型（grep 看行、sed 看一个处理周期、awk 看字段），再讲语法。sed 按「一个周期」讲，不按命令字母表罗列</td></tr>
+<tr><td class="nw">GNU Bash 官方手册</td><td>展开顺序这条骨架：第 2 章按手册里的展开次序编排，而不是按「变量、字符串、算术」这种话题分类；引用规则与参数展开速查表的字段划分也照它</td></tr>
+<tr><td class="nw">POSIX Shell 与 Utilities 卷</td><td>「哪些写法是 POSIX 保证的、哪些是 bash 扩展」这条分界线。凡属 bash 扩展逐处标出，并给在 dash 上的替代写法，1.2 的家谱表与 bashism 对照表就是按这条线做的</td></tr>
+<tr><td class="nw">ShellCheck</td><td>陷阱表的组织方式：按「这段代码在什么输入下会出错」列，不按语法点列。7.4 的常见陷阱速查表与它的告警条目基本一一对得上，查到一条告警就能在书里找到对应的解释</td></tr>
+</tbody>
+</table>
+<h3>讲什么、不讲什么</h3>
+<p>本书覆盖<strong>写出一个能交给别人跑的 shell 脚本所需要的全部机制，以及日常命令行工具的选型</strong>，7 章 68 节。</p>
+<table style="contain-intrinsic-size:auto 296px">
+<thead><tr><th class="nw">章</th><th>主题</th><th>它回答的问题</th></tr></thead>
+<tbody>
+<tr><td class="nw">第 1 章</td><td>shell 是什么、启动文件与执行模型</td><td>一条命令从回车到进程退出经过了什么</td></tr>
+<tr><td class="nw">第 2 章</td><td>变量、引号与展开</td><td>为什么变量几乎总要加双引号</td></tr>
+<tr><td class="nw">第 3 章</td><td>流程控制、函数与数组</td><td>怎么写出有条件、有循环、有函数的脚本</td></tr>
+<tr><td class="nw">第 4 章</td><td>重定向、管道与进程</td><td>输出怎么分流，进程怎么串成流水线</td></tr>
+<tr><td class="nw">第 5 章</td><td>grep / sed / awk</td><td>同一份文本三种切法，什么时候用哪个</td></tr>
+<tr><td class="nw">第 6 章</td><td>常用命令行工具速查</td><td>手上这件事该用哪个命令、怎么用</td></tr>
+<tr><td class="nw">第 7 章</td><td>健壮脚本：调试、陷阱与实践</td><td>怎么让脚本在别人的机器上也不出事</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚，并指明归谁。</p>
+<table style="contain-intrinsic-size:auto 415px">
+<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td>zsh、fish 的特有语法与配置框架</td><td class="nw">各自的官方文档</td><td>本书以 bash 为准，1.2 给了家谱与差异，交互体验的话题不展开</td></tr>
+<tr><td>Python 与其他通用语言</td><td class="nw">各自的文档</td><td>7.10 给出该换语言的信号与逐条迁移对照，换过去之后归那边</td></tr>
+<tr><td>系统调用与内核机制：<code>fork</code>、<code>exec</code>、文件描述符的实现</td><td class="nw">《Linux 系统编程手册》</td><td>本书讲怎么用管道与重定向，那本讲它们在内核里怎么实现</td></tr>
+<tr><td>Windows 上的 <code>cmd</code> 与 PowerShell</td><td>《CMD 批处理 · 现代详解》《PowerShell · 现代详解》</td><td>三本合起来覆盖三种壳，本书只负责 bash 这一侧</td></tr>
+<tr><td>单个第三方工具的完整手册：git、docker、ffmpeg 等</td><td class="nw">各自的官方文档</td><td>第 6 章只收通用工具，给的是选型与最常用的几种形态</td></tr>
+<tr><td>发行版运维、容器与 CI 平台的配置</td><td class="nw">不在本书系范围</td><td>本书讲脚本本身，不讲它跑在哪、被谁调度</td></tr>
+</tbody>
+</table>
+<h3>读之前要会什么</h3>
+<p>本书的前置不高。必须那一档只要求你在终端里待过，最好有那一档也都是能当场验证的小事。</p>
+<table style="contain-intrinsic-size:auto 262px">
+<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>会打开一个终端并运行命令</td><td>进到某个目录，列出里面的文件，再回到上一级</td></tr>
+<tr><td class="nw">必须</td><td>看得懂文件路径与权限位</td><td>看 <code>ls -l</code> 输出的第一列，说出 <code>rwxr-xr--</code> 里三组各管谁</td></tr>
+<tr><td class="nw">必须</td><td>会用一个终端里的编辑器改文件并存盘</td><td>用 <code>nano</code> 或 <code>vim</code> 改掉一行内容，存盘退出，再确认改动生效</td></tr>
+<tr><td class="nw">最好有</td><td>写过任何一种脚本或程序</td><td>说出「变量」「条件」「循环」在你用过的那门语言里各是什么写法</td></tr>
+<tr><td class="nw">最好有</td><td>用过重定向或管道</td><td>说出 <code>cmd &gt; a 2&gt;&amp;1</code> 与 <code>cmd 2&gt;&amp;1 &gt; a</code> 的结果差别在哪</td></tr>
+<tr><td class="nw">最好有</td><td>知道进程与退出码是什么</td><td>说出一个放到后台的命令怎么找回来、怎么让它停下来</td></tr>
+</tbody>
+</table>
+<p>三样不需要：不需要懂 C 或系统调用，第 1.4 节只讲一条命令在 shell 这一侧看得见的部分；不需要有一台 Linux 服务器，示例在 WSL、macOS 或任何一台装了 bash 的机器上都能跑；不需要 root 权限，涉及系统改动的示例都单独标出。</p>
+<h3>与那些资料相比，本书多给了什么</h3>
+<ul>
+<li><strong>以 bash 为准，同时把可移植边界画出来。</strong>凡属 bash 扩展逐处标注，并给出在 dash 与 busybox 上的替代写法；1.2 用一张家谱表说清 sh、bash、dash、zsh、ash、ksh、fish 各是什么关系，以及哪一个不能拿来写脚本。</li>
+<li><strong>陷阱按「什么输入会让它出错」组织。</strong>不是列一串「注意事项」，而是给触发条件与暴露形态：文件名含空格、变量为空、内容含通配符、管道中间一段失败。7.4 把这些收成一张速查表。</li>
+<li><strong>教材与速查双结构。</strong>68 节里有 7 节是整节速查：参数展开、条件测试、重定向总表、工具分类表、陷阱对照等，全书 132 张表。顺读时它们是章末总结，查阅时它们是入口。</li>
+<li><strong>把静态检查当成写作的一部分。</strong>7.3 单独讲 <code>shellcheck</code> 怎么接进编辑器与 CI，书中示例按它的规则写；123 个批注里 43 个蓝色指现代替代、27 个黄色标过时写法，两色合起来占一半以上。</li>
+<li><strong>写清 bash 的天花板在哪。</strong>7.10 给出九条该换语言的信号，以及从 bash 到 Python 的逐条迁移对照，而不是把所有事都往 shell 里塞。</li>
+<li><strong>20 张图画的是执行模型与数据流</strong>：一条命令的一生、三个标准流的去向、管道的进程结构、sed 的一个处理周期。</li>
+</ul>
+<h3>两条读法：顺读与按需查</h3>
+<p>第一次写脚本走顺读，手上已经有一个不听话的脚本走按需查。</p>
+<table style="contain-intrinsic-size:auto 222px">
+<thead><tr><th>你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
+<tbody>
+<tr><td class="nw">第一次写 shell 脚本</td><td>第 1 章顺读到第 4 章，再按需取第 5、6 章</td><td class="nw">第 1、2、3 章</td><td class="nw">第 5、6 章</td></tr>
+<tr><td class="nw">会写一点，但脚本总出意外</td><td>直接读 2.4、3.10、7.2、7.4 四节</td><td class="nw">第 2、7 章</td><td class="nw">第 6 章</td></tr>
+<tr><td class="nw">主要在命令行上干活，不写脚本</td><td>第 5、6 章，再回头补第 4 章的管道与重定向</td><td class="nw">第 4、5、6 章</td><td class="nw">第 3、7 章</td></tr>
+<tr><td class="nw">脚本要交给别人跑</td><td>整章读第 7 章，重点 7.2、7.3、7.9</td><td class="nw">第 7 章</td><td>—</td></tr>
+<tr><td class="nw">只想查一个命令或写法</td><td>第 6 章的分类表，或各章末尾的速查节</td><td>—</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>主干是第 2 章。</strong>引用与展开是绝大多数 shell 事故的来源，第 3、4、5 章遇到的坑几乎都能追回到它的某一条规则。第 2 章之后，第 3.10 与第 7.2 这两节讲严格模式与 <code>trap</code>，是让脚本「失败就停」的开关，越早读越好。</p>
+<p>按需查有三个入口：<strong>6.1 先认结构再查表</strong>按工具类别查，<strong>7.4 常见陷阱速查表</strong>按现象查，各章末尾的速查节按机制查。第 6 章本身就是一本小型手册，不必顺读，用到哪一类翻哪一节。</p>
+<p>读完第 1 到 3 章，能写出带参数、条件、循环与函数的脚本，并让它在文件名含空格时不出错；读完第 4 章，能把日志与数据分流、能把几个工具串成流水线并正确取到每一段的退出码；读完第 5 章，能从一份日志里榨出统计而不必另写程序；读完第 7 章，能写出通过 <code>shellcheck</code>、可以重复跑、失败会立刻停下并清理现场的脚本。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 三本脚本书按目标机器分工，bash 负责 Linux 一侧</span><p>要在 Linux 或容器里编排进程、处理文本、串工具链，用 bash；要在任何一台 Windows 上不做配置就能跑，用批处理；要在 Windows 上处理结构化数据，用 PowerShell。三者互相调用的写法在各自书的第 1 章都有。同一件事选哪一种，判据是目标机器上有什么，不是哪一门语言更好写。</p></div>
 <h2 id="b1-role">1.1 shell 的角色：你和内核之间的翻译官</h2>
 
 <p>你打开终端，敲下 <code>ls -l</code>，回车，屏幕刷出一串文件名和权限位。这中间到底是谁在干活？</p>
 
-<p>很多人以为「终端窗口」就是系统本身。其实终端只是一块显示文字、收集按键的画布；真正读你这行字、把它变成一次程序执行的，是一个叫 <b>shell</b> 的普通程序。它没有任何特权，和 <code>ls</code>、<code>vim</code> 一样是跑在用户态的可执行文件（<code>/bin/bash</code> 通常一两 MB）。它的一生就是一个循环：</p>
+<p>很多人以为「终端窗口」就是系统本身。实际上终端只是一块显示文字、收集按键的画布；真正读你这行字、把它变成一次程序执行的，是一个叫 <b>shell</b> 的普通程序。它没有任何特权，和 <code>ls</code>、<code>vim</code> 一样是跑在用户态的可执行文件（<code>/bin/bash</code> 通常一两 MB）。它的一生就是一个循环：</p>
 
 <p>打印提示符 → 读你一行字 → 把这行字翻译成「执行某个程序」→ 等它跑完、拿到退出码 → 回到第一步。</p>
 
@@ -416,7 +498,7 @@ echo "${BASH_VERSION:-我不是 bash}"</code></pre>
 </tbody>
 </table>
 
-<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示：选一个，写清楚</span><p>不要纠结「要不要写得可移植」。做个决定并在 shebang 里说明：需要跑在容器 / 路由器 / 初始化脚本里，就老老实实写 POSIX 加 <code>#!/bin/sh</code>；否则大方写 <code>#!/usr/bin/env bash</code>，享受数组和 <code>[[ ]]</code>。真正的错误是「写着 sh 的头，用着 bash 的语法」。装一个 <code>shellcheck</code>，它会按你的 shebang 逐条指出越界用法。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 现代提示：选一个，写清楚</span><p>不要纠结「要不要写得可移植」。做个决定并在 shebang 里说明：需要跑在容器 / 路由器 / 初始化脚本里，就写 POSIX 加 <code>#!/bin/sh</code>；否则大方写 <code>#!/usr/bin/env bash</code>，享受数组和 <code>[[ ]]</code>。真正的错误是「写着 sh 的头，用着 bash 的语法」。装一个 <code>shellcheck</code>，它会按你的 shebang 逐条指出越界用法。</p></div>
 
 <div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 macOS 用户注意</span><p>macOS 自带的 <code>/bin/bash</code> 永远停留在 <b>3.2</b>（2007 年，因为之后 bash 改用 GPLv3 协议），没有关联数组、没有 <code>${var^^}</code>、没有 <code>readarray</code>。而系统默认登录 shell 早已是 zsh。要用现代 bash 就 <code>brew install bash</code>，它装在 <code>/opt/homebrew/bin/bash</code>——这正是下文推荐 <code>#!/usr/bin/env bash</code> 的直接原因。</p></div>
 
@@ -433,7 +515,7 @@ echo "${BASH_VERSION:-我不是 bash}"</code></pre>
 <tr><td class="nw"><code>==</code>(test 里)</td><td class="nw"><code>=</code></td><td>单等号才是标准</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 决策一句话 + 验证一条命令</span><p>先选阵营再动笔:<strong>要发行给未知环境(安装脚本、容器入口、CI 步骤)→ 老实写 POSIX,shebang 写 /bin/sh;只在自己可控的环境跑 → 大方写 bash,但 shebang 必须诚实地写 #!/usr/bin/env bash</strong>。最怕的是写着 sh 的头、用着 bash 的身。验证:<code>shellcheck --shell=sh 脚本</code> 会把每一处 bashism 点名(SC2039/SC3xxx 系),或直接拿 dash 跑一遍测试。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 决策一句话 + 验证一条命令</span><p>先选阵营再动笔:<strong>要发行给未知环境(安装脚本、容器入口、CI 步骤)→ 写 POSIX,shebang 写 /bin/sh;只在自己可控的环境跑 → 大方写 bash,但 shebang 必须诚实地写 #!/usr/bin/env bash</strong>。最怕的是写着 sh 的头、用着 bash 的身。验证:<code>shellcheck --shell=sh 脚本</code> 会把每一处 bashism 点名(SC2039/SC3xxx 系),或直接拿 dash 跑一遍测试。</p></div>
 
 <h2 id="b1-modes">1.3 交互式与非交互式、登录与非登录</h2>
 
@@ -1015,7 +1097,7 @@ $ ./check.sh /nope; echo "退出码=$?"
 
 <h3>机制：等号不是运算符，赋值是「一个词」</h3>
 
-<p>shell 拿到一行输入，第一件事是按空白把它切成若干个<strong>词</strong>，然后把第一个词当作命令名。<code>name = Alice</code> 被切成 <code>name</code>、<code>=</code>、<code>Alice</code> 三个词，于是 shell 老老实实地去找一个叫 <code>name</code> 的命令。</p>
+<p>shell 拿到一行输入，第一件事是按空白把它切成若干个<strong>词</strong>，然后把第一个词当作命令名。<code>name = Alice</code> 被切成 <code>name</code>、<code>=</code>、<code>Alice</code> 三个词，于是 shell 去找一个叫 <code>name</code> 的命令。</p>
 
 <p>只有当一个词整体长成 <code>名字=值</code> 的形状、并且出现在命令名<strong>之前</strong>时，shell 才把它识别为赋值。中间插一个空格，这个词就被劈成三半，赋值的形状也就没了。</p>
 
@@ -2082,7 +2164,7 @@ re=<span class="kw">'</span>^app\.([0-9]{4})-([0-9]{2})-([0-9]{2})\.log$<span cl
   echo <span class="kw">"</span>年=${BASH_REMATCH[1]} 月=${BASH_REMATCH[2]} 日=${BASH_REMATCH[3]}<span class="kw">"</span>
 <span class="kw">fi</span></code></pre>
 
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p>把「脚本第一行是什么」当成选择依据：写 <code>#!/usr/bin/env bash</code> 就放心用 <code>[[ ]]</code> 和 <code>(( ))</code>；只有当你确实要在 dash、BusyBox ash、Alpine 容器的 <code>/bin/sh</code> 下运行时，才退回 <code>[ ]</code>，并且每个变量都老老实实加引号。用 <code>shellcheck</code> 检查脚本，它会自动按 shebang 判断你用错没有。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 现代提示</span><p>把「脚本第一行是什么」当成选择依据：写 <code>#!/usr/bin/env bash</code> 就放心用 <code>[[ ]]</code> 和 <code>(( ))</code>；只有当你确实要在 dash、BusyBox ash、Alpine 容器的 <code>/bin/sh</code> 下运行时，才退回 <code>[ ]</code>，并且每个变量都加引号。用 <code>shellcheck</code> 检查脚本，它会自动按 shebang 判断你用错没有。</p></div>
 
 <div class="note dead" style="contain-intrinsic-size:auto 168px"><span class="t">别再写：<code>[ ... -a ... ]</code> 与 <code>[ ... -o ... ]</code></span><p><code>-a</code> / <code>-o</code> 在 POSIX 中已被标记为「过时」，因为参数一多，<code>test</code> 无法可靠地区分「运算符」和「恰好长得像运算符的字符串」。<code>[ "$a" = -o ]</code> 这种输入就能让它彻底误判。改用 <code>[[ A &amp;&amp; B ]]</code>，或者在 sh 里写成两条命令 <code>[ A ] &amp;&amp; [ B ]</code>。</p></div>
 
@@ -2183,7 +2265,7 @@ re=<span class="kw">'</span>^app\.([0-9]{4})-([0-9]{2})-([0-9]{2})\.log$<span cl
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 168px"><span class="t">陷阱：<code>A &amp;&amp; B || C</code> 不是三目运算符</span><p>很多人把 <code>[[ cond ]] &amp;&amp; do_yes || do_no</code> 当成 <code>cond ? yes : no</code> 来写。区别在于：如果 <code>cond</code> 为真但 <code>do_yes</code> <strong>自己失败了</strong>，<code>do_no</code> 也会被执行——两个分支都跑了一遍。当 <code>do_yes</code> 是 <code>echo</code> 这类几乎不会失败的命令时没事，一旦是真业务逻辑就会出灵异事件。分支里有实质动作时，老老实实写 <code>if/else</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 168px"><span class="t">陷阱：<code>A &amp;&amp; B || C</code> 不是三目运算符</span><p>很多人把 <code>[[ cond ]] &amp;&amp; do_yes || do_no</code> 当成 <code>cond ? yes : no</code> 来写。区别在于：如果 <code>cond</code> 为真但 <code>do_yes</code> <strong>自己失败了</strong>，<code>do_no</code> 也会被执行——两个分支都跑了一遍。当 <code>do_yes</code> 是 <code>echo</code> 这类几乎不会失败的命令时没事，一旦是真业务逻辑就会出灵异事件。分支里有实质动作时，写 <code>if/else</code>。</p></div>
 
 <h2 id="b3-case">3.4 case：按模式分派，比一长串 elif 干净</h2>
 
@@ -2384,7 +2466,7 @@ count=0
 count=0
 <span class="kw">while</span> read -r _; <span class="kw">do</span> count=$((count+1)); <span class="kw">done</span> &lt; &lt;(grep ERROR access.log)</code></pre>
 
-<p><strong>陷阱二：文件最后一行没有换行符时会被漏掉。</strong><code>read</code> 遇到 EOF 且没读到终止符时返回非 0，此时 <code>while</code> 判定为假，但变量里其实已经有内容了。</p>
+<p><strong>陷阱二：文件最后一行没有换行符时会被漏掉。</strong><code>read</code> 遇到 EOF 且没读到终止符时返回非 0，此时 <code>while</code> 判定为假，但变量里已经有内容了。</p>
 
 <pre style="contain-intrinsic-size:auto 114px"><code><span class="kw">while</span> IFS= read -r line || [[ -n $line ]]; <span class="kw">do</span>
   echo <span class="kw">"</span>&gt;&gt; $line<span class="kw">"</span>
@@ -3307,7 +3389,7 @@ bc &lt;&lt;&lt; '2^16'
 
 <p>管道 <code>|</code> 是 Unix 最有辨识度的发明。<code>a | b</code> 让 shell 先创建一个内核缓冲区（Linux 上默认 64 KiB），然后把 a 的 fd 1 接到缓冲区的写端、b 的 fd 0 接到读端，最后<strong>同时</strong>启动两个进程。</p>
 
-<p><strong>注意"同时"这两个字。</strong>很多人以为 <code>a | b</code> 是"a 跑完再跑 b"，其实它们是并发的：a 写满缓冲区就阻塞等 b 来读，b 读空了就阻塞等 a 来写。这就是为什么 <code>tail -f app.log | grep ERROR</code> 能实时出结果，也是为什么 <code>find / | head -5</code> 几乎瞬间返回而不用等 <code>find</code> 遍历完整个磁盘。</p>
+<p><strong>注意"同时"这两个字。</strong>很多人以为 <code>a | b</code> 是"a 跑完再跑 b"，实际上它们是并发的：a 写满缓冲区就阻塞等 b 来读，b 读空了就阻塞等 a 来写。这就是为什么 <code>tail -f app.log | grep ERROR</code> 能实时出结果，也是为什么 <code>find / | head -5</code> 几乎瞬间返回而不用等 <code>find</code> 遍历完整个磁盘。</p>
 
 <p><strong>打个比方。</strong>管道不是"先装满一桶再倒给下一个人"，而是流水线上的传送带：上游放一件，下游就取一件；传送带堆满了上游就停手，传送带空了下游就等着。这套背压（back-pressure）机制不需要任何一方写代码去协调，全由内核在 <code>read</code>/<code>write</code> 阻塞里完成。</p>
 
@@ -3423,7 +3505,7 @@ make 2&gt; &gt;(sed 's/^/[ERR] /' &gt;&amp;2)</code></pre>
 </tbody>
 </table>
 
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 进程替换的两个真实限制</span><p>其一，返回的是管道而非普通文件，<strong>不能 seek</strong>。所以 <code>sort &lt;(...)</code> 这种需要回头读的命令在极端情况下会有问题，而 <code>tail -c 100 &lt;(cmd)</code> 干脆无法工作。其二，<code>&gt;(cmd)</code> 里的进程是异步的，主命令返回时它可能还在写文件；脚本里紧接着读那个文件会读到半截。稳妥做法是加一句 <code>wait</code>，或者老老实实用临时文件。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 进程替换的两个真实限制</span><p>其一，返回的是管道而非普通文件，<strong>不能 seek</strong>。所以 <code>sort &lt;(...)</code> 这种需要回头读的命令在极端情况下会有问题，而 <code>tail -c 100 &lt;(cmd)</code> 干脆无法工作。其二，<code>&gt;(cmd)</code> 里的进程是异步的，主命令返回时它可能还在写文件；脚本里紧接着读那个文件会读到半截。稳妥做法是加一句 <code>wait</code>，或者用临时文件。</p></div>
 
 <h3>命令替换与嵌套</h3>
 
@@ -3676,7 +3758,7 @@ st=("${PIPESTATUS[@]}")
 </tbody>
 </table>
 
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 本章的一条主线</span><p>重定向、管道、进程替换、作业控制，表面上是四组不相干的语法，底层其实是同一件事：<strong>shell 在进程启动之前，替它把 fd 表布置好</strong>。<code>&gt;</code> 是把 fd 接到文件，<code>|</code> 是把上下游的 fd 接到同一个内核缓冲区，<code>&lt;(...)</code> 是把 fd 起个名字塞进参数，<code>&amp;</code> 是把 fd 布置好之后不等它。想不清某个组合会发生什么时，就画一遍前面那张 fd 指向表 —— 从左到右，一步一步改，答案自然浮出来。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 本章的一条主线</span><p>重定向、管道、进程替换、作业控制，表面上是四组不相干的语法，底层是同一件事：<strong>shell 在进程启动之前，替它把 fd 表布置好</strong>。<code>&gt;</code> 是把 fd 接到文件，<code>|</code> 是把上下游的 fd 接到同一个内核缓冲区，<code>&lt;(...)</code> 是把 fd 起个名字塞进参数，<code>&amp;</code> 是把 fd 布置好之后不等它。想不清某个组合会发生什么时，就画一遍前面那张 fd 指向表 —— 从左到右，一步一步改，答案自然浮出来。</p></div>
 
 </section>
 
@@ -4060,7 +4142,7 @@ docker logs web | <span class="kw">grep</span> 'timeout'
 <div class="note dead" style="contain-intrinsic-size:auto 275px"><span class="t"><span class="badge dead">禁用</span>　裸 <code>sed -i</code> 批量改文件</span><p><code>sed -i 's/a/b/g' **/*.conf</code> 是不可撤销的。它没有确认、没有 diff、没有备份，正则写错一个字符就是几百个文件同时损坏。<strong>纪律：先不加 <code>-i</code> 跑一遍看输出，确认后再加 <code>-i.bak</code>。</strong></p><p>还有个跨平台陷阱：GNU sed 写 <code>-i.bak</code>（无空格）或 <code>-i</code>（不备份）；BSD/macOS sed 的 <code>-i</code> <em>必须</em>带参数，不备份要写成 <code>-i ''</code>。在 macOS 上照抄 Linux 的 <code>sed -i 's/a/b/' f</code>，sed 会把 <code>s/a/b/</code> 当成备份后缀，然后报「没有命令」——或者更糟，生成一堆奇怪文件名。写跨平台脚本时，统一用 <code>-i.bak</code> 再删备份，是最省事的解法。</p></div>
 
 <h3>保持空间:sed 的第二块内存,多行处理的钥匙</h3>
-<p>sed 每周期只装一行的那块内存叫<strong>模式空间</strong>;它其实还有第二块——<strong>保持空间</strong>(hold space),跨周期不清空,专做「记住点什么」的活。五条指令在两块内存间搬运:</p>
+<p>sed 每周期只装一行的那块内存叫<strong>模式空间</strong>;它还有第二块——<strong>保持空间</strong>(hold space),跨周期不清空,专做「记住点什么」的活。五条指令在两块内存间搬运:</p>
 <table style="contain-intrinsic-size:auto 151px">
 <thead><tr><th class="nw">指令</th><th>动作</th></tr></thead>
 <tbody>
@@ -4076,7 +4158,7 @@ docker logs web | <span class="kw">grep</span> 'timeout'
 
 <p>grep 能告诉你「哪些行」，sed 能改「这些行长什么样」，但只要问题里出现「平均」「总和」「按什么分组」「前十名」，它俩就无能为力了——因为它们没有变量，也不会算数。这时候上 awk。</p>
 
-<p>很多人以为 awk 就是「<code>awk '{print $1}'</code> 取第一列」的那个工具。其实 awk 是一门完整的编程语言：有变量、数组、条件、循环、函数、正则。它的名字来自三位作者的姓氏首字母（Aho、Weinberger、Kernighan），1977 年发布，比 Python 早了 14 年。</p>
+<p>很多人以为 awk 就是「<code>awk '{print $1}'</code> 取第一列」的那个工具。实际上 awk 是一门完整的编程语言：有变量、数组、条件、循环、函数、正则。它的名字来自三位作者的姓氏首字母（Aho、Weinberger、Kernighan），1977 年发布，比 Python 早了 14 年。</p>
 
 <h3>核心模型：记录与字段</h3>
 
@@ -4458,14 +4540,14 @@ echo "===== 按小时 ====="
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 18668px;--thin-h:18668px">
+<section class="chapter" style="contain-intrinsic-size:auto 18669px;--thin-h:18669px">
 <h1 id="b6"><span class="part">第 6 章</span>常用命令行工具速查</h1>
 
 <h2 id="b6-map">6.1 先认结构，再查表</h2>
 
 <p>你大概经历过这样的时刻：想把一个目录同步到服务器，脑子里知道「有个命令能干这事」，但选项想不起来，于是打开浏览器搜「rsync 常用参数」，抄一行贴进终端，回车，成了——三天后再遇到同样的问题，还得再搜一次。</p>
 
-<p>问题不在记性，在于你是把命令当成「咒语」在背。命令行工具其实有非常整齐的骨架：<strong>命令名 + 选项 + 参数</strong>。命令名决定「跑哪个程序」，选项调整行为，参数是被操作的对象。绝大多数工具还共享一套选项惯例：<code>-r</code> 是递归、<code>-f</code> 是强制、<code>-n</code> 是空跑、<code>-v</code> 是啰嗦。认出这套骨架之后，一条没见过的命令你也能猜出七成意思。</p>
+<p>问题不在记性，在于你是把命令当成「咒语」在背。命令行工具有非常整齐的骨架：<strong>命令名 + 选项 + 参数</strong>。命令名决定「跑哪个程序」，选项调整行为，参数是被操作的对象。绝大多数工具还共享一套选项惯例：<code>-r</code> 是递归、<code>-f</code> 是强制、<code>-n</code> 是空跑、<code>-v</code> 是啰嗦。认出这套骨架之后，一条没见过的命令你也能猜出七成意思。</p>
 
 <figure style="contain-intrinsic-size:auto 320px">
 <svg viewBox="0 17 720 232" role="img" aria-label="一条命令的结构解剖">
@@ -4817,7 +4899,7 @@ journalctl <span class="kw">-u</span> nginx <span class="kw">-f</span>
 
 <div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 free 里「剩余内存很少」通常不是问题</span><p><span class="badge ok">仍适用</span> Linux 会主动把空闲内存拿去做文件缓存（buff/cache），这是收益，不是浪费——需要时立刻能还回来。所以别盯着 <code>free</code> 那一列，要看 <strong>available</strong>：它才是「新程序还能拿到多少」。真正的内存告警信号是 swap 持续增长，以及 <code>journalctl -k | grep -i oom</code> 里出现 OOM killer 的记录。</p></div>
 
-<div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">🟡 kill -9 别当第一选择</span><p><span class="badge old">已过时</span> 上来就 <code>kill -9</code> 意味着进程没机会刷盘、没机会释放锁、没机会通知下游，可能留下损坏的数据文件或残留的 pid/socket 文件。顺序应该是：<code>kill PID</code>（TERM）→ 等几秒 → 还在就 <code>kill -9</code>。同理，systemd 管的服务用 <code>systemctl restart</code>，别绕过去手工杀，否则守护进程会按自己的策略又把它拉起来，你以为杀掉了其实换了个 PID。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">🟡 kill -9 别当第一选择</span><p><span class="badge old">已过时</span> 上来就 <code>kill -9</code> 意味着进程没机会刷盘、没机会释放锁、没机会通知下游，可能留下损坏的数据文件或残留的 pid/socket 文件。顺序应该是：<code>kill PID</code>（TERM）→ 等几秒 → 还在就 <code>kill -9</code>。同理，systemd 管的服务用 <code>systemctl restart</code>，别绕过去手工杀，否则守护进程会按自己的策略又把它拉起来，你以为杀掉了,实际换了个 PID。</p></div>
 
 <div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 现代提示</span><p><span class="badge new">现代提示</span> <code>btop</code>/<code>htop</code> 交互体验远好于 <code>top</code>，值得装在常用机器上。<code>systemctl</code> 改过 unit 文件后必须先 <code>systemctl daemon-reload</code> 再 restart。<code>journalctl</code> 默认按分页器输出，加 <code>--no-pager</code> 才适合写进脚本；想看上一次开机的日志用 <code>-b -1</code>。<code>service</code> 和 <code>chkconfig</code> 在 systemd 系统上只是兼容外壳，新写的文档请直接用 <code>systemctl</code>。</p></div>
 
@@ -4877,7 +4959,7 @@ jq <span class="kw">--arg</span> n "$name" '.items[] | select(.name == $n)' data
 
 <p>你把私钥拷到新机器上，<code>ssh</code> 却报「permissions are too open」拒绝使用；或者 Web 服务器读不到你上传的文件，于是你搜到一条「<code>chmod -R 777</code> 就好了」的答案。前者是 Unix 权限模型在保护你，后者是把门直接拆了。</p>
 
-<p>机制其实很简单：每个文件记着一个属主、一个属组，以及三组各三位的权限——属主能干什么、同组能干什么、其他人能干什么。三位分别是读（4）、写（2）、执行（1），相加就是那个熟悉的数字。</p>
+<p>机制很简单：每个文件记着一个属主、一个属组，以及三组各三位的权限——属主能干什么、同组能干什么、其他人能干什么。三位分别是读（4）、写（2）、执行（1），相加就是那个熟悉的数字。</p>
 
 <figure style="contain-intrinsic-size:auto 358px">
 <svg viewBox="0 -1 720 266" role="img" aria-label="权限位与 umask 的关系">

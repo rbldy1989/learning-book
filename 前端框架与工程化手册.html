@@ -199,6 +199,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">前端框架与工程化手册</div>
 <details><summary><a class="ch" href="#e1">为什么需要框架:组件与 JSX</a></summary>
+<a class="sec" href="#e1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#f10-why">1.1 为什么需要框架:从手写 DOM 到状态驱动</a>
 <a class="sec" href="#f10-components">1.2 组件、JSX 与 props</a>
 <a class="sec" href="#e1-sum">1.3 小结:本章要点与易错清单</a>
@@ -263,10 +264,110 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 23056px;--thin-h:14556px">
+<section class="chapter" style="contain-intrinsic-size:auto 28443px;--thin-h:19943px">
 <h1 id="e1"><span class="part">框架</span>为什么需要框架:组件与 JSX</h1>
 <p>前面几本书给的是原材料:一棵能读能改的 DOM 树(<a href="浏览器API与工作原理手册.html#f7-dom">《浏览器 API 与工作原理手册》1.1</a>)、会沿树传播的事件(<a href="浏览器API与工作原理手册.html#f7-events">《浏览器 API 与工作原理手册》2.1</a>)、CSS、JavaScript 与类型。原材料齐了照样能把一个几十个交互点的界面写成谁也不敢动的一团——因为界面的真相被存了两份,一份在 JS 变量里,一份在 DOM 节点的文本和属性上,靠你手写的每一行赋值同步。这一章讲的就是框架用来消掉第二份真相的那个等式:<strong><code>UI = f(state)</code></strong>。你只维护状态,DOM 的差异由框架落地;Vue 是同一个等式的另一种写法(<a href="#f10-vue">4.5</a>),学会等式本身,换框架只是换语法。</p>
 <p>两节按「为什么」到「怎么写」排。<a href="#f10-why">1.1</a> 先摆出手写 DOM 的三个痛点——状态与视图不同步、事件绑定散落、列表更新代价——再给出声明式的定义和它推出的三条规矩,最后交代虚拟 DOM 与细粒度响应式两条实现路线;这条分界线是后面所有「React 要替换、Vue 能原地改」差异的根,不先讲清楚,不可变更新看起来就只是没道理的规矩。<a href="#f10-components">1.2</a> 讲 <code>f</code> 本身怎么写:函数组件的两条硬规矩、JSX 编译成 <code>_jsx()</code> 之后那些「和 HTML 不一样」的地方为什么必须不一样、props 为什么只读、<code>key</code> 为什么不能用下标。读完这两节,任何 React 代码的结构你都能读懂;状态怎么变、副作用往哪放是 <a href="#f10-state">2.1</a> 的事,组件之间怎么摆布状态在 <a href="#f10-patterns">2.3</a>。</p>
+<h2 id="e1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>本书讲<strong>框架用什么等式消掉手写的同步代码,以及把一个项目从开发交付到线上要哪几条工程链路</strong>:组件与状态、路由与数据、并发与服务端渲染、构建与转译、依赖与发布、指标与部署、三层测试与门禁。前四本给的是原材料,这一本讲怎么把它们组织成能长期维护、能持续交付的项目。</p>
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>这个领域的资料最新,也最容易过期:框架与工具链按月发版,成体系的书往往写完就对不上默认配置,所以<strong>官方文档是唯一可靠的一手来源</strong>。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 788px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<tbody>
+<tr><td>React 官方文档</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>新版教程从「用 React 思考」讲到 Hook 的心智模型,示例可以直接在页面上改了跑。局限:只讲框架本身,路由、数据请求与构建各看各自文档</td></tr>
+<tr><td>Vue 官方文档</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>同一个等式的另一种写法,响应式原理与组合式接口讲得清楚,中文版由官方维护。局限:同样只覆盖框架本身</td></tr>
+<tr><td>Vite 官方指南与配置参考</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>开发服务器与生产构建的一手说明,插件接口与每个配置项的默认值以它为准。局限:底层打包器仍在换代,产物细节随版本变,照抄旧教程多半起不来</td></tr>
+<tr><td>npm 与 Node 官方文档</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>包清单的字段契约、版本范围语义、依赖与模块解析规则,第 6 章以它为准。局限:字段多、交叉引用多,单读很碎,看不出字段之间怎么配合</td></tr>
+<tr><td>web.dev 与 Core Web Vitals 文档</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>指标的定义、阈值与测量方式,第 7 章的口径全部照它。局限:Chrome 视角,部分工具与建议在其他引擎上没有对应物</td></tr>
+<tr><td>刘博文《深入浅出 Vue.js》</td><td class="nw">进阶专题</td><td class="nw">参考</td><td>把响应式系统、虚拟 DOM 与差异比对从零实现一遍,理解「框架做了什么」最直接的一本。局限:对应较早的版本,实现已换过一轮,读思路不读代码</td></tr>
+<tr><td>各框架与构建工具的源码</td><td class="nw">源码</td><td class="nw">参考</td><td>文档说不清时的仲裁者:更新怎么排队、依赖怎么被收集、产物怎么切分。局限:内部实现随版本改动,读出的结论不能当接口承诺</td></tr>
+<tr><td>Testing Library 与 Playwright 官方文档</td><td class="nw">官方文档</td><td class="nw">参考</td><td>查询优先级与「按用户能看到的东西断言」,第 8、9 章的写法从它来。局限:只讲工具怎么用,不回答该测什么</td></tr>
+<tr><td>Kent C. Dodds 关于测试比例的文章</td><td class="nw">在线资料</td><td class="nw">参考</td><td>三层测试各投入多少的一种主流主张,8.1 以它为对照。局限:是一家之言,团队规模与交付节奏不同,结论会变</td></tr>
+<tr><td>《JavaScript 语言手册》与《浏览器 API 与工作原理手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>框架替你省掉的那些手写代码在那两本。局限:都不讲框架与工程</td></tr>
+</tbody>
+</table>
+<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 工具链换代最快,配置一律以官方文档的当前版为准</span><p>这一层的知识分两半:等式与机制不变,配置格式与默认值按月变。判断办法是看你要抄的东西属于哪一半——「状态变了为什么要生成新对象」属于机制,任何时候都成立;「这个选项写在哪个字段下」属于配置,只有官方文档的当前版说了算。</p></div>
+<h3>锚定的五样各借鉴了什么</h3>
+<p>下表只收标为「锚定」的,借鉴的内容具体到手法。</p>
+<table style="contain-intrinsic-size:auto 375px">
+<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td>React 官方文档</td><td>第 1 到 4 章的骨架与心智模型:界面是状态的函数这个等式、「把依赖删掉而不是关掉规则」这条处理副作用的判据、并发特性按优先级与过渡与挂起三组来讲的分法。术语与官方中文文档一致</td></tr>
+<tr><td>Vue 官方文档</td><td>4.5 与 4.6 的对照方式:同一个模型的两种写法逐条并排,而不是分开各讲一遍;响应式与组合式函数的术语照它,便于两边切换</td></tr>
+<tr><td>Vite 官方指南</td><td>第 5 章的组织顺序:开发服务器、配置与环境变量、生产构建与产物切分、转译与目标浏览器;配置项的字段划分照它的配置参考排</td></tr>
+<tr><td>npm 与 Node 官方文档</td><td>第 6 章把包清单当成一份契约来讲:每个字段固定说清谁读它、什么时候读、写错了症状是什么;版本范围与依赖解析照官方规则讲,不凭经验总结</td></tr>
+<tr><td>web.dev 与 Core Web Vitals 文档</td><td>第 7 章的指标口径与阈值一律用官方定义,不自造名词;每个优化手段固定配一句「改完之后在哪个指标上能看到变化」</td></tr>
+</tbody>
+</table>
+<p>这个领域有一条别处没有的情况必须写清:<strong>框架与工具链是全书系里过时最快的一层,书出版即滞后</strong>。所以本书系把事实层与组织层分开——书讲等式、机制与判据,而某个配置项当前叫什么、默认值是多少,一律以官方文档为准。上表里五份官方文档标为锚定而非「参考」,原因就在这里。</p>
+<h3>讲什么、不讲什么</h3>
+<p>本书覆盖<strong>把一个项目从组件写起、交付到线上并守住质量</strong>所需要的全部内容,三部分各回答一个问题。</p>
+<table style="contain-intrinsic-size:auto 174px">
+<thead><tr><th class="nw">部分</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
+<tbody>
+<tr><td class="nw">框架</td><td class="nw">第 1 到 4 章,18 节</td><td>框架消掉了什么、状态怎么摆、副作用往哪放、路由与数据怎么接、并发与服务端渲染各解决什么、两种框架怎么选</td></tr>
+<tr><td class="nw">工程化</td><td class="nw">第 5 到 7 章,15 节</td><td>代码怎么变成产物、依赖怎么管、包怎么发、指标怎么测、站点怎么部署</td></tr>
+<tr><td class="nw">质量</td><td class="nw">第 8 到 9 章,11 节</td><td>该测什么、三层测试各怎么写、门禁怎么在流水线里卡住不合格的提交</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚,并指明归谁。另有五章的末尾各带一节「这一章刻意没讲的东西」,把边界写在发生的地方。</p>
+<table style="contain-intrinsic-size:auto 485px">
+<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td>JavaScript 语言本体:闭包、异步、原型与模块语义</td><td class="nw">《JavaScript 语言手册》</td><td>本书不重讲语言;组件里那些「为什么拿到的是旧值」的问题,根在闭包</td></tr>
+<tr><td>DOM 与事件、浏览器 API、渲染管线与网络</td><td class="nw">《浏览器 API 与工作原理手册》</td><td>本书讲框架替你做了什么,底下是什么在那本;两边合起来才解释得通框架的规矩</td></tr>
+<tr><td>HTML 语义与 CSS 布局本身</td><td class="nw">《HTML 与 CSS 手册》</td><td>本书只讲样式在构建链里怎么被处理、在组件里怎么限定作用域</td></tr>
+<tr><td>类型系统的原理:泛型、条件类型、声明文件</td><td class="nw">《TypeScript 手册》</td><td>本书示例用 TypeScript 写,但只用到日常标注</td></tr>
+<tr><td>服务端框架、数据库与后端部署</td><td class="nw">不在本书系范围</td><td>7.3 只讲静态托管、内容分发与反向代理</td></tr>
+<tr><td>框架的源码级实现:调度器与编译器内部</td><td class="nw">不展开</td><td>第 4 章讲到能解释行为与优化手段的层次就停</td></tr>
+<tr><td>其他框架的完整讲解</td><td class="nw">各自官方文档</td><td>4.5 与 4.6 给的是对照坐标:同一个等式换一种语法之后哪些规矩跟着变</td></tr>
+<tr><td>移动端与跨端方案、桌面壳</td><td class="nw">不在本书系范围</td><td>各有独立的运行时与构建链</td></tr>
+</tbody>
+</table>
+<h3>读之前要会什么</h3>
+<p>前置分两档,每条给自测方式。门槛不在框架语法,而在前四本手册的基础:框架的每条规矩都是为了绕开语言或 DOM 层的某个代价,基础不牢就只能把规矩当清单背。</p>
+<table style="contain-intrinsic-size:auto 384px">
+<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>会写 JavaScript,包括闭包与异步</td><td>说清闭包捕获的是变量还是它当时的值;说出一段混合定时器与 Promise 的代码的输出顺序</td></tr>
+<tr><td class="nw">必须</td><td>会用 DOM 与事件手写交互</td><td>不用框架写一个「输入框内容实时显示在下方」的页面,并指出你在哪几处手工同步了状态</td></tr>
+<tr><td class="nw">必须</td><td>读得懂 HTML 与基本的 CSS</td><td>看一个组件渲染出来的标记,说出哪些元素会生成盒子、样式从哪条规则来</td></tr>
+<tr><td class="nw">必须</td><td>会用命令行装包并跑脚本</td><td>新建一个项目,装上依赖,起开发服务器,再打出一份生产产物并在本地打开它</td></tr>
+<tr><td class="nw">必须</td><td>用过版本控制</td><td>说出你上一次解决冲突时,判断该保留哪一边的依据是什么</td></tr>
+<tr><td class="nw">最好有</td><td>一点 TypeScript</td><td>说清接口与类型别名各适合什么场合,以及泛型参数是在哪个位置被确定的</td></tr>
+<tr><td class="nw">最好有</td><td>写过服务端接口</td><td>说出前端拿到一个错误响应时,该怎么区分「用户输入不对」与「服务出问题」</td></tr>
+<tr><td class="nw">最好有</td><td>写过测试</td><td>说出你上一条断言检查的是行为还是实现,并说清两者为什么不能混</td></tr>
+</tbody>
+</table>
+<h3>与那些资料相比,本书多给了什么</h3>
+<ul>
+<li><strong>讲的是等式,不是接口清单。</strong>界面是状态的函数这个等式贯穿第 1 到 4 章:不可变更新、依赖数组、键的规矩、受控与非受控,每一条都能从等式推出来。4.5 与 4.6 用另一种框架逐条对照同一个模型,换语法不换认知。</li>
+<li><strong>5 处「这一章刻意没讲的东西,以及它归谁」。</strong>边界写在发生的地方,而不是只写在开卷一节里,读者不会在半路以为某个话题被漏掉了。</li>
+<li><strong>6 处「学到什么程度算够」。</strong>每一处给的是可自测的掌握判据,不是内容回顾;答不上来的那条直接指回对应的节。</li>
+<li><strong>80 个批注里有 43 个红色。</strong>重渲染的成因、依赖数组写错的症状、受控与非受控的切换、锁文件与安装脚本的风险——每个红色批注固定给症状与排查手段,另有 28 个绿色写成一句能直接执行的判据。</li>
+<li><strong>44 个「完整示例」都可运行,另有 3 张「本章 API 签名速查」。</strong>示例是能跑起来的完整片段,不是截取的几行。</li>
+<li><strong>时效性有固定对策。</strong>正文讲机制与判据,不罗列参数;涉及版本处标出基线并给迁移对照;配置一律指向官方文档,并给出「写对了怎么验证」的动作,而不是只贴一份配置文件。</li>
+<li><strong>质量两章不止讲工具。</strong>先回答该测什么与三层各投入多少,再讲工具怎么用;末节把可访问性检查、视觉回归与性能预算编排成一条能卡住不合格提交的流水线。</li>
+</ul>
+<h3>两条读法:顺读与按需查</h3>
+<p>第一次学框架走顺读,手上已经有具体任务走按需查。工程化与质量五章是典型的按需查,第一遍不必读。</p>
+<table style="contain-intrinsic-size:auto 335px">
+<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
+<tbody>
+<tr><td class="nw">会 JavaScript 与 DOM,第一次学框架</td><td>第 1、2 章顺读,再进第 3 章,先不碰第 4 章</td><td class="nw">第 1、2、3 章</td><td class="nw">第 4、6、9 章</td></tr>
+<tr><td class="nw">写过组件,常被重渲染与依赖困住</td><td>2.1 与 2.2 精读,再读 2.3 与 4.4</td><td class="nw">2.1、2.2、4.4</td><td class="nw">第 5 到 9 章</td></tr>
+<tr><td class="nw">要给新项目搭工程</td><td>第 5、6 章顺读,配 7.3 的部署</td><td class="nw">5.1、5.2、6.2</td><td class="nw">第 4、9 章</td></tr>
+<tr><td class="nw">首屏慢或交互卡</td><td>第 7 章顺读,配 4.4 的渲染开销与 4.2 的服务端渲染</td><td class="nw">7.1、7.2</td><td class="nw">第 8、9 章</td></tr>
+<tr><td class="nw">要把测试与门禁建起来</td><td>第 8 章顺读到第 9 章,先定形态再选工具</td><td class="nw">8.1、8.2、9.1、9.6</td><td class="nw">第 4 章</td></tr>
+<tr><td class="nw">手上有具体问题</td><td>先查各章末的「本章要点」与「学到什么程度算够」,签名查 3 张速查表</td><td class="nw">—</td><td class="nw">—</td></tr>
+</tbody>
+</table>
+<p><strong>第 1、2 章是全书地基,必须按顺序读完</strong>,其中 2.1 最要紧:状态什么时候变、变了之后哪些组件重新执行、副作用落在这条时间线的哪个位置。后面每一章都在用这三个答案——第 3 章的数据获取、第 4 章的并发与服务端渲染、第 7 章的性能优化全部建立在它上面。</p>
+<p>第 4 章可以整章推迟到项目遇到卡顿或需要服务端渲染时再读,但 4.5、4.6 两节例外:如果团队用的是另一种框架,这两节应该紧接着第 2 章读,它们把同一个模型的两种写法逐条对上了。</p>
+<p>读完第 1 到 3 章,能独立写出一个带路由与数据获取的应用,并说清每一次重渲染是怎么来的;读完第 4 章,能在两种框架之间做选型并说出依据;读完第 5 到 7 章,能从零搭起一条从开发到部署的构建链,并把一个包正确地发布出去;读完第 8、9 章,能给一个项目建起三层测试与质量门禁,独立交付上线。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 跳过前四本直接抄框架代码,卡点会落在语言与 DOM 那一层</span><p>常见的两处卡点都不是框架问题:2.1 里「这个组件为什么重新执行了」,根在闭包捕获的是变量而不是值;2.3 里「受控与非受控」,根在表单控件自己也存着一份值。症状是照文档抄能跑通,一改就坏,且查不出坏在哪。这两处卡住时,回《JavaScript 语言手册》1.4 与《浏览器 API 与工作原理手册》2.3 补,比反复读框架文档快。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 先把「界面是状态的函数」吃透,再按任务挑章节</span><p>判断自己吃透了没有,回答三问:为什么更新状态要生成新对象而不是改原来那个;为什么列表的键不能用下标;为什么副作用不能直接写在渲染过程里。三问都能从等式推出来,推不出来就回 1.1 与 2.1,而不是去记规矩。</p></div>
 <h2 id="f10-why">1.1 为什么需要框架:从手写 DOM 到状态驱动</h2>
 <p><a href="浏览器API与工作原理手册.html#d1">《浏览器 API 与工作原理手册》第 1–3 章</a>的 DOM API 足够写出任何界面:<code>createElement</code>、<code>textContent</code>、<code>addEventListener</code>,三样东西在手,一个待办列表、一个表单、一个表格都能做出来。问题不在「能不能」,在「界面长到多大以后你还能不能说清它现在为什么长这样」。手写 DOM 的程序里,<strong>界面的真相存在两个地方</strong>:一份在 JS 变量里,一份在 DOM 节点的属性和文本里,两份靠你手写的每一行赋值保持一致。交互点一多,这种一致性就靠不住了。</p>
 <p>框架解决的正是这个问题,而且只解决这个问题:<strong>把「真相」收回到一份数据里,界面变成这份数据的函数</strong>。这一节先把手写 DOM 的痛点摆到桌面上,再给出状态驱动的定义,最后用同一个计数器的两种写法对照,看框架到底替你做了什么、没做什么。</p>
@@ -457,7 +558,7 @@ import { jsx as _jsx } from <span>'react/jsx-runtime'</span>;
 <tr><td class="nw"><code>key</code></td><td>string 或 number 或 null</td><td>自动运行时里是 <code>_jsx</code> 的第三个参数;经典的 <code>React.createElement</code> 则从 props 里把它取走。两种写法下 <strong><code>key</code> 都不会出现在组件收到的 props 上</strong>——子组件想知道自己的 id,得再传一个普通 prop</td></tr>
 </tbody>
 </table>
-<p>看懂编译结果,JSX 的全部规矩都有了解释:属性其实是对象的键,所以 <code>class</code> 这种 JS 保留字要改名;花括号里是函数参数,所以只能放表达式;一个 JSX 标签就是一次 <code>_jsx</code> 调用,返回值只有一个,所以只能有一个根节点;<code>children</code> 只是 props 里的一个普通字段。React 元素是<strong>不可变</strong>的纯数据,创建之后不能改它的属性,要变就重新创建——这是 <a href="#f10-why">1.1</a> 「描述 ≠ DOM」的具体形态,也是 diff 能做的前提。</p>
+<p>看懂编译结果,JSX 的全部规矩都有了解释:属性是对象的键,所以 <code>class</code> 这种 JS 保留字要改名;花括号里是函数参数,所以只能放表达式;一个 JSX 标签就是一次 <code>_jsx</code> 调用,返回值只有一个,所以只能有一个根节点;<code>children</code> 只是 props 里的一个普通字段。React 元素是<strong>不可变</strong>的纯数据,创建之后不能改它的属性,要变就重新创建——这是 <a href="#f10-why">1.1</a> 「描述 ≠ DOM」的具体形态,也是 diff 能做的前提。</p>
 <h3>props:只读、单向流动、children 也是 props</h3>
 <p>props 是父组件传给子组件的一个对象,子组件里只能读不能改。「不能改」不是约定,是机制要求:子组件改了 props,父组件不知道,下次父组件重渲染时会用自己手里的值覆盖回来,界面就会在两个值之间跳。数据要改,只能改它的来源——要么是某个组件的状态,要么是更上层的 props。所以 props 是<strong>单向数据流</strong>:数据从父向子流,子组件想影响父组件,只能调用父组件通过 props 传下来的回调函数,由父组件改自己的状态。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 468px"><code><span class="cm">// 子组件:只读 props,想改值就调父组件给的回调</span>
@@ -849,7 +950,7 @@ export function Temperature() {
 <svg viewBox="0 10 722 164" xmlns="http://www.w3.org/2000/svg" font-size="13"><defs><marker id="ar-f10-b" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs><rect x="10" y="40" width="125" height="60" rx="8" fill="var(--svg-soft)" stroke="var(--accent)"/><text class="svgtext" x="72" y="62" text-anchor="middle" font-size="12">事件处理器</text><text class="svgmuted" x="72" y="80" text-anchor="middle" font-size="10">setState ×N 排队</text><text class="svgmuted" x="72" y="93" text-anchor="middle" font-size="10">批处理成一次</text><path d="M140,70 L158,70" stroke="var(--accent)" fill="none" marker-end="url(#ar-f10-b)"/><rect x="163" y="40" width="140" height="60" rx="8" fill="var(--svg-fill)" stroke="var(--accent)"/><text class="svgtext" x="233" y="62" text-anchor="middle" font-size="12">渲染阶段</text><text class="svgmuted" x="233" y="80" text-anchor="middle" font-size="10">调用组件函数,diff</text><text class="svgmuted" x="233" y="93" text-anchor="middle" font-size="10">纯,StrictMode 跑两次</text><path d="M308,70 L326,70" stroke="var(--accent)" fill="none" marker-end="url(#ar-f10-b)"/><rect x="331" y="40" width="130" height="60" rx="8" fill="var(--svg-fill)" stroke="var(--accent)"/><text class="svgtext" x="396" y="62" text-anchor="middle" font-size="12">提交阶段</text><text class="svgmuted" x="396" y="80" text-anchor="middle" font-size="10">改 DOM,ref 赋值</text><text class="svgmuted" x="396" y="93" text-anchor="middle" font-size="10">useLayoutEffect 同步</text><path d="M466,70 L484,70" stroke="var(--accent)" fill="none" marker-end="url(#ar-f10-b)"/><rect x="489" y="40" width="95" height="60" rx="8" fill="var(--svg-soft2)" stroke="var(--muted)"/><text class="svgtext" x="536" y="62" text-anchor="middle" font-size="12">浏览器绘制</text><text class="svgmuted" x="536" y="80" text-anchor="middle" font-size="10">用户看到新界面</text><path d="M589,70 L607,70" stroke="var(--accent)" fill="none" marker-end="url(#ar-f10-b)"/><rect x="612" y="40" width="100" height="60" rx="8" fill="var(--ok-bg)" stroke="var(--ok-fg)"/><text class="svgtext" x="662" y="62" text-anchor="middle" font-size="12">useEffect</text><text class="svgmuted" x="662" y="80" text-anchor="middle" font-size="10">先清理上一轮</text><text class="svgmuted" x="662" y="93" text-anchor="middle" font-size="10">再运行本轮</text><line x1="326" y1="20" x2="326" y2="120" stroke="var(--rule)" stroke-dasharray="4 4"/><text class="svgmuted" x="233" y="135" text-anchor="middle" font-size="11">左侧:可以被打断、重做、丢弃</text><text class="svgmuted" x="520" y="135" text-anchor="middle" font-size="11">右侧:已经落到页面,不可回退</text><text class="svgmuted" x="360" y="160" text-anchor="middle" font-size="11">effect 里 setState 会再走一遍整条线 —— 这就是「effect 派生状态」多渲染一次的原因</text></svg>
 <figcaption>一次状态更新的时间线:渲染阶段是纯的、可重复的,提交之后才碰 DOM,effect 在绘制之后（原创绘制）</figcaption>
 </figure>
-<p>图上「提交阶段」这一格里其实还藏着一个更早的时点。React 一共给了三个 effect Hook,它们做的事一模一样,差别只有<strong>什么时候跑</strong>,凑齐就是一把完整的刻度尺。</p>
+<p>图上「提交阶段」这一格里还藏着一个更早的时点。React 一共给了三个 effect Hook,它们做的事一模一样,差别只有<strong>什么时候跑</strong>,凑齐就是一把完整的刻度尺。</p>
 <table style="contain-intrinsic-size:auto 278px">
 <thead><tr><th>Hook</th><th>什么时候运行</th><th>这时的 DOM</th><th>用来做什么</th></tr></thead>
 <tbody>
@@ -943,7 +1044,7 @@ Row apple: 2      Row avocado: 2      Row banana: 2
 <tr><td>props 上的一整个对象,而你只用其中一两个字段</td><td class="nw">父组件每次渲染都传新对象</td><td>在组件顶层解构出 <code>const { url, token } = opts</code>,依赖 <code>[url, token]</code></td></tr>
 <tr><td>一个状态,而 Effect 只是「基于它算下一个」</td><td>每 <code>set</code> 一次它就变,Effect 跟着重跑</td><td>用更新函数 <code>setX(x =&gt; …)</code>,或把逻辑搬进 <code>useReducer</code> 的 reducer,依赖只留 <code>dispatch</code>(它稳定)</td></tr>
 <tr><td>一个「事件里要读最新值、但它变了不该重新同步」的值</td><td>它按业务需要变化,和同步条件无关</td><td>Effect Event(见本节深入层)</td></tr>
-<tr><td class="nw">一个只在挂载时用一次的值</td><td class="nw">它其实不该进 Effect</td><td>把这段逻辑挪到事件处理器里——用户点了才发生的事,本来就不是 Effect</td></tr>
+<tr><td class="nw">一个只在挂载时用一次的值</td><td class="nw">它不该进 Effect</td><td>把这段逻辑挪到事件处理器里——用户点了才发生的事,本来就不是 Effect</td></tr>
 </tbody>
 </table>
 <div class="note dead" style="contain-intrinsic-size:auto 262px"><span class="t">🔴 两条最常见的错误出路</span><p><strong>关掉规则</strong>:在依赖数组上面写 <code>// eslint-disable-next-line react-hooks/exhaustive-deps</code>。它不解决任何问题,只是把「Effect 里读到的是旧值」这个 bug 从构建期挪到线上——症状是聊天室切了房间还在收上一个房间的消息、搜索框换了关键词结果不更新。react.dev 的原话是:这条规则报的每一处都是真问题,压制它之前先想「怎么让这个依赖不再需要」。<strong>到处 useCallback</strong>:给每个传进 Effect 的函数包一层。它有时是对的(函数确实要被多个 Effect 或 <code>memo</code> 子组件共用),但更多时候只是把一个依赖换成了「<code>useCallback</code> 自己的依赖数组」,问题原样搬家,代码还多了一层。判据很简单:<strong>这个函数只有一个 Effect 用吗?是,就移进去,别包。</strong></p></div>
@@ -1594,7 +1695,7 @@ app div 收到冒泡: modal              ← DOM 上不是祖先,React 树上是
 <tr><td><a href="#f10-state">2.1</a> useRef 是跨渲染的盒子</td><td>改 <code>.current</code> 不触发渲染;提交之后才有 DOM 节点</td><td>在渲染过程中读 <code>ref.current</code> 决定输出,首屏拿到 <code>null</code></td></tr>
 <tr><td><a href="#f10-state">2.1</a> useMemo/useCallback 有边界</td><td>只为「计算真的贵」和「要让引用稳定」两件事而用</td><td>当性能习惯到处包,只多了一次比较和一份缓存</td></tr>
 <tr><td><a href="#f10-state">2.1</a> context 是传递工具</td><td>value 一变,全部消费者重渲染,不管用的是哪个字段</td><td>写 <code>value={{ user, setUser }}</code>,父一渲染引用就变,全员跟着渲染</td></tr>
-<tr><td class="nw"><a href="#f10-state">2.1</a> 重渲染的三个来源</td><td>自己状态变、父组件渲染、消费的 context 变</td><td>看到子组件重跑就先怀疑 <code>memo</code> 没生效,其实是父组件在渲染</td></tr>
+<tr><td class="nw"><a href="#f10-state">2.1</a> 重渲染的三个来源</td><td>自己状态变、父组件渲染、消费的 context 变</td><td>看到子组件重跑就先怀疑 <code>memo</code> 没生效,实际上是父组件在渲染</td></tr>
 <tr><td class="nw"><a href="#f10-patterns">2.3</a> 受控与非受控</td><td><code>value</code> 传了就是受控;可复用组件两种都支持</td><td><code>value={user.name}</code> 在数据未到时是 <code>undefined</code>,控制台「A component is changing an uncontrolled input to be controlled」</td></tr>
 <tr><td><a href="#f10-patterns">2.3</a> 受控必须配 onChange</td><td>状态不更新,React 会把 DOM 值改回状态值</td><td>只写 <code>value</code> 不写 <code>onChange</code>,输入框敲不动,警告 provided a `value` prop without an `onChange` handler</td></tr>
 <tr><td class="nw"><a href="#f10-patterns">2.3</a> 复合组件</td><td>部件通过 context 共享状态,结构交给调用方用 JSX 拼</td><td>子组件被单独拿出去用,<code>useContext</code> 拿到 <code>null</code>,崩在 <code>null.current</code> 上而不是给一句明确报错</td></tr>
@@ -1960,7 +2061,7 @@ createRoot(document.getElementById(<span>'root'</span>)).render(
 Network 面板勾选 Offline 后点另一条 → 约 7 秒后显示「出错:Failed to fetch」(默认重试 3 次,退避 1s/2s/4s)</code></pre>
 <p>解读:Network 里请求的 Host 是 <code>localhost:5173</code>,印证了代理——浏览器从头到尾没有跨源,CORS 不存在;把 <code>vite.config.js</code> 里的 proxy 删掉、<code>VITE_API_BASE</code> 改成完整的 <code>https://jsonplaceholder.typicode.com</code>,这个接口恰好允许跨源所以仍能跑,但换成你自己的后端就会在控制台看到 <a href="浏览器API与工作原理手册.html#f8-cors">《浏览器 API 与工作原理手册》11.2</a> 的 CORS 报错。「返回」不发请求印证了 key 级缓存与 <code>staleTime</code>;把 <code>staleTime</code> 删掉(默认 0),返回时列表仍瞬间出现(先给缓存),但 Network 里多一条后台刷新请求——这就是「stale-while-revalidate」。404 的分支印证了 <code>getJSON</code> 里 <code>res.ok</code> 检查的必要性:fetch 对 404 不 reject(见 <a href="JavaScript语言手册.html#f6-fetch">《JavaScript 语言手册》9.2</a>),不抛的话 <code>data</code> 会是一个空对象,页面渲染出空标题,比报错更难查。</p></div>
 <h2 id="f10-eco">3.2 状态管理生态与选型</h2>
-<p>「状态管理」是 React 生态里名词最多、争论最久的领域:Redux、MobX、Zustand、Jotai、Recoil、Valtio、XState,还有 Context、TanStack Query、react-hook-form……初学者最常见的困惑不是「怎么用」,是「要不要用、用哪个」。这一节先做一件釜底抽薪的事:<strong>把「状态」拆成四类</strong>,每类的生命周期、来源、变化频率都不同,合适的工具也不同;大部分选型争论其实是把四类混在一起谈。拆开之后再看每个工具解决哪一类,选型就变成查表。</p>
+<p>「状态管理」是 React 生态里名词最多、争论最久的领域:Redux、MobX、Zustand、Jotai、Recoil、Valtio、XState,还有 Context、TanStack Query、react-hook-form……初学者最常见的困惑不是「怎么用」,是「要不要用、用哪个」。这一节先做一件釜底抽薪的事:<strong>把「状态」拆成四类</strong>,每类的生命周期、来源、变化频率都不同,合适的工具也不同;大部分选型争论是把四类混在一起谈。拆开之后再看每个工具解决哪一类,选型就变成查表。</p>
 <p>这一节以 React 19 + 各库当前主版本为准(Zustand 5、Jotai 2、Redux Toolkit 2、TanStack Query 5、react-hook-form 7),安装命令在节末。所有示例都能放进 <a href="#f10-router-data">3.1</a> 建好的 Vite 项目里跑。</p>
 <h3>四类状态:先分类,再选工具</h3>
 <table style="contain-intrinsic-size:auto 455px">
@@ -2579,7 +2680,7 @@ hydrateRoot(container: Element, initialChildren: ReactNode, { onRecoverableError
 <p>第三条最容易被忽略,而它是让「客户端包保持很小」的关键——容器是客户端的,内容仍然只在服务端跑。</p></div>
 <h3>React 19 让组件自己声明资源</h3>
 <p>一个组件知道自己接下来要用什么资源,这个知识以前只能人工搬到 <code>index.html</code> 的 <code>&lt;link&gt;</code> 里(<a href="#f11-opt">7.2</a> 讲的 <code>preconnect</code>/<code>preload</code>)。React 19 把它做成了可以在组件里直接调用的函数:调用点在组件树里,React 负责去重,并在 SSR 时把对应的标签提到 HTML 的 <code>&lt;head&gt;</code>。</p>
-<div class="note new" style="contain-intrinsic-size:auto 267px"><span class="t">🔵 react-dom 的四个资源提示 API</span><p><code>prefetchDNS(href)</code>——只做 DNS 解析,用于「可能会用到」的域名;<code>preconnect(href)</code>——建好 TCP + TLS 连接,用于「一定会用到但还不知道具体文件」的域名;<code>preload(href, { as })</code>——下载但不执行,<code>as</code> 必填(<code>'script'</code>/<code>'style'</code>/<code>'font'</code>/<code>'image'</code>);<code>preinit(href, { as })</code>——下载<strong>并且执行/应用</strong>,用于确定马上要用的脚本或样式表。四者的代价依次上升,用错方向的典型症状是:该 <code>preconnect</code> 的地方用了 <code>preload</code>(下载了一个其实用不上的文件),或者该 <code>preload</code> 字体的地方用了 <code>preinit</code>。这四个是同一件事的组件侧写法,和 HTML 里静态写 <code>&lt;link rel&gt;</code> 效果相同但更准——组件知道自己要什么,<code>index.html</code> 不知道。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 267px"><span class="t">🔵 react-dom 的四个资源提示 API</span><p><code>prefetchDNS(href)</code>——只做 DNS 解析,用于「可能会用到」的域名;<code>preconnect(href)</code>——建好 TCP + TLS 连接,用于「一定会用到但还不知道具体文件」的域名;<code>preload(href, { as })</code>——下载但不执行,<code>as</code> 必填(<code>'script'</code>/<code>'style'</code>/<code>'font'</code>/<code>'image'</code>);<code>preinit(href, { as })</code>——下载<strong>并且执行/应用</strong>,用于确定马上要用的脚本或样式表。四者的代价依次上升,用错方向的典型症状是:该 <code>preconnect</code> 的地方用了 <code>preload</code>(下载了一个用不上的文件),或者该 <code>preload</code> 字体的地方用了 <code>preinit</code>。这四个是同一件事的组件侧写法,和 HTML 里静态写 <code>&lt;link rel&gt;</code> 效果相同但更准——组件知道自己要什么,<code>index.html</code> 不知道。</p></div>
 <div class="deep"><h3 class="deep">流式的 HTML 到底长什么样:fallback 是怎么被换掉的</h3>
 <p>流式 SSR 听起来需要某种特殊协议,实际上它只用了两样最普通的东西:一个不结束的 HTTP 响应,和几段内联脚本。骨架先发出去时,每个还没好的 Suspense 边界在 HTML 里留下的是 <code>fallback</code> 的内容加一对注释标记;某一块的数据好了,服务器往<strong>同一个响应</strong>里追加两样东西:这一块的真实 HTML(藏在一个 <code>hidden</code> 的容器里,通常挂在 <code>&lt;body&gt;</code> 末尾),以及一小段内联 <code>&lt;script&gt;</code>,它做的事就是把真实内容搬到占位的位置上、删掉占位。这段脚本不依赖你的应用 JS,所以<strong>在应用包还没下载完的时候,内容替换就已经在发生了</strong>——这是流式 SSR 能在慢网络上明显赢过 CSR 的直接原因。</p>
 <p>有三条工程后果。<strong>一,不能给响应设 <code>Content-Length</code></strong>,也不能让中间层(某些反向代理、CDN、压缩中间件)把响应缓冲起来一次性下发——一缓冲,流式就退化成普通 SSR,而且所有收益归零却看不出任何报错。部署 SSR 时要确认代理没开缓冲(<a href="#f11-deploy">7.3</a>)。<strong>二,状态码和响应头必须在骨架发出前就定下来</strong>:第一个字节一出去就没法再改 <code>res.status</code> 了,所以「数据不存在要返回 404」这类判断必须发生在 <code>onShellReady</code> 之前,这也是 <code>onShellError</code> 存在的理由。<strong>三,慢的块不能无限期拖着响应</strong>:配一个超时调 <code>abort()</code>,让还没好的块降级到客户端渲染,而不是让用户的连接一直挂着。</p></div>
@@ -3374,7 +3475,7 @@ Elements 面板:&lt;div <span class="kw">class</span>=<span>"modal-box"</span>&g
 <tr><td><a href="#f10-concurrent-ssr">4.2</a> 渲染形态按一个问题分</td><td>「HTML 在哪生成、什么时候生成」:CSR / SSR / SSG / ISR / 流式 / RSC</td><td>登录后的后台系统硬上 SSR:复杂度翻倍,SEO 与首屏收益都为零</td></tr>
 <tr><td><a href="#f10-concurrent-ssr">4.2</a> 水合要求两端一致</td><td>客户端首次渲染的输出必须和服务端 HTML 逐节点相同</td><td>渲染里读 <code>Date.now()</code>/<code>localStorage</code>/<code>window.innerWidth</code>,报 Hydration failed because the server rendered text didn't match the client</td></tr>
 <tr><td><a href="#f10-concurrent-ssr">4.2</a> hydrateRoot 不是 createRoot</td><td>前者认领已有 DOM,后者清空重建</td><td>SSR 页面用 <code>createRoot</code> 接管,首屏先白闪一下,服务端 HTML 白发</td></tr>
-<tr><td class="nw"><a href="#f10-perf">4.4</a> 四段成本模型</td><td>渲染、提交、浏览器绘制、加载,四段的症状和面板都不一样</td><td>一上来就到处加 <code>memo</code>,而瓶颈其实在首屏 JS 体积</td></tr>
+<tr><td class="nw"><a href="#f10-perf">4.4</a> 四段成本模型</td><td>渲染、提交、浏览器绘制、加载,四段的症状和面板都不一样</td><td>一上来就到处加 <code>memo</code>,而瓶颈在首屏 JS 体积</td></tr>
 <tr><td class="nw"><a href="#f10-perf">4.4</a> 重渲染不等于慢</td><td>组件函数重跑通常是微秒级,diff 没变化就不动 DOM</td><td>追求「零重渲染」,代码写成一片 <code>memo</code>,Profiler 上量不出任何改善</td></tr>
 <tr><td><a href="#f10-perf">4.4</a> Profiler 的两个数字</td><td><code>actualDuration</code> 是这次真花的,<code>baseDuration</code> 是完全不缓存时的估计</td><td>只看火焰图宽度,不勾「Record why each component rendered」,查不到原因</td></tr>
 <tr><td><a href="#f10-perf">4.4</a> memo 的前提是引用稳定</td><td>props 浅比较全部相同才跳过</td><td>传 <code>style={{ color: 'red' }}</code> 和内联箭头函数,浅比较永远失败,原因栏写着 Props changed: (style, onPick)</td></tr>
@@ -3651,7 +3752,7 @@ import.meta.env.VITE_*      <span class="cm">// string   你在 .env 里定义�
 
 <span class="cm">// 文件加载顺序(后者覆盖前者;.local 系列应加入 .gitignore)</span>
 <span class="cm">// .env  →  .env.local  →  .env.[mode]  →  .env.[mode].local</span></code></pre>
-<p><code>mode</code> 默认 <code>vite</code> 是 <code>development</code>、<code>vite build</code> 是 <code>production</code>,用 <code>--mode staging</code> 可以自定义——它只影响读哪个 <code>.env.staging</code> 文件和 <code>MODE</code> 的值,<strong>不改变构建是否压缩</strong>(那由命令决定)。一个常见的误会是以为 <code>vite build --mode development</code> 会产出未压缩的包,其实不会。环境变量的值永远是字符串,<code>VITE_DEBUG=false</code> 读出来是 <code>'false'</code>,在 if 里为真;要布尔值自己转。给 <code>import.meta.env</code> 加类型提示,在 <code>src/vite-env.d.ts</code> 里扩展 <code>ImportMetaEnv</code> 接口。</p>
+<p><code>mode</code> 默认 <code>vite</code> 是 <code>development</code>、<code>vite build</code> 是 <code>production</code>,用 <code>--mode staging</code> 可以自定义——它只影响读哪个 <code>.env.staging</code> 文件和 <code>MODE</code> 的值,<strong>不改变构建是否压缩</strong>(那由命令决定)。一个常见的误会是以为 <code>vite build --mode development</code> 会产出未压缩的包,实际上不会。环境变量的值永远是字符串,<code>VITE_DEBUG=false</code> 读出来是 <code>'false'</code>,在 if 里为真;要布尔值自己转。给 <code>import.meta.env</code> 加类型提示,在 <code>src/vite-env.d.ts</code> 里扩展 <code>ImportMetaEnv</code> 接口。</p>
 <div class="deep"><h3>完整示例:同一行代码在 dev 与 build 下读到什么</h3>
 <p>三个文件、一行 <code>console.log</code>,把「环境变量在浏览器里根本不存在,只是构建期的文本替换」这句话在产物里验证一次。这也解释了两个天天遇到的现象:改了 <code>.env</code> 为什么必须重启,以及为什么密钥一旦加了 <code>VITE_</code> 前缀就等于公开。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 223px"><code># .env                      (所有环境共用,可提交)
@@ -5448,7 +5549,7 @@ $ npm publish --help | grep -o <span>"\-\-provenance[^]]*"</span>
 <tr><td class="nw"><a href="#f11-pkg">6.2</a> 锁文件才是事实</td><td>记录精确版本、下载地址与 <code>integrity</code> 哈希</td><td>遇到冲突就 <code>rm -rf node_modules package-lock.json</code> 重装,「修好」的代价是整棵树换了一遍</td></tr>
 <tr><td><a href="#f11-pkg">6.2</a> peerDependencies 表示共用实例</td><td>组件库要用宿主那份 React</td><td>把 React 写进 <code>dependencies</code>,使用者装出两份 React,报 Invalid hook call</td></tr>
 <tr><td><a href="#f11-pkg">6.2</a> --legacy-peer-deps 是止血</td><td>它只是让安装通过,树仍然是 invalid 的</td><td>拿它绕过 ERESOLVE 之后当问题已解决,运行时随机炸</td></tr>
-<tr><td class="nw"><a href="#f11-pkg">6.2</a> pnpm 默认不提升</td><td>顶层只有你声明过的包,其余在 <code>.pnpm</code> 里各自可见</td><td>老项目迁 pnpm 后一片 Cannot find module,以为 pnpm 有 bug,其实是幽灵依赖一直在</td></tr>
+<tr><td class="nw"><a href="#f11-pkg">6.2</a> pnpm 默认不提升</td><td>顶层只有你声明过的包,其余在 <code>.pnpm</code> 里各自可见</td><td>老项目迁 pnpm 后一片 Cannot find module,以为 pnpm 有 bug,实际上是幽灵依赖一直在</td></tr>
 <tr><td><a href="#f11-pkg">6.2</a> packageManager 字段</td><td>配合 corepack,团队与 CI 用同一个包管理器版本</td><td>三个人三种包管理器,仓库里躺着三个锁文件</td></tr>
 <tr><td class="nw"><a href="#f11-pkg">6.2</a> 依赖树先归因再动手</td><td><code>npm explain &lt;pkg&gt;</code> 给出「谁引入的、声明的范围是什么」</td><td>直接 <code>npm update</code>,而上游把范围写死成精确版本,update 根本动不了</td></tr>
 <tr><td><a href="#f11-pkg">6.2</a> overrides 是临时补丁</td><td>它只改这一次的解析结果,不改上游的范围</td><td>钉完就忘,上游早发了新版,覆盖还压着一个旧版本</td></tr>
@@ -7983,7 +8084,7 @@ $ # 把 .btn 的 padding 从 8px 改成 12px 再跑(其余不动):
 <ul>
 <li><strong>基线只在一个固定环境里生成。</strong>文件名里的 <code>-chromium-win32</code> 已经暗示了这一点:换平台就是另一套基线。可行的做法只有两种——全员用同一个容器(<code>mcr.microsoft.com/playwright</code> 官方镜像,版本与 <code>@playwright/test</code> 对齐),或者干脆规定「基线由 CI 生成」,本地只读不写。</li>
 <li><strong>更新基线是一次显式操作,不是顺手。</strong>把它做成一个单独的手动触发工作流(跑 <code>--update-snapshots</code>,把改动提成一个只含图片的 PR),而不是让每个人本机 <code>-u</code> 一把梭——后者的代价是某天有人把一个真 bug 的截图当成新基线固化了,从此再也没人会发现。</li>
-<li><strong>差异必须能在 PR 里被看见。</strong>自建方案是把 <code>test-results/</code> 里的 expected/actual/diff 三张图作为构建产物上传,并在 PR 评论里给出链接;托管服务(Chromatic、Percy、Argos)卖的其实就是这一步——差异直接渲染在 PR 检查里,点一下接受就更新基线,还能记录是谁接受的。</li>
+<li><strong>差异必须能在 PR 里被看见。</strong>自建方案是把 <code>test-results/</code> 里的 expected/actual/diff 三张图作为构建产物上传,并在 PR 评论里给出链接;托管服务(Chromatic、Percy、Argos)卖的就是这一步——差异直接渲染在 PR 检查里,点一下接受就更新基线,还能记录是谁接受的。</li>
 </ul>
 <p>选自建还是托管,判据是<strong>每次 PR 会产生多少张待审的图</strong>。只给设计系统的十来个基础组件做视觉回归,自建足够;要覆盖几十个页面 × 三种视口 × 明暗两套主题,人工翻 artifact 的方式撑不住,那时托管服务按截图计费的钱花得值。还有一个常被忽略的省钱办法:<strong>只对改动影响到的组件截图</strong>——Storybook 生态的托管服务能按依赖图判断哪些故事受影响,自建方案可以用 <code>--grep</code> 配合改动路径粗略近似。</p></div>
 <h2 id="ftest-budget">9.6 性能预算:Lighthouse CI、包体积与流水线编排</h2>

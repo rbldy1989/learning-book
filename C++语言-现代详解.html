@@ -180,6 +180,7 @@ main .note{content-visibility:auto;contain-intrinsic-size:auto 200px;}
 
 
 
+
 /* —— 薄/厚阅读模式 —— */
 #depthBtn{position:fixed;top:12px;right:52px;z-index:11;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--rule);background:var(--side-bg);color:var(--muted);cursor:pointer;line-height:0;}
 #depthBtn:hover{color:var(--accent);border-color:var(--accent);}
@@ -199,7 +200,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">C++ 语言 · 现代详解</div>
 <details><summary><a class="ch" href="#c0">预备:C 程序员够用的 C++ 基础</a></summary>
-<a class="sec" href="#c0-howto">0.0 这一章讲什么、怎么读</a>
+<a class="sec" href="#c0-open">0.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#c0-class">0.1 类与对象:从 struct 到 class</a>
 <a class="sec" href="#c0-basic">0.2 引用、重载、默认参数与运算符重载</a>
 <a class="sec" href="#c0-scope">0.3 作用域、生命周期与存储期</a>
@@ -214,7 +215,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c0-sum">0.12 小结:这一章的清单</a>
 </details>
 <details><summary><a class="ch" href="#c1">从 C 到 C++:分界线在哪</a></summary>
-<a class="sec" href="#c1-classics">1.0 相关经典书籍</a>
+<a class="sec" href="#c1-guide">1.0 遇到问题时翻哪一本</a>
 <a class="sec" href="#c1-line">1.1 分界线:C++ 在 C 上加了什么</a>
 <a class="sec" href="#c1-odr">1.2 编译单元、ODR 与名字改编</a>
 <a class="sec" href="#c1-header">1.3 头文件、inline 与静态初始化顺序</a>
@@ -386,86 +387,116 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 85055px;--thin-h:85055px">
+<section class="chapter" style="contain-intrinsic-size:auto 87020px;--thin-h:87020px">
 <h1 id="c0"><span class="part">第 0 章</span>预备:C 程序员够用的 C++ 基础</h1>
-<h2 id="c0-howto">0.0 这一章讲什么、怎么读</h2>
-<p>后面十六章讲的是机制与判据,默认读者已经能读懂 C++ 的日常语法。<strong>这一章补的就是那部分语法</strong>:类、引用、重载、模板、异常、标准库的常用入口,以及一个能编译能调试的最小工程。</p>
-<p>编排原则是<strong>详略得当</strong>:与 C 相同或近似的部分一句带过,C 里没有对应物的部分讲清楚「它是什么、解决什么、最小怎么写」,而<strong>为什么这样设计、边界在哪、怎么用错</strong>一律不在这里展开,留给对应的章节。每一节末尾都指明后续位置。</p>
-<table style="contain-intrinsic-size:auto 444px">
-<thead><tr><th>这一节</th><th>讲到什么程度</th><th>深入位置</th></tr></thead>
+<h2 id="c0-open">0.0 开卷:锚定、定位与读法</h2>
+<p>本书面向<strong>已经写得动 C、C++ 只有零星经验</strong>的读者。讲法是从 C 的已知出发:先说清同一件事在两种语言里差在哪,再说清 C++ 多出来的那部分机制是为解决什么问题而存在的,最后给出它在什么条件下不成立。</p>
+<p>语言基线取 <strong>C++17</strong>——凡是没有标注版本的写法在 C++17 上都成立;C++20 与 C++23 的设施逐处标出最低版本。0.11 节给出的工程配置把标准直接开到 C++20,因为后面的示例用到了 <code>std::format</code> 与 ranges。编译器覆盖 GCC、Clang 与 MSVC,行为不一致处三家分别给出。手上只有旧编译器时有三条替代路线:<code>std::format</code> 换成 fmt 库,格式串语法相同;ranges 换成写全 <code>begin()</code> 与 <code>end()</code>;<code>std::span</code> 换成指针加长度两个参数。</p>
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>C++ 的资料密度在编程语言里排在前列,问题不是找不到,而是版本跨度太大:同一个问题在 1998 年、2011 年与今天有三种正确答案。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。按触发场景决定翻哪一本的对照表另见 1.0 节。</p>
+<table style="contain-intrinsic-size:auto 1051px">
+<thead><tr><th>资料</th><th>类型</th><th>关系</th><th>特点与局限</th></tr></thead>
 <tbody>
-<tr><td class="nw">0.1 类与对象</td><td>能定义类、写构造析构、知道访问控制干什么</td><td>第 3 章(内存布局)、第 4 章(资源管理)</td></tr>
-<tr><td class="nw">0.2 引用、重载、默认参数</td><td class="nw">能读会写,知道与指针的分工</td><td>第 2 章(值类别)、第 6 章(重载决议)</td></tr>
-<tr><td class="nw">0.3 作用域、生命周期与存储期</td><td class="nw">知道变量什么时候诞生与销毁</td><td>1.3(初始化顺序)、第 4 章</td></tr>
-<tr><td class="nw">0.4 流程控制的增补</td><td>范围 for、带初始化的 if、三个常用属性</td><td>—</td></tr>
-<tr><td class="nw">0.5 标准库常用入口</td><td><code>string</code> / <code>vector</code> / <code>map</code> / 迭代器够日常使用</td><td>《C++ 标准库 API 编程手册》</td></tr>
-<tr><td class="nw">0.6 字符串处理</td><td>拼接、切分、数值转换、编码现状</td><td>同上</td></tr>
-<tr><td class="nw">0.7 输入输出与文件</td><td>读写文件、流状态、三套格式化接口怎么选</td><td>同上</td></tr>
-<tr><td class="nw">0.8 模板与 auto</td><td class="nw">能读懂后面章节里的模板代码</td><td>第 9、10 章</td></tr>
-<tr><td class="nw">0.9 异常与 RAII</td><td>知道错误怎么传、资源怎么自动释放</td><td>第 4 章、第 12 章</td></tr>
-<tr><td class="nw">0.10 常用工具设施</td><td class="nw">时间、随机数、文件系统</td><td>同上</td></tr>
-<tr><td class="nw">0.11 第一个工程</td><td class="nw">能编译、能运行、能下断点</td><td>第 15 章(工具链)</td></tr>
+<tr><td>Stroustrup《C++ 程序设计语言》(第 4 版)</td><td>经典教材</td><td>参考</td><td>语言之父写的大全,设计意图的权威出处。局限:极厚,内容止于 C++11,不适合顺序读</td></tr>
+<tr><td class="nw">Lippman 等《C++ Primer》</td><td>经典教材</td><td>推荐</td><td>最完整的入门教材,例题密度高。局限:面向没有编程经验的读者,C 程序员会觉得前几百页在重复已知的东西</td></tr>
+<tr><td class="nw">Lippman《深度探索 C++ 对象模型》</td><td>进阶与专题</td><td>锚定</td><td>类的内存布局、构造析构的编译期展开、虚表的生成过程,C 程序员最缺的就是这一层。局限:成书较早,不含移动语义与模板新特性</td></tr>
+<tr><td>Meyers《Effective C++》与《Effective Modern C++》</td><td>进阶与专题</td><td>锚定</td><td>条款式:做什么、为什么、记住哪几条。前者管类设计与资源管理,后者管现代写法。局限:非入门书;前者止于 C++03,涉及拷贝与性能的条款要用后者修正</td></tr>
+<tr><td>Sutter《Exceptional C++》系列与《C++ 编程规范》</td><td>进阶与专题</td><td>锚定</td><td>以问答推导异常安全与对象生命周期的边界情形,「什么时候会错」讲得最透。局限:例子偏刁钻,不适合当第一本</td></tr>
+<tr><td>Vandevoorde 与 Josuttis《C++ Templates》</td><td>进阶与专题</td><td>参考</td><td>模板推导、特化与元编程的完整参考。局限:后半部分难度陡增,是查阅书不是通读书</td></tr>
+<tr><td>Williams《C++ Concurrency in Action》</td><td>进阶与专题</td><td>参考</td><td>标准线程库与内存模型,含无锁数据结构。局限:内存序部分需要反复读</td></tr>
+<tr><td class="nw">侯捷《STL 源码剖析》</td><td>进阶与专题</td><td>推荐</td><td>从实现看容器与迭代器,能补上「标准库是怎么做到的」这一层。局限:基于早期的 SGI STL,与现在的实现有出入</td></tr>
+<tr><td class="nw">cppreference</td><td>参考手册</td><td>锚定</td><td>接口签名、参数含义、各版本的行为差异与编译器支持表,查得最快。局限:给规则不给取舍;中文版更新滞后,建议看英文版</td></tr>
+<tr><td>ISO C++ 标准工作草案与 WG21 提案文档</td><td>官方文档与规范</td><td>参考</td><td>编译器行为不一致时的仲裁依据;提案的动机一节往往比标准正文好读。局限:草案不是给人顺序阅读的,只能按条款号查</td></tr>
+<tr><td class="nw">C++ Core Guidelines</td><td>官方文档与规范</td><td>锚定</td><td>Stroustrup 与 Sutter 主持,每条带编号,适合作团队规范的依据。局限:是清单不是教材,不解释背景</td></tr>
+<tr><td>GCC / Clang / MSVC 的文档与标准库实现源码</td><td>官方文档与规范</td><td>参考</td><td>扩展、警告开关、ABI 约定,以及文档说不清时的最终事实。局限:实现细节随版本改动,读出的结论不能当接口承诺</td></tr>
+<tr><td class="nw">Compiler Explorer</td><td>在线资料</td><td>参考</td><td>一段代码被编译成了什么,可同时开三个编译器对比,能快速验证行为差异。局限:看得到生成代码,看不到运行期行为</td></tr>
 </tbody>
 </table>
-<p>已经写过一段时间 C++ 的读者可以跳过这一章,直接从第 1 章开始。<strong>但 0.11 建议看一眼</strong>——后面所有示例都假设工具链已经按那里的配置调好,尤其是标准版本开关与 sanitizer。</p>
-<h3>术语对照:同一件事的两种叫法</h3>
-<p>C 与 C++ 有不少概念是同一件事换了名字,也有一些名字相同但含义变了。先把这张表过一遍,后面读文档和报错信息会顺很多。</p>
-<table style="contain-intrinsic-size:auto 415px">
-<thead><tr><th>C 里的说法</th><th>C++ 里的说法</th><th>变了什么</th></tr></thead>
+<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 经典的机制层没有过时,涉及拷贝与性能的结论要用移动语义修正</span><p>Lippman 讲的对象布局与虚函数机制至今没有变化,Meyers 里类设计与资源管理的条款也仍然成立。要修正的是三类:「返回容器要靠输出参数」这类性能建议在移动语义之后不再成立;围绕 <code>std::auto_ptr</code> 的条款已随它被移除而作废;自己写拷贝构造与赋值的前提换成了三五零法则(4.2 节)。本书在需要修正处会明确标出。</p></div>
+<h3>锚定的五样各借鉴了什么</h3>
+<p>借鉴的都是具体手法,不是笼统的风格。</p>
+<table style="contain-intrinsic-size:auto 426px">
+<thead><tr><th>锚定的资料</th><th>借鉴了什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">结构体</td><td>类(<code>struct</code> 与 <code>class</code>)</td><td>多了成员函数、访问控制、构造析构</td></tr>
-<tr><td class="nw">函数</td><td class="nw">函数、<strong>成员函数</strong>、<strong>函数模板</strong></td><td>多了重载与模板</td></tr>
-<tr><td class="nw"><code>typedef</code></td><td class="nw"><code>using</code> 别名</td><td><code>using</code> 能带模板参数</td></tr>
-<tr><td class="nw">宏常量</td><td class="nw"><code>constexpr</code> 常量</td><td>有类型、有作用域</td></tr>
-<tr><td class="nw">宏函数</td><td class="nw"><code>inline</code> 函数或模板</td><td>参数只求值一次</td></tr>
-<tr><td class="nw"><code>void*</code> 泛型</td><td class="nw">模板</td><td>类型不丢失</td></tr>
-<tr><td class="nw">文件内 <code>static</code></td><td class="nw">匿名命名空间</td><td>对类型也有效</td></tr>
-<tr><td class="nw"><code>malloc</code> / <code>free</code></td><td><code>new</code> / <code>delete</code>,或智能指针</td><td>多了构造与析构</td></tr>
-<tr><td class="nw">返回错误码</td><td>返回值、异常、<code>std::expected</code></td><td>多了两条通道</td></tr>
-<tr><td class="nw">「一个 <code>.c</code> 文件」</td><td class="nw"><strong>编译单元</strong></td><td>概念相同,但头文件里能放的东西多得多</td></tr>
+<tr><td class="nw">Lippman《深度探索 C++ 对象模型》</td><td>第 3 章的编排与讲法:先摊开内存布局,再说编译器在构造析构处插入了什么,最后才是虚表与继承下的布局。区别在于每一处布局都按现代编译器的实际输出重新核对过,而不是照抄早期实现的图</td></tr>
+<tr><td class="nw">Meyers</td><td>结论的形式。每条使用规矩都写成「做什么、为什么、什么时候不适用」,但不逐条对应条款号,而是按主题聚合进章里;涉及拷贝与性能的旧结论用移动语义重写过(第 5 章)</td></tr>
+<tr><td class="nw">Sutter</td><td>边界与失效情形的写法。问答式的刁钻例子换成真实事故的症状与排查手段——报错原文长什么样、在哪一步暴露、用哪条命令区分两种成因;12.2 节的异常安全三级保证照它的划分</td></tr>
+<tr><td class="nw">cppreference</td><td>两处。一是接口与版本事实的准绳,二手资料与它冲突时以它为准;二是版本标注的形式,每个设施标出最低标准版本,单独占一列</td></tr>
+<tr><td class="nw">C++ Core Guidelines</td><td>绿色批注的形态:一句祈使句加一条理由,能对应到某条编号的写法与它保持一致,团队要给规范找依据时可以按编号引用</td></tr>
 </tbody>
 </table>
-<p>有两个词特别容易误解。<strong><code>inline</code> 在 C++ 里的规范作用不是「建议内联」</strong>,而是「允许这个定义出现在多个编译单元里」(1.2 节);<strong><code>const</code> 在 C++ 里参与类型系统</strong>,会影响重载决议和能调用哪些成员函数,不只是「别改它」的提示(2.5 节)。</p>
-<h3>建议的读法</h3>
-<p>这一章按「读代码需要什么」排序,不按「概念的重要性」排序。如果时间有限,<strong>0.1 与 0.2 是必读</strong>——类和引用出现在每一段 C++ 代码里;0.3 到 0.10 可以边读后面章节边回来查;0.11 建议先跑一遍,把环境配好。</p>
-<p>从第 1 章开始,讲法就变了:每个知识点都按「是什么 → 怎么运作 → 什么时候失效 → 实战形态」四步展开,而且会给出失效时的具体症状。<strong>这一章刻意不这样写</strong>,因为在还不认识语法的时候讨论边界情形没有意义。</p>
-<h3>C 程序员最常问的五个问题</h3>
-<p>下面五个问题在每一次 C 转 C++ 的过程中都会出现。这里给一句话答案与出处,详细解释在对应章节。</p>
-<table style="contain-intrinsic-size:auto 352px">
-<thead><tr><th>问题</th><th>一句话答案</th><th>出处</th></tr></thead>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 语言行为有分歧时按标准、多编译器实测、二手资料的顺序取信</span><p>先查 cppreference 确认接口与所需的标准版本;行为与预期不符时用 Compiler Explorer 在三家编译器上复现一次,这一步能立刻区分「标准如此」与「某家实现的差异」;仍有分歧才去查标准条款。绝大多数问题在第一步就能解决,直接跳到第三步的代价是查一条规则往往要读五页交叉引用。</p></div>
+<h3>讲什么、不讲什么</h3>
+<p>本书覆盖<strong>C++ 语言本体的机制与取舍</strong>,19 章 147 节。</p>
+<table style="contain-intrinsic-size:auto 370px">
+<thead><tr><th>章</th><th>它回答的问题</th></tr></thead>
 <tbody>
-<tr><td>我还能用 <code>malloc</code> / <code>printf</code> / <code>memcpy</code> 吗</td><td><strong>能</strong>,C 标准库在 C++ 里全部可用。但内存管理应当换成容器与智能指针,格式化换成 <code>std::format</code></td><td>1.5、1.6</td></tr>
-<tr><td class="nw">C++ 是不是一定比 C 慢</td><td><strong>不是。</strong>不用的特性不花钱——不写虚函数就没有虚表,不抛异常就没有运行期开销。反过来 <code>std::sort</code> 通常比 <code>qsort</code> 快一倍</td><td>1.6、《C++ 性能优化》</td></tr>
-<tr><td class="nw">必须用面向对象吗</td><td><strong>不必。</strong>自由函数加简单结构体是完全正当的 C++ 风格,标准库自己就大量这样写。继承只在确实需要多态时用</td><td>第 7 章</td></tr>
-<tr><td class="nw">模板会不会让二进制变得很大</td><td>会,但可控。同一个模板按用到的类型各生成一份代码,类型多了代码就多。控制手段是把与类型无关的部分抽到非模板函数里</td><td>第 9 章</td></tr>
-<tr><td class="nw">异常会不会让程序变慢</td><td><strong>不抛的时候不会</strong>,现代实现的正常路径零开销;抛出时很慢。所以异常只用于真正异常的情况</td><td>第 12 章</td></tr>
+<tr><td class="nw">第 0 章</td><td>读懂后面章节所需的最小 C++ 语法,以及一个能编译能调试的工程</td></tr>
+<tr><td class="nw">第 1、2 章</td><td>同一件事在 C 与 C++ 里差在哪:编译单元、ODR、名字改编、初始化与值类别</td></tr>
+<tr><td class="nw">第 3 到 5 章</td><td>对象模型与资源管理:类在内存里长什么样,谁负责释放,移动语义解决什么</td></tr>
+<tr><td class="nw">第 6 到 8 章</td><td>一次调用编译器选中了哪个函数,继承什么时候该用,值语义类怎么设计</td></tr>
+<tr><td class="nw">第 9 到 11 章</td><td>模板、concepts 与 lambda:泛型代码怎么写、报错怎么读、代价在哪</td></tr>
+<tr><td class="nw">第 12、13 章</td><td>异常与并发:错误怎么传,内存模型保证了什么</td></tr>
+<tr><td class="nw">第 14、15 章</td><td>C++20 与 C++23 的新设施,以及未定义行为、诊断与工具链</td></tr>
+<tr><td class="nw">第 16、17 章</td><td>让自己的类型接进标准库,以及把判据写进接口</td></tr>
+<tr><td class="nw">第 18 章</td><td>从 C 迁移的完整对照表与全书判据索引</td></tr>
 </tbody>
 </table>
-<p>还有一个隐含的问题值得先说清楚:<strong>不必一次性用上所有特性</strong>。一个只用了类、<code>std::vector</code>、<code>std::string</code> 和 RAII 的程序,已经比等价的 C 代码安全得多,而学习成本只有这一章。模板、并发、协程都可以等到确实需要时再学。</p>
-<h3>判断一段代码是哪一代 C++</h3>
-<p>真实代码库里三种风格并存:1998 年定型的 C++98 风格、C++11/14 带来的现代化写法、以及 C++20/23 的新设施。同一个项目里常常三代混杂——底层模块十几年没动过,新加的功能用的是最新语法。读别人的代码之前先判断它属于哪一代,能省掉大量困惑:很多看起来累赘的写法,在它被写下的那一年是唯一的选择。</p>
-<table style="contain-intrinsic-size:auto 492px">
-<thead><tr><th>看到这个写法</th><th>说明是哪一代</th><th>现在的写法</th></tr></thead>
+<p>不讲的部分同样要说清楚,并指明归谁。</p>
+<table style="contain-intrinsic-size:auto 398px">
+<thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
-<tr><td><code>std::vector&lt;std::vector&lt;int&gt; &gt;</code>(两个尖括号之间留空格)</td><td class="nw">C++98</td><td>C++11 起不必留空格</td></tr>
-<tr><td class="nw"><code>NULL</code> 或 <code>0</code> 当空指针</td><td class="nw">C++98</td><td><code>nullptr</code></td></tr>
-<tr><td class="nw"><code>typedef</code> 定义别名</td><td class="nw">C++98</td><td><code>using</code></td></tr>
-<tr><td class="nw">自己实现的 <code>scoped_ptr</code>、引用计数指针</td><td>C++98 或 Boost 时代</td><td>标准库的智能指针</td></tr>
-<tr><td class="nw"><code>std::auto_ptr</code></td><td>C++98,C++17 已删除</td><td><code>std::unique_ptr</code></td></tr>
-<tr><td class="nw">裸 <code>enum</code>,靠前缀避免重名</td><td class="nw">C++98</td><td><code>enum class</code></td></tr>
-<tr><td><code>auto</code>、范围 <code>for</code>、lambda、<code>nullptr</code></td><td class="nw">C++11/14</td><td>—</td></tr>
-<tr><td><code>std::move</code>、<code>&amp;&amp;</code>、<code>noexcept</code>、<code>override</code></td><td class="nw">C++11/14</td><td>—</td></tr>
-<tr><td>带初始化的 <code>if</code>、结构化绑定、<code>std::optional</code></td><td class="nw">C++17</td><td>—</td></tr>
-<tr><td><code>std::string_view</code>、<code>std::filesystem</code></td><td class="nw">C++17</td><td>—</td></tr>
-<tr><td><code>concept</code>、<code>requires</code>、<code>std::ranges</code>、<code>&lt;=&gt;</code></td><td class="nw">C++20/23</td><td>—</td></tr>
-<tr><td><code>std::format</code>、<code>std::span</code>、<code>std::expected</code></td><td class="nw">C++20/23</td><td>—</td></tr>
+<tr><td class="nw">标准库各设施的接口清单、参数与复杂度保证</td><td>《C++ 标准库 API 编程手册》</td><td>本书讲机制与取舍,不讲某个容器有哪些成员函数</td></tr>
+<tr><td class="nw">性能的测量、剖析与调优流程</td><td>《C++ 性能优化 · 现代详解》</td><td>本书指出开销来自哪里,不给测量步骤与优化顺序</td></tr>
+<tr><td class="nw">C 标准库函数的逐个用法</td><td class="nw">《C 标准库 API 手册》</td><td>本书只讲它在 C++ 里该换成什么</td></tr>
+<tr><td class="nw">系统调用、进程与文件系统的语义</td><td class="nw">《Linux 系统编程手册》</td><td>本书的边界停在标准设施</td></tr>
+<tr><td class="nw">Qt 的对象系统、信号槽与部件</td><td class="nw">Qt 四本</td><td>Qt 在 C++ 之上另有一套对象模型与生命周期规则</td></tr>
+<tr><td class="nw">构建系统与包管理的完整用法</td><td class="nw">不在本书系范围</td><td>第 15 章只给一份够用的最小配置</td></tr>
+<tr><td class="nw">语言史与跨语言比较</td><td class="nw">不在本书系范围</td><td>只在解释某个设计为什么是现在这样时提一句</td></tr>
 </tbody>
 </table>
-<p>还有两个更快的判断入口。看构建脚本里的 <code>-std=</code> 或 <code>CMAKE_CXX_STANDARD</code>,那是这份代码的语法上限;看头文件里有没有 <code>&lt;memory&gt;</code> 与 <code>&lt;utility&gt;</code>,现代代码几乎一定会用到智能指针与 <code>std::move</code>。</p>
-<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 C++98 风格的代码能读懂就行,不要照着写新代码</span><p>旧代码里的手写拷贝构造、裸 <code>new</code> 与 <code>delete</code>、返回错误码加输出参数,在当年都是正当写法。但新写的代码没有理由再走那条路:同样的功能用容器与智能指针表达,行数更少、出错面更小。改动旧文件时的分寸是<strong>只把改到的地方现代化</strong>,不要顺手重写整个文件,那会让代码审查无法进行。</p></div>
-<h3>本书示例的默认前提</h3>
-<p>后面所有示例默认按 C++20 编译,少数用到 C++23 设施的地方会在旁边写明。选 C++20 的理由是它是当前主流编译器都已完整支持、而且能明显改善日常写法的版本:<code>std::format</code> 取代了手工拼字符串,ranges 取代了成对的迭代器参数,concepts 让模板报错从几十行缩到一行。</p>
-<p>手上只有旧编译器时,书里绝大部分内容仍然适用,三条替代路线是:<code>std::format</code> 换成 fmt 库,格式串语法完全相同;ranges 换成写全 <code>begin()</code> 与 <code>end()</code>;<code>std::span</code> 换成「指针加长度」两个参数。C++11 以前的编译器不在本书的支持范围内,那一代的写法只讲怎么读,不讲怎么写。</p>
+<h3>读之前要会什么</h3>
+<p>前置分两档,每条都给自测方式——「熟悉 C」无法自测,也就无法用来判断该不该现在读。</p>
+<table style="contain-intrinsic-size:auto 462px">
+<thead><tr><th>档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td class="nw">写得动 C</td><td>独立写出一个用到指针、结构体与动态内存的程序,并指出哪一行分配、哪一行释放</td></tr>
+<tr><td class="nw">必须</td><td class="nw">说得清指针与数组的关系</td><td>说出 <code>int a[10]</code> 与 <code>int *p</code> 在 <code>sizeof</code> 和传参时的差别,并解释原因</td></tr>
+<tr><td class="nw">必须</td><td class="nw">知道源码怎么变成可执行文件</td><td>说出预处理、编译、汇编、链接各自的输入与输出,以及「未定义的引用」是哪一步报的</td></tr>
+<tr><td class="nw">必须</td><td class="nw">能在命令行编译并调试</td><td>不借助 IDE 把两个源文件编成一个可执行文件,再用调试器在某一行停下来看变量</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">读过带函数指针的 C 代码</td><td>说清一张函数指针表怎么做到「同一个调用走不同实现」,这正是虚函数要解决的问题</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">用过一次内存检查工具</td><td>说出上次定位到的是越界、泄漏还是重复释放,以及工具是从哪里发现的</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">了解结构体填充与对齐</td><td>说出一个含 <code>char</code> 与 <code>int</code> 的结构体在常见平台上的 <code>sizeof</code>,并指出多出来的字节在哪</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">读过其他语言的面向对象代码</td><td>说出那门语言里一个对象什么时候被回收,再对照 C++ 的答案</td></tr>
+</tbody>
+</table>
+<p>有两样不在前置里:不需要有 C++ 经验,第 0 章从类与引用开始补;不需要懂模板,第 9 章从实参推导讲起。</p>
+<h3>与那些资料相比,本书多给了什么</h3>
+<ul>
+<li><strong>每个机制都从 C 的已知出发。</strong>先说它在 C 里对应什么、差别在哪,再讲机制本身——第 1 章整章做这件事,第 18 章给出完整对照表,中间各章在概念首次出现时都补一句 C 的对照。</li>
+<li><strong>五百条上下的批注里,写失效与陷阱的红色一类接近一半。</strong>每条红色批注给症状:报错原文长什么样、在哪一步暴露、用什么手段区分两种成因,而不只是「注意不要这样写」。</li>
+<li><strong>版本标注到设施一级。</strong>C++17 之外的每个设施标出最低标准版本,14.1 节另有一张地图说明哪些值得现在就用、哪些可以先放着。</li>
+<li><strong>每章末尾都有小结与易错清单。</strong>第 18 章另有一份全书判据索引,按主题正查,配合各章小结可当速查用。</li>
+<li><strong>八百段以上的代码都是可编译的最小形态。</strong>配套的工具链配置——警告开关、sanitizer、静态分析——在 0.11 节与第 15 章给出可以直接抄的完整版本。</li>
+</ul>
+<h3>三条读法:顺读、补语法与按需查</h3>
+<p>第一次学 C++ 走顺读,已经写过一些 C++ 走补机制,手上有具体问题走按需查。</p>
+<table style="contain-intrinsic-size:auto 222px">
+<thead><tr><th>你的情形</th><th>从哪读起</th><th>主干</th><th>可以先放过</th></tr></thead>
+<tbody>
+<tr><td class="nw">写得动 C,没写过 C++</td><td>第 0 章顺读,再从第 1 章往下</td><td>第 0 到 5 章</td><td>第 10、13、14 章</td></tr>
+<tr><td class="nw">写过一些 C++,想补机制</td><td>跳过第 0 章,第 2 章读到第 8 章</td><td>第 2 到 6 章</td><td>第 0 章</td></tr>
+<tr><td class="nw">维护 C 与 C++ 混合的工程</td><td>第 1 章,再跳到第 18 章</td><td>第 1、18 章</td><td>第 9 到 11 章</td></tr>
+<tr><td class="nw">要写库或对外的公共接口</td><td>第 4、8、16、17 章</td><td>第 17 章</td><td>第 13、14 章</td></tr>
+<tr><td class="nw">手上有具体问题</td><td>18.4 节的全书判据索引</td><td>—</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>第 2 到 5 章必须按顺序读完</strong>,这四章是主干,后面每一章都建立在它们之上:第 2 章值类别与初始化,第 3 章对象布局与虚表,第 4 章 RAII 与拷贝控制,第 5 章移动语义与完美转发。第 6 章的重载决议要用到第 2 章的转换序列,第 7 章的继承要用到第 3 章的布局,第 9 章的模板推导要用到第 5 章的引用折叠。</p>
+<p>第 0 章按「读代码需要什么」排序,不按概念的重要性排序:时间有限时 0.1 与 0.2 必读,其余可以边读后面章节边回来查,0.11 建议先跑一遍把环境配好。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 第 2 到 5 章按顺序读完再挑章节</span><p>跳着读的表现很典型:每章都看得懂字面,却记不住为什么要这样写,遇到没见过的现象也推不出原因。原因是后面各章的判据都是从这四章的机制推出来的,机制没有过一遍时,判据只能当口诀背,而口诀在边界情形上一定失效。</p></div>
+<p>第 10 章的模板进阶不写库时可以先放过,第 13 章在动到多线程之前不必读,第 14 章按当前项目的标准版本取用。第 15 章的工具链建议早读一遍,它决定了后面每一次调试能省多少时间。</p>
+<p>按需查有两个入口:各章末尾的小结列出本章要点与易错项,适合定位到具体小节;18.4 节的全书判据索引按主题正查,适合已经要做一个选择、想找依据时用。</p>
+<p>读完第 0 到 2 章,能读懂日常的 C++ 代码并说清它与等价 C 代码的差别;读完第 3 到 5 章,能解释一个类为什么是这个大小、对象什么时候被销毁、一次移动省下了什么;读完全书,能把一个 C 模块迁到 C++,并说清每一处改动换来了什么保障。</p>
 <h2 id="c0-class">0.1 类与对象:从 struct 到 class</h2>
 <p>C++ 的类就是 C 的结构体加上三样东西:<strong>成员函数</strong>、<strong>访问控制</strong>、<strong>构造与析构</strong>。除此之外的内存布局、字段排布,与 C 完全一致(第 3 章会证明这一点)。</p>
 <h3>struct 与 class 只差一个默认值</h3>
@@ -1481,7 +1512,7 @@ std::cout &lt;&lt; name &lt;&lt; <span>": "</span> &lt;&lt; std::fixed &lt;&lt; 
 std::print(<span>"{}: {:.2f}\n"</span>, name, score);                     <span class="cm">// C++23,推荐</span></code></pre>
 <p>有一条与性能相关的实践值得提前知道:<strong><code>std::cout</code> 默认与 C 的 <code>stdio</code> 保持同步</strong>,这会显著拖慢大量输出。确认程序里不混用两套接口时,可以在 <code>main</code> 开头写 <code>std::ios::sync_with_stdio(false);</code> 关掉同步,吞吐量通常能提升数倍。另外<strong>用 <code>'\n'</code> 而不是 <code>std::endl</code></strong>,后者每次都强制刷新缓冲区。</p>
 <h3>流的四个层次</h3>
-<p><code>&lt;iostream&gt;</code> 这套接口的类名很多,但结构其实很清楚:按<strong>数据从哪来、到哪去</strong>分成四组。</p>
+<p><code>&lt;iostream&gt;</code> 这套接口的类名很多,但结构很清楚:按<strong>数据从哪来、到哪去</strong>分成四组。</p>
 <table style="contain-intrinsic-size:auto 189px">
 <thead><tr><th>类</th><th>数据源 / 目的地</th><th>典型用法</th></tr></thead>
 <tbody>
@@ -1669,7 +1700,7 @@ std::sort(v.begin(), v.end(), [](<span class="kw">const</span> <span class="kw">
 </table>
 <p>完整规则在 2.4 节,那里还会讲 <code>decltype</code> 与 <code>decltype(auto)</code>。现在只需记住一条:<strong>遍历写 <code>const auto&amp;</code>,要改元素写 <code>auto&amp;</code>,泛型代码写 <code>auto&amp;&amp;</code>。</strong></p>
 <h3>什么时候该自己写模板</h3>
-<p>初学阶段的常见误区是「学会了模板就到处用」。判据其实很简单:<strong>同一段逻辑要为多个类型各写一遍,而且写出来几乎一模一样</strong>,才值得抽成模板。</p>
+<p>初学阶段的常见误区是「学会了模板就到处用」。判据很简单:<strong>同一段逻辑要为多个类型各写一遍,而且写出来几乎一模一样</strong>,才值得抽成模板。</p>
 <ul>
 <li><strong>值得写</strong>:容器、算法、包装类型、与类型无关的工具函数。</li>
 <li><strong>不值得写</strong>:只有一个类型会用到的东西;为了「将来可能扩展」而预留的泛型。</li>
@@ -1687,7 +1718,7 @@ std::sort(v.begin(), v.end(), [](<span class="kw">const</span> <span class="kw">
 </ol>
 <p>三条能省很多时间的经验。<strong>先在脑子里做替换</strong>:报错里九成的长度来自默认模板参数被完整展开,<code>basic_string&lt;char, char_traits&lt;char&gt;, allocator&lt;char&gt; &gt;</code> 就是 <code>std::string</code>。<strong>成对数尖括号</strong>,编辑器的括号匹配对尖括号同样有效。<strong>把类型名贴进编辑器手工换行</strong>,每嵌套一层缩进一级,一分钟就能看清结构。</p>
 <table style="contain-intrinsic-size:auto 264px">
-<thead><tr><th>报错里的写法</th><th>它其实是</th></tr></thead>
+<thead><tr><th>报错里的写法</th><th>实际是什么</th></tr></thead>
 <tbody>
 <tr><td class="nw"><code>basic_string&lt;char, …&gt;</code></td><td class="nw"><code>std::string</code></td></tr>
 <tr><td><code>basic_string_view&lt;char, …&gt;</code></td><td><code>std::string_view</code></td></tr>
@@ -1824,7 +1855,7 @@ std::expected&lt;<span class="kw">int</span>, ParseError&gt; parse(std::string_v
 <tr><td class="nw">析构函数里的失败</td><td class="nw"><strong>只能记日志或吞掉</strong></td><td>析构函数不能抛,理由见前面</td></tr>
 </tbody>
 </table>
-<p>表里反复出现的其实是同一条判据:<strong>这是「程序写错了」还是「世界不配合」。</strong>程序写错了用断言,让它在开发阶段就崩在最近的位置;世界不配合用返回值或异常,再按发生频率在两者之间二选一。</p>
+<p>表里反复出现的是同一条判据:<strong>这是「程序写错了」还是「世界不配合」。</strong>程序写错了用断言,让它在开发阶段就崩在最近的位置;世界不配合用返回值或异常,再按发生频率在两者之间二选一。</p>
 <h3>try 与 catch 的四种写错形态</h3>
 <table style="contain-intrinsic-size:auto 267px">
 <thead><tr><th>写法</th><th>问题</th></tr></thead>
@@ -2300,30 +2331,11 @@ $ ctest --test-dir build --output-on-failure</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 每写一段新代码,当天就用 sanitizer 跑一遍</span><p>未定义行为的特点是「今天不出错,换个编译器或者改一行无关代码就出错」,拖得越久越难定位。开着 <code>-fsanitize=address,undefined</code> 跑测试,越界、释放后使用、未初始化读取、有符号溢出会在发生的那一行当场停下,并打印出这块内存是谁分配、谁释放的。代价是程序慢两到三倍、内存占用翻倍,这在开发阶段完全可以接受。这条习惯在整个 C++ 生涯里都成立。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 63163px;--thin-h:63163px">
+<section class="chapter" style="contain-intrinsic-size:auto 62200px;--thin-h:62200px">
 <h1 id="c1"><span class="part">第 1 章</span>从 C 到 C++:分界线在哪</h1>
-<h2 id="c1-classics">1.0 相关经典书籍</h2>
-<p>本书面向<strong>已经写得动 C、C++ 只有零星经验</strong>的读者。讲法是从 C 的已知出发:先说清同一件事在两种语言里的差别,再说清 C++ 多出来的那部分机制是为解决什么问题而存在的。语言基线取 <strong>C++17</strong>,C++20/23 的新写法逐条标注。</p>
-<table style="contain-intrinsic-size:auto 550px">
-<thead><tr><th>书</th><th>定位</th><th>特点(含局限)</th></tr></thead>
-<tbody>
-<tr><td>Stanley Lippman《深度探索 C++ 对象模型》</td><td class="nw">机制·首选</td><td>把类的内存布局、构造析构的编译期展开、虚函数表的生成过程摊开讲。<strong>C 程序员最缺的就是这一层</strong>。局限:成书于 C++98,不含移动语义与模板新特性。</td></tr>
-<tr><td>Scott Meyers《Effective C++》(第 3 版)与《Effective Modern C++》</td><td class="nw">结论·必读</td><td>条款式:做什么、为什么、记住哪几条。前者管类设计与资源管理,后者管 C++11/14 的现代写法。局限:非入门书,默认读者能读懂语法。</td></tr>
-<tr><td>Herb Sutter《Exceptional C++》系列与《C++ 编程规范》</td><td class="nw">边界·必读</td><td>以问答推导异常安全、对象生命周期的边界情形。<strong>「什么时候会错」讲得最透</strong>。局限:例子偏刁钻,不适合当第一本。</td></tr>
-<tr><td>Bjarne Stroustrup《C++ 程序设计语言》(第 4 版)</td><td class="nw">查阅</td><td>语言之父的大全,设计意图的权威出处。局限:极厚,止于 C++11。</td></tr>
-<tr><td>Vandevoorde/Josuttis《C++ Templates》(第 2 版)</td><td class="nw">模板·权威</td><td>模板推导、特化、元编程的完整参考,覆盖到 C++17。局限:第 9 章之后难度陡增。</td></tr>
-<tr><td>Anthony Williams《C++ Concurrency in Action》(第 2 版)</td><td class="nw">并发·权威</td><td>标准线程库与内存模型,含无锁数据结构。局限:内存序部分需要反复读。</td></tr>
-<tr><td class="nw">C++ Core Guidelines(在线)</td><td class="nw">判据</td><td>Stroustrup 与 Sutter 主持的官方指导,每条带编号。本书的 🟢 批注多数能对应到其中一条。局限:是清单不是教材,不解释背景。</td></tr>
-</tbody>
-</table>
-<p>这七本不必都读。<strong>推荐的读法是把本书当主线,把前三本当参考</strong>:读到对象布局、构造析构展开时翻 Lippman;读到某条使用规矩、想知道背后的权衡时翻 Meyers 对应的条款;读到异常安全、边界情形时翻 Sutter。后四本是需要时查阅的工具书,不必通读——Stroustrup 用来确认语言的设计意图,Vandevoorde 用来查模板的精确规则,Williams 用来查内存序,Core Guidelines 用来在团队里给规范找依据。</p>
-<p>需要说明的是几本经典的<strong>时间局限</strong>。Lippman 成书于 1996 年,不含移动语义、右值引用、模板的新特性,但它讲的对象布局与虚函数机制至今没有变化,所以「机制层看它、语法层看别处」是可行的读法。Meyers 的《Effective C++》第 3 版止于 C++03,类设计与资源管理的条款仍然成立,但涉及性能与拷贝的部分要用《Effective Modern C++》里的移动语义章节修正。本书在需要修正的地方会明确标出。</p>
-<p>另一类值得补充的材料是<strong>标准文本与在线参考</strong>。cppreference 网站是查具体接口、版本差异与行为细节最快的入口,它的中文版翻译质量参差,建议直接看英文版。标准草案本身(WG21 的 N 系列文档)在遇到「编译器行为不一致」时是唯一的仲裁者,但它不是给人顺序阅读的,只在确实需要时按条款号查。</p>
+<h2 id="c1-guide">1.0 遇到问题时翻哪一本</h2>
 <p>这一章不讲任何 C++ 独有的大特性。它要回答的是更靠前的一个问题:<strong>一段能通过 C 编译器的代码,交给 C++ 编译器之后,哪些地方的行为变了、哪些地方直接编不过、以及为什么。</strong>这些差别不写进书里,读者会在后面每一章反复被绊住。</p>
-<h3>这本书与经典的关系</h3>
-<p>本书不是任何一本经典的翻译或缩写,它的定位是<strong>把散在多本书里的内容按「C 程序员会在哪里翻车」重新组织一遍</strong>,并补上那些书成书时还不存在的部分(移动语义、concepts、ranges、协程、模块)。</p>
-<p>具体的取舍是这样:机制层的讲法参照 Lippman,但用现代编译器的实际行为重新核对过;结论的形式参照 Meyers 的条款式,但不逐条对应,而是按主题聚合;边界与失效情形参照 Sutter,但把「刁钻的问答」换成「真实事故的症状与排查手段」。</p>
-<p>因此读本书<strong>不能替代</strong>读经典,尤其是深入某个专题时。每一章末尾的回看清单会指出哪些内容在哪本书里有更完整的展开。</p>
+<p>上一节给了这个领域的资料全景与本书的锚定关系。这一节给的是使用方式:读到具体某一处卡住时,按下面两张表去查。</p>
 <h3>什么时候翻哪一本</h3>
 <p>经典的价值在于「遇到具体问题时能查到确定的答案」,不在于通读。下面按触发场景给出对应关系,读本书某一章时如果还有疑问,按这张表找。</p>
 <table style="contain-intrinsic-size:auto 370px">
@@ -2466,6 +2478,56 @@ T add(T a, T b) { <span class="kw">return</span> a + b; }</code></pre>
 <span class="kw">struct</span> Config { <span class="kw">int</span> width; <span class="kw">int</span> height; <span class="kw">int</span> depth; };
 <span class="kw">void</span> use() { Config c{1, 2, 3}; /* 按 12 字节布局写 */ }</code></pre>
 <p>这份程序编译、链接全部通过。真正出问题的是两边共享同一个 <code>Config</code> 对象的时候:一方写第三个成员,另一方的对象只有两个成员的空间,越界写进相邻内存。</p>
+<figure style="contain-intrinsic-size:auto 398px">
+<svg viewBox="0 0 720 302" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLodr_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">两个编译单元各自展开、各自编译;下面两条布局带按同一比例画,一格 4 字节</text>
+
+  <rect x="16" y="32" width="324" height="94" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="28" y="52" text-anchor="start" font-size="12">编译单元 a.cpp</text>
+  <text class="svgmuted" x="28" y="70" text-anchor="start" font-size="11">struct Config { int width; int height; };</text>
+  <rect x="28" y="80" width="90" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="73" y="99" text-anchor="middle" font-size="11">width</text>
+  <rect x="118" y="80" width="90" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="163" y="99" text-anchor="middle" font-size="11">height</text>
+  <text class="svgmuted" x="216" y="99" text-anchor="start" font-size="11">8 字节</text>
+
+  <rect x="364" y="32" width="340" height="94" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="376" y="52" text-anchor="start" font-size="12">编译单元 b.cpp</text>
+  <text class="svgmuted" x="376" y="70" text-anchor="start" font-size="11">struct Config { int width; int height; int depth; };</text>
+  <rect x="376" y="80" width="90" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="421" y="99" text-anchor="middle" font-size="11">width</text>
+  <rect x="466" y="80" width="90" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="511" y="99" text-anchor="middle" font-size="11">height</text>
+  <rect x="556" y="80" width="90" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgtext" x="601" y="99" text-anchor="middle" font-size="11">depth</text>
+  <text class="svgmuted" x="654" y="99" text-anchor="start" font-size="11">12 字节</text>
+
+  <path d="M178,126 V144" stroke="var(--accent)" fill="none" marker-end="url(#gLodr_a)"/>
+  <path d="M534,126 V144" stroke="var(--accent)" fill="none" marker-end="url(#gLodr_a)"/>
+
+  <rect x="16" y="148" width="324" height="52" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="28" y="168" text-anchor="start" font-size="12">a.o</text>
+  <text class="svgmuted" x="28" y="188" text-anchor="start" font-size="11">符号表:main,以及未定义的 _Z3usev</text>
+  <rect x="364" y="148" width="340" height="52" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="376" y="168" text-anchor="start" font-size="12">b.o</text>
+  <text class="svgmuted" x="376" y="188" text-anchor="start" font-size="11">符号表:定义了 _Z3usev</text>
+
+  <path d="M178,200 V214 H352 V228" stroke="var(--accent)" fill="none" marker-end="url(#gLodr_a)"/>
+  <path d="M534,200 V214 H352" stroke="var(--accent)" fill="none"/>
+
+  <rect x="150" y="232" width="404" height="42" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="352" y="250" text-anchor="middle" font-size="12">链接器:按符号名 _Z3usev 对上,拼成可执行文件</text>
+  <text class="svgmuted" x="352" y="268" text-anchor="middle" font-size="11">它不比较两边 Config 的定义 —— 编译与链接全部通过</text>
+
+  <text class="svgmuted" x="12" y="294" text-anchor="start" font-size="11">出事的是运行期:b.cpp 里的代码按 12 字节布局写第三个成员,而 a.cpp 认为这个对象只有 8 字节,越界写进相邻内存</text>
+</svg>
+<figcaption>同名不同义的类为什么能一路通过编译与链接（原创绘制）</figcaption>
+</figure>
 <div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 一处定义原则被破坏时,编译器和链接器都不会告诉你</span><p>违反「逐字相同」属于未定义行为,而且标准明确说明<strong>不要求诊断</strong>。典型触发场景有三个:同一个类在不同编译单元被不同的宏开关裁剪,例如一边定义了 <code>NDEBUG</code>、一边没有;同一个库的头文件在工程里存在两份不同版本;预编译头与实际包含路径不一致。排查手段是打开链接期优化,或用 <code>gold</code> / <code>lld</code> 链接器的 ODR 检查,以及 <code>-fsanitize=undefined</code> 的 vptr 检查。</p></div>
 <h3>名字改编:符号名里编进了什么</h3>
 <p>编译器把函数的命名空间、类归属、参数类型、<code>const</code> 限定等信息压缩进符号名。改编方案是 ABI 的一部分,不同平台不同。</p>
@@ -3457,7 +3519,7 @@ app.exe : fatal error LNK1169: 找到一个或多个多重定义的符号</code>
 </ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 66933px;--thin-h:66933px">
+<section class="chapter" style="contain-intrinsic-size:auto 67315px;--thin-h:67315px">
 <h1 id="c2"><span class="part">第 2 章</span>类型、初始化与值类别</h1>
 <h2 id="c2-init">2.1 初始化:七种写法与花括号</h2>
 <p>C 的初始化只有两种形态:等号赋初值,以及聚合体的花括号列表。C++ 把这件事扩到了七种,而且不同写法在「未初始化」「调不调构造函数」「允不允许窄化」上有实质差别。写错不一定报错,得到的是一个内容不确定的对象。</p>
@@ -3619,6 +3681,40 @@ n + 1        <span class="cm">// prvalue:算术结果,取不了地址</span>
 <span>"abc"</span>        <span class="cm">// lvalue:字符串字面量是数组对象,能取地址(这一条常被记反)</span>
 std::move(n) <span class="cm">// xvalue:有身份,但被标记为可搬走</span>
 Widget{}     <span class="cm">// prvalue:临时对象</span></code></pre>
+<figure style="contain-intrinsic-size:auto 360px">
+<svg viewBox="0 0 720 268" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">底下三个是基本类别,上面两个是由它们合并出的复合类别;xvalue 同时属于两个复合类别,这是整棵树的关节</text>
+
+  <rect x="285" y="36" width="150" height="32" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="360" y="57" text-anchor="middle">表达式</text>
+
+  <path d="M360,68 L220,100 M360,68 L500,100" stroke="var(--rule)" fill="none"/>
+
+  <rect x="145" y="100" width="150" height="32" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="220" y="121" text-anchor="middle">glvalue</text>
+  <rect x="425" y="100" width="150" height="32" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="500" y="121" text-anchor="middle">rvalue</text>
+
+  <path d="M220,132 L120,170 M220,132 L360,170 M500,132 L360,170 M500,132 L600,170" stroke="var(--rule)" fill="none"/>
+
+  <rect x="50" y="170" width="140" height="32" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="120" y="191" text-anchor="middle">lvalue</text>
+  <rect x="290" y="170" width="140" height="32" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="360" y="191" text-anchor="middle">xvalue</text>
+  <rect x="530" y="170" width="140" height="32" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="600" y="191" text-anchor="middle">prvalue</text>
+
+  <text class="svgmuted" x="120" y="222" text-anchor="middle" font-size="11">有身份,不可移动</text>
+  <text class="svgmuted" x="120" y="238" text-anchor="middle" font-size="11">变量名、*p、字符串字面量</text>
+  <text class="svgmuted" x="360" y="222" text-anchor="middle" font-size="11">有身份,可被移动</text>
+  <text class="svgmuted" x="360" y="238" text-anchor="middle" font-size="11">std::move(x)</text>
+  <text class="svgmuted" x="600" y="222" text-anchor="middle" font-size="11">无身份,可被移动</text>
+  <text class="svgmuted" x="600" y="238" text-anchor="middle" font-size="11">42、n + 1、Widget{}</text>
+
+  <text class="svgmuted" x="12" y="256" text-anchor="start" font-size="11">「有身份」就是能取地址;glvalue 是「指代一个对象」的那一半,rvalue 是「能绑到 T&#38;&#38; 上」的那一半</text>
+</svg>
+<figcaption>五个值类别之间是什么包含关系,xvalue 为什么同属两边（原创绘制）</figcaption>
+</figure>
 <h3>为什么要区分 xvalue 和 prvalue</h3>
 <p>两者都是右值,都能绑到 <code>T&amp;&amp;</code>,差别在<strong>有没有一个已经存在的对象</strong>。</p>
 <ul>
@@ -4158,7 +4254,7 @@ std::integral <span class="kw">auto</span> checksum(std::span&lt;<span class="kw
 <li><strong>处理剩下卡住的函数。</strong>它们通常卡在一两个尚未标注的底层接口上,或者卡在一个本该用 <code>mutable</code> 的缓存上,逐个判断。</li>
 <li><strong>最后处理第三方接口。</strong>确实无法修改的旧接口,在一个薄封装层里集中用 <code>const_cast</code>,并在那一处写清为什么安全。</li>
 </ol>
-<p>每一批推进都应当跑一次全量编译,因为 <code>const</code> 的传播会暴露出「这个函数其实修改了状态」的情况——这类发现往往比 <code>const</code> 本身更有价值。</p>
+<p>每一批推进都应当跑一次全量编译,因为 <code>const</code> 的传播会暴露出「这个函数修改了状态」的情况——这类发现往往比 <code>const</code> 本身更有价值。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 const_cast 一律集中在一层薄封装里,不要散落在业务代码中</span><p>散落的 <code>const_cast</code> 有两个问题:读者无法判断哪一处是安全的、哪一处正在写一个真正的常量对象(后者是未定义行为);以及它掩盖了「接口标注不对」这个根因,让 <code>const</code> 正确性永远推不下去。集中之后,这一层的每一处都可以配一句注释说明底层接口为什么不会写入,审查时也只需要盯住这一个文件。</p></div>
 <h2 id="c2-constexpr">2.6 constexpr 家族:编译期计算的四个关键字</h2>
 <p>C++ 有四个词管编译期求值:<code>const</code>、<code>constexpr</code>、<code>consteval</code>、<code>constinit</code>。它们解决的是不同问题,名字却长得像。</p>
@@ -4796,7 +4892,7 @@ std::optional&lt;Op&gt; parse_op(std::<span class="kw">uint8_t</span> raw) <span
 </ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 72135px;--thin-h:72135px">
+<section class="chapter" style="contain-intrinsic-size:auto 73196px;--thin-h:73196px">
 <h1 id="c3"><span class="part">第 3 章</span>对象模型:类的内存布局与生命周期</h1>
 <h2 id="c3-layout">3.1 类的内存布局:从 struct 到 class</h2>
 <p>C 程序员对 <code>struct</code> 的心智模型是准确的:成员按声明顺序排布,中间按对齐要求填充,整体大小是最大成员对齐的整数倍。这个模型在 C++ 里<strong>依然成立</strong>,只是多了三样东西可能插进来:虚表指针、基类子对象、以及访问控制段之间的重排许可。把这三样搞清楚,C++ 对象在内存里长什么样就不再是黑盒。</p>
@@ -4822,6 +4918,45 @@ std::optional&lt;Op&gt; parse_op(std::<span class="kw">uint8_t</span> raw) <span
 <span class="kw">static_assert</span>(<span class="kw">sizeof</span>(A) == 12 &amp;&amp; alignof(A) == 4);
 <span class="kw">static_assert</span>(<span class="kw">sizeof</span>(B) ==  8 &amp;&amp; alignof(B) == 4);</code></pre>
 <p>规律是<strong>按对齐要求从大到小排列成员</strong>,填充最少。这在成员多的结构体上能省下可观的内存,《C++ 性能优化》第 7 章会量化这个收益。</p>
+<figure style="contain-intrinsic-size:auto 300px">
+<svg viewBox="0 0 720 214" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">横轴按字节等比,一格一字节;虚线格是编译器为对齐插入的填充,谁也用不上</text>
+  <text class="svgmuted" x="150" y="42" text-anchor="middle" font-size="11">0</text>
+  <text class="svgmuted" x="302" y="42" text-anchor="middle" font-size="11">4</text>
+  <text class="svgmuted" x="454" y="42" text-anchor="middle" font-size="11">8</text>
+  <text class="svgmuted" x="606" y="42" text-anchor="middle" font-size="11">12</text>
+  <path d="M150,50 H606 M150,46 V54 M302,46 V54 M454,46 V54 M606,46 V54" stroke="var(--rule)" fill="none"/>
+
+  <text class="svgtext" x="12" y="82" text-anchor="start">struct A</text>
+  <text class="svgmuted" x="12" y="98" text-anchor="start" font-size="11">char c; int n; char d;</text>
+  <rect x="150" y="64" width="38" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="169" y="86" text-anchor="middle" font-size="11">c</text>
+  <rect x="188" y="64" width="114" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <text class="svgmuted" x="245" y="86" text-anchor="middle" font-size="11">填充 3</text>
+  <rect x="302" y="64" width="152" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="378" y="86" text-anchor="middle" font-size="11">n</text>
+  <rect x="454" y="64" width="38" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="473" y="86" text-anchor="middle" font-size="11">d</text>
+  <rect x="492" y="64" width="114" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <text class="svgmuted" x="549" y="86" text-anchor="middle" font-size="11">填充 3</text>
+  <text class="svgtext" x="616" y="86" text-anchor="start" font-size="11">12 字节</text>
+
+  <text class="svgtext" x="12" y="150" text-anchor="start">struct B</text>
+  <text class="svgmuted" x="12" y="166" text-anchor="start" font-size="11">int n; char c; char d;</text>
+  <rect x="150" y="132" width="152" height="34" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="226" y="154" text-anchor="middle" font-size="11">n</text>
+  <rect x="302" y="132" width="38" height="34" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="321" y="154" text-anchor="middle" font-size="11">c</text>
+  <rect x="340" y="132" width="38" height="34" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="359" y="154" text-anchor="middle" font-size="11">d</text>
+  <rect x="378" y="132" width="76" height="34" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <text class="svgmuted" x="416" y="154" text-anchor="middle" font-size="11">填充 2</text>
+  <text class="svgtext" x="464" y="154" text-anchor="start" font-size="11">8 字节</text>
+
+  <text class="svgmuted" x="12" y="200" text-anchor="start" font-size="11">成员完全相同,B 把对齐要求大的放在前面,填充从 6 字节降到 2 字节;两者的 alignof 都是 4,大小都是 4 的整数倍</text>
+</svg>
+<figcaption>同样的三个成员,声明顺序不同时填充落在哪里（原创绘制）</figcaption>
+</figure>
 <p>查看真实布局不要靠心算,编译器可以直接打印出来。</p>
 <pre style="contain-intrinsic-size:auto 332px"><code>$ g++ -Xclang -fdump-record-layouts -c a.cpp     # Clang
 $ clang++ -Xclang -fdump-record-layouts -c a.cpp
@@ -5137,6 +5272,54 @@ Derived d{1};                 <span class="cm">// d.n_ 未初始化</span></code
                             +--------------+</code></pre>
 <p>调用 <code>p-&gt;f()</code> 时,编译器生成的不是一条直接调用,而是三步:读出 <code>vptr</code>,按 <code>f</code> 在表中的<strong>固定下标</strong>取出函数地址,间接调用。下标在编译期确定,所以虚调用的开销是固定的一次内存读加一次间接跳转,与继承层数无关。</p>
 <p>每个派生类有自己的虚表,同名虚函数占据<strong>相同下标</strong>,只是指向各自的实现。动态绑定就是这么来的:指针的静态类型决定用哪个下标,对象里的 <code>vptr</code> 决定用哪张表。</p>
+<figure style="contain-intrinsic-size:auto 336px">
+<svg viewBox="0 0 720 246" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLvt_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">下标由指针的静态类型在编译期定死,取哪一张表由对象里的 vptr 在运行期决定</text>
+  <text class="svgmuted" x="104" y="42" text-anchor="middle" font-size="11">对象</text>
+  <text class="svgmuted" x="349" y="42" text-anchor="middle" font-size="11">虚表:每个类一张,静态存储</text>
+  <text class="svgmuted" x="604" y="42" text-anchor="middle" font-size="11">函数体</text>
+
+  <rect x="24" y="54" width="160" height="60" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="104" y="74" text-anchor="middle" font-size="12">Base 对象</text>
+  <rect x="34" y="82" width="140" height="24" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="104" y="99" text-anchor="middle" font-size="11">vptr</text>
+
+  <rect x="254" y="54" width="190" height="60" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="349" y="74" text-anchor="middle" font-size="12">Base 的虚表</text>
+  <rect x="264" y="82" width="170" height="24" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="349" y="99" text-anchor="middle" font-size="11">[0] &#38;Base::draw</text>
+
+  <rect x="514" y="72" width="180" height="34" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="604" y="94" text-anchor="middle" font-size="11">Base::draw 的机器码</text>
+
+  <path d="M174,94 H250" stroke="var(--accent)" fill="none" marker-end="url(#gLvt_a)"/>
+  <path d="M434,94 H510" stroke="var(--accent)" fill="none" marker-end="url(#gLvt_a)"/>
+
+  <rect x="24" y="142" width="160" height="60" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="104" y="162" text-anchor="middle" font-size="12">Derived 对象</text>
+  <rect x="34" y="170" width="140" height="24" rx="4" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgtext" x="104" y="187" text-anchor="middle" font-size="11">vptr</text>
+
+  <rect x="254" y="142" width="190" height="60" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="349" y="162" text-anchor="middle" font-size="12">Derived 的虚表</text>
+  <rect x="264" y="170" width="170" height="24" rx="4" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgtext" x="349" y="187" text-anchor="middle" font-size="11">[0] &#38;Derived::draw</text>
+
+  <rect x="514" y="160" width="180" height="34" rx="6" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgtext" x="604" y="182" text-anchor="middle" font-size="11">Derived::draw 的机器码</text>
+
+  <path d="M174,182 H250" stroke="var(--accent)" fill="none" marker-end="url(#gLvt_a)"/>
+  <path d="M434,182 H510" stroke="var(--accent)" fill="none" marker-end="url(#gLvt_a)"/>
+
+  <text class="svgmuted" x="12" y="228" text-anchor="start" font-size="11">Base* p = new Derived; p-&gt;draw(); 走的是下面这一行:静态类型 Base* 给出下标 [0],对象里的 vptr 把它引到 Derived 的表</text>
+</svg>
+<figcaption>同名虚函数在两个类的虚表里为什么占同一个下标（原创绘制）</figcaption>
+</figure>
 <h3>构造与析构期间的虚函数不多态</h3>
 <p>3.2 节讲过,<code>vptr</code> 在基类构造完成之后、成员构造之前被设置成<strong>当前正在构造的这个类</strong>的虚表。所以在基类构造函数里调用虚函数时,<code>vptr</code> 还指向基类的表,调到的是基类版本,不是派生类的重写。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 277px"><code><span class="kw">struct</span> Base {
@@ -5419,6 +5602,68 @@ d.Base::log(<span>"hi"</span>);            <span class="cm">// 要用必须显�
   偏移 24 : Writer 自己的成员
   偏移 32 : Device 子对象        ← 只有一份,位置由上面两个偏移指出</code></pre>
 <p>Itanium ABI 把虚基类偏移放在虚表的负下标区,MSVC 则用一张独立的虚基类表,对象里多一个指向它的指针。两种实现的共同点是:<strong>访问虚基类的成员要先读一次偏移,再加到 <code>this</code> 上</strong>,比普通继承多一次内存读,而且这次读无法被优化掉,因为编译器不能假定动态类型。</p>
+<figure style="contain-intrinsic-size:auto 367px">
+<svg viewBox="0 0 720 274" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLinh_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">横轴按字节等比,64 位平台;带主色边框的格是这一种布局比上一种多出来的东西</text>
+  <text class="svgmuted" x="132" y="42" text-anchor="middle" font-size="11">0</text>
+  <text class="svgmuted" x="244" y="42" text-anchor="middle" font-size="11">8</text>
+  <text class="svgmuted" x="356" y="42" text-anchor="middle" font-size="11">16</text>
+  <text class="svgmuted" x="468" y="42" text-anchor="middle" font-size="11">24</text>
+  <text class="svgmuted" x="580" y="42" text-anchor="middle" font-size="11">32</text>
+  <text class="svgmuted" x="692" y="42" text-anchor="middle" font-size="11">40</text>
+  <path d="M132,50 H692 M132,46 V54 M244,46 V54 M356,46 V54 M468,46 V54 M580,46 V54 M692,46 V54" stroke="var(--rule)" fill="none"/>
+
+  <text class="svgtext" x="12" y="72" text-anchor="start" font-size="12">单继承</text>
+  <text class="svgmuted" x="12" y="88" text-anchor="start" font-size="11">Derived : Base</text>
+  <rect x="132" y="60" width="112" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="188" y="81" text-anchor="middle" font-size="11">vptr</text>
+  <rect x="244" y="60" width="56" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="272" y="81" text-anchor="middle" font-size="11">a</text>
+  <rect x="300" y="60" width="56" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="328" y="81" text-anchor="middle" font-size="11">b</text>
+  <text class="svgmuted" x="366" y="81" text-anchor="start" font-size="11">sizeof 16;Base 子对象与整个对象同址,转 Base* 不改指针值</text>
+
+  <text class="svgtext" x="12" y="130" text-anchor="start" font-size="12">多继承</text>
+  <text class="svgmuted" x="12" y="146" text-anchor="start" font-size="11">C : A, B</text>
+  <rect x="132" y="118" width="112" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="188" y="139" text-anchor="middle" font-size="11">vptr_A</text>
+  <rect x="244" y="118" width="56" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="272" y="139" text-anchor="middle" font-size="11">a</text>
+  <rect x="300" y="118" width="56" height="32" rx="4" fill="var(--svg-fill)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <text class="svgmuted" x="328" y="139" text-anchor="middle" font-size="11">填充</text>
+  <rect x="356" y="118" width="112" height="32" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="412" y="139" text-anchor="middle" font-size="11">vptr_B</text>
+  <rect x="468" y="118" width="56" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="496" y="139" text-anchor="middle" font-size="11">b</text>
+  <rect x="524" y="118" width="56" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="552" y="139" text-anchor="middle" font-size="11">c</text>
+  <text class="svgmuted" x="590" y="139" text-anchor="start" font-size="11">sizeof 32</text>
+  <text class="svgmuted" x="366" y="164" text-anchor="start" font-size="11">B 子对象从偏移 16 起,所以 C* 转 B* 时指针值要加 16</text>
+
+  <text class="svgtext" x="12" y="196" text-anchor="start" font-size="12">虚继承</text>
+  <text class="svgmuted" x="12" y="212" text-anchor="start" font-size="11">ReadWriter</text>
+  <rect x="132" y="184" width="112" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="188" y="205" text-anchor="middle" font-size="11">vptr(Reader)</text>
+  <rect x="244" y="184" width="112" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="300" y="205" text-anchor="middle" font-size="11">Reader 的成员</text>
+  <rect x="356" y="184" width="112" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="412" y="205" text-anchor="middle" font-size="11">vptr(Writer)</text>
+  <rect x="468" y="184" width="112" height="32" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="524" y="205" text-anchor="middle" font-size="11">Writer 的成员</text>
+  <rect x="580" y="184" width="112" height="32" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="636" y="205" text-anchor="middle" font-size="11">Device 子对象</text>
+
+  <path d="M188,216 V236 H626 V220" stroke="var(--accent)" fill="none" stroke-dasharray="5 4" marker-end="url(#gLinh_a)"/>
+  <path d="M412,216 V248 H648 V220" stroke="var(--accent)" fill="none" stroke-dasharray="5 4" marker-end="url(#gLinh_a)"/>
+  <text class="svgmuted" x="12" y="266" text-anchor="start" font-size="11">Device 只有一份;两个 vptr 指向的表里各记着一个到它的偏移(32 与 16),访问虚基类成员要先读这个偏移再相加</text>
+</svg>
+<figcaption>单继承、多继承、虚继承三种布局在对象里各多出了什么（原创绘制）</figcaption>
+</figure>
 <table style="contain-intrinsic-size:auto 260px">
 <thead><tr><th>操作</th><th>普通继承</th><th>虚继承</th></tr></thead>
 <tbody>
@@ -6231,7 +6476,7 @@ std::visit([](<span class="kw">const</span> <span class="kw">auto</span>&amp; x)
 <div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 对象模型相关的故障几乎都不在出错点崩溃,不要从崩溃位置往回推</span><p>切片、对非平凡类型用 <code>memcpy</code>、非虚析构、存储复用后用旧指针,这四类的共同点是:出错的那一行照常执行完,损坏的数据或泄漏的资源要到很久以后才引发可见后果。有效的手段是先用 <code>-fsanitize=address,undefined</code> 把出错点与症状之间的时间差压缩掉,再按上表的症状对照根因。直接读崩溃处的栈回溯,多数情况下只会看到一段与根因完全无关的代码,并把排查引向错误的方向。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46561px;--thin-h:46561px">
+<section class="chapter" style="contain-intrinsic-size:auto 46998px;--thin-h:46998px">
 <h1 id="c4"><span class="part">第 4 章</span>资源管理:RAII 与拷贝控制</h1>
 <h2 id="c4-raii">4.1 RAII:把释放写进类型</h2>
 <p>第 1 章说过 C++ 的第一条分界线是「类型能表达所有权」。这一节把它讲透:RAII 到底保证了什么、它的保证在什么条件下失效、以及怎么用它包装任何一种资源。</p>
@@ -6673,7 +6918,50 @@ shared_ptr sp2           +----------------+            |
 </tbody>
 </table>
 <p>原子递增递减看起来只是一条指令,但在多线程下它要争抢缓存行的独占权。一个被多个线程频繁拷贝的 <code>shared_ptr</code>,其计数所在的缓存行会在核心之间反复弹跳,代价远高于一次普通写。《C++ 性能优化》第 8 章会量化这一点。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 默认用 unique_ptr,只有确实需要共享所有权时才升级到 shared_ptr</span><p>判据是问一句:「这个对象的销毁时机,是不是由多个互不知情的持有者共同决定?」多数情况下答案是否——所有权其实很清晰,只是需要多处<strong>访问</strong>它。那种情况用「一个 <code>unique_ptr</code> 持有,其余用裸指针或引用观察」即可,前提是观察者的生命周期不长于持有者。真正需要 <code>shared_ptr</code> 的典型场景是:异步回调持有对象直到回调完成、缓存与使用方共享条目、以及图结构里的节点。</p></div>
+<figure style="contain-intrinsic-size:auto 418px">
+<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLsp_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">每个智能指针都是两个指针:一个指向对象,一个指向控制块;虚线表示 weak_ptr 不能直接用它指向的对象</text>
+
+  <rect x="16" y="40" width="154" height="36" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="93" y="63" text-anchor="middle" font-size="12">shared_ptr sp1</text>
+  <rect x="16" y="100" width="154" height="36" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="93" y="123" text-anchor="middle" font-size="12">shared_ptr sp2</text>
+  <rect x="16" y="160" width="154" height="36" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="93" y="183" text-anchor="middle" font-size="12">weak_ptr wp</text>
+
+  <rect x="520" y="32" width="180" height="60" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="610" y="58" text-anchor="middle" font-size="12">Widget 对象</text>
+  <text class="svgmuted" x="610" y="78" text-anchor="middle" font-size="11">强计数归零时被析构</text>
+
+  <rect x="300" y="150" width="170" height="126" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="385" y="168" text-anchor="middle" font-size="12">控制块</text>
+  <rect x="310" y="176" width="150" height="22" rx="4" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgtext" x="385" y="192" text-anchor="middle" font-size="11">强计数 = 2</text>
+  <rect x="310" y="202" width="150" height="22" rx="4" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgtext" x="385" y="218" text-anchor="middle" font-size="11">弱计数 = 1</text>
+  <rect x="310" y="228" width="150" height="20" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="385" y="243" text-anchor="middle" font-size="11">删除器</text>
+  <rect x="310" y="252" width="150" height="20" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="385" y="267" text-anchor="middle" font-size="11">分配器</text>
+
+  <path d="M170,54 L512,46" stroke="var(--accent)" fill="none" marker-end="url(#gLsp_a)"/>
+  <path d="M170,114 L512,60" stroke="var(--accent)" fill="none" marker-end="url(#gLsp_a)"/>
+  <path d="M170,178 L512,74" stroke="var(--accent)" fill="none" stroke-dasharray="5 4" marker-end="url(#gLsp_a)"/>
+  <path d="M170,66 L294,180" stroke="var(--accent)" fill="none" marker-end="url(#gLsp_a)"/>
+  <path d="M170,126 L294,204" stroke="var(--accent)" fill="none" marker-end="url(#gLsp_a)"/>
+  <path d="M170,188 L294,230" stroke="var(--accent)" fill="none" marker-end="url(#gLsp_a)"/>
+
+  <text class="svgmuted" x="12" y="296" text-anchor="start" font-size="11">拷贝 sp1 只让强计数原子加一,不产生新的控制块;wp 不动强计数,访问前必须 lock() 提升成 shared_ptr</text>
+  <text class="svgmuted" x="12" y="312" text-anchor="start" font-size="11">强计数归零先析构 Widget,弱计数也归零之后控制块才被释放;make_shared 时两块内存连在一起,要一起等到最后</text>
+</svg>
+<figcaption>控制块被谁指着,强弱两个计数各自归零时释放的是哪一块（原创绘制）</figcaption>
+</figure>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 默认用 unique_ptr,只有确实需要共享所有权时才升级到 shared_ptr</span><p>判据是问一句:「这个对象的销毁时机,是不是由多个互不知情的持有者共同决定?」多数情况下答案是否——所有权很清晰,只是需要多处<strong>访问</strong>它。那种情况用「一个 <code>unique_ptr</code> 持有,其余用裸指针或引用观察」即可,前提是观察者的生命周期不长于持有者。真正需要 <code>shared_ptr</code> 的典型场景是:异步回调持有对象直到回调完成、缓存与使用方共享条目、以及图结构里的节点。</p></div>
 <h3>优先用 make_shared,以及它的一个例外</h3>
 <p><code>std::make_shared&lt;T&gt;(args...)</code> 把对象和控制块分配在同一块内存里,省一次分配,而且两者相邻对缓存友好。</p>
 <p>例外是:<strong>对象很大,而且可能有长寿的 <code>weak_ptr</code></strong>。因为对象与控制块同块,只有当强计数与弱计数<strong>都</strong>归零时,这块内存才能释放。强计数归零时对象被析构,但那一大块内存要一直留到最后一个 <code>weak_ptr</code> 消失。这种情况用 <code>shared_ptr&lt;T&gt;(new T)</code> 反而更省内存。</p>
@@ -6885,7 +7173,7 @@ std::<span class="kw">size_t</span> read_into(std::span&lt;<span class="kw">char
 <h3>给裸指针加标注:gsl::owner 与 gsl::not_null</h3>
 <p>与 C 接口交界、或者维护老代码时,总有一些地方必须留着裸指针。GSL 提供两个零开销的标注,把类型系统表达不了的信息写成代码,静态分析工具能读懂它们。</p>
 <table style="contain-intrinsic-size:auto 164px">
-<thead><tr><th>标注</th><th>它其实是什么</th><th>表达什么</th><th>工具据此检查什么</th></tr></thead>
+<thead><tr><th>标注</th><th>它实际是什么</th><th>表达什么</th><th>工具据此检查什么</th></tr></thead>
 <tbody>
 <tr><td class="nw"><code>gsl::owner&lt;T*&gt;</code></td><td>就是 <code>T*</code>,一个别名</td><td><strong>这个指针拥有所指对象</strong></td><td>有没有在每条路径上释放;有没有对非 <code>owner</code> 指针调用 <code>delete</code></td></tr>
 <tr><td class="nw"><code>gsl::not_null&lt;T*&gt;</code></td><td>一个包装类,构造时检查非空</td><td><strong>这个指针一定不为空</strong></td><td>调用点有没有传可能为空的值;函数体里还有没有多余的判空</td></tr>
@@ -7213,7 +7501,7 @@ FileHandle f{Win32Handle&lt;-1&gt;{::CreateFileW(path, GENERIC_READ, FILE_SHARE_
 <div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 C++20 起线程一律用 std::jthread,不要再用 std::thread</span><p><code>std::thread</code> 的析构函数在线程既没 <code>join</code> 也没 <code>detach</code> 时直接调用 <code>std::terminate</code>,这是标准库里少见的「不符合 RAII 直觉」的设计:它不替你收尾,而是让程序崩溃。<code>std::jthread</code> 修好了这一点——析构时自动请求停止并 <code>join</code>,而且它带一个 <code>std::stop_token</code>,让线程体能配合退出。改用它之后,「函数中途抛异常导致线程没被 <code>join</code>」这类问题自动消失。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 44981px;--thin-h:44981px">
+<section class="chapter" style="contain-intrinsic-size:auto 45697px;--thin-h:45697px">
 <h1 id="c5"><span class="part">第 5 章</span>移动语义与完美转发</h1>
 <h2 id="c5-why">5.1 移动语义解决什么问题</h2>
 <p>第 4 章讲的是「资源归谁」,这一章讲的是「资源怎么换主人」。C++11 之前,把一个持有资源的对象从一处传到另一处,只有一条路:<strong>拷贝</strong>——分配新内存、复制内容、释放旧的。但在很多场合,源对象在这次操作之后就再也不会被用到了,复制完全是白做的。移动语义就是给这类场合开的第二条路。</p>
@@ -7475,6 +7763,54 @@ src.clear();      <span class="cm">// 源容器里现在都是被移动过的空
         <span class="kw">return</span> *<span class="kw">this</span>;
     }
 };</code></pre>
+<figure style="contain-intrinsic-size:auto 369px">
+<svg viewBox="0 0 720 276" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLmv_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">Buf b = std::move(o); 执行前后。搬的只有 p_ 与 n_ 两个字段,堆上那块内存原地不动</text>
+  <path d="M356,36 V222" stroke="var(--rule)" fill="none" stroke-dasharray="5 4"/>
+
+  <text class="svgtext" x="24" y="50" text-anchor="start" font-size="12">移动前</text>
+  <rect x="24" y="60" width="130" height="62" rx="6" fill="var(--svg-fill)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <text class="svgmuted" x="89" y="84" text-anchor="middle" font-size="11">目标 b</text>
+  <text class="svgmuted" x="89" y="104" text-anchor="middle" font-size="11">尚未构造</text>
+  <rect x="24" y="140" width="130" height="70" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="89" y="158" text-anchor="middle" font-size="12">源对象 o</text>
+  <rect x="32" y="164" width="114" height="20" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="89" y="179" text-anchor="middle" font-size="11">p_</text>
+  <rect x="32" y="186" width="114" height="20" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="89" y="201" text-anchor="middle" font-size="11">n_ = 100</text>
+  <rect x="196" y="148" width="140" height="54" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="266" y="170" text-anchor="middle" font-size="12">堆上的缓冲区</text>
+  <text class="svgmuted" x="266" y="190" text-anchor="middle" font-size="11">100 字节</text>
+  <path d="M146,174 H192" stroke="var(--accent)" fill="none" marker-end="url(#gLmv_a)"/>
+
+  <text class="svgtext" x="382" y="50" text-anchor="start" font-size="12">移动后</text>
+  <rect x="382" y="60" width="130" height="70" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="447" y="78" text-anchor="middle" font-size="12">目标 b</text>
+  <rect x="390" y="84" width="114" height="20" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="447" y="99" text-anchor="middle" font-size="11">p_</text>
+  <rect x="390" y="106" width="114" height="20" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="447" y="121" text-anchor="middle" font-size="11">n_ = 100</text>
+  <rect x="382" y="140" width="130" height="70" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="447" y="158" text-anchor="middle" font-size="12">源对象 o</text>
+  <rect x="390" y="164" width="114" height="20" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="447" y="179" text-anchor="middle" font-size="11">p_ = nullptr</text>
+  <rect x="390" y="186" width="114" height="20" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="447" y="201" text-anchor="middle" font-size="11">n_ = 0</text>
+  <rect x="554" y="108" width="140" height="54" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="624" y="130" text-anchor="middle" font-size="12">堆上的缓冲区</text>
+  <text class="svgmuted" x="624" y="150" text-anchor="middle" font-size="11">同一块,没有重新分配</text>
+  <path d="M504,94 H530 V132 H550" stroke="var(--accent)" fill="none" marker-end="url(#gLmv_a)"/>
+
+  <text class="svgmuted" x="12" y="242" text-anchor="start" font-size="11">std::exchange(o.p_, nullptr) 一步完成「取走并置空」:目标接管指针,源对象的指针当场变空,析构时什么也不做</text>
+  <text class="svgmuted" x="12" y="260" text-anchor="start" font-size="11">o 之后仍然可析构、可赋值,但内容不可依赖 —— 这就是「有效但未指定」的确切含义</text>
+</svg>
+<figcaption>一次移动构造之后,两个对象的字段与那块堆缓冲区各是什么状态（原创绘制）</figcaption>
+</figure>
 <p>自赋值检查在移动赋值里是<strong>必需的</strong>。<code>v = std::move(v)</code> 看起来很蠢,但它会在真实代码里出现——例如 <code>std::sort</code> 内部、或者 <code>a[i] = std::move(a[j])</code> 而 <code>i</code> 恰好等于 <code>j</code>。不检查的话,<code>delete[] p_</code> 之后再从自己身上取指针,取到的是已释放的地址。</p>
 <h3>写法二:交换</h3>
 <p>不释放自己的资源,而是与源对象交换。旧资源随源对象一起在它析构时释放。</p>
@@ -7556,7 +7892,7 @@ assert(a.size() == 0);      <span class="cm">// 只有文档承诺了这一条,�
 <li><strong>它的成员多不多?</strong>成员多而且都是能自己管资源的类型,说明这个类本来就该适用零法则,先回去检查是不是有个多余的析构函数关掉了自动生成。</li>
 <li><strong>它需要在移动之后保持某个不变式吗?</strong>需要的话三种写法都要额外补一段复位代码,而且要写测试验证。</li>
 </ol>
-<table style="contain-intrinsic-size:auto 149px">
+<table style="contain-intrinsic-size:auto 150px">
 <thead><tr><th>写法</th><th>旧资源何时归还</th><th>峰值内存</th><th>适合</th></tr></thead>
 <tbody>
 <tr><td class="nw">拷贝并交换</td><td>函数返回时(参数对象析构)</td><td>多一份</td><td>绝大多数业务类型</td></tr>
@@ -7637,6 +7973,59 @@ f(w);              <span class="cm">// T = Widget&amp;   → 参数类型 Widget
 f(std::move(w));   <span class="cm">// T = Widget    → 参数类型 Widget&amp;&amp;</span>
 f(Widget{});       <span class="cm">// T = Widget    → 参数类型 Widget&amp;&amp;</span>
 f(cw);             <span class="cm">// T = const Widget&amp; → 参数类型 const Widget&amp;</span></code></pre>
+<figure style="contain-intrinsic-size:auto 344px">
+<svg viewBox="0 0 720 254" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLfr_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">上排是折叠规则的全部四种组合,下排把 template &#60;class T&#62; void f(T&#38;&#38; x) 的两步推导走了一遍</text>
+
+  <rect x="20" y="34" width="160" height="32" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="100" y="55" text-anchor="middle" font-size="12">T&#38; 加 &#38; → T&#38;</text>
+  <rect x="192" y="34" width="160" height="32" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="272" y="55" text-anchor="middle" font-size="12">T&#38; 加 &#38;&#38; → T&#38;</text>
+  <rect x="364" y="34" width="160" height="32" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="444" y="55" text-anchor="middle" font-size="12">T&#38;&#38; 加 &#38; → T&#38;</text>
+  <rect x="536" y="34" width="160" height="32" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="616" y="55" text-anchor="middle" font-size="12">T&#38;&#38; 加 &#38;&#38; → T&#38;&#38;</text>
+  <text class="svgmuted" x="12" y="84" text-anchor="start" font-size="11">只要有一个是左值引用,结果就是左值引用;只有两个右值引用才折成右值引用</text>
+
+  <text class="svgmuted" x="95" y="110" text-anchor="middle" font-size="11">实参</text>
+  <text class="svgmuted" x="275" y="110" text-anchor="middle" font-size="11">推出的 T</text>
+  <text class="svgmuted" x="455" y="110" text-anchor="middle" font-size="11">代回 T&#38;&#38;</text>
+  <text class="svgmuted" x="630" y="110" text-anchor="middle" font-size="11">折叠结果</text>
+
+  <rect x="20" y="120" width="150" height="34" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="95" y="142" text-anchor="middle" font-size="12">f(w),w 是左值</text>
+  <rect x="200" y="120" width="150" height="34" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="275" y="142" text-anchor="middle" font-size="12">Widget&#38;</text>
+  <rect x="380" y="120" width="150" height="34" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="455" y="142" text-anchor="middle" font-size="12">Widget&#38; &#38;&#38;</text>
+  <rect x="560" y="120" width="140" height="34" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="630" y="142" text-anchor="middle" font-size="12">Widget&#38;</text>
+  <path d="M170,137 H196" stroke="var(--accent)" fill="none" marker-end="url(#gLfr_a)"/>
+  <path d="M350,137 H376" stroke="var(--accent)" fill="none" marker-end="url(#gLfr_a)"/>
+  <path d="M530,137 H556" stroke="var(--accent)" fill="none" marker-end="url(#gLfr_a)"/>
+
+  <rect x="20" y="168" width="150" height="34" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="95" y="190" text-anchor="middle" font-size="12">f(Widget{}),prvalue</text>
+  <rect x="200" y="168" width="150" height="34" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="275" y="190" text-anchor="middle" font-size="12">Widget</text>
+  <rect x="380" y="168" width="150" height="34" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="455" y="190" text-anchor="middle" font-size="12">Widget&#38;&#38;</text>
+  <rect x="560" y="168" width="140" height="34" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="630" y="190" text-anchor="middle" font-size="12">Widget&#38;&#38;</text>
+  <path d="M170,185 H196" stroke="var(--accent)" fill="none" marker-end="url(#gLfr_a)"/>
+  <path d="M350,185 H376" stroke="var(--accent)" fill="none" marker-end="url(#gLfr_a)"/>
+  <path d="M530,185 H556" stroke="var(--accent)" fill="none" marker-end="url(#gLfr_a)"/>
+
+  <text class="svgmuted" x="12" y="228" text-anchor="start" font-size="11">推论:T 被推成引用类型就说明调用方传的是左值,T 是非引用类型就说明传的是右值</text>
+  <text class="svgmuted" x="12" y="244" text-anchor="start" font-size="11">std::forward 用的正是这条信息,所以它的模板实参必须显式写出来,而且只能靠推导得到</text>
+</svg>
+<figcaption>引用折叠的四种组合,以及转发引用接住左值时走的两步（原创绘制）</figcaption>
+</figure>
 <p>于是有一个非常有用的推论:<strong>看 <code>T</code> 被推成什么,就知道调用方传的是左值还是右值。</strong><code>T</code> 是引用类型说明传的是左值,<code>T</code> 是非引用类型说明传的是右值。<code>std::forward</code> 正是利用这个信息工作的。</p>
 <h3>auto&amp;&amp; 与范围 for</h3>
 <p><code>auto&amp;&amp;</code> 也是转发引用,遵循同样的规则。这让它成为「什么都能接、什么都不复制」的通用写法。</p>
@@ -7845,7 +8234,7 @@ T&amp; emplace_back(Args&amp;&amp;... args) {
 <p>三个细节:返回类型用 <code>decltype(auto)</code>,这样被包装函数返回引用时不会被退化成值(2.4 节);用 <code>std::invoke</code> 而不是直接 <code>f(...)</code>,这样成员函数指针、成员数据指针也能被包装;耗时记录放进作用域守卫,异常路径上照样执行。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 包装层的返回类型用 decltype(auto),调用用 std::invoke</span><p><code>auto</code> 会丢掉引用与顶层 <code>const</code>,被包装函数如果返回 <code>T&amp;</code>,包装之后就变成了返回副本——调用方对返回值的修改不会生效,而且多一次拷贝。<code>std::invoke</code> 则统一了七种可调用形态(普通函数、函数指针、成员函数指针、成员数据指针、函数对象、lambda、<code>reference_wrapper</code>),不用它就要为成员函数单独写一套。</p></div>
 <h3>forward 的两个重载,以及它挡住的一类误用</h3>
-<p>上面给的 <code>std::forward</code> 实现只有一个重载。标准里其实有两个,第二个的存在是为了在编译期挡住一种误用。</p>
+<p>上面给的 <code>std::forward</code> 实现只有一个重载。标准里有两个,第二个的存在是为了在编译期挡住一种误用。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 386px"><code><span class="cm">// 一、接左值:最常用的那个</span>
 <span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt;
 <span class="kw">constexpr</span> T&amp;&amp; forward(std::remove_reference_t&lt;T&gt;&amp; x) <span class="kw">noexcept</span> {
@@ -7900,7 +8289,7 @@ wrap([](<span class="kw">int</span> x) { g(x); });                    <span clas
 <p>表里多列了一个位域。它比前四个少见,但形态一样:<strong>转发引用要绑住实参,而位域没有地址</strong>,于是 <code>wrap(obj.flag)</code> 编译错误。解法是先写 <code>auto v = obj.flag;</code> 再转发这个局部变量。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 包装重载函数时优先用 lambda,不要用 static_cast 指定函数指针</span><p><code>static_cast&lt;void(*)(int)&gt;(g)</code> 把整个重载集合塌缩成了一个具体的函数指针,之后调用方传别的类型就不再走对应的重载,而且这行代码在 <code>g</code> 的签名变化时会静默失配。包一层 <code>[](auto&amp;&amp;... a) { return g(std::forward&lt;decltype(a)&gt;(a)...); }</code> 则把重载决议留到了实际调用的位置,签名变了也不用改。这个形态在标准提案里被称为提升 lambda,写包装层时值得做成一段固定片段。</p></div>
 <h2 id="c5-pitfall">5.6 移动的误用与性能陷阱</h2>
-<p>移动语义写对了是纯收益,写歪了会得到「以为优化了、其实退化了」的结果,而且全程没有任何编译警告。这一节把真实项目里出现频率最高的几种收在一起。</p>
+<p>移动语义写对了是纯收益,写歪了会得到「以为优化了、实际退化了」的结果,而且全程没有任何编译警告。这一节把真实项目里出现频率最高的几种收在一起。</p>
 <h3>无效的 std::move</h3>
 <table style="contain-intrinsic-size:auto 265px">
 <thead><tr><th>形态</th><th>为什么无效</th><th>正确做法</th></tr></thead>
@@ -7994,7 +8383,7 @@ a = std::move(b);                     <span class="cm">// i == j 时就是自移
 <h3>「移动没生效」的排查流程</h3>
 <p>怀疑某处该移动却在拷贝时,按下面六步走,通常两三步之内能定位。关键是<strong>先测量再推理</strong>:影响移动是否生效的因素有四个,读代码猜很容易漏掉其中一条,从而得出错误结论。</p>
 <ol>
-<li><strong>先确认它确实在拷贝。</strong>用 5.2 节那个计数探针,或者在移动构造与拷贝构造里各加一行日志,跑一遍真实路径看数字。这一步能筛掉一半「其实本来就是移动」的误报。</li>
+<li><strong>先确认它确实在拷贝。</strong>用 5.2 节那个计数探针,或者在移动构造与拷贝构造里各加一行日志,跑一遍真实路径看数字。这一步能筛掉一半「本来就是移动」的误报。</li>
 <li><strong>查这个类型有没有移动操作。</strong>写 <code>static_assert(std::is_nothrow_move_constructible_v&lt;T&gt;);</code>。失败就往下查:是不是写了析构函数导致移动没生成?是不是有成员是 <code>const</code> 或引用?是不是某个成员的移动没标 <code>noexcept</code>?</li>
 <li><strong>查源表达式是不是右值。</strong>参数类型是 <code>const T&amp;</code> 吗?对象本身是 <code>const</code> 吗?该写 <code>std::move</code> 还是 <code>std::forward</code>,写对了吗?</li>
 <li><strong>查中间有没有多一层。</strong>包装层按值接了参数再往下传时,如果忘了 <code>std::move</code>,那一层就把右值变回了左值。逐层看每一次传递。</li>
@@ -8122,7 +8511,7 @@ ints.emplace_back(3.7);         <span class="cm">// 编译通过:插入的是 3<
 </tbody>
 </table>
 <div class="note dead" style="contain-intrinsic-size:auto 267px"><span class="t">🔴 在成员函数里 move 一个成员变量,而这个对象之后还要用</span><p>形态:<code>std::vector&lt;Item&gt; Basket::take_all() { return std::move(items_); }</code>。这个函数把成员掏空了,但调用方看不出来——签名和一个普通的取值函数一模一样。第二次调用返回空容器,连 <code>size()</code> 这类查询也全变成 0。症状是「第一次对,之后全错」。两种正确写法:把函数名改成明确表达消耗语义的(<code>release_items</code>、<code>take_items</code>),并在文档里写明调用之后对象被清空;或者用引用限定,让它只能在右值对象上调用——<code>std::vector&lt;Item&gt; take_all() &amp;&amp; { return std::move(items_); }</code>,这样 <code>basket.take_all()</code> 编译错误,必须写成 <code>std::move(basket).take_all()</code>,消耗行为在调用点可见。</p></div>
-<h3>三个「看起来该写 move,其实不该写」的位置</h3>
+<h3>三个「看起来该写 move,实际不该写」的位置</h3>
 <p>上面那张表覆盖的是常规情况。下面三处判断容易反过来,单独列出来。</p>
 <ol>
 <li><strong>返回局部变量。</strong><code>return std::move(local);</code> 把一个 prvalue 变成了 xvalue,编译器不再能做具名返回值优化,「零次操作」变成「一次移动」。直接写 <code>return local;</code>——编译器要么省略,要么自己按右值处理。唯一的例外是返回类型与局部变量类型不同时(例如返回 <code>std::unique_ptr&lt;Base&gt;</code> 而局部变量是 <code>std::unique_ptr&lt;Derived&gt;</code>),此时优化本来就用不上,写 <code>std::move</code> 是必要的。</li>
@@ -8133,7 +8522,7 @@ ints.emplace_back(3.7);         <span class="cm">// 编译通过:插入的是 3<
 <div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">🔵 C++20 起用引用限定的成员函数表达「消耗」,不要靠函数名约定</span><p><code>auto take() &amp;&amp; -&gt; std::vector&lt;Item&gt; { return std::move(items_); }</code> 这个写法让编译器帮忙检查:只有右值对象能调用它,左值对象调用直接编译错误。调用点因此必须写出 <code>std::move(basket).take()</code>,消耗语义在代码里可见、可搜索、可审查。这比「靠函数名提醒读者」强得多,因为函数名不参与编译。同一个技巧也用在 <code>optional::value()</code> 与 <code>expected::value()</code> 上,标准库自己就提供了 <code>&amp;</code>、<code>const&amp;</code>、<code>&amp;&amp;</code>、<code>const&amp;&amp;</code> 四个版本。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46007px;--thin-h:46007px">
+<section class="chapter" style="contain-intrinsic-size:auto 46442px;--thin-h:46442px">
 <h1 id="c6"><span class="part">第 6 章</span>重载决议、名字查找与隐式转换</h1>
 <h2 id="c6-overview">6.1 一次函数调用,编译器做了三件事</h2>
 <p>C 里 <code>f(x)</code> 的含义是确定的:只有一个 <code>f</code>,参数按标准转换规则转过去。C++ 里同一行代码可能有几十个候选,而最终选中哪一个由一套三阶段的规则决定。<strong>这套规则是 C++ 里出意外最多的地方</strong>——不是因为它不合理,而是因为它在无声地工作:选错了不会报错,只会调到另一个函数。</p>
@@ -8184,7 +8573,7 @@ ints.emplace_back(3.7);         <span class="cm">// 编译通过:插入的是 3<
     <span class="kw">using</span> <span class="kw">namespace</span> app;
     draw(p, 3);         <span class="cm">// 现在调 app::draw</span>
 }</code></pre>
-<p>把 <code>app::draw</code> 改成也只有一个参数,两者就都可行,而且转换代价相同,编译器会报二义。这类报错读起来吓人,但它其实是好事——<strong>二义是编译器帮你发现了设计问题</strong>,真正危险的是「不二义,但选中了另一个」。</p>
+<p>把 <code>app::draw</code> 改成也只有一个参数,两者就都可行,而且转换代价相同,编译器会报二义。这类报错读起来吓人,但它是好事——<strong>二义是编译器帮你发现了设计问题</strong>,真正危险的是「不二义,但选中了另一个」。</p>
 <h3>为什么这套规则值得学</h3>
 <p>三阶段规则看起来是编译器实现细节,但它决定了两件与日常写代码直接相关的事。<strong>第一是接口设计的自由度</strong>:能不能给同一个操作提供多个入口,让调用方按手头的类型自然地写。<code>std::max</code> 对整数、浮点、字符串都是同一个名字,而 C 要写 <code>abs</code> / <code>labs</code> / <code>fabs</code>,这个差别就来自重载决议。</p>
 <p><strong>第二是缺陷的形态</strong>。重载决议出错时,几乎从不表现为「编译不过」,而是表现为「调到了另一个函数」。这类缺陷不会被类型检查拦住,也很难被单元测试发现——因为被调到的那个函数往往也能算出一个看起来合理的结果。第 6.6 节列的六种形态,每一种都出自这个特点。</p>
@@ -8226,10 +8615,53 @@ log(<span>"hello"</span>);     <span class="cm">// 跑一遍就知道进的是�
 </tbody>
 </table>
 <p>这张轨迹表说明了两件事。第一,<strong>全局那个 <code>render</code> 从来没有「被拒绝」,它只是在第二阶段因为参数个数不对而出局</strong>——它如果恰好也接受两个参数,情况就完全不同。第二,<strong>实参依赖查找带进来的两个重载才是这次调用的真正参与者,而调用点没有任何地方写着 <code>app::</code></strong>。这两点是后面所有意外的来源。</p>
+<figure style="contain-intrinsic-size:auto 416px">
+<svg viewBox="0 0 720 318" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLov_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">三个阶段严格分开,前一个阶段完全不看参数类型;调用点没有任何地方写着 app::</text>
+
+  <text class="svgtext" x="12" y="58" text-anchor="start" font-size="12">阶段一</text>
+  <text class="svgmuted" x="12" y="74" text-anchor="start" font-size="11">名字查找</text>
+  <rect x="100" y="34" width="290" height="66" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="112" y="54" text-anchor="start" font-size="11">常规查找:从调用点向外,找到就停</text>
+  <text class="svgtext" x="112" y="80" text-anchor="start" font-size="12">全局 render(int)</text>
+  <rect x="402" y="34" width="306" height="66" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="414" y="52" text-anchor="start" font-size="11">实参依赖查找:实参类型所属的命名空间</text>
+  <text class="svgtext" x="414" y="72" text-anchor="start" font-size="11">app::render(const Widget&#38;, int)</text>
+  <text class="svgtext" x="414" y="92" text-anchor="start" font-size="11">app::render(const Widget&#38;, double)</text>
+  <path d="M245,100 V114" stroke="var(--accent)" fill="none" marker-end="url(#gLov_a)"/>
+  <path d="M555,100 V114" stroke="var(--accent)" fill="none" marker-end="url(#gLov_a)"/>
+
+  <text class="svgmuted" x="12" y="146" text-anchor="start" font-size="11">合并</text>
+  <rect x="100" y="118" width="608" height="42" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="112" y="144" text-anchor="start" font-size="11">候选集(三个):全局 render(int) · app::render(const Widget&#38;, int) · app::render(const Widget&#38;, double)</text>
+  <path d="M404,160 V176" stroke="var(--accent)" fill="none" marker-end="url(#gLov_a)"/>
+
+  <text class="svgtext" x="12" y="200" text-anchor="start" font-size="12">阶段二</text>
+  <text class="svgmuted" x="12" y="216" text-anchor="start" font-size="11">筛可行</text>
+  <rect x="100" y="180" width="608" height="44" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="112" y="200" text-anchor="start" font-size="11">去掉参数个数不对、以及实参无法转换的</text>
+  <text class="svgtext" x="112" y="218" text-anchor="start" font-size="11">全局 render(int) 只收一个参数,出局 → 剩两个</text>
+  <path d="M404,224 V240" stroke="var(--accent)" fill="none" marker-end="url(#gLov_a)"/>
+
+  <text class="svgtext" x="12" y="264" text-anchor="start" font-size="12">阶段三</text>
+  <text class="svgmuted" x="12" y="280" text-anchor="start" font-size="11">重载决议</text>
+  <rect x="100" y="244" width="608" height="44" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="112" y="264" text-anchor="start" font-size="11">按转换代价排序:第二个实参上 int → int 精确匹配,胜过 int → double</text>
+  <text class="svgtext" x="112" y="282" text-anchor="start" font-size="11">选中 app::render(const Widget&#38;, int)</text>
+
+  <text class="svgmuted" x="12" y="310" text-anchor="start" font-size="11">全局那个 render 从来没有被拒绝,它只是在阶段二因为参数个数不对而出局 —— 它如果恰好也收两个参数,情况就完全不同</text>
+</svg>
+<figcaption>一次调用 render(w, 1) 在三个阶段里各剩下哪些候选（原创绘制）</figcaption>
+</figure>
 <div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 候选集里出现意外的函数时,报错往往指向一个从没听说过的头文件</span><p>真实形态:某天给一个类加了个基类,或者升级了一个第三方库,原本正常的调用突然报「二义」或者行为变了。原因是候选集变了——基类所在的命名空间被实参依赖查找拉了进来,或者库在自己的命名空间里新增了一个同名函数。这类问题的特征是<strong>「改动 A 处,B 处出错,而 B 处的代码一个字没动」</strong>。排查第一步永远是看清候选集(6.2 节给了办法),不要在 B 处的代码里找原因。</p></div>
 <h3>当场验证选中了哪个重载:三种手段</h3>
 <p>前面给了一种(加打印)。三种手段各有适用场景,合起来能覆盖全部情况。</p>
-<table style="contain-intrinsic-size:auto 150px">
+<table style="contain-intrinsic-size:auto 149px">
 <thead><tr><th>手段</th><th>做法</th><th>能回答什么</th><th>代价</th></tr></thead>
 <tbody>
 <tr><td class="nw">运行期标记</td><td>在可疑的几个重载里各加一行打印</td><td><strong>实际跑起来进了哪个</strong></td><td>要能跑到那条路径</td></tr>
@@ -8406,7 +8838,7 @@ c.f(1);                       <span class="cm">// 选中私有的 f(int),报「�
 algo(1.5);      <span class="cm">// helper(x):ADL 对 double 没有关联命名空间 → 找不到 helper(double)</span>
 <span class="cm">                // 于是用第一阶段找到的 helper(int),1.5 被截断成 1</span></code></pre>
 <p>结论是一条很实用的规矩:<strong>模板里要调用的自由函数,要么在模板定义之前声明,要么保证它与实参类型在同一个命名空间里(靠实参依赖查找找到)。</strong>写在模板之后的全局函数,模板看不见。</p>
-<table style="contain-intrinsic-size:auto 149px">
+<table style="contain-intrinsic-size:auto 150px">
 <thead><tr><th>名字的性质</th><th>什么时候查</th><th>查找方式</th><th>风险</th></tr></thead>
 <tbody>
 <tr><td class="nw">不依赖模板参数</td><td><strong>定义模板时</strong></td><td>常规查找</td><td>之后新增的重载看不见</td></tr>
@@ -8770,7 +9202,7 @@ connect(<span>"a.com"</span>, Timeout{3000ms}, Retries{3});      <span class="cm
 <span class="cm">// connect("a.com", Retries{3}, Timeout{3000ms});   // 编译错误:类型不匹配</span></code></pre>
 <p>代价是调用点多写十几个字符,收益是<strong>「参数传反」与「单位搞错」这两类无法靠测试发现的错误彻底消失</strong>。对于会被很多地方调用的公开接口,这个交换几乎总是划算的。</p>
 <h3>= delete 的五种用法</h3>
-<p><code>= delete</code> 最常见的用法是删掉拷贝。它其实能表达五类不同的意图,后三类在设计接口时很有用。</p>
+<p><code>= delete</code> 最常见的用法是删掉拷贝。它能表达五类不同的意图,后三类在设计接口时很有用。</p>
 <table style="contain-intrinsic-size:auto 278px">
 <thead><tr><th>用法</th><th>写法</th><th>挡住什么</th></tr></thead>
 <tbody>
@@ -9083,7 +9515,7 @@ U u2{{}};                   <span class="cm">// initializer_list 版,列表里�
 <p>最后一行值得单独说:<strong>参数传反不是重载决议的问题,规则层面它完全合法。</strong>这类错误只能靠类型设计挡住,按排查流程是查不出来的。本章前面所有的机制讨论都是为了理解「编译器为什么这么选」,而 6.5 那三个手段才是让编译器替你把关的地方。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 55029px;--thin-h:55029px">
+<section class="chapter" style="contain-intrinsic-size:auto 55458px;--thin-h:55458px">
 <h1 id="c7"><span class="part">第 7 章</span>继承与多态的正确用法</h1>
 <h2 id="c7-what">7.1 继承表达的是「可替换」,不是「复用」</h2>
 <p>C 里没有继承,复用靠把公共代码抽成函数、把公共字段嵌进结构体。转到 C++ 之后,很多人把继承当成「更方便的代码复用」——基类里放公共字段和公共函数,派生类直接拿来用。这个用法能编译、能跑,但它误用了继承的语义,代价在几个月之后才会显现:类层次越来越深,改一个基类要验证十几个派生类,而且没人说得清某个虚函数被谁重写过。</p>
@@ -9528,6 +9960,49 @@ std::vector&lt;std::unique_ptr&lt;Shape&gt;&gt; copy_all(<span class="kw">const<
 </tbody>
 </table>
 <p>这张表最重要的信息在中间两列:<strong>虚函数与 variant 的扩展方向正好相反。</strong>类型经常增加、操作基本固定时用虚函数(画图形:随时可能加一种形状);操作经常增加、类型基本固定时用 <code>variant</code>(处理表达式节点:节点种类固定,但求值、打印、优化各是一种操作)。选错方向的后果是每加一样东西都要改一大片代码。</p>
+<figure style="contain-intrinsic-size:auto 411px">
+<svg viewBox="0 0 720 314" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <text class="svgmuted" x="12" y="18" text-anchor="start" font-size="11">同一张「类型乘操作」的表:格子是要写的一份实现,带主色的一片是这次改动要动的地方</text>
+
+  <text class="svgtext" x="245" y="42" text-anchor="middle" font-size="11">Circle</text>
+  <text class="svgtext" x="355" y="42" text-anchor="middle" font-size="11">Square</text>
+  <text class="svgtext" x="465" y="42" text-anchor="middle" font-size="11">Triangle(新增)</text>
+  <text class="svgtext" x="12" y="76" text-anchor="start" font-size="13">虚函数</text>
+  <text class="svgmuted" x="12" y="94" text-anchor="start" font-size="11">代码按列分块</text>
+  <text class="svgtext" x="182" y="71" text-anchor="end" font-size="11">area()</text>
+  <text class="svgtext" x="182" y="107" text-anchor="end" font-size="11">print()(新增)</text>
+  <rect x="190" y="50" width="110" height="34" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="300" y="50" width="110" height="34" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="410" y="50" width="110" height="34" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <rect x="190" y="86" width="110" height="34" fill="var(--svg-soft)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <rect x="300" y="86" width="110" height="34" fill="var(--svg-soft)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <rect x="410" y="86" width="110" height="34" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="534" y="70" text-anchor="start" font-size="11">加一种类型:只加一个派生类</text>
+  <text class="svgmuted" x="534" y="106" text-anchor="start" font-size="11">加一种操作:三列全要改</text>
+
+  <text class="svgtext" x="245" y="168" text-anchor="middle" font-size="11">Circle</text>
+  <text class="svgtext" x="355" y="168" text-anchor="middle" font-size="11">Square</text>
+  <text class="svgtext" x="465" y="168" text-anchor="middle" font-size="11">Triangle(新增)</text>
+  <text class="svgtext" x="12" y="202" text-anchor="start" font-size="13">std::variant</text>
+  <text class="svgmuted" x="12" y="220" text-anchor="start" font-size="11">代码按行分块</text>
+  <text class="svgtext" x="182" y="197" text-anchor="end" font-size="11">area()</text>
+  <text class="svgtext" x="182" y="233" text-anchor="end" font-size="11">print()(新增)</text>
+  <rect x="190" y="176" width="110" height="34" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="300" y="176" width="110" height="34" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="410" y="176" width="110" height="34" fill="var(--svg-soft)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <rect x="190" y="212" width="110" height="34" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <rect x="300" y="212" width="110" height="34" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <rect x="410" y="212" width="110" height="34" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="534" y="196" text-anchor="start" font-size="11">加一种类型:类型列表与</text>
+  <text class="svgmuted" x="534" y="212" text-anchor="start" font-size="11">每个 visitor 都要改</text>
+  <text class="svgtext" x="534" y="234" text-anchor="start" font-size="11">加一种操作:只加一个 visitor</text>
+
+  <text class="svgmuted" x="12" y="274" text-anchor="start" font-size="11">虚函数的代码按列分块,一列就是一个派生类;variant 的代码按行分块,一行就是一个 visitor</text>
+  <text class="svgmuted" x="12" y="290" text-anchor="start" font-size="11">于是两者的「只改一处」正好占了垂直与水平两个方向:类型经常增加选虚函数,操作经常增加选 variant</text>
+  <text class="svgmuted" x="12" y="306" text-anchor="start" font-size="11">最常见的错配是「类型固定、操作不断增加」却选了虚函数 —— 语法树节点、协议消息、状态机的状态都属于这一类</text>
+</svg>
+<figcaption>加一种图形与加一种操作,虚函数与 variant 各要改哪一片（原创绘制）</figcaption>
+</figure>
 <h3>模板:静态多态</h3>
 <p>不需要运行期才决定类型时,模板给出零开销的多态。它对类型的要求是<strong>隐式</strong>的——只要有对应的成员或自由函数即可,不必继承任何基类。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 223px"><code><span class="cm">// 不需要公共基类,只要类型有 area() 就能用</span>
@@ -12232,7 +12707,7 @@ ClangBuildAnalyzer --analyze capture.bin</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 模板报错先看 required from here,不要从第一行开始读</span><p>模板报错的结构是固定的:开头几行是编译器在最深处发现的问题,中间是从调用点到出错点的整条实例化链,最后是具体的错误。<strong>有价值的信息在两头,中间那几十行只是路径。</strong>从第一行开始顺着读,读到的是标准库内部的实现细节,与自己的代码无关,读完也不知道该改哪里。正确顺序是:先找实例化链的<strong>第一环</strong>(那是自己写的代码,也是唯一能改的地方),再看<strong>最后一个</strong> <code>error:</code>(那是缺的具体东西),两者一对照通常就有答案。把这条当成机械流程执行,读模板报错的时间能缩短一大半。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 43355px;--thin-h:43355px">
+<section class="chapter" style="contain-intrinsic-size:auto 43765px;--thin-h:43765px">
 <h1 id="c10"><span class="part">第 10 章</span>模板进阶:元编程、SFINAE 与 concepts</h1>
 <h2 id="c10-traits">10.1 类型萃取:在编译期向类型提问</h2>
 <p>泛型代码经常需要根据类型的性质分岔:这个类型是不是整数?能不能默认构造?有没有 <code>size()</code> 成员?这些问题在运行期问不了——类型是编译期的东西。<strong>类型萃取</strong>就是在编译期提问并得到答案的机制,它是后面 SFINAE 与 concepts 的基础。</p>
@@ -12882,6 +13357,43 @@ std::apply([](<span class="kw">auto</span>... xs) { (std::cout &lt;&lt; ... &lt;
 Circle c{1.0};
 c.describe();          <span class="cm">// 全程无虚调用,area_impl 可以被内联</span></code></pre>
 <p>关键在 <code>static_cast&lt;const Derived*&gt;(this)</code> 这一步:基类知道自己的模板实参就是派生类,所以这次向下转换在编译期是安全的、零开销的。<strong>但它要求派生类确实是 <code>Derived</code></strong>——写成 <code>class Square : public Shape&lt;Circle&gt;</code> 会编译通过而行为完全错误,这是这个形态最大的坑。</p>
+<figure style="contain-intrinsic-size:auto 391px">
+<svg viewBox="0 0 720 296" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLcrt_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">派生类把自己作为模板实参传上去,于是基类在编译期就知道派生类的确切类型,两个方向都不需要虚表</text>
+
+  <rect x="24" y="44" width="392" height="76" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="36" y="66" text-anchor="start" font-size="12">Shape&#60;Circle&#62;:基类模板的一次实例化</text>
+  <text class="svgmuted" x="36" y="88" text-anchor="start" font-size="11">double area() const {</text>
+  <text class="svgmuted" x="36" y="108" text-anchor="start" font-size="11">    return static_cast&#60;const Circle*&#62;(this)-&gt;area_impl(); }</text>
+
+  <path d="M116,180 V126" stroke="var(--accent)" fill="none" marker-end="url(#gLcrt_a)"/>
+  <text class="svgtext" x="128" y="146" text-anchor="start" font-size="11">继承时把自己当模板实参传上去</text>
+  <path d="M330,126 V174" stroke="var(--accent)" fill="none" marker-end="url(#gLcrt_a)"/>
+  <text class="svgtext" x="318" y="168" text-anchor="end" font-size="11">向下转换在编译期完成</text>
+
+  <rect x="24" y="180" width="392" height="76" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="36" y="202" text-anchor="start" font-size="12">class Circle : public Shape&#60;Circle&#62;</text>
+  <text class="svgmuted" x="36" y="224" text-anchor="start" font-size="11">double area_impl() const {</text>
+  <text class="svgmuted" x="36" y="244" text-anchor="start" font-size="11">    return 3.14159 * r_ * r_; }</text>
+
+  <text class="svgtext" x="440" y="66" text-anchor="start" font-size="12">与虚函数相比</text>
+  <text class="svgmuted" x="440" y="90" text-anchor="start" font-size="11">对象里没有 vptr,类也没有虚表</text>
+  <text class="svgmuted" x="440" y="110" text-anchor="start" font-size="11">调用在编译期定死,area_impl</text>
+  <text class="svgmuted" x="440" y="126" text-anchor="start" font-size="11">可以被完全内联</text>
+  <text class="svgmuted" x="440" y="156" text-anchor="start" font-size="11">代价是绑定时机提前到编译期:</text>
+  <text class="svgmuted" x="440" y="172" text-anchor="start" font-size="11">Shape&#60;Circle&#62; 与 Shape&#60;Square&#62;</text>
+  <text class="svgmuted" x="440" y="188" text-anchor="start" font-size="11">是两个无关的类型,放不进</text>
+  <text class="svgmuted" x="440" y="204" text-anchor="start" font-size="11">同一个容器</text>
+
+  <text class="svgmuted" x="12" y="282" text-anchor="start" font-size="11">模板实参写错(class Square : public Shape&#60;Circle&#62;)会编译通过而读到错位的内存;防护办法是把基类构造函数设为私有并声明 Derived 为友元</text>
+</svg>
+<figcaption>基类怎么在没有虚函数的情况下调到派生类的实现（原创绘制）</figcaption>
+</figure>
 <div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 CRTP 里派生类传错模板实参,编译通过但行为错乱</span><p><code>class Square : public Shape&lt;Circle&gt;</code> 这个笔误在复制粘贴一个已有派生类时极易发生。<code>static_cast</code> 会把 <code>Square*</code> 当成 <code>Circle*</code>,读到的成员是错位的内存,而且不会崩溃——只是算出错误的结果。<strong>防护办法是在基类里加一条断言</strong>:把基类的构造函数设为私有并把 <code>Derived</code> 声明为友元,这样只有真正的 <code>Derived</code> 能继承它。</p></div>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code><span class="kw">template</span> &lt;<span class="kw">typename</span> Derived&gt;
 <span class="kw">class</span> Shape {
@@ -13100,7 +13612,7 @@ c.describe();          <span class="cm">// 全程无虚调用,area_impl 可以�
 <div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 类模板的成员函数不被调用就不检查,「编过了」不等于「对」</span><p>这是模板与普通代码最大的行为差别:<code>template &lt;typename T&gt; struct Ring { void flush() { this-&gt;no_such_member(); } };</code> 只要没人调用 <code>flush</code>,编译完全通过。<strong>症状是模板在自己的测试里一切正常,交付出去之后第一个用它的人撞上一堆报错</strong>,而那些代码作者从来没有编译过。显式实例化 <code>template class Ring&lt;int&gt;;</code> 会强制实例化全部成员函数,把这类错误在本地一次逼出来;有约束的模板还要为每个约束分支各写一行。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46490px;--thin-h:46490px">
+<section class="chapter" style="contain-intrinsic-size:auto 46890px;--thin-h:46890px">
 <h1 id="c11"><span class="part">第 11 章</span>lambda 与可调用对象</h1>
 <h2 id="c11-what">11.1 lambda 是什么:编译器生成的一个类</h2>
 <p>C 里「把一段逻辑传给另一个函数」只有一条路:函数指针。它的两个缺点很具体——<strong>不能带状态</strong>(要靠一个额外的 <code>void*</code> 参数把上下文传进去),以及<strong>不能内联</strong>(编译时不知道最终指向哪个函数)。lambda 同时解决了这两个问题,代价是理解它需要知道编译器在背后做了什么。</p>
@@ -13260,6 +13772,39 @@ c_register(+[](<span class="kw">int</span> c, <span class="kw">const</span> <spa
     <span class="kw">auto</span> make_ok()   { <span class="kw">return</span> [*<span class="kw">this</span>] { <span class="kw">return</span> name_; }; }   <span class="cm">// 复制整个对象,安全</span>
     <span class="kw">auto</span> make_ok2()  { <span class="kw">return</span> [n = name_] { <span class="kw">return</span> n; }; }   <span class="cm">// 只复制需要的成员</span>
 };</code></pre>
+<figure style="contain-intrinsic-size:auto 382px">
+<svg viewBox="0 0 720 288" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLcap_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">闭包是编译器生成的一个类,捕获列表决定它有哪些数据成员;虚线表示存的只是地址,不是数据</text>
+
+  <rect x="16" y="94" width="200" height="76" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="116" y="118" text-anchor="middle" font-size="12">Session 对象</text>
+  <rect x="28" y="128" width="176" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="116" y="147" text-anchor="middle" font-size="11">std::string name_</text>
+  <text class="svgmuted" x="116" y="188" text-anchor="middle" font-size="11">它先销毁时……</text>
+
+  <rect x="290" y="38" width="414" height="58" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="302" y="58" text-anchor="start" font-size="12">[this] 的闭包</text>
+  <text class="svgmuted" x="302" y="78" text-anchor="start" font-size="11">成员只有一个 Session* this;name_ 其实写作 this-&gt;name_,对象没了就悬垂</text>
+  <path d="M286,72 L222,120" stroke="var(--accent)" fill="none" stroke-dasharray="5 4" marker-end="url(#gLcap_a)"/>
+
+  <rect x="290" y="110" width="414" height="58" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="302" y="130" text-anchor="start" font-size="12">[*this] 的闭包</text>
+  <text class="svgmuted" x="302" y="150" text-anchor="start" font-size="11">成员是一个完整的 Session 副本,连 name_ 一起复制;闭包自己就是主人</text>
+
+  <rect x="290" y="182" width="414" height="58" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="302" y="202" text-anchor="start" font-size="12">[n = name_] 的闭包</text>
+  <text class="svgmuted" x="302" y="222" text-anchor="start" font-size="11">成员是一个 std::string n:只复制需要的那个成员,不整份搬走</text>
+
+  <text class="svgmuted" x="12" y="266" text-anchor="start" font-size="11">在成员函数里写 [=] 捕获的也是 this,不是 name_ 的副本 —— 代码上完全看不出来,C++20 起这种隐式捕获已被弃用</text>
+  <text class="svgmuted" x="12" y="282" text-anchor="start" font-size="11">判据是 lambda 的去向:同一条语句里用完可以捕获引用;存进成员、容器、任务队列或返回出去,一律按值或初始化捕获</text>
+</svg>
+<figcaption>三种捕获写法各自在闭包里存了什么,对象销毁后哪一个悬垂（原创绘制）</figcaption>
+</figure>
 <div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 [=] 不会按值捕获成员变量,它捕获的是 this 指针</span><p>这是 lambda 里最隐蔽的一个坑。在成员函数里写 <code>[=]{ return name_; }</code>,看起来「按值捕获了 <code>name_</code>」,实际捕获的是 <code>this</code>,函数体里的 <code>name_</code> 是 <code>this-&gt;name_</code>。<strong>对象销毁之后这个 lambda 就悬垂</strong>,而代码上完全看不出来。C++20 起 <code>[=]</code> 隐式捕获 <code>this</code> 已被弃用,编译器会警告。规避办法:要复制成员就写 <code>[n = name_]</code>,要复制整个对象就写 <code>[*this]</code>,需要访问对象且能保证它活着才写 <code>[this]</code>。</p></div>
 <h3>初始化捕获:C++14 最有用的改进</h3>
 <p><code>[name = expr]</code> 让捕获不再局限于「复制一个已有变量」。三个用途。</p>
@@ -13344,7 +13889,7 @@ counter();  <span class="cm">// 2</span></code></pre>
 <li><strong>捕获成员时写 <code>[n = name_]</code> 而不是 <code>[this]</code>,除非确实需要访问对象。</strong></li>
 </ul>
 <h3>哪些名字根本不需要捕获</h3>
-<p>捕获列表管的只是<strong>局部自动变量</strong>。其余的名字在 lambda 里直接可用,不出现在捕获列表里,也不产生任何副本。这一条是「以为按值捕获了、其实是共享的」这类错误的根源。</p>
+<p>捕获列表管的只是<strong>局部自动变量</strong>。其余的名字在 lambda 里直接可用,不出现在捕获列表里,也不产生任何副本。这一条是「以为按值捕获了、实际是共享的」这类错误的根源。</p>
 <table style="contain-intrinsic-size:auto 335px">
 <thead><tr><th>名字</th><th>要不要捕获</th><th>在 lambda 里是什么</th></tr></thead>
 <tbody>
@@ -13466,7 +14011,7 @@ std::invoke(std::plus&lt;&gt;{}, 1, 2);</code></pre>
 <p>配套的 <code>std::invoke_result_t&lt;F, Args...&gt;</code> 给出调用的返回类型,<code>std::is_invocable_v&lt;F, Args...&gt;</code> 判断能不能这样调用。<strong>写包装层时一律用 <code>std::invoke</code></strong>,否则成员函数指针要单独写一套(5.5 节)。</p>
 <h3>std::function 的三种替代品</h3>
 <p>11.3 节的表列了五种可调用形态,这里补充「已经在用 <code>std::function</code>,想去掉它的开销」时的三条路。</p>
-<table style="contain-intrinsic-size:auto 150px">
+<table style="contain-intrinsic-size:auto 151px">
 <thead><tr><th>替代品</th><th>适用条件</th><th>收益</th></tr></thead>
 <tbody>
 <tr><td class="nw">模板参数</td><td class="nw">回调只在函数执行期间使用</td><td><strong>零开销</strong>,完全内联</td></tr>
@@ -14061,7 +14606,7 @@ std::erase_if(names, std::not_fn(is_txt));               <span class="cm">// not
 <div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 审查 lambda 只看两件事:它活多久,以及捕获列表里有什么</span><p>其余问题都是这两件事的推论。<strong>「活多久」决定捕获方式</strong>:活不过当前语句的可以放心用引用捕获,要存下来的一个引用都不能有,而且要顺着捕获进去的指针与视图再追一层。<strong>「捕获了什么」决定成本与副作用</strong>:捕获大对象是拷贝开销,捕获可变状态是并发风险,捕获 <code>this</code> 是生命周期风险。把这两个问题写进审查清单,比逐条背本章的易错项管用得多。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 50817px;--thin-h:50817px">
+<section class="chapter" style="contain-intrinsic-size:auto 51225px;--thin-h:51225px">
 <h1 id="c12"><span class="part">第 12 章</span>异常与错误处理</h1>
 <h2 id="c12-machine">12.1 异常的运行期机制</h2>
 <p>C 里错误只有返回值一条通道,调用方可以忽略,而且构造对象、重载运算符这些位置根本没有返回值可用(1.1 节)。异常是 C++ 给出的第二条通道。要用好它,先要知道它在运行期到底做了什么——很多关于「异常慢不慢」「该不该用」的争论,根子都在对这套机制的误解上。</p>
@@ -14151,6 +14696,47 @@ std::erase_if(names, std::not_fn(is_txt));               <span class="cm">// not
 </tbody>
 </table>
 <p>「找不到处理器时栈可能根本没被展开」这一点由此而来:第一阶段只查不动,发现无人接手就直接终止,第二阶段不会开始。<strong>这对排查是有利的</strong>——core dump 里保留着抛出点的完整调用栈,而不是一个已经被清理干净的栈。所以未捕获的异常反而比「接住了又吞掉」更容易定位。</p>
+<figure style="contain-intrinsic-size:auto 387px">
+<svg viewBox="0 0 720 292" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLexc_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">左边是调用栈,最新的帧在上;两遍都沿着同一条路径从抛出点走向处理器</text>
+  <text class="svgtext" x="302" y="38" text-anchor="start" font-size="12">第一遍:搜索</text>
+  <text class="svgtext" x="512" y="38" text-anchor="start" font-size="12">第二遍:清理</text>
+
+  <rect x="16" y="46" width="264" height="46" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="28" y="66" text-anchor="start" font-size="12">may_throw()</text>
+  <text class="svgmuted" x="28" y="84" text-anchor="start" font-size="11">throw:异常对象构造在专门的存储里</text>
+
+  <rect x="16" y="102" width="264" height="68" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="28" y="122" text-anchor="start" font-size="12">risky()</text>
+  <text class="svgmuted" x="28" y="140" text-anchor="start" font-size="11">局部对象 p:unique_ptr&#60;Widget&#62;</text>
+  <text class="svgmuted" x="28" y="158" text-anchor="start" font-size="11">局部对象 lk:lock_guard</text>
+
+  <rect x="16" y="180" width="264" height="52" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="28" y="200" text-anchor="start" font-size="12">main()</text>
+  <text class="svgmuted" x="28" y="220" text-anchor="start" font-size="11">catch (const std::exception&#38; e)</text>
+
+  <path d="M292,50 V222" stroke="var(--accent)" fill="none" stroke-dasharray="5 4" marker-end="url(#gLexc_a)"/>
+  <text class="svgmuted" x="302" y="72" text-anchor="start" font-size="11">从抛出点起逐帧查异常表</text>
+  <text class="svgmuted" x="302" y="136" text-anchor="start" font-size="11">这一帧有清理动作,但</text>
+  <text class="svgmuted" x="302" y="152" text-anchor="start" font-size="11">这一遍一个析构函数都不调</text>
+  <text class="svgmuted" x="302" y="210" text-anchor="start" font-size="11">找到类型匹配的处理器,搜索结束</text>
+
+  <path d="M502,50 V222" stroke="var(--accent)" fill="none" marker-end="url(#gLexc_a)"/>
+  <text class="svgmuted" x="512" y="72" text-anchor="start" font-size="11">再走一遍同一条路径</text>
+  <text class="svgtext" x="512" y="136" text-anchor="start" font-size="11">析构 lk:解锁</text>
+  <text class="svgtext" x="512" y="152" text-anchor="start" font-size="11">析构 p:释放 Widget</text>
+  <text class="svgmuted" x="512" y="210" text-anchor="start" font-size="11">异常对象绑到 e 上,进入处理代码</text>
+
+  <text class="svgmuted" x="12" y="258" text-anchor="start" font-size="11">第一遍找不到处理器就直接 std::terminate,第二遍不会开始 —— 栈保持原样,core dump 里留着抛出点的完整调用栈</text>
+  <text class="svgmuted" x="12" y="274" text-anchor="start" font-size="11">裸指针不在清理动作里:risky() 里那句 new char[1024] 在第二遍走过时不会被释放</text>
+</svg>
+<figcaption>栈展开的两遍分别做了什么,析构函数在哪一遍被调用（原创绘制）</figcaption>
+</figure>
 <p>抛出本身也不是免费的:<code>throw</code> 先调用运行时库的分配函数为异常对象要一块内存(分配失败时退回一块很小的静态紧急缓冲区),再逐帧解析异常表,而异常表是压缩编码的,解析一帧要走一遍字节码。栈越深、模块越多,这个过程越慢。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 多线程高频抛异常会在 unwinder 的锁上排队</span><p>栈展开要根据返回地址找到对应的异常表条目,这一步在部分实现里需要遍历已加载模块的信息,并且带一把<strong>进程级的锁</strong>。单线程压测看不出问题,一旦多个工作线程同时把异常当常规控制流用,所有线程会在这把锁上排队,<strong>加机器不但不增加吞吐,反而更慢</strong>。确认办法是抓一次 <code>perf</code>,火焰图顶部出现 <code>_Unwind_RaiseException</code>、<code>_Unwind_Find_FDE</code> 或 <code>dl_iterate_phdr</code> 这类符号就可以定性。修法不是优化展开,而是回到本节的判据:把高频的失败改成返回值。</p></div>
 <h3>throw 抛出的是一个副本</h3>
@@ -14427,7 +15013,7 @@ std::erase_if(names, std::not_fn(is_txt));               <span class="cm">// not
 <li><strong>函数指针的转换是单向的。</strong><code>void(*)() noexcept</code> 能转成 <code>void(*)()</code>,反过来不行——丢掉承诺是安全的,凭空多出承诺不是。</li>
 <li><strong>虚函数覆盖时只能变严,不能变松。</strong>基类的虚函数标了 <code>noexcept</code>,派生类的覆盖必须也标;基类没标,派生类可以标。</li>
 </ul>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">void</span> a() <span class="kw">noexcept</span> {}
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">void</span> a() <span class="kw">noexcept</span> {}
 <span class="kw">void</span> b() {}
 <span class="kw">void</span> (*p1)()          = a;    <span class="cm">// 可以:丢掉承诺</span>
 <span class="cm">// void (*p2)() noexcept = b; // 编译错误:凭空多出承诺</span>
@@ -14534,7 +15120,7 @@ std::expected&lt;<span class="kw">int</span>, ParseError&gt; parse_int(std::stri
 <li><strong>调用方通常需要分支处理它吗?</strong>是 → <strong>返回值</strong>(<code>optional</code> / <code>expected</code>)。</li>
 <li><strong>它发生在构造函数或运算符里吗?</strong>是 → <strong>只能用异常</strong>。</li>
 </ol>
-<p>四问都不命中的,用异常。<strong>这个顺序的设计意图是:先把不该用异常的排除掉,剩下的才是异常的领地。</strong>实践中第一问排除掉的比例最高——很多被当成「错误处理」的东西其实是缺陷,应当让它尽早暴露而不是被处理掉。</p>
+<p>四问都不命中的,用异常。<strong>这个顺序的设计意图是:先把不该用异常的排除掉,剩下的才是异常的领地。</strong>实践中第一问排除掉的比例最高——很多被当成「错误处理」的东西是缺陷,应当让它尽早暴露而不是被处理掉。</p>
 <h3>错误码方案的正规形态</h3>
 <p>「用错误码」不等于「返回 <code>int</code>」。C++11 之后有一套完整的设施:<code>std::error_code</code> 携带一个整数值加一个<strong>分类</strong>,分类负责把整数翻译成消息。自定义的错误枚举可以接入同一套机制,与系统错误放在同一个变量里传递。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 549px"><code><span class="kw">enum</span> <span class="kw">class</span> DbError { Busy = 1, Locked, Corrupt };
@@ -15110,7 +15696,7 @@ grep -rn -A5 <span>'what() *const'</span> src/</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 体检先做前两项,它们对应的是「进程直接死掉」这一类后果</span><p>六项里,吞异常与线程入口这两项的后果是不可恢复的:一个让故障信息彻底消失,一个让整个进程终止。其余四项的后果是性能损失或单次操作出错,严重程度低一个量级。<strong>时间有限时先做这两项</strong>,而且它们都能靠一次搜索定位,不需要理解业务逻辑,新接手的人第一天就能做。做完之后再按模块推进剩下的四项。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 43953px;--thin-h:43953px">
+<section class="chapter" style="contain-intrinsic-size:auto 44368px;--thin-h:44368px">
 <h1 id="c13"><span class="part">第 13 章</span>并发与内存模型</h1>
 <h2 id="c13-thread">13.1 线程:创建、汇合与生命周期</h2>
 <p>C++11 起标准库有了线程,不必再直接调 pthread 或 Windows API。这一节讲线程对象的生命周期规矩——它们是并发代码里第一批会遇到的坑,而且症状都是进程直接终止。</p>
@@ -15303,7 +15889,7 @@ use(data);                <span class="cm">// 即使读到 ready,也不保证看
 }</code></pre>
 <h3>「原子的一组操作」不等于「一组原子操作」</h3>
 <p>每个操作各自加锁,组合起来仍然可能出错——因为两次加锁之间状态可以被改变。这是并发里最常见的逻辑缺陷。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// 每一步都是线程安全的,组合起来仍然有竞争</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 每一步都是线程安全的,组合起来仍然有竞争</span>
 <span class="kw">if</span> (!map.contains(key)) {        <span class="cm">// 检查</span>
     map.insert({key, value});    <span class="cm">// 使用 —— 中间可能有别的线程插入了</span>
 }
@@ -15534,7 +16120,7 @@ counter.compare_exchange_strong(expected, 10);   <span class="cm">// 比较并�
 </tbody>
 </table>
 <p>核心的配对是 <strong><code>release</code> 与 <code>acquire</code></strong>:一个线程用 <code>release</code> 写标志,另一个线程用 <code>acquire</code> 读到这个值时,<strong>写线程在 <code>release</code> 之前做的所有事,读线程都能看见</strong>。这正是 13.2 节那个例子需要的保证。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code>std::atomic&lt;<span class="kw">bool</span>&gt; ready{<span class="kw">false</span>};
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code>std::atomic&lt;<span class="kw">bool</span>&gt; ready{<span class="kw">false</span>};
 <span class="kw">int</span> data = 0;                              <span class="cm">// 普通变量,不必是原子的</span>
 
 <span class="cm">// 线程 A</span>
@@ -15544,6 +16130,40 @@ ready.store(<span class="kw">true</span>, std::memory_order_release);   <span cl
 <span class="cm">// 线程 B</span>
 <span class="kw">while</span> (!ready.load(std::memory_order_acquire)) { }   <span class="cm">// 之后的读不会被重排到这之前</span>
 use(data);                                  <span class="cm">// 保证看得见 42</span></code></pre>
+<figure style="contain-intrinsic-size:auto 396px">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLato_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">两条线程的时间轴,时间由左向右;data 是普通变量,只有 ready 是原子的</text>
+
+  <text class="svgtext" x="12" y="80" text-anchor="start" font-size="12">线程 A</text>
+  <path d="M100,44 V52 H500 V44" stroke="var(--rule)" fill="none"/>
+  <text class="svgmuted" x="300" y="38" text-anchor="middle" font-size="11">这一段里的写不会被重排到 store 之后</text>
+  <rect x="100" y="60" width="180" height="40" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="190" y="85" text-anchor="middle" font-size="12">data = 42;</text>
+  <rect x="300" y="60" width="200" height="40" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="400" y="85" text-anchor="middle" font-size="11">ready.store(true, release)</text>
+
+  <path d="M400,100 V184" stroke="var(--accent)" fill="none" marker-end="url(#gLato_a)"/>
+  <text class="svgtext" x="412" y="128" text-anchor="start" font-size="12">同步边</text>
+  <text class="svgmuted" x="412" y="148" text-anchor="start" font-size="11">B 读到 true 的那一刻,A 在 store 之前的全部写入对 B 可见</text>
+
+  <text class="svgtext" x="12" y="212" text-anchor="start" font-size="12">线程 B</text>
+  <rect x="300" y="188" width="200" height="40" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="400" y="213" text-anchor="middle" font-size="11">ready.load(acquire)</text>
+  <rect x="520" y="188" width="186" height="40" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="613" y="213" text-anchor="middle" font-size="12">use(data) 读到 42</text>
+  <path d="M300,244 V236 H706 V244" stroke="var(--rule)" fill="none"/>
+  <text class="svgmuted" x="503" y="258" text-anchor="middle" font-size="11">这一段里的读不会被重排到 load 之前</text>
+
+  <text class="svgmuted" x="12" y="282" text-anchor="start" font-size="11">同步边只在 B 确实读到 A 写进去的那个值时才建立;B 一直读到 false 的那些次循环不建立任何顺序关系</text>
+  <text class="svgmuted" x="12" y="296" text-anchor="start" font-size="11">x86 上 acquire 与 release 的读写与普通读写生成同样的指令,只有 seq_cst 的写多一条屏障;ARM 与 POWER 上差别才明显</text>
+</svg>
+<figcaption>release 与 acquire 配上之后,线程 B 能看见线程 A 的哪些写入（原创绘制）</figcaption>
+</figure>
 <div class="note ok" style="contain-intrinsic-size:auto 266px"><span class="t">🟢 默认用 seq_cst,只有测量证明它是瓶颈时才放宽</span><p>不写内存序参数时默认就是 <code>seq_cst</code>,它是唯一一个「按直觉推理就不会错」的选项。放宽到 <code>acquire</code>/<code>release</code> 需要仔细论证每一处配对,放宽到 <code>relaxed</code> 则要论证「这里确实不需要任何顺序保证」。<strong>而收益在 x86 上通常很小</strong>——x86 的内存模型本身就很强,<code>acquire</code>/<code>release</code> 的读写与普通读写生成同样的指令,只有 <code>seq_cst</code> 的写多一条屏障。ARM 与 POWER 上差别才明显。<strong>唯一一个几乎总是值得用 <code>relaxed</code> 的场景是纯计数器</strong>:统计计数、以及引用计数的<strong>递增</strong>(递减必须是 <code>acq_rel</code>,因为归零后要销毁对象,那需要看见其他线程的全部写入)。</p></div>
 <h3>compare_exchange:无锁算法的基本操作</h3>
 <p>「读出当前值,算出新值,只有当前值没被别人改过时才写回去」——这个操作叫比较并交换,是所有无锁算法的基础。</p>
@@ -15629,7 +16249,7 @@ std::future&lt;<span class="kw">int</span>&gt; f = std::async(std::launch::async
 <span class="cm">// … 干别的事 …</span>
 <span class="kw">int</span> r = f.get();          <span class="cm">// 阻塞等结果;计算里抛的异常在这里重新抛出</span></code></pre>
 <p><strong>第一个参数不能省。</strong>不写启动策略时默认是 <code>async | deferred</code>,实现可以选择<strong>不启动线程</strong>,而是等到 <code>get()</code> 时才在当前线程同步执行。于是「并行」变成了串行,而且没有任何提示。</p>
-<table style="contain-intrinsic-size:auto 150px">
+<table style="contain-intrinsic-size:auto 151px">
 <thead><tr><th>策略</th><th>行为</th></tr></thead>
 <tbody>
 <tr><td class="nw"><code>std::launch::async</code></td><td class="nw"><strong>保证</strong>另起一个线程立刻执行</td></tr>
@@ -16037,7 +16657,7 @@ $ TSAN_OPTIONS=<span>"suppressions=tsan.supp:halt_on_error=1:second_deadlock_sta
 <div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 并发代码的验收标准是「关得掉、压得住、错得起」,不只是「跑得对」</span><p>功能正确只是第一项,而它恰恰是最容易通过的一项——并发缺陷本来就不在正常路径上。真正会在生产环境出事的是另外三件:<strong>关不掉</strong>(进程退出时挂住,发布只能强杀,而强杀会留下写了一半的数据);<strong>压不住</strong>(并发度上去之后延迟长尾崩掉,或者队列无限增长直到内存耗尽);<strong>错不起</strong>(一个任务失败拖垮整个进程)。这三项都要在上线前专门构造场景验证,它们不会自己在功能测试里出现。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 39589px;--thin-h:39589px">
+<section class="chapter" style="contain-intrinsic-size:auto 39984px;--thin-h:39984px">
 <h1 id="c14"><span class="part">第 14 章</span>C++20 / 23:四大件与其余新特性</h1>
 <h2 id="c14-map">14.1 一张地图:哪些值得现在就用</h2>
 <p>C++20 是自 C++11 以来变动最大的一版,四个「大件」——concepts、ranges、协程、模块——各自改变了一类写法。但它们的<strong>成熟度差别很大</strong>:有的已经可以在生产代码里放心用,有的工具链支持还不完整。这一节先给一张判断表,免得读完后面几节不知道该从哪下手。</p>
@@ -16376,6 +16996,43 @@ std::generator&lt;<span class="kw">int</span>&gt; fibonacci() {
 </tbody>
 </table>
 <p>三个返回类型里最重要的是第二个。<code>await_suspend</code> 返回一个协程句柄时,编译器会<strong>立刻恢复那个协程,而且不增加调用栈深度</strong>,这个机制叫对称转移。没有它的话,「A 等 B、B 等 C、C 完成后逐层返回」会在栈上叠出与协程链等长的帧,一条长链就能把栈耗尽。</p>
+<figure style="contain-intrinsic-size:auto 376px">
+<svg viewBox="0 0 720 282" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLcor_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">co_await 不是原语,编译器把它翻译成对等待体的三次调用;走上面一条还是下面一条,由第一次调用的返回值决定</text>
+
+  <rect x="14" y="102" width="130" height="44" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="79" y="129" text-anchor="middle" font-size="12">co_await expr</text>
+  <rect x="176" y="102" width="140" height="44" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="246" y="129" text-anchor="middle" font-size="12">await_ready()</text>
+  <path d="M144,124 H172" stroke="var(--accent)" fill="none" marker-end="url(#gLcor_a)"/>
+
+  <text class="svgmuted" x="330" y="50" text-anchor="start" font-size="11">返回 true:结果已就绪,不暂停,直接往下走</text>
+  <path d="M246,102 V62 H494 V118 H520" stroke="var(--accent)" fill="none" marker-end="url(#gLcor_a)"/>
+
+  <rect x="524" y="94" width="180" height="48" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="614" y="123" text-anchor="middle" font-size="12">await_resume()</text>
+  <text class="svgmuted" x="704" y="86" text-anchor="end" font-size="11">返回值就是整个 co_await 表达式的值</text>
+
+  <text class="svgmuted" x="256" y="182" text-anchor="start" font-size="11">返回 false:当前协程挂起</text>
+  <path d="M246,146 V200 H332" stroke="var(--accent)" fill="none" marker-end="url(#gLcor_a)"/>
+
+  <rect x="336" y="190" width="160" height="44" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="416" y="217" text-anchor="middle" font-size="12">await_suspend(h)</text>
+  <rect x="524" y="190" width="180" height="44" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="614" y="217" text-anchor="middle" font-size="12">别处调用 h.resume()</text>
+  <path d="M496,212 H520" stroke="var(--accent)" fill="none" marker-end="url(#gLcor_a)"/>
+  <path d="M614,190 V146" stroke="var(--accent)" fill="none" marker-end="url(#gLcor_a)"/>
+
+  <text class="svgmuted" x="12" y="258" text-anchor="start" font-size="11">挂起时局部变量与执行位置都在堆上的协程帧里,句柄 h 指向它;由 await_suspend 决定「以后谁来恢复」</text>
+  <text class="svgmuted" x="12" y="274" text-anchor="start" font-size="11">await_suspend 返回一个协程句柄时,编译器立刻恢复那个协程且不增加调用栈深度,这个机制叫对称转移</text>
+</svg>
+<figcaption>一次 co_await 展开成对等待体的哪三次调用（原创绘制）</figcaption>
+</figure>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 440px"><code><span class="cm">// 一个最小的等待体:把当前协程交给线程池,由池里的线程恢复它</span>
 <span class="kw">struct</span> ResumeOnPool {
     Pool&amp; pool;
@@ -16525,7 +17182,7 @@ export <span class="kw">void</span> connect(<span class="kw">const</span> <span 
 <tr><td class="nw">由构建系统按需生成</td><td>它是<strong>中间产物</strong>,与目标文件同一个层级</td></tr>
 </tbody>
 </table>
-<p>所以一个以源码或者静态库形式分发的第三方库,仍然要提供 <code>.cppm</code> 这类<strong>模块接口源文件</strong>,由使用者自己编译一遍。这与头文件的分发模型其实一样,只是「解析一次」的收益落在使用者的构建里,而不是库作者那边。</p>
+<p>所以一个以源码或者静态库形式分发的第三方库,仍然要提供 <code>.cppm</code> 这类<strong>模块接口源文件</strong>,由使用者自己编译一遍。这与头文件的分发模型一样,只是「解析一次」的收益落在使用者的构建里,而不是库作者那边。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 把模块接口的二进制产物提交到版本库或者跨机器复用</span><p>症状是换一台机器、升一次编译器小版本之后出现难懂的错误:「模块文件由不同版本的编译器生成」,或者更麻烦的情形——能读进来但语义不一致,报出一堆看不懂的重定义。<strong>规矩:接口二进制与目标文件同级,一律放在构建目录里,由构建系统管理依赖与重新生成</strong>,不进版本库、不跨机器复用,除非用的是能把编译器与全部选项都算进哈希键的分布式缓存。</p></div>
 <h3>名字在模块里怎么可见</h3>
 <p>模块改变的不只是编译模型,还有名字的可见性规则。三条与日常写法直接相关。</p>
@@ -16804,7 +17461,7 @@ std::ranges::sort(a);                 <span class="cm">// 因为提供了 begin/
 <span class="cm">// 显式声明:这个类型的迭代器不依赖对象自身的生命周期</span>
 <span class="kw">template</span> &lt;&gt;
 <span class="kw">inline</span> <span class="kw">constexpr</span> <span class="kw">bool</span> std::ranges::enable_borrowed_range&lt;app::ByteRange&gt; = <span class="kw">true</span>;</code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 给一个实际持有数据的类型开启 borrowed_range</span><p>这个变量模板是一条<strong>由你保证、编译器不验证的断言</strong>。声明为 <code>true</code> 之后,标准库就不再对这个类型施加悬垂保护:把一个临时对象传给 <code>ranges::find</code> 会正常返回一个迭代器,而不是 <code>dangling</code>。如果这个类型其实拥有自己的存储(内部有一个 <code>vector</code> 成员),那个迭代器在表达式结束时就指向已释放的内存,而<strong>标准库本来提供的那层保护恰恰被你自己关掉了</strong>。判据只有一条:<strong>迭代器指向的存储是不是活在这个对象之外</strong>——是,才能开启。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 给一个实际持有数据的类型开启 borrowed_range</span><p>这个变量模板是一条<strong>由你保证、编译器不验证的断言</strong>。声明为 <code>true</code> 之后,标准库就不再对这个类型施加悬垂保护:把一个临时对象传给 <code>ranges::find</code> 会正常返回一个迭代器,而不是 <code>dangling</code>。如果这个类型拥有自己的存储(内部有一个 <code>vector</code> 成员),那个迭代器在表达式结束时就指向已释放的内存,而<strong>标准库本来提供的那层保护恰恰被你自己关掉了</strong>。判据只有一条:<strong>迭代器指向的存储是不是活在这个对象之外</strong>——是,才能开启。</p></div>
 <div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 自己的容器接入 ranges,提供成员 begin/end 就够了</span><p>不必特化任何东西,也不必写非成员的 <code>begin</code> 自由函数:<code>std::ranges::begin</code> 会优先找成员版本。要注意的只有两点——<strong>同时提供 <code>const</code> 与非 <code>const</code> 两个版本</strong>(否则 <code>const</code> 对象无法遍历,而这通常要到传参时才暴露),以及<strong>让 <code>end()</code> 的返回类型与 <code>begin()</code> 一致,或者是一个明确的哨位类型</strong>。做到这两点之后,范围 <code>for</code>、全部 ranges 算法与视图组合就都可用了。</p></div>
 <h2 id="c14-sum">14.7 小结:本章要点与易错清单</h2>
 <p>C++20 的四大件里,<strong>只有 concepts 是「立刻换、纯收益」的</strong>;ranges 要注意生命周期;协程缺配套;模块缺构建集成。而 14.5 节那批小改进的收益兑现最快,应当先做。</p>
@@ -17260,7 +17917,7 @@ $ LSAN_OPTIONS=<span>"suppressions=lsan.supp"</span> ./app</code></pre>
 <h2 id="c15-static">15.4 静态分析与编译期检查</h2>
 <p>sanitizer 只能发现<strong>实际跑到的路径</strong>上的问题。静态分析在编译期看代码,能覆盖没被测试到的分支,代价是有误报。两者互补,都要用。</p>
 <h3>三层静态检查</h3>
-<table style="contain-intrinsic-size:auto 151px">
+<table style="contain-intrinsic-size:auto 150px">
 <thead><tr><th>层次</th><th>工具</th><th>抓什么</th><th>误报</th></tr></thead>
 <tbody>
 <tr><td class="nw"><strong>编译器警告</strong></td><td><code>-Wall -Wextra</code> / <code>/W4</code></td><td>类型、初始化、未使用、遮蔽</td><td>很少</td></tr>
@@ -17329,7 +17986,7 @@ HeaderFilterRegex: <span>'^src/'</span></code></pre>
 <h3>静态分析的误报怎么处理</h3>
 <p>误报是静态分析最大的使用障碍——一次几百条告警里如果一半是误报,人就不会再看它。三条处理原则。</p>
 <ol>
-<li><strong>能改代码就改代码。</strong>很多「误报」其实指出了代码确实不够清楚:一个编译器分析不出来的不变式,人读起来同样要费劲。加一个断言或者重构一下,通常两边都受益。</li>
+<li><strong>能改代码就改代码。</strong>很多「误报」指出了代码确实不够清楚:一个编译器分析不出来的不变式,人读起来同样要费劲。加一个断言或者重构一下,通常两边都受益。</li>
 <li><strong>确实是误报就精确抑制。</strong>用 <code>// NOLINT(检查名)</code> 抑制单行,不要整个文件关掉,更不要全局关掉某个检查。抑制时<strong>写一句为什么</strong>。</li>
 <li><strong>成组的误报要调配置。</strong>某个检查在你的代码风格下持续误报,就把它从配置里去掉,并在配置文件里注明原因。这比让每个人各自忽略要好。</li>
 </ol>
@@ -17735,7 +18392,7 @@ $ cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release &amp;&amp; cmake --buil
 <div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 工具链的收益是「一次配置、每次提交都在兑现」,而且随代码量增长</span><p>这与写测试不同:测试的覆盖要一个用例一个用例地加,而打开一个警告或者接上一个 sanitizer,<strong>是对整份代码库同时生效的</strong>,并且对以后写的每一行也自动生效。所以它的投入产出比随代码量与团队规模上升,是所有工程实践里最先该做的一项。<strong>反过来,它也是最容易被无限期推迟的一项</strong>——不做也能交付功能,代价要到几个月之后才以「一个查了三天的崩溃」的形式出现。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 71740px;--thin-h:71740px">
+<section class="chapter" style="contain-intrinsic-size:auto 71739px;--thin-h:71739px">
 <h1 id="c16"><span class="part">第 16 章</span>与标准库接合:让自己的类型用起来像内建类型</h1>
 <h2 id="c16-shape">16.1 标准库对一个类型提了哪些要求</h2>
 <p>C 里让自己的类型被库用起来,靠的是在调用点补齐函数指针:<code>qsort</code> 要一个比较函数,<code>bsearch</code> 要一个比较函数,第三方哈希表要一个哈希函数加一个相等函数。类型本身不需要具备任何性质,一切都在调用处现场拼装。C++ 标准库走的是另一条路——<strong>设施对类型提出一组要求,类型满足了就能用,不满足就编不过,或者编得过但行为未定义。</strong>这组要求既不是基类也不是接口声明,而是「这个类型上必须存在哪些操作,这些操作必须满足哪些性质」。</p>
@@ -17988,7 +18645,7 @@ std::sort(v.begin(), v.end(), [](<span class="kw">const</span> Task&amp; a, <spa
 <div class="note dead" style="contain-intrinsic-size:auto 229px"><span class="t">🔴 哈希与相等不一致,元素存进去了却查不到</span><p>机制上,查找只在哈希值定位到的那一个桶里比较。<strong>桶数少的时候,两个哈希值不同的键仍可能因为取模而落进同一个桶,于是查得到;插入到某个数量触发再散列、桶数变多之后,它们被分到不同的桶,同一段代码突然查不到了。</strong>这就是「不稳定复现」的来源,也是这类问题最容易被误判成并发问题的原因。<strong>确诊方法是直接算一遍</strong>:取出那个查不到的键 <code>k</code> 和容器里那个应当匹配的键 <code>k2</code>,打印 <code>k == k2</code>、<code>Hash{}(k)</code> 与 <code>Hash{}(k2)</code>。相等为真而哈希不同,结论立刻成立。</p></div>
 <h3>组合成员的哈希:为什么异或不行</h3>
 <p>把几个成员的哈希值合成一个,最容易想到的是 <code>h1 ^ h2</code>。它有三个具体缺陷,每一个都会造成可观的碰撞。</p>
-<table style="contain-intrinsic-size:auto 150px">
+<table style="contain-intrinsic-size:auto 151px">
 <thead><tr><th>缺陷</th><th>后果</th><th>具体例子</th></tr></thead>
 <tbody>
 <tr><td class="nw">异或满足交换律</td><td class="nw">字段互换的对象哈希相同</td><td><code>Point{1, 2}</code> 与 <code>Point{2, 1}</code> 落进同一个桶</td></tr>
@@ -18866,7 +19523,7 @@ swap(a, b);               <span class="cm">// 第二步:非限定调用,让实�
 <h3>编译期格式串与运行期格式串</h3>
 <p><code>std::format</code> 的第一个参数类型不是 <code>const char*</code>,而是 <code>std::format_string&lt;Args...&gt;</code>。它有一个 <code>consteval</code> 的构造函数,在编译期把格式串完整解析一遍,并对照实参类型检查。所以格式串<strong>必须是编译期常量</strong>,把一个 <code>std::string</code> 变量传进去会直接编不过。</p>
 <p>格式串来自配置文件、翻译资源或者数据库时,用 <code>std::vformat</code>。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">#include</span> &lt;format&gt;
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">#include</span> &lt;format&gt;
 <span class="kw">#include</span> &lt;string&gt;
 
 std::string render(<span class="kw">const</span> std::string&amp; pattern, <span class="kw">int</span> code, std::string_view msg) {
@@ -19164,7 +19821,7 @@ std::string render(<span class="kw">const</span> std::string&amp; pattern, <span
 <div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 接合工作的正确时机是写下类型定义的当天,不是出问题之后</span><p>本章列出的事情加起来不到二十行代码:一个 <code>= default</code> 的相等比较、一个三路比较、一个哈希特化、一个 formatter 特化、几行断言。<strong>写类型的时候顺手加上,成本是十分钟;等到某个下游模块编不过、或者压测发现容器慢了十倍再回来补,成本是几个人天的排查加一次跨模块改动。</strong>差别不在工作量,在于第一种情况下你手边有完整的上下文,第二种情况下要先把上下文重建出来。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 72778px;--thin-h:72778px">
+<section class="chapter" style="contain-intrinsic-size:auto 73195px;--thin-h:73195px">
 <h1 id="c17"><span class="part">第 17 章</span>接口设计:把判据写进类型</h1>
 <h2 id="c17-shape">17.1 设计一个接口要决定的六件事</h2>
 <p>前面十七章讲的都是语言机制:初始化与值类别、对象模型、拷贝控制、移动、重载决议、继承与多态、模板、lambda、异常、并发。这些是材料。接口是用材料搭出来的形状——一个函数的声明写成什么样,一个类把哪些东西放在 <code>public</code> 下面。这一章回答的是:材料齐了之后,怎么决定形状。</p>
@@ -19761,7 +20418,7 @@ p-&gt;a = 7;                       <span class="cm">// 没有任何检查会阻�
 };</code></pre>
 <p>这个写法有两条必须遵守的规矩。第一,<strong>每一个会改变源数据的函数,都必须让缓存失效</strong>;漏掉一处,<code>area()</code> 就会一直返回旧值,而且这个错误不会崩溃,只会给出错误的数字。把「缓存要么为空,要么与 <code>pts_</code> 一致」写成不变式,并在调试构建里检查(17.3 节),能挡住这类遗漏。第二,<code>mutable</code> 只能用在这类真正的实现细节上;用它绕开 <code>const</code> 去改可观察状态,等于把这个函数的 <code>const</code> 承诺变成假的,而调用方仍然会依赖它。</p>
 <p>有一个容易忽略的点:<strong><code>const</code> 只作用于对象自己的存储,不穿透指针。</strong>一个 <code>const</code> 成员函数里,<code>T* p_</code> 的类型是 <code>T* const</code>,而不是 <code>const T*</code>——指针本身不能改,但指向的对象可以随便改。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">class</span> Widget {
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">class</span> Widget {
     Impl* p_;                       <span class="cm">// 裸指针</span>
     std::unique_ptr&lt;Impl&gt; u_;       <span class="cm">// 智能指针,行为相同</span>
 <span class="kw">public</span>:
@@ -19789,7 +20446,7 @@ p-&gt;a = 7;                       <span class="cm">// 没有任何检查会阻�
 <div class="note dead" style="contain-intrinsic-size:auto 263px"><span class="t">🔴 mutable 缓存不加锁,const 函数就有数据竞争</span><p><code>const</code> 在调用方看来意味着「可以并发调用」,而带缓存的实现在内部执行了写操作。两个线程同时进入 <code>area()</code>、缓存又恰好是空的时候,双方同时写 <code>area_cache_</code>——<code>std::optional</code> 的写不是原子的,可能一个线程写了「有值」标志、另一个线程还在写数值。<strong>症状是偶发的错误数值、或者析构时崩溃,复现概率与线程数和调用频率有关,单线程测试永远抓不到。</strong>排查手段是 ThreadSanitizer,它会直接报出两个线程写同一地址的栈(第 13 章、第 15 章)。<strong>修法:<code>mutable</code> 缓存一律配一把 <code>mutable std::mutex</code>,或者把缓存改成 <code>std::atomic</code> 并接受偶尔重复计算。</strong></p></div>
 <h3><code>noexcept</code>:承诺的强度与代价</h3>
 <p><code>noexcept</code> 是这几个承诺里后果最重的一个。它的含义不是「这个函数不抛异常,抛了就传出去」,而是<strong>「异常绝对不会离开这个函数;一旦有异常试图离开,程序直接调用 <code>std::terminate</code>」</strong>。中间不经过栈展开,外层的 <code>catch</code> 一个也不会执行,已经在栈上的对象的析构函数是否被调用由实现决定。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">void</span> handler() <span class="kw">noexcept</span> {
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">void</span> handler() <span class="kw">noexcept</span> {
     <span class="kw">throw</span> std::runtime_error(<span>"boom"</span>);      <span class="cm">// 编译通过(可能有警告)</span>
 }
 
@@ -20112,7 +20769,7 @@ print(sorted([(e[<span>'dur'</span>],e[<span>'name'</span>]) <span class="kw">fo
 <tr><td class="nw">放进 <code>std::vector&lt;T&gt;</code></td><td class="nw"><strong>需要</strong>(实例化成员函数时)</td><td><code>std::unique_ptr&lt;T&gt;</code> 的成员则不需要</td></tr>
 </tbody>
 </table>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// widget.h —— 不必包含 renderer.h</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// widget.h —— 不必包含 renderer.h</span>
 <span class="kw">class</span> Renderer;                       <span class="cm">// 前向声明</span>
 
 <span class="kw">class</span> Widget {
@@ -20184,6 +20841,51 @@ Session&amp; Session::<span class="kw">operator</span>=(Session&amp;&amp;) <span
 }
 
 std::<span class="kw">size_t</span> Session::bytes_sent() <span class="kw">const</span> <span class="kw">noexcept</span> { <span class="kw">return</span> p_-&gt;sent; }</code></pre>
+<figure style="contain-intrinsic-size:auto 396px">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gLabi_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">箭头表示「谁被迫展开谁」;私有成员虽然调用方访问不到,但它的类型仍然要写在头文件里</text>
+
+  <text class="svgtext" x="16" y="48" text-anchor="start" font-size="13">Pimpl 之前</text>
+  <rect x="16" y="58" width="332" height="88" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="28" y="78" text-anchor="start" font-size="12">session.h</text>
+  <text class="svgmuted" x="28" y="98" text-anchor="start" font-size="11">TlsContext tls;</text>
+  <text class="svgmuted" x="28" y="116" text-anchor="start" font-size="11">SocketPool::Handle sock;</text>
+  <text class="svgmuted" x="28" y="134" text-anchor="start" font-size="11">std::vector&#60;std::byte&#62; outbuf;</text>
+  <path d="M182,146 V166" stroke="var(--accent)" fill="none" marker-end="url(#gLabi_a)"/>
+  <rect x="16" y="170" width="106" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="69" y="189" text-anchor="middle" font-size="11">tls_context.h</text>
+  <rect x="130" y="170" width="106" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="183" y="189" text-anchor="middle" font-size="11">socket_pool.h</text>
+  <rect x="244" y="170" width="104" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="296" y="189" text-anchor="middle" font-size="11">&#60;vector&#62;</text>
+  <path d="M182,198 V218" stroke="var(--accent)" fill="none" marker-end="url(#gLabi_a)"/>
+  <rect x="16" y="222" width="332" height="52" rx="6" fill="var(--svg-soft)" stroke="var(--rule)" stroke-dasharray="5 4"/>
+  <text class="svgtext" x="28" y="242" text-anchor="start" font-size="12">加一个私有成员</text>
+  <text class="svgmuted" x="28" y="262" text-anchor="start" font-size="11">所有直接或间接包含 session.h 的源文件全部重编</text>
+
+  <text class="svgtext" x="372" y="48" text-anchor="start" font-size="13">Pimpl 之后</text>
+  <rect x="372" y="58" width="332" height="88" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="384" y="78" text-anchor="start" font-size="12">session.h</text>
+  <text class="svgmuted" x="384" y="98" text-anchor="start" font-size="11">struct Impl;   不完整类型,只在这里声明</text>
+  <text class="svgmuted" x="384" y="116" text-anchor="start" font-size="11">std::unique_ptr&#60;Impl&#62; p_;</text>
+  <text class="svgmuted" x="384" y="134" text-anchor="start" font-size="11">~Session(); 声明在这里,定义在源文件里</text>
+  <path d="M538,146 V166" stroke="var(--accent)" fill="none" marker-end="url(#gLabi_a)"/>
+  <rect x="372" y="170" width="332" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="538" y="189" text-anchor="middle" font-size="10">session.cpp:tls_context.h、socket_pool.h、&#60;vector&#62; 搬到这里</text>
+  <path d="M538,198 V218" stroke="var(--accent)" fill="none" marker-end="url(#gLabi_a)"/>
+  <rect x="372" y="222" width="332" height="52" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="384" y="242" text-anchor="start" font-size="12">给 Impl 加一个成员</text>
+  <text class="svgmuted" x="384" y="262" text-anchor="start" font-size="11">只有 session.cpp 重编,调用方一行都不用动</text>
+
+  <text class="svgmuted" x="12" y="292" text-anchor="start" font-size="11">代价是每次访问成员多一次指针跳转、构造时多一次堆分配,而且析构与两个移动操作必须显式声明并在源文件里定义</text>
+</svg>
+<figcaption>Pimpl 把私有成员搬走之后,改一次实现要重编的范围变成了什么（原创绘制）</figcaption>
+</figure>
 <h3><code>unique_ptr</code> 与不完整类型:必踩的那个编译错误</h3>
 <p>上面代码里有一处看起来多余的写法:析构函数与移动操作在头文件里声明、在源文件里用 <code>= default</code> 定义。删掉这几行会得到一个信息量很低的编译错误。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 359px"><code><span class="cm">// 如果头文件里没有声明析构函数(即让编译器隐式生成):</span>

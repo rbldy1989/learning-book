@@ -199,6 +199,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">JavaScript 语言手册</div>
 <details><summary><a class="ch" href="#b1">类型、值与作用域</a></summary>
+<a class="sec" href="#b1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#f5-types">1.1 类型、值与转换</a>
 <a class="sec" href="#f5-lexical">1.2 词法结构:标识符、声明、运算符与自动分号插入</a>
 <a class="sec" href="#f5-scope">1.3 作用域链、提升与暂时性死区</a>
@@ -260,11 +261,110 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 48568px;--thin-h:25453px">
+<section class="chapter" style="contain-intrinsic-size:auto 54177px;--thin-h:31062px">
 <h1 id="b1"><span class="part">语言</span>类型、值与作用域</h1>
 <p>对写过 C/C++/Java/Go 的人来说,JavaScript 的语法几分钟就能看懂,真正花时间的是底下两套和静态语言不一样的机制:<strong>类型属于值,不属于变量</strong>——运算符按规范里的三个抽象操作悄悄转换操作数,于是 <code>'5' - 2</code> 得 3 而 <code>'1' + 2</code> 得 <code>"12"</code>;<strong>名字属于它被写下的那个块</strong>——函数对象带着出生地的环境记录到处跑,于是有了闭包。这一章按「先给出一个反直觉的输出 → 拆开引擎在做什么 → 推出能记住的规则」把这两套机制讲到能推导。</p>
 <p>四节的顺序不能反。<a href="#f5-types">1.1</a> 先把值这一层盘清:8 种类型、ToPrimitive/ToNumber/ToString、<code>==</code> 与 <code>&lt;</code> 两套彼此独立的算法、7 个假值。<a href="#f5-lexical">1.2</a> 退回解析层,回答「这段源码被切成了什么形状」:标识符与保留字、三种声明的四个维度、优先级与结合性、自动分号插入——这一层的坑与转换规则无关,却和转换规则的坑长得一模一样,分不开就永远排查不清。<a href="#f5-scope">1.3</a> 建立作用域链与环境记录,把「读未声明抛 <code>ReferenceError</code>、写未声明创建全局、TDZ 为什么也是 <code>ReferenceError</code>」串成一条线。<a href="#f5-closure">1.4</a> 收尾:函数带着出生地的环境记录活下来,于是有了工厂、模块模式与循环里的三个 <code>i</code>。</p>
 <p>后面几乎每一章都踩在这一章上:<a href="#f5-this">2.2</a> 里箭头函数把 <code>this</code> 并进作用域规则,<a href="#f5-func">2.1</a> 的工厂函数与柯里化是闭包的固定形态,<a href="#f6-promise">8.2</a> 的回调、<a href="前端框架与工程化手册.html#f10-state">《前端框架与工程化手册》2.1</a> 里 React 读到「旧 state」的现象,都是 <a href="#f5-closure">1.4</a> 最后那张环境记录图的直接后果。读完的判据很硬:随手给一个表达式能推出它的值,随手给一段带回调的循环能说出每个回调看到的是哪一个变量。</p>
+<h2 id="b1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>本书讲 <strong>JavaScript 这门语言本身,以及它自带的标准库</strong>:值与类型转换、作用域与闭包、函数与 <code>this</code>、原型与类、迭代与模块、字符串与正则、集合与二进制、事件循环与 Promise。判断一段内容归不归本书只看一条——<strong>把这段代码搬到浏览器之外的运行时里,还跑不跑得起来</strong>。跑得起来的归本书,离不开浏览器的归《浏览器 API 与工作原理手册》。</p>
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>JavaScript 的资料密度很高,但分工明确:几本大书各擅长一件事,规范给最终事实,MDN 给日常查阅。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 878px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<tbody>
+<tr><td>Matt Frisbie《JavaScript 高级程序设计》(红宝书)</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>语言加浏览器 API 最系统的一本,每个主题都是概念、语法、示例、兼容性、小结这个节奏。局限:近千页;版本停在成书那一年,之后的新增要另补;「为什么」讲得比「是什么」少</td></tr>
+<tr><td>Kyle Simpson《你不知道的 JavaScript》</td><td class="nw">进阶专题</td><td class="nw">锚定</td><td>作用域与闭包、<code>this</code> 与原型、类型与异步这几块,一律用「反直觉的例子、拆引擎行为、推出规则」的写法。局限:只讲语言本体,不碰浏览器;中文版对应英文第一版,<code>async</code> 之后偏少</td></tr>
+<tr><td>David Flanagan《JavaScript 权威指南》(犀牛书)</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>定义先行、例子短而密、边角情形穷举,标准库与元编程两章尤其齐全。局限:大部头,读起来累;版本同样停在成书那一年</td></tr>
+<tr><td>ECMAScript 语言规范(ECMA-262)</td><td class="nw">官方规范</td><td class="nw">锚定</td><td>抽象操作层面的最终事实:<code>ToPrimitive</code>、抽象相等比较、作业队列都定义在这里。局限:写给实现者读,术语门槛高,不给用法建议,也不写哪个引擎实现了没有</td></tr>
+<tr><td>MDN Web Docs 的 JavaScript 分区</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>每个方法给签名、参数、返回值、抛出的异常与示例,并标 Baseline。局限:是参考不是教程,不成体系;中文页滞后于 en-US</td></tr>
+<tr><td>TC39 提案仓库</td><td class="nw">官方来源</td><td class="nw">参考</td><td>一个语法处在哪一阶段、语义定成什么样以它为准,本书凡涉及尚未定案的语法都指向它。局限:阶段会变也会退回,Stage 3 之前的提案不要写进生产代码</td></tr>
+<tr><td>V8 与 JavaScriptCore 的官方博客</td><td class="nw">在线资料</td><td class="nw">参考</td><td>隐藏类、内联缓存、垃圾回收的实际做法,3.3 的性能结论从这里来。局限:引擎实现不是语言承诺,读出的结论换一个引擎可能不成立</td></tr>
+<tr><td>Jake Archibald 关于任务与微任务的讲解</td><td class="nw">在线资料</td><td class="nw">参考</td><td>任务队列、微任务与渲染时机的排序讲得最清楚,配可视化演示。局限:单篇文章不成体系,渲染时机随浏览器实现变化</td></tr>
+<tr><td>Node.js 官方文档</td><td class="nw">官方文档</td><td class="nw">推荐</td><td>同一门语言在另一个运行时:模块解析规则、事件循环的阶段划分、流与缓冲区。局限:与浏览器的差异要自己对照</td></tr>
+<tr><td>《浏览器 API 与工作原理手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>本书刻意不讲的那一半:DOM、事件、存储、渲染管线与网络。局限:不讲语言本体</td></tr>
+<tr><td>《TypeScript 手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>给这门语言补一层构建期的静态检查。局限:类型在运行时被完全抹掉,本书讲的机制一条都不会因此改变</td></tr>
+</tbody>
+</table>
+<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 三本大书的版本线各停在一年,新增语法只信规范与 MDN</span><p>语言按年发版,书从定稿到出版就已经落后一到两版。判断办法很简单:书里没有的语法,先在 MDN 查它属于哪一版、Baseline 是什么状态,再在控制台里跑一行看当前环境有没有。相反,作用域、闭包、原型、类型转换、事件循环这些地基十年没有变过,老书在这里恰恰讲得最好。</p></div>
+<h3>锚定的五样各借鉴了什么</h3>
+<p>下表只收标为「锚定」的,借鉴的内容具体到手法。</p>
+<table style="contain-intrinsic-size:auto 401px">
+<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">ECMAScript 规范</td><td>事实层的唯一准绳。运算符一律按抽象操作讲:<code>==</code> 走抽象相等比较、<code>+</code> 先走 <code>ToPrimitive</code>、关系运算符走另一套彼此独立的算法;微任务讲成作业队列而不是「Promise 自带一个队列」。1.1 与 8.1 的推导直接照规范的条目顺序</td></tr>
+<tr><td>《你不知道的 JavaScript》</td><td>机制节的写法:先给一段输出与直觉不符的代码,再拆引擎在做什么,最后推出能记住的规则。1.3、1.4、2.2、3.1 四节按这条线组织;各章末的「自测:先写下预期,再运行」也来自它「预测错了就是模型有洞」的读法</td></tr>
+<tr><td class="nw">红宝书</td><td>章节骨架与节内节奏:概念定义、语法形态、可运行示例、边界情形、要点清单。全书 41 节保持这个形状,便于按索引跳读</td></tr>
+<tr><td class="nw">犀牛书</td><td>标准库三章的编排顺序,以及「定义先行、例子短而密」的密度。第 5 到 7 章基本照它的标准库一章排,分成字符串与正则、数字与日期、二进制与元编程三组</td></tr>
+<tr><td>MDN Web Docs</td><td>API 速查表的字段划分:签名、参数、返回值、抛出的异常、Baseline 状态各占一列。术语与 MDN 中文页保持一致,便于交叉查阅</td></tr>
+</tbody>
+</table>
+<p>这个领域有一条别处没有的情况必须写清:<strong>语言按年发版,官方文档与提案仓库更新极快,书出版即滞后</strong>。所以本书系把事实层与组织层分开——书提供章节骨架与推导路径,而语法属于哪一版、某个方法当前能不能用,一律以规范、TC39 与 MDN 为准。上表里规范与 MDN 被标为锚定而不是「参考」,原因就在这里。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 取信顺序固定为规范、MDN、书,冲突时按这个顺序</span><p>日常查用法看 MDN 的语法框与 Baseline;要解释「为什么会得到这个结果」时翻规范的抽象操作;书提供推导路径与组织方式。二手资料与规范冲突一律以规范为准,与 MDN 冲突则以它页脚的规范链接为准。</p></div>
+<h3>讲什么、不讲什么</h3>
+<p>本书覆盖<strong>写出并读懂任意一段 JavaScript 所需要的全部语言机制</strong>,三部分各回答一个问题。</p>
+<table style="contain-intrinsic-size:auto 201px">
+<thead><tr><th class="nw">部分</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
+<tbody>
+<tr><td class="nw">语言</td><td class="nw">第 1 到 4 章,18 节</td><td>值与类型转换、名字与作用域、函数与 <code>this</code>、原型与类、迭代与错误、模块的语义</td></tr>
+<tr><td class="nw">标准库</td><td class="nw">第 5 到 7 章,15 节</td><td>语言自带哪些内置对象:字符串与 Unicode、正则、数字与日期、四种集合、二进制视图、JSON、元编程与全局对象</td></tr>
+<tr><td class="nw">异步</td><td class="nw">第 8 到 9 章,8 节</td><td>一段代码什么时候执行:事件循环与微任务、Promise 与 <code>async</code>、定时器、请求与工作线程</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚,并指明归谁。分界线只有一条:代码离开浏览器还跑不跑得起来。</p>
+<table style="contain-intrinsic-size:auto 638px">
+<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td>DOM 树的查询与增删改、事件传播、存储、观察者与 Web Components</td><td class="nw">《浏览器 API 与工作原理手册》第 1 到 8 章</td><td>这些对象只有浏览器才提供,本书一个都不用</td></tr>
+<tr><td>渲染管线、重排与重绘、加载与缓存、网络协议、同源与安全</td><td class="nw">《浏览器 API 与工作原理手册》第 9 到 12 章</td><td>本书的 8.1 只讲到「微任务与渲染时机的先后」这一层就停</td></tr>
+<tr><td>请求与工作线程的完整形态:拦截、缓存策略、实时通信</td><td class="nw">《浏览器 API 与工作原理手册》第 7 章</td><td>本书第 9 章只把它们当异步机制讲:取消、并发与错误处理</td></tr>
+<tr><td>静态类型:类型标注、泛型、声明文件、编译配置</td><td class="nw">《TypeScript 手册》</td><td>本书示例是纯 JavaScript;类型在构建时被抹掉,不改变本书讲的任何一条运行时机制</td></tr>
+<tr><td>HTML 与 CSS</td><td class="nw">《HTML 与 CSS 手册》</td><td>本书不产出界面,示例的输出都在控制台里</td></tr>
+<tr><td>框架的响应式实现、模块打包与构建工具的行为</td><td class="nw">《前端框架与工程化手册》</td><td>7.5 手写最小响应式系统只为讲清代理的用法;4.4 讲两套模块的语义差别,不讲打包器怎么处理</td></tr>
+<tr><td>Node.js 的运行时接口:文件、进程、流、缓冲区</td><td class="nw">不在本书系范围</td><td>指向 Node 官方文档;本书只在模块一节做语义对照</td></tr>
+<tr><td>引擎实现:即时编译、垃圾回收算法、内存快照分析</td><td class="nw">不展开</td><td>3.3 只给隐藏类与内联缓存的结论;那是引擎的当前做法,不是语言承诺</td></tr>
+</tbody>
+</table>
+<h3>读之前要会什么</h3>
+<p>前置分两档,每条给自测方式。本书不要求有 JavaScript 经验,但要求已经会写另一门语言。</p>
+<table style="contain-intrinsic-size:auto 486px">
+<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>熟练一门有函数与对象的语言</td><td>说清在那门语言里怎么把函数当参数传给另一个函数,以及它捕获了外层哪些名字</td></tr>
+<tr><td class="nw">必须</td><td>知道静态类型与动态类型的差别</td><td>举一个「静态语言编译期就能拦下、动态语言要跑到那一行才暴露」的错误,并说出后者暴露时的报错形态</td></tr>
+<tr><td class="nw">必须</td><td>会在命令行跑脚本,会开浏览器控制台</td><td>用 <code>node</code> 跑一个打印当前时间的文件;在控制台粘一行表达式,看清返回值与打印内容不是一回事</td></tr>
+<tr><td class="nw">必须</td><td>读得懂 JSON</td><td>说出 JSON 支持哪几种值,并指出三样常见的 JavaScript 值它表达不了</td></tr>
+<tr><td class="nw">必须</td><td>读过《HTML 与 CSS 手册》1.1</td><td>说清浏览器这个运行时与你熟悉的运行时有哪三点不一样</td></tr>
+<tr><td class="nw">最好有</td><td>写过带回调或事件的程序</td><td>说出在那套系统里,一个回调由谁调用、在哪个线程上、什么时候调用</td></tr>
+<tr><td class="nw">最好有</td><td>了解队列与单线程模型</td><td>说清单线程加一条队列能做到什么、做不到什么,并举一个「任务已经排进队列却迟迟不执行」的成因</td></tr>
+<tr><td class="nw">最好有</td><td>用过正则表达式</td><td>写出「以字母开头、只含字母数字与下划线、长度 3 到 16」的表达式,并说出它在哪种输入上会退化</td></tr>
+</tbody>
+</table>
+<h3>与那些资料相比,本书多给了什么</h3>
+<ul>
+<li><strong>规则都从规范的抽象操作推出来。</strong><code>'5' - 2</code> 得 3 而 <code>'1' + 2</code> 得字符串、<code>==</code> 与 <code>&lt;</code> 走两套彼此独立的算法、<code>await</code> 之后那一段为什么排在某个 <code>then</code> 之后——每一条都指得出它出自规范的哪个条目。</li>
+<li><strong>32 个「完整示例」都可运行,输出逐行给出。</strong>涉及执行顺序的地方,每一行的输出与它为什么排在那个位置写在一起,可以照着复现。</li>
+<li><strong>6 处「自测:先写下预期,再运行」。</strong>分布在类型、函数、对象、字符串、集合、异步六章的末尾;预测错的那一段就是模型有洞的地方。</li>
+<li><strong>71 个批注按四色分工。</strong>31 个红色写会写错的地方,每个配症状:控制台里报什么、值变成了什么;29 个绿色写成一句能直接执行的判据;7 个蓝色写现代替代;4 个黄色写历史包袱。</li>
+<li><strong>时效性有固定对策,不写死浏览器版本号。</strong>较新的语法与方法标出它属于哪一版并给 Baseline 状态,能不能用给出可在控制台跑的一行自测;尚未定案的语法一律指向 TC39 提案仓库,并写明当前阶段会变。</li>
+<li><strong>103 个「深入」块与 3 张「本章 API 速查」分工。</strong>规范条文、引擎实现与历史写法折进「深入」,顺读时不打断主线;速查表在第 4、7、9 章末,按签名、参数、返回值、异常、Baseline 五栏排。</li>
+</ul>
+<h3>两条读法:顺读与按需查</h3>
+<p>第一次学这门语言走顺读,手上已经有具体问题走按需查。</p>
+<table style="contain-intrinsic-size:auto 298px">
+<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
+<tbody>
+<tr><td class="nw">第一次学 JavaScript</td><td>第 1 到 4 章顺读,接着读第 8 章,标准库三章按需取</td><td class="nw">第 1、2、3、8 章</td><td class="nw">第 7 章</td></tr>
+<tr><td class="nw">从别的语言转过来</td><td>1.1 与 1.2 快读,1.3 到 3.2 精读,再直接跳第 8 章</td><td class="nw">1.3、1.4、2.2、3.1</td><td class="nw">第 5、6 章</td></tr>
+<tr><td class="nw">写得出代码但常被输出顺序绕住</td><td>直接读 8.1,再回头补 1.3 与 1.4</td><td class="nw">8.1、8.2、8.3</td><td class="nw">第 5、6、7 章</td></tr>
+<tr><td class="nw">要写库或框架</td><td>第 3、4 章,再进第 7 章,重点是 7.3 到 7.5</td><td class="nw">3.1、4.4、7.3、7.4</td><td class="nw">第 9 章</td></tr>
+<tr><td class="nw">手上有具体问题</td><td>先查各章末的「要点与易错清单」,再查第 4、7、9 章末的 API 速查表</td><td class="nw">—</td><td class="nw">—</td></tr>
+</tbody>
+</table>
+<p><strong>第 1 章四节的顺序不能反。</strong>1.1 先把值这一层盘清,1.2 讲名字与声明,1.3 讲名字属于哪个块,1.4 才讲函数带着出生地的环境记录跑出去;跳过前三节直接看闭包,得到的是一个记不住也推不出来的定义。第 2 章的 <code>this</code> 与第 3 章的原型建立在这四节上,第 8 章的事件循环则建立在第 2、4 章的函数与错误处理上。这四章是主干。</p>
+<p>标准库三章是查得多、读得少的那种,先通读每章末的要点清单知道有什么,写代码撞上再回来精读。7.3 到 7.5 除外:元编程与代理是理解框架响应式实现的地基,想写库的人要精读。</p>
+<p>读完第 1 到 4 章,能解释任何一段陌生代码的作用域、<code>this</code> 指向与原型关系;读完第 8 章,能预测一段混合定时器、Promise 与 <code>await</code> 的代码的精确输出顺序;读完第 5 到 7 章,标准库不必再靠搜索引擎;读完第 9 章,能把耗时计算挪出主线程并正确取消一个进行中的请求。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 第 1 章顺序读完再挑章节,后面三部都建立在它上面</span><p>跳着读的表现是每一节看着都懂,但遇到没见过的输出推不出原因:循环里的定时器为什么全打印同一个值、对象方法赋给变量再调用为什么 <code>this</code> 变了。答案在 1.4 与 2.2,而两者都要先有 1.1 与 1.3 这一层才讲得通。</p></div>
 <h2 id="f5-types">1.1 类型、值与转换</h2>
 <p>JavaScript 是动态类型语言:<strong>类型属于值,不属于变量</strong>。<code>let x = 1; x = 'a';</code> 完全合法,变量只是一个可以指向任意值的名字。这和「弱类型」是两件事:JS 的弱,是指运算符会<strong>悄悄把操作数转成它需要的类型</strong>(<code>'5' - 2</code> 得到 <code>3</code>),而不是类型不存在。读懂这一节的目标只有一个:看到任何一个表达式,能说出引擎会对操作数做哪几步转换、最后拿到什么。</p>
 <p>转换规则本身不多(三个抽象操作加一张 <code>==</code> 的算法表),难的是它们藏在 <code>+</code>、<code>==</code>、<code>if</code>、模板字符串、属性名这些地方不声不响地触发。这一节只盘值这一层:先把 8 种类型盘清,再把三个抽象操作与两套比较算法盘清。写法那一层(声明、优先级、分号)在 <a href="#f5-lexical">1.2</a>。</p>
@@ -298,7 +398,7 @@ Object.prototype.toString.call(null)          <span class="cm">// "[object Null]
 <h3>数字:双精度、安全整数与 BigInt</h3>
 <p>JS 只有一种数字类型 Number,是 IEEE 754 <strong>64 位双精度浮点数</strong>,和 C 的 <code>double</code> 完全一样——所以 C 里 <code>0.1 + 0.2 != 0.3</code> 的事在这里原样发生:<code>0.1 + 0.2</code> 得到 <code>0.30000000000000004</code>。不是 JS 的 bug,是二进制小数表示不了 0.1 的 bug。比较小数用误差容限:<code>Math.abs(a - b) &lt; Number.EPSILON</code>(<code>EPSILON</code> 是 1 与大于 1 的最小双精度数之差,约 2.22e-16;实际工程里常用更宽松的容限,或者干脆把钱换算成「分」用整数算)。</p>
 <p>整数也装在这 64 位里:尾数 52 位,所以能<strong>精确表示</strong>的整数范围是 ±(2⁵³ − 1),即 <code>Number.MAX_SAFE_INTEGER</code> = 9007199254740991。超过这个范围,相邻整数之间开始出现空洞:<code>2 ** 53 === 2 ** 53 + 1</code> 为 <code>true</code>。后端传来的 64 位 id(雪花算法、数据库 bigint)经 <code>JSON.parse</code> 进到 JS 就会被悄悄改掉末尾几位——这是前后端联调最经典的「id 对不上」事故,解决办法是后端把 id 当字符串发。真正需要大整数运算用 <code>BigInt</code>:字面量加 <code>n</code> 后缀,运算符照常用,但<strong>不能和 Number 混算</strong>(<code>1n + 1</code> 抛 <code>TypeError</code>),没有小数,<code>Math</code> 函数不接受它,<code>JSON.stringify</code> 遇到它直接报错。</p>
-<p><code>NaN</code>(Not a Number)是 Number 类型里唯一不等于自身的值:<code>NaN === NaN</code> 为 <code>false</code>。判断用 <code>Number.isNaN(x)</code>;全局的 <code>isNaN(x)</code> 会先把参数转成数字再判断,<code>isNaN('abc')</code> 是 <code>true</code>,意思其实是「转成数字后是 NaN」,和「x 是不是 NaN」是两个问题。<code>Object.is(NaN, NaN)</code> 也为 <code>true</code>,<code>[NaN].includes(NaN)</code> 为 <code>true</code> 而 <code>[NaN].indexOf(NaN)</code> 为 -1——后者用的是 <code>===</code>。</p>
+<p><code>NaN</code>(Not a Number)是 Number 类型里唯一不等于自身的值:<code>NaN === NaN</code> 为 <code>false</code>。判断用 <code>Number.isNaN(x)</code>;全局的 <code>isNaN(x)</code> 会先把参数转成数字再判断,<code>isNaN('abc')</code> 是 <code>true</code>,意思是「转成数字后是 NaN」,和「x 是不是 NaN」是两个问题。<code>Object.is(NaN, NaN)</code> 也为 <code>true</code>,<code>[NaN].includes(NaN)</code> 为 <code>true</code> 而 <code>[NaN].indexOf(NaN)</code> 为 -1——后者用的是 <code>===</code>。</p>
 <table style="contain-intrinsic-size:auto 407px">
 <thead><tr><th class="nw">需求</th><th>写法</th><th>说明</th></tr></thead>
 <tbody>
@@ -992,7 +1092,7 @@ console.log(<span>'  间接 eval 也只看全局:'</span>, t(() =&gt; indirect(<
   间接 eval 也只看全局: undefined</code></pre>
 <p>第 1 行是整节的地基:<code>inner</code> 在 <code>caller</code> 里被调用,<code>caller</code> 也有一个 <code>x</code>,但打印的是定义位置的 <code>outer</code>。第 2、3 行是同一个块里的两种声明,唯一的差别是关键字。第 5 行的报错文本值得记住:<code>Cannot access 'tdz' before initialization</code>,和第 6 行的 <code>nope is not defined</code> 不是同一句话——前者说「绑定在,但还没初始化」,后者说「根本没有这个绑定」,在 DevTools 里一眼就能区分是 TDZ 还是拼错了名字。最后两行是同一件事的两种问法:<code>new Function</code> 与间接 <code>eval</code> 都在全局作用域里编译,所以 <code>typeof x</code> 得到 <code>"undefined"</code>——模块顶层的 <code>const x</code> 属于模块作用域,不在全局环境记录里,更不是全局对象的属性。</p></div>
 <h2 id="f5-closure">1.4 闭包:函数带着出生地的环境记录</h2>
-<p><a href="#f5-scope">1.3</a> 讲的是「名字怎么被找到」,前提是那条作用域链还活着。这一节回答的是链<strong>不该活着的时候</strong>发生了什么:外层函数已经返回,它那次调用的环境记录本该被回收,但只要还有一个函数对象引用着它,它就活下来——这就是闭包。JS 里被神秘化得最厉害的概念,其实只是词法作用域加上垃圾回收规则的自然结果。</p>
+<p><a href="#f5-scope">1.3</a> 讲的是「名字怎么被找到」,前提是那条作用域链还活着。这一节回答的是链<strong>不该活着的时候</strong>发生了什么:外层函数已经返回,它那次调用的环境记录本该被回收,但只要还有一个函数对象引用着它,它就活下来——这就是闭包。JS 里被神秘化得最厉害的概念,只是词法作用域加上垃圾回收规则的自然结果。</p>
 <p>顺序是:先把定义和三条要点说死(捕获的是变量不是值、同一次调用共享一份记录、不同次调用互不干扰),再看它的三种标准形态——模块模式(ESM 之前的私有状态)、循环里的每轮一个绑定、以及内存视角下「闭包本身不泄漏、长命引用才泄漏」。这三条分别是 <a href="#f5-func">2.1</a> 的工厂函数、<a href="#f6-timers">9.1</a> 的定时器回调、<a href="前端框架与工程化手册.html#f10-state">《前端框架与工程化手册》2.1</a> 里 React 读到旧 state 的直接来源。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 156px"><code><span class="cm">// 闭包的三种标准形态</span>
 function 工厂(初值) { let 状态 = 初值; <span class="kw">return</span> { 读: () =&gt; 状态, 写: v =&gt; { 状态 = v; } }; }   <span class="cm">// 私有状态:每次调用一份新记录</span>
@@ -1125,7 +1225,7 @@ undefined
 <tr><td class="nw">直接 eval 与间接 eval</td><td>只有字面写成 <code>eval(...)</code> 的调用看得见局部变量</td><td>用 <code>new Function</code> 想读局部变量;线上 CSP 没给 <code>'unsafe-eval'</code>,模板的运行时编译直接报错</td></tr>
 <tr><td class="nw">保留字分四类</td><td>只有第一类到处不能用;<code>let</code>/<code>static</code>/<code>implements</code> 只在严格模式与 ESM 里保留</td><td>写 <code>const enum = 1</code>、<code>interface</code> 当变量名——解析期就 <code>SyntaxError</code>,整个文件一行不执行</td></tr>
 <tr><td class="nw">链式赋值只声明第一个</td><td><code>let a = b = 1</code> 里 <code>b</code> 走赋值查找</td><td>非严格模式下 <code>b</code> 悄悄变全局;严格模式 / ESM 抛 <code>ReferenceError</code></td></tr>
-<tr><td class="nw">语句也有值(完成值)</td><td>只有 <code>eval</code> 能看见;<code>{}</code> 在语句位置是块、在表达式位置是对象字面量</td><td>拿 <code>{} + []</code> 的控制台结果当「JS 的加法很怪」的证据,其实是解析层的事</td></tr>
+<tr><td class="nw">语句也有值(完成值)</td><td>只有 <code>eval</code> 能看见;<code>{}</code> 在语句位置是块、在表达式位置是对象字面量</td><td>拿 <code>{} + []</code> 的控制台结果当「JS 的加法很怪」的证据,实际上是解析层的事</td></tr>
 <tr><td class="nw">取值查找 vs 赋值查找</td><td>找不到绑定 → <code>ReferenceError</code>;找到了但值不能这么用 → <code>TypeError</code></td><td>把 TDZ 的 <code>Cannot access before initialization</code> 和 <code>is not defined</code> 当同一种错去查</td></tr>
 <tr><td class="nw">同名声明的优先级</td><td>函数声明整体提升并压过 <code>var</code>;<code>let</code> 与任何同名声明共存都是 <code>SyntaxError</code></td><td>以为 <code>var f = 1; function f(){}</code> 之后 <code>f</code> 还是函数</td></tr>
 </tbody>
@@ -1283,7 +1383,7 @@ function reduce(arr, fn, init) {
 }</code></pre>
 <p>「回调收三个参数」有个著名的陷阱:<code>['1', '2', '3'].map(parseInt)</code> 得到 <code>[1, NaN, NaN]</code>,因为 <code>map</code> 把下标当第二个参数传给了 <code>parseInt</code>,而 <code>parseInt</code> 的第二个参数是基数(<code>parseInt('2', 1)</code> 是 NaN)。把一个多参数函数直接当回调传之前,想一下它会收到什么——写成 <code>map(s =&gt; parseInt(s, 10))</code> 或 <code>map(Number)</code> 就安全。<code>forEach</code> 不能 <code>break</code>,里面 <code>return</code> 只是跳过本次;要提前退出用 <code>for…of</code> 或 <code>some</code>/<code>every</code>;<code>forEach</code>/<code>map</code> 对 <code>async</code> 回调不等待(见 <a href="#f6-async">8.3</a>)。</p>
 <div class="deep"><h3 class="deep">回调就是控制反转</h3>
-<p>「把函数交给函数」听起来只是一种便利,它其实是一次<strong>控制权的移交</strong>:你把回调交给 <code>chargeOnce(amount, done)</code> 的那一刻,「<code>done</code> 什么时候被调、调几次、带什么参数、同步还是异步、抛的错谁接」全部由对方决定,你的代码剩下的部分(回调里的内容)要在对方选择的时机、以对方选择的方式运行。YDKJS 下卷把这叫<strong>控制反转</strong>(inversion of control),并列出了第三方可能违反的信任:调得太早、调得太晚或不调、调太少或太多次、漏传参数、吞掉错误。这不是理论上的担心——支付 SDK 回调触发两次导致重复扣款、第三方脚本同步调回调导致 <code>after-call</code> 顺序错乱,都是真实事故。</p>
+<p>「把函数交给函数」听起来只是一种便利,它是一次<strong>控制权的移交</strong>:你把回调交给 <code>chargeOnce(amount, done)</code> 的那一刻,「<code>done</code> 什么时候被调、调几次、带什么参数、同步还是异步、抛的错谁接」全部由对方决定,你的代码剩下的部分(回调里的内容)要在对方选择的时机、以对方选择的方式运行。YDKJS 下卷把这叫<strong>控制反转</strong>(inversion of control),并列出了第三方可能违反的信任:调得太早、调得太晚或不调、调太少或太多次、漏传参数、吞掉错误。这不是理论上的担心——支付 SDK 回调触发两次导致重复扣款、第三方脚本同步调回调导致 <code>after-call</code> 顺序错乱,都是真实事故。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 455px"><code><span class="cm">// ioc.js — node ioc.js</span>
 function chargeOnce(amount, done) { done(amount); done(amount); }        <span class="cm">// 一个「不守信」的第三方:回调被调了两次</span>
 let charged = 0;
@@ -1491,7 +1591,7 @@ arrow field: OK
 <span class="kw">true</span> <span class="kw">false</span></code></pre>
 <p>DOM 事件处理器是 this 规则在浏览器里最常见的触点:<code>el.addEventListener('click', fn)</code> 调用 <code>fn</code> 时把 <code>this</code> 设为 <code>event.currentTarget</code>(注册监听器的元素)。这是浏览器替你做的一次显式绑定。所以传普通函数进去,<code>this</code> 是元素;传箭头函数进去,<code>this</code> 是外层的;传 class 原型方法进去,<code>this</code> 是元素而不是实例——想在处理器里访问实例就得 bind 或用字段箭头函数。需要元素时,<strong>推荐直接用 <code>event.currentTarget</code></strong>,不依赖 this,两种函数形式都能用(见 <a href="浏览器API与工作原理手册.html#f7-events">《浏览器 API 与工作原理手册》2.1</a>)。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 排查「this 不对」的固定动作</span><p>在报错那行之前加 <code>console.log(this)</code>,看它是 <code>undefined</code>、<code>window</code> 还是某个 DOM 元素:<code>undefined</code>/<code>window</code> 说明函数被裸调用了(走了默认绑定);DOM 元素说明是事件系统绑的;然后回到调用点看是哪种取出函数的形态。DevTools 的 Call Stack 面板点进上一帧,能直接看到是谁、以什么形态调用的。</p></div>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 现代代码里 this 的使用面其实很窄</span><p>函数组件(React)和 <code>&lt;script setup&gt;</code>(Vue)都不用 this;事件处理器用 <code>event.currentTarget</code>;工具函数用参数传对象。真正绕不开 this 的是 class 的方法和原型方法,在那里遵守一条:<strong>方法要作为回调传出去,就用箭头函数字段或 bind;否则用普通方法</strong>。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 现代代码里 this 的使用面很窄</span><p>函数组件(React)和 <code>&lt;script setup&gt;</code>(Vue)都不用 this;事件处理器用 <code>event.currentTarget</code>;工具函数用参数传对象。真正绕不开 this 的是 class 的方法和原型方法,在那里遵守一条:<strong>方法要作为回调传出去,就用箭头函数字段或 bind;否则用普通方法</strong>。</p></div>
 <div class="deep"><h3 class="deep">严格模式、装箱与 new 的返回值</h3>
 <p>非严格模式下显式绑定的 thisArg 会被「修正」:<code>null</code>/<code>undefined</code> 换成全局对象,原始值装箱成包装对象(<code>f.call(1)</code> 里 <code>this</code> 是 <code>Number {1}</code>,<code>typeof this</code> 是 <code>"object"</code>)。严格模式下不做任何修正,传什么是什么——这是两种模式下同一段代码行为不同的又一个来源。ESM 模块和 class 体都是严格模式,所以新项目里默认按严格模式的规则想。</p>
 <p><code>new</code> 绑定的 <code>this</code> 是新对象,但构造函数的<strong>返回值</strong>会改写 <code>new</code> 表达式的结果:显式 <code>return</code> 一个对象,<code>new</code> 的结果就是那个对象(this 被丢弃);<code>return</code> 原始值或不 return,结果是 this。这一条在 <a href="#f5-proto">3.1</a> 手写 <code>new</code> 时会用到。<code>new</code> 和 <code>bind</code> 相遇时,<code>new</code> 胜出:绑定函数被 <code>new</code> 调用时,预填的参数保留,但 <code>thisArg</code> 被忽略,<code>this</code> 是新对象——规范里绑定函数的 <code>[[Construct]]</code> 就是这么写的,所以优先级表里 new 排在显式绑定之前不是约定,是实现。</p></div>
@@ -1613,7 +1713,7 @@ runLater(() =&gt; obj.whoAmI(<span>'6b 用箭头包一层'</span>));</code></pre
 <tr><td class="nw">箭头函数不能 <code>new</code></td><td>没有 <code>prototype</code> 属性</td><td>把箭头函数当构造函数,得 <code>TypeError: af is not a constructor</code>;拿它当原型方法</td></tr>
 <tr><td>事件处理器的 <code>this</code> 是 <code>currentTarget</code></td><td class="nw">浏览器替你做了一次显式绑定</td><td>直接把 class 原型方法交给 <code>addEventListener</code>,里面 <code>this</code> 是元素不是实例(见 <a href="浏览器API与工作原理手册.html#f7-events">《浏览器 API 与工作原理手册》2.1</a>)</td></tr>
 <tr><td class="nw">class 字段箭头函数 vs 原型方法</td><td>字段每个实例一份、this 词法固定;原型方法所有实例共享一份</td><td>要传出去当回调却用了原型方法;所有方法都写成字段,子类 <code>super.f()</code> 调不到</td></tr>
-<tr><td class="nw">分组括号保留 Reference</td><td><code>(obj.fn)()</code> 的 this 还是 <code>obj</code>,<code>(0, obj.fn)()</code> 就丢了</td><td>把打包产物里的 <code>(0, _u.f)(x)</code> 当成压缩噪音,其实是故意剥掉 this</td></tr>
+<tr><td class="nw">分组括号保留 Reference</td><td><code>(obj.fn)()</code> 的 this 还是 <code>obj</code>,<code>(0, obj.fn)()</code> 就丢了</td><td>把打包产物里的 <code>(0, _u.f)(x)</code> 当成压缩噪音,实际上是故意剥掉 this</td></tr>
 <tr><td>非严格 + 简单参数列表时 <code>arguments</code> 与形参联动</td><td>一旦有默认值、剩余参数或解构,映射永久断开</td><td>在老代码里改 <code>arguments[0]</code>,形参跟着变,查半天找不到赋值语句</td></tr>
 </tbody>
 </table>
@@ -1730,7 +1830,7 @@ console.log([] instanceof Object, Object.create(null) instanceof Object);   <spa
 <div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 原型上的引用类型数据会被所有实例共享</span><p><code>F.prototype.items = []</code> 然后在某个实例上 <code>this.items.push(x)</code>——读 <code>this.items</code> 沿链读到原型上那一个数组,push 改的是共享的数组,所有实例一起变。症状是「另一个对象的数据莫名其妙多了一条」。数据一律在 constructor 里 <code>this.items = []</code>;原型上只放方法。class 的字段语法(<code>items = []</code>)天然就是每实例一份,不会踩到。</p></div>
 <div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 日常只需要三条</span><p>① 新代码用 <code>class</code>,不再手写 <code>F.prototype.x</code>;② 要无原型的纯字典用 <code>Object.create(null)</code> 或干脆用 <code>Map</code>;③ 判断类型:数组 <code>Array.isArray</code>,自定义类 <code>instanceof</code>,内建类型 <code>Object.prototype.toString.call</code>,别用 <code>constructor.name</code>(压缩后会变)。</p></div>
 <div class="deep"><h3 class="deep">屏蔽与三种赋值情形</h3>
-<p><code>obj.x = v</code> 在 <code>obj</code> 自身没有 <code>x</code> 而原型链上有时,分三种情形:原型上的 <code>x</code> 是普通可写数据属性 → 在 obj 上新建自有属性 x(屏蔽);原型上的 <code>x</code> 是只读(<code>writable: false</code>)→ 赋值失败,严格模式抛 <code>TypeError: Cannot assign to read only property</code>,非严格模式静默忽略,<strong>不会</strong>在 obj 上创建;原型上的 <code>x</code> 是 setter → 调用 setter(this 为 obj),同样不在 obj 上创建数据属性。第二条很反直觉:原型上一个只读属性会「禁止」所有后代对象创建同名自有属性(用 <code>Object.defineProperty</code> 直接定义仍然可以)。<code>Object.freeze(F.prototype)</code> 之后子对象就会撞上这一条。还有一个隐蔽的屏蔽:<code>obj.count++</code> 等价于 <code>obj.count = obj.count + 1</code>,读沿链读到原型的值,写在自身创建——看起来像「改了原型的 count」,其实是在实例上造了个新的。</p></div>
+<p><code>obj.x = v</code> 在 <code>obj</code> 自身没有 <code>x</code> 而原型链上有时,分三种情形:原型上的 <code>x</code> 是普通可写数据属性 → 在 obj 上新建自有属性 x(屏蔽);原型上的 <code>x</code> 是只读(<code>writable: false</code>)→ 赋值失败,严格模式抛 <code>TypeError: Cannot assign to read only property</code>,非严格模式静默忽略,<strong>不会</strong>在 obj 上创建;原型上的 <code>x</code> 是 setter → 调用 setter(this 为 obj),同样不在 obj 上创建数据属性。第二条很反直觉:原型上一个只读属性会「禁止」所有后代对象创建同名自有属性(用 <code>Object.defineProperty</code> 直接定义仍然可以)。<code>Object.freeze(F.prototype)</code> 之后子对象就会撞上这一条。还有一个隐蔽的屏蔽:<code>obj.count++</code> 等价于 <code>obj.count = obj.count + 1</code>,读沿链读到原型的值,写在自身创建——看起来像「改了原型的 count」,实际上是在实例上造了个新的。</p></div>
 <div class="deep"><h3 class="deep">OLOO 行为委托:只用对象与 Object.create,不引入「类」</h3>
 <p>看完 <code>class</code>,回头问一个问题:既然 JS 里根本没有类,只有对象和对象之间的 <code>[[Prototype]]</code> 链接,为什么一定要用「类 → 实例化」这套心智模型来写它?YDKJS 上卷的答案是不必——把链接本身当作一等设计工具,对象直接<strong>委托</strong>给另一个对象,这种风格叫 <strong>OLOO</strong>(Objects Linked to Other Objects,行为委托)。写法只有三条:用对象字面量定义「提供行为的对象」;用 <code>Object.create(提供者)</code> 造出链接到它的新对象;需要初始化就调一个普通方法(习惯叫 <code>init</code>/<code>setup</code>)而不是构造函数。没有 <code>new</code>、没有 <code>prototype</code> 属性、没有 <code>constructor</code>、没有 <code>super</code>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 754px"><code><span class="cm">// oloo.js — node oloo.js</span>
@@ -1774,7 +1874,7 @@ patched [OK] | patched [OK]</code></pre>
 </ul>
 <p>今天的代码里 class 是主流写法,TypeScript 对它的类型支持也最好,没必要把项目改写成 OLOO。但 OLOO 的思路每天都在用:<code>Object.create(proto)</code> 造「带默认行为的配置对象」、<code>Object.setPrototypeOf</code> 给已有对象挂行为、mixin 把多个行为对象合进一条链,以及读任何一段 <code>prototype</code> 代码时,脑子里画的应该是「对象 → 对象」的链接图(本节的图),而不是「类 → 子类 → 实例」的树。</p></div>
 <div class="deep"><h3 class="deep">constructor 属性有多可靠</h3>
-<p><code>p.constructor === Person</code> 看起来像「这个对象是 Person 造的」的证明,其实它只是一条<strong>普通的、可写的、沿链查到的</strong>属性:函数创建时引擎在 <code>F.prototype</code> 上放了一个 <code>constructor: F</code>(不可枚举、可写、可配置),仅此而已。它不是实例自有的,不是只读的,也没有任何内部槽与它关联——<code>new</code> 的四步里根本不看它。于是它在下面几种很常见的情形下都会「说谎」:</p>
+<p><code>p.constructor === Person</code> 看起来像「这个对象是 Person 造的」的证明,实际上它只是一条<strong>普通的、可写的、沿链查到的</strong>属性:函数创建时引擎在 <code>F.prototype</code> 上放了一个 <code>constructor: F</code>(不可枚举、可写、可配置),仅此而已。它不是实例自有的,不是只读的,也没有任何内部槽与它关联——<code>new</code> 的四步里根本不看它。于是它在下面几种很常见的情形下都会「说谎」:</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 646px"><code><span class="cm">// ctor.js — node ctor.js</span>
 function F() {}
 <span class="kw">const</span> f1 = <span class="kw">new</span> F();
@@ -2495,7 +2595,7 @@ Bob Cid
 <thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
 <tbody>
 <tr><td><code>[[Prototype]]</code> / <code>__proto__</code> / <code>F.prototype</code> 是三件事</td><td><code>F.prototype</code> 不是 F 的原型,是「用 F <code>new</code> 出来的对象的原型」</td><td>把 <code>__proto__</code> 和 <code>prototype</code> 当同一个;去实例上找 <code>prototype</code> 属性</td></tr>
-<tr><td class="nw">读沿链走,写只落自身</td><td>读到访问器时以调用者为 <code>this</code>,这就是「方法共享、数据各有」</td><td>以为 <code>obj.x = v</code> 会改到原型上;<code>obj.count++</code> 其实是在实例上新建了一个 count</td></tr>
+<tr><td class="nw">读沿链走,写只落自身</td><td>读到访问器时以调用者为 <code>this</code>,这就是「方法共享、数据各有」</td><td>以为 <code>obj.x = v</code> 会改到原型上;<code>obj.count++</code> 是在实例上新建了一个 count</td></tr>
 <tr><td class="nw">原型上只放方法</td><td>数据一律在 constructor 或字段里初始化</td><td><code>F.prototype.items = []</code> 之后 <code>this.items.push(x)</code>,所有实例的数据一起变</td></tr>
 <tr><td class="nw">原型上的只读属性会挡住后代赋值</td><td>赋值失败,严格模式抛 <code>TypeError: Cannot assign to read only property</code></td><td><code>Object.freeze(F.prototype)</code> 之后子对象再也建不出同名自有属性</td></tr>
 <tr><td class="nw"><code>new</code> 的四步</td><td>造空对象 → 接上 <code>F.prototype</code> → 以它为 this 执行 → 返回对象则用那个对象</td><td>忘写 <code>new</code>,静默往全局挂属性或当场 <code>Cannot set properties of undefined</code>;构造函数里 <code>return</code> 一个对象把实例丢了</td></tr>
@@ -2553,7 +2653,7 @@ JSON.stringify({ u: undefined, d: <span class="kw">new</span> Date(0), m: <span 
 <span class="kw">const</span> shallow = { ...state, count: 1 };
 shallow.user === state.user            <span class="cm">// true ← 没改的子树复用引用;改它就等于改了原状态</span></code></pre>
 <p>最后一行是这一章最值得反复确认的一处:展开<strong>只拷一层</strong>,<code>shallow.user</code> 和 <code>state.user</code> 是同一个对象。它既是结构共享的好处(没改的部分不用拷),也是「明明展开了为什么原数据还是变了」的标准答案——改到第几层,就得在第几层展开。</p>
-<p>这一章学到位的标志有三条:能手写一遍 <code>new</code> 的四步并解释每一步;能在纸上画出 <code>class B extends A</code> 的两条链;拿到一段状态更新代码,能指出它是可变的还是不可变的、以及框架会不会检测到变化。接下来 <a href="#f5-iter">4.1</a> 讲迭代协议与解构展开的完整规则(本章用到的 <code>[...arr]</code> 与 <code>{ ...o }</code> 走的其实是两套不同的机制),<a href="#fstd-coll">6.3</a> 把 <code>Map</code>/<code>Set</code>/<code>WeakMap</code> 讲全,<a href="#fstd-proxy">7.4</a> 则会展示 <code>Proxy</code> 怎么在这条属性查找链上再插一层,那正是 Vue 3 响应式的实现方式。</p>
+<p>这一章学到位的标志有三条:能手写一遍 <code>new</code> 的四步并解释每一步;能在纸上画出 <code>class B extends A</code> 的两条链;拿到一段状态更新代码,能指出它是可变的还是不可变的、以及框架会不会检测到变化。接下来 <a href="#f5-iter">4.1</a> 讲迭代协议与解构展开的完整规则(本章用到的 <code>[...arr]</code> 与 <code>{ ...o }</code> 走的是两套不同的机制),<a href="#fstd-coll">6.3</a> 把 <code>Map</code>/<code>Set</code>/<code>WeakMap</code> 讲全,<a href="#fstd-proxy">7.4</a> 则会展示 <code>Proxy</code> 怎么在这条属性查找链上再插一层,那正是 Vue 3 响应式的实现方式。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 46304px;--thin-h:29927px">
@@ -3845,7 +3945,7 @@ g.test(<span>'aa'</span>), g.test(<span>'aa'</span>), g.test(<span>'aa'</span>) 
 <span>'&lt;b&gt;x&lt;/b&gt;'</span>.match(/&lt;.+&gt;/)[0]                 <span class="cm">// '&lt;b&gt;x&lt;/b&gt;'  ← 贪婪吃到最后一个 &gt;</span>
 <span>'&lt;b&gt;x&lt;/b&gt;'</span>.match(/&lt;.+?&gt;/)[0]                <span class="cm">// '&lt;b&gt;'       ← 惰性停在第一个</span></code></pre>
 <p>这九行里最值得反复确认的是第一组和 <code>g.test</code> 那一行:前者是「选错单位」的全部症状来源,后者是「同样的输入时灵时不灵」的唯一解释。哪一行对不上,就回 <a href="#fstd-string">5.1</a> 的三层单位那一段或 <a href="#fstd-regex">5.2</a> 的执行模型那一段重看。</p>
-<p>学到什么程度算够:拿到一个「字符串处理不对」的问题,能立刻判断它出在码元、码点还是字素这一层,并选对 API;读一段正则能说出它的回溯路径,并指出哪个输入会让它跑很久。接下来 <a href="#fstd-number">6.1</a> 与 <a href="#fstd-date">6.2</a> 用同样的方式处理另外两类「看起来简单其实有底层模型」的值——双精度浮点与时间戳加时区投影,并把这一章开了头的 <code>Intl</code> 讲完整;<a href="#fstd-binary">7.1</a> 则会把字符串一路拆到字节,回答「一个 emoji 到底占几个字节」这个本章没答的问题。</p>
+<p>学到什么程度算够:拿到一个「字符串处理不对」的问题,能立刻判断它出在码元、码点还是字素这一层,并选对 API;读一段正则能说出它的回溯路径,并指出哪个输入会让它跑很久。接下来 <a href="#fstd-number">6.1</a> 与 <a href="#fstd-date">6.2</a> 用同样的方式处理另外两类「看起来简单实际上有底层模型」的值——双精度浮点与时间戳加时区投影,并把这一章开了头的 <code>Intl</code> 讲完整;<a href="#fstd-binary">7.1</a> 则会把字符串一路拆到字节,回答「一个 emoji 到底占几个字节」这个本章没答的问题。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 34028px;--thin-h:24909px">
@@ -4317,7 +4417,7 @@ Set(4) { 1, 2, 3, 4 } Set(2) { 2, 3 } Set(1) { 1 } Set(2) { 1, 4 }
 <p>集合运算方法返回<strong>新 Set</strong>,不改原集合;参数可以是任何「类 Set」对象(有 <code>size</code>、<code>has</code>、<code>keys</code> 即可,所以 Map 也能当参数,按它的键算)。支持情况:Chrome 122+ / Safari 17+ / Firefox 127+ / Node 22+;更老的环境用 <code>new Set([...A].filter(x =&gt; B.has(x)))</code> 这种一行写法。去重后的 <code>[...new Set(arr)]</code> 保持首次出现的顺序——这个性质常被依赖,比如「最近搜索」去重。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 用 Set 替代 includes 的时机</span><p>在循环里对同一个数组反复 <code>includes</code>/<code>indexOf</code>,总复杂度是 O(n·m);先 <code>const set = new Set(arr)</code> 再 <code>set.has(x)</code> 变成 O(n + m)。几十个元素无所谓,几千个元素做交叉过滤(「列表里哪些 id 已选中」)就是卡顿与否的差别。</p></div>
 <h3>WeakMap 与 WeakSet:给对象挂数据而不持有它</h3>
-<p><code>WeakMap</code> 的键<strong>只能是对象</strong>(ES2023 起也接受非注册的 Symbol),而且这个键是<strong>弱持有</strong>的:如果除了 WeakMap 之外没有任何地方引用这个对象,它就可以被垃圾回收,对应的条目随之消失。由此推出它的两个「缺陷」其实是设计:<strong>不可迭代、没有 <code>size</code>、没有 <code>clear</code></strong>——因为条目可能在任何时刻被 GC 拿走,暴露遍历就会暴露 GC 时机,而 GC 时机是不确定的。WeakSet 同理,只存对象、只有 <code>add/has/delete</code>。</p>
+<p><code>WeakMap</code> 的键<strong>只能是对象</strong>(ES2023 起也接受非注册的 Symbol),而且这个键是<strong>弱持有</strong>的:如果除了 WeakMap 之外没有任何地方引用这个对象,它就可以被垃圾回收,对应的条目随之消失。由此推出它的两个「缺陷」是设计:<strong>不可迭代、没有 <code>size</code>、没有 <code>clear</code></strong>——因为条目可能在任何时刻被 GC 拿走,暴露遍历就会暴露 GC 时机,而 GC 时机是不确定的。WeakSet 同理,只存对象、只有 <code>add/has/delete</code>。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 129px"><code><span class="kw">new</span> WeakMap(iterable?)    wm.set(objKey, v)    wm.get(objKey)    wm.has(objKey)    wm.<span class="kw">delete</span>(objKey)   <span class="cm">// 没有 size / keys / clear</span>
 <span class="kw">new</span> WeakSet(iterable?)    ws.add(obj)    ws.has(obj)    ws.<span class="kw">delete</span>(obj)
 <span class="cm">// 键为原始值(字符串、数字、Symbol.for() 注册符号)时抛 TypeError: Invalid value used as weak map key</span></code></pre>
@@ -4884,7 +4984,7 @@ Symbol(id) Symbol(id)
 [ Symbol(id), Symbol(Symbol.iterator) ] [ <span>'normal'</span>, Symbol(id), Symbol(Symbol.iterator) ]
 <span class="kw">for</span>-in: normal
 { normal: 1, Symbol(id): <span>'hidden'</span>, Symbol(Symbol.iterator): null } { normal: 1, Symbol(id): <span>'hidden'</span>, Symbol(Symbol.iterator): null }</code></pre>
-<p>第 2 行值得记住:<code>'' + sym</code> 与模板字符串里直接插值都抛 TypeError,这是规范故意设的护栏,防止你以为符号能像字符串一样当键名用。要打印必须写 <code>String(sym)</code> 或 <code>sym.toString()</code>(<code>String()</code> 对符号有特判,不走通常的 ToString)。倒数第 3 行说明 <code>Reflect.ownKeys</code> 是唯一能一次拿全「字符串键 + 符号键」的入口,顺序是:整数索引升序 → 其余字符串键按插入序 → 符号键按插入序。最后一行的 <code>Object.assign</code> 与展开都<strong>带上了符号键</strong>,这是很多「拷贝之后内部标记丢了」类问题的反面:它们其实不丢,丢的是 <code>JSON.stringify</code> 那条路。</p>
+<p>第 2 行值得记住:<code>'' + sym</code> 与模板字符串里直接插值都抛 TypeError,这是规范故意设的护栏,防止你以为符号能像字符串一样当键名用。要打印必须写 <code>String(sym)</code> 或 <code>sym.toString()</code>(<code>String()</code> 对符号有特判,不走通常的 ToString)。倒数第 3 行说明 <code>Reflect.ownKeys</code> 是唯一能一次拿全「字符串键 + 符号键」的入口,顺序是:整数索引升序 → 其余字符串键按插入序 → 符号键按插入序。最后一行的 <code>Object.assign</code> 与展开都<strong>带上了符号键</strong>,这是很多「拷贝之后内部标记丢了」类问题的反面:它们不丢,丢的是 <code>JSON.stringify</code> 那条路。</p>
 <h3>公开符号:把内建流程改写成自己的</h3>
 <p>规范预定义了一批符号并挂在 <code>Symbol</code> 上,称为<strong>公开符号</strong>(well-known symbols)。它们不是给你当普通键用的,而是引擎在执行某个内建操作时<strong>会主动去对象上找的钩子</strong>——实现了哪个钩子,就等于改写了哪个语言行为。</p>
 <table style="contain-intrinsic-size:auto 767px">
@@ -5822,7 +5922,7 @@ User Timing 条目: [ <span>'列表'</span>, <span>'详情'</span>, <span>'报�
 <tr><td class="nw">Symbol 键过不了序列化边界</td><td><code>JSON.stringify</code>、<code>structuredClone</code>、<code>postMessage</code> 都会默默丢掉它</td><td>用 Symbol 挂的元数据存进 <code>localStorage</code>,取回来没了</td></tr>
 <tr><td class="nw">三道锁一层比一层紧</td><td><code>preventExtensions</code> 挡新增,<code>seal</code> 再挡删除,<code>freeze</code> 再挡改值</td><td>以为 <code>freeze</code> 是深的——内层对象照样能改;非严格模式下三者全是静默失败</td></tr>
 <tr><td><code>Atomics.wait</code> 只能在 Worker 里用</td><td>主线程调用直接抛;<code>waitAsync</code> 才是主线程那一半</td><td>直接 <code>await r.value</code>——它有 <code>{async:false}</code> 的同步形态</td></tr>
-<tr><td>Vue 2 的四条限制全来自 <code>defineProperty</code></td><td>它拦属性不拦操作,所以新增/删除/下标赋值都漏</td><td>以为 <code>Vue.set</code> 是设计选择,其实是补丁</td></tr>
+<tr><td>Vue 2 的四条限制全来自 <code>defineProperty</code></td><td>它拦属性不拦操作,所以新增/删除/下标赋值都漏</td><td>以为 <code>Vue.set</code> 是设计选择,实际上是补丁</td></tr>
 <tr><td class="nw">浏览器的 <code>console.log</code> 是惰性的</td><td>存的是引用,展开时才读当前状态</td><td>拿两条 log 比对「值什么时候变的」,结果两条一模一样</td></tr>
 </tbody>
 </table>

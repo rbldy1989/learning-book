@@ -199,7 +199,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">HTML 与 CSS 手册</div>
 <details><summary><a class="ch" href="#a1">前端是什么,以及怎么把它跑起来</a></summary>
-<a class="sec" href="#f1-classics">1.0 相关经典书籍</a>
+<a class="sec" href="#f1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#f1-what">1.1 前端三件套与浏览器这个运行时</a>
 <a class="sec" href="#f1-devtools">1.2 DevTools:前端的调试器与观测台</a>
 <a class="sec" href="#f1-setup">1.3 最小工程:从一个 html 文件到 Vite 项目</a>
@@ -276,59 +276,111 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 43088px;--thin-h:26550px">
+<section class="chapter" style="contain-intrinsic-size:auto 44979px;--thin-h:29393px">
 <h1 id="a1"><span class="part">入门</span>前端是什么,以及怎么把它跑起来</h1>
 <p>这本书假定你已经会写程序,只是没在浏览器里写过。所以这一章不从语法开始,而是回答换一个运行时之后最先要弄清的四件事:谁在执行你的代码——浏览器由渲染引擎、JS 引擎、网络栈拼成,HTML/CSS/JS 三件套各自交给谁(<a href="#f1-what">1.1</a>);出了问题去哪看——DevTools 六个面板分别对应 DOM、日志、断点、请求、主线程与存储(<a href="#f1-devtools">1.2</a>);工程怎么起——从双击一个 html 文件,到 <code>npm create vite</code> 出来的那个目录里每一样东西是什么(<a href="#f1-setup">1.3</a>);以及遇到没见过的 API 时去哪查、怎么判断今天能不能用(<a href="#f1-mdn">1.4</a>)。</p>
 <p>这个顺序就是把一页代码跑起来所必需的顺序:先知道执行环境,再有观测手段,再有工程与依赖,最后有查证渠道。四件事都是后面每一章的前提——<a href="#f2-doc">2.1</a> 讲脚本加载时序时,你要能在 Network 面板里读出那几条请求的先后;<a href="#f3-cascade">4.1</a> 讲层叠时,判断「谁赢了」全靠 Elements 面板的 Styles 与 Computed;<a href="前端框架与工程化手册.html#f11-vite">《前端框架与工程化手册》5.1</a> 讲构建链时,默认你已经跑过 <code>npm run dev</code> 与 <code>npm run build</code>。章首先列出全书反复引用的书目,后面再引用时只写书名。</p>
-<h2 id="f1-classics">1.0 相关经典书籍</h2>
-<p>前端这个领域的好书不多,但几本顶级的足够用很多年。下面这张表是后面各章反复引用的书目,引用时只写书名。</p>
-<table style="contain-intrinsic-size:auto 1319px">
-<thead><tr><th>书</th><th class="nw">定位</th><th>特点(含局限)</th></tr></thead>
+<h2 id="f1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>本书讲 <strong>HTML 与 CSS 这两门声明式语言</strong>:标记怎么表达文档的结构与语义,样式表怎么被层叠成一份计算值,浏览器再按这份计算值把盒子摆到屏幕上。读者设定是已经会写后端或系统程序的工程师,所以不从「什么是变量」开始。全书是前端五本手册的入口,末章给出整套书系与相关经典的学习路线。</p>
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>HTML 与 CSS 的资料分布有一个特点:讲机制的书很少但很耐用,讲特性的书出版当年就开始滞后,而规范与 MDN 一直在动。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 964px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
 <tbody>
-<tr><td>Matt Frisbie《JavaScript 高级程序设计(第 4 版)》(红宝书)</td><td class="nw">骨架·查阅</td><td>语言与浏览器 API 最系统的一本:每个主题都是「概念 → 语法 → 可运行示例 → 兼容性 → 小结」,覆盖 ES2019 以前的全部语言特性与大部分 Web API。<strong>局限</strong>:近千页;成书于 2019,ES2020 之后的语法、fetch 之后的 API 演进与所有框架内容要另补;「为什么」讲得比「是什么」少。</td></tr>
-<tr><td>Kyle Simpson《你不知道的 JavaScript》(上中下)</td><td class="nw">机制·进阶</td><td>作用域与闭包、this 与对象原型、类型与语法、异步与性能、ES6 及更新——每一本都用「反直觉的例子 → 拆机制 → 推出规则」的写法,读完之后规则不必硬记。<strong>局限</strong>:只讲语言本体,不碰 DOM 与浏览器;中文版对应英文第一版,async/await 与 ES2017 之后的内容偏少(英文第二版只出了前两本)。</td></tr>
-<tr><td>MDN Web Docs(developer.mozilla.org)</td><td class="nw">参考·标准</td><td>HTML/CSS/JS/Web API 的事实标准文档:每页有语法框、参数、示例、规范链接与浏览器兼容性表,并标注 Baseline。<strong>局限</strong>:是参考不是教程,不成体系;中文页面滞后于英文页面,拿不准时看 en-US。</td></tr>
-<tr><td class="nw">张鑫旭《CSS 世界》《CSS 新世界》</td><td class="nw">CSS 机制</td><td>前者把流、盒模型、内联元素基线、BFC 这些「老 CSS」的行为讲到根;后者补 Flex/Grid/自定义属性/逻辑属性等现代特性。<strong>局限</strong>:文风个人化,例子偏 PC 端;不是查阅型书。</td></tr>
-<tr><td class="nw">Lea Verou《CSS 揭秘》</td><td class="nw">CSS 技巧</td><td>47 个用纯 CSS 解决的难题(背景、形状、视觉效果、排版、动画),每一个都从规范推导而非记口诀。<strong>局限</strong>:成书于 2015,部分方案今天有更直接的属性可用。</td></tr>
-<tr><td>Dan Vanderkam《Effective TypeScript》(第 2 版)</td><td class="nw">TS 实践</td><td>83 条「做什么/别做什么」的条款,讲清类型系统的思维方式(类型是值的集合、结构类型、收窄)和工程取舍。<strong>局限</strong>:假定读者已会 TS 基础语法。</td></tr>
-<tr><td>Boris Cherny《Programming TypeScript》</td><td class="nw">TS 原理</td><td>从<strong>类型是值的集合</strong>讲起:类型层级、赋值兼容与变体、错误处理的四种模式(null / 异常 / 联合 / Result)、异步与并发的类型、与 JS 的互操作。<strong>局限</strong>:成书于 2019,TS 4.1 之后的模板字面量类型、satisfies、装饰器新提案要另补;命名空间等章节今天用不上。</td></tr>
-<tr><td>Gabriel Vergnaud《Type-Level TypeScript》(在线书 + 课程)</td><td class="nw">类型层编程</td><td>把类型系统当成一门函数式语言来教:类型即函数、条件类型作分支、递归作循环、infer 作模式匹配,以及分配律、尾递归与深度上限这些只有系统学过才不会踩的坑。<strong>局限</strong>:只讲类型层,不碰工程与运行时;英文。</td></tr>
-<tr><td>Flanagan《JavaScript 权威指南(第 7 版)》(犀牛书)</td><td class="nw">语言·穷举</td><td>定义先行、例子短而密,标准库(正则、Date、Intl)与元编程(Proxy/Reflect/Symbol)两章尤其齐全,浏览器一章覆盖面广。<strong>局限</strong>:大部头;成书于 2020,ES2021 之后的新增要另补。</td></tr>
-<tr><td>Ilya Grigorik《Web 性能权威指南》(HPBN)</td><td class="nw">网络·性能</td><td>从 TCP 握手、慢启动讲到 TLS、HTTP/1.1、HTTP/2,给的全是可量化的数字与优化清单,是理解「为什么快、为什么慢」的底座(免费在线版 hpbn.co)。<strong>局限</strong>:成书于 2013,HTTP/3 与 QUIC 要看规范与浏览器发布说明补。</td></tr>
-<tr><td class="nw">react.dev(React 官方文档)</td><td class="nw">框架·权威</td><td>新版官方教程,从「用 React 思考」到 Hook 的心智模型,是学 React 唯一必读的东西;交互式示例可以直接改。<strong>局限</strong>:只讲 React 本身,路由、数据请求、构建要看生态各自的文档。</td></tr>
-<tr><td class="nw">web.dev(Google)</td><td class="nw">性能·工程</td><td>Learn CSS/HTML/Performance 系列课程 + Core Web Vitals 的权威解释;Lighthouse 与 Chrome DevTools 的用法以它为准。<strong>局限</strong>:Chrome 视角,部分建议与 Safari/Firefox 现状有差。</td></tr>
+<tr><td>Eric Meyer《CSS 权威指南》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>按属性逐条讲,每条给取值语法、初值、继承性与计算值。局限:成书节奏跟不上模块推进,容器查询、<code>@layer</code>、嵌套、锚点定位这一批要另补</td></tr>
+<tr><td>张鑫旭《CSS 世界》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>把流、内联盒模型、基线、BFC 这些「老 CSS」的行为讲到根,而这一层至今没有变过。局限:文风个人化,例子偏桌面端,不是查阅型的书</td></tr>
+<tr><td>张鑫旭《CSS 新世界》</td><td class="nw">进阶专题</td><td class="nw">参考</td><td>补现代特性:逻辑属性、自定义属性、新单位与新函数。局限:按属性罗列,推导线不如前一本连贯</td></tr>
+<tr><td>Lea Verou《CSS 揭秘》</td><td class="nw">进阶专题</td><td class="nw">锚定</td><td>四十多个问题式技巧,每一个都从规范推导而不是背口诀。局限:成书较早,其中不少方案今天有更直接的属性可用,读的时候把解法当历史、把原理当正课</td></tr>
+<tr><td>MDN Web Docs</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>每页有语法框、参数、可运行示例、规范链接与浏览器兼容性表,并标 Baseline。局限:是参考不是教程,不成体系;中文页滞后于 en-US,拿不准时切英文</td></tr>
+<tr><td>WHATWG HTML Standard</td><td class="nw">官方规范</td><td class="nw">锚定</td><td>解析算法、内容模型、元素默认行为的最终裁判,持续修订。局限:写给实现者读,不给用法建议,也不写兼容性</td></tr>
+<tr><td>W3C 的各份 CSS 模块规范</td><td class="nw">官方规范</td><td class="nw">锚定</td><td>一个属性的初值、适用于、是否继承、计算值、动画类型全部在这里定义。局限:模块各自推进、成熟度不一,同一个属性的定义可能分散在几份文档里</td></tr>
+<tr><td>Can I Use</td><td class="nw">在线资料</td><td class="nw">参考</td><td>按浏览器份额回答「这个特性现在能不能上线」。局限:给的是统计口径的全球份额,不等于你自己的用户构成,判断前先换成你的目标浏览器区间</td></tr>
+<tr><td>web.dev</td><td class="nw">在线资料</td><td class="nw">参考</td><td>Learn CSS 与 Learn HTML 系列成体系,Baseline 与 Core Web Vitals 的解释以它为准。局限:Chrome 视角,部分建议与其他引擎的现状有差</td></tr>
+<tr><td>WAI-ARIA 规范与 ARIA Authoring Practices</td><td class="nw">官方规范</td><td class="nw">参考</td><td>角色、状态、属性与键盘交互模式的权威出处,第 3 章的可访问性两节以它为准。局限:给的是模式骨架,落到具体控件仍要自己补细节</td></tr>
+<tr><td>The A11Y Project</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>清单式的可访问性自查,适合交付前过一遍。局限:清单只说该做什么,不解释为什么</td></tr>
+<tr><td>《JavaScript 语言手册》与《浏览器 API 与工作原理手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>本书刻意不讲的两块在这两本里:语言本体,以及用脚本改这棵树。局限:都不含 CSS</td></tr>
 </tbody>
 </table>
-<p>全书的讲法锚定其中五本:骨架照红宝书——每个主题从定义到语法到可运行示例到边界;机制照《你不知道的 JavaScript》——规则从机制推出来而不是背;定义的精度与标准库的穷举照犀牛书;参考面照 MDN——签名、参数、取值、兼容性以它为准,术语与它一致;网络层性能照《Web 性能权威指南》。CSS 两章与 CSS 进阶章吸收张鑫旭与 Lea Verou 的推导方式,TypeScript 章吸收《Effective TypeScript》的取舍、《Programming TypeScript》的原理与《Type-Level TypeScript》的类型层方法,框架章以 react.dev 为准,性能与工程化章以 web.dev 为准。</p>
-<h3>手边常开的四个网址</h3>
-<p>上面这些书是拿来读的,下面四个地址是拿来<strong>随时查</strong>的,写代码时建议常驻标签页:</p>
-<pre style="contain-intrinsic-size:auto 141px"><code>https:<span class="cm">//developer.mozilla.org/zh-CN/     # MDN:语法、参数、示例与浏览器兼容性表;拿不准时切到 en-US</span>
-https:<span class="cm">//caniuse.com/                     # Can I use:一个特性在真实用户中的支持份额</span>
-https:<span class="cm">//web.dev/                         # Core Web Vitals、Lighthouse 与性能课程</span>
-https:<span class="cm">//html.spec.whatwg.org/multipage/  # HTML 标准:行为有分歧时的最终裁判</span></code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 查的顺序是 MDN → caniuse → 规范</span><p>先在 MDN 看语法框、参数与 Baseline 标记;不确定能不能上线,再去 caniuse 对照目标浏览器的份额;只有两边都说不清、或者要解释「浏览器为什么这么做」时才翻规范。反过来先啃规范会很慢,而且规范里不写兼容性。完整的查法与判断流程见 <a href="#f1-mdn">1.4</a>。</p></div>
-<p>「锚定」不只是说讲法像,还落到了每一节的<strong>形状</strong>上:因为锚定书的每一节都固定给读者同样几样东西,本书也照这个骨架写。知道这个骨架,读的时候就能按需跳:只想抄一个写法,看语法框和取值表;想弄懂为什么,看「计算规则」那一段;想验证,照着「完整示例」跑一遍。</p>
-<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 413px"><code><span class="cm">// CSS 属性 / 机制节(照 Meyer《CSS 权威指南》+ 张鑫旭《CSS 世界》)</span>
-一句话定位        这个属性解决什么问题,不解决什么
-语法框            取值语法 / 初值 / 适用于 / 是否继承 / 计算值 / 动画类型
-取值全表          每个关键字一行:含义 | 什么时候用 | 坑
-计算规则          规范怎么算的 —— 「为什么」都在这一段
-完整示例:…       可运行的代码 + DevTools 里量到的真实数值
-批注              note ok 推荐做法 / note dead 不知道就会写错的坑 / note <span class="kw">new</span> 新特性 / note old 历史
-深入:…           规范条文、历史演进、浏览器差异(薄模式下整块折叠)
-
-<span class="cm">// HTML 元素节(照 MDN + WHATWG HTML Standard)</span>
-内容模型 → 属性全表 → 默认样式与默认行为 → 示例与渲染结果 → 可访问性注意 → 批注
-
-<span class="cm">// 技巧节(照 Lea Verou《CSS 揭秘》)</span>
-问题 → 常规解法为什么不够 → 解法 → 原理 → 扩展与边界      <span class="cm">// 四步显式成段</span></code></pre>
-<div class="deep"><h3 class="deep">这些资料各自的「时间戳」:读到哪里该停下来另查</h3>
-<p>上表每一行的<strong>局限</strong>其实可以归成三条时间线,记住这三条,读任何一本老书时就知道哪一章可以照读、哪一章要停下来去 MDN 核对。</p>
-<p><strong>语言线(ECMAScript)</strong>:红宝书停在 ES2019 前后,犀牛书停在 ES2020,《你不知道的 JavaScript》中文版对应英文第一版(async/await 与之后的内容偏少)。这意味着可选链 <code>?.</code>、空值合并 <code>??</code>、<code>Array.prototype.at</code>、<code>Object.hasOwn</code>、<code>structuredClone</code>、顶层 <code>await</code>、类的私有字段 <code>#x</code>、<code>Array.prototype.group</code> 这一批要另查;而作用域、闭包、原型、<code>this</code>、类型转换这些语言地基<strong>没有变过</strong>,老书在这里恰恰讲得最好。</p>
-<p><strong>CSS 线</strong>:《CSS 揭秘》成书于 2015,书里不少技巧今天有更直接的属性可用(<code>aspect-ratio</code> 取代百分比 padding 撑比例、<code>gap</code> 取代负 margin 拼间距、<code>clamp()</code> 取代一堆断点、<code>:has()</code> 取代「父选择器做不到」的绕法、<code>@supports</code> 取代 hack)——但它的<strong>推导方式</strong>是全书最值得学的部分,读的时候把「解法」当历史、把「原理」当正课。Meyer《CSS 权威指南》第 4 版覆盖到 Flex 与 Grid,Grid 的 <code>subgrid</code>、容器查询、<code>@layer</code>、嵌套、锚点定位这一批要另补;张鑫旭《CSS 世界》讲的是「老 CSS」的机制(流、内联盒模型、BFC),这部分至今没有过时,现代特性看它的《CSS 新世界》。</p>
-<p><strong>网络与工具线</strong>:HPBN 成书于 2013,TCP、TLS、HTTP/1.1、HTTP/2 那几章仍然准确且是本书网络部分的底座,但 HTTP/3 与 QUIC 完全没有,要看规范与浏览器发布说明。《Programming TypeScript》停在 TS 4.1 之前(模板字面量类型、<code>satisfies</code>、新装饰器要另补),命名空间那类章节今天基本用不上。工具链变化最快:任何书里的构建配置、脚手架命令、包管理器行为都以官方文档为准,不要照抄书上的配置文件。</p>
-<p>一条通用判据:<strong>讲机制的部分越老越可靠,讲 API 与工具的部分越新越可靠</strong>。所以老书拿来读机制,MDN 拿来查 API,规范拿来裁决分歧——<a href="#f1-mdn">1.4</a> 把这条流程写成了固定动作。</p>
-<p>读者是会写后端或系统程序的工程师:你已经知道什么是进程、线程、socket、HTTP,知道事件循环和 epoll 长什么样,知道静态类型有什么好处。所以这里不从「什么是变量」开始,而是直接回答一个写后端的人会问的四个问题——浏览器这个运行时和我熟悉的运行时有什么不一样,它的调试器在哪,工程怎么搭,文档怎么查。<a href="#a1">第 1 章</a>就是这四个问题的答案,后面 11 章是六个领域(HTML/CSS、JavaScript、TypeScript、浏览器原理、框架、工程化与性能)的展开。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 老书拿来读机制,特性与兼容性一律回 MDN 和规范核对</span><p>一条通用判据:讲机制的部分越老越可靠,讲特性与工具的部分越新越可靠。流、内联盒模型、层叠与 BFC 这些地基十年没有变过,老书在这里讲得最好;而某个属性有没有落地、默认值是多少、写法有没有被新语法取代,任何书都不该当作事实来源。</p></div>
+<h3>锚定的五样各借鉴了什么</h3>
+<p>下表只收标为「锚定」的,借鉴的内容具体到手法。</p>
+<table style="contain-intrinsic-size:auto 437px">
+<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">W3C CSS 模块规范</td><td>语法框的字段划分照规范的属性定义表:取值语法、初值、适用于、是否继承、计算值、动画类型各占一行。另一处是「计算规则」那一段——每条规则都写清规范是按什么顺序算的,而不是只给结论</td></tr>
+<tr><td class="nw">WHATWG HTML Standard</td><td>HTML 元素节的组织:内容模型、属性全表、默认样式与默认行为,顺序照规范的元素定义。行为在不同引擎里有分歧时,以规范条文裁决并写明分歧在哪</td></tr>
+<tr><td>MDN Web Docs</td><td>参考面的字段与术语:属性名、取值、示例、兼容性各占一栏,术语与 MDN 中文页保持一致,便于交叉查阅;每个较新的特性标注 Baseline 状态而不是写死浏览器版本号</td></tr>
+<tr><td>Meyer《CSS 权威指南》</td><td>章节骨架:选择器与层叠、值与单位、盒模型、视觉格式化、布局、文本、装饰这条顺序,以及每个属性都配一张取值全表的做法</td></tr>
+<tr><td>张鑫旭《CSS 世界》</td><td>机制节的写法:先给一个反直觉的渲染结果,再拆浏览器按什么算,最后推出能记住的规则。第 5 章与 7.2 整节按这条线组织</td></tr>
+<tr><td>Lea Verou《CSS 揭秘》</td><td>技巧节的四步显式成段:问题、常规解法为什么不够、解法、原理与边界。第 8.2、8.3、9.2、10.3 四节用这个形状</td></tr>
+</tbody>
+</table>
+<p>这个领域还有一条别的领域没有的情况必须写清:<strong>HTML 与 CSS 的规范和官方文档更新极快,书出版即滞后</strong>。所以本书系把事实层与组织层分开——书提供章节骨架与推导路径,取值、默认值、兼容性这类事实一律以规范和 MDN 为准。上表里四份官方来源被标为锚定,而不是「参考」,原因就在这里。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 取信顺序固定为规范、MDN、书,三者冲突时按这个顺序</span><p>先在 MDN 看语法框、取值与 Baseline 标记;不确定能不能上线,去 Can I Use 对照目标浏览器;两边都说不清、或者要解释「引擎为什么这么做」时才翻规范。反过来先啃规范会很慢,规范里也不写兼容性。完整的查法见 <a href="#f1-mdn">1.4</a>。</p></div>
+<h3>讲什么、不讲什么</h3>
+<p>本书覆盖<strong>不借助任何框架、把一个界面写出来并说清它为什么长这样</strong>所需要的全部内容,四部分各回答一个问题。</p>
+<table style="contain-intrinsic-size:auto 211px">
+<thead><tr><th class="nw">部分</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
+<tbody>
+<tr><td class="nw">入门</td><td class="nw">第 1 章,5 节</td><td>浏览器这个运行时长什么样、调试器在哪、最小工程怎么搭、文档怎么查</td></tr>
+<tr><td class="nw">HTML</td><td class="nw">第 2 到 3 章,13 节</td><td>文档骨架与语义、元数据与分享卡片、内容元素与表单、可访问性怎么验收</td></tr>
+<tr><td class="nw">CSS</td><td class="nw">第 4 到 10 章,29 节</td><td>一条样式怎么被选中、值怎么算出来、盒子怎么摆、文字怎么排、怎么装饰与动起来、样式怎么组织</td></tr>
+<tr><td class="nw">路线</td><td class="nw">第 11 章,5 节</td><td>五本手册与相关经典各自怎么读,练手项目与掌握判据是什么</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚,并指明归谁。</p>
+<table style="contain-intrinsic-size:auto 499px">
+<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td>JavaScript 语言本体:类型转换、作用域、原型、异步</td><td class="nw">《JavaScript 语言手册》</td><td>本书只在 1.1 与 1.3 用到最少量的脚本,用来把工程跑起来</td></tr>
+<tr><td>用脚本改这棵树:DOM 操作、事件、Web API、渲染管线的内部实现</td><td class="nw">《浏览器 API 与工作原理手册》</td><td>本书讲声明式的那一半——标记与样式写下去会发生什么;命令式的那一半在那本</td></tr>
+<tr><td>类型标注与类型系统</td><td class="nw">《TypeScript 手册》</td><td>本书的示例是纯 HTML、CSS 与少量 JavaScript</td></tr>
+<tr><td>组件级样式方案与框架接入:CSS-in-JS、原子化框架、样式作用域</td><td class="nw">《前端框架与工程化手册》</td><td>本书的 10.4 讲与框架无关的那一层:命名约定、层次划分与自定义属性的组织</td></tr>
+<tr><td>构建配置、打包产物、部署与性能预算</td><td class="nw">《前端框架与工程化手册》</td><td>本书的 1.3 只搭到「能跑起来、能热更新」为止</td></tr>
+<tr><td>Canvas、SVG 的脚本化与图形编程</td><td class="nw">《浏览器 API 与工作原理手册》第 5 章</td><td>本书只把 SVG 当作一种可以用 CSS 样式化的内容</td></tr>
+<tr><td>邮件 HTML、AMP、WebGL 着色器与打印排版的深水区</td><td class="nw">不在本书系范围</td><td>各有独立的子集与实现约束</td></tr>
+</tbody>
+</table>
+<h3>读之前要会什么</h3>
+<p>前置分两档,每条给自测方式——「熟悉网页」无法自测,也就无法用来判断该不该现在读。</p>
+<table style="contain-intrinsic-size:auto 477px">
+<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>能在命令行装好 Node 并起一个本地静态服务</td><td>不借助 IDE,把一个含 <code>index.html</code> 的目录跑成本地地址上能打开的站点,再把端口换一个重来一次</td></tr>
+<tr><td class="nw">必须</td><td>知道一次 HTTP 请求与响应由哪几部分构成</td><td>各举两个常见的请求头与响应头,说清 <code>Content-Type</code> 决定了什么、状态码 304 与 200 对浏览器的区别</td></tr>
+<tr><td class="nw">必须</td><td>读得懂嵌套的树形文本格式</td><td>拿一段三层嵌套的 JSON 或 XML,画出它的树,指出哪些节点是容器、哪些是叶子</td></tr>
+<tr><td class="nw">必须</td><td>装好一个现代桌面浏览器,知道开发者工具在哪</td><td>打开任意页面,找到 Elements 与 Network 两个面板,并在页面上选中一个元素</td></tr>
+<tr><td class="nw">最好有</td><td>写过任何一种界面:桌面 GUI、终端界面或服务端模板</td><td>说出在那套系统里,「容器变宽,里面的元素怎么重新摆」这件事由谁计算、按什么规则</td></tr>
+<tr><td class="nw">最好有</td><td>一点 JavaScript</td><td>读懂 <code>document.querySelector('.card').classList.toggle('on')</code> 这一行改了什么,以及页面上会有什么变化</td></tr>
+<tr><td class="nw">最好有</td><td>与设计稿打过交道</td><td>指着一张设计稿说出哪些数字应该写成固定值、哪些应该随视口或容器变化</td></tr>
+</tbody>
+</table>
+<p>两样不在前置里:不需要有前端经验,第 1 章从最小工程开始;不需要懂色彩理论,第 8 章只用到取值形式与对比度的计算方式。</p>
+<h3>与那些资料相比,本书多给了什么</h3>
+<ul>
+<li><strong>每个属性都有语法框加取值全表。</strong>语法框固定给取值语法、初值、适用于、是否继承、计算值、动画类型六个字段;取值表每个关键字一行,含义、什么时候用、坑各占一栏。这是 MDN 的字段划分加上规范的定义精度,单看任何一边都拿不到。</li>
+<li><strong>51 个「完整示例」都可运行,且带实测数值。</strong>示例不是片段,是能直接粘进 <code>index.html</code> 跑起来的整段代码,涉及尺寸与耗时的地方给出在开发者工具里量到的数字,读者可以照着复现。</li>
+<li><strong>111 个批注按四色分工。</strong>44 个红色写会写错的地方,每个配症状:页面上表现成什么样、在哪个面板能看出来;47 个绿色写成一句能直接执行的判据;16 个蓝色写现代替代;4 个黄色写历史包袱。</li>
+<li><strong>时效性有固定对策,不写死版本号。</strong>较新的特性标 Baseline 状态(全书 48 处),能不能上线指向 Can I Use(30 处),行为有分歧指向 WHATWG 与 W3C 规范(32 处)。哪些内容会过时也说明白:特性与兼容性会过时,层叠、盒模型、内联格式化这些机制不会。</li>
+<li><strong>116 个「深入」块把规范条文与历史演进分了出去。</strong>主线只留推导得出结论所需的部分,规范原文、引擎差异、某个写法的来历折进「深入」,顺读时不被打断,需要考据时展开。</li>
+<li><strong>第 11 章把五本经典按章对到本书系的节。</strong>红宝书、犀牛书、《你不知道的 JavaScript》、两本 CSS 书与《Web 性能权威指南》各自哪一章对应本书系哪一节、哪些章可以跳过,列成了表。</li>
+</ul>
+<h3>两条读法:顺读与按需查</h3>
+<p>第一次系统学前端走顺读,手上已经有具体问题走按需查。</p>
+<table style="contain-intrinsic-size:auto 273px">
+<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
+<tbody>
+<tr><td class="nw">第一次系统学前端</td><td>第 1 章顺读到第 6 章,再按需取第 7 到 10 章,最后读第 11 章定路线</td><td class="nw">第 1、4、5、6 章</td><td class="nw">第 8、9 章</td></tr>
+<tr><td class="nw">会写后端,只要能改页面</td><td>第 1、2 章,再直接进第 4、5 章,补 6.1 与 6.3</td><td class="nw">第 4、5 章</td><td class="nw">第 3、7、8、9 章</td></tr>
+<tr><td class="nw">样式写得出来但说不清为什么</td><td>第 4、5 章顺读,再读 7.2 与 5.4</td><td class="nw">第 4、5 章</td><td class="nw">第 1、2、3 章</td></tr>
+<tr><td class="nw">要做可访问性验收</td><td>3.6 与 3.7,再回头补 2.2 的文档大纲</td><td class="nw">3.6、3.7</td><td class="nw">CSS 各章</td></tr>
+<tr><td class="nw">手上有具体问题</td><td>先在 MDN 查到属性名或元素名,再回本书对应节看计算规则与坑</td><td class="nw">—</td><td class="nw">—</td></tr>
+</tbody>
+</table>
+<p><strong>第 4 章与第 5 章必须按顺序读完</strong>,后面所有 CSS 章节都建立在这两章上:一条样式怎么被选中并胜出(4.1)、值怎么算成计算值(4.2)、盒子的四层怎么叠(5.1)、<code>display</code> 与 <code>position</code> 怎么决定它参与哪种格式化(5.2)。第 6 章的 Flex 与 Grid 是在 5.3 的尺寸计算之上的一层,顺序颠倒会读成一堆记不住的属性名。</p>
+<p>按需查有两个入口:知道属性名的,先在 MDN 查语法,再回本书对应节看「计算规则」与批注;不知道该查什么的,从 1.4 的查阅流程走一遍。</p>
+<p>读完第 1 到 6 章,能不用框架做出一个响应式、可访问的界面,并说清每条样式为什么生效;读完第 7 到 10 章,能解释一段陌生 CSS 的计算过程,把一个项目的样式组织成能长期维护的结构;读完第 11 章,知道接下来四本手册与那几本经典各自该按什么顺序读。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 第 4、5 章按顺序读完再挑章节,它们是全书的地基</span><p>跳着读的表现是每一节看着都懂,但遇到没见过的现象推不出原因:两个 <code>margin</code> 为什么合并成一个、百分比高度为什么不生效、绝对定位的元素为什么跑到了意料之外的位置。这三个问题的答案分别在 5.4、5.3、5.2,而它们都要先有 4.2 的值与计算值这一层才讲得通。</p></div>
 <h2 id="f1-what">1.1 前端三件套与浏览器这个运行时</h2>
 <p>一个网页由三种东西组成:HTML 负责<strong>结构</strong>(有什么内容、内容之间是什么关系),CSS 负责<strong>表现</strong>(长什么样、摆在哪),JavaScript 负责<strong>行为</strong>(响应什么、什么时候改变)。这三者各自是一门独立的语言,由浏览器里三套不同的代码解析执行,但它们操作的是同一个对象——文档。分清「谁管什么」不是为了分类好看,而是因为把事做错地方会有具体代价:用 JS 去设置本该写在 CSS 里的样式,页面会先以无样式状态闪一下;用 CSS 去藏掉本该由 HTML 决定不存在的内容,屏幕阅读器和搜索引擎仍会读到它;用 HTML 的属性去干本该由 JS 判断的事,逻辑就散进了标记里。</p>
 <p>写后端的人容易把浏览器当成「显示 HTML 的程序」。更准确的模型是:<strong>浏览器是一个运行时</strong>,地位相当于操作系统之于你的进程——它给页面提供 API(DOM、fetch、存储、定时器),隔离不同来源的页面,替页面管网络和缓存,并在页面越界时拒绝执行。你写的 HTML/CSS/JS 是交给这个运行时的「程序」,理解运行时提供什么、禁止什么,比记住任何一个标签都重要。</p>
@@ -425,7 +477,7 @@ Elements 面板里 &lt;span id=<span>"count"</span>&gt; 的文本是 3;而 Ctrl+
 <tr><td class="nw">与对方的接口</td><td><code>fetch(url, { method, headers, body })</code> → <code>Response</code></td><td>路由 → 处理 → 状态码 + 响应头 + JSON</td></tr>
 </tbody>
 </table>
-<p>「同源」是这条边界上最先撞到的概念:源 = 协议 + 主机 + 端口,三者全同才算同源。页面脚本默认只能读同源的响应,向其他源发请求要对方用 CORS 响应头明确允许,否则浏览器会把响应拦在脚本之外(请求其实发出去了,只是读不到)。开发时前端跑在 <code>localhost:5173</code>、后端跑在 <code>localhost:8080</code> 就已经是跨源——这是后端工程师初学前端遇到的第一个 CORS 报错的来源,机制与解法见 <a href="浏览器API与工作原理手册.html#f8-cors">《浏览器 API 与工作原理手册》11.2</a>,Vite 的开发代理见 <a href="前端框架与工程化手册.html#f11-vite">《前端框架与工程化手册》5.1</a>。</p>
+<p>「同源」是这条边界上最先撞到的概念:源 = 协议 + 主机 + 端口,三者全同才算同源。页面脚本默认只能读同源的响应,向其他源发请求要对方用 CORS 响应头明确允许,否则浏览器会把响应拦在脚本之外(请求发出去了,只是读不到)。开发时前端跑在 <code>localhost:5173</code>、后端跑在 <code>localhost:8080</code> 就已经是跨源——这是后端工程师初学前端遇到的第一个 CORS 报错的来源,机制与解法见 <a href="浏览器API与工作原理手册.html#f8-cors">《浏览器 API 与工作原理手册》11.2</a>,Vite 的开发代理见 <a href="前端框架与工程化手册.html#f11-vite">《前端框架与工程化手册》5.1</a>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 196px"><code><span class="cm">// 在任何页面的 Console 里运行:向一个公开的测试接口发 GET,读 JSON</span>
 <span class="kw">const</span> res = await fetch(<span>'https://jsonplaceholder.typicode.com/todos/1'</span>);
 console.log(res.status, res.headers.get(<span>'content-type'</span>));
@@ -1015,7 +1067,7 @@ npm run build &amp;&amp; npm run preview             # dist/ → http:<span clas
 <div class="deep"><h3 class="deep">本章内容的出处:规范、经典与官方文档</h3>
 <p>这一章讲的是「去哪查」,所以它自己的出处值得单列一遍,后面各章不再重复。<strong>HTML</strong> 的唯一权威是 WHATWG 的 HTML Standard(html.spec.whatwg.org),它是一份持续更新的活标准,没有版本号;DOM、Fetch、URL、Encoding 各是 WHATWG 的一份独立标准。<strong>CSS</strong> 分成几十个模块,每个模块自己有等级(Level 3/4/5),入口是 W3C 的 CSS 规范索引;不要去找「CSS3 规范」这个东西,它从来不存在。<strong>JavaScript 语言本体</strong>是 ECMA-262(tc39.es/ecma262),新提案在 TC39 的 proposals 仓库里按 Stage 0–4 推进。</p>
 <p><strong>MDN 的兼容表</strong>背后是一个开源数据集 browser-compat-data(BCD),每条数据都能追到提交与来源;页面顶部的 <strong>Baseline</strong> 标记则来自 WebDX 社区组的定义——「Newly available」表示三大引擎的最新稳定版都支持,「Widely available」表示这个状态已经持续了约两年半,后者才是可以不加回退直接用的信号。<strong>caniuse</strong> 的份额数据来自 StatCounter,它能按地区筛选,做面向国内用户的项目时记得改地区,默认的全球份额会低估国内浏览器的占比。</p>
-<p>书这一侧:红宝书(Frisbee《JavaScript 高级程序设计》)提供「概念 → 语法 → 示例 → 兼容性」的骨架,犀牛书(Flanagan《JavaScript 权威指南》)提供定义的精度与标准库的穷举,《你不知道的 JavaScript》提供从机制推出规则的写法。本书全书的讲法就锚定在这几本上,<a href="#f1-classics">1.0</a> 那张表列出了完整书目与各自的局限。</p></div>
+<p>书这一侧:红宝书(Frisbee《JavaScript 高级程序设计》)提供「概念 → 语法 → 示例 → 兼容性」的骨架,犀牛书(Flanagan《JavaScript 权威指南》)提供定义的精度与标准库的穷举,《你不知道的 JavaScript》提供从机制推出规则的写法。本书全书的讲法就锚定在这几本上,<a href="#f1-open">1.0</a> 那张表列出了完整书目与各自的局限。</p></div>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 46487px;--thin-h:28358px">
@@ -2148,7 +2200,7 @@ He said “a ‘nested’ quote”.
 document.querySelectorAll(<span>':lang(zh)'</span>).length        <span class="cm">// 命中 &lt;html&gt; 及其所有未另行声明语言的后代</span>
 document.querySelectorAll(<span>'[lang|="zh"]'</span>).length     <span class="cm">// 只命中真正写了 lang 属性的那一个元素</span></code></pre>
 <div class="deep"><h3 class="deep">什么时候必须转义,什么时候不必</h3>
-<p>「字符引用」是 HTML 解析器规则的一部分,不是可选的美化写法。三种形态等价:<strong>命名引用</strong> <code>&amp;amp;</code>、<strong>十进制</strong> <code>&amp;#38;</code>、<strong>十六进制</strong> <code>&amp;#x26;</code>;命名引用只有规范列出的那几百个有效(<code>&amp;nbsp;</code> 有,<code>&amp;apos;</code> 在 HTML5 里有而在 HTML4 里没有),写错的名字浏览器多数会原样显示成文本。真正<strong>必须</strong>转义的只有几处:文本里的 <code>&amp;</code>(否则它后面的内容可能被当成一个字符引用吃掉)和 <code>&lt;</code>(否则被当成标签开始);属性值里,你用哪种引号包的就必须转义哪一种,加上 <code>&amp;</code>。<code>&gt;</code> 在文本里其实不必转义,但所有模板引擎都转,原因是「统一规则比记例外便宜」。</p>
+<p>「字符引用」是 HTML 解析器规则的一部分,不是可选的美化写法。三种形态等价:<strong>命名引用</strong> <code>&amp;amp;</code>、<strong>十进制</strong> <code>&amp;#38;</code>、<strong>十六进制</strong> <code>&amp;#x26;</code>;命名引用只有规范列出的那几百个有效(<code>&amp;nbsp;</code> 有,<code>&amp;apos;</code> 在 HTML5 里有而在 HTML4 里没有),写错的名字浏览器多数会原样显示成文本。真正<strong>必须</strong>转义的只有几处:文本里的 <code>&amp;</code>(否则它后面的内容可能被当成一个字符引用吃掉)和 <code>&lt;</code>(否则被当成标签开始);属性值里,你用哪种引号包的就必须转义哪一种,加上 <code>&amp;</code>。<code>&gt;</code> 在文本里不必转义,但所有模板引擎都转,原因是「统一规则比记例外便宜」。</p>
 <p>「为什么会看到 <code>&amp;amp;amp;</code>」的答案就在这里:一段文本被转义了两次。第一次把 <code>&amp;</code> 变成 <code>&amp;amp;</code>,第二次把这个结果里的 <code>&amp;</code> 又变成 <code>&amp;amp;</code>,于是页面上显示出 <code>&amp;amp;</code> 这五个字符。典型成因是「后端已经转义过一遍,前端模板又转了一遍」,或者把已经是 HTML 的字符串再塞进一个会转义的插值位置。反方向的错更危险:该转义的地方用了不转义的通道(<code>innerHTML</code>、模板引擎的「原样输出」语法),用户输入里的 <code>&lt;script&gt;</code> 就直接变成了标签——这就是 XSS 的入口,见 <a href="浏览器API与工作原理手册.html#f12-xss">《浏览器 API 与工作原理手册》11.3</a>。</p>
 <table style="contain-intrinsic-size:auto 415px">
 <thead><tr><th class="nw">字符</th><th>必须转义的位置</th><th class="nw">命名引用</th><th class="nw">数字引用</th><th>备注</th></tr></thead>
@@ -2887,7 +2939,7 @@ el.matches(<span>':focus-visible'</span>)     <span class="cm">// 判断这次�
 <p><strong>焦点管理</strong>是动态界面的必修课:弹出模态框时焦点要进入框内,Tab 不能跑到框外(焦点陷阱),关闭后焦点回到触发它的按钮——原生 <code>&lt;dialog&gt;</code>+<code>showModal()</code> 全包了,自定义模态要自己做,最省事的办法是给模态以外的内容加 <code>inert</code> 属性。单页应用切换「页面」时要把焦点移到新内容的标题(<code>h1.tabIndex = -1; h1.focus()</code>)或宣布页面变化,否则屏幕阅读器用户不知道发生了什么(见 <a href="前端框架与工程化手册.html#f10-router-data">《前端框架与工程化手册》3.1</a>)。删除列表项后焦点应移到相邻项或列表容器,而不是丢到 <code>body</code>。页面顶部放一个「跳到主内容」链接(<code>&lt;a href="#main" class="skip-link"&gt;</code>,默认视觉隐藏、聚焦时出现),让键盘用户不必每页 Tab 过整个导航——Lighthouse 的 <code>bypass</code> 审计检查的就是有没有这种跳转手段或地标。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 305px"><span class="t">🔴 最常见的四个键盘事故及其现场</span><ul>
 <li><strong><code>&lt;div onclick&gt;</code> 当按钮。</strong>Tab 跳过它;Accessibility 面板 Role 为 generic、Focusable 缺失。</li>
-<li><strong><code>outline: none</code> 无替代。</strong>按 Tab 页面「没反应」,其实焦点在动只是看不见。</li>
+<li><strong><code>outline: none</code> 无替代。</strong>按 Tab 页面「没反应」,实际上焦点在动只是看不见。</li>
 <li><strong>自定义模态没有陷阱。</strong>Tab 几下焦点跑到遮罩后面的页面上,屏幕阅读器开始读背景内容。</li>
 <li><strong>正数 tabindex 或 CSS <code>order</code> 重排。</strong>焦点在屏幕上跳来跳去。</li>
 </ul>
@@ -3654,7 +3706,7 @@ innerWidth 1280 → font-size 24px       ← 12 + 16 = 28 被夹到 24</code></p
   包住 img 的 span 宽 = 120
   a.textContent = <span>"CSS 生成内容"</span>
   innerText 里有「在新窗口打开」吗 = <span class="kw">false</span></code></pre>
-<p>这几行输出各钉死一条规矩。第一行加最后一行:备用文本原样留在计算值里,却<strong>不进 <code>innerText</code></strong>——它只走可访问树,不走文本内容,所以页内查找永远搜不到它。第二、三行:<code>attr()</code> 在<strong>计算值阶段</strong>就被属性值替换掉了,替换完还会跟相邻的字符串<strong>合并成一段</strong>(<code>"图 " attr(data-n) ":"</code> 变成了单个 <code>"图 7:"</code>),所以想在 DevTools 里看到 <code>attr()</code> 三个字是看不到的。第四行:空串是合法的 <code>content</code>,盒真的生成了,而且因为在 flex 容器里被块化,<code>width: 4px</code> 直接生效。第五行是「设了宽高什么都没有」的标准现场:<code>content</code> 是 <code>none</code>,<code>width</code> 却老老实实返回 <code>80px</code>——只看 <code>width</code> 会以为盒存在。第六行配上 <code>span</code> 的宽度:<code>img::after</code> 的计算值是完整的字符串,父盒宽度却仍然只有图片本身的 <code>120px</code>,替换元素上的伪元素从来没被生成过。</p>
+<p>这几行输出各钉死一条规矩。第一行加最后一行:备用文本原样留在计算值里,却<strong>不进 <code>innerText</code></strong>——它只走可访问树,不走文本内容,所以页内查找永远搜不到它。第二、三行:<code>attr()</code> 在<strong>计算值阶段</strong>就被属性值替换掉了,替换完还会跟相邻的字符串<strong>合并成一段</strong>(<code>"图 " attr(data-n) ":"</code> 变成了单个 <code>"图 7:"</code>),所以想在 DevTools 里看到 <code>attr()</code> 三个字是看不到的。第四行:空串是合法的 <code>content</code>,盒真的生成了,而且因为在 flex 容器里被块化,<code>width: 4px</code> 直接生效。第五行是「设了宽高什么都没有」的标准现场:<code>content</code> 是 <code>none</code>,<code>width</code> 却返回 <code>80px</code>——只看 <code>width</code> 会以为盒存在。第六行配上 <code>span</code> 的宽度:<code>img::after</code> 的计算值是完整的字符串,父盒宽度却仍然只有图片本身的 <code>120px</code>,替换元素上的伪元素从来没被生成过。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 装饰交给伪元素,信息交给 HTML</span><p>一条能一直用的分界线:<strong>把这段生成内容删掉,页面的意思变了没有?</strong>没变(箭头角标、装饰竖杠、引号、序号、卡片化表格回显的列名)就放心用 <code>content</code>,顺手配一段 <code>/ 备用文本</code>;变了(按钮文案、状态提示、错误信息)就写进 HTML。打印时展开 URL 是这条线上很典型的一例:屏幕上有超链接可点,地址是冗余的;纸上点不了,地址才变成信息——所以它只出现在 <code>@media print</code> 里,而不是一直挂在那儿。</p></div></div>
 <div class="deep"><h3 class="deep">深入:计算值里没有「最后渲染出来的那串字」</h3>
 <p><code>content</code> 的计算值是个半成品:能立刻替换的替换掉,要等布局的原样留着。<code>attr()</code> 与相对 <code>url()</code> 属于前者——属性值和文档基地址在算样式时就已知,直接换成结果。<code>counter()</code>、<code>counters()</code>、<code>open-quote</code> 属于后者——一个计数器的值取决于这个盒在盒树里的位置,一对引号取哪一层要看嵌套深度,都得等布局阶段才有答案。下面这张表是在同一个页面上逐条量到的对照。</p>
@@ -3878,7 +3930,7 @@ html { box-sizing: border-box; }
 after : p.top=8   c1.top=38  gap(c1→c2)=40</code></pre>
 <p>解读:before 里 <code>.p</code> 和 <code>.c1</code> 的顶边重合在 30px——<code>.c1</code> 的 30px 上外边距穿过没有边框内边距的 <code>.p</code>,又和 <code>body</code> 默认的 8px 外边距折叠,取最大值 30;灰色背景的 <code>.p</code> 顶上什么都没有,看起来像「margin 没生效」。<code>.c1</code> 与 <code>.c2</code> 之间是 max(20, 40) = 40 而不是 60。after 里 <code>.p</code> 成了 BFC,子元素的外边距留在它内部:<code>.p</code> 顶边回到 8(只剩 body 的 8px),<code>.c1</code> 在 8 + 30 = 38。兄弟间的折叠不受影响,仍是 40。</p>
 <p><code>margin: auto</code> 在块布局里只对水平方向有效:左右都 <code>auto</code> 就把剩余空间平分,这是 <code>width</code> 确定的块元素水平居中的经典写法;垂直方向的 <code>auto</code> 在块布局里算 0,在 flex/grid 里则会吸收剩余空间,能做垂直居中和「把最后一项推到底部」(见 <a href="#f4-flex">6.1</a>)。<strong>负 margin</strong>合法且有用:<code>margin-left: -16px</code> 让元素向左越出包含块,<code>margin-top: -1px</code> 让相邻边框重叠成一条线,列表两端对齐时用 <code>margin-inline: -8px</code> 抵消子项的内边距。</p>
-<div class="deep"><h3 class="deep">margin 折叠的三种情形,其实是同一条规则</h3>
+<div class="deep"><h3 class="deep">margin 折叠的三种情形出自同一条规则</h3>
 <p>折叠看起来有三种互不相关的情形——相邻兄弟之间、父子之间、空元素自己的上下 margin 之间——但它们是同一条规则的三个投影:<strong>当两个 margin 边在块轴方向上「贴在了一起」,中间没有任何东西把它们隔开,它们就合成一个</strong>。所谓「隔开」的东西只有四类:边框、内边距、行内内容(哪怕只有一个字符)、以及 clearance。把这句话代进三种情形:相邻兄弟之间,上一个的下 margin 与下一个的上 margin 直接相邻,没东西隔开 → 折叠;父子之间,父元素若没有 <code>border-top</code>、没有 <code>padding-top</code>、第一个孩子之前没有任何行内内容,那么父的上 margin 边与子的上 margin 边就是同一条线 → 折叠(现象是「子元素的 margin-top 跑到父元素外面去了」);一个高度为 0、没有边框和内边距的空块,它自己的上下 margin 边贴在一起 → 自己和自己折叠。</p>
 <p>折叠的<strong>结果</strong>也只有一条规则:都为正取最大值,都为负取绝对值最大的那个(即取最小值),一正一负则相加。三个 margin 折叠在一起时按同一规则一次算完,而不是两两算。这解释了「我给下面那个元素加了 <code>margin-top: 10px</code>,间距为什么没变」——上面那个的 <code>margin-bottom</code> 是 24px,取最大值仍是 24px。</p>
 <p>规范用的词是<strong>块轴方向的 margin</strong>,不是「垂直 margin」。这一点解释了两件事:横排文档里块轴是竖直的,所以折叠发生在上下;把 <code>writing-mode</code> 改成竖排(<a href="#f2-text-i18n">3.2</a> 提到的方向体系),块轴变成水平的,折叠方向也跟着转九十度。同一条规则还解释了为什么<strong>内联方向从不折叠</strong>——两个行内盒之间的 margin 是把同一行里的内容拉开,把它们合并会破坏行内布局的语义。</p>
@@ -4941,7 +4993,7 @@ grid-<span class="kw">template</span>-rows: subgrid;   /* 自己也是网格项�
 <tr><td class="nw">移动优先</td><td>从最窄写起,用 <code>min-width</code>(或范围语法 <code>(width &gt;= 40em)</code>)一档档往上加</td><td>断点顺序写反,宽断点被后面的窄断点覆盖;断点按机型定而不是按内容什么时候「不好看了」定</td></tr>
 <tr><td class="nw">断点的单位</td><td>用 <code>em</code>,它随用户的浏览器字号缩放;媒体查询里的 <code>em</code> 永远相对 16px,不受 <code>html</code> 的 <code>font-size</code> 影响</td><td>把 <code>40em</code> 当成 400px;为了「更精确」全用 px,用户放大字号后布局不跟着换</td></tr>
 <tr><td class="nw">容器查询</td><td><code>container-type: inline-size</code> 写在<strong>容器</strong>上,<code>@container</code> 查询的是它的<strong>子元素</strong>该怎么排</td><td>把 <code>@container</code> 写在容器自己身上想改自己(会死循环,规范直接禁止);忘了设 <code>container-type</code>,查询永远不匹配</td></tr>
-<tr><td class="nw">先流动再断点</td><td><code>auto-fit</code>、<code>flex-wrap</code>、<code>clamp()</code>、<code>max-width</code> 是连续的,媒体查询是跳变的</td><td>为字号写了五个断点,其实一行 <code>clamp()</code> 就够;结构没变也硬拆一个断点</td></tr>
+<tr><td class="nw">先流动再断点</td><td><code>auto-fit</code>、<code>flex-wrap</code>、<code>clamp()</code>、<code>max-width</code> 是连续的,媒体查询是跳变的</td><td>为字号写了五个断点,实际上一行 <code>clamp()</code> 就够;结构没变也硬拆一个断点</td></tr>
 <tr><td class="nw">用户偏好与设备能力</td><td><code>(hover: hover)</code>、<code>(pointer: coarse)</code>、<code>prefers-color-scheme</code> 是响应式的另一半</td><td><code>:hover</code> 样式没包在 <code>(hover: hover)</code> 里,触屏上点完「粘住」不消失</td></tr>
 </tbody>
 </table>
@@ -5200,7 +5252,7 @@ font-synthesis: [ weight || style || small-caps ] | none   /* 以及三个长属
 <tr><td class="nw"><code>font-synthesis</code></td><td>字体缺粗体/斜体时浏览器自己描粗、剪切</td><td><code>font-synthesis: none</code> 全关;只关粗体用 <code>font-synthesis-weight: none</code></td><td>中文字体合成粗体尤其糊。关掉之后缺失的字重会落回常规字重(变成不加粗),这是刻意的——要真粗体就把粗体字重的字体准备好</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 中英混排的两条设置</span><p>正文里 <code>font-size-adjust: from-font</code> 可以让整串字体栈里每个字体的小写字母保持同样的视觉大小,不必手填数值(不支持的浏览器忽略它,退回今天的样子);中文正文加 <code>font-synthesis-weight: none</code>,让「设计稿写了 500 但字体只有 400/700」的情况老老实实显示成常规字重,而不是一版发糊的合成粗体。这两条都是渐进增强,各家支持进度不同,写之前按 <a href="#f1-mdn">1.4</a> 的办法查一次 MDN 页面底部的兼容性表。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 中英混排的两条设置</span><p>正文里 <code>font-size-adjust: from-font</code> 可以让整串字体栈里每个字体的小写字母保持同样的视觉大小,不必手填数值(不支持的浏览器忽略它,退回今天的样子);中文正文加 <code>font-synthesis-weight: none</code>,让「设计稿写了 500 但字体只有 400/700」的情况显示成常规字重,而不是一版发糊的合成粗体。这两条都是渐进增强,各家支持进度不同,写之前按 <a href="#f1-mdn">1.4</a> 的办法查一次 MDN 页面底部的兼容性表。</p></div></div>
 <div class="deep"><h3>完整示例:字体栈到底命中了哪个字体</h3>
 <p><code>getComputedStyle</code> 只会把声明的整串字体栈原样回显,不告诉你每个字符实际落在哪个候选上——浏览器没有暴露这个信息。可行的办法是用 canvas 量宽度反推:同一串测试文字,分别用「候选字体 + 兜底字体」和「只用兜底字体」量一次,宽度不同就说明候选字体装在这台机器上并且被用上了。下面的页面用这个办法探测几个常见中英文字体,再用 <code>1ex</code> 量出两个西文字体的 x-height 比值,解释后备字体切换时「字看起来变小了」是怎么回事、以及 <code>font-size-adjust</code> 怎么把它抹平。存成 html 打开看控制台;数值随本机装了哪些字体而变,关系不变。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1271px"><code>&lt;!doctype html&gt;
@@ -5741,7 +5793,7 @@ overflow: [ visible | hidden | clip | scroll | <span class="kw">auto</span> ]{1,
 .fancy { background: linear-gradient(90deg, #2563eb, #9333ea); -webkit-background-clip: text; background-clip: text; color: transparent; }</code></pre>
 <p>渐变<strong>不能 <code>transition</code></strong>(<code>background-image</code> 的两个图像之间没有定义插值),想让渐变动起来,要么动 <code>background-position</code>/<code>background-size</code>,要么用 <code>@property</code> 注册自定义属性后对属性做过渡(Chrome 85+ / Safari 16.4+ / Firefox 128+,见 <a href="#f4-modern">10.1</a>)。</p>
 <h3>border 与 border-radius</h3>
-<p><code>border</code> 简写是宽度、样式、颜色三者的任意顺序,<code>border-top</code> 等按边写,<code>border-width</code>/<code>border-style</code>/<code>border-color</code> 按「上 右 下 左」写四边。样式有 <code>solid dashed dotted double groove ridge inset outset hidden none</code>,初值 <code>none</code>——不写样式看不到边,这是新手最常问的「border 没出来」。<code>border-radius</code> 四个值顺序是左上、右上、右下、左下;每个角其实有水平与垂直两个半径,用斜杠分开写(<code>border-radius: 50% / 20%</code> 是扁椭圆角);百分比水平半径相对宽、垂直半径相对高,所以 <code>50%</code> 在正方形上是圆、在矩形上是椭圆。相邻半径之和超过边长时,浏览器会<strong>按同一比例缩小所有半径</strong>直到放得下——这就是 <code>border-radius: 9999px</code> 能在任何高度上得到「胶囊」两端半圆的原因。</p>
+<p><code>border</code> 简写是宽度、样式、颜色三者的任意顺序,<code>border-top</code> 等按边写,<code>border-width</code>/<code>border-style</code>/<code>border-color</code> 按「上 右 下 左」写四边。样式有 <code>solid dashed dotted double groove ridge inset outset hidden none</code>,初值 <code>none</code>——不写样式看不到边,这是新手最常问的「border 没出来」。<code>border-radius</code> 四个值顺序是左上、右上、右下、左下;每个角有水平与垂直两个半径,用斜杠分开写(<code>border-radius: 50% / 20%</code> 是扁椭圆角);百分比水平半径相对宽、垂直半径相对高,所以 <code>50%</code> 在正方形上是圆、在矩形上是椭圆。相邻半径之和超过边长时,浏览器会<strong>按同一比例缩小所有半径</strong>直到放得下——这就是 <code>border-radius: 9999px</code> 能在任何高度上得到「胶囊」两端半圆的原因。</p>
 <table style="contain-intrinsic-size:auto 265px">
 <thead><tr><th>写法</th><th>结果</th></tr></thead>
 <tbody>
@@ -5869,7 +5921,7 @@ background-repeat: repeat | repeat-x | repeat-y | no-repeat | space | round</cod
 <p>背景定位的三个写法对应三种需求:想让图片「距右下角各 20px/10px」,用四值语法 <code>background-position: right 20px bottom 10px</code>;想让它「距边缘的距离等于 padding」,不用写数字,<code>background-origin: content-box</code> 让 0 0 从内容区算,padding 变了背景跟着动;要和其他单位混算,<code>background-position: calc(100% - 20px) calc(100% - 10px)</code>——这里要知道百分比定位的定义是「图片的 X% 点对齐到容器的 X% 点」,所以 100% 就是右/下贴边,减 20px 就是往回退。三种写法的兼容性都已不是问题,按语义选最直接的那个。</p>
 <h3>多重边框:box-shadow 扩展与 outline</h3>
 <p><code>border</code> 只能有一层,但视觉上的「几层边框」有两条路。<strong><code>box-shadow</code> 的扩展半径</strong>(第四个值)可以把阴影向四周放大而不模糊:<code>box-shadow: 0 0 0 10px #655, 0 0 0 15px deeppink</code> 就是两层实色「边框」,注意多层阴影<strong>先写的在上面</strong>,所以第二层的扩展值要包含第一层(15 = 10 + 5)才露出 5px;阴影不占布局空间、不接收鼠标事件,需要占位就在外层留同样的 margin,需要在内侧画就用 <code>inset</code>。<strong><code>outline</code></strong> 是第二条路:<code>border: 10px solid #655; outline: 5px solid deeppink</code>,它只能再加一层,但能画虚线、能用 <code>outline-offset</code> 负值缩进到元素内部做「缝线」效果(<code>outline: 1px dashed white; outline-offset: -8px</code>)。过去 <code>outline</code> 不跟随 <code>border-radius</code>,圆角元素上它是个直角框;Chrome 94+ / Firefox 88+ / Safari 16.4+ 之后 outline 跟随圆角,《CSS 揭秘》里「边框内圆角」那个靠 outline 直角 + box-shadow 补缝的技巧(<code>border-radius: .8em; box-shadow: 0 0 0 .6em #655; outline: .6em solid #655</code>)在新浏览器里看起来只剩一圈圆角粗边——它的目标效果「外直角内圆角」今天要靠一层容器 <code>padding</code> + 内层圆角来做。</p>
-<table style="contain-intrinsic-size:auto 426px">
+<table style="contain-intrinsic-size:auto 427px">
 <thead><tr><th>做法</th><th class="nw">层数</th><th class="nw">占空间</th><th class="nw">跟随圆角</th><th class="nw">鼠标事件</th><th>适合</th></tr></thead>
 <tbody>
 <tr><td class="nw"><code>border</code></td><td class="nw">1</td><td class="nw">是</td><td class="nw">是</td><td class="nw">是</td><td>常规边框</td></tr>
@@ -5901,7 +5953,7 @@ background-repeat: repeat | repeat-x | repeat-y | no-repeat | space | round</cod
 /* 跟随文字色:边框颜色不写时默认就是 currentcolor */
 .caret { width: 0; height: 0; border: .3em solid transparent; border-bottom: 0; border-top-style: solid; }</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 232px"><span class="t">🟢 什么时候用 clip-path 代替它</span><p><code>clip-path: polygon(50% 0, 100% 100%, 0 100%)</code> 同样得到三角形,而且形状是按百分比写的、尺寸直观、能在两个顶点数相同的多边形之间过渡、能填渐变。边框法今天仍然有两个不可替代的地方:一是<strong>零依赖地跟随文字色</strong>——不写 <code>border-color</code> 时它就是 <code>currentcolor</code>,父元素 <code>:hover</code> 改一个 <code>color</code>,尖角跟着变;二是<strong>能做「带边框的尖角」</strong>——两层三角错开 1px 的写法,<code>clip-path</code> 做不到(裁切会把边框一起裁掉)。需要过渡、需要渐变填充、需要复杂多边形时用 <code>clip-path</code>;做气泡尖角、下拉箭头这类小装饰,边框法更短。</p></div>
-<p><strong>同心圆角</strong>是另一个从边框模型推出来的结论。一张卡片外层圆角 12px、内边距 8px,里面的图片如果也写 12px,视觉上会显得内圈「太圆」——两条圆弧不同心。正确的关系是<strong>内半径 = 外半径 − 两者之间的距离</strong>,写成 <code>calc()</code> 之后改一个数两层一起动。至于《CSS 揭秘》那个「外直角、内圆角」的画法(<code>box-shadow</code> 补缝 + 直角 <code>outline</code>),它成立的前提是 <code>outline</code> 不跟随 <code>border-radius</code>;这个前提在新浏览器里已经不成立了,今天要这个效果,老老实实用两层元素:外层给背景与内边距、内层自己圆角。</p>
+<p><strong>同心圆角</strong>是另一个从边框模型推出来的结论。一张卡片外层圆角 12px、内边距 8px,里面的图片如果也写 12px,视觉上会显得内圈「太圆」——两条圆弧不同心。正确的关系是<strong>内半径 = 外半径 − 两者之间的距离</strong>,写成 <code>calc()</code> 之后改一个数两层一起动。至于《CSS 揭秘》那个「外直角、内圆角」的画法(<code>box-shadow</code> 补缝 + 直角 <code>outline</code>),它成立的前提是 <code>outline</code> 不跟随 <code>border-radius</code>;这个前提在新浏览器里已经不成立了,今天要这个效果,用两层元素:外层给背景与内边距、内层自己圆角。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 347px"><code>/* 同心圆角:内半径 = 外半径 − 间距 */
 .card { --r: 12px; --pad: 8px; border-radius: var(--r); padding: var(--pad); background: #f3f4f6; }
 .card &gt; img { display: block; width: 100%; border-radius: calc(var(--r) - var(--pad)); }
@@ -6107,7 +6159,7 @@ transform: skewX(&lt;角度&gt;) | rotate(&lt;角度&gt;) | perspective(&lt;长�
 .pointer { rotate: atan2(var(--dy), var(--dx)); }</code></pre>
 <div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 兼容线与降级</span><p>三角函数与 <code>pi</code>/<code>e</code> 常量在 Chrome 111+ / Safari 15.4+ / Firefox 108+ 可用。降级要看用途:环形排布不支持时元素会全部叠在圆心,不能靠 <code>@supports</code> 之外的办法自动退化,所以要写 <code>@supports (translate: calc(1px * cos(0deg)))</code> 分支,不支持时退回 <code>rotate + translateY</code> 的老写法或者干脆排成一行。角度单位可以直接写 <code>deg</code>/<code>turn</code>,不需要手动换算成弧度——这是它比 JS 里的 <code>Math.cos</code> 省事的地方,后者只吃弧度。</p></div></div>
 <div class="deep"><h3 class="deep">十个滤镜函数不够用的时候:SVG 的 &lt;filter&gt;</h3>
-<p>CSS 的 <code>filter</code> 只有十个预设函数(<code>blur</code>、<code>brightness</code>、<code>contrast</code>、<code>drop-shadow</code>、<code>grayscale</code>、<code>hue-rotate</code>、<code>invert</code>、<code>opacity</code>、<code>saturate</code>、<code>sepia</code>),它们其实都是 SVG 滤镜的快捷方式。真正的能力面在 <code>filter: url(#id)</code>——引用一个内联的 <code>&lt;filter&gt;</code>,里面把若干滤镜原语串成管道:<code>feTurbulence</code> 生成柏林噪声,<code>feDisplacementMap</code> 按一张图的通道值扭曲另一张图,<code>feColorMatrix</code> 对四个通道做矩阵运算,<code>feGaussianBlur</code>/<code>feComposite</code>/<code>feMerge</code> 负责模糊与合成。噪点纹理、水波、纸张质感、粘性球(gooey)这类效果,CSS 侧没有对应函数,全靠这条路。</p>
+<p>CSS 的 <code>filter</code> 只有十个预设函数(<code>blur</code>、<code>brightness</code>、<code>contrast</code>、<code>drop-shadow</code>、<code>grayscale</code>、<code>hue-rotate</code>、<code>invert</code>、<code>opacity</code>、<code>saturate</code>、<code>sepia</code>),它们都是 SVG 滤镜的快捷方式。真正的能力面在 <code>filter: url(#id)</code>——引用一个内联的 <code>&lt;filter&gt;</code>,里面把若干滤镜原语串成管道:<code>feTurbulence</code> 生成柏林噪声,<code>feDisplacementMap</code> 按一张图的通道值扭曲另一张图,<code>feColorMatrix</code> 对四个通道做矩阵运算,<code>feGaussianBlur</code>/<code>feComposite</code>/<code>feMerge</code> 负责模糊与合成。噪点纹理、水波、纸张质感、粘性球(gooey)这类效果,CSS 侧没有对应函数,全靠这条路。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 918px"><code>&lt;svg width=<span>"0"</span> height=<span>"0"</span> style=<span>"position:absolute"</span> aria-hidden=<span>"true"</span>&gt;
   &lt;defs&gt;
     &lt;!-- 纸张质感:噪声当位移图,把元素的像素轻微推开 --&gt;
@@ -6594,7 +6646,7 @@ dialog 过渡结束,open = <span class="kw">false</span></code></pre>
 <tr><td class="nw"><code>transition</code> 写在哪</td><td>写在基础规则上,不写在 <code>:hover</code> 里</td><td>进入有动画、移开瞬间跳回,因为 <code>:hover</code> 不匹配时声明也没了</td></tr>
 <tr><td class="nw"><code>animation</code> 简写的两个时间</td><td>先出现的是时长,后出现的是延迟;名字放第一个免得和关键字撞</td><td>把动画命名为 <code>reverse</code>/<code>paused</code>,被当成取值解析</td></tr>
 <tr><td class="nw"><code>animation-fill-mode</code></td><td><code>forwards</code> 停在终帧,<code>both</code> 连延迟期间也保持首帧</td><td>入场动画结束元素跳回初始样式;错开延迟入场时元素先闪现在终点</td></tr>
-<tr><td class="nw">动画的优先级</td><td>正在运行的动画压过普通声明,<code>!important</code> 也压不过</td><td>「hover 改颜色没反应」,其实是一条 <code>infinite</code> 动画占着这个属性</td></tr>
+<tr><td class="nw">动画的优先级</td><td>正在运行的动画压过普通声明,<code>!important</code> 也压不过</td><td>「hover 改颜色没反应」,实际上是一条 <code>infinite</code> 动画占着这个属性</td></tr>
 <tr><td class="nw">只动 transform 和 opacity</td><td>其余属性每帧要布局或绘制,主线程一忙就掉帧</td><td><code>transition: all</code> 把 <code>width</code>、<code>margin</code> 一起卷进来</td></tr>
 <tr><td class="nw"><code>will-change</code> 是提示不是开关</td><td>只加在马上要动的少数元素上,动画结束就移除</td><td><code>* { will-change: transform }</code> 把整页拆成图层,显存暴涨反而更卡;写在 <code>:hover</code> 自身规则里已经太晚</td></tr>
 <tr><td class="nw"><code>prefers-reduced-motion</code></td><td>用户在系统里声明「减少动态效果」,响应它是可访问性基本项</td><td>完全不处理;或直接删掉动画,让依赖 <code>transitionend</code> 的逻辑再也不触发(应把时长压到 .01ms)</td></tr>
@@ -6602,7 +6654,7 @@ dialog 过渡结束,open = <span class="kw">false</span></code></pre>
 <tr><td class="nw">反向缓动</td><td>把 <code>cubic-bezier(x1,y1,x2,y2)</code> 翻成 <code>(1−x2, 1−y2, 1−x1, 1−y1)</code> 写在默认态</td><td>曲线只写在 <code>:hover</code> 上,移开时用的是默认 <code>ease</code></td></tr>
 <tr><td class="nw"><code>linear()</code></td><td>分段折线能表达贝塞尔表达不了的形状:真正的弹簧与多次回弹</td><td>为了一点弹性效果引入一整个 JS 动画库</td></tr>
 <tr><td class="nw"><code>steps()</code> 的三个用途</td><td>雪碧图逐帧、光标闪烁(<code>steps(1)</code>)、打字机(<code>steps(N)</code>)</td><td>逐帧动画用 <code>linear</code>,看到图片在平滑滑动而不是换帧</td></tr>
-<tr><td class="nw">可变换元素</td><td><code>transform</code> 只作用于块级盒与原子内联级盒(<code>inline-block</code>、替换元素),行内非替换元素无效</td><td>给裸 <code>&lt;span&gt;</code>/<code>&lt;a&gt;</code> 写 <code>rotate</code> 毫无反应,以为是动画写错了,其实是没资格被变换</td></tr>
+<tr><td class="nw">可变换元素</td><td><code>transform</code> 只作用于块级盒与原子内联级盒(<code>inline-block</code>、替换元素),行内非替换元素无效</td><td>给裸 <code>&lt;span&gt;</code>/<code>&lt;a&gt;</code> 写 <code>rotate</code> 毫无反应,以为是动画写错了,实际上是没资格被变换</td></tr>
 <tr><td class="nw">打字机的宽度单位</td><td>等宽字体下一个字符是 <code>1ch</code>,中文一个字是 <code>1ic</code></td><td>中文打字机按 <code>ch</code> 算,字符数与宽度对不上,末尾挤出或空出</td></tr>
 <tr><td><code>animation-direction: alternate</code></td><td>奇数次正放偶数次倒放,往返动画只写一端的关键帧</td><td>手写一套对称关键帧,改数值要改两处</td></tr>
 <tr><td class="nw">滚动驱动动画</td><td><code>animation-timeline: scroll()</code> 以滚动进度为时间轴,<code>view()</code> 以元素与滚动口的相对位置为进度</td><td>不用 <code>@supports</code> 包住,不支持的浏览器里进度条按时钟自己跑满;<code>animation</code> 简写写在 <code>animation-timeline</code> 之后把它重置掉</td></tr>
@@ -7573,7 +7625,7 @@ light-dark(浅色值, 深色值)                    按当前 color-scheme 取�
 <tr><td class="nw">E《前端框架与工程化手册》</td><td>组件与 JSX、状态与副作用、路由与数据、并发与性能、Vite 与转译、质量与发布、Web Vitals 与部署、三层测试</td><td>B、D(强烈建议先读 C)</td><td>独立交付一个带三层测试与 CI 的 SPA 并部署上线</td><td><a href="前端框架与工程化手册.html#f10-why">《前端框架与工程化手册》1.1</a></td></tr>
 </tbody>
 </table>
-<p>顺序上,<strong>A → B → D</strong> 是主干:A 让你有东西可看,B 让你有逻辑可写,D 把两者接起来,并解释「为什么不生效、为什么慢、为什么被拦」。主干走完之后 C 与 E 可以并行——C 改变的是你写 B 的方式,E 改变的是你交付的方式,两者互不依赖;但 E 的示例默认用 TypeScript,先读 C 会顺一些。反过来,跳过主干直接读 E 的人,通常在 <a href="前端框架与工程化手册.html#f10-state">《前端框架与工程化手册》2.1</a> 的「这个组件为什么重渲染」和 <a href="前端框架与工程化手册.html#f10-patterns">《前端框架与工程化手册》2.3</a> 的「受控与非受控」两处卡住,而那两处说的其实是 B 的闭包(<a href="JavaScript语言手册.html#f5-scope">《JavaScript 语言手册》1.3</a>)与 D 的表单事件(<a href="浏览器API与工作原理手册.html#f7-forms-js">《浏览器 API 与工作原理手册》2.3</a>)。每本手册内部的读法在各自的章末小结里,这里不重复。</p>
+<p>顺序上,<strong>A → B → D</strong> 是主干:A 让你有东西可看,B 让你有逻辑可写,D 把两者接起来,并解释「为什么不生效、为什么慢、为什么被拦」。主干走完之后 C 与 E 可以并行——C 改变的是你写 B 的方式,E 改变的是你交付的方式,两者互不依赖;但 E 的示例默认用 TypeScript,先读 C 会顺一些。反过来,跳过主干直接读 E 的人,通常在 <a href="前端框架与工程化手册.html#f10-state">《前端框架与工程化手册》2.1</a> 的「这个组件为什么重渲染」和 <a href="前端框架与工程化手册.html#f10-patterns">《前端框架与工程化手册》2.3</a> 的「受控与非受控」两处卡住,而那两处说的是 B 的闭包(<a href="JavaScript语言手册.html#f5-scope">《JavaScript 语言手册》1.3</a>)与 D 的表单事件(<a href="浏览器API与工作原理手册.html#f7-forms-js">《浏览器 API 与工作原理手册》2.3</a>)。每本手册内部的读法在各自的章末小结里,这里不重复。</p>
 <p>回到原书。读者是会写后端的工程师,这决定了读法与零基础不同:语言基础章节快读(语法与别的语言大同小异),机制章节精读(作用域、this、原型、类型转换、事件循环是这门语言真正不一样的地方),浏览器 API 章节按需查(用到哪个翻哪个),性能章节对着 DevTools 复现数字(不复现就只是读过)。五本经典的总表如下,后面分书展开。</p>
 <table style="contain-intrinsic-size:auto 908px">
 <thead><tr><th>书</th><th>取什么</th><th>怎么读</th><th>可跳过</th><th>与本书系的对应</th></tr></thead>

@@ -180,6 +180,7 @@ main .note{content-visibility:auto;contain-intrinsic-size:auto 200px;}
 
 
 
+
 /* —— 薄/厚阅读模式 —— */
 #depthBtn{position:fixed;top:12px;right:52px;z-index:11;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--rule);background:var(--side-bg);color:var(--muted);cursor:pointer;line-height:0;}
 #depthBtn:hover{color:var(--accent);border-color:var(--accent);}
@@ -199,7 +200,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">C++ 性能优化</div>
 <details><summary><a class="ch" href="#c1">方法论:先测再改</a></summary>
-<a class="sec" href="#p1-classics">1.0 相关经典书籍</a>
+<a class="sec" href="#p1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#p1-first">1.1 优化的第一条规矩:先测再改</a>
 <a class="sec" href="#p1-bench">1.2 基准测试怎么才不骗人</a>
 <a class="sec" href="#p1-profile">1.3 剖析:找出时间花在哪</a>
@@ -299,44 +300,113 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 32140px;--thin-h:32140px">
+<section class="chapter" style="contain-intrinsic-size:auto 35387px;--thin-h:35387px">
 <h1 id="c1"><span class="part">第 1 章</span>方法论:先测再改</h1>
-<h2 id="p1-classics">1.0 相关经典书籍</h2>
-<p>本书讲的是<strong>怎么让 C++ 程序跑得更快,以及怎么确认它真的更快了</strong>。它不是一本「优化技巧集锦」——那类清单的问题是:每一条在某些场景下成立,而读者无从判断自己的场景是不是那一种。本书的组织方式是先给测量方法,再讲硬件与编译器的行为,最后才是具体手段,每一条手段都说清它在什么条件下有收益、收益大概多少。</p>
-<p>平台上采取<strong>双轨对照</strong>:Linux 侧用 GCC / Clang、perf、火焰图;Windows 侧用 MSVC、VTune、WPA 与 ETW。每个工具都给两套命令,不假设读者用哪个平台。</p>
-<table style="contain-intrinsic-size:auto 641px">
-<thead><tr><th>书</th><th>定位</th><th>特点(含局限)</th></tr></thead>
+<h2 id="p1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>这本书回答两个问题:<strong>一段 C++ 代码为什么慢,以及改完之后怎么证明它确实更快了</strong>。它不是一份优化技巧清单——那类清单的问题在于,每一条只在某些场景下成立,读者无从判断自己是不是那一种。编排顺序因此定为:先给测量方法,再讲硬件与编译器的实际行为,最后才是具体手段,每一条都写明适用条件与收益量级。</p>
+<p>工具链采取<strong>双轨对照</strong>:Linux 侧用 GCC / Clang、perf 与火焰图,Windows 侧用 MSVC、VTune、WPA 与 ETW,同一个测量目标给两套命令。语言基线取 C++17,用到 C++20 设施的地方逐处标注。硬件按 x86-64 讲,与 ARM 有出入的地方单独说明。</p>
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>这个领域的资料分布不平均:讲方法的书不讲 C++,讲 C++ 的书不讲硬件,最准的硬件数字只存在于厂商手册和几个在线数据库里。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 1039px">
+<thead><tr><th>资料</th><th>类型</th><th>关系</th><th>特点与局限</th></tr></thead>
 <tbody>
-<tr><td>Denis Bakhvalov《Performance Analysis and Tuning on Modern CPUs》</td><td class="nw">方法·首选</td><td><strong>自顶向下的性能分析方法论</strong>、PMU 计数器怎么读、perf 实操。局限:偏 Intel 平台,而且假设读者有一定的微架构基础。</td></tr>
-<tr><td>Agner Fog 优化手册(<code>optimizing_cpp</code> / <code>microarchitecture</code> / <code>instruction_tables</code>)</td><td class="nw">硬件事实·权威</td><td>编译器行为、各代微架构的细节、逐条指令的延迟与吞吐。<strong>是硬数据的来源</strong>。局限:是参考手册不是教材,不适合顺序阅读。</td></tr>
-<tr><td>Ulrich Drepper《What Every Programmer Should Know About Memory》</td><td class="nw">内存·必读</td><td>缓存层次、TLB、预取、NUMA 讲得最系统。局限:2007 年的文章,具体数字要按现代硬件更新,原理不变。</td></tr>
-<tr><td>Bryant / O'Hallaron《深入理解计算机系统》第 5、6 章</td><td class="nw">基础</td><td>优化编译器的能力边界、存储层次的程序视角。局限:例子偏教学,不是生产代码。</td></tr>
-<tr><td>Kurt Guntheroth《Optimized C++》</td><td class="nw">语言层</td><td>C++ 特有的开销来源:字符串、容器、动态分配、I/O。局限:成书于 C++11 时代,部分结论要按移动语义与新标准修正。</td></tr>
-<tr><td>Fedor Pikus《The Art of Writing Efficient Programs》</td><td class="nw">并发开销</td><td>锁的代价、无锁、内存序的成本,以及怎么测量它们。局限:后半部分难度较高。</td></tr>
-<tr><td>Mike Acton 的演讲与 Richard Fabian《Data-Oriented Design》</td><td class="nw">数据布局</td><td>按访问模式组织数据,而不是按概念。局限:观点鲜明,部分主张需要结合场景权衡。</td></tr>
-<tr><td>Brendan Gregg《Systems Performance》</td><td class="nw">系统层</td><td>火焰图、perf、eBPF、以及系统层的定位方法。局限:以 Linux 为主。</td></tr>
+<tr><td>Bryant 与 O'Hallaron《深入理解计算机系统》</td><td>经典教材</td><td>参考</td><td>第 5、6 章从程序员视角讲优化编译器的能力边界与存储层次,是补齐机器模型的最短路径。局限:面向教学,示例不是生产代码,不涉及 C++ 语言层</td></tr>
+<tr><td>Hennessy 与 Patterson《计算机体系结构:量化研究方法》</td><td>经典教材</td><td>推荐</td><td>流水线、缓存层次与多核一致性的原始出处。局限:面向体系结构设计者,读完不会直接改进你的代码</td></tr>
+<tr><td>Bakhvalov《Performance Analysis and Tuning on Modern CPUs》</td><td>进阶与专题</td><td>锚定</td><td>自顶向下的性能分析方法、PMU 计数器怎么读、perf 怎么用。局限:偏 Intel 平台,并且假设读者已有微架构基础</td></tr>
+<tr><td>Drepper《What Every Programmer Should Know About Memory》</td><td>进阶与专题</td><td>锚定</td><td>缓存层次、TLB、预取与 NUMA 讲得最系统,篇幅不长。局限:成文较早,绝对数字要按现在的硬件重新校准,原理部分没有过时</td></tr>
+<tr><td>Guntheroth《Optimized C++》</td><td>进阶与专题</td><td>参考</td><td>C++ 特有的开销来源:字符串、容器、动态分配与 I/O。局限:成书于 C++11 时代,涉及拷贝与返回值的结论要用移动语义修正</td></tr>
+<tr><td>Pikus《The Art of Writing Efficient Programs》</td><td>进阶与专题</td><td>参考</td><td>锁的代价、无锁结构与内存序的成本,并给出测量方法。局限:后半部分难度陡增,并发之外的篇幅有限</td></tr>
+<tr><td>Fabian《Data-Oriented Design》与 Acton 的公开演讲</td><td>进阶与专题</td><td>参考</td><td>按访问模式组织数据而不是按概念组织。局限:主张鲜明,多数结论没有配可复现的测量步骤</td></tr>
+<tr><td class="nw">Agner Fog 的优化手册与指令表</td><td>参考手册</td><td>锚定</td><td>编译器行为、各代微架构的细节、逐条指令的延迟与吞吐,是硬数字的来源。局限:查阅资料而非教材,顺序读收获有限;最新几代 CPU 更新有滞后</td></tr>
+<tr><td class="nw">Intel 与 AMD 的官方优化手册</td><td>官方文档与规范</td><td>锚定</td><td>对齐要求、缓存行大小、存储转发与预取器的触发条件,一手且随微架构更新。局限:篇幅以千页计,只能跳读,不给 C++ 层面的对应写法</td></tr>
+<tr><td>编译器与剖析工具的官方文档(GCC / Clang / MSVC、perf、VTune)</td><td>官方文档与规范</td><td>参考</td><td>优化开关做了什么、某个循环为什么没有向量化、计数器事件名与采样原理的出处。局限:只讲工具本身,不讲拿到数字之后怎么判断</td></tr>
+<tr><td class="nw">Compiler Explorer</td><td>在线资料</td><td>参考</td><td>同一段代码在多个编译器、多组开关下生成了什么,十几秒出结果。局限:不测真实耗时,不反映缓存与分支行为</td></tr>
+<tr><td class="nw">uops.info</td><td>在线资料</td><td>参考</td><td>逐条指令的延迟、吞吐与端口占用,按微架构分列,数据由自动化实测生成。局限:只给代价,语义要另查厂商手册</td></tr>
 </tbody>
 </table>
-<p>主锚定取前三本:<strong>Bakhvalov 给方法,Agner Fog 给硬件事实,Drepper 给内存</strong>。本书不重复它们的完整内容,而是把「C++ 程序员在实际项目里会遇到的部分」抽出来,配上可复现的测量步骤。</p>
-<p>与本书系另外两本的分工:<strong>《C++ 语言 · 现代详解》管语言本体</strong>(「这个 <code>std::move</code> 为什么没生效」),<strong>《C++ 标准库 API 编程手册》管接口</strong>(「<code>ranges</code> 有哪些 view」),<strong>本书管测量与调优</strong>(「这段代码为什么慢、改完真的快了吗」)。三本之间交叉引用,不重复展开。</p>
-<h3>这些书该按什么顺序读</h3>
-<p>上面八条不必全读,更不必按顺序读。<strong>先读 Bakhvalov,它给的是一套可执行的流程</strong>:测量、定位、归类、验证。读完这一本就能开始动手,遇到具体问题再去查其余几本。</p>
-<p>第二本读 Drepper 的内存文章。它篇幅不长,却把「为什么访存这么贵」讲透了,而访存是实际项目里出现频率最高的瓶颈类型。读的时候把文中的绝对数字当量级看:2007 年的三级缓存容量与今天差了一个数量级,层次之间的相对关系却基本没变。</p>
-<p>Agner Fog 的三份手册<strong>不要顺序读</strong>,它们是查阅用的参考资料。写 SIMD 时查 <code>instruction_tables</code>;怀疑编译器做了或没做某个变换时查 <code>optimizing_cpp</code>;想弄清某一代微架构的具体限制时查 <code>microarchitecture</code>。当成教材从头啃会花掉大量时间而收获有限。</p>
-<p>其余几本按需要取用:动到并发就读 Pikus,要重排数据布局就读 Fabian 与 Acton 的材料,要在系统层定位就读 Gregg。</p>
-<div class="note old" style="contain-intrinsic-size:auto 195px"><span class="t">🟡 旧书里的绝对数字要重新校准,部分建议已经不成立</span><p>这些书的成书时间跨越十几年,<strong>凡是带具体数字的结论都要重新验证</strong>。三处典型:缓存容量与内存延迟的比值变了,「多大的工作集算大」这个门槛也就变了;移动语义普及之后,「返回容器要靠输出参数」这条老建议不再成立;分支预测器强了很多,早年那些「把分支改写成算术」的例子今天很多已经没有收益,甚至更慢。<strong>过时的是具体建议与门槛值,原理部分基本没有过时。</strong>拿不准时以自己机器上的实测为准。</p></div>
-<h3>在线资源各自适合查什么</h3>
-<p>书给的是体系,在线资源给的是随时可查的细节。四个资源覆盖日常查询的绝大部分。</p>
-<table style="contain-intrinsic-size:auto 263px">
-<thead><tr><th>资源</th><th>适合查什么</th><th>不适合查什么</th></tr></thead>
+<div class="note old" style="contain-intrinsic-size:auto 195px"><span class="t">🟡 旧资料里的绝对数字要重新校准,部分结论已经不成立</span><p>上表的成文时间跨越十几年,凡是带具体数字的结论都要重新验证。三处典型:缓存容量与内存延迟的比值变了,「多大的工作集算大」这个门槛跟着变;移动语义普及之后,「返回容器要靠输出参数」不再成立;分支预测器强了很多,早年把分支改写成算术的例子今天不少已经没有收益。过时的是门槛值与具体建议,原理没有过时,拿不准时以实测为准。</p></div>
+<h3>锚定的四样各借鉴了什么</h3>
+<p>借鉴的都是具体手法,不是笼统的风格。</p>
+<table style="contain-intrinsic-size:auto 338px">
+<thead><tr><th>锚定的资料</th><th>借鉴了什么</th></tr></thead>
 <tbody>
-<tr><td class="nw"><code>cppreference.com</code></td><td>标准库接口的复杂度保证、异常保证、哪个重载会被选中</td><td>性能数字,它不给</td></tr>
-<tr><td>Compiler Explorer(<code>godbolt.org</code>)</td><td><strong>某种写法生成了什么代码</strong>、不同编译器与开关的差别</td><td>真实运行耗时,它不测</td></tr>
-<tr><td class="nw"><code>uops.info</code></td><td><strong>逐条指令的延迟、吞吐、占用哪些端口</strong>,按微架构分列</td><td>指令的语义,那要配 Intel Intrinsics Guide</td></tr>
-<tr><td class="nw">Agner Fog 的网站</td><td>指令表、微架构文档、编译器行为的横向对比</td><td>最新几代 CPU,更新有滞后</td></tr>
+<tr><td class="nw">Bakhvalov</td><td>全书的主线顺序:先测量与定位,再讲硬件与编译器的行为,最后才给手段。1.3 节的剖析流程照自顶向下分析法组织,先判断瓶颈落在前端、后端、分支还是访存,再往下细分,而不是一上来就看函数排行榜</td></tr>
+<tr><td class="nw">Agner Fog 的手册与指令表</td><td>两处硬数据的出处。2.5 节直接教读者查它的指令表;第 4 章判断某个变换编译器做没做时,以它对各家编译器的实测结论作核对基准</td></tr>
+<tr><td class="nw">Drepper</td><td>第 3 章的编排顺序:层次与数字、缓存行、访问模式、伪共享、TLB、预取、NUMA。另一处是讲法——每一层都配一个能自己跑的小程序,把这一层的代价当场量出来,而不是只给一张延迟表</td></tr>
+<tr><td class="nw">Intel 与 AMD 的官方优化手册</td><td>硬件事实的准绳。缓存行大小、对齐要求、存储转发的成立条件、预取器的触发条件一律以它为准;二手资料与它冲突时不采信二手资料</td></tr>
 </tbody>
 </table>
-<p>使用顺序通常是:先在 Compiler Explorer 上看编译器到底生成了什么,发现某条指令可疑再去 <code>uops.info</code> 查它的代价,需要确认标准语义时回到 <code>cppreference</code>。<strong>这三步都不用跑程序,十分钟内能排除掉大部分错误猜测。</strong></p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 硬件行为有分歧时按厂商手册、目标机实测、二手资料的顺序取信</span><p>厂商手册写的是这一代硬件的设计约束,但不保证你手上这颗 CPU 的实际表现;目标机上的实测是最终事实,代价是换一台机器就要重做;二手资料常常落后几代微架构。做法固定为先查手册确认有没有明确约束,再用一个最小程序在目标机上量一次,二手资料只用来提供线索。</p></div>
+<h3>讲什么、不讲什么</h3>
+<p>本书覆盖<strong>单台机器上一个 C++ 程序的性能</strong>,12 章 74 节按从方法到机器、再到语言与交付排列。</p>
+<table style="contain-intrinsic-size:auto 333px">
+<thead><tr><th>章</th><th>它回答的问题</th></tr></thead>
+<tbody>
+<tr><td class="nw">第 1 章</td><td>怎么测才不会骗自己,怎么定位,以及什么时候该停手</td></tr>
+<tr><td class="nw">第 2、3 章</td><td>CPU 与内存层次实际怎么执行这段代码,代价落在哪一环</td></tr>
+<tr><td class="nw">第 4 章</td><td>哪些优化编译器会替你做,哪些做不到、为什么做不到</td></tr>
+<tr><td class="nw">第 5、6 章</td><td>C++ 的哪些写法要额外花钱,钱花在哪一步</td></tr>
+<tr><td class="nw">第 7、8 章</td><td>数据布局与并行各自的收益从哪来,上限在哪</td></tr>
+<tr><td class="nw">第 9、10 章</td><td>系统调用与 I/O 的成本,复杂度之外的常数因子</td></tr>
+<tr><td class="nw">第 11 章</td><td>启动时间、二进制体积与代码布局这三个交付期问题</td></tr>
+<tr><td class="nw">第 12 章</td><td>一次完整的调优:同一个程序四轮改到原来的二十分之一</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚,并指明归谁。</p>
+<table style="contain-intrinsic-size:auto 372px">
+<thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td class="nw">C++ 的语法与语言机制本身</td><td>《C++ 语言 · 现代详解》</td><td>本书只讲某个机制的运行期代价,不讲它怎么用</td></tr>
+<tr><td class="nw">标准库的接口清单、参数与复杂度保证</td><td>《C++ 标准库 API 编程手册》</td><td>本书讲某个容器为什么慢,不讲它有哪些成员函数</td></tr>
+<tr><td class="nw">系统调用的语义、参数与错误码</td><td class="nw">《Linux 系统编程手册》</td><td>本书只讲一次系统调用的成本与批量化手法</td></tr>
+<tr><td class="nw">界面框架自身的性能</td><td>《Qt 性能优化 · 现代详解》</td><td>判据是把 Qt 换成别的库,现象还在不在</td></tr>
+<tr><td class="nw">分布式与服务端架构层面的性能</td><td class="nw">不在本书系范围</td><td>本书的边界是单台机器上的一个进程</td></tr>
+<tr><td class="nw">GPU、异构计算与专用加速器</td><td class="nw">不在本书系范围</td><td>性能模型与 CPU 不同,本书的判据不能直接套用</td></tr>
+<tr><td class="nw">算法本身的设计与正确性证明</td><td class="nw">算法教材</td><td>本书只讲复杂度相同时常数因子差在哪</td></tr>
+</tbody>
+</table>
+<h3>读之前要会什么</h3>
+<p>前置分两档,每条都给自测方式——「熟悉 C++」无法自测,也就无法用来判断该不该现在读。</p>
+<table style="contain-intrinsic-size:auto 537px">
+<thead><tr><th>档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>读得懂现代 C++ 的日常代码</td><td>说清 <code>vector</code> 扩容时已有元素发生了什么,以及一个对象被移动之后处于什么状态</td></tr>
+<tr><td class="nw">必须</td><td>能把工程编成带调试符号的优化版</td><td>说出你用的编译器里「开优化」与「保留符号」各是哪个开关,并说明两个为什么要同时开</td></tr>
+<tr><td class="nw">必须</td><td class="nw">会在命令行下测一个程序的耗时</td><td>把同一个程序连续跑十次,报出中位数与最大最小值,而不是只报一次的数字</td></tr>
+<tr><td class="nw">必须</td><td>知道进程、线程与虚拟内存的基本概念</td><td>说清一次缺页发生了什么,并说出一次线程切换的代价大致是哪个量级</td></tr>
+<tr><td class="nw">最好有</td><td>读得懂一小段 x86-64 汇编</td><td>看一个函数开头的几条指令,指出哪几条在建栈帧、参数从哪几个寄存器进来</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">用过一次剖析器</td><td>说出上次得到的结论是「哪个函数占了多少比例」还是「哪一行缓存未命中最多」,两者的采样方式差在哪</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">对缓存有量级上的直觉</td><td>估一估顺序遍历与随机遍历同一个一百万元素的整型数组,耗时相差几倍,量级对上即可</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">写过多线程代码并调试过一次</td><td>说出数据竞争要在什么条件下才会暴露,以及为什么加了打印之后它常常不再出现</td></tr>
+</tbody>
+</table>
+<p>有两样不在前置里:不需要先懂微架构,第 2 章从流水线讲起;不需要用过 perf 或 VTune,1.3 节从装工具和第一条命令开始。</p>
+<h3>与那些资料相比,本书多给了什么</h3>
+<ul>
+<li><strong>每条手段都写明适用条件与收益量级。</strong>不写「用 <code>reserve</code> 更快」,写的是元素个数事先已知、且元素移动不平凡时省下了几次重分配与几次移动,以及规模小到什么程度就测不出差别。</li>
+<li><strong>批注集中在判据与失效上。</strong>全书一百七十条上下的批注,九成以上属于两类:绿色写成一句能直接执行的判据,红色写失效与误判,其中「测出来变快了,问题出在基准写法上」占了相当篇幅。</li>
+<li><strong>Linux 与 Windows 两套工具链都给命令。</strong>同一个测量目标,perf 与 VTune / WPA 各给一条可以照抄的命令行,不假设读者用哪个平台。</li>
+<li><strong>两百五十张以上的表格把条件与收益固定下来。</strong>「什么时候有收益、大概多少、代价是什么」一律进表,便于回查。</li>
+<li><strong>第 12 章是一次完整的四轮调优。</strong>同一个程序从 4.2 秒改到 0.21 秒,每一轮都给出剖析输出、改了哪几行、复测数字,以及为什么就此停下。</li>
+</ul>
+<h3>两条读法:顺读与按需查</h3>
+<p>第一次系统做性能工作走顺读,手上已经有一个跑得慢的程序走按需查。</p>
+<table style="contain-intrinsic-size:auto 222px">
+<thead><tr><th>你的情形</th><th>从哪读起</th><th>主干</th><th>可以先放过</th></tr></thead>
+<tbody>
+<tr><td class="nw">第一次做性能工作</td><td>第 1 章顺读到第 5 章,再按需取后面</td><td>第 1、2、3、4 章</td><td>第 11、12 章</td></tr>
+<tr><td class="nw">手上有一个跑得慢的程序</td><td>先读 1.2 与 1.3 建基准并剖析,再按剖析结论跳章</td><td>第 1 章</td><td>第 2 章的细节</td></tr>
+<tr><td class="nw">只想知道 C++ 哪些写法贵</td><td>第 5、6 章,再加第 7 章</td><td>第 5、6 章</td><td>第 1 到 4 章</td></tr>
+<tr><td class="nw">加了核却没有变快</td><td>第 8 章,配 3.4 节的伪共享</td><td>第 8 章</td><td>第 4、5 章</td></tr>
+<tr><td class="nw">启动慢或者交付体积过大</td><td>第 11 章</td><td>第 11 章</td><td>其余各章</td></tr>
+</tbody>
+</table>
+<p><strong>第 1、2、3 章是主干,不能跳。</strong>第 1 章给测量与验收的规矩,后面每一条手段的收益都要靠它验证;第 2、3 章给机器模型,没有这层模型,后面的判据只能当口诀背。第 4 章讲编译器的能力边界,它决定了哪些事根本不必自己动手。</p>
+<p>第 5 到 8 章按主题独立,可以挑着读。第 9、10 章在瓶颈落到系统调用、I/O 或数据结构上时读。第 11 章面向交付期问题,准备发版时再看。</p>
+<p>第 12 章建议在读完第 1 到 7 章之后整章读一遍。它把前面的手段串成一次真实的调优,补上单章里看不到的东西:每一轮先改哪里、什么时候收益开始变小、在哪一步停下来。</p>
+<p>按需查的入口是各章末尾的小结节:它列出本章要点与常见误区,先扫小结再定位到具体小节,比从章标题猜要快。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 先判断瓶颈属于哪一类,再决定读哪一章</span><p>瓶颈按类型分成几种:访存、分支、指令吞吐、动态分配、锁争用、系统调用与 I/O。剖析器给出的第一层结论就是它属于哪一种,而每一种在书里对应固定的章节——访存看第 3 章,分配看第 6 章,锁争用看第 8 章,系统调用与 I/O 看第 9 章。按手段清单从头逐条试之所以低效,是因为多数手段对当前这一种瓶颈无效。</p></div>
+<p>读完第 1 章,能写出一份别人也能复现的基准,并说清这次测量的噪声有多大;读完第 2 到 4 章,能看着剖析结果说出瓶颈属于哪一类,而不只是哪个函数占比高;读完全书,能完成一次有基线、有归因、有复测的调优。</p>
 <h2 id="p1-first">1.1 优化的第一条规矩:先测再改</h2>
 <p>性能优化里最贵的错误不是「优化得不够好」,而是<strong>优化了不该优化的地方</strong>——花了两周把一个占总耗时 0.3% 的函数提速了十倍,整体收益 0.27%,同时代码变得难以维护。这类事故的成因都一样:凭直觉判断哪里慢。</p>
 <h3>直觉为什么不可靠</h3>
@@ -588,7 +658,7 @@ REM Windows Performance Recorder / Analyzer:系统级,含内核
 </table>
 <div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 剖析一定要用带优化的构建,而且带调试符号</span><p>用 <code>-O0</code> 剖析得到的热点分布与发布版<strong>完全不同</strong>:调试版没有内联,于是访问器函数占据大量时间;没有循环优化,于是循环体的相对权重完全变了。<strong>正确的剖析构建是 <code>-O2 -g -fno-omit-frame-pointer</code></strong>——优化与发布版一致,同时保留符号与栈回溯能力。<code>-fno-omit-frame-pointer</code> 会损失一点性能(x86-64 上通常 1% 以内),换来的是可靠的调用栈,值得。</p></div>
 <h3>自顶向下的分析方法</h3>
-<p>Bakhvalov 书里的核心方法:不要一上来就看函数列表,而是<strong>先判断瓶颈属于哪一类</strong>,再往下细分。这套方法能避免「盯着一个函数看半天,其实问题在别处」。</p>
+<p>Bakhvalov 书里的核心方法:不要一上来就看函数列表,而是<strong>先判断瓶颈属于哪一类</strong>,再往下细分。这套方法能避免「盯着一个函数看半天,问题在别处」。</p>
 <ol>
 <li><strong>第一层:退休槽位分成四类。</strong>前端受限(取指令跟不上)、后端受限(执行单元或访存跟不上)、错误推测(分支预测失败)、退休(有效工作)。</li>
 <li><strong>第二层:后端受限再分成核心受限与访存受限。</strong>前者是执行单元不够用,后者是在等数据。</li>
@@ -929,7 +999,7 @@ $ perf report --stdio --sort=overhead --percent-limit=1</code></pre>
 <p>后面几章都建立在这一章的流程之上。第 2 章讲的是当 perf stat 显示分支失败率高或者 IPC 偏低时,CPU 内部发生了什么;第 3 章讲的是缓存未命中率高的时候该往哪里看;第 4 章讲的是编译器在你测量之前已经替你做了什么、又有哪些事它做不到。所有这些内容的使用前提都相同:先有一个可复现的基准,再有一份剖析数据,然后才轮到具体技巧。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 27571px;--thin-h:27571px">
+<section class="chapter" style="contain-intrinsic-size:auto 28761px;--thin-h:28761px">
 <h1 id="c2"><span class="part">第 2 章</span>硬件模型:CPU 是怎么执行你的代码的</h1>
 <h2 id="p2-pipeline">2.1 流水线与乱序执行</h2>
 <p>「一条指令一个周期」这个模型在 1990 年代就已经不成立了。现代 x86 与 ARM 核心每周期可以取多条指令、乱序执行、并行完成,而且一条指令从取指到退休要经过十几个流水级。<strong>不理解这个执行模型,很多性能现象无法解释</strong>——为什么循环展开有用、为什么分支预测失败这么贵、为什么依赖链会限制吞吐。这一章不追求微架构的完整细节,只讲对写代码有直接影响的那几条。</p>
@@ -947,8 +1017,60 @@ $ perf report --stdio --sort=overhead --percent-limit=1</code></pre>
 </table>
 <p>这里最关键的是<strong>乱序</strong>:处理器内部维护一个「重排序缓冲区」,能同时跟踪几百条在途指令,谁的操作数先准备好谁先算。所以<strong>程序里相邻的两条独立指令,实际上是并行执行的</strong>;而互相依赖的两条,后一条必须等前一条算完。</p>
 <p>这条性质直接推出了两个优化方向:<strong>增加独立的工作</strong>(让乱序引擎有事可做),以及<strong>缩短依赖链</strong>(减少必须串行的部分)。2.3 节展开。</p>
+<figure style="contain-intrinsic-size:auto 382px">
+<svg viewBox="0 0 720 288" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gPpip_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">前端负责把指令喂进来,后端负责把它们算完;哪一边跟不上,就说这段代码受限于哪一边</text>
+
+  <path d="M32,58 V50 H418 V58" stroke="var(--rule)" fill="none"/>
+  <text class="svgmuted" x="225" y="44" text-anchor="middle" font-size="11">前端</text>
+  <path d="M434,58 V50 H686 V58" stroke="var(--rule)" fill="none"/>
+  <text class="svgmuted" x="560" y="44" text-anchor="middle" font-size="11">后端</text>
+
+  <rect x="32" y="66" width="118" height="50" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="91" y="88" text-anchor="middle" font-size="12">取指</text>
+  <text class="svgmuted" x="91" y="106" text-anchor="middle" font-size="11">从指令缓存读字节</text>
+  <rect x="166" y="66" width="118" height="50" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="225" y="88" text-anchor="middle" font-size="12">译码</text>
+  <text class="svgmuted" x="225" y="106" text-anchor="middle" font-size="11">拆成微操作</text>
+  <rect x="300" y="66" width="118" height="50" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="359" y="88" text-anchor="middle" font-size="12">重命名与分派</text>
+  <text class="svgmuted" x="359" y="106" text-anchor="middle" font-size="11">消除假依赖</text>
+  <rect x="434" y="66" width="118" height="50" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="493" y="88" text-anchor="middle" font-size="12">乱序执行</text>
+  <text class="svgmuted" x="493" y="106" text-anchor="middle" font-size="11">谁先就绪谁先算</text>
+  <rect x="568" y="66" width="118" height="50" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="627" y="88" text-anchor="middle" font-size="12">退休</text>
+  <text class="svgmuted" x="627" y="106" text-anchor="middle" font-size="11">按程序顺序提交</text>
+  <path d="M150,91 H162" stroke="var(--accent)" fill="none" marker-end="url(#gPpip_a)"/>
+  <path d="M284,91 H296" stroke="var(--accent)" fill="none" marker-end="url(#gPpip_a)"/>
+  <path d="M418,91 H430" stroke="var(--accent)" fill="none" marker-end="url(#gPpip_a)"/>
+  <path d="M552,91 H564" stroke="var(--accent)" fill="none" marker-end="url(#gPpip_a)"/>
+
+  <rect x="32" y="142" width="654" height="86" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="44" y="164" text-anchor="start" font-size="11">重排序缓冲区:同时跟踪几百条在途指令</text>
+  <rect x="48" y="176" width="122" height="30" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="109" y="196" text-anchor="middle" font-size="11">独立指令 A</text>
+  <rect x="178" y="176" width="122" height="30" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="239" y="196" text-anchor="middle" font-size="11">独立指令 B</text>
+  <rect x="308" y="176" width="122" height="30" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="369" y="196" text-anchor="middle" font-size="11">独立指令 C</text>
+  <rect x="470" y="176" width="200" height="30" rx="4" fill="var(--svg-soft)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <text class="svgtext" x="570" y="196" text-anchor="middle" font-size="11">要用 A 的结果的指令 D</text>
+  <text class="svgmuted" x="239" y="220" text-anchor="middle" font-size="11">这三条实际上是并行执行的</text>
+  <text class="svgmuted" x="570" y="220" text-anchor="middle" font-size="11">这一条必须等 A 算完</text>
+
+  <text class="svgmuted" x="12" y="254" text-anchor="start" font-size="11">由此推出:缓存未命中的真实代价取决于周围有多少独立工作可做 —— 同样的未命中次数,耗时可以差三到五倍</text>
+  <text class="svgmuted" x="12" y="270" text-anchor="start" font-size="11">也推出两个优化方向:增加独立的工作,让乱序引擎有事可做;以及缩短依赖链,减少必须串行的部分</text>
+</svg>
+<figcaption>一条指令要经过哪几级,前端与后端各管哪一段（原创绘制）</figcaption>
+</figure>
 <h3>乱序为什么能掩盖延迟</h3>
-<p>一次 L3 缓存访问要 15 纳秒,大约 50 个周期。如果处理器只能傻等,这 50 个周期就全浪费了。乱序执行让它在等待期间继续执行后面那些不依赖这个结果的指令——<strong>延迟被「藏」在了其他工作后面</strong>。</p>
+<p>一次 L3 缓存访问要 15 纳秒,大约 50 个周期。如果处理器只能停下等待,这 50 个周期就全浪费了。乱序执行让它在等待期间继续执行后面那些不依赖这个结果的指令——<strong>延迟被「藏」在了其他工作后面</strong>。</p>
 <p>这解释了一个反直觉的现象:<strong>缓存未命中的真实代价,取决于周围有多少独立工作可做。</strong>一个循环如果每轮都是「读一个指针、跟着它再读一个」(链表遍历),那么每次未命中都无法被掩盖,总耗时接近未命中次数乘以延迟;而一个循环如果每轮读若干个互不相关的数组元素,多次未命中可以重叠进行,总耗时远小于简单相乘。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 196px"><code><span class="cm">// 形态一:依赖链,延迟无法掩盖 —— 每次访问都要等上一次的结果</span>
 Node* p = head;
@@ -1025,6 +1147,71 @@ Node* p = head;
 std::ranges::sort(v);                     <span class="cm">// 排序之后再跑同一个循环</span>
 <span class="kw">for</span> (<span class="kw">int</span> x : v) <span class="kw">if</span> (x &gt;= 128) sum += x;   <span class="cm">// 排序后:几乎不失败,快 3 到 6 倍</span></code></pre>
 <p>注意这个实验的意义不是「先排序再处理」——排序本身的开销通常远大于收益。<strong>它的意义是让人对分支预测失败的代价有一个量级上的认识</strong>:一个五五开的分支,在紧凑循环里可能占掉一半以上的时间。</p>
+<figure style="contain-intrinsic-size:auto 353px">
+<svg viewBox="0 0 720 262" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">每一格是一次迭代里 if (x &#62;= 128) 的方向,深色为真;格下的短线是这一次预测失败</text>
+
+  <text class="svgtext" x="12" y="76" text-anchor="start" font-size="12">未排序</text>
+  <rect x="120" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="142" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="164" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="186" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="208" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="230" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="252" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="274" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="296" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="318" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="340" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="362" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="384" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="406" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="428" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="450" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="472" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="494" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="516" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="538" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="560" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="582" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="604" y="54" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="626" y="54" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <path d="M124,92 H138 M190,92 H204 M234,92 H248 M278,92 H292 M322,92 H336 M366,92 H380 M410,92 H424 M454,92 H468 M498,92 H512 M542,92 H556 M586,92 H600 M630,92 H644" stroke="var(--accent)" stroke-width="3" fill="none"/>
+  <text class="svgtext" x="12" y="118" text-anchor="start" font-size="11">约一半的迭代预测失败,每次失败要把已经做的十几到二十个周期的工作全部丢掉重来</text>
+
+  <text class="svgtext" x="12" y="164" text-anchor="start" font-size="12">排序后</text>
+  <rect x="120" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="142" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="164" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="186" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="208" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="230" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="252" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="274" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="296" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="318" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="340" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="362" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="384" y="142" width="22" height="32" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <rect x="406" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <rect x="428" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="450" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="472" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="494" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="516" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="538" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="560" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="582" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="604" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <rect x="626" y="142" width="22" height="32" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <path d="M410,180 H424" stroke="var(--accent)" stroke-width="3" fill="none"/>
+  <text class="svgtext" x="12" y="206" text-anchor="start" font-size="11">先连续假、再连续真,整趟只在跨过阈值的那一次失败;同一段代码快 3 到 6 倍</text>
+
+  <text class="svgmuted" x="12" y="234" text-anchor="start" font-size="11">这个实验的意义不是「先排序再处理」——排序本身的开销通常远大于收益</text>
+  <text class="svgmuted" x="12" y="250" text-anchor="start" font-size="11">它给出的是量级:一个五五开的分支,在紧凑循环里可能占掉一半以上的时间</text>
+</svg>
+<figcaption>同一个循环,数据排序前后分支的方向序列差在哪里（原创绘制）</figcaption>
+</figure>
 <h3>消除分支:三种手段</h3>
 <p>确认某个分支难以预测之后(用 <code>perf stat</code> 看 <code>branch-misses</code>),有三种消除手段,代价递增。</p>
 <ol>
@@ -1099,6 +1286,50 @@ std::<span class="kw">size_t</span> i = 0;
 <span class="kw">float</span> sum = (s0 + s1) + (s2 + s3);
 <span class="kw">for</span> (; i &lt; n; ++i) sum += a[i];       <span class="cm">// 收尾</span></code></pre>
 <p>四条链互不依赖,可以同时在流水线里推进,理论上快 4 倍;实测通常能到 3 倍以上。这个手法叫<strong>循环展开配多累加器</strong>,是计算密集循环最基础的优化。</p>
+<figure style="contain-intrinsic-size:auto 398px">
+<svg viewBox="0 0 720 302" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">横轴按周期等比;一条浮点加法的延迟约 4 个周期,而吞吐是每周期 2 条</text>
+  <text class="svgmuted" x="120" y="42" text-anchor="middle" font-size="11">0</text>
+  <text class="svgmuted" x="256" y="42" text-anchor="middle" font-size="11">4</text>
+  <text class="svgmuted" x="392" y="42" text-anchor="middle" font-size="11">8</text>
+  <text class="svgmuted" x="528" y="42" text-anchor="middle" font-size="11">12</text>
+  <text class="svgmuted" x="664" y="42" text-anchor="middle" font-size="11">16</text>
+  <path d="M120,50 H664 M120,46 V54 M256,46 V54 M392,46 V54 M528,46 V54 M664,46 V54" stroke="var(--rule)" fill="none"/>
+
+  <text class="svgtext" x="12" y="76" text-anchor="start" font-size="12">一条累加链</text>
+  <text class="svgmuted" x="12" y="92" text-anchor="start" font-size="11">sum += a[i]</text>
+  <rect x="120" y="62" width="136" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="188" y="84" text-anchor="middle" font-size="11">加 a[0]</text>
+  <rect x="256" y="62" width="136" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="324" y="84" text-anchor="middle" font-size="11">加 a[1]</text>
+  <rect x="392" y="62" width="136" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="460" y="84" text-anchor="middle" font-size="11">加 a[2]</text>
+  <rect x="528" y="62" width="136" height="34" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="596" y="84" text-anchor="middle" font-size="11">加 a[3]</text>
+  <text class="svgmuted" x="12" y="118" text-anchor="start" font-size="11">每一步都要等上一步算完</text>
+  <text class="svgtext" x="672" y="84" text-anchor="start" font-size="11">16 周期</text>
+
+  <text class="svgtext" x="12" y="176" text-anchor="start" font-size="12">四条独立链</text>
+  <text class="svgmuted" x="12" y="192" text-anchor="start" font-size="11">s0 s1 s2 s3</text>
+  <text class="svgmuted" x="12" y="212" text-anchor="start" font-size="11">四条互不依赖,</text>
+  <text class="svgmuted" x="12" y="228" text-anchor="start" font-size="11">同时在流水线里推进</text>
+  <rect x="120" y="140" width="136" height="26" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="188" y="158" text-anchor="middle" font-size="11">s0 += a[i]</text>
+  <rect x="120" y="170" width="136" height="26" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="188" y="188" text-anchor="middle" font-size="11">s1 += a[i+1]</text>
+  <rect x="154" y="200" width="136" height="26" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="222" y="218" text-anchor="middle" font-size="11">s2 += a[i+2]</text>
+  <rect x="154" y="230" width="136" height="26" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="222" y="248" text-anchor="middle" font-size="11">s3 += a[i+3]</text>
+  <path d="M290,140 V262" stroke="var(--accent)" fill="none" stroke-dasharray="5 4"/>
+  <text class="svgtext" x="298" y="200" text-anchor="start" font-size="11">约 5 个周期</text>
+  <text class="svgmuted" x="298" y="218" text-anchor="start" font-size="11">每周期最多发 2 条,所以 s2 与 s3 晚一个周期起步</text>
+
+  <text class="svgmuted" x="12" y="282" text-anchor="start" font-size="11">一条链只能做到「4 个周期一次加法」,是理论峰值的八分之一;拆成四条之后理论上快 4 倍,实测通常能到 3 倍以上</text>
+  <text class="svgmuted" x="12" y="298" text-anchor="start" font-size="11">编译器默认不会替你做这个变换,因为浮点加法不满足结合律,拆链改变了求和顺序也就改变了结果</text>
+</svg>
+<figcaption>同样四次浮点加法,一条链与四条独立链各占多少个周期（原创绘制）</figcaption>
+</figure>
 <div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 编译器不会自动对浮点加法做这个变换,除非你允许它改变求值顺序</span><p>原因是<strong>浮点加法不满足结合律</strong>(2.7 节讲过):<code>(a+b)+c</code> 与 <code>a+(b+c)</code> 的结果可能不同。拆成四条累加链改变了求和顺序,因此改变了结果——编译器在默认模式下不允许这样做。要让它自动做,需要 <code>-ffast-math</code> 或更精确的 <code>-fassociative-math</code>(GCC/Clang)、<code>/fp:fast</code>(MSVC)。<strong>但这些开关会一并放开很多别的假设</strong>(允许假设没有 NaN 与无穷、允许把除法换成乘倒数),对数值敏感的代码是危险的。<strong>更可控的做法是手工写多累加器</strong>,或者用 <code>#pragma omp simd reduction(+:sum)</code> 显式授权这一处。整数加法满足结合律,所以整数求和编译器会自己展开。</p></div>
 <h3>依赖链在哪里出现</h3>
 <table style="contain-intrinsic-size:auto 223px">
@@ -1277,7 +1508,7 @@ Block RThroughput: 2.0</code></pre>
 <p><code>Block RThroughput</code> 是这段代码在理想情况下每轮迭代的周期数下限。<strong>实测远高于它,说明有依赖链或访存瓶颈;接近它,说明已经受限于执行端口,只能减少指令数或换指令。</strong></p>
 <h3>这些数字什么时候真的用得上</h3>
 <p>绝大多数性能问题不需要查指令表——它们的瓶颈在访存、分支或算法层面,比指令延迟高一到两个数量级。<strong>指令级的数据只在两种情况下有用</strong>:确认已经受限于执行端口(IPC 高、缓存未命中低)之后,判断换哪条指令有收益;以及写 SIMD 内建函数时,选延迟或吞吐更好的那条。</p>
-<p>一条常被忽略的实践:<strong>先看编译器生成了什么,再决定要不要动手。</strong>很多「这里应该用位运算更快」的直觉,其实编译器已经做了同样的变换。下一节讲怎么看。</p>
+<p>一条常被忽略的实践:<strong>先看编译器生成了什么,再决定要不要动手。</strong>很多「这里应该用位运算更快」的直觉,实际上编译器已经做了同样的变换。下一节讲怎么看。</p>
 <h3>除法与取模怎么绕开</h3>
 <p>除法是整数运算里唯一贵一个数量级的操作,而且它出现得比想象中频繁:哈希取模、环形缓冲区绕回、按行列拆分下标,都是除法或取模。</p>
 <p>除数是编译期常量时,编译器会自己把它换成一次乘法加几次移位,不必手工干预。<strong>问题出在除数是运行期变量的时候</strong>:此时编译器只能生成真正的除法指令,每次二十到四十个周期。</p>
@@ -1434,7 +1665,7 @@ $ g++ -O2 -S -o - hot.cpp | c++filt | grep -nE <span>'operator new|memcpy|memmov
 <li>为了拿到向量化随手加上 <code>-ffast-math</code>,同时放开了一大批自己并不打算放开的假设。</li>
 <li>把循环展开因子设成 16 或 32,代码撑大、寄存器溢出到栈上,反而比展开 4 次更慢。</li>
 <li>直接上手写内建函数,既没有保留朴素实现作参照,也没有做运行期 CPU 特性检测,换台机器就是非法指令。</li>
-<li>写了 <code>__restrict</code> 就认为一定会向量化,没有看优化报告确认,而报告里其实写着失败的另一个原因。</li>
+<li>写了 <code>__restrict</code> 就认为一定会向量化,没有看优化报告确认,而报告里写着失败的另一个原因。</li>
 <li>循环体里保留了一次函数调用或一次可能抛出的操作,自动向量化整个失败。</li>
 <li>拿 Compiler Explorer 上的汇编指令条数判断快慢,不实测——指令少不等于跑得快。</li>
 <li>把时间花在查指令延迟表上,而程序真正的瓶颈在访存,量级差了一到两个数量级。</li>
@@ -1478,7 +1709,7 @@ $ objdump -dC --source ./app | less</code></pre>
 <p>这一章讲的是 CPU 内部,第 3 章讲的是 CPU 外面——数据从哪里来、要等多久。两章的关系在 2.1 节已经点明:乱序执行能掩盖延迟,但掩盖能力有限,而内存未命中的 200 到 300 个周期远远超出了它的掩盖范围。所以访存受限的程序无法靠指令层面的技巧救回来,只能改变数据的组织方式,那正是第 3 章与后面数据布局部分的内容。第 4 章则从另一侧补充这一章:2.4 节里向量化失败的那些前提条件,大多数最终都落在编译器的别名分析上,4.3 节会把这件事讲透。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 31104px;--thin-h:31104px">
+<section class="chapter" style="contain-intrinsic-size:auto 32311px;--thin-h:32311px">
 <h1 id="c3"><span class="part">第 3 章</span>内存层次:决定性能的那一层</h1>
 <h2 id="p3-hier">3.1 内存层次:数字与直觉</h2>
 <p>第 1 章那张耗时表里,内存访问是 250 倍。这个数字值得展开:<strong>现代 CPU 的计算能力远远超过内存的供给能力</strong>,一个核心每周期能执行几条指令,而一次内存访问要几百个周期。于是绝大多数真实程序的瓶颈不在「算得慢」,而在「数据来得慢」。</p>
@@ -1498,6 +1729,53 @@ $ objdump -dC --source ./app | less</code></pre>
 </table>
 <p>这张表要记住的不是精确数字,而是<strong>相邻两级之间大约是 3 到 5 倍的差距,而 L3 到内存是 5 倍</strong>。从 L1 到内存,总共差了 50 倍以上。</p>
 <p>还有一个容易被忽略的维度:<strong>容量与共享范围</strong>。L1 只有几十 KB,意味着一个热循环的工作集必须很小才能全部待在 L1 里;L3 是所有核心共享的,意味着<strong>别的线程在做什么会影响你的命中率</strong>——这是多线程程序性能不稳定的一个常见来源。</p>
+<figure style="contain-intrinsic-size:auto 396px">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">方块的宽度表示容量的量级,越往下越大;右侧是延迟,越往下越慢</text>
+  <text class="svgmuted" x="556" y="42" text-anchor="start" font-size="11">延迟</text>
+
+  <rect x="100" y="52" width="80" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="140" y="71" text-anchor="middle" font-size="11">寄存器</text>
+  <text class="svgmuted" x="188" y="71" text-anchor="start" font-size="11">几百字节</text>
+  <text class="svgtext" x="556" y="71" text-anchor="start" font-size="11">0 周期</text>
+
+  <rect x="100" y="86" width="130" height="28" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="165" y="105" text-anchor="middle" font-size="11">L1 数据缓存</text>
+  <text class="svgmuted" x="238" y="105" text-anchor="start" font-size="11">32 到 48 KB</text>
+  <text class="svgtext" x="556" y="105" text-anchor="start" font-size="11">4 到 5 周期</text>
+
+  <rect x="100" y="120" width="190" height="28" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="195" y="139" text-anchor="middle" font-size="11">L2 缓存</text>
+  <text class="svgmuted" x="298" y="139" text-anchor="start" font-size="11">512 KB 到 2 MB</text>
+  <text class="svgtext" x="556" y="139" text-anchor="start" font-size="11">12 到 15 周期</text>
+
+  <rect x="100" y="154" width="260" height="28" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="230" y="173" text-anchor="middle" font-size="11">L3 缓存</text>
+  <text class="svgmuted" x="368" y="173" text-anchor="start" font-size="11">8 到 64 MB</text>
+  <text class="svgtext" x="556" y="173" text-anchor="start" font-size="11">40 到 60 周期</text>
+
+  <rect x="100" y="188" width="330" height="28" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="265" y="207" text-anchor="middle" font-size="11">内存(DRAM)</text>
+  <text class="svgmuted" x="438" y="207" text-anchor="start" font-size="11">GB 级</text>
+  <text class="svgtext" x="556" y="207" text-anchor="start" font-size="11">200 到 300 周期</text>
+
+  <rect x="100" y="222" width="400" height="28" rx="4" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="300" y="241" text-anchor="middle" font-size="11">NVMe 固态盘</text>
+  <text class="svgmuted" x="508" y="241" text-anchor="start" font-size="11">TB 级</text>
+  <text class="svgtext" x="556" y="241" text-anchor="start" font-size="11">约 100 微秒</text>
+
+  <path d="M92,52 H84 V148 H92" stroke="var(--rule)" fill="none"/>
+  <text class="svgmuted" x="76" y="104" text-anchor="end" font-size="11">本核心</text>
+  <path d="M92,154 H84 V182 H92" stroke="var(--rule)" fill="none"/>
+  <text class="svgmuted" x="76" y="173" text-anchor="end" font-size="11">所有核心共享</text>
+  <path d="M92,188 H84 V250 H92" stroke="var(--rule)" fill="none"/>
+  <text class="svgmuted" x="76" y="223" text-anchor="end" font-size="11">全系统</text>
+
+  <text class="svgmuted" x="12" y="276" text-anchor="start" font-size="11">要记住的不是精确数字:相邻两级之间大约是 3 到 5 倍的差距,L3 到内存也是 5 倍,从 L1 到内存总共差了 50 倍以上</text>
+  <text class="svgmuted" x="12" y="292" text-anchor="start" font-size="11">L3 由所有核心共享,所以别的线程在做什么会影响你的命中率 —— 这是多线程程序性能不稳定的一个常见来源</text>
+</svg>
+<figcaption>从寄存器到磁盘,每一级的容量、延迟与共享范围各是什么量级（原创绘制）</figcaption>
+</figure>
 <h3>一个能建立直觉的实验</h3>
 <p>用一个简单的实验测出自己机器的层次结构:对一个大小为 N 的数组做随机访问,测每次访问的平均耗时,N 从几 KB 增长到几百 MB。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 413px"><code><span class="kw">double</span> measure(std::<span class="kw">size_t</span> n_bytes) {
@@ -1565,6 +1843,68 @@ std::vector&lt;std::<span class="kw">uint32_t</span>&gt; ids;          <span cla
 std::vector&lt;EntityRest&gt;    rest;
 <span class="kw">for</span> (std::<span class="kw">size_t</span> i = 0; i &lt; ids.size(); ++i) <span class="kw">if</span> (ids[i] == target) { /* … */ }
 <span class="cm">// 有效利用率 100%,访存次数降到十六分之一</span></code></pre>
+<figure style="contain-intrinsic-size:auto 349px">
+<svg viewBox="0 0 720 258" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">两条行按同一比例画,一条 64 字节;带主色的格是这个循环真正用到的字节</text>
+  <text class="svgmuted" x="90" y="34" text-anchor="middle" font-size="11">0</text>
+  <text class="svgmuted" x="242" y="34" text-anchor="middle" font-size="11">16</text>
+  <text class="svgmuted" x="394" y="34" text-anchor="middle" font-size="11">32</text>
+  <text class="svgmuted" x="546" y="34" text-anchor="middle" font-size="11">48</text>
+  <text class="svgmuted" x="698" y="34" text-anchor="middle" font-size="11">64</text>
+  <path d="M90,42 H698 M90,38 V46 M242,38 V46 M394,38 V46 M546,38 V46 M698,38 V46" stroke="var(--rule)" fill="none"/>
+
+  <text class="svgmuted" x="12" y="62" text-anchor="start" font-size="11">形态一:std::vector&#60;Entity&#62;,每个元素 64 字节,一条行只装一个,而循环里只读 id</text>
+  <rect x="90" y="70" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="109" y="93" text-anchor="middle" font-size="10">id</text>
+  <rect x="128" y="70" width="380" height="36" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="318" y="93" text-anchor="middle" font-size="11">name[40]</text>
+  <rect x="508" y="70" width="38" height="36" rx="3" fill="var(--svg-fill)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <text class="svgmuted" x="527" y="93" text-anchor="middle" font-size="10">填充</text>
+  <rect x="546" y="70" width="76" height="36" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="584" y="93" text-anchor="middle" font-size="11">x</text>
+  <rect x="622" y="70" width="76" height="36" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="660" y="93" text-anchor="middle" font-size="11">y</text>
+  <text class="svgtext" x="12" y="128" text-anchor="start" font-size="11">有效利用率 6%:每读 4 字节有用数据,就要搬 64 字节</text>
+
+  <text class="svgmuted" x="12" y="164" text-anchor="start" font-size="11">形态二:热字段单独一个数组 std::vector&#60;std::uint32_t&#62; ids,一条行装 16 个</text>
+  <rect x="90" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="109" y="195" text-anchor="middle" font-size="9">0</text>
+  <rect x="128" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="147" y="195" text-anchor="middle" font-size="9">1</text>
+  <rect x="166" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="185" y="195" text-anchor="middle" font-size="9">2</text>
+  <rect x="204" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="223" y="195" text-anchor="middle" font-size="9">3</text>
+  <rect x="242" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="261" y="195" text-anchor="middle" font-size="9">4</text>
+  <rect x="280" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="299" y="195" text-anchor="middle" font-size="9">5</text>
+  <rect x="318" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="337" y="195" text-anchor="middle" font-size="9">6</text>
+  <rect x="356" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="375" y="195" text-anchor="middle" font-size="9">7</text>
+  <rect x="394" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="413" y="195" text-anchor="middle" font-size="9">8</text>
+  <rect x="432" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="451" y="195" text-anchor="middle" font-size="9">9</text>
+  <rect x="470" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="489" y="195" text-anchor="middle" font-size="9">10</text>
+  <rect x="508" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="527" y="195" text-anchor="middle" font-size="9">11</text>
+  <rect x="546" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="565" y="195" text-anchor="middle" font-size="9">12</text>
+  <rect x="584" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="603" y="195" text-anchor="middle" font-size="9">13</text>
+  <rect x="622" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="641" y="195" text-anchor="middle" font-size="9">14</text>
+  <rect x="660" y="172" width="38" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="679" y="195" text-anchor="middle" font-size="9">15</text>
+  <text class="svgtext" x="12" y="230" text-anchor="start" font-size="11">有效利用率 100%,访存次数降到十六分之一</text>
+
+  <text class="svgmuted" x="12" y="252" text-anchor="start" font-size="11">读一个字节和读 64 个连续字节代价完全相同,所以对象大小直接决定了遍历一批对象要读多少条行</text>
+</svg>
+<figcaption>一条 64 字节的行装下几个对象,只用一个字段时搬了多少无用的字节（原创绘制）</figcaption>
+</figure>
 <h3>对齐与跨行访问</h3>
 <p>一个对象如果跨越两条缓存行,访问它就要读两行。<strong>自然对齐的类型不会跨行</strong>(<code>int</code> 在 4 的倍数地址上、<code>double</code> 在 8 的倍数上,都不会跨越 64 字节边界),所以正常写的代码不必担心。会出问题的是几种特殊情况。</p>
 <table style="contain-intrinsic-size:auto 236px">
@@ -1728,6 +2068,61 @@ threads.emplace_back([&amp;, t] {
     <span class="kw">for</span> (std::<span class="kw">size_t</span> i = t; i &lt; n; i += nthreads) local += work(data[i]);
     counters[t].v = local;                            <span class="cm">// 只写一次</span>
 });</code></pre>
+<figure style="contain-intrinsic-size:auto 402px">
+<svg viewBox="0 0 720 306" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gPfs_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="18" text-anchor="start" font-size="11">三条行按同一比例画,一条 64 字节;long long 是 8 字节,8 个正好挤在同一条行里</text>
+
+  <rect x="30" y="32" width="120" height="28" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="90" y="51" text-anchor="middle" font-size="11">线程 0 写 [0]</text>
+  <rect x="170" y="32" width="120" height="28" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="230" y="51" text-anchor="middle" font-size="11">线程 1 写 [1]</text>
+  <text class="svgmuted" x="330" y="51" text-anchor="start" font-size="11">std::vector&#60;long long&#62; counters(nthreads)</text>
+  <path d="M90,60 L70,88" stroke="var(--accent)" fill="none" marker-end="url(#gPfs_a)"/>
+  <path d="M230,60 L146,88" stroke="var(--accent)" fill="none" marker-end="url(#gPfs_a)"/>
+
+  <rect x="30" y="92" width="73" height="32" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="66" y="113" text-anchor="middle" font-size="10">[0]</text>
+  <rect x="103" y="92" width="73" height="32" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="139" y="113" text-anchor="middle" font-size="10">[1]</text>
+  <rect x="176" y="92" width="73" height="32" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="212" y="113" text-anchor="middle" font-size="10">[2]</text>
+  <rect x="249" y="92" width="73" height="32" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="285" y="113" text-anchor="middle" font-size="10">[3]</text>
+  <rect x="322" y="92" width="73" height="32" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="358" y="113" text-anchor="middle" font-size="10">[4]</text>
+  <rect x="395" y="92" width="73" height="32" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="431" y="113" text-anchor="middle" font-size="10">[5]</text>
+  <rect x="468" y="92" width="73" height="32" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="504" y="113" text-anchor="middle" font-size="10">[6]</text>
+  <rect x="541" y="92" width="73" height="32" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="577" y="113" text-anchor="middle" font-size="10">[7]</text>
+  <text class="svgmuted" x="622" y="113" text-anchor="start" font-size="11">一条行</text>
+
+  <text class="svgtext" x="12" y="146" text-anchor="start" font-size="11">两个线程访问的是不同的变量,逻辑上毫无冲突;但这一整条行必须在两个核心之间反复传递</text>
+  <text class="svgmuted" x="12" y="164" text-anchor="start" font-size="11">一次跨核传递约 100 纳秒,一次 L1 写不到 1 纳秒 —— 8 线程时可能比单线程还慢 2 到 5 倍</text>
+
+  <text class="svgmuted" x="12" y="188" text-anchor="start" font-size="11">修法一:struct alignas(64) Counter { long long v; },每个线程独占一条行</text>
+  <rect x="30" y="196" width="73" height="30" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="66" y="216" text-anchor="middle" font-size="10">v</text>
+  <rect x="103" y="196" width="511" height="30" rx="3" fill="var(--svg-fill)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <text class="svgmuted" x="358" y="216" text-anchor="middle" font-size="10">填充到 64 字节</text>
+  <text class="svgmuted" x="622" y="216" text-anchor="start" font-size="11">线程 0 独占</text>
+  <rect x="30" y="232" width="73" height="30" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="66" y="252" text-anchor="middle" font-size="10">v</text>
+  <rect x="103" y="232" width="511" height="30" rx="3" fill="var(--svg-fill)" stroke="var(--rule)" stroke-dasharray="4 3"/>
+  <text class="svgmuted" x="358" y="252" text-anchor="middle" font-size="10">填充到 64 字节</text>
+  <text class="svgmuted" x="622" y="252" text-anchor="start" font-size="11">线程 1 独占</text>
+
+  <text class="svgmuted" x="12" y="282" text-anchor="start" font-size="11">修法二更好:线程内先用一个局部变量累加,结束时只写一次共享数组 —— 连一致性流量都没有</text>
+  <text class="svgmuted" x="12" y="298" text-anchor="start" font-size="11">伪共享不是数据竞争,任何工具都不会报错;唯一的症状是加线程不加速,甚至更慢</text>
+</svg>
+<figcaption>两个线程各写各的变量,为什么还是会互相拖慢（原创绘制）</figcaption>
+</figure>
 <p>C++17 提供了两个常量,用来代替硬编码的 64:<code>std::hardware_destructive_interference_size</code>(避免伪共享的最小间隔)与 <code>std::hardware_constructive_interference_size</code>(希望共享同一行时的最大距离)。<strong>但它们在部分实现上不可用或者给出保守值</strong>,实践中直接写 64 也可以,并加一条注释说明来源。</p>
 <h3>伪共享藏在哪里</h3>
 <p>上面那个例子是显式的,更常见的是隐藏在数据结构里。四个高发位置。</p>
@@ -1760,7 +2155,7 @@ $ perf c2c report --stdio
 <tr><td class="nw">逻辑上有没有竞争</td><td class="nw">没有</td><td>有</td></tr>
 <tr><td class="nw">对策</td><td class="nw"><strong>把变量隔开</strong></td><td><strong>降低访问频率</strong>或换算法</td></tr>
 <tr><td class="nw">改完能不能线性扩展</td><td class="nw"><strong>能</strong></td><td>不能,只能减轻</td></tr>
-<tr><td class="nw">用缓存行对齐能不能解决</td><td class="nw">能</td><td><strong>不能,白费力气</strong></td></tr>
+<tr><td class="nw">用缓存行对齐能不能解决</td><td class="nw">能</td><td><strong>不能,对齐无效</strong></td></tr>
 </tbody>
 </table>
 <p>真共享的对策不是隔离,而是降低共享的频率,有三种做法。<strong>批量化</strong>:线程本地先累加,到一定量再合并一次,而不是每次都写共享变量。<strong>分片</strong>:准备 N 个计数器,线程按编号取模选一个,读的时候求和。<strong>换成无共享的算法</strong>:每个线程完全独立地产出局部结果,最后归约一次。</p>
@@ -1777,7 +2172,7 @@ $ perf c2c report --stdio
 </tbody>
 </table>
 <p>由此还能推出一条布局规则:<strong>把只读的配置数据与频繁改写的状态放进不同的缓存行。</strong>两者混在同一个对象里时,每次写状态都会让配置那部分的副本一起失效,而配置本来可以在所有核心里免费共存。这个形态在「一个对象里既有初始化后不再改的参数、又有运行期计数器」的结构上很常见。</p>
-<p>这条规则还有一个方向相反的用法。<code>std::hardware_constructive_interference_size</code> 表示「希望共处一行」时的最大距离:<strong>总是被同一个线程一起访问的几个小字段,应当挤进同一条缓存行</strong>,这样一次访存就把它们全取来了。伪共享要求拆开,这一条要求合起来,两者其实是同一个原理的两面——<strong>按「会不会被同一个线程一起写」来分组,而不是按逻辑上的归属来分组。</strong></p>
+<p>这条规则还有一个方向相反的用法。<code>std::hardware_constructive_interference_size</code> 表示「希望共处一行」时的最大距离:<strong>总是被同一个线程一起访问的几个小字段,应当挤进同一条缓存行</strong>,这样一次访存就把它们全取来了。伪共享要求拆开,这一条要求合起来,两者是同一个原理的两面——<strong>按「会不会被同一个线程一起写」来分组,而不是按逻辑上的归属来分组。</strong></p>
 <div class="note dead" style="contain-intrinsic-size:auto 229px"><span class="t">🔴 标准的伪共享间隔常量,还不能直接拿来用</span><p><code>std::hardware_destructive_interference_size</code> 的本意是替代硬编码的 64,但实现层面有两个问题。<strong>一是可用性</strong>:libstdc++ 较晚才提供它,而且 GCC 对使用它的代码会发出 ABI 警告——它的值会参与类的布局,不同编译选项下取值不同就造成 ABI 不兼容。<strong>二是取值未必符合预期</strong>:有的实现给 64,有的给 128(为了避开相邻行预取),两者相差一倍,直接拿去当数组步长时内存开销差很多。<strong>务实的做法是自己定义一个常量</strong>,默认取 64,在需要的平台上覆盖,并在注释里写清依据;要求跨平台严格正确时,在构建期跑一段探测程序测出真实值再写进配置。</p></div>
 <h2 id="p3-tlb">3.5 TLB 与大页</h2>
 <p>缓存管的是「数据在不在近处」,TLB 管的是另一件事:<strong>虚拟地址翻译成物理地址有多快</strong>。工作集大到一定程度之后,TLB 未命中会成为一个独立的、容易被忽略的瓶颈。</p>
@@ -1925,7 +2320,7 @@ REM VirtualAlloc(<span class="kw">nullptr</span>, size, MEM_RESERVE|MEM_COMMIT|M
 <tr><td class="nw">B 树,节点 512 字节</td><td>约 63 个键</td><td>约 3 到 4 步</td><td>一个节点占几条行,但这几条能并行取</td></tr>
 </tbody>
 </table>
-<p>这就是数据库索引一律用 B 树、而内存里的有序容器也越来越多改用 B 树布局(例如 <code>absl::btree_map</code>)的原因。<strong>访存次数从 20 降到 5 是四倍的差距,而比较次数其实增加了</strong>——多做的比较发生在已经进了缓存的数据上,几乎不花时间。这正是本章反复出现的模式:<strong>用更多的计算换更少的访存,在现代硬件上通常划算。</strong></p>
+<p>这就是数据库索引一律用 B 树、而内存里的有序容器也越来越多改用 B 树布局(例如 <code>absl::btree_map</code>)的原因。<strong>访存次数从 20 降到 5 是四倍的差距,而比较次数增加了</strong>——多做的比较发生在已经进了缓存的数据上,几乎不花时间。这正是本章反复出现的模式:<strong>用更多的计算换更少的访存,在现代硬件上通常划算。</strong></p>
 <p>这条经验也有边界。<strong>节点做得越大,一次比较要扫过的键越多,CPU 那一侧的开销就越可观</strong>,所以 B 树的节点不是越大越好;常见取值在 64 到 512 字节之间,再大就要靠 SIMD 批量比较才压得住。具体取值应当在<strong>目标数据规模上实测</strong>——数据小到能整个装进 L2 时,访存本来就不是瓶颈,节点大反而是纯粹的额外比较。</p>
 <h2 id="p3-numa">3.7 NUMA:多路系统上的内存亲和</h2>
 <p>单路机器上所有核心到内存的距离相同。多路服务器(两个或更多物理 CPU)不是这样:<strong>每个 CPU 有自己直连的内存,访问别的 CPU 的内存要走互联总线</strong>,延迟高 50% 到 100%,带宽也更低。这叫非一致内存访问,简称 NUMA。</p>
@@ -1994,7 +2389,7 @@ std::vector&lt;<span class="kw">float</span>&gt; data(n);              <span cla
 <p>最后一条与测量有关:<strong>NUMA 的影响不会均匀地体现在平均值上。</strong>本地访问与远端访问的差异会直接放大延迟的长尾——平均耗时可能只涨两成,而 p99 涨了一倍。所以在多路机器上评估任何改动,一定要看分位数,只看吞吐或平均延迟会漏掉最要紧的那部分。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 多路机器上「线程越多越慢」,先查绑定,再查代码</span><p>症状很清楚:线程数在一个节点内部增加时扩展一直很好,一旦跨过节点边界(比如从 16 加到 32),总吞吐不升反降。这几乎一定是跨节点访问,而不是算法本身的扩展性到头了。<strong>确认只要一步</strong>:用 <code>numactl --cpunodebind=0 --membind=0</code> 把进程限制在一个节点上再测一遍,如果每线程吞吐立刻恢复,结论就成立。<strong>不要跳过这一步直接改代码</strong>——很多「多线程扩展不上去」的调查,最后发现只是线程被调度器在节点之间迁移而数据没跟着走,绑一下就解决了。</p></div>
 <h2 id="p3-sum">3.8 小结:本章要点与常见误区</h2>
-<p>这一章讲的是数据从内存走到寄存器的那段路。第 2 章说明了 CPU 内部有多快,这一章说明了它大部分时间其实在等:L1 命中 4 到 5 个周期,L2 是 12 到 15,L3 是 40 到 60,到内存要 200 到 300。相邻两级之间差 3 到 5 倍,从最快到最慢差了将近两个数量级。<strong>一个访存受限的程序,决定它快慢的不是写了多少条指令,而是这些指令要等多少次、每次等多久。</strong></p>
+<p>这一章讲的是数据从内存走到寄存器的那段路。第 2 章说明了 CPU 内部有多快,这一章说明了它大部分时间在等:L1 命中 4 到 5 个周期,L2 是 12 到 15,L3 是 40 到 60,到内存要 200 到 300。相邻两级之间差 3 到 5 倍,从最快到最慢差了将近两个数量级。<strong>一个访存受限的程序,决定它快慢的不是写了多少条指令,而是这些指令要等多少次、每次等多久。</strong></p>
 <p>这一章在全书里是收益最集中的一章。第 2 章的技巧大多在 1.2 到 3 倍这一档,而这一章的几个例子动辄是几倍到几百倍:顺序访问 0.4 毫秒对随机访问 80 毫秒对指针追逐 120 毫秒,差 200 到 300 倍;二维数组按行遍历 4 毫秒对按列遍历 45 毫秒;分块能让矩阵类的计算快 3 到 8 倍;而伪共享严重时,多线程版本会比单线程还慢。这些差距全部来自数据在内存里怎么摆、按什么顺序访问,与算法复杂度无关。</p>
 <p>使用这一章的时机很明确:当 <code>perf stat</code> 显示缓存未命中率超过 10%,或者自顶向下分析落在「访存受限」这一格时。这一章的每一节对应一种具体的访存问题——3.1 与 3.2 是单线程的容量与粒度,3.3 是访问顺序,3.4 是多线程的行争用,3.5 是地址翻译,3.6 是把未命中提前,3.7 是多路机器上的距离。</p>
 <h3>要点回顾</h3>
@@ -2508,7 +2903,7 @@ $ clang++ -O2 -fsave-optimization-record -c a.cpp     # 产出 .opt.yaml
 </table>
 <p>用法上有一个要点:<strong>优化报告只有在开了优化时才有内容</strong>,而且报告里的行号对应的是优化过程中的中间表示,与源码不总是一一对应。所以它适合回答「这个循环为什么没向量化」,不适合精确定位到某一行。真要确认最终生成了什么,还是得看反汇编。</p>
 <h3>相信编译器,同时验证编译器</h3>
-<p>这一章的两个结论看起来矛盾,其实是分工:<strong>指令层面的事交给编译器,不要手工重写;但每一次「交给它」的判断,都要有一次对应的验证。</strong>分界线可以这样划。</p>
+<p>这一章的两个结论看起来矛盾,实际上是分工:<strong>指令层面的事交给编译器,不要手工重写;但每一次「交给它」的判断,都要有一次对应的验证。</strong>分界线可以这样划。</p>
 <table style="contain-intrinsic-size:auto 259px">
 <thead><tr><th>优化项</th><th>谁负责</th><th>要不要验证</th></tr></thead>
 <tbody>
@@ -2857,7 +3252,7 @@ f-&gt;apply(samples);                                 <span class="cm">// 一次
 </tbody>
 </table>
 <p>强保证的标准实现手法是「复制—修改—交换」:先复制一份,在副本上做修改,全部成功之后再 <code>swap</code>。<code>swap</code> 不抛异常,所以中途失败时原对象没有被碰过。<strong>代价是一次完整的复制</strong>,对大对象来说这是真实且可观的开销,而且它在成功路径上也要付。</p>
-<p>所以设计接口时要先确定需要哪一级。<strong>大多数操作只需要基本保证</strong>,靠 RAII 就能免费拿到;强保证应当留给「失败之后必须能原样重试」的操作,而不是无差别地全线提供。一个常见的浪费是给内部辅助函数也做强保证,而调用方在失败时其实直接放弃了整个请求。</p>
+<p>所以设计接口时要先确定需要哪一级。<strong>大多数操作只需要基本保证</strong>,靠 RAII 就能免费拿到;强保证应当留给「失败之后必须能原样重试」的操作,而不是无差别地全线提供。一个常见的浪费是给内部辅助函数也做强保证,而调用方在失败时直接放弃了整个请求。</p>
 <h3>noexcept 标注与「不用异常」的连带后果</h3>
 <p><code>std::vector</code> 扩容时要把已有元素搬到新缓冲,并且必须保证扩容失败时原容器完好。这只有在<strong>元素的移动构造不会抛异常</strong>时才做得到——移动到一半抛出的话,旧元素已经被掏空,无法回滚。</p>
 <p>于是标准库用 <code>std::move_if_noexcept</code> 判断:元素的移动构造标了 <code>noexcept</code> 就移动,否则<strong>退回逐个拷贝</strong>。</p>
@@ -2989,7 +3384,7 @@ std::string to_key(<span class="kw">int</span> a, <span class="kw">int</span> b)
 </tbody>
 </table>
 <p>这一列的共同点是:<strong>它们提供的能力在运行期才能确定,所以必须有运行期的实体来承载。</strong>成本是这个能力的必要代价,不是实现的缺陷——用别的语言实现同样的能力,开销只会更大。</p>
-<p>判据因此很清楚:<strong>问一句「我真的需要这个运行期能力吗」。</strong>类型在编译期已知却用了虚函数、回调只在函数内使用却用了 <code>std::function</code>、所有权其实是单一的却用了 <code>shared_ptr</code>——这三种是最常见的「付了成本没拿到收益」。</p>
+<p>判据因此很清楚:<strong>问一句「我真的需要这个运行期能力吗」。</strong>类型在编译期已知却用了虚函数、回调只在函数内使用却用了 <code>std::function</code>、所有权是单一的却用了 <code>shared_ptr</code>——这三种是最常见的「付了成本没拿到收益」。</p>
 <h3>一张替换表</h3>
 <table style="contain-intrinsic-size:auto 303px">
 <thead><tr><th>用了</th><th>如果不需要那个运行期能力</th><th>收益</th></tr></thead>
@@ -3107,7 +3502,7 @@ std::string to_key(<span class="kw">int</span> a, <span class="kw">int</span> b)
 <p>这一章与前后的关系:第 2 到 4 章解释了「为什么挡住内联和预测失败这么贵」,是本章各项成本的机理来源;第 6 章接着讲堆分配,本章反复出现的「一次隐式转换带来一次分配」在那里展开;第 7 章讲数据布局,它与 5.4 的容器速查表是同一件事的两个视角——遍历为什么快,答案在布局而不在复杂度;第 8 章的原子操作成本,正是 5.3 里 <code>shared_ptr</code> 引用计数那一行的完整版本。至于本书系的分工:<strong>《C++ 语言 · 现代详解》讲这些构造的语义与规则</strong>(移动为什么没生效、异常表怎么工作),<strong>《C++ 标准库 API 编程手册》讲接口</strong>(<code>flat_map</code> 有哪些成员、<code>string_view</code> 的注意事项),<strong>本书只管一件事:它们各自多贵,以及什么时候值得换掉。</strong></p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 22168px;--thin-h:22168px">
+<section class="chapter" style="contain-intrinsic-size:auto 22573px;--thin-h:22573px">
 <h1 id="c6"><span class="part">第 6 章</span>动态内存:分配、池与 pmr</h1>
 <h2 id="p6-new">6.1 一次 new 到底做了什么</h2>
 <p>堆分配是业务代码里最常见的隐藏开销:它不出现在源码的显眼位置(一个 <code>std::string</code> 的构造、一次 <code>push_back</code>、一个 lambda 被存进 <code>std::function</code>),但每一次都是几十纳秒,而且带来后续的缓存与碎片代价。这一节先把「一次分配的成本由什么构成」拆清楚,后面几节才有优化的依据。</p>
@@ -3135,6 +3530,51 @@ std::string to_key(<span class="kw">int</span> a, <span class="kw">int</span> b)
 </tbody>
 </table>
 <p>第三行值得单独说:<strong>生产者线程分配、消费者线程释放</strong>这个模式在流水线架构里很常见,它会让内存块在线程的本地缓存之间迁移,产生额外的同步。如果剖析显示分配相关的函数占比高而且是多线程程序,先检查是不是这个模式。</p>
+<figure style="contain-intrinsic-size:auto 387px">
+<svg viewBox="0 0 720 292" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gPnew_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">左边是分配器内部的三条路,右边是拿到地址之后仍然要付的账</text>
+
+  <rect x="16" y="118" width="104" height="46" rx="6" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgtext" x="68" y="146" text-anchor="middle" font-size="12">new / malloc</text>
+  <path d="M120,134 L156,82" stroke="var(--accent)" fill="none" marker-end="url(#gPnew_a)"/>
+  <path d="M120,141 H156" stroke="var(--accent)" fill="none" marker-end="url(#gPnew_a)"/>
+  <path d="M120,148 L156,198" stroke="var(--accent)" fill="none" marker-end="url(#gPnew_a)"/>
+
+  <rect x="160" y="52" width="196" height="52" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="172" y="74" text-anchor="start" font-size="11">线程本地缓存命中</text>
+  <text class="svgmuted" x="172" y="94" text-anchor="start" font-size="11">10 到 20 纳秒,无锁</text>
+
+  <rect x="160" y="118" width="196" height="52" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="172" y="140" text-anchor="start" font-size="11">本地缓存耗尽,去中心堆补</text>
+  <text class="svgmuted" x="172" y="160" text-anchor="start" font-size="11">几百纳秒,要加锁</text>
+
+  <rect x="160" y="184" width="196" height="52" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="172" y="206" text-anchor="start" font-size="11">大块:直接 mmap</text>
+  <text class="svgmuted" x="172" y="226" text-anchor="start" font-size="11">微秒级</text>
+
+  <text class="svgmuted" x="392" y="44" text-anchor="start" font-size="11">拿到地址之后</text>
+  <rect x="392" y="52" width="312" height="52" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="404" y="74" text-anchor="start" font-size="11">第一次写这一页:缺页中断</text>
+  <text class="svgmuted" x="404" y="94" text-anchor="start" font-size="11">内核分配并清零一个物理页,微秒级</text>
+
+  <rect x="392" y="118" width="312" height="52" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="404" y="140" text-anchor="start" font-size="11">后续访问:新内存不在缓存里</text>
+  <text class="svgmuted" x="404" y="160" text-anchor="start" font-size="11">每次约 80 纳秒</text>
+
+  <rect x="392" y="184" width="312" height="52" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="404" y="206" text-anchor="start" font-size="11">释放:归还,并可能与相邻空闲块合并</text>
+  <text class="svgmuted" x="404" y="226" text-anchor="start" font-size="11">10 到 30 纳秒</text>
+
+  <text class="svgmuted" x="12" y="262" text-anchor="start" font-size="11">缺页那一项是分配器簿记开销的上百倍:「一次分配 1 GB」的真实代价不在 malloc 那一行,而在后面第一次遍历它的时候</text>
+  <text class="svgmuted" x="12" y="278" text-anchor="start" font-size="11">跨线程释放(A 分配、B 释放)会让内存块在各线程的本地缓存之间迁移,产生额外的同步</text>
+</svg>
+<figcaption>一次 new 走哪条路,以及拿到地址之后还有哪几笔账（原创绘制）</figcaption>
+</figure>
 <h3>怎么数出分配次数</h3>
 <p>与数拷贝一样,不要猜。三种手段,按侵入性排序。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 468px"><code><span class="cm">// 手法一:替换全局 operator new(最简单,能数总次数与总字节)</span>
@@ -3558,7 +3998,7 @@ T* Arena::make(A&amp;&amp;... a) {
 <p>这一章与其他章的关系:第 3 章讲的缓存层次解释了「为什么新分配的内存第一次访问一定慢」;第 5 章列出的语言层开销有相当一部分最终落成一次堆分配,两章要对照着看;第 7 章的「用索引代替指针」是 6.2 第五个手法的完整展开,它把批量分配从一个减少分配的技巧提升成一种数据组织方式;第 8 章讲并发,那里的分配还要再加一层——跨线程释放与本地缓存耗尽是多线程程序特有的成本。本书系的分工在这一章体现得很清楚:<strong>《C++ 标准库 API 编程手册》讲 <code>&lt;memory_resource&gt;</code> 里每个类的接口与用法</strong>,<strong>《C++ 语言 · 现代详解》讲 <code>operator new</code> 的重载规则与对象生命周期</strong>,<strong>本书只回答一件事:这些东西各自多贵,以及在什么条件下换哪一个。</strong></p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 22054px;--thin-h:22054px">
+<section class="chapter" style="contain-intrinsic-size:auto 22420px;--thin-h:22420px">
 <h1 id="c7"><span class="part">第 7 章</span>数据布局与数据导向设计</h1>
 <h2 id="p7-size">7.1 结构体的大小、填充与排序</h2>
 <p>第 3 章讲过缓存行是 64 字节,一次访问要搬一整行。这条性质把「对象有多大、字段怎么排」从一个内存占用问题变成了<strong>性能问题</strong>。这一节讲清具体的算法与收益。</p>
@@ -3688,6 +4128,91 @@ std::vector&lt;Particle&gt; particles;      <span class="cm">// 32 字节一个<
 <span class="kw">for</span> (std::<span class="kw">size_t</span> i = 0; i &lt; n; ++i) ps.y[i] += ps.vy[i] * dt;
 <span class="kw">for</span> (std::<span class="kw">size_t</span> i = 0; i &lt; n; ++i) ps.z[i] += ps.vz[i] * dt;</code></pre>
 <p>实测收益在这类循环上通常是 <strong>2 到 4 倍</strong>:一半来自缓存行利用率,一半来自向量化。对象越大、用到的字段占比越小,收益越大——一个 128 字节的对象只用其中 4 字节时,SoA 能快十倍以上。</p>
+<figure style="contain-intrinsic-size:auto 347px">
+<svg viewBox="0 0 720 256" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">两条行按同一比例画,一条 64 字节;带主色的格是这个循环真正用到的字节</text>
+  <text class="svgmuted" x="70" y="34" text-anchor="middle" font-size="11">0</text>
+  <text class="svgmuted" x="226" y="34" text-anchor="middle" font-size="11">16</text>
+  <text class="svgmuted" x="382" y="34" text-anchor="middle" font-size="11">32</text>
+  <text class="svgmuted" x="538" y="34" text-anchor="middle" font-size="11">48</text>
+  <text class="svgmuted" x="694" y="34" text-anchor="middle" font-size="11">64</text>
+  <path d="M70,42 H694 M70,38 V46 M226,38 V46 M382,38 V46 M538,38 V46 M694,38 V46" stroke="var(--rule)" fill="none"/>
+
+  <text class="svgmuted" x="12" y="62" text-anchor="start" font-size="11">AoS:std::vector&#60;Particle&#62;,每个 32 字节,一条行装 2 个;中间那条粗线是两个对象的分界</text>
+  <rect x="70" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="89" y="93" text-anchor="middle" font-size="10">x</text>
+  <rect x="109" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="128" y="93" text-anchor="middle" font-size="10">y</text>
+  <rect x="148" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="167" y="93" text-anchor="middle" font-size="10">z</text>
+  <rect x="187" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="206" y="93" text-anchor="middle" font-size="10">vx</text>
+  <rect x="226" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="245" y="93" text-anchor="middle" font-size="10">vy</text>
+  <rect x="265" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="284" y="93" text-anchor="middle" font-size="10">vz</text>
+  <rect x="304" y="70" width="39" height="36" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="323" y="93" text-anchor="middle" font-size="10">mass</text>
+  <rect x="343" y="70" width="39" height="36" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="362" y="93" text-anchor="middle" font-size="10">id</text>
+  <rect x="382" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="401" y="93" text-anchor="middle" font-size="10">x</text>
+  <rect x="421" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="440" y="93" text-anchor="middle" font-size="10">y</text>
+  <rect x="460" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="479" y="93" text-anchor="middle" font-size="10">z</text>
+  <rect x="499" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="518" y="93" text-anchor="middle" font-size="10">vx</text>
+  <rect x="538" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="557" y="93" text-anchor="middle" font-size="10">vy</text>
+  <rect x="577" y="70" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="596" y="93" text-anchor="middle" font-size="10">vz</text>
+  <rect x="616" y="70" width="39" height="36" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="635" y="93" text-anchor="middle" font-size="10">mass</text>
+  <rect x="655" y="70" width="39" height="36" rx="3" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="674" y="93" text-anchor="middle" font-size="10">id</text>
+  <path d="M382,66 V110" stroke="var(--rule)" stroke-width="3" fill="none"/>
+  <text class="svgtext" x="12" y="128" text-anchor="start" font-size="11">有效利用率 75%:mass 与 id 白搬了;而且同一个字段之间隔着 32 字节,难以向量化</text>
+
+  <text class="svgmuted" x="12" y="160" text-anchor="start" font-size="11">SoA:ps.x 自己是一个连续的 float 数组,一条行装 16 个</text>
+  <rect x="70" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="89" y="191" text-anchor="middle" font-size="9">x[0]</text>
+  <rect x="109" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="128" y="191" text-anchor="middle" font-size="9">x[1]</text>
+  <rect x="148" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="167" y="191" text-anchor="middle" font-size="9">x[2]</text>
+  <rect x="187" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="206" y="191" text-anchor="middle" font-size="9">x[3]</text>
+  <rect x="226" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="245" y="191" text-anchor="middle" font-size="9">x[4]</text>
+  <rect x="265" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="284" y="191" text-anchor="middle" font-size="9">x[5]</text>
+  <rect x="304" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="323" y="191" text-anchor="middle" font-size="9">x[6]</text>
+  <rect x="343" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="362" y="191" text-anchor="middle" font-size="9">x[7]</text>
+  <rect x="382" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="401" y="191" text-anchor="middle" font-size="9">x[8]</text>
+  <rect x="421" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="440" y="191" text-anchor="middle" font-size="9">x[9]</text>
+  <rect x="460" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="479" y="191" text-anchor="middle" font-size="9">x[10]</text>
+  <rect x="499" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="518" y="191" text-anchor="middle" font-size="9">x[11]</text>
+  <rect x="538" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="557" y="191" text-anchor="middle" font-size="9">x[12]</text>
+  <rect x="577" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="596" y="191" text-anchor="middle" font-size="9">x[13]</text>
+  <rect x="616" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="635" y="191" text-anchor="middle" font-size="9">x[14]</text>
+  <rect x="655" y="168" width="39" height="36" rx="3" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="674" y="191" text-anchor="middle" font-size="9">x[15]</text>
+  <text class="svgtext" x="12" y="226" text-anchor="start" font-size="11">有效利用率 100%,三次遍历都完全连续,而且每次都能向量化</text>
+
+  <text class="svgmuted" x="12" y="250" text-anchor="start" font-size="11">实测收益通常是 2 到 4 倍:一半来自缓存行利用率,一半来自向量化;对象越大、用到的字段占比越小,收益越大</text>
+</svg>
+<figcaption>同一批粒子两种布局,遍历一次位置更新各搬了多少字节（原创绘制）</figcaption>
+</figure>
 <h3>折中方案:分块的 AoSoA</h3>
 <p>纯 SoA 的问题是「访问一个完整对象」变慢了,而且代码可读性下降。折中方案是<strong>按块组织</strong>:每块内部是 SoA,块之间是数组。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 196px"><code><span class="kw">constexpr</span> std::<span class="kw">size_t</span> kBlock = 16;                  <span class="cm">// 一块 16 个,正好一条缓存行的浮点数</span>
@@ -3955,7 +4480,7 @@ std::vector&lt;std::<span class="kw">uint32_t</span>&gt; active;             <sp
 <li>按「逻辑上属于同一个概念」排列成员,结果一个 24 字节的结构体有 14 字节是填充。</li>
 <li>调整了与网络协议或文件格式逐字节对应的结构体的成员顺序,协议直接错乱。</li>
 <li>把多线程下频繁写的字段挪到一起,以为在优化布局,实际制造了伪共享。</li>
-<li>为了「显得现代」把整个数据模型改成 SoA,而热点循环其实一次要用一个对象的全部字段。</li>
+<li>为了「显得现代」把整个数据模型改成 SoA,而热点循环一次要用一个对象的全部字段。</li>
 <li>改成 SoA 之后忘了增删单个对象要同步操作 N 个数组,两个平行数组的长度悄悄不一致。</li>
 <li>直接把一堆平行数组暴露给调用方,没有封装,调用方代码变得没法读。</li>
 <li>不加实测就相信 SoA 一定更快——判据必须是实测,而且收益要超过 1.5 倍才值得改。</li>
@@ -4626,7 +5151,7 @@ $ flamegraph.pl --color=io --title=<span>"Off-CPU"</span> &lt; off.txt &gt; off.
 <li><strong>注意内联。</strong>被内联的函数不出现在栈里,所以某个函数「自身耗时高」可能实际上是它内联进来的几个小函数。用 <code>--inline</code> 选项或者对照源码判断。</li>
 </ol>
 <h3>差分火焰图</h3>
-<p>优化前后各采一次,把两次的差异画出来,能直接看出「哪里变快了、哪里变慢了」。这在验证一个改动的实际效果时非常有用——有时总时间降了,但某个部分其实变慢了,只是被别处的改善盖过去。</p>
+<p>优化前后各采一次,把两次的差异画出来,能直接看出「哪里变快了、哪里变慢了」。这在验证一个改动的实际效果时非常有用——有时总时间降了,但某个部分变慢了,只是被别处的改善盖过去。</p>
 <pre style="contain-intrinsic-size:auto 169px"><code>$ perf record -g -o before.data -- ./app_old
 $ perf record -g -o after.data  -- ./app_new
 $ perf script -i before.data | stackcollapse-perf.pl &gt; before.txt
@@ -4643,7 +5168,7 @@ $ difffolded.pl before.txt after.txt | flamegraph.pl &gt; diff.svg</code></pre>
 <tr><td class="nw"><strong>按线程分色</strong></td><td class="nw">同一个线程的栈用同一种颜色</td><td>多线程程序里看负载是否均衡</td></tr>
 </tbody>
 </table>
-<p>颜色在默认的火焰图里<strong>不表示任何含义</strong>,只是为了让相邻的方块可区分。很多人误以为红色代表更热,据此找优化目标,那是白费力气。要让颜色带信息,必须显式指定配色方案:<code>--color=java</code> 之类按代码类型着色(用户代码、内核、运行时各一色),<code>--color=io</code> 用于 off-CPU 图。<strong>按代码类型着色特别有用</strong>——一眼就能看出时间是花在自己的代码里,还是花在内核或语言运行时里,这两种情况的优化方向完全不同。</p>
+<p>颜色在默认的火焰图里<strong>不表示任何含义</strong>,只是为了让相邻的方块可区分。很多人误以为红色代表更热,据此找优化目标不会有结果。要让颜色带信息,必须显式指定配色方案:<code>--color=java</code> 之类按代码类型着色(用户代码、内核、运行时各一色),<code>--color=io</code> 用于 off-CPU 图。<strong>按代码类型着色特别有用</strong>——一眼就能看出时间是花在自己的代码里,还是花在内核或语言运行时里,这两种情况的优化方向完全不同。</p>
 <p>还有一个实用技巧:<strong>把火焰图的根节点换成别的维度</strong>。以线程名做根,能看出各线程分别在干什么;以请求类型做根(需要采样时带标签),能看出哪类请求最费 CPU。这比在一张混合了所有线程与所有请求类型的图上找规律有效得多。</p>
 <p>冰柱图还有一个专门用法:把调用栈反过来聚合,让某个热点函数当根,向下展开它的所有调用者与各自占比。<strong>回答「这个函数是被谁反复调用的」比在完整火焰图里到处找它快得多。</strong></p>
 <h3>持续剖析、每请求 CPU 时间与采样偏差</h3>
@@ -6090,7 +6615,7 @@ std::<span class="kw">size_t</span> count_newlines(<span class="kw">const</span>
     hist[b].fetch_add(1, std::memory_order_relaxed);
 <span class="cm">    // 进程退出时打印:每一行是「规模落在 [2^b, 2^(b+1)) 的调用次数」</span>
 }</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 260px"><span class="t">🟢 体检的价值一半在于它能给出「这里没有空间了」这个结论</span><p>优化工作最常见的浪费不是改错了方向,而是<strong>在一个已经接近上限的地方继续投入</strong>。第一问算出的比值同时是启动条件与停止条件:比值 1.5 倍时,「这段代码已经接近硬件能力,要继续加速只能加核或换指令集」是一个有依据的判断,而不是放弃。<strong>把这个数字连同算法一起写进提交说明</strong>,它会在半年后被再次问到同一个问题时直接给出答案。<strong>五问的顺序不要打乱</strong>:先问上限,再问重复,然后才问数据结构——顺序反过来的典型后果是花两天换了一个更好的容器,而那段代码其实有一半调用的结果根本没被使用。<strong>五问全部通过之后</strong>,才轮到前九章的微观手法,那时它们作用在正确的代码上,收益才是净的。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 260px"><span class="t">🟢 体检的价值一半在于它能给出「这里没有空间了」这个结论</span><p>优化工作最常见的浪费不是改错了方向,而是<strong>在一个已经接近上限的地方继续投入</strong>。第一问算出的比值同时是启动条件与停止条件:比值 1.5 倍时,「这段代码已经接近硬件能力,要继续加速只能加核或换指令集」是一个有依据的判断,而不是放弃。<strong>把这个数字连同算法一起写进提交说明</strong>,它会在半年后被再次问到同一个问题时直接给出答案。<strong>五问的顺序不要打乱</strong>:先问上限,再问重复,然后才问数据结构——顺序反过来的典型后果是花两天换了一个更好的容器,而那段代码有一半调用的结果根本没被使用。<strong>五问全部通过之后</strong>,才轮到前九章的微观手法,那时它们作用在正确的代码上,收益才是净的。</p></div>
 <h3>本章手法与它依赖的硬件性质</h3>
 <p>这一章的每一条手法背后都是一条硬件性质。查不出某条结论为什么成立时,回到对应的章节。</p>
 <table style="contain-intrinsic-size:auto 706px">
@@ -6176,7 +6701,7 @@ std::<span class="kw">size_t</span> count_newlines(<span class="kw">const</span>
 <p>最后一条,也是这一章最重要的一条:<strong>算法层的改动收益最大,但它同时是唯一会改变程序行为的一层。</strong>调整成员顺序、加 <code>reserve</code>、消除一个分支,这些都不改变输出;换一个哈希表实现会改变遍历顺序,换一个排序算法会改变相等元素的相对位置,改成增量维护会改变浮点结果的最后几位。<strong>所以这一章的每一次改动都必须配一组「同样的输入产生同样的输出」的比对</strong>,而且要在改动前先跑一遍留下基准。这不是流程要求,而是这一层工作的固有代价——它换来的数量级收益,正是以此为前提的。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 47200px;--thin-h:47200px">
+<section class="chapter" style="contain-intrinsic-size:auto 47601px;--thin-h:47601px">
 <h1 id="c11"><span class="part">第 11 章</span>启动、体积与代码布局</h1>
 <h2 id="p11-start">11.1 启动时间:动态链接、重定位与静态初始化</h2>
 <p>前十章讨论的都是 <code>main</code> 跑起来之后的事。这一章从更早的地方开始:<strong>一个进程从被创建到执行 <code>main</code> 的第一条语句,中间要做的工作比多数人预期的多</strong>,而这段时间在剖析器的默认视图里几乎看不到——采样式剖析器通常在进程已经跑起来之后才开始采样,启动期的开销被整段漏掉,于是它成了一块「测不到所以不存在」的时间。</p>
@@ -6196,7 +6721,59 @@ std::<span class="kw">size_t</span> count_newlines(<span class="kw">const</span>
 <tr><td class="nw">六、进入 main</td><td>—</td><td>把 <code>argc</code> 与 <code>argv</code> 传给 <code>main</code></td><td>可忽略</td><td>—</td></tr>
 </tbody>
 </table>
-<p>六个阶段里只有第三和第五会失控。第一阶段基本是常数,第二阶段与库的数量成正比而系数很小,第四阶段的耗时其实是第五阶段的同一类问题只不过发生在库里。<strong>所以整节的重点是两件事:符号解析,以及 main 之前跑的构造函数。</strong></p>
+<p>六个阶段里只有第三和第五会失控。第一阶段基本是常数,第二阶段与库的数量成正比而系数很小,第四阶段的耗时是第五阶段的同一类问题只不过发生在库里。<strong>所以整节的重点是两件事:符号解析,以及 main 之前跑的构造函数。</strong></p>
+<figure style="contain-intrinsic-size:auto 382px">
+<svg viewBox="0 0 720 288" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="gPst_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">带主色的两个阶段是会失控的那两个,其余四个要么是常数,要么与库数成正比而系数很小</text>
+
+  <rect x="16" y="34" width="216" height="80" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="28" y="56" text-anchor="start" font-size="12">一、建立地址空间</text>
+  <text class="svgmuted" x="28" y="76" text-anchor="start" font-size="10">内核:按 PT_LOAD 建立映射,并映射解释器</text>
+  <text class="svgtext" x="28" y="100" text-anchor="start" font-size="11">0.1 到 0.5 毫秒</text>
+
+  <rect x="252" y="34" width="216" height="80" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="264" y="56" text-anchor="start" font-size="12">二、加载共享库</text>
+  <text class="svgmuted" x="264" y="76" text-anchor="start" font-size="10">动态链接器:按 DT_NEEDED 逐个映射进来</text>
+  <text class="svgtext" x="264" y="100" text-anchor="start" font-size="11">每个库 30 到 150 微秒</text>
+
+  <rect x="488" y="34" width="216" height="80" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="500" y="56" text-anchor="start" font-size="12">三、重定位与符号解析</text>
+  <text class="svgmuted" x="500" y="76" text-anchor="start" font-size="10">动态链接器:逐条处理重定位表并查符号</text>
+  <text class="svgtext" x="500" y="100" text-anchor="start" font-size="11">1 到 200 毫秒,启动开销的大头</text>
+
+  <path d="M232,74 H248" stroke="var(--accent)" fill="none" marker-end="url(#gPst_a)"/>
+  <path d="M468,74 H484" stroke="var(--accent)" fill="none" marker-end="url(#gPst_a)"/>
+  <path d="M596,114 V128 H124 V140" stroke="var(--accent)" fill="none" marker-end="url(#gPst_a)"/>
+
+  <rect x="16" y="144" width="216" height="80" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="28" y="166" text-anchor="start" font-size="12">四、各库的初始化</text>
+  <text class="svgmuted" x="28" y="186" text-anchor="start" font-size="10">动态链接器:执行各对象的 .init_array</text>
+  <text class="svgtext" x="28" y="210" text-anchor="start" font-size="11">取决于所依赖的库</text>
+
+  <rect x="252" y="144" width="216" height="80" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="264" y="166" text-anchor="start" font-size="12">五、主程序的全局构造</text>
+  <text class="svgmuted" x="264" y="186" text-anchor="start" font-size="10">C 运行时:逐个执行 .init_array,串行</text>
+  <text class="svgtext" x="264" y="210" text-anchor="start" font-size="11">0 到几十毫秒</text>
+
+  <rect x="488" y="144" width="216" height="80" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="500" y="166" text-anchor="start" font-size="12">六、进入 main</text>
+  <text class="svgmuted" x="500" y="186" text-anchor="start" font-size="10">把 argc 与 argv 交给 main</text>
+  <text class="svgtext" x="500" y="210" text-anchor="start" font-size="11">可忽略</text>
+
+  <path d="M232,184 H248" stroke="var(--accent)" fill="none" marker-end="url(#gPst_a)"/>
+  <path d="M468,184 H484" stroke="var(--accent)" fill="none" marker-end="url(#gPst_a)"/>
+
+  <text class="svgmuted" x="12" y="250" text-anchor="start" font-size="11">第三阶段的代价大致是「需要查符号的重定位条数」乘以「平均要探测的对象数」,依赖库翻倍时两个因子一起涨</text>
+  <text class="svgmuted" x="12" y="266" text-anchor="start" font-size="11">第五阶段的代价是全局对象的个数与各自构造函数的工作量,一张一千条的 map 每千条约 0.3 到 1 毫秒</text>
+  <text class="svgmuted" x="12" y="282" text-anchor="start" font-size="11">所以压启动时间只压这两处:减少导出符号与依赖库,以及把 main 之前的构造挪走或改成编译期常量</text>
+</svg>
+<figcaption>从 exec 到 main 的六个阶段,谁在做、各花多少时间（原创绘制）</figcaption>
+</figure>
 <p>Windows 的流程结构相同而细节不同:内核映射 PE 映像,<code>ntdll</code> 里的加载器解析导入表,逐个加载 DLL 并填好导入地址表(IAT),然后按依赖顺序对每个 DLL 调用一次 <code>DllMain</code> 并传入 <code>DLL_PROCESS_ATTACH</code>,最后由 C 运行时的 <code>_initterm</code> 执行动态初始化器,再进 <code>main</code>。两个差别值得记住:<strong>PE 的导入是按模块记账的</strong>,每个模块有自己的导入表,查符号是「到指定的那个 DLL 里按名字或序号找」,不存在 ELF 那种扁平的全局符号空间,所以解析本身便宜得多;<strong>而 <code>DllMain</code> 在加载器锁下串行执行</strong>,在里面做重活会直接拉长启动。</p>
 <h3>符号解析:启动开销里最大的一块</h3>
 <p>第三阶段值得单独讲,因为它是唯一一个随规模超线性增长的阶段。</p>
@@ -7053,7 +7630,7 @@ $ perf stat -r 20 --null ./app --version</code></pre>
 <p>另外两处较弱的连接:<strong>第 5 章</strong>算过异常与 RTTI 的运行期开销,本章 11.2 节补上它们的体积开销,两笔账合起来才能判断该不该禁用;<strong>第 9 章</strong>讲的缺页与系统调用,在本章表现为启动期的那几千次缺页与几十次库加载,测量工具也是同一套。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 38740px;--thin-h:38740px">
+<section class="chapter" style="contain-intrinsic-size:auto 39146px;--thin-h:39146px">
 <h1 id="c12"><span class="part">第 12 章</span>完整调优案例:从 4.2 秒到 0.21 秒</h1>
 <h2 id="p12-base">12.1 基线:一个「很自然」的实现</h2>
 <p>前九章分别讲了方法、硬件模型、内存层次、编译器、语言层的开销、动态内存、数据布局、并发与系统层。这一章把它们用在同一个任务上:<strong>一个日志分析程序,基线耗时 4.2 秒,四轮优化之后 0.21 秒,整体 20 倍</strong>。四轮的耗时链是 4.2 秒、1.6 秒、0.78 秒、0.34 秒、0.21 秒。每一轮都给出剖析结果、具体改动、改动之后的数字,以及这一轮的剖析怎么决定下一轮做什么。</p>
@@ -7792,6 +8369,42 @@ Result out;
 </tbody>
 </table>
 <p>这张表有两种读法,而且两种都对,不能只看一种。<strong>按节省的秒数看,越早做的改动越占便宜</strong>:第一轮拿走了 65% 的总节省,第四轮只有 3%。这是必然的——每一轮都在更小的基数上做减法。<strong>按倍数看,前三轮各贡献 2 倍上下,只有并行明显偏低,是 1.62 倍。</strong>倍数是可以相乘的,秒数不能:2.63 乘 2.05 乘 2.29 乘 1.62 正好等于 20.0。</p>
+<figure style="contain-intrinsic-size:auto 387px">
+<svg viewBox="0 0 720 292" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">条的长度按耗时等比;横轴一格 1 秒</text>
+  <text class="svgmuted" x="140" y="36" text-anchor="middle" font-size="11">0</text>
+  <text class="svgmuted" x="273" y="36" text-anchor="middle" font-size="11">1</text>
+  <text class="svgmuted" x="407" y="36" text-anchor="middle" font-size="11">2</text>
+  <text class="svgmuted" x="540" y="36" text-anchor="middle" font-size="11">3</text>
+  <text class="svgmuted" x="673" y="36" text-anchor="middle" font-size="11">4</text>
+  <path d="M140,44 H700 M140,40 V48 M273,40 V48 M407,40 V48 M540,40 V48 M673,40 V48" stroke="var(--rule)" fill="none"/>
+
+  <text class="svgtext" x="12" y="74" text-anchor="start" font-size="11">基线</text>
+  <rect x="140" y="56" width="560" height="26" rx="4" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="690" y="74" text-anchor="end" font-size="11">4.2 秒</text>
+
+  <text class="svgtext" x="12" y="108" text-anchor="start" font-size="11">第一轮 解析与分配</text>
+  <rect x="140" y="90" width="213" height="26" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="361" y="108" text-anchor="start" font-size="11">1.6 秒 · 2.63 倍 · 省下 2.60 秒,占总节省 65%</text>
+
+  <text class="svgtext" x="12" y="142" text-anchor="start" font-size="11">第二轮 容器与查找</text>
+  <rect x="140" y="124" width="104" height="26" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="252" y="142" text-anchor="start" font-size="11">0.78 秒 · 2.05 倍 · 省下 0.82 秒,21%</text>
+
+  <text class="svgtext" x="12" y="176" text-anchor="start" font-size="11">第三轮 算法与布局</text>
+  <rect x="140" y="158" width="45" height="26" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="193" y="176" text-anchor="start" font-size="11">0.34 秒 · 2.29 倍 · 省下 0.44 秒,11%</text>
+
+  <text class="svgtext" x="12" y="210" text-anchor="start" font-size="11">第四轮 并行</text>
+  <rect x="140" y="192" width="28" height="26" rx="4" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="176" y="210" text-anchor="start" font-size="11">0.21 秒 · 1.62 倍 · 省下 0.13 秒,3%</text>
+
+  <text class="svgmuted" x="12" y="244" text-anchor="start" font-size="11">按节省的秒数看,越早做的改动越占便宜:第一轮拿走 65%,第四轮只有 3% —— 每一轮都在更小的基数上做减法</text>
+  <text class="svgmuted" x="12" y="260" text-anchor="start" font-size="11">按倍数看,前三轮各贡献 2 倍上下,只有并行明显偏低。倍数可以相乘:2.63 × 2.05 × 2.29 × 1.62 正好是 20.0 倍</text>
+  <text class="svgmuted" x="12" y="276" text-anchor="start" font-size="11">所以评价一个改动值不值得做,看的是它的倍数,不是它省下的秒数</text>
+</svg>
+<figcaption>四轮优化的耗时按比例排开,收益是怎么分布的（原创绘制）</figcaption>
+</figure>
 <p>所以评价一个改动值不值得做,应当看它的<strong>倍数</strong>而不是它省下的秒数。按这个标准,这次贡献最大的两类是:<strong>减少分配</strong>(第一轮的主体,把每行 7 次分配压到零)与<strong>换算法</strong>(第三轮的直方图,把「存下全部样本再排序」整个删掉)。这两类都不需要任何底层技巧,而并行——通常被认为是提速的首选手段——在这里是四轮里收益最小的一轮,还带来了 3.2 倍的内存开销与显著的复杂度。</p>
 <p>这与第 1 章分层表的预期一致,也印证了第 8 章反复强调的那句话:<strong>先把单线程优化好,再考虑并行</strong>。如果调换顺序,先并行再做前三轮,前三轮的倍数不会变(它们减少的是每行的绝对工作量),而并行的倍数会更低——因为并行的收益上限由串行部分决定,而前三轮恰恰主要压缩的是可并行的那部分。</p>
 <h3>这次没做什么以及为什么</h3>
@@ -7817,7 +8430,7 @@ Result out;
 <li><strong>先看 CPU 利用率决定用哪种剖析,再按职责分组读报告。</strong>接近满载用 CPU 剖析,明显不满载说明在等什么,用 off-CPU 分析。读报告时不要盯着单个符号,把符号归到它们服务的目的上,再看每一组的占比与绝对时间。</li>
 <li><strong>配上硬件计数器读出瓶颈类型。</strong>IPC 低加缓存未命中高是访存受限;IPC 低加分支预测失败高是控制流问题;IPC 高而仍然慢是指令太多。三者的优化方向完全不同。</li>
 <li><strong>从最高的层次找改动。</strong>顺序是:能不能不做,能不能换算法,能不能改数据布局,能不能改实现,最后才是指令级。上一层的改动经常让下一层的问题消失。</li>
-<li><strong>一次只改一件事,改完立刻重测。</strong>收益必须超过噪声底线才算数。多个改动一起上,无法知道哪个有效,也无法知道哪个其实是负收益。</li>
+<li><strong>一次只改一件事,改完立刻重测。</strong>收益必须超过噪声底线才算数。多个改动一起上,无法知道哪个有效,也无法知道哪个是负收益。</li>
 <li><strong>确认结果仍然正确。</strong>逐字节比对输出,或者按事先定好的容差比对。换算法时先把定义写死再写代码。</li>
 <li><strong>重新剖析,让新的分布决定下一步。</strong>百分比会重新分配,原本第三顺位的问题可能已经变成第一位。跨版本对比一律看绝对时间。</li>
 <li><strong>达到目标就停,把过程、数字与没做的事写进文档。</strong>没做的事连同预估收益一起记下来,就是下一次的路线图。</li>

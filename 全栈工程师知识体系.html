@@ -197,6 +197,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">全栈工程师知识体系</div>
 <details><summary><a class="ch" href="#f0">什么是全栈,以及怎么用这份地图</a></summary>
+<a class="sec" href="#f0-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#f0-map">1.1 一张总图:五层加四条横切</a>
 <a class="sec" href="#f0-books">1.2 关于「推荐书籍」的说明</a>
 </details>
@@ -263,9 +264,114 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 1676px;--thin-h:1676px">
+<section class="chapter" style="contain-intrinsic-size:auto 7640px;--thin-h:7640px">
 <h1 id="f0"><span class="part">导读</span>什么是全栈,以及怎么用这份地图</h1>
 <p>全栈工程师不是「什么都会一点」,而是<strong>能独立把一个产品从想法带到线上、并让它活下去</strong>的人——需求成形、界面呈现、服务支撑、数据落地、部署运维、故障排除,链条上没有他跨不过去的断点。能力形状是 <strong>T 型</strong>:横向覆盖整条链路(每一环都能上手),纵向在一两环上有真正的深度(出了疑难问题别人来找你)。全栈的价值不在「都会」,在<strong>没有断点</strong>。</p>
+<h2 id="f0-open">1.0 开卷:锚定、定位与读法</h2>
+<p>这本书是路线图,不是技术手册。它回答的是<strong>该学什么、学到什么程度、按什么顺序</strong>,每一格背后的语法、接口与配置在别处——在本书系其余各本里,在各技术自己的官方文档里。</p>
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>「该怎么成长为一名工程师」这件事没有教科书,能借的材料分散在三处:讲工作方式的经典、讲能力分档的职级框架、以及各家的公开路线图。下表按类型分组,「与本书的关系」分三档:<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指写作时对照过但没有影响结构,<strong>推荐</strong>指与本书没有直接关系、但读者迟早用得上。第一行是这份地图的内容侧,单独成类。</p>
+<table style="contain-intrinsic-size:auto 1878px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">与本书的关系</th><th>特点与局限</th></tr></thead>
+<tbody>
+<tr><td>本书系其余 24 本(语言与标准库、Windows 与 Qt 桌面、Linux 系统编程、前端五本、Git、脚本三本、源码剖析五本)</td><td class="nw">本书系</td><td class="nw">锚定</td><td>地图上凡是本书系已有专书的格子,深度由那一本兑现:前端一路对应五本手册,Git 与协作对应《Git 与工程协作手册》,操作系统与命令行对应《Linux 系统编程手册》与三本脚本书。<strong>局限</strong>:覆盖不全。后端语言、数据库、容器与编排、云、安全、AI 工程这几格目前没有对应的书,只能靠外部资料,这些格子的推荐书籍表里也就没有本书系的条目。</td></tr>
+<tr><td>Titus Winters 等《Software Engineering at Google》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>把「编程」与「随时间演化的工程」分开,测试、评审、依赖管理、废弃流程各自独立成章,是少数正面回答「工程能力包含哪些非编码项」的书。<strong>局限</strong>:Google 的规模与自有工具链不能照搬到小团队;几乎不谈前端与产品交付。</td></tr>
+<tr><td>Andrew Hunt &amp; David Thomas《程序员修炼之道》</td><td class="nw">经典教材</td><td class="nw">推荐</td><td>管的是工作方式而不是某项技术:正交性、不重复、可追溯的调试、能自动化的一律自动化。与这份地图的关系是横向的,地图管学什么,它管怎么做事。<strong>局限</strong>:全书以格言组织,不给可验收的判据,读完容易只剩下口号。</td></tr>
+<tr><td class="nw">Frederick Brooks《人月神话》</td><td class="nw">经典教材</td><td class="nw">推荐</td><td>「没有银弹」与「往延期的项目里加人只会更慢」这些结论几十年后仍然成立,是理解复杂度与团队的底子。<strong>局限</strong>:案例来自大型机时代,要自己做一次翻译;与个人技能规划几乎无关。</td></tr>
+<tr><td>Martin Kleppmann《数据密集型应用系统设计》</td><td class="nw">进阶与专题</td><td class="nw">推荐</td><td>数据层与分布式两块的深挖档几乎都能在这里找到答案:复制、分区、事务、一致性模型、流处理。<strong>局限</strong>:厚且密,没有相应工程经验时读不动;适合在第 6 章或 8.4 对应的格子上撞到真实问题之后再读。</td></tr>
+<tr><td>Betsy Beyer 等《Site Reliability Engineering》与《SRE 工作手册》</td><td class="nw">进阶与专题</td><td class="nw">推荐</td><td>服务等级目标、错误预算、事故处置与复盘的定义出处,第 7 章与 8.3 的判据用的就是这一套概念。<strong>局限</strong>:以 Google 的组织形态与人力配置为前提,小团队要按比例裁剪,照搬会把流程压垮。</td></tr>
+<tr><td>各大厂公开的工程师能力模型与职级框架</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>按影响范围与自主程度定档,而不是按会哪些技术定档,是判断「下一档要求什么」最直接的材料;多家框架已有公开汇总站点可对照。<strong>局限</strong>:与各家组织结构绑定,换一家就要重新对照;写给评级用,不给学习路径。</td></tr>
+<tr><td>各语言、框架与平台的官方参考(标准库文档、接口索引、MDN)</td><td class="nw">参考手册</td><td class="nw">推荐</td><td>版本相关的事实以它们为准,地图每一格的细节最终都落到这里。<strong>局限</strong>:只回答怎么用,不回答该不该用、学到什么程度算够——这两问正是地图要补的。</td></tr>
+<tr><td>各技术的官方文档与规范(语言标准、HTTP 与 TLS 的 RFC、容器与编排文档、云厂商文档)</td><td class="nw">官方文档与源码</td><td class="nw">推荐</td><td>变化最快的几层——前端、基础设施、AI 工程——只有官方文档跟得上,地图里标注「官方文档优先」的格子指的就是这些。<strong>局限</strong>:按功能组织,不给取舍与顺序;版本切换时要先确认自己看的是哪一版。</td></tr>
+<tr><td>真实开源项目的源码,以及各家公开的事故复盘</td><td class="nw">官方文档与源码</td><td class="nw">推荐</td><td>判据里「出事能查」这一档只能靠读别人的代码与事故记录来练;本书系另有五本源码剖析走的是同一条路。<strong>局限</strong>:项目挑大了没有入口,复盘读多了容易照搬别人规模下的结论。</td></tr>
+<tr><td class="nw">roadmap.sh 等公开技能路线图</td><td class="nw">在线资料</td><td class="nw">参考</td><td>覆盖面最广的一类公开路线图,按方向分图,适合拿来核对自己的清单有没有漏项。<strong>局限</strong>:节点是技术名的堆叠,不给深度判据,也不区分必选与可选;跟着点完仍然不知道自己会到什么程度。</td></tr>
+<tr><td class="nw">大厂工程博客</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>当案例库读,分布式、可观测性与性能三块尤其值得。<strong>局限</strong>:写的是他们那个规模下的结论,不加判断地照搬会导致过度设计。</td></tr>
+</tbody>
+</table>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 路线图看覆盖面,判据看深度,两者分开用</span><p>公开路线图适合回答「有没有漏项」,它不回答「我到了什么程度」;这份地图每一格的判据适合回答后者,但不追求把所有技术名列全。两者一起用的顺序是:先拿路线图查漏,再拿判据给自己定档。只用其中一样,要么清单很长而深度不明,要么深度清楚却漏掉了整条链路。</p></div>
+<h3>本书锚定了哪几样,各借鉴了什么</h3>
+<p>下表只收上表里标为「锚定」的三样,写清各自被借鉴的是什么手法。标为「参考」的只用于对照覆盖面,标为「推荐」的与本书写法无关。</p>
+<table style="contain-intrinsic-size:auto 326px">
+<thead><tr><th class="nw">锚定</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">本书系其余 24 本</td><td>分工方式:地图只写「学什么、到什么程度」,细节一律由对应的那本兑现,因此全书没有一行可运行代码。节的形状也随之固定成三段——核心内容一句话、掌握判据、推荐书籍。判据用批注框单独列出、与正文分离,这一体例与其余各本一致,读者从任何一本转过来都认得。</td></tr>
+<tr><td class="nw">《Software Engineering at Google》</td><td>把安全、测试、可观测性、分布式思维提为<strong>横切能力</strong>单独成章(第 8 章),而不是各自挂在某一层下面;以及「上层技术的保质期是三五年、底座的保质期是整个职业生涯」这条分界——它决定了第 2 章为什么排在所有应用层之前。</td></tr>
+<tr><td class="nw">大厂能力模型与职级框架</td><td>第 11 章三个成长阶段的分档形式:按「能独立交付什么」定档,每档给标志、该攒什么、产出三栏,对应职级框架里的影响范围与自主程度两列。不按「会哪些技术」定档,是因为技术清单只能证明学过,证明不了能交付。</td></tr>
+</tbody>
+</table>
+<h3>本书讲什么、不讲什么</h3>
+<p>地图正文 42 节,每节回答同一组问题:这一格是什么、要学到什么程度、拿什么验证、接着读哪本书。</p>
+<table style="contain-intrinsic-size:auto 262px">
+<thead><tr><th class="nw">部分</th><th class="nw">章</th><th>回答什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">用法与底座</td><td class="nw">第 1、2 章</td><td>这份地图怎么用、书单怎么选;数据结构与算法、操作系统、网络、数据库原理、编码五块底座各要到什么程度</td></tr>
+<tr><td class="nw">五个纵向层</td><td class="nw">第 3 至 7 章</td><td>前端、网络与接口、后端、数据层、基础设施与交付,每层的工作档与深挖档分别是什么</td></tr>
+<tr><td class="nw">横切与新维度</td><td class="nw">第 8、9 章</td><td>安全、测试、可观测性、分布式思维四条贯穿所有层的能力;LLM 应用、检索增强、Agent 三节</td></tr>
+<tr><td class="nw">素养与路径</td><td class="nw">第 10、11 章</td><td>协作、调试方法、代码表达、系统设计与选型;三个成长阶段各该攒什么,以及哪些学习方法是自欺</td></tr>
+</tbody>
+</table>
+<p>下面这些内容本书不讲,列出它们各自归谁。</p>
+<table style="contain-intrinsic-size:auto 285px">
+<thead><tr><th>不讲的</th><th>归谁</th></tr></thead>
+<tbody>
+<tr><td class="nw">任何一门语言、框架、工具的语法与接口</td><td>本书系其余 24 本与各自的官方文档。地图给判据,细节在那里</td></tr>
+<tr><td class="nw">安装、配置与操作步骤</td><td>官方文档。地图上没有一行可运行的代码,也没有版本相关的命令</td></tr>
+<tr><td class="nw">选型的最终答案</td><td>取决于团队与场景。10.4 给的是选型时该问哪几个问题,不是该选哪一个数据库</td></tr>
+<tr><td class="nw">面试题与题库</td><td>与本书目标无关。判据问的是能不能做出来,不是能不能背出来</td></tr>
+<tr><td class="nw">简历、谈薪、跳槽这类职业事务</td><td>职业发展类材料。本书只到技术能力这一层</td></tr>
+<tr><td class="nw">团队管理与项目管理方法</td><td>管理类材料。第 11 章只讲个人的成长阶段</td></tr>
+</tbody>
+</table>
+<h3>前置技能</h3>
+<p>这本书面向需要方向感的人,门槛压得很低。必须的只有两条,都可以在十分钟内自测。</p>
+<table style="contain-intrinsic-size:auto 222px">
+<thead><tr><th class="nw">档</th><th class="nw">要求</th><th>自测方式</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td class="nw">写过代码,语言不限</td><td>不照抄地写出一个读文件、统计并输出结果的小程序</td></tr>
+<tr><td class="nw">必须</td><td class="nw">让程序在自己机器上跑起来过</td><td>说出上一个程序是怎么启动的、跑在哪个端口或哪个进程里、怎么停掉</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">有一个自己部署上线的小项目</td><td>说出它挂掉时你会从哪一步开始查</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">在团队里交付过一次改动</td><td>说出上一次改动从提交到上线经过了哪几道关</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">遇到过自己解决不了的线上问题</td><td>说出当时卡在哪一层:前端、接口、服务、数据还是基础设施</td></tr>
+</tbody>
+</table>
+<p>不需要的东西同样要说清:</p>
+<ul>
+<li><strong>不需要前端或后端任一方向的工作经验</strong>。每一节都从「这一格是什么」开始,空白格照样读得懂。</li>
+<li><strong>不需要先读过本书系任何一本</strong>。地图里的引用都给了去处,先记下来即可。</li>
+<li><strong>不需要按章顺序读</strong>。42 节彼此独立,判据也各自独立。</li>
+<li><strong>不需要一次读完再动手</strong>。第一遍只做打分,不补课。</li>
+</ul>
+<h3>本书的特点</h3>
+<p>与上面那些资料相比,本书多给的是下面五样,每样都能在书里直接核对。</p>
+<table style="contain-intrinsic-size:auto 324px">
+<thead><tr><th class="nw">特点</th><th>可核对的地方</th></tr></thead>
+<tbody>
+<tr><td class="nw">每一格给可验证判据</td><td>42 个格子里有 38 个带「掌握判据」批注,写的是能解释什么、能做出什么、出事能查到哪一层,不写「熟悉」「了解」</td></tr>
+<tr><td class="nw">只给地图,不给细节</td><td>全书没有一行可运行代码,也没有任何命令与配置片段;要点与书单一律用表承载,技术细节指向对应的书与官方文档</td></tr>
+<tr><td class="nw">每节自带书单</td><td>42 格里有 37 格附「推荐书籍」表,每本标了入门、进阶、查阅、免费四种定位,选书标准写在 1.2</td></tr>
+<tr><td class="nw">层次按依赖切,不按热度切</td><td>五个纵向层加四条横切、底下垫底座;AI 工程作为独立维度单列(第 9 章三节),而不是塞进后端章</td></tr>
+<tr><td class="nw">给的是路径不止是清单</td><td>第 11 章按「能交付功能、能负责系统、能定方向」三档,每档给标志、该攒什么、产出三栏</td></tr>
+</tbody>
+</table>
+<h3>怎么读</h3>
+<p>地图的读法与技术手册相反:它应当被<strong>反复回看</strong>,而不是读一遍。技术手册读完就可以放下,地图要在每次换方向、定学习计划、或者被问到「你会什么」之前重新翻开。</p>
+<p>第一遍限时读完,不补课,只做一件事:给 42 格各打一个标记——达成、在学、空白。判据说不出口的一律算空白。打分与排序的具体做法在 1.1。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 打分只承认现在做得出的,不承认学过的</span><p>判据一律写成能解释、能做出、出事能查,就是为了给自评留一条硬线。学过、看过、跟着教程做过一遍都不算达成,标准是现在打开编辑器就能做出来,或者被追问机制时答得上。高估的代价不是面子,是把接下来几个月花在已经会的格子上。</p></div>
+<p>之后按目标回看,每次只翻相关的几章。</p>
+<table style="contain-intrinsic-size:auto 259px">
+<thead><tr><th>目标</th><th class="nw">先看哪几章</th></tr></thead>
+<tbody>
+<tr><td>补齐独立把产品送上线的能力</td><td class="nw">第 4、5、6、7 章</td></tr>
+<tr><td>从前端走向全栈</td><td class="nw">第 5、6、7 章与 8.1</td></tr>
+<tr><td>从后端补前端</td><td class="nw">第 3 章与 4.1</td></tr>
+<tr><td>上层熟练但机制说不清,想补底座</td><td class="nw">第 2 章与 8.4</td></tr>
+<tr><td>在现有技术栈上加 AI 工程</td><td class="nw">第 9 章、5.4 与 6.3</td></tr>
+<tr><td>要带人或定技术方向</td><td class="nw">第 10、11 章与 8.2</td></tr>
+</tbody>
+</table>
+<p>第 1 章与第 11 章是这份地图的用法说明,两章都必读;中间九章按上表挑,没有必须遵守的顺序。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 逐格填满是这份地图最常见的误用</span><p>42 格不是待办清单。全栈的能力形状是 T 型:横向每格能上手,纵向一两格有真正的深度;把空白格当任务逐条清,时间会花在几年内用不到的地方,而深挖档一格都长不出来。一次推进一到两格,按「离现在的工作最近、缺口最痛」排序。</p></div>
+<p>用完这份地图之后应当能做到两件事:写出自己未来半年的学习清单,每项带判据和一个收口的小项目;被问到「你会什么」时给出带深度的回答——哪几格到了深挖档、哪几格只到工作档、哪几格是空白。</p>
 <h2 id="f0-map">1.1 一张总图:五层加四条横切</h2>
 <p>把整个技术栈立起来,是五个纵向层加四条横切能力,底下垫着计算机科学底座,旁边多出一个新维度(AI 工程):</p>
 <table style="contain-intrinsic-size:auto 333px">
@@ -782,7 +888,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw">③ 能定方向</td><td>技术决策影响团队一年以上:选型、架构演化、平台建设</td><td>取舍的艺术;跨团队沟通;用系统思维平衡业务/技术/人</td><td>被时间验证过的架构决策</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 阶段不能跳</span><p>没交付过完整项目就想做架构,画出来的是空中楼阁——架构能力长在「被自己设计坑过」的疤上。老老实实在①攒够项目、在②攒够事故,③是自然长出来的,不是学出来的。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 阶段不能跳</span><p>没交付过完整项目就想做架构,画出来的是空中楼阁——架构能力长在「被自己设计坑过」的疤上。在①攒够项目、在②攒够事故,③是自然长出来的,不是学出来的。</p></div>
 <h2 id="f10-method">11.2 学习方法与反模式</h2>
 <p>同样的时间,方法决定回报。先说有效的五条:</p>
 <table style="contain-intrinsic-size:auto 248px">

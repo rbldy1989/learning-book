@@ -199,7 +199,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">Git 与工程协作手册</div>
 <details><summary><a class="ch" href="#g1">Git 到底存了什么:对象库、引用与三棵树</a></summary>
-<a class="sec" href="#g1-classics">1.0 相关经典书籍</a>
+<a class="sec" href="#g1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#g1-why">1.1 为什么先讲机制:三板斧用户的四个典型症状</a>
 <a class="sec" href="#g1-object">1.2 对象库:blob、tree、commit、tag 与内容寻址</a>
 <a class="sec" href="#g1-ref">1.3 引用:HEAD、分支、标签、reflog 都只是装着哈希的文件</a>
@@ -281,53 +281,100 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 40452px;--thin-h:12292px">
+<section class="chapter" style="contain-intrinsic-size:auto 43034px;--thin-h:16830px">
 <h1 id="g1"><span class="part">机制</span>Git 到底存了什么:对象库、引用与三棵树</h1>
 <p>只会 <code>add</code> / <code>commit</code> / <code>push</code> 的人不是不会用 Git,是脑子里没有 Git 的数据结构。命令背了一大堆,遇到没背过的组合就只能删掉重 clone。这一章把 Git 拆成三样东西——<strong>对象库</strong>(内容按哈希存的一堆不可变对象)、<strong>引用</strong>(一批只装着 40 位哈希的小文件)、<strong>索引</strong>(下一次提交的草稿)。所有命令都只是在动这三样里的一样或几样。知道这一点,<code>reset --soft</code> 和 <code>reset --hard</code> 的区别不必硬记,看它动了哪几棵树就够了。</p>
 <p>五节按「先有东西,再有指针,再有搬运,最后看一次完整过程」排:<a href="#g1-why">1.1</a> 先摆出三板斧用户的四个典型症状,说明为什么倒过来讲(先命令后机制)一定会忘;<a href="#g1-object">1.2</a> 用 <code>git cat-file</code> 把一次真实提交层层拆开,看到 commit → tree → blob 这条链和每个对象的真实哈希;<a href="#g1-ref">1.3</a> 说明分支、HEAD、标签、reflog 全是引用,「切换分支」本质是改一行文本;<a href="#g1-three-trees">1.4</a> 把工作区、索引、HEAD 三棵树摆成一排,四个日常动作各自在它们之间搬哪一段;<a href="#g1-inside">1.5</a> 最后用底层命令手工造出一个提交,把前面四节串成一条完整时序。这一章的每条输出都是在 git 2.54.0.windows.1 上真跑出来抄下来的,你照着敲能得到一模一样的哈希。学完这一章再去看 <a href="#g2-status">2.1</a> 的日常命令,会发现它们只是这三样东西的不同组合。</p>
-<h2 id="g1-classics">1.0 相关经典书籍</h2>
-<p>Git 这个领域的好资料集中度极高:一本免费的官方书打底,一套 man 页兜底,剩下的是工程协作层面的几本经典。下面这张表是全书反复引用的书目与站点,后面再引用时只写书名。</p>
-<table style="contain-intrinsic-size:auto 1073px">
-<thead><tr><th>书 / 站点</th><th>定位</th><th>特点(含局限)</th></tr></thead>
+<h2 id="g1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>Git 这个领域的资料集中度极高:一本免费的官方书打底,一套 man 页兜底,协作层面另有几本工程经典。资料不难找,难判断的是哪一份该在什么时候翻、哪一份已经跟不上今天的命令。</p>
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>下表按类型分五组,每组两三样。「与本书的关系」分三档:<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指写作时查证过但没有影响结构,<strong>推荐</strong>指与本书没有直接关系、但读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 2380px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">与本书的关系</th><th>特点与局限</th></tr></thead>
 <tbody>
-<tr><td>Scott Chacon & Ben Straub《Pro Git》(第二版,git-scm.com/book)</td><td class="nw">骨架·必读</td><td>Git 官方钦定的入门到进阶书,免费在线且有中文版。前九章覆盖日常与协作,「Git 内部原理」那一章把对象库、引用、包文件、传输协议全拆开——本书第一部的讲法就锚定在那一章上。<strong>局限</strong>:第二版成书较早,<code>switch</code> / <code>restore</code> / <code>--force-with-lease</code> / <code>sparse-checkout</code> 这批后来的命令要另查 man 页;协作流程只有一章,不够用。</td></tr>
-<tr><td>git-scm.com/docs(Git 官方 man 页)</td><td class="nw">参考·裁判</td><td>每个命令的选项、退出码、配置项以它为准。本地就有:<code>git help merge</code> 打开的就是同一份。除命令外还有一批概念页——<code>gitignore(5)</code>、<code>gitattributes(5)</code>、<code>githooks(5)</code>、<code>gitrevisions(7)</code>、<code>gitglossary(7)</code>。<strong>局限</strong>:纯参考,极度精简,不解释设计意图;中文翻译滞后,拿不准时看英文。</td></tr>
-<tr><td class="nw">蒋鑫《Git 权威指南》</td><td class="nw">中文·穷举</td><td>中文世界最厚的一本 Git 书,底层命令与实验式讲法(每章都是「跑一遍看结果」)对本书影响很大。<strong>局限</strong>:成书于 Git 1.7 时代,命令输出措辞、默认分支名、<code>ort</code> 合并策略这些都变了,例子照跑会对不上。</td></tr>
-<tr><td>John Wiegley《Git from the Bottom Up》(在线)</td><td class="nw">机制·短</td><td>三十来页,从「Git 是一个内容寻址的对象数据库」一句话推出全部命令语义,是把对象模型讲得最紧凑的一份材料。<strong>局限</strong>:只讲机制,不讲协作,不更新。</td></tr>
-<tr><td>Titus Winters 等《Software Engineering at Google》</td><td class="nw">协作·规模</td><td>「版本控制与分支管理」和「代码评审」两章解释了大规模团队为什么选主干开发、为什么评审要小而快、为什么单一版本原则比分支灵活更重要。本书第二部的立场取自这里。<strong>局限</strong>:Google 的规模与工具链(单仓 + Piper + Critique)不能直接照搬到十人团队。</td></tr>
-<tr><td>Jez Humble & David Farley《持续交付》</td><td class="nw">流程·发布</td><td>部署流水线、构建一次到处部署、发布与上线解耦这几个概念的出处。分支策略一章对「长期分支的代价」算得最清楚。<strong>局限</strong>:成书于 2010,书里的工具全过时了,读概念不读工具。</td></tr>
-<tr><td>Forsgren / Humble / Kim《Accelerate》</td><td class="nw">度量·证据</td><td>DORA 四个指标(部署频率、变更前置时间、变更失败率、恢复时间)与它们和主干开发、小批量提交的相关性,是「为什么要这么做流程」唯一有数据支撑的来源。<strong>局限</strong>:讲的是统计相关,不是每个团队的处方。</td></tr>
-<tr><td>Martin Fowler《Patterns for Managing Source Code Branches》(martinfowler.com)</td><td class="nw">分支·模式</td><td>把分支策略拆成一组可组合的模式(集成频率、发布分支、环境分支、feature flag),比「Git Flow 还是 GitHub Flow」这种二选一讨论清楚得多。<strong>局限</strong>:在线长文,没有可操作的命令。</td></tr>
-<tr><td>Google Engineering Practices(google.github.io/eng-practices)</td><td class="nw">评审·手册</td><td>分「怎么做评审」和「怎么写让人好评审的 CL」两册,是本书评审章的骨架。<strong>局限</strong>:英文;术语是 CL 不是 PR。</td></tr>
-<tr><td>Conventional Commits(conventionalcommits.org)/ 语义化版本(semver.org)</td><td class="nw">规范·约定</td><td>两份极短的规范文本,是自动生成 changelog 与自动定版本的前提。<strong>局限</strong>:是约定不是标准,团队可以裁剪。</td></tr>
+<tr><td>Scott Chacon &amp; Ben Straub《Pro Git》第 2 版(git-scm.com/book,免费在线,有中文版)</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>Git 官方钦定的入门到进阶书,「Git 内部原理」一章把对象库、引用、包文件、传输协议全拆开。<strong>局限</strong>:第二版成书较早,<code>switch</code>、<code>restore</code>、<code>--force-with-lease</code> 这批后来的命令要另查 man 页;协作流程只占一章。</td></tr>
+<tr><td class="nw">蒋鑫《Git 权威指南》</td><td class="nw">经典教材</td><td class="nw">参考</td><td>中文世界最厚的一本,选项接近穷举,每章都是「跑一遍看结果」的实验式讲法,换行符、编码、中文路径这些中文语境的坑写得全。<strong>局限</strong>:成书于 Git 1.7 时代,命令输出措辞、默认分支名、默认合并策略都变了,例子照跑会对不上。</td></tr>
+<tr><td>John Wiegley《Git from the Bottom Up》(在线)</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>三十来页,从「Git 是一个内容寻址的对象数据库」一句推出全部命令语义,是把对象模型讲得最紧凑的一份材料。<strong>局限</strong>:只讲机制,不讲协作,不再更新。</td></tr>
+<tr><td>Titus Winters 等《Software Engineering at Google》与 Google Engineering Practices 评审手册(google.github.io/eng-practices)</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>前者的「版本控制与分支管理」「代码评审」两章解释了大规模团队为什么选主干开发、评审为什么要小而快;后者分「怎么做评审」与「怎么写让人好评审的变更」两册。<strong>局限</strong>:Google 的单仓与自有工具链不能照搬到十人团队;手册是英文,术语用 CL 而不是 PR。</td></tr>
+<tr><td class="nw">Jez Humble &amp; David Farley《持续交付》</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>部署流水线、构建一次到处部署、发布与上线解耦这几个概念的出处;分支策略一章把长期分支的代价算得最清楚。<strong>局限</strong>:成书较早,书里的工具已经整代换过,读概念不读工具。</td></tr>
+<tr><td>Forsgren / Humble / Kim《Accelerate》与历年 DORA 报告</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>四个交付指标(部署频率、变更前置时间、变更失败率、恢复时间)与主干开发、小批量提交的相关性,是流程主张里唯一有数据支撑的来源。<strong>局限</strong>:讲的是统计相关,不是单个团队的处方。</td></tr>
+<tr><td>Git man 页与概念页(<code>git help &lt;命令&gt;</code>、<code>git help -g</code>)</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>选项、退出码、配置项以它为准,本机装了 Git 就有。概念页 <code>gitglossary</code>、<code>gitrevisions</code>、<code>githooks</code>、<code>gitattributes</code>、<code>gitignore</code> 解释的是术语与规则,不对应任何单个命令。<strong>局限</strong>:极度精简,不解释设计意图;中文翻译滞后,拿不准时看英文。</td></tr>
+<tr><td>Conventional Commits 与语义化版本(两份规范文本)</td><td class="nw">参考手册</td><td class="nw">参考</td><td>都很短,是自动生成变更日志与自动定版本号的前提。<strong>局限</strong>:是约定不是标准,团队裁剪之后工具链要跟着改。</td></tr>
+<tr><td>Git 源码、随源码发布的 <code>Documentation/technical/</code>,以及本机的 <code>.git</code> 目录</td><td class="nw">官方文档与源码</td><td class="nw">参考</td><td>包文件格式、传输协议、索引格式的逐字节说明只有这里有;<code>.git</code> 目录则是一手证据——第一部的每条结论都能在自己机器上用 <code>ls</code> 与 <code>git cat-file</code> 复核一遍。<strong>局限</strong>:面向实现者,读之前得先有对象模型的概念。</td></tr>
+<tr><td>GitHub / GitLab 官方文档(保护分支、必需检查、代码属主、流水线配置)</td><td class="nw">官方文档与源码</td><td class="nw">参考</td><td>平台侧的规则模型与配置项以各自文档为准,权限与合并策略的边界只有这里写得准。<strong>局限</strong>:界面与配置项变化快,带截图的教程半年就失效;两家术语不同(PR 与 MR、必需检查与流水线阶段)。</td></tr>
+<tr><td>Martin Fowler《Patterns for Managing Source Code Branches》(martinfowler.com)</td><td class="nw">在线资料</td><td class="nw">参考</td><td>把分支策略拆成一组可组合的模式(集成频率、发布分支、环境分支、特性开关),比「Git Flow 还是 GitHub Flow」这种二选一讨论清楚得多。<strong>局限</strong>:长文,没有可操作的命令。</td></tr>
+<tr><td>Git 发行说明(<code>Documentation/RelNotes</code>)</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>确认某个命令或默认值是哪一版改的,这是最快的路径。<strong>局限</strong>:按版本流水记事,不成体系。</td></tr>
+<tr><td>Learn Git Branching(交互式网站)</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>分支、合并与 rebase 的指针移动可以点着看,建立拓扑直觉最快。<strong>局限</strong>:只覆盖分支操作,与索引、远程、真实冲突无关。</td></tr>
 </tbody>
 </table>
-<p>全书的讲法锚定其中三本:机制照《Pro Git》的内部原理章与《Git from the Bottom Up》——先有对象模型再有命令语义;命令的精确行为照官方 man 页——选项、退出码、配置项以它为准,并且每条都在本机实跑核对过;协作流程照《Software Engineering at Google》与《持续交付》——先说这个流程要保证什么,再说它的成本。</p>
-<h3>手边常开的四个入口</h3>
-<p>上面的书是拿来读的,下面四个入口是拿来<strong>随时查</strong>的。前两个不用联网。</p>
-<pre style="contain-intrinsic-size:auto 169px"><code>git help &lt;命令&gt;          # 打开该命令的完整 man 页,例:git help merge
-git help -g              # 列出概念指南:everyday / glossary / revisions / workflows …
-git &lt;命令&gt; -h            # 只看选项摘要,一屏能看完,查选项拼写用这个
-https:<span class="cm">//git-scm.com/docs # 同一份 man 页的网页版,带版本切换</span>
-https:<span class="cm">//git-scm.com/book # 《Pro Git》全文,中英文都有</span></code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 查的顺序是 -h → man 页 → Pro Git</span><p>只是忘了选项怎么拼,<code>git rebase -h</code> 一屏就够;要知道某个选项的确切语义与边界,翻 man 页;要知道「为什么这么设计」,才去翻《Pro Git》。反过来先读书会很慢,而且书里不写你这个版本的措辞。所有版本敏感的输出,本书都注明了实测版本(git 2.54.0.windows.1)。</p></div>
-<p>「锚定」不只是讲法像,还落到每一节的<strong>形状</strong>上。本书的节分两类,骨架固定,知道骨架就能按需跳读:只想抄一条命令,看语法框和选项表;想弄懂它到底动了什么,看「机制」那一段;想验证,照着「完整示例」在自己的临时仓库里跑一遍。</p>
-<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 386px"><code><span class="cm">// 命令节(照《Pro Git》+《Git 权威指南》)</span>
-一句话定位     这个命令解决什么问题;它动的是对象库 / 引用 / 索引里的哪几样
-语法框         用法行 + 最常用的选项 + 危险选项标注
-选项全表       选项 | 作用 | 什么时候用 | 坑
-图             动引用或拓扑的命令,画「执行前 → 执行后」两态
-完整示例:…    可复制的完整命令序列 + 真实终端输出(逐字抄录,不是重写的)
-批注           note dead 会丢东西的坑 / note ok 推荐做法
-机制:…        它在 .git 里到底改了什么(薄模式下折叠)
-
-<span class="cm">// 流程节(照《Software Engineering at Google》+《持续交付》)</span>
-这个流程保证什么、不保证什么 → 泳道图或状态图 → 角色×动作×产物对照表
-→ 完整示例:一次真实走完的操作序列 → 为什么这么设计(规模化时会发生什么)
-→ 常见的走样</code></pre>
-<p>本书全部命令输出都在同一个环境实测:<code>git version 2.54.0.windows.1</code>。Git 的提示文本(hint、advice)在小版本之间会变措辞,遇到和书里不完全一致的,先用 <code>git --version</code> 对一下版本,再看提示里给的命令是不是同一个——命令一般不变,措辞常变。</p>
-<div class="deep"><h3>完整示例:建一个用完就扔的实验仓库</h3>
-<p>这本书从第一节起就要求你跟着跑。用一个临时目录建仓库,跑完删掉,永远不要拿真实项目做实验。下面这段是本书每个例子的固定开头,把它存成一个 shell 函数最省事:</p>
+<p>上表的<strong>局限</strong>归起来是两条时间线。一条是命令行界面:<code>checkout</code> 被拆成 <code>switch</code> 与 <code>restore</code>、默认分支名变成可配置项、默认合并策略换代、冲突标记多了一种风格,这些都在近几年发生,老书里的写法读得懂即可,自己写用新的。另一条是对象模型:blob、tree、commit、tag 四种对象与内容寻址的规则从 Git 1.x 至今没有变过。</p>
+<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 老书的机制章可照读,命令与输出要另核</span><p>判断一段老材料会不会过时,看它讲的是<strong>数据结构</strong>还是<strong>命令行界面</strong>:前者稳定,后者一直在动。《Git 权威指南》讲对象库的那几章今天一字不改仍然成立,而同一本书里的终端输出、默认分支名、策略名要拿 <code>git help</code> 重新核对。本书所有版本敏感的输出都注明了实测版本。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 查的顺序是 -h、man 页、Pro Git</span><p>只是忘了选项怎么拼,<code>git rebase -h</code> 一屏就够;要知道某个选项的确切语义与边界,翻 <code>git help rebase</code>;要知道为什么这么设计,才去翻《Pro Git》。反过来先读书会很慢,而且书里不写你这个版本的措辞。</p></div>
+<h3>本书锚定了哪几样,各借鉴了什么</h3>
+<p>下表只收上表里标为「锚定」的五样,写清各自被借鉴的是什么手法。标为「参考」的材料只用于查证,没有进入结构;标为「推荐」的与本书写法无关。</p>
+<table style="contain-intrinsic-size:auto 400px">
+<thead><tr><th class="nw">锚定</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">《Pro Git》内部原理章</td><td>第一部的编排顺序:先对象库、再引用、再索引与三棵树,命令一律排在机制之后。本书把它的「内部原理」独立成章的做法改成了逐节固定的收尾段——每个命令节最后都有一段「机制:它在 .git 里改了什么」。</td></tr>
+<tr><td class="nw">Git man 页与概念页</td><td>选项表的字段划分(选项、作用、什么时候用、坑),以及「以 man 页为准」这条裁判规则:书里每条选项的语义都与本机 man 页逐条核对过,不一致时以 man 页为准并注明版本。</td></tr>
+<tr><td class="nw">《Git from the Bottom Up》</td><td>把命令语义还原成「对哪个引用、哪棵树做了什么」的表述方式。三棵树一节的讲法与那张「四个动作在三棵树之间搬什么」的对照表,形式取自这里。</td></tr>
+<tr><td class="nw">Google 的两份工程实践材料</td><td>评审章的四个关注层次,以及「谁的批准算数」这个问题的提法。更根本的是流程节的固定骨架:先写这个流程保证什么、不保证什么,再写规模变大之后会发生什么。</td></tr>
+<tr><td class="nw">《持续交付》</td><td>选分支模型的判据形式——按团队规模、发布频率、回滚要求三个维度取值,而不是按流行程度推荐;以及把「发布」与「上线」当成两件事分开讲的做法。</td></tr>
+</tbody>
+</table>
+<h3>本书讲什么、不讲什么</h3>
+<p>本书讲一个人用 Git 完成工作、以及一群人用 Git 一起完成工作所需要的全部内容:命令背后的数据结构、日常操作、分支与历史、远程协作、排错、团队流程、评审与自动化。</p>
+<table style="contain-intrinsic-size:auto 274px">
+<thead><tr><th class="nw">部分</th><th class="nw">章</th><th>回答什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">机制与日常</td><td class="nw">第 1、2 章</td><td><code>.git</code> 里到底存了什么;一天里用得最多的十个命令各自动了工作区、索引、HEAD 中的哪几样</td></tr>
+<tr><td class="nw">分支与历史</td><td class="nw">第 3、4 章</td><td>分支指针怎么动、冲突从哪来;重写历史的手段有哪些,不可越过的那条线在哪</td></tr>
+<tr><td class="nw">协作与排错</td><td class="nw">第 5、6 章</td><td>本地分支、远程跟踪分支、远端分支三者的区别;push 被拒的四种情形;东西丢了怎么找回来</td></tr>
+<tr><td class="nw">团队流程</td><td class="nw">第 7 至 9 章</td><td>分支模型怎么选、提交信息怎么写、PR 怎么拆、评审看什么、闸门设在哪一层</td></tr>
+<tr><td class="nw">实战与疑难</td><td class="nw">第 10、11 章</td><td>一个任务从需求卡走到线上的完整链路;大仓库、多仓库结构与误操作恢复</td></tr>
+</tbody>
+</table>
+<p>下面这些内容本书不讲,列出它们各自归谁。</p>
+<table style="contain-intrinsic-size:auto 336px">
+<thead><tr><th>不讲的</th><th>归谁</th></tr></thead>
+<tbody>
+<tr><td class="nw">图形客户端与 IDE 内置的 Git 面板</td><td>各客户端自己的文档。本书只讲命令行,机制清楚之后任何客户端的按钮都能对应到某条命令</td></tr>
+<tr><td class="nw">托管平台的界面操作与按钮位置</td><td>GitHub / GitLab 官方文档。本书第 9 章讲的是规则模型——保护分支、必需检查、代码属主各自约束什么——不讲在哪个页面点</td></tr>
+<tr><td class="nw">CI 配置文件的语法</td><td>各平台文档。本书只讲闸门跑在哪个提交上、什么条件下才算通过</td></tr>
+<tr><td class="nw">Git 服务端的搭建、权限系统与备份</td><td>服务端软件自己的文档。本书假设远端已经存在</td></tr>
+<tr><td class="nw">包文件格式与传输协议的逐字节细节</td><td>Git 源码的 <code>Documentation/technical/</code>。本书讲到「传的是什么、为什么能增量传」为止</td></tr>
+<tr><td class="nw">需求怎么拆、迭代怎么排</td><td>项目管理方法自己的范畴。本书从一张需求卡已经进来之后开始</td></tr>
+</tbody>
+</table>
+<h3>前置技能</h3>
+<p>门槛集中在命令行,不在 Git 本身。每条都给了自测方式,答不上来的那条先补。</p>
+<table style="contain-intrinsic-size:auto 403px">
+<thead><tr><th class="nw">档</th><th class="nw">要求</th><th>自测方式</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td class="nw">命令行能走动</td><td>不借助文件管理器,写出建目录、进目录、新建文件、打印文件内容这四步各自的命令</td></tr>
+<tr><td class="nw">必须</td><td class="nw">装过 Git 并完成过一次提交</td><td>说出 <code>git status</code> 输出里 <code>Changes to be committed</code> 与 <code>Changes not staged for commit</code> 分别对应哪一堆文件</td></tr>
+<tr><td class="nw">必须</td><td class="nw">读得懂用法行</td><td>看到 <code>git commit [-m &lt;msg&gt;] [--amend]</code>,能说出方括号与尖括号各表示什么</td></tr>
+<tr><td class="nw">必须</td><td class="nw">分得清文本与二进制文件</td><td>说出为什么 Git 能给 <code>.txt</code> 显示逐行差异,对 <code>.png</code> 只输出一行 <code>Binary files ... differ</code></td></tr>
+<tr><td class="nw">最好有</td><td class="nw">参与过一次带 PR 的协作</td><td>说出一个 PR 里源分支与目标分支各是什么,合并之后变的是哪一个</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">shell 基础</td><td>写出一个带条件判断并返回非零退出码的 shell 函数——第 9 章的 hooks 全是这个形状</td></tr>
+<tr><td class="nw">最好有</td><td class="nw">见过 CI 挂掉</td><td>说出「本地能跑、CI 挂了」的三种常见原因</td></tr>
+</tbody>
+</table>
+<h3>本书的特点</h3>
+<p>与上面那些资料相比,本书多给的是下面五样,每样都能在书里直接核对。</p>
+<table style="contain-intrinsic-size:auto 351px">
+<thead><tr><th class="nw">特点</th><th>可核对的地方</th></tr></thead>
+<tbody>
+<tr><td class="nw">机制排在命令之前</td><td>第 1 章 6 节全部在讲 <code>.git</code> 里的数据结构,第一条日常命令要到第 2 章才出现;全书 29 张图多数画的是同一件事的「执行前、执行后」两态</td></tr>
+<tr><td class="nw">终端输出是实测抄录,不是重写</td><td>80 处「完整示例」的输出抄自同一环境(<code>git version 2.54.0.windows.1</code>),包括空行与大小写;版本敏感的提示文本都注明了版本</td></tr>
+<tr><td class="nw">会丢东西的操作单独标出</td><td>全书 108 个批注里有 67 个是红色的陷阱类,写的是会真删东西或静默出错的操作,不是泛泛的注意事项</td></tr>
+<tr><td class="nw">命令与流程各占一半</td><td>11 章里第 1 至 6 章是命令与机制,第 7 至 11 章是分支模型、评审、自动化与实战,后半部分不是附录</td></tr>
+<tr><td class="nw">按症状查得动</td><td>58 节、107 张表,选项表与决策树可以脱离正文单独看;每章末尾是「小结:本章要点与易错清单」,11.3 节按「你丢了什么」索引恢复手段</td></tr>
+</tbody>
+</table>
+<h3>怎么读</h3>
+<p>第一次学按第 1 至 6 章顺读,这六章是主干,后面每一章都依赖它们。第 7 至 9 章按团队现状挑着读:已经定好流程的团队,第 7 章可以只看选型判据那一节;不需要自己配 CI 的,第 9 章看规则模型即可。第 10 章把前面串成一条完整链路,第 11 章遇到再翻。</p>
+<p>顺读时每个示例都要在临时仓库里跑一遍,不要拿真实项目做实验。把下面这个函数存进 shell 配置,每次实验一条命令都从干净仓库开始:</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code>lab() {                      # lab 试一下  →  在 /tmp/试一下 里建一个干净仓库并进去
   local d=<span>"${TMPDIR:-/tmp}/$1"</span>
   rm -rf <span>"$d"</span> &amp;&amp; mkdir -p <span>"$d"</span> &amp;&amp; cd <span>"$d"</span> || <span class="kw">return</span> 1
@@ -336,23 +383,23 @@ https:<span class="cm">//git-scm.com/book # 《Pro Git》全文,中英文都有<
   git config user.email <span>"lin@example.com"</span>
   git config core.autocrlf <span class="kw">false</span>          # 让输出跨平台一致,见 2.6
 }</code></pre>
-<p>本书的示例还额外固定了作者和时间,这样你算出来的哈希会和书里<strong>逐字符相同</strong>——提交对象包含作者、提交者和两个时间戳,不固定就对不上。需要复现书里哈希的例子会显式给出这几行:</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 141px"><code>export GIT_AUTHOR_NAME=<span>"Lin Wei"</span>    GIT_AUTHOR_EMAIL=<span>"lin@example.com"</span>
-export GIT_COMMITTER_NAME=<span>"Lin Wei"</span> GIT_COMMITTER_EMAIL=<span>"lin@example.com"</span>
-export GIT_AUTHOR_DATE=<span>"2025-03-01T10:00:00+08:00"</span>
-export GIT_COMMITTER_DATE=<span>"2025-03-01T10:00:00+08:00"</span></code></pre>
-<pre style="contain-intrinsic-size:auto 169px"><code>$ git init
-Initialized empty Git repository in C:/Users/Administrator/AppData/Local/Temp/试一下/.git/
-
-$ git --version
-git version 2.54.0.windows.1</code></pre>
-<p>输出里那个绝对路径是本书实测环境(Windows 上的 Git Bash,<code>/tmp</code> 映射到用户的 Temp 目录);在 Linux 或 macOS 上你会看到 <code>/tmp/试一下/.git/</code>。除了这类路径,本书后面所有终端输出都是原样抄录的,包括空行、制表符和大小写。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 别在真实项目里练 reset --hard 和 clean</span><p>本书标了 ⚠ 的命令都会真的删东西。练习一律在临时仓库里做,理由不是「怕你手滑」,而是<strong>只有在自己能随便毁掉的仓库里,你才敢真的把它毁掉一次,并且亲眼看清丢的是什么、救得回哪些</strong>。看别人描述十遍,不如自己 <code>reset --hard</code> 掉一次未暂存的改动、然后确认它真的找不回来。</p></div></div>
-<div class="deep"><h3 class="deep">这些资料各自的「时间戳」:读到哪里该停下来另查</h3>
-<p>上表每一行的<strong>局限</strong>其实归成三条时间线。记住这三条,读任何一本老 Git 书时就知道哪一章可以照读、哪一章要停下来去 man 页核对。</p>
-<p><strong>命令线</strong>:2019 年的 Git 2.23 引入 <code>switch</code> 与 <code>restore</code>,把超载的 <code>checkout</code> 拆开;2020 年的 2.28 引入 <code>init.defaultBranch</code>;2021 年的 2.34 把默认合并策略从 <code>recursive</code> 换成 <code>ort</code>;2022 年的 2.35 引入 <code>zdiff3</code> 冲突风格;2.37 内置 <code>fsmonitor</code>。老书里的 <code>git checkout -- 文件</code>、<code>git reset HEAD 文件</code>、<code>Merge made by the 'recursive' strategy.</code>、默认分支 <code>master</code> 都属于「读得懂即可,自己写用新的」。</p>
-<p><strong>机制线</strong>:对象模型(blob / tree / commit / tag、内容寻址、引用、索引)从 Git 1.x 至今<strong>没有变过</strong>,所以老书讲机制的部分恰恰最可靠——《Git 权威指南》2011 年写的对象库那几章今天一字不改仍然成立,只是它演示用的命令输出格式变了。判断一段内容会不会过时,看它讲的是<strong>数据结构</strong>还是<strong>命令行界面</strong>:前者稳定,后者一直在动。</p>
-<p><strong>协作线</strong>:变化最快的是流程与平台。2010 年提出的 Git Flow、2011 年的 GitHub Flow、这些年被 DORA 数据推上主流的主干开发,背后是发布频率从「季度」变成「每天多次」这个事实。所以读流程类材料时,先看它<strong>假设的发布频率</strong>——假设不成立,结论就不成立。平台侧(GitHub/GitLab 的按钮、保护分支的配置项)变化更快,本书一律只讲机制不讲按钮位置。</p></div>
+<p>需要复现书里那些 40 位哈希的例子,还要固定作者与两个时间戳——提交对象把它们一起算进了哈希,不固定就对不上。相关例子会显式给出那几行 <code>export</code>。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 别在真实项目里练 reset --hard 和 clean</span><p>本书标了危险符号的命令会直接删除数据。练习一律在临时仓库里做,理由不是防止误操作,而是<strong>只有在能随便毁掉的仓库里,你才敢把它毁掉一次,并且亲眼看清丢的是什么、救得回哪些</strong>。看十遍描述,不如自己 <code>reset --hard</code> 掉一处未暂存的改动,再确认它确实找不回来。</p></div>
+<p>已经在用 Git、只是遇到具体问题的,按症状直接跳。</p>
+<table style="contain-intrinsic-size:auto 333px">
+<thead><tr><th>症状</th><th class="nw">去哪一节</th></tr></thead>
+<tbody>
+<tr><td>改完不知道该撤销到哪一步,不确定用哪个命令</td><td class="nw">2.4</td></tr>
+<tr><td>合并时冲突不知道从哪下手</td><td class="nw">3.3、10.2</td></tr>
+<tr><td>pull 之后历史里多出一串合并提交</td><td class="nw">5.2</td></tr>
+<tr><td>push 被拒绝</td><td class="nw">5.3</td></tr>
+<tr><td>提交或改动找不到了</td><td class="nw">6.4、11.3</td></tr>
+<tr><td>密钥或大文件推上去了</td><td class="nw">6.5</td></tr>
+<tr><td>PR 太大,评审排不上</td><td class="nw">8.2</td></tr>
+<tr><td>仓库操作越来越慢</td><td class="nw">11.2</td></tr>
+</tbody>
+</table>
+<p>顺读一遍之后应当能做到三件事:说出任意一条日常命令动了工作区、索引、HEAD 里的哪几样;把一串杂乱的本地提交整理成一组可评审的提交并安全地推上去;仓库出问题时按症状选工具(reflog、bisect、blame),而不是把报错原文丢进搜索框。</p>
 <h2 id="g1-why">1.1 为什么先讲机制:三板斧用户的四个典型症状</h2>
 <p>「先讲命令,用熟了自然懂」这条路在 Git 上走不通,因为 Git 的命令名和它干的事之间几乎没有对应关系:<code>checkout</code> 既能切分支又能丢改动,<code>reset</code> 既能挪分支又能取消暂存,<code>revert</code> 和 <code>reset</code> 名字像意思完全不同。这些命名是历史包袱,不是设计。想靠名字推语义,必然背了忘、忘了再查。反过来,只要知道每条命令动的是对象库、引用、索引里的哪几样,语义就是推出来的。</p>
 <p>命名混乱有历史原因。Git 最初是 Linus 为 Linux 内核仓库写的一组<strong>底层工具</strong>(Git 自己的术语叫 plumbing,管道),<code>hash-object</code>、<code>write-tree</code>、<code>commit-tree</code>、<code>update-ref</code> 这些名字准确得像 API。上层那些给人用的命令(porcelain,瓷器)是后来一层层长出来的,长的过程中不断加功能、不断复用已有命令名,于是 <code>checkout</code> 从「检出一个版本」被扩展成「切分支 + 按路径恢复文件 + 进游离头」三件事。Git 2.23 把后两件拆成 <code>switch</code> 和 <code>restore</code>,就是在还这笔债。所以别指望从命令名推语义;要推,就从它动了哪几样东西推。</p>
@@ -715,7 +762,7 @@ $ ls .git/refs/heads/           ← 空了,但 git rev-parse main 照样能解�
 0000000000000000000000000000000000000000 b6ba8b64ec8b174aaf8eefcd25a82b5b646fc56d Lin Wei &lt;lin@example.com&gt; 1740794400 +0800
 b6ba8b64ec8b174aaf8eefcd25a82b5b646fc56d a133db6bc7f07a4eb27531f21e1cdf04a6d6a901 Lin Wei &lt;lin@example.com&gt; 1740795000 +0800	commit: docs: 加第二行</code></pre>
 <p>全零的旧哈希表示「这条引用之前不存在」。<code>HEAD@{2}</code> 这种写法就是在这个文件里从下往上数第 3 行的新哈希;<code>main@{yesterday}</code> 按时间戳查。因为 reflog 只在本地、且是逐条追加的,它构成了本地操作的<strong>完整审计轨迹</strong>——这也是为什么几乎所有「我把东西弄丢了」都能从这里救回来(前提仍是那东西进过对象库)。</p>
-<p>reflog 的保留期是可配的,而且有<strong>两条不同的期限</strong>:<code>gc.reflogExpire</code>(默认 90 天)管仍然可达的条目,<code>gc.reflogExpireUnreachable</code>(默认 30 天)管那些指向「已经从历史里掉出去」的提交的条目——也就是你最可能需要救的那些。所以「reflog 保留 90 天」这个说法对救援场景其实偏乐观,真实窗口通常是 30 天。要给自己留更长的后悔期,可以把两者都调大:<code>git config --global gc.reflogExpire "1 year"</code> 加 <code>git config --global gc.reflogExpireUnreachable "1 year"</code>。代价是对象库不会及时收缩,对普通项目完全可接受。</p>
+<p>reflog 的保留期是可配的,而且有<strong>两条不同的期限</strong>:<code>gc.reflogExpire</code>(默认 90 天)管仍然可达的条目,<code>gc.reflogExpireUnreachable</code>(默认 30 天)管那些指向「已经从历史里掉出去」的提交的条目——也就是你最可能需要救的那些。所以「reflog 保留 90 天」这个说法对救援场景偏乐观,真实窗口通常是 30 天。要给自己留更长的后悔期,可以把两者都调大:<code>git config --global gc.reflogExpire "1 year"</code> 加 <code>git config --global gc.reflogExpireUnreachable "1 year"</code>。代价是对象库不会及时收缩,对普通项目完全可接受。</p>
 <p>与之相关的一条纪律:<strong>别随手跑 <code>git gc --prune=now</code></strong>。它会立刻回收所有不可达对象,等于把 reflog 这张安全网提前收掉。真正需要它的场景只有「刚清理完大文件想让仓库立刻变小」,而那种场景下你应该已经确认过没有别的东西要救了。日常什么都不用做,Git 会在合适的时机自己跑 <code>gc --auto</code>。</p>
 <p>最后一个容易混的点:<code>ORIG_HEAD</code>。它不是一个持续维护的引用,而是<strong>某些危险操作前的一次性备份</strong>——<code>merge</code>、<code>rebase</code>、<code>reset</code> 这类会大幅移动 HEAD 的命令,会先把移动前的位置写进 <code>.git/ORIG_HEAD</code>。所以「刚才那次 merge 我想撤了」的标准动作是 <code>git reset --hard ORIG_HEAD</code>。但它只保留最近一次,连着做两次危险操作就只剩后一次的备份了,别把它当回收站用。</p></div>
 <h2 id="g1-three-trees">1.4 三棵树:工作区、索引、HEAD,以及四个动作在它们之间搬什么</h2>
@@ -971,7 +1018,7 @@ Another git process seems to be running in <span class="kw">this</span> reposito
 <p>处置的顺序不能反:<strong>先确认真的没有 Git 进程在跑</strong>(编辑器里开着的 <code>git commit</code> 也算),<strong>再删掉那个 .lock 文件</strong>。删锁文件本身是安全的——它不含数据,只是一个存在性标记。真正危险的是没确认就删,那等于关掉了并发保护。另外,IDE 的 Git 插件常在后台跑 <code>status</code> 和 <code>fetch</code>,「我明明什么都没干」并不能作为「没有 Git 进程」的证据。</p>
 <p>③ <strong>历史「不可变」是结构决定的,不是规矩</strong>。commit 对象的哈希覆盖了它的树和它的父,所以改任何一个祖先提交,它之后所有提交的哈希都会变。这不是 Git 禁止你改历史,而是「改」在物理上只能表现为「造一批新对象、把引用指过去」。理解这一条,就能理解为什么 rebase 是复制而不是移动、为什么改过历史之后必须强推、为什么别人已经基于旧提交工作时强推会出事。</p></div>
 <h2 id="g1-sum">1.6 小结:本章要点与易错清单</h2>
-<p>这一章五节讲的其实是同一件事的三个侧面:<strong>Git 是一个内容寻址的对象数据库,外面套了一层引用,旁边放了一个叫索引的提交草稿</strong>。<a href="#g1-why">1.1</a> 说明了为什么必须先讲这个;<a href="#g1-object">1.2</a> 把对象库拆到字节一级——blob 存内容、tree 存目录、commit 存快照指针,名字由内容算出来所以内容相同必然共用;<a href="#g1-ref">1.3</a> 说明分支、HEAD、标签只是 41 字节的文件,「切分支」是改一行文本;<a href="#g1-three-trees">1.4</a> 把工作区、索引、HEAD 摆成一排,让 <code>add</code> / <code>commit</code> / <code>restore</code> / <code>reset</code> 的语义变成坐标而不是词条;<a href="#g1-inside">1.5</a> 用底层命令手工造出一个提交,证明 <code>git commit</code> 没有魔法。</p>
+<p>这一章五节讲的是同一件事的三个侧面:<strong>Git 是一个内容寻址的对象数据库,外面套了一层引用,旁边放了一个叫索引的提交草稿</strong>。<a href="#g1-why">1.1</a> 说明了为什么必须先讲这个;<a href="#g1-object">1.2</a> 把对象库拆到字节一级——blob 存内容、tree 存目录、commit 存快照指针,名字由内容算出来所以内容相同必然共用;<a href="#g1-ref">1.3</a> 说明分支、HEAD、标签只是 41 字节的文件,「切分支」是改一行文本;<a href="#g1-three-trees">1.4</a> 把工作区、索引、HEAD 摆成一排,让 <code>add</code> / <code>commit</code> / <code>restore</code> / <code>reset</code> 的语义变成坐标而不是词条;<a href="#g1-inside">1.5</a> 用底层命令手工造出一个提交,证明 <code>git commit</code> 没有魔法。</p>
 <p>一句话记住这一章:<strong>所有 Git 命令都只在做三件事之一——往对象库里加东西、改某个引用指向、在三棵树之间搬内容。</strong>剩下的全是这三件事的组合与命名习惯。</p>
 <table style="contain-intrinsic-size:auto 1441px">
 <thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
@@ -983,7 +1030,7 @@ Another git process seems to be running in <span class="kw">this</span> reposito
 <tr><td class="nw">松散对象与包文件</td><td>新对象是一个文件一个,<code>gc</code> 之后打进 packfile 并做 delta</td><td>看到 <code>.git/objects</code> 里文件变少了以为丢东西了</td></tr>
 <tr><td class="nw">分支是 41 字节的文件</td><td><code>refs/heads/&lt;名&gt;</code> 里就一行 40 位哈希加换行</td><td>以为建分支会复制一份代码,于是「怕分支多了仓库变大」</td></tr>
 <tr><td class="nw">HEAD 是符号引用</td><td>正常时内容是 <code>ref: refs/heads/main</code>,游离时直接是哈希</td><td>在 CI 的游离 HEAD 上用 <code>git rev-parse --abbrev-ref HEAD</code> 拿分支名,拿到字符串 <code>HEAD</code></td></tr>
-<tr><td class="nw">游离 HEAD</td><td>在上面提交完全正常,只是没有分支指着新提交</td><td>切走前忘了 <code>git branch &lt;名&gt; &lt;哈希&gt;</code>,以为提交没了;其实 Git 切走时已经把哈希印在警告里</td></tr>
+<tr><td class="nw">游离 HEAD</td><td>在上面提交完全正常,只是没有分支指着新提交</td><td>切走前忘了 <code>git branch &lt;名&gt; &lt;哈希&gt;</code>,以为提交没了;实际上 Git 切走时已经把哈希印在警告里</td></tr>
 <tr><td class="nw">标签 vs 分支</td><td>唯一区别是提交时分支会自动前移</td><td>把发布点打成分支,过一阵被人在上面提交了,「版本」就变了</td></tr>
 <tr><td class="nw">packed-refs</td><td>引用有松散文件和打包文件两处存放,松散优先</td><td>直接 <code>rm .git/refs/heads/xxx</code> 删分支,发现分支还在</td></tr>
 <tr><td class="nw">reflog</td><td>每次引用移动追加一行,只在本地,默认 90 天</td><td>以为 <code>git clone</code> 会带上 reflog,于是指望在新克隆里找回别人的误操作</td></tr>
@@ -995,7 +1042,7 @@ Another git process seems to be running in <span class="kw">this</span> reposito
 <tr><td class="nw">reset vs restore</td><td><code>reset</code> 动引用,<code>restore</code> 只在树之间搬内容</td><td>想丢弃一个文件的改动,打了 <code>git reset --hard</code>,把别的文件也一起退了</td></tr>
 <tr><td class="nw">能救与不能救</td><td>进过对象库的都能救,没 <code>add</code> 过的工作区改动救不回来</td><td>事后才问「能恢复吗」;正确做法是危险操作前先 <code>git stash -u</code> 或 <code>git add -A</code></td></tr>
 <tr><td class="nw">commit 五步</td><td>写 blob → 写 tree → 写 commit → 移引用 → 记 reflog,只有第四步有副作用</td><td>以为提交中断会损坏仓库,于是遇到 <code>index.lock</code> 就删整个 <code>.git</code></td></tr>
-<tr><td class="nw">悬空对象</td><td class="nw">对象还在,只是没有引用指着它</td><td>「我的提交不见了」——其实用 <code>git fsck --lost-found</code> 加 <code>git branch</code> 就能接回来</td></tr>
+<tr><td class="nw">悬空对象</td><td class="nw">对象还在,只是没有引用指着它</td><td>「我的提交不见了」——用 <code>git fsck --lost-found</code> 加 <code>git branch</code> 就能接回来</td></tr>
 <tr><td class="nw">历史不可变</td><td>提交哈希覆盖它的树和父,改祖先就会换掉后续所有哈希</td><td>以为 <code>rebase</code> 是把提交「搬」过去,于是不理解为什么要强推</td></tr>
 </tbody>
 </table>
@@ -1028,7 +1075,7 @@ $ git cat-file -t HEAD^{tree} ; git cat-file -t :a.txt</code></pre>
 <p>接下来去 <a href="#g2-status">2.1</a>。第二章把这一章的机制换成一天里真正会敲的十个命令:怎么读 <code>status</code>、<code>diff</code> 的三种范围、<code>add -p</code> 拆提交、撤销决策树、<code>stash</code> 和 <code>.gitignore</code>。那一章几乎不引入新概念,全是本章三样东西的组合,读起来会很快。再往后 <a href="#g3-branch">3.1</a> 讲分支与合并,那时你会发现「分支就是一个 41 字节的文件」这句话不是修辞。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46821px;--thin-h:12212px">
+<section class="chapter" style="contain-intrinsic-size:auto 46787px;--thin-h:12212px">
 <h1 id="g2"><span class="part">日常</span>改、看、撤:一天里用得最多的十个命令</h1>
 <p>上一章把 Git 拆成对象库、引用、索引三样东西。这一章把它们换成一天里真正会敲的命令:看状态、看差异、挑着暂存、写提交、撤销、临时收起手头的活、让 Git 别管某些文件。这里几乎不引入新概念——每一条命令都能用三棵树的坐标读出来,所以这一章读起来应该比上一章快得多。目标是让你在遇到任何一个「这时候该敲什么」的岔口时,不用去搜,而是能自己推。</p>
 <p>六节按「先看清楚,再动手,再收拾」排。<a href="#g2-status">2.1</a> 和 <a href="#g2-diff">2.2</a> 是两只眼睛:<code>status</code> 告诉你每个文件在三棵树的哪一段之间不一致,<code>diff</code> 告诉你具体差在哪几行——两者的输出都直接对应 <a href="#g1-three-trees">1.4</a> 那三棵树,读法一样。<a href="#g2-commit">2.3</a> 讲怎么把工作区里混在一起的改动拆成几个干净的提交,以及 <code>--amend</code> 的确切语义。<a href="#g2-undo">2.4</a> 是这一章的核心:一张决策树把「我想撤销」这句话按「东西到了哪一棵树」分成五个岔口,每个岔口只有一条命令,危险的那几条都标了丢什么、能不能救。<a href="#g2-stash">2.5</a> 处理「手头活没干完又要切分支」,顺带给出比 stash 更适合长期并行的 <code>worktree</code>。<a href="#g2-ignore">2.6</a> 收尾:哪些文件根本不该进仓库、已经进去了怎么办、跨平台换行符怎么统一。本章全部输出实测于 git 2.54.0.windows.1。</p>
@@ -1330,7 +1377,7 @@ git commit [&lt;选项&gt;]
 <tr><td class="nw"><code>git add -u</code></td><td>只处理已跟踪文件</td><td>只想提交修改与删除,不想把新文件带进来</td><td>新加的文件<strong>不会</strong>被暂存,容易漏</td></tr>
 <tr><td class="nw"><code>git add -A</code></td><td>全仓库的全部变更</td><td>明确知道要一网打尽时</td><td>最容易把临时文件、密钥、构建产物一起带进去</td></tr>
 <tr><td class="nw"><code>git add -p</code></td><td>逐块挑</td><td>一次改动混了两件事</td><td>新文件默认进不去,要先 <code>git add -N &lt;文件&gt;</code></td></tr>
-<tr><td class="nw"><code>git commit -a</code></td><td>暂存已跟踪的改动再提交</td><td>只改了几个已有文件的小提交</td><td>同 <code>-u</code>:新文件不会进来,以为提交了其实没有</td></tr>
+<tr><td class="nw"><code>git commit -a</code></td><td>暂存已跟踪的改动再提交</td><td>只改了几个已有文件的小提交</td><td>同 <code>-u</code>:新文件不会进来,以为提交了,实际没有</td></tr>
 <tr><td class="nw"><code>git commit --amend</code></td><td>替换最近一个提交</td><td>提交信息写错、漏了一个文件、忘了跑格式化</td><td><strong>产生新哈希</strong>;已经推出去的提交这么干,别人下次拉取会分叉</td></tr>
 </tbody>
 </table>
@@ -1496,11 +1543,11 @@ index 0000000..4b619f7
   5: [p]atch	  6: [d]iff	  7: [q]uit	  8: [h]elp
 What now&gt; q
 Bye.</code></pre>
-<p>上半部分那张表比 <code>git status</code> 直观:<strong>staged 列是索引相对 HEAD 的增删行数,unstaged 列是工作区相对索引的</strong>——正好是短格式两列状态码的数量版。菜单里 <code>u</code> 是按文件暂存、<code>r</code> 是按文件取消暂存、<code>a</code> 是加未跟踪文件、<code>p</code> 才进 <code>add -p</code> 那套逐块界面。日常够用的其实就是 <code>git add -p</code>,<code>-i</code> 适合一次要处理很多文件、又想边看边挑的场合。</p></div>
+<p>上半部分那张表比 <code>git status</code> 直观:<strong>staged 列是索引相对 HEAD 的增删行数,unstaged 列是工作区相对索引的</strong>——正好是短格式两列状态码的数量版。菜单里 <code>u</code> 是按文件暂存、<code>r</code> 是按文件取消暂存、<code>a</code> 是加未跟踪文件、<code>p</code> 才进 <code>add -p</code> 那套逐块界面。日常够用的就是 <code>git add -p</code>,<code>-i</code> 适合一次要处理很多文件、又想边看边挑的场合。</p></div>
 <div class="deep"><h3 class="deep">机制:一次提交的边界该画在哪</h3>
 <p>「一次提交一件事」不是洁癖,是有具体收益的:① <code>git revert</code> 能干净地撤掉一件事,而不会顺手撤掉混在同一提交里的另外两件;② <code>git bisect</code> 二分定位问题提交时,提交越小,定位到之后要读的代码越少;③ review 时读一个只做一件事的提交,比读一个「顺手」提交快一个数量级。这三条收益都随提交变大而急剧下降,所以拆分的成本几乎总是划算的。</p>
 <p>实操上有一条很有效的判据:<strong>提交信息里如果出现「并且」「顺便」「同时」,就该拆</strong>。写不出一句不带连接词的标题,通常说明这个提交做了两件事。</p>
-<p>拆分的三个常用手法各有适用场景:<code>git add -p</code> 适合改动已经混在一起、但在文件里物理上分得开的情况;<code>git add -N &lt;新文件&gt;</code> 之后再 <code>-p</code>,适合新文件里也只想提交一部分(不加 <code>-N</code> 的话新文件对 <code>-p</code> 是不可见的);而如果改动在同一个函数里犬牙交错,最省事的其实是<strong>先提交全部,再用后续手段拆</strong>——硬用 <code>e</code> 手工编辑 hunk 很容易做出一个编译不过的中间提交,那比不拆更糟。</p>
+<p>拆分的三个常用手法各有适用场景:<code>git add -p</code> 适合改动已经混在一起、但在文件里物理上分得开的情况;<code>git add -N &lt;新文件&gt;</code> 之后再 <code>-p</code>,适合新文件里也只想提交一部分(不加 <code>-N</code> 的话新文件对 <code>-p</code> 是不可见的);而如果改动在同一个函数里犬牙交错,最省事的是<strong>先提交全部,再用后续手段拆</strong>——硬用 <code>e</code> 手工编辑 hunk 很容易做出一个编译不过的中间提交,那比不拆更糟。</p>
 <p>最后一条常被忽略的规矩:<strong>每个提交都应该能独立构建和通过测试</strong>。这不只是洁癖——<code>bisect</code> 的前提就是每个提交都可运行,历史里混进几个「中间态」提交,二分就会卡在无法判定的位置上。所以拆分的粒度上限是「拆到不能再拆但仍然能跑」,不是「拆到每次只改一行」。</p></div>
 <h2 id="g2-undo">2.4 撤销决策树:改了没 add、add 了没 commit、commit 了没 push</h2>
 <p>「撤销」在 Git 里不是一条命令,是五个岔口。走错岔口的代价差别极大:走对了什么都不丢,走错了可能把一上午的工作抹掉。判据只有一个——<strong>你要撤的东西目前落在三棵树的哪一棵,以及它有没有离开过你这台机器</strong>。这一节把这个判据画成一张决策树,并把每条命令的破坏力标清楚。</p>
@@ -1701,7 +1748,7 @@ $ git add a.txt &amp;&amp; git stash push -m <span>"第二次"</span>
 $ git stash pop --index
 Changes to be committed:
 	modified:   a.txt                ← 暂存状态保住了</code></pre></div>
-<div class="deep"><h3>完整示例:stash 其实是一个(或三个父的)提交</h3>
+<div class="deep"><h3>完整示例:stash 是一个(或三个父的)提交</h3>
 <p><code>stash</code> 不是什么特殊存储,它就是<strong>提交</strong>,存在 <code>refs/stash</code> 这个引用上:</p>
 <pre style="contain-intrinsic-size:auto 413px"><code>$ cat .git/refs/stash
 093d5262ebe815be4dd91b58cfe930c30409de27
@@ -1742,7 +1789,7 @@ $ git stash list
 stash@{0}: On feature: 会冲突的        ← 还在,没被删</code></pre>
 <p><code>Updated upstream</code> 是当前分支上的内容,<code>Stashed changes</code> 是你收起来的内容。冲突标记的读法和合并冲突完全一样(见 <a href="#g3-conflict">3.3</a>)。关键是最后那行提示:<strong>pop 遇冲突时不会删掉这条 stash</strong>,所以解完冲突之后要手动 <code>git stash drop</code>,否则它会一直挂在列表里。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 233px"><span class="t">🔴 stash 是最容易被遗忘的仓库角落</span><p><strong>丢什么</strong>:<code>git stash clear</code> 和 <code>git stash drop</code> 会解除引用,<code>gc</code> 跑过之后就真没了。更常见的损失不是删,而是<strong>忘</strong>:改了三天的东西 stash 之后被别的事岔开,一个月后 <code>git stash list</code> 才想起来,那时候主干已经跑出几百个提交,pop 全是冲突。<strong>能不能救</strong>:<code>drop</code> 之后 <code>gc</code> 之前,<code>git fsck --unreachable | grep commit</code> 能捞到那个 stash 提交,<code>git stash apply &lt;哈希&gt;</code> 恢复。<strong>怎么救</strong>:根本办法是别把 stash 当仓库——超过半天的活开一个分支提交上去(哪怕消息叫 <code>wip</code>),分支会出现在 <code>git branch</code> 里,stash 不会出现在任何日常输出里。</p></div>
-<p>处理「被打断」这件事,其实有四种工具,选哪个取决于<strong>打断会持续多久</strong>。几分钟(改一行推上去)——<code>git stash</code>;半天以上(修一个要来回验证的线上问题)——在当前分支上提交一个 <code>wip: 未完成</code> 再切走,回来 <code>git reset --soft HEAD~1</code> 拆开继续;需要同时跑两套环境(一边开着开发服务器,一边跑测试)——<code>git worktree</code>;只是想看看另一个分支上某个文件长什么样,根本不用切——<code>git show &lt;分支&gt;:&lt;路径&gt;</code> 直接打印出来。第四种最被低估:大多数「我切过去看一眼」的需求根本不需要切分支。</p>
+<p>处理「被打断」这件事,有四种工具,选哪个取决于<strong>打断会持续多久</strong>。几分钟(改一行推上去)——<code>git stash</code>;半天以上(修一个要来回验证的线上问题)——在当前分支上提交一个 <code>wip: 未完成</code> 再切走,回来 <code>git reset --soft HEAD~1</code> 拆开继续;需要同时跑两套环境(一边开着开发服务器,一边跑测试)——<code>git worktree</code>;只是想看看另一个分支上某个文件长什么样,根本不用切——<code>git show &lt;分支&gt;:&lt;路径&gt;</code> 直接打印出来。第四种最被低估:大多数「我切过去看一眼」的需求根本不需要切分支。</p>
 <p><code>wip</code> 提交这条路值得多说一句,因为它比 stash 稳。它的三个优势:改动进了对象库并且<strong>有分支指着</strong>,不会像 stash 那样被遗忘;<code>git log</code>、<code>git branch</code> 这些日常命令都能看到它;回来之后 <code>git reset --soft HEAD~1</code> 就把改动原样退回索引,和从没提交过一样。唯一要守的纪律是<strong>别把 wip 推到共享分支</strong>——推到自己的 feature 分支没问题,后面用交互式 rebase 收拾干净即可。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 stash 之前先看清楚它收不收未跟踪文件</span><p>默认 <code>git stash</code> 只收已跟踪文件的改动。新建的文件会留在工作区,跟着你切到别的分支去,然后在那边被 <code>git add .</code> 一起提交——这是「怎么把别的分支的文件带过来了」的最常见成因。养成用 <code>git stash -u</code> 的习惯,或者 stash 之后瞄一眼 <code>git status</code> 确认干净。</p></div></div>
 <div class="deep"><h3>完整示例:只收一部分</h3>
@@ -1765,7 +1812,7 @@ $ git stash list
 stash@{0}: On main: 只收 seed</code></pre>
 <p>按路径限定时那个 <code>--</code> 别省:<code>git stash push -m "x" seed.txt</code> 里的 <code>seed.txt</code> 会被当成什么取决于它是不是同时也是个分支名,加上 <code>--</code> 就没有歧义了。这条规矩在 Git 里到处适用——凡是命令既接受「修订」又接受「路径」的地方(<code>diff</code>、<code>log</code>、<code>checkout</code>、<code>restore</code>、<code>stash push</code>),用 <code>--</code> 把两者分开是最省心的写法。</p></div>
 <div class="deep"><h3 class="deep">深入:worktree —— 比 stash 更适合长期并行</h3>
-<p>stash 的适用面其实很窄:它假设你会在几分钟内回来。要长期并行两条线(比如一边写功能一边帮别人 review 另一个分支),更合适的是 <code>git worktree</code>——在另一个目录检出另一个分支,两个目录<strong>共用同一个对象库</strong>,互不干扰。</p>
+<p>stash 的适用面很窄:它假设你会在几分钟内回来。要长期并行两条线(比如一边写功能一边帮别人 review 另一个分支),更合适的是 <code>git worktree</code>——在另一个目录检出另一个分支,两个目录<strong>共用同一个对象库</strong>,互不干扰。</p>
 <pre style="contain-intrinsic-size:auto 468px"><code>$ git worktree add ../wt-hotfix hotfix
 Preparing worktree (checking out <span>'hotfix'</span>)
 HEAD is now at cf84264 c2 别人改了同一行
@@ -1916,7 +1963,7 @@ blob.bin: text: unset</code></pre>
 <div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 加了 .gitattributes 之后,老文件不会自动变</span><p>属性只在文件<strong>经过</strong>索引时生效。已经在仓库里的文件不会因为你加了规则就重新规整,<code>git ls-files --eol</code> 里仍然是老的 <code>w/crlf</code>。要一次性规整全仓库,跑 <code>git add --renormalize .</code> 再提交——这会产生一个「只改了换行符」的巨大提交,应当<strong>单独提交、单独说明</strong>,并挑一个没人有长期分支的时间点做,否则所有在途分支都会全文件冲突。规整之后工作区里的文件还是老换行,要重新检出(<code>rm 文件 &amp;&amp; git checkout -- 文件</code>)才会变。</p></div>
 <p>另外两个常用属性值得记住:<code>-diff</code> 让某类文件在 <code>git diff</code> 里只显示 <code>Binary files differ</code>(适合体积大又没意义比较的生成文件);<code>merge=union</code> 让 Git 在冲突时把两边的行都保留(只适合 CHANGELOG 这种纯追加的文件,用在代码上会做出语法错误的结果);<code>linguist-generated=true</code> 是 GitHub 的扩展属性,让生成的文件在 PR diff 里默认折叠。</p></div>
 <h2 id="g2-sum">2.7 小结:本章要点与易错清单</h2>
-<p>这一章六节其实只讲了一件事:<strong>日常命令都是三棵树之间的搬运,而「该敲哪条」取决于东西现在在哪一棵树上</strong>。<a href="#g2-status">2.1</a> 教你读出「在哪」——长格式的三段标题、短格式的两列状态码,都是三棵树的两两比较;<a href="#g2-diff">2.2</a> 教你看清「差在哪」,并把默认的两端(工作区↔索引)记牢,把 <code>A..B</code> 与 <code>A...B</code> 分开;<a href="#g2-commit">2.3</a> 讲怎么把混在一起的改动拆成干净的提交,以及 <code>--amend</code> 其实是造了个新提交;<a href="#g2-undo">2.4</a> 把「我想撤销」拆成五个岔口,前四个动本地引用,第五个必须用 <code>revert</code>;<a href="#g2-stash">2.5</a> 处理临时打断,并给出更适合长期并行的 <code>worktree</code>;<a href="#g2-ignore">2.6</a> 划清「哪些文件不该进仓库」和「进了的怎么处理」。</p>
+<p>这一章六节只讲了一件事:<strong>日常命令都是三棵树之间的搬运,而「该敲哪条」取决于东西现在在哪一棵树上</strong>。<a href="#g2-status">2.1</a> 教你读出「在哪」——长格式的三段标题、短格式的两列状态码,都是三棵树的两两比较;<a href="#g2-diff">2.2</a> 教你看清「差在哪」,并把默认的两端(工作区↔索引)记牢,把 <code>A..B</code> 与 <code>A...B</code> 分开;<a href="#g2-commit">2.3</a> 讲怎么把混在一起的改动拆成干净的提交,以及 <code>--amend</code> 是造了个新提交;<a href="#g2-undo">2.4</a> 把「我想撤销」拆成五个岔口,前四个动本地引用,第五个必须用 <code>revert</code>;<a href="#g2-stash">2.5</a> 处理临时打断,并给出更适合长期并行的 <code>worktree</code>;<a href="#g2-ignore">2.6</a> 划清「哪些文件不该进仓库」和「进了的怎么处理」。</p>
 <p>一句话记住这一章:<strong>先用 <code>status</code> 和 <code>diff</code> 确认东西在哪一棵树上,再选命令;凡是会覆盖工作区的命令,先想清楚那份内容进没进过对象库。</strong></p>
 <table style="contain-intrinsic-size:auto 1679px">
 <thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
@@ -2379,7 +2426,7 @@ $ git show :2:price.js          ← ours(main)
   <span class="kw">return</span> items.reduce((s, i) =&gt; s + i.price * i.qty, 0);
 $ git show :3:price.js          ← theirs(feature-tax)
   <span class="kw">return</span> items.reduce((s, i) =&gt; s + i.price * 1.13, 0);</code></pre>
-<p>这就是「冲突的本质」那句话的实证:文件里的标记是<strong>投影</strong>,索引里的三份才是<strong>数据</strong>。所以「不小心把标记删错了」不是灾难——三份原始内容还在索引里,<code>git checkout --ours/--theirs</code> 或 <code>git show :N:</code> 随时能重新取。</p>
+<p>这就是「冲突的本质」那句话的实证:文件里的标记是<strong>投影</strong>,索引里的三份才是<strong>数据</strong>。所以「不小心把标记删错了」不是不可逆的——三份原始内容还在索引里,<code>git checkout --ours/--theirs</code> 或 <code>git show :N:</code> 随时能重新取。</p>
 <pre style="contain-intrinsic-size:auto 141px"><code>$ git checkout --ours price.js  &amp;&amp; sed -n 2p price.js
   <span class="kw">return</span> items.reduce((s, i) =&gt; s + i.price * i.qty, 0);
 $ git checkout --theirs price.js &amp;&amp; sed -n 2p price.js
@@ -2660,17 +2707,17 @@ UU f.txt                                       ← 但仍然是「未解决」�
 <tr><td class="nw"><code>-d</code> 的判据</td><td>按<strong>祖先关系</strong>判「已合并」,不看内容</td><td>squash 合并过的分支被判未合并,以为没合成功</td></tr>
 <tr><td class="nw"><code>branch -D</code></td><td>强删,只剩 reflog 拴着</td><td>删前不记哈希,事后要靠 <code>fsck --lost-found</code> 翻</td></tr>
 <tr><td class="nw">分支命名带斜杠</td><td class="nw">引用文件会放进子目录</td><td>同时有 <code>feat</code> 和 <code>feat/x</code>,报 <code>cannot lock ref</code></td></tr>
-<tr><td class="nw">快进的条件</td><td><code>merge-base(我, 对方) == 我</code></td><td>以为「没冲突就是快进」,其实两边都提交过就一定不是</td></tr>
+<tr><td class="nw">快进的条件</td><td><code>merge-base(我, 对方) == 我</code></td><td>以为「没冲突就是快进」,实际上两边都提交过就一定不是</td></tr>
 <tr><td class="nw">快进不产生新对象</td><td class="nw">只是指针挪一格</td><td>以为快进也会造合并提交,于是在历史里找不到</td></tr>
-<tr><td class="nw">三方合并</td><td class="nw">造一个有两个父的提交</td><td>以为 merge 提交里存着「合并的差异」,其实它和普通提交一样是快照</td></tr>
+<tr><td class="nw">三方合并</td><td class="nw">造一个有两个父的提交</td><td>以为 merge 提交里存着「合并的差异」,实际上它和普通提交一样是快照</td></tr>
 <tr><td class="nw">父的顺序有意义</td><td>第一个父是执行合并时所在的分支</td><td><code>git revert</code> 合并提交时 <code>-m</code> 写错边,把主干撤没了</td></tr>
-<tr><td class="nw"><code>--ff-only</code> 被拒</td><td>退出码 128,提示里给了两条出路</td><td>看到 <code>fatal</code> 以为出错了,其实是保护</td></tr>
+<tr><td class="nw"><code>--ff-only</code> 被拒</td><td>退出码 128,提示里给了两条出路</td><td>看到 <code>fatal</code> 以为出错了,实际上是保护</td></tr>
 <tr><td class="nw"><code>merge.ff only</code></td><td class="nw">让任何隐式合并都停下来问你</td><td>不设,默认 <code>git pull</code> 造出满屏 <code>Merge branch 'main' of …</code></td></tr>
 <tr><td class="nw"><code>--abort</code></td><td class="nw">回到合并前</td><td>解冲突解到一半嫌烦 <code>--abort</code>,把已解的部分一起丢了</td></tr>
 <tr><td class="nw"><code>ORIG_HEAD</code></td><td class="nw">合并前的位置备份</td><td>想撤销已完成的合并却去 <code>reset --hard HEAD~1</code>,退错了边</td></tr>
 <tr><td class="nw">冲突的定义</td><td class="nw">同一路径两边改成了不同内容</td><td>以为「同时改了同一个文件」就一定冲突;改不同行不冲突</td></tr>
 <tr><td class="nw">索引里存三份</td><td>暂存位 1/2/3 = base/ours/theirs</td><td>以为文件被 Git 弄坏了,删掉重写</td></tr>
-<tr><td class="nw"><code>git show :2:&lt;文件&gt;</code></td><td class="nw">随时取回任一版本</td><td>标记删错了就 <code>--abort</code> 重来,其实三份都还在</td></tr>
+<tr><td class="nw"><code>git show :2:&lt;文件&gt;</code></td><td class="nw">随时取回任一版本</td><td>标记删错了就 <code>--abort</code> 重来,实际上三份都还在</td></tr>
 <tr><td class="nw"><code>checkout --ours</code></td><td class="nw"><strong>整个文件</strong>取一边</td><td>以为只影响冲突处,把对方在这个文件里的其他改动全丢了</td></tr>
 <tr><td class="nw">修改/删除冲突</td><td class="nw">文件里<strong>没有</strong>标记</td><td>搜不到 <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> 就以为解完了,漏掉这一类</td></tr>
 <tr><td class="nw">解冲突的收尾判据</td><td><code>git status</code> 里 <code>Unmerged paths</code> 为空</td><td>只靠搜标记判断,漏文件</td></tr>
@@ -3649,7 +3696,7 @@ From C:/…/sec
   origin/main
   origin/pr/7</code></pre>
 <p>这个能力有两面。正面是本地评审 PR 极其方便(<code>git switch --detach origin/pr/7</code> 就能跑起来)。反面在 <a href="#g6-big">6.5</a> 里会看到:<strong>平台留着的这些 ref 会让「从历史里删掉的东西」继续可达</strong>——密钥删了却删不干净,原因常常就在这里。</p>
-<p><code>git remote add</code> 加的其实也只是几行配置,手写等价:</p>
+<p><code>git remote add</code> 加的也只是几行配置,手写等价:</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 87px"><code>git config remote.upstream.url https:<span class="cm">//example.com/org/repo.git</span>
 git config remote.upstream.fetch <span>'+refs/heads/*:refs/remotes/upstream/*'</span></code></pre></div>
 <h3>常用配置速查</h3>
@@ -3766,7 +3813,7 @@ cat .git/FETCH_HEAD</code></pre>
 
 c2a2f12826ecea75bb0675722bc0737e8a2265ee		branch <span>'main'</span> of C:/…/o6</code></pre>
 <p><code>git pull</code> 的第二步合并的就是这个 <code>FETCH_HEAD</code>,而不是 <code>origin/main</code>——这也是为什么那条 merge 提交的信息里带着 URL。<code>git pull &lt;url&gt; &lt;branch&gt;</code> 这种不配置远端的临时拉取之所以能工作,靠的也是它。</p>
-<p><code>pull --rebase</code> 还多做一件事:它默认带 <code>--fork-point</code>,会去查 <code>origin/&lt;branch&gt;</code> 的 <strong>reflog</strong>,判断「哪些本地提交其实曾经是上游的一部分」。这正是 <a href="#g4-never">4.5</a> 里那个场景的救命机制——上游被强推之后,<code>pull --rebase</code> 能认出旧的公共提交并把它丢掉,而不是当成你的本地提交重放,于是不会制造重复。</p>
+<p><code>pull --rebase</code> 还多做一件事:它默认带 <code>--fork-point</code>,会去查 <code>origin/&lt;branch&gt;</code> 的 <strong>reflog</strong>,判断「哪些本地提交曾经是上游的一部分」。这正是 <a href="#g4-never">4.5</a> 里那个场景的救命机制——上游被强推之后,<code>pull --rebase</code> 能认出旧的公共提交并把它丢掉,而不是当成你的本地提交重放,于是不会制造重复。</p>
 <p>顺带一个常被问到的问题:<code>git fetch</code> 之后本地磁盘变大了,但工作区没变——因为对象已经下载进 <code>.git/objects</code>,只是没有任何工作区文件对应它们。这也是「fetch 很安全但不是零成本」的意思;大仓库里可以用 <code>--depth</code> / <code>--filter</code> 控制拿多少,那是仓库性能的话题,见 <a href="#g11-perf">11.2</a>。</p></div>
 <h3>该配哪一个:决策表</h3>
 <table style="contain-intrinsic-size:auto 302px">
@@ -3987,7 +4034,7 @@ error: failed to push some refs to <span>'C:/…/myfork.git'</span></code></pre>
 <pre style="contain-intrinsic-size:auto 87px"><code>To C:/…/myfork.git
  + 0ef75c9...000618e feature/i18n -&gt; feature/i18n (forced update)</code></pre></div>
 <h3>给 upstream 上一把锁</h3>
-<p>三方模型里最常见的事故是手滑往 <code>upstream</code> 推。有写权限的人(比如你其实是维护者之一)一推就直接改了原项目;没权限的会被拒,但那条命令可能已经跑了几分钟。一行配置彻底断掉这条路:</p>
+<p>三方模型里最常见的事故是手滑往 <code>upstream</code> 推。有写权限的人(比如你是维护者之一)一推就直接改了原项目;没权限的会被拒,但那条命令可能已经跑了几分钟。一行配置彻底断掉这条路:</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 114px"><code>git remote set-url --push upstream DISABLED
 git remote -v
 git push upstream main</code></pre>
@@ -4032,13 +4079,13 @@ git push origin --tags        # 需要的话再同步到自己的 fork</code></p
 <p>两种模型下 <code>origin</code> 的含义不同,这是读别人文档时最容易混淆的地方:同仓库模型里 <code>origin</code> 就是官方仓库;fork 模型里 <code>origin</code> 是你的 fork,官方那个叫 <code>upstream</code>。所以「push 到 origin」这句话在两种语境下的危险程度天差地别。看到别人的操作步骤时,先确认它假设的是哪一种。</p>
 <p>分支模型本身的选择(Git Flow / GitHub Flow / 主干开发)是另一个维度的问题,和这里的仓库结构正交,见 <a href="#g7-models">7.1</a>。</p></div>
 <h2 id="g5-sum">5.5 小结:本章要点与易错清单</h2>
-<p>这一章的 4 节都在回答同一个问题:<strong>「远端现在是什么样」这件事,你的仓库其实并不知道</strong>。<a href="#g5-remote">5.1</a> 把三者的边界画清楚——本地分支、远程跟踪分支、远端分支是三个独立的东西,你机器上只有前两个,而 <code>git status</code> 的所有「领先/落后」都只比前两个。由此推出一切:不 fetch 就永远看不到别人的改动,<code>origin/main</code> 是快照不是实况,<code>fetch</code> 不加 <code>--prune</code> 就不会清理消失的分支。<a href="#g5-fetch">5.2</a> 把 <code>pull</code> 拆成 <code>fetch</code> + 一次合并,并把三种合并方式的历史形状摆在一起:默认的 merge 会源源不断地制造 <code>Merge branch 'main' of …</code> 这种零信息量的提交,<code>pull.rebase=true</code> 或 <code>pull.ff only</code> 是团队级的解药。<a href="#g5-push">5.3</a> 把四种拒绝文本、原因和处置对齐,核心是那句反复出现的判断:<strong>看括号里的词,不要一律加 <code>-f</code></strong>——<code>fetch first</code> 和 <code>non-fast-forward</code> 加 <code>-f</code> 是在删别人的提交,<code>pre-receive hook declined</code> 加 <code>-f</code> 根本没用。<a href="#g5-fork">5.4</a> 处理三方结构:upstream 只读、origin 是你的、本地 main 永远只快进。</p>
+<p>这一章的 4 节都在回答同一个问题:<strong>「远端现在是什么样」这件事,你的仓库并不知道</strong>。<a href="#g5-remote">5.1</a> 把三者的边界画清楚——本地分支、远程跟踪分支、远端分支是三个独立的东西,你机器上只有前两个,而 <code>git status</code> 的所有「领先/落后」都只比前两个。由此推出一切:不 fetch 就永远看不到别人的改动,<code>origin/main</code> 是快照不是实况,<code>fetch</code> 不加 <code>--prune</code> 就不会清理消失的分支。<a href="#g5-fetch">5.2</a> 把 <code>pull</code> 拆成 <code>fetch</code> + 一次合并,并把三种合并方式的历史形状摆在一起:默认的 merge 会源源不断地制造 <code>Merge branch 'main' of …</code> 这种零信息量的提交,<code>pull.rebase=true</code> 或 <code>pull.ff only</code> 是团队级的解药。<a href="#g5-push">5.3</a> 把四种拒绝文本、原因和处置对齐,核心是那句反复出现的判断:<strong>看括号里的词,不要一律加 <code>-f</code></strong>——<code>fetch first</code> 和 <code>non-fast-forward</code> 加 <code>-f</code> 是在删别人的提交,<code>pre-receive hook declined</code> 加 <code>-f</code> 根本没用。<a href="#g5-fork">5.4</a> 处理三方结构:upstream 只读、origin 是你的、本地 main 永远只快进。</p>
 <p>一句能记住的话:<strong>Git 里所有关于远端的知识都是过期的,过期时间从你上一次 fetch 开始算。</strong>推论是两条日常习惯:动手协作前先 <code>git fetch</code>(它没有任何副作用),看不懂状态时用 <code>git remote show origin</code> 直接问远端。</p>
 <table style="contain-intrinsic-size:auto 1502px">
 <thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
 <tbody>
 <tr><td class="nw">三个「分支」</td><td>本地分支、远程跟踪分支、远端分支是三个东西,你机器上只有前两个</td><td>把 <code>origin/main</code> 当成「远端的 main」,以为它是实时的</td></tr>
-<tr><td class="nw"><code>git status</code> 的领先/落后</td><td class="nw">比的是本地分支和<strong>远程跟踪分支</strong></td><td>没 fetch 就相信「已是最新」,其实中间那格几天没动过</td></tr>
+<tr><td class="nw"><code>git status</code> 的领先/落后</td><td class="nw">比的是本地分支和<strong>远程跟踪分支</strong></td><td>没 fetch 就相信「已是最新」,实际上中间那格几天没动过</td></tr>
 <tr><td class="nw">远程跟踪分支怎么更新</td><td>只有 <code>fetch</code> / <code>pull</code> / <code>push</code> 成功后才动</td><td>以为 <code>git branch -r</code> 会联网</td></tr>
 <tr><td class="nw"><code>git remote show origin</code></td><td>会联网,一次说清远端有什么、哪些跟踪已失效</td><td>不知道有这条命令,靠猜</td></tr>
 <tr><td class="nw"><code>fetch</code> 不清理</td><td>远端删掉的分支,本地副本会一直留着</td><td><code>origin/</code> 下积了几百个死分支;不配 <code>fetch.prune</code></td></tr>
@@ -4048,9 +4095,9 @@ git push origin --tags        # 需要的话再同步到自己的 fork</code></p
 <tr><td class="nw">分叉时的 <code>git pull</code></td><td>新版本直接 <code>fatal</code>,要你先选合并方式</td><td>看到那段 hint 随手复制第一条 <code>pull.rebase false</code>,从此满仓库 merge 提交</td></tr>
 <tr><td class="nw">默认 merge 的产物</td><td><code>Merge branch 'main' of …</code>,零信息量</td><td>觉得「历史乱是正常的」,不知道一行配置就能治</td></tr>
 <tr><td class="nw"><code>pull.rebase = true</code></td><td>本地提交重放到远端之上,历史线性</td><td>在有别人提交的共享分支上开着它,等于替别人改写历史</td></tr>
-<tr><td class="nw"><code>pull.ff only</code></td><td class="nw">一旦分叉就报错停下</td><td>以为它是「更安全的 pull」,其实是「更严格的约定」</td></tr>
+<tr><td class="nw"><code>pull.ff only</code></td><td class="nw">一旦分叉就报错停下</td><td>以为它是「更安全的 pull」,实际上是「更严格的约定」</td></tr>
 <tr><td class="nw"><code>fetch</code> 的安全性</td><td class="nw">不动本地分支、工作区、索引</td><td>因为怕出事而连 fetch 都不敢跑</td></tr>
-<tr><td class="nw"><code>FETCH_HEAD</code></td><td><code>pull</code> 合并的其实是它,不是 <code>origin/x</code></td><td>看到 merge 提交信息里带 URL 觉得奇怪</td></tr>
+<tr><td class="nw"><code>FETCH_HEAD</code></td><td><code>pull</code> 合并的是它,不是 <code>origin/x</code></td><td>看到 merge 提交信息里带 URL 觉得奇怪</td></tr>
 <tr><td><code>(fetch first)</code> vs <code>(non-fast-forward)</code></td><td>区别只在你的跟踪引用知不知情,处置相同</td><td>以为是两种不同的错,分别去搜</td></tr>
 <tr><td class="nw"><code>(stale info)</code></td><td><code>--force-with-lease</code> 的租约不成立,不是「你落后了」</td><td>直接换成 <code>-f</code> 重来</td></tr>
 <tr><td class="nw"><code>[remote rejected]</code></td><td>方括号里多了 remote,说明是服务端规则拒的</td><td>加 <code>-f</code> 反复重试;不去看 <code>remote:</code> 那几行真正的原因</td></tr>
@@ -5339,7 +5386,7 @@ feature-line-2</code></pre>
 <tr><td class="nw">60 人,单仓多服务,一天几十次部署</td><td>CI 20 分钟;有 merge queue;有 flag 平台</td><td><strong>trunk-based + merge queue</strong></td><td>账:要维护队列基础设施,合入有排队延迟。收益:语义冲突在合入前暴露</td></tr>
 </tbody>
 </table>
-<p>第二行的「去掉 develop」值得展开一句。Git Flow 里 <code>develop</code> 的职责是「攒下一个版本的内容」,而 <code>main</code> 的职责是「记录已发布的状态」。当你有 <code>release/*</code> 分支时,「已发布状态」其实由 tag 和 release 分支共同记录了,<code>main</code> 完全可以承担「攒下一个版本」的职责。留着 <code>develop</code> 的代价是:每个特性分支要选基点、每次发布要合两次、每个人要记住「我该从哪儿切」。<strong>去掉一条长期分支,就去掉了一整类「切错基点」的错误</strong>。</p>
+<p>第二行的「去掉 develop」值得展开一句。Git Flow 里 <code>develop</code> 的职责是「攒下一个版本的内容」,而 <code>main</code> 的职责是「记录已发布的状态」。当你有 <code>release/*</code> 分支时,「已发布状态」由 tag 和 release 分支共同记录了,<code>main</code> 完全可以承担「攒下一个版本」的职责。留着 <code>develop</code> 的代价是:每个特性分支要选基点、每次发布要合两次、每个人要记住「我该从哪儿切」。<strong>去掉一条长期分支,就去掉了一整类「切错基点」的错误</strong>。</p>
 <div class="deep"><h3>完整示例:一次真实的迁移(Git Flow → 简化版)</h3>
 <p>迁移不是「宣布从下周一开始用新模型」。下面是一个可执行的顺序,每一步都是可回退的:</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 754px"><code># 步骤 1:先量,别先动。看清现状再决定
@@ -5417,7 +5464,7 @@ $ echo <span>"退出码 $?  —— 无输出表示 develop 上没有 main 没有
 <tr><td class="nw">SemVer 的边角</td><td>预发布版优先级低于同号正式版;构建元数据不参与比较</td><td>以为 <code>1.0.0-rc.1</code> 比 <code>1.0.0</code> 新</td></tr>
 <tr><td class="nw">hotfix 的切点</td><td>从线上正在跑的那个 tag 切,不是从当前主干切</td><td>从主干切,把一堆没发布的东西一起带上了生产</td></tr>
 <tr><td class="nw">版本号文件的冲突</td><td>回灌主干时 <code>version.txt</code> 必冲突,且要保留主干那一边</td><td>每次手工解一遍;正解是让版本号由 tag 推导,文件根本不存在</td></tr>
-<tr><td class="nw"><code>cherry-pick -x</code></td><td>在提交信息里留一行溯源;冲突是常态,因为上下文不同</td><td>以为它是「搬一个提交过去」,其实是「重新打一遍补丁」</td></tr>
+<tr><td class="nw"><code>cherry-pick -x</code></td><td>在提交信息里留一行溯源;冲突是常态,因为上下文不同</td><td>以为它是「搬一个提交过去」,实际上是「重新打一遍补丁」</td></tr>
 <tr><td class="nw"><code>git cherry</code> 的边界</td><td>按 patch-id 比对,解决过冲突的补丁就对不上了</td><td>拿它做同步检查,得到一堆假阳性</td></tr>
 <tr><td class="nw">revert 一个合并之后</td><td>那条分支对主干仍是「已合过」,再合会得到 <code>Already up to date.</code></td><td>修好后直接再合一次,代码没回来还以为合上了</td></tr>
 <tr><td class="nw">标签的可变性</td><td><code>tag -f</code> + <code>push -f</code> 能让同一版本号在不同机器上是不同代码</td><td>发错了就改标签,而不是发一个新的补丁版本</td></tr>
@@ -5450,7 +5497,7 @@ $ git branch --contains &lt;提交&gt; --all</code></pre>
 
 <section class="chapter" style="contain-intrinsic-size:auto 30004px;--thin-h:20300px">
 <h1 id="g8"><span class="part">评审</span>提交信息、PR 拆分与 code review</h1>
-<p>上一章讲的是「代码往哪条分支流」,这一章讲的是<strong>它在流动的过程中要经过谁、留下什么</strong>。这两件事经常被当成软性的团队文化问题,其实它们有非常硬的机制:一条提交信息决定了半年后的人能不能看懂这行代码为什么长这样;一个 PR 的体积决定了评审者是认真读还是两分钟点通过;评审里说的话属于哪一层,决定了讨论会收敛还是会变成审美之争。这一章把这三件事各自的机制、可验证的做法和常见走样讲清楚。</p>
+<p>上一章讲的是「代码往哪条分支流」,这一章讲的是<strong>它在流动的过程中要经过谁、留下什么</strong>。这两件事经常被当成软性的团队文化问题,实际上它们有非常硬的机制:一条提交信息决定了半年后的人能不能看懂这行代码为什么长这样;一个 PR 的体积决定了评审者是认真读还是两分钟点通过;评审里说的话属于哪一层,决定了讨论会收敛还是会变成审美之争。这一章把这三件事各自的机制、可验证的做法和常见走样讲清楚。</p>
 <p>四节是「写清楚 → 切得开 → 看得动 → 改得回」的链条。<a href="#g8-message">8.1</a> 讲提交信息:Conventional Commits 的规格只占一小半篇幅,重点是<strong>为什么正文比标题重要</strong>——标题回答「改了什么」,而 diff 本来就能回答这个问题;只有正文能回答「为什么」,而半年后你要的正是这个。<a href="#g8-pr">8.2</a> 讲怎么把一坨改动切成能被认真评审的几个 PR,以及 PR 描述该写什么、体积怎么量。<a href="#g8-review">8.3</a> 按 Google 那本工程书里 Code Review 那一章的四个关注层次组织:正确性、设计、可读性、一致性,并且说清「谁的批准算数」和「LGTM 不等于放行」。<a href="#g8-reviewed">8.4</a> 站到被评审的一侧:怎么用 <code>--fixup</code> 回应意见、怎么让评审者只看增量、以及什么时候应该坚持不改。写提交信息用到的 <code>amend</code> 与部分提交在 <a href="#g2-commit">2.3</a>,重写历史的机制在 <a href="#g4-rebase">4.1</a>,闸门怎么把这些约定变成机器可执行的规则在 <a href="#g9-hooks">9.1</a> 与 <a href="#g9-ci">9.2</a>。</p>
 <h2 id="g8-message">8.1 提交信息:Conventional Commits,以及为什么正文比标题重要</h2>
 <p>这一节要保证的是:<strong>半年后有人 <code>git blame</code> 到这一行时,能在三十秒内知道它为什么长这样</strong>。它不保证提交信息好看,也不保证能自动生成完美的 changelog——后者是 <a href="#g9-release">9.3</a> 的事,而且要靠的正是这一节定下的格式。</p>
@@ -5989,7 +6036,7 @@ git push --force-with-lease</code></pre>
 <tr><td class="nw">回应意见的四种结局</td><td>接受改 / 换个改法 / 解释后不改 / 推后</td><td>沉默地改掉,或者沉默地不改</td></tr>
 <tr><td class="nw">「解释后不改」的正确完成方式</td><td class="nw">把解释写进代码注释或提交信息</td><td>只在评论区解释,半年后新人再问一遍</td></tr>
 <tr><td class="nw"><code>--fixup</code> 的用法</td><td>回应意见时生成 <code>fixup!</code> 提交,合入前才 <code>--autosquash</code></td><td>评审期间就压掉,评审者失去「只看增量」的能力</td></tr>
-<tr><td class="nw"><code>--force-with-lease</code> 的边界</td><td>它比的是本地的远程跟踪分支,强推前 fetch 会让保护失效</td><td>先 fetch 再 force-with-lease,以为安全其实照样覆盖</td></tr>
+<tr><td class="nw"><code>--force-with-lease</code> 的边界</td><td>它比的是本地的远程跟踪分支,强推前 fetch 会让保护失效</td><td>先 fetch 再 force-with-lease,以为安全,实际照样覆盖</td></tr>
 <tr><td class="nw">强推前的自保</td><td><code>git branch bak/…</code> 打本地备份;出事靠 <code>reflog</code></td><td>压合出错后才发现远程那份原始序列已经没了</td></tr>
 <tr><td class="nw">什么时候该坚持</td><td class="nw">事实错误、纯偏好、超出范围</td><td>照单全改,PR 从 200 行涨到 600 行</td></tr>
 <tr><td class="nw">「我读不懂这段」</td><td class="nw">这是可读性反馈,要改代码</td><td>在评论区解释一遍就算过了</td></tr>
@@ -6213,7 +6260,7 @@ remote: update: 标签 v0.1 已存在,不允许移动
 remote: error: hook declined to update refs/tags/v0.1
  ! [remote rejected] v0.1 -&gt; v0.1 (hook declined)</code></pre>
 <p>注意两条拒绝的<strong>来源不同</strong>:第一条 <code>! [rejected] … (non-fast-forward)</code> 是<strong>客户端自己</strong>拒的(Git 默认不会用非快进覆盖远程),第二条 <code>! [remote rejected] … (hook declined)</code> 才是服务端拒的。区分这两条对排查很关键——前者你自己加 <code>--force</code> 就能绕过,后者不能。<code>push</code> 的四种拒绝各自怎么处理见 <a href="#g5-push">5.3</a>。</p>
-<p>最常见的两条规则其实<strong>不需要写钩子</strong>,Git 自带配置项:</p>
+<p>最常见的两条规则<strong>不需要写钩子</strong>,Git 自带配置项:</p>
 <pre style="contain-intrinsic-size:auto 304px"><code>$ git -C central.git config receive.denyNonFastForwards <span class="kw">true</span>
 $ git -C central.git config receive.denyDeletes <span class="kw">true</span>
 
@@ -6668,7 +6715,7 @@ v1.0.0-1-g5926762</code></pre>
 <table style="contain-intrinsic-size:auto 3109px">
 <thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
 <tbody>
-<tr><td class="nw">钩子是什么</td><td>特定目录下的同名可执行文件,Git 按时机调用、看退出码</td><td>以为要装什么东西;其实一个 shell 脚本加可执行权限就行</td></tr>
+<tr><td class="nw">钩子是什么</td><td>特定目录下的同名可执行文件,Git 按时机调用、看退出码</td><td>以为要装什么东西;实际上一个 shell 脚本加可执行权限就行</td></tr>
 <tr><td class="nw"><code>.sample</code> 后缀</td><td>自带样例不会执行,去掉后缀才生效</td><td>改了 <code>pre-commit.sample</code> 然后奇怪为什么没反应</td></tr>
 <tr><td class="nw">钩子不入库</td><td><code>.git/hooks/</code> 在 <code>.git</code> 里,克隆不会带来别人的钩子</td><td>以为提交了钩子队友就有了</td></tr>
 <tr><td class="nw">客户端 vs 服务端</td><td class="nw">前者是便利,后者才是闸门</td><td>把 <code>pre-commit</code> 当成质量保证,然后被 <code>--no-verify</code> 打脸</td></tr>
@@ -6694,7 +6741,7 @@ v1.0.0-1-g5926762</code></pre>
 <tr><td class="nw">管理员豁免</td><td>它让闸门从「总是有效」变成「大部分时候有效」</td><td>出事那天有人用它直推了一个坏修复,主干红给所有人</td></tr>
 <tr><td class="nw">必需检查跑在哪</td><td>必须是「主干 ⊕ PR」的合并结果,不是分支头</td><td>两个 PR 各自绿、合起来主干红,而 Git 全程没报冲突</td></tr>
 <tr><td class="nw">分支陈旧的判据</td><td><code>git merge-base --is-ancestor origin/main HEAD</code>,0 = 不陈旧</td><td>靠肉眼看「落后几个提交」</td></tr>
-<tr><td class="nw">合并队列</td><td>解决「并行合入时检查结果会过期」</td><td>以为它是为了排队,其实是为了让检查跑在真正的合并结果上</td></tr>
+<tr><td class="nw">合并队列</td><td>解决「并行合入时检查结果会过期」</td><td>以为它是为了排队,实际上是为了让检查跑在真正的合并结果上</td></tr>
 <tr><td class="nw">必需集的两个判据</td><td>它红时是不是一定不该合;它是不是稳定</td><td>把视觉回归、依赖扫描、覆盖率塞进必需集,天天误报</td></tr>
 <tr><td class="nw">必需检查改名</td><td>平台按名字匹配,改名后闸门可能静默失效</td><td>改完不验证;正确做法是用一个故意失败的 PR 试一次</td></tr>
 <tr><td class="nw"><code>[skip ci]</code></td><td>检查没跑,必需项永远处于未完成</td><td>用它「加速」,结果 PR 卡住或被当成没有这项检查而放行</td></tr>
@@ -7387,7 +7434,7 @@ tax.js</code></pre>
 <p>复盘阶段最容易走样的是「补测试」这个结论。测试只能挡住能被断言的东西;真正决定下次事故长短的,是<strong>止血路径有没有被演练过</strong>。所以复盘的必答题不是「怎么早点发现」,而是:开关在不在?回滚按钮几个人按过?回滚一次要多久?这三个问题的答案如果是「没有 / 没人 / 不知道」,那么补再多测试,下一次事故也一样长。</p></div>
 <h2 id="g10-sum">10.4 小结:本章要点与易错清单</h2>
 <p>这一章三节讲的是同一件事的三种状态:顺利的时候流程长什么样(<a href="#g10-lifecycle">10.1</a>)、撞上冲突的时候怎么办(<a href="#g10-conflict-real">10.2</a>)、出事故的时候怎么止血(<a href="#g10-rollback">10.3</a>)。贯穿三节的那条主线是:<strong>每一步都要留下一件事后还查得到的产物,并且事先想好这一步怎么退回去。</strong>分支名、提交信息、PR 描述、CI 记录、合并提交、tag,这六件产物构成了一条从线上代码倒查回需求卡的链;<code>--force-with-lease</code>、<code>merge --abort</code>、<code>--no-ff</code> 的合并粒度、tag、feature flag,则是这条链上的五个退路。</p>
-<p>另一条贯穿的线索是:<strong>看懂 git 说了什么,比记住该敲什么更重要。</strong><code>[ahead 2, behind 2]</code> 不是灾难,<code>Auto-merging</code> 不是警告,<code>CONFLICT</code> 不是错误,<code>is a merge but no -m option was given</code> 是在问你一个必须由人回答的问题。这一章把这些输出逐行拆开,是因为三板斧用户的绝大多数事故都始于对某一行输出的误读。</p>
+<p>另一条贯穿的线索是:<strong>看懂 git 说了什么,比记住该敲什么更重要。</strong><code>[ahead 2, behind 2]</code> 不是故障,<code>Auto-merging</code> 不是警告,<code>CONFLICT</code> 不是错误,<code>is a merge but no -m option was given</code> 是在问你一个必须由人回答的问题。这一章把这些输出逐行拆开,是因为三板斧用户的绝大多数事故都始于对某一行输出的误读。</p>
 <h3>本章要点</h3>
 <table style="contain-intrinsic-size:auto 1531px">
 <thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
@@ -8062,7 +8109,7 @@ dangling commit 56e9225243da64eec4b7f1e3344f23f8f5dd2209</code></pre>
 <p>最后一类救援是<strong>服务端</strong>。有人 <code>push -f</code> 覆盖了公共分支,而所有本地克隆也都同步过去了,这时候还有两条路:一是主流托管平台会保留一段时间的引用变更记录(GitHub 的 events API、GitLab 的 push events、自建 Gitea/GitLab 服务端的 reflog),从里面能拿到旧哈希,再让任何一个仓库把它推回去;二是备份。这两条都不属于 git 本身的能力,所以它们的可用性取决于你们用的平台和运维策略——<strong>值得在平静的时候先确认一次,而不是出事的时候才去查</strong>。防住这类事故的正道仍然在合并之前:保护分支上禁止强推(<a href="#g9-ci">9.2</a>),以及所有人都用 <code>--force-with-lease</code> 而不是 <code>-f</code>(<a href="#g4-force">4.4</a>)。</p></div>
 <h2 id="g11-sum">11.4 小结:本章要点与易错清单</h2>
 <p>这一章三节看起来各管一摊——仓库结构、仓库性能、误操作恢复——但它们共用同一条主线:<strong>git 的一切行为都由「对象是不是可达」和「引用指向哪里」这两件事决定。</strong>submodule 存的是一个指向别的仓库的哈希,所以 clone 下来是空的;partial clone 允许对象库有空洞,所以 <code>.git</code> 能小到十几分之一;sparse-checkout 只改索引里的一个标志位,所以 <code>.git</code> 一点没变小;误删的东西还能捞回来,是因为对象还在、只是没人指着它;<code>gc --prune=now</code> 之后捞不回来,是因为不可达的对象被真的删掉了。把这条主线握住,这三节的所有结论都能自己推出来。</p>
-<p>第二条线索是<strong>规模决定手段</strong>。monorepo 的代价要到仓库变大之后才显现,partial clone 与 sparse-checkout 的收益要到文件上万才显著,commit-graph 与 fsmonitor 在几百个提交、一千个文件的仓库上根本测不出差别(这一章老老实实测了,确实测不出)。<strong>没量过就别配</strong>——照着别人博客抄一堆配置,得到的通常只是更难排查的环境差异。</p>
+<p>第二条线索是<strong>规模决定手段</strong>。monorepo 的代价要到仓库变大之后才显现,partial clone 与 sparse-checkout 的收益要到文件上万才显著,commit-graph 与 fsmonitor 在几百个提交、一千个文件的仓库上根本测不出差别(这一章实测过,确实测不出)。<strong>没量过就别配</strong>——照着别人博客抄一堆配置,得到的通常只是更难排查的环境差异。</p>
 <h3>本章要点</h3>
 <table style="contain-intrinsic-size:auto 1809px">
 <thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
@@ -8086,7 +8133,7 @@ dangling commit 56e9225243da64eec4b7f1e3344f23f8f5dd2209</code></pre>
 <tr><td class="nw">sparse 之外的工具链</td><td>编辑器搜索、TS 路径解析、构建脚本可能不知道文件不在</td><td>只给个人配稀疏,不给团队约定「哪些目录是一组」</td></tr>
 <tr><td class="nw"><code>maintenance</code></td><td><code>register</code> 只写配置,<code>start</code> 才装系统调度任务</td><td>以为 <code>register</code> 就会自动跑,等了一个月什么也没发生</td></tr>
 <tr><td class="nw">小仓库上的性能开关</td><td>241 提交 / 1240 文件上,commit-graph 与 fsmonitor 测不出差别</td><td>在小仓库上做实验,得出「这些都没用」的结论</td></tr>
-<tr><td class="nw">恢复的第一判据</td><td>内容进没进过对象库(add 过 / commit 过)</td><td>不分青红皂白问「怎么恢复」,其实分两类完全不同的答案</td></tr>
+<tr><td class="nw">恢复的第一判据</td><td>内容进没进过对象库(add 过 / commit 过)</td><td>不分青红皂白问「怎么恢复」,实际上分两类完全不同的答案</td></tr>
 <tr><td class="nw">真正不可逆的三条</td><td><code>restore</code> 覆盖没 add 的改动、<code>clean -fd</code>、<code>gc --prune=now</code></td><td>以为 <code>reset --hard</code> 也不可逆,于是不敢用;或以为 <code>clean</code> 能救,于是敢乱用</td></tr>
 <tr><td class="nw"><code>reset --hard</code> 之后</td><td><code>git reflog</code> → <code>reset --hard HEAD@{n}</code>;刚做完就用 <code>ORIG_HEAD</code></td><td>慌了继续敲命令,把 reflog 又推远几行</td></tr>
 <tr><td class="nw">删分支 / 丢 stash</td><td>删除输出里就印着哈希;<code>git fsck --unreachable &#124; grep commit</code> 兜底</td><td>屏幕滚过去就以为没了</td></tr>
@@ -8136,7 +8183,7 @@ git cat-file -p &lt;blob 哈希&gt;                  # 逐个认内容(文件名
 # git gc --prune=now   —— 把所有退路一次抹掉</code></pre></div>
 <h3>下一步</h3>
 <p>这一章学到什么程度算够:给你一个「代码该放几个仓库」的问题,能说清三种结构在原子提交、clone 体验、评审可见性上的具体差别,而不是背标签;拿到一个 clone 要几分钟的仓库,能判断它慢在历史、文件还是大文件,并选对手段;最重要的是,任何人跑过来说「我把东西弄丢了」,你能先问一句「add 过没有」,然后在两分钟之内给出救法或者明确告诉他救不回来。</p>
-<p>这也是全书的终点。回头看,这十一章其实只讲了两件事:<strong>git 在动哪三样东西</strong>(对象库、引用、索引 —— <a href="#g1-three-trees">1.4</a>),以及<strong>一群人怎么在这三样东西上不互相踩脚</strong>(<a href="#g7-models">7.1</a> 到 <a href="#g10-lifecycle">10.1</a>)。命令会忘,选项会改,但这两件事不会。真的忘了某条命令的时候,回到「它动的是哪一样」这个问题上,答案通常就自己出来了。</p>
+<p>这也是全书的终点。回头看,这十一章只讲了两件事:<strong>git 在动哪三样东西</strong>(对象库、引用、索引 —— <a href="#g1-three-trees">1.4</a>),以及<strong>一群人怎么在这三样东西上不互相踩脚</strong>(<a href="#g7-models">7.1</a> 到 <a href="#g10-lifecycle">10.1</a>)。命令会忘,选项会改,但这两件事不会。真的忘了某条命令的时候,回到「它动的是哪一样」这个问题上,答案通常就自己出来了。</p>
 </section>
 
 </div></main>

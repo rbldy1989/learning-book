@@ -209,7 +209,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">C 标准库 API 手册</div>
 <details><summary><a class="ch" href="#s1">stdio.h 输入输出</a></summary>
-<a class="sec" href="#s1-classics">1.0 相关经典书籍</a>
+<a class="sec" href="#s1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#s1-overview">1.1 速览</a>
 <a class="sec" href="#s1-printf">1.2 printf</a>
 <a class="sec" href="#s1-fprintf">1.3 fprintf</a>
@@ -347,22 +347,119 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 23094px;--thin-h:21422px">
+<section class="chapter" style="contain-intrinsic-size:auto 27983px;--thin-h:26311px">
 <h1 id="s1"><span class="part">分类 1</span>stdio.h 输入输出</h1>
-<h2 id="s1-classics">1.0 相关经典书籍</h2>
-<p>本手册按头文件分类速查标准库函数。C 语言与标准库的经典,首推这几本:</p>
-<table style="contain-intrinsic-size:auto 211px">
-<thead><tr><th>书</th><th class="nw">定位</th><th>特点(含局限)</th></tr></thead>
+<h2 id="s1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>本手册按<strong>头文件</strong>分类速查 C 标准库函数。每个条目回答同一组问题:这个函数做什么、原型长什么样、每个参数有什么约束、返回值怎么判、最小的正确写法是什么、以及它有哪些必踩的坑。</p>
+<p>标准基线取 <strong>C11 与 C17</strong>,C99 与 C23 引入或删除的设施逐处标明。平台上兼顾 Linux 与 Windows:凡是有 <code>_s</code> 后缀变体的函数,两者的参数差别与可移植性代价都写在条目里。</p>
+
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>C 标准库的资料有一个特点:书大多成于 C89 前后,而库本身在此后又改了三轮。因此「读什么」与「按什么核对」是两件事。下表先给全景。<strong>锚定</strong>指本手册的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本手册无直接关系、读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 837px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">与本书的关系</th><th>特点与局限</th></tr></thead>
 <tbody>
-<tr><td>Kernighan & Ritchie《C 程序设计语言》(第 2 版)</td><td class="nw">原典·必读</td><td>最精炼的 C 语言书,标准库示例经典,人手一本。<strong>局限</strong>:薄,不含 C99/C11 新增。</td></tr>
-<tr><td>Harbison & Steele《C 语言参考手册》</td><td class="nw">查阅</td><td>语言与库最全的参考。<strong>局限</strong>:工具书,不适合通读。</td></tr>
-<tr><td class="nw">Andrew Koenig《C 陷阱与缺陷》</td><td class="nw">进阶</td><td>薄而精,专治踩坑。<strong>局限</strong>:年代久,但多数坑至今仍在。</td></tr>
-<tr><td class="nw">P.J. Plauger《C 标准库》</td><td class="nw">查阅·进阶</td><td>逐函数讲标准库的实现。<strong>局限</strong>:基于 C89,古老难寻。</td></tr>
+<tr><td>Kernighan 与 Ritchie《C 程序设计语言》(第 2 版)</td><td class="nw">经典教材</td><td class="nw">参考</td><td>最精炼的 C 语言书,库函数的示例至今被反复引用。<strong>局限</strong>:薄,基于 C89,不含此后新增的设施</td></tr>
+<tr><td>Andrew Koenig《C 陷阱与缺陷》</td><td class="nw">经典教材</td><td class="nw">推荐</td><td>专讲踩坑,薄而精。<strong>局限</strong>:成书久,涉及具体编译器行为的部分已变,多数陷阱至今仍在</td></tr>
+<tr><td>P.J. Plauger《C 标准库》</td><td class="nw">进阶与专题</td><td class="nw">推荐</td><td>逐函数给出一份完整实现,能看清接口背后的取舍。<strong>局限</strong>:基于 C89,现已难寻</td></tr>
+<tr><td>van der Linden《C 专家编程》</td><td class="nw">进阶与专题</td><td class="nw">推荐</td><td>声明语法、数组与指针的差别、链接期问题讲得清楚。<strong>局限</strong>:成书早,平台相关的章节已过时</td></tr>
+<tr><td>Harbison 与 Steele《C 语言参考手册》</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>语言与库最全的参考,逐条标出各版本标准的差异。<strong>局限</strong>:工具书,不适合通读,示例少</td></tr>
+<tr><td>cppreference 的 C 部分</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>签名、参数含义与版本差异查得最快,随标准更新。<strong>局限</strong>:给规则不给取舍;中文版更新滞后,建议看英文版</td></tr>
+<tr><td>ISO C 标准文本(C11 / C17 / C23)</td><td class="nw">官方文档与规范</td><td class="nw">锚定</td><td>「标准保证什么」的唯一出处,未定义行为与实现定义行为逐条列明。<strong>局限</strong>:不是顺序阅读用的,术语密度高;正式文本需购买,公开可取的是工作草案</td></tr>
+<tr><td>SEI CERT C 编码标准</td><td class="nw">官方文档与规范</td><td class="nw">锚定</td><td>每条规则给出不合规写法、合规写法与风险评估,是安全类判据的出处。<strong>局限</strong>:面向合规审计,条目多,不解释语言机制</td></tr>
+<tr><td>Microsoft C 运行库文档</td><td class="nw">官方文档与规范</td><td class="nw">锚定</td><td><code>_s</code> 系列的参数约束、C4996 警告与 Windows 侧的实际差异,一手且准确。<strong>局限</strong>:只覆盖 MSVC,其中不少接口不可移植</td></tr>
+<tr><td>glibc 手册与源码</td><td class="nw">官方文档与规范</td><td class="nw">参考</td><td>Linux 侧的实际行为,文档说不清时可直接读实现。<strong>局限</strong>:含大量 GNU 扩展,照抄会丢掉可移植性</td></tr>
+<tr><td>POSIX 规范</td><td class="nw">官方文档与规范</td><td class="nw">推荐</td><td>标准库之外的那一半在这里:文件描述符、进程、信号、线程。<strong>局限</strong>:与 C 标准的边界要读者自己分清</td></tr>
+<tr><td>Compiler Explorer</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>看同一段代码在几家编译器下生成了什么、哪些警告被触发。<strong>局限</strong>:不测运行期行为,也不查内存错误</td></tr>
+</tbody>
+</table>
+<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 早期经典的语言核心没有过时,新增设施要另查</span><p>那几本书成于 C89 前后,讲的语言核心与标准库的基本模型至今成立。不含的是后来新增或删除的部分:定宽整数类型、<code>snprintf</code>、复合字面量、<code>static_assert</code>,以及已从标准中删除的 <code>gets</code>。可行的分工是用它们打底,用标准文本或 cppreference 补版本差异。</p></div>
+
+<h3>锚定的五样各借鉴了什么</h3>
+<p>借鉴的都是具体手法,不是笼统的风格。</p>
+<table style="contain-intrinsic-size:auto 353px">
+<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">Harbison 与 Steele</td><td>函数条目的骨架与字段划分:原型、参数逐个说明、返回值、其他说明,四段固定顺序,任何一个函数都在同一位置给同一类信息</td></tr>
+<tr><td class="nw">cppreference 的 C 部分</td><td>两处。一是版本事实的准绳——某个设施属于哪一版标准、是必选还是可选附录,以它为准;二是参数表里「类型」单独占一列的做法</td></tr>
+<tr><td class="nw">ISO C 标准文本</td><td>「标准保证 / 实现定义 / 未定义」这条分界线。全书六十余处未定义行为的措辞都按标准原文核对过,写明是哪一类,而不是含糊地说「可能会出错」</td></tr>
+<tr><td class="nw">SEI CERT C 编码标准</td><td>红色批注的形式:先给不安全写法,再给替代写法,并说明风险落在哪里。<code>gets</code>、无宽度的 <code>%s</code>、<code>fflush(stdin)</code> 这几条判据的出处也在它那里</td></tr>
+<tr><td class="nw">Microsoft C 运行库文档</td><td><code>_s</code> 变体与 C4996 的对照口径:每个有安全版本的函数都标出参数差别、行为差别与可移植性代价,而不是只写一句「推荐用 <code>_s</code> 版」</td></tr>
 </tbody>
 </table>
 
-<p>stdio.h 是 C 程序与外界交流的总入口:格式化打印、键盘输入、文件读写全在这里。它的核心抽象是<strong>带缓冲的流</strong>(<code>FILE *</code>)——标准流 <code>stdin</code>/<code>stdout</code>/<code>stderr</code> 程序启动即可用,磁盘文件则由 <code>fopen</code> 打开、<code>fclose</code> 关闭。本章按"格式化 I/O → 文件打开关闭 → 块与行读写 → 定位与缓冲 → 错误处理"的顺序展开;历史遗留的不安全函数(<code>gets</code>、无宽度的 <code>%s</code>、<code>sprintf</code>)会逐一标注替代方案。</p>
+<h3>讲什么、不讲什么</h3>
+<p>本手册覆盖 <strong>C 标准库的常用部分</strong>,9 章 118 节按头文件编排。</p>
+<table style="contain-intrinsic-size:auto 373px">
+<thead><tr><th class="nw">章</th><th>它收哪些内容</th></tr></thead>
+<tbody>
+<tr><td class="nw">第 1 章 stdio.h</td><td>格式化输入输出、文件的打开与关闭、块与行读写、定位与缓冲、错误处理</td></tr>
+<tr><td class="nw">第 2 章 stdlib.h</td><td>动态内存、数值转换、随机数、排序与二分查找、进程控制与环境变量</td></tr>
+<tr><td class="nw">第 3 章 string.h</td><td>字符串与内存块的复制、拼接、比较、查找与切分</td></tr>
+<tr><td class="nw">第 4 章 wchar.h</td><td>宽字符版本的字符串与 I/O,以及窄宽之间的转换</td></tr>
+<tr><td class="nw">第 5 章 字符分类</td><td><code>ctype.h</code> 与 <code>wctype.h</code> 的分类与大小写转换,含负值 <code>char</code> 这一处陷阱</td></tr>
+<tr><td class="nw">第 6 章 math.h</td><td>数学函数、浮点分类判断,以及 <code>f</code> 后缀的单精度版本</td></tr>
+<tr><td class="nw">第 7 章 time.h</td><td>取时间、分解、格式化与求差,含线程安全的转换接口</td></tr>
+<tr><td class="nw">第 8 章 其他头文件</td><td>断言、<code>errno</code>、可变参数、定宽整数类型与各类实现常量</td></tr>
+<tr><td class="nw">第 9 章 #pragma</td><td>标准规定的部分,以及 MSVC 与 GCC / Clang 的私有指令和可移植写法</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚,并指明归谁。</p>
+<table style="contain-intrinsic-size:auto 491px">
+<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td>C 语言本身的语法:声明、指针、类型规则与控制流</td><td class="nw">K&amp;R 与语言教材</td><td>本手册只讲库函数,不教语言。第 9 章是唯一的例外,因为预处理指令在工程里出现得太频繁</td></tr>
+<tr><td>同一件事在 C++ 里该怎么写</td><td class="nw">《C++ 语言 · 现代详解》与《C++ 标准库 API 编程手册》</td><td>本手册在有类型安全替代时用蓝色批注指过去,不展开</td></tr>
+<tr><td>系统调用、文件描述符、进程与信号</td><td class="nw">《Linux 系统编程手册》</td><td>分界是「C 标准保证的」与「操作系统提供的」</td></tr>
+<tr><td>Win32 的字符串、文件与注册表接口</td><td class="nw">《Windows API 手册》</td><td>本手册只讲 <code>wchar.h</code> 与 MSVC 的 <code>_s</code> 系列这两处 Windows 侧绕不开的内容</td></tr>
+<tr><td>函数的执行开销与优化手法</td><td class="nw">《C++ 性能优化 · 现代详解》</td><td>本手册给行为与陷阱,不给耗时数据</td></tr>
+<tr><td>C11 可选线程附录(<code>threads.h</code>)与原子操作</td><td class="nw">《C++ 标准库 API 编程手册》</td><td>多数 C 实现把它列为可选,可移植性不足;并发在 C++ 侧才有完整且通用的设施</td></tr>
+</tbody>
+</table>
 
+<h3>读之前要会什么</h3>
+<p>前置分两档,每条都给自测方式——「熟悉 C」无法自测,也就无法用来判断该不该现在读。</p>
+<table style="contain-intrinsic-size:auto 415px">
+<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>会写并编译一个 C 程序</td><td>把一个含 <code>main</code>、自定义函数与头文件包含的程序编成可执行文件并跑起来</td></tr>
+<tr><td class="nw">必须</td><td>说得清指针与数组的关系</td><td>说出 <code>char buf[64]</code> 传进函数之后 <code>sizeof buf</code> 变成了什么,并解释原因</td></tr>
+<tr><td class="nw">必须</td><td>知道字符串在 C 里是什么</td><td>说出 <code>"abc"</code> 占几个字节,以及少写一个结尾字符会导致什么后果</td></tr>
+<tr><td class="nw">必须</td><td>分得清栈上与堆上的内存</td><td>说出一个函数返回局部数组的地址之后会发生什么,以及为什么编译器不一定报错</td></tr>
+<tr><td class="nw">最好有</td><td>用过一次调试器或内存检查工具</td><td>说出上次定位到的是越界、泄漏还是重复释放,以及工具是从哪里发现的</td></tr>
+<tr><td class="nw">最好有</td><td>了解字符编码的基本概念</td><td>说出一个汉字在 UTF-8 与 UTF-16 下各占几个字节,以及 <code>wchar_t</code> 在两个平台上宽度不同</td></tr>
+<tr><td class="nw">最好有</td><td>读得懂编译器的警告</td><td>说出 <code>-Wall</code> 与 <code>-Wextra</code> 各开了哪一类检查,以及 MSVC 的 C4996 在提示什么</td></tr>
+<tr><td class="nw">最好有</td><td>知道自己的目标平台</td><td>说出当前工程用的是哪家编译器、哪个标准版本开关,以及它提不提供带 <code>_s</code> 后缀的边界检查接口</td></tr>
+</tbody>
+</table>
+
+<h3>与那些资料相比,本手册多给了什么</h3>
+<ul>
+<li><strong>九十余个函数条目按同一副骨架写。</strong>一句话定位、函数原型、参数逐个说明、返回值、示例、其他说明,顺序固定。查任何一个函数,同一类信息都在同一个位置。</li>
+<li><strong>陷阱与替代直接标在条目里。</strong>红色批注写禁用写法与未定义行为,蓝色批注给现代或更安全的替代;正文里另有六十余处逐一写明某个用法为什么属于未定义行为,而不是笼统地说不安全。</li>
+<li><strong>兼顾 Windows 与可移植性。</strong>有 <code>_s</code> 变体的函数都给出两者差别与可移植代价;第 4 章整章讲宽字符,因为中文路径与窗口标题在 Windows 上绕不开。</li>
+<li><strong>版本标注到设施一级。</strong>某个函数属于哪一版标准、是否属于可选附录、是否已被删除,逐处标明,避免在只支持 C99 的工具链上写出编不过的代码。</li>
+<li><strong>每章开头有一张速览表。</strong>一句话说明加一句备注,备注直接写这个函数最常见的误用,扫一遍就能定位到要看的条目。</li>
+</ul>
+<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 先按返回值判断成败,再取 errno,顺序反了会读到旧值</span><p>标准库函数在成功时并不保证把 <code>errno</code> 清零,上一次失败留下的值可能还在。可靠的顺序是:需要区分「返回 0 且成功」与「返回 0 且失败」时先把 <code>errno</code> 置零,再按该函数自己的约定判断返回值,确认失败之后才读 <code>errno</code>,并且这中间不能插入任何其他库调用——那会改写它。</p></div>
+
+<h3>两条读法:按需查与整章读</h3>
+<p>速查手册的默认读法是按需查。整章顺读只对三章值得。</p>
+<table style="contain-intrinsic-size:auto 222px">
+<thead><tr><th>你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
+<tbody>
+<tr><td>手上有具体函数要查</td><td>跳到该章的速览表,再点进条目</td><td class="nw">—</td><td class="nw">—</td></tr>
+<tr><td>系统补一遍标准库</td><td>第 1、2、3 章顺读,其余按需取</td><td class="nw">第 1、2、3 章</td><td class="nw">第 4、6 章</td></tr>
+<tr><td>在 Windows 上做开发</td><td>第 1、3 章之后接第 4 章,再看 9.6 与 9.7</td><td class="nw">第 4 章</td><td class="nw">—</td></tr>
+<tr><td>要处理中文路径或文本</td><td>第 4 章,配 5.12 的宽字符分类</td><td class="nw">第 4 章</td><td class="nw">第 6、7 章</td></tr>
+<tr><td>代码要跨编译器</td><td>第 9 章,重点是 9.9</td><td class="nw">第 9 章</td><td class="nw">第 4 章</td></tr>
+</tbody>
+</table>
+<p><strong>值得整章读的是第 1、3、9 章。</strong>第 1 章确立了「带缓冲的流」这个模型,后面所有 I/O 行为都是它的推论,只查单个函数会反复撞上同一类困惑;第 3 章的字符串函数是 C 程序里事故最集中的地方,边界条件必须成套地看;第 9 章讲的 <code>#pragma</code> 严格说来不属于标准库,但关警告、控制对齐、防重复包含都靠它,而各家编译器的写法互不相同。</p>
+<p>其余各章按需取用。第 2 章的动态内存与数值转换使用频率最高,第 6、7 章在做数值计算或时间处理时才翻,第 8 章是零散设施的集合,适合遇到 <code>va_list</code>、<code>offsetof</code> 或定宽整数类型时单点查阅。</p>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 写 C++ 时,这里的多数函数都有类型安全的替代</span><p>本手册在条目末尾用蓝色批注指出对应的 C++ 设施:格式化用 <code>std::format</code>,动态数组用 <code>std::vector</code>,字符串用 <code>std::string</code> 与 <code>std::string_view</code>,路径用 <code>std::filesystem::path</code>。它们把占位符与类型不匹配这类错误提前到编译期。纯 C 工程里没有这条路,那时以条目里给出的 C 侧替代为准。</p></div>
+<p>读完之后应当能做到三件事:不查网络就正确调用日常的库函数,并说得出这次调用失败该看返回值还是 <code>errno</code>;在代码审查里认出 <code>gets</code>、无宽度的 <code>%s</code>、<code>fflush(stdin)</code> 这类必错写法,并当场给出替代;拿到一份要跨平台的代码时,分得清哪些调用是标准保证的、哪些是某家编译器的私有扩展。</p>
+
+<p>stdio.h 是 C 程序与外界交流的总入口:格式化打印、键盘输入、文件读写全在这里。它的核心抽象是<strong>带缓冲的流</strong>(<code>FILE *</code>)——标准流 <code>stdin</code>/<code>stdout</code>/<code>stderr</code> 程序启动即可用,磁盘文件则由 <code>fopen</code> 打开、<code>fclose</code> 关闭。本章按"格式化 I/O → 文件打开关闭 → 块与行读写 → 定位与缓冲 → 错误处理"的顺序展开;历史遗留的不安全函数(<code>gets</code>、无宽度的 <code>%s</code>、<code>sprintf</code>)会逐一标注替代方案。</p>
 <h2 id="s1-overview">1.1 速览</h2><p><strong>本章速览</strong>——stdio.h 把"格式化"与"流"两件事捏在一起，先记住每个函数的返回值含义，一半的坑就绕过去了。</p><table style="contain-intrinsic-size:auto 1247px"><thead><tr><th class="nw">函数</th><th>一句话说明</th><th>备注</th></tr></thead><tbody><tr><td class="nw"><a class="fnlink" href="#s1-printf"><code>printf</code></a></td><td class="nw">按格式把数据写到标准输出</td><td>格式串与实参类型必须严格对应，否则是未定义行为；永远不要把变量直接当格式串传入</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fprintf"><code>fprintf</code></a></td><td class="nw">按格式写入指定的文件流</td><td>目标流须以写或追加模式打开；诊断信息写 stderr，可绕开 stdout 的缓冲延迟</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-sprintf"><code>sprintf</code></a> / <a class="fnlink" href="#s1-sprintf"><code>snprintf</code></a></td><td class="nw">按格式写入字符串缓冲区</td><td><a class="fnlink" href="#s1-sprintf"><code>sprintf</code></a> 不限长度，溢出即踩内存 <span class="badge dead">禁用</span>；一律用 <a class="fnlink" href="#s1-sprintf"><code>snprintf</code></a> <span class="badge ok">推荐</span>，但它返回的是"本应写入的长度"，可能大于缓冲区</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-sscanf"><code>sscanf</code></a></td><td class="nw">从字符串中按格式解析数据</td><td>%s 不加宽度必然溢出，写成 %49s；判断成功与否要看返回的匹配项个数，而不是看变量</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-scanf"><code>scanf</code></a></td><td class="nw">从标准输入按格式读取</td><td>会把换行留在输入缓冲里，和 <a class="fnlink" href="#s1-fgets"><code>fgets</code></a> 混用即出错；交互式输入改用 <a class="fnlink" href="#s1-fgets"><code>fgets</code></a> + <a class="fnlink" href="#s1-sscanf"><code>sscanf</code></a> <span class="badge ok">推荐</span></td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fopen"><code>fopen</code></a> / <a class="fnlink" href="#s1-fopen"><code>fopen_s</code></a></td><td class="nw">打开文件并返回流指针</td><td>返回值必须判空再用；处理非文本数据要加 "b"，否则 Windows 会改写换行符。<a class="fnlink" href="#s1-fopen"><code>fopen_s</code></a> 属 C11 可选附录，跨平台不保证存在</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fclose"><code>fclose</code></a></td><td class="nw">关闭流并刷新其缓冲区</td><td>忘记关闭可能丢掉尾部数据；返回值能暴露最后一次写入失败，别一律忽略</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fread"><code>fread</code></a></td><td class="nw">从流中读入若干个定长块</td><td>返回的是成功读取的"块数"而非字节数；数量不足时须用 <a class="fnlink" href="#s1-feof"><code>feof</code></a> / <a class="fnlink" href="#s1-feof"><code>ferror</code></a> 区分读完与出错</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fwrite"><code>fwrite</code></a></td><td class="nw">把内存中的数据块写入流</td><td>直接整体写结构体不可移植，对齐填充和字节序都会变；返回块数同样要校验</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fgets"><code>fgets</code></a></td><td class="nw">读入一行，长度受缓冲区限制</td><td>安全但会把 '\n' 一并留下，通常需手动截断；它的前辈 <code>gets</code> 已从标准中删除 <span class="badge dead">禁用</span></td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fputs"><code>fputs</code></a></td><td class="nw">把字符串原样写入流</td><td>不会自动补换行，这一点和 <code>puts</code> 相反，最常见的"输出粘一行"就源于此</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fgetc"><code>fgetc</code></a> / <a class="fnlink" href="#s1-fgetc"><code>fputc</code></a></td><td class="nw">逐个字符地读入与写出</td><td><a class="fnlink" href="#s1-fgetc"><code>fgetc</code></a> 返回 int 不是 char；用 char 变量接收会把 0xFF 误判成 EOF</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fseek"><code>fseek</code></a> / <a class="fnlink" href="#s1-fseek"><code>ftell</code></a> / <a class="fnlink" href="#s1-fseek"><code>rewind</code></a></td><td class="nw">定位、查询与重置读写位置</td><td>文本模式下的偏移量只能原样回传，不能做加减；超 2GB 文件需 <code>fseeko</code> 或 <code>_fseeki64</code>。<a class="fnlink" href="#s1-fseek"><code>rewind</code></a> 会顺手清掉错误标志</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-fflush"><code>fflush</code></a></td><td class="nw">强制把缓冲中的数据写出</td><td>仅对输出流有定义，<code>fflush(stdin)</code> 是未定义行为 <span class="badge dead">禁用</span>，清输入请循环读到换行</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-feof"><code>feof</code></a> / <a class="fnlink" href="#s1-feof"><code>ferror</code></a></td><td class="nw">查询流的结束标志与错误标志</td><td><a class="fnlink" href="#s1-feof"><code>feof</code></a> 要读失败之后才为真，拿它当循环条件会多处理一次数据；正确写法是判断读取函数本身的返回值</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-remove"><code>remove</code></a> / <a class="fnlink" href="#s1-remove"><code>rename</code></a></td><td class="nw">删除文件、重命名或移动文件</td><td>目标已存在时的行为由实现决定，可能失败也可能覆盖；操作不可撤销，动手前先确认路径</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-perror"><code>perror</code></a></td><td>按 errno 打印带前缀的错误信息</td><td>必须紧接在失败调用之后使用，中间插入任何库调用都可能改写 errno</td></tr><tr><td class="nw"><a class="fnlink" href="#s1-setvbuf"><code>setvbuf</code></a></td><td class="nw">设置流的缓冲方式与缓冲区大小</td><td>只能在打开之后、任何 I/O 之前调用；若自备缓冲区，其生命周期必须长于该流</td></tr></tbody></table>
 
 <h2 id="s1-printf" class="fntarget">1.2 printf</h2>
@@ -696,7 +793,7 @@ errno_t fopen_s(FILE **fp, <span class="kw">const</span> <span class="kw">char</
 <p><strong>示例</strong></p>
 <pre style="contain-intrinsic-size:auto 79px"><code><span class="cl"><span class="cc" style="min-width:26.0ch">printf(<span>"processing..."</span>);</span><span class="cm">// 没有 \n,行缓冲下不会立刻显示</span></span><span class="cl"><span class="cc" style="min-width:26.0ch">fflush(stdout);</span><span class="cm">// 强制刷出,进度提示即时可见</span></span></code></pre>
 <p><strong>其他说明</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 禁用写法</span><p><code>fflush(stdin)</code> 对输入流是<strong>未定义行为</strong>——MSVC 曾自行赋予其"清空输入缓冲"的含义,但这不可移植。要丢弃输入残留,老老实实循环 <code>fgetc</code> 直到读到 <code>\n</code> 或 <code>EOF</code>。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 133px"><span class="t">🔴 禁用写法</span><p><code>fflush(stdin)</code> 对输入流是<strong>未定义行为</strong>——MSVC 曾自行赋予其"清空输入缓冲"的含义,但这不可移植。要丢弃输入残留,循环 <code>fgetc</code> 直到读到 <code>\n</code> 或 <code>EOF</code>。</p></div>
 
 <h2 id="s1-feof" class="fntarget">1.16 feof / ferror</h2>
 <p class="fsum">读写失败之后查流的两个状态标志，用来区分是正常读到文件尾还是中途发生了 I/O 错误。</p>

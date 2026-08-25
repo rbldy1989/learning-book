@@ -197,7 +197,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">PowerShell 脚本</div>
 <details><summary><a class="ch" href="#p1">第 1 章 PowerShell 的核心思想：传对象，不传文本</a></summary>
-<a class="sec" href="#p1-classics">1.0 相关经典书籍</a>
+<a class="sec" href="#p1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#p1-problem">1.1 从一个真实的痛点说起</a>
 <a class="sec" href="#p1-object">1.2 管道里流的是对象，不是文本</a>
 <a class="sec" href="#p1-verb-noun">1.3 动词-名词：命令名本身就是文档</a>
@@ -271,21 +271,104 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 21015px;--thin-h:21015px">
+<section class="chapter" style="contain-intrinsic-size:auto 25571px;--thin-h:25571px">
 <h1 id="p1"><span class="part">第 1 章</span>PowerShell 的核心思想：传对象，不传文本</h1>
-<h2 id="p1-classics">1.0 相关经典书籍</h2>
-<p>PowerShell 的顶级读物,按「深机制 / 好教法 / 查配方」各推一本:</p>
-<table style="contain-intrinsic-size:auto 225px">
-<thead><tr><th>书</th><th class="nw">定位</th><th>特点(含局限)</th></tr></thead>
+<h2 id="p1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>PowerShell 与它之前的每一种命令行都差一件事：<strong>管道里传的不是文本行，是结构化的 .NET 对象</strong>。这一条决定了它的筛选、排序、导出、格式化各是怎么设计的，也决定了从 CMD 或 bash 转过来的人最容易卡在哪里。<strong>本书讲清这套对象模型怎么运作，以及它在什么条件下不成立。</strong>Windows PowerShell 5.1 与 PowerShell 7 两条线并行覆盖，行为不同处两侧写法都给。</p>
+<h3>这个领域有哪些资料</h3>
+<p>PowerShell 的资料结构清楚：语言机制有一本奠基之作，教法有一本公认最好的入门书，事实以官方文档与本机帮助为准，边界情况去仓库里查。下表按类型排开。<strong>锚定</strong>指本书的骨架或写法从它来，<strong>参考</strong>指写作时查证过但没有影响结构，<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 841px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
 <tbody>
-<tr><td>Bruce Payette《Windows PowerShell 实战指南》(PowerShell in Action,第 3 版)</td><td class="nw">进阶·首选</td><td>作者是 PowerShell 语言设计者,对象管道/绑定/作用域的机制无可替代。<strong>局限</strong>:偏厚偏深,不是入门书。</td></tr>
-<tr><td>Don Jones 等《一月一课:PowerShell 入门》(Month of Lunches)</td><td class="nw">入门·最佳</td><td>教法极好,循序渐进,上手最快。<strong>局限</strong>:入门向,不深入语言机制。</td></tr>
-<tr><td>Lee Holmes《PowerShell 经典实例》(Cookbook,第 4 版)</td><td class="nw">查阅</td><td>场景配方大全,作者是安全团队元老。<strong>局限</strong>:查阅型,不成体系。</td></tr>
+<tr><td>Payette 与 Siddaway《Windows PowerShell in Action》（中译《Windows PowerShell 实战指南》）</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>作者是语言设计者，参数绑定、作用域、语言语义讲得最深，是这个领域唯一一本机制类著作。局限：偏厚且默认读者已有基础；成书版本落后于当前的 PowerShell 7，跨平台与新语法要另补</td></tr>
+<tr><td>Jones 与 Hicks《一月一课：PowerShell 入门》</td><td class="nw">经典教材</td><td class="nw">参考</td><td>教法极好，把「先学会自省命令，再学语法」这条路径立住了。局限：入门向，语言机制与错误处理都点到为止</td></tr>
+<tr><td>Lee Holmes《PowerShell Cookbook》</td><td class="nw">参考手册</td><td class="nw">参考</td><td>场景配方最全，从文本处理到系统管理都有现成写法。局限：配方式组织不成体系，部分配方针对旧版本，抄之前要核对</td></tr>
+<tr><td>Microsoft Learn 的 PowerShell 文档，含 <code>about_*</code> 主题</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>一手来源。<code>about_Parameters</code>、<code>about_Preference_Variables</code> 这类主题是语言语义的权威说明，并逐条标注适用版本。局限：主题之间的联系要自己接，示例偏短</td></tr>
+<tr><td>内建帮助：<code>Get-Help</code>、<code>Get-Command</code>、<code>Get-Member</code></td><td class="nw">参考手册</td><td class="nw">锚定</td><td>与本机这一版完全对应，<code>Update-Help</code> 之后是最新的，是判定版本差异最可靠的手段。局限：要先知道找什么；<code>-Online</code> 打开的页面与本机版本未必一致</td></tr>
+<tr><td>PowerShell 的 GitHub 仓库：源码、议题与变更日志</td><td class="nw">源码</td><td class="nw">锚定</td><td>文档与实际行为冲突时的仲裁者，破坏性变更与新特性的引入版本都能查到。局限：实现细节随版本变动，读出来的不是接口承诺</td></tr>
+<tr><td>PowerShell 团队博客</td><td class="nw">在线资料</td><td class="nw">参考</td><td>新版本特性与设计取舍的第一手说明，发布节奏之外还会讲清为什么这么改。局限：按发布节奏写，不成体系</td></tr>
+<tr><td>PowerShell Gallery 与 PSScriptAnalyzer</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>模块的发布与获取渠道；PSScriptAnalyzer 同时是一份可执行的写法规范。局限：Gallery 上模块质量参差，引入前要看维护状态与下载来源</td></tr>
+<tr><td>Microsoft Learn 的 .NET API 文档</td><td class="nw">官方文档</td><td class="nw">推荐</td><td>PowerShell 的类型来自 .NET，方法与属性最终要查这里。局限：面向 C#，示例要自己翻成 PowerShell 的写法</td></tr>
+<tr><td>《CMD 批处理 · 现代详解》与《Shell 脚本与命令行工具 · 现代详解》</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>同一套三本里的另外两本，同样的教材加速查结构。局限：不含 PowerShell 内容，只在互相调用的写法上与本书衔接</td></tr>
 </tbody>
 </table>
-
-<p>如果你从 CMD 或 Bash 转过来，学 PowerShell 最大的障碍从来不是语法，而是一个根深蒂固的习惯：把命令的输出当成「一堆字符」。这一章只讲一件事——在 PowerShell 里，管道传的是<strong>结构化的 .NET 对象</strong>，不是文本行。这个观念一旦转过来，后面所有章节都会顺理成章；转不过来，你写出来的就是「用 PowerShell 语法写的 Bash 脚本」，又长又脆。</p>
-
+<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 查语言语义先看 about_ 主题，再看单条命令的帮助</span><p>两类帮助回答的是不同的问题。<code>Get-Help Get-ChildItem</code> 回答「这条命令有哪些参数」，<code>Get-Help about_Parameters</code> 回答「参数是怎么绑定上去的」。绑定失败、作用域不符预期、比较运算结果反常这类问题，答案基本都在 <code>about_*</code> 主题里，用 <code>Get-Help about_*</code> 可以列出本机全部主题。</p></div>
+<h3>锚定的四样各借鉴了什么</h3>
+<p>借鉴的都是具体手法，不是笼统的风格。</p>
+<table style="contain-intrinsic-size:auto 314px">
+<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td>Payette《Windows PowerShell in Action》</td><td>「先讲清管道里流的是对象」这条入口，全书第一节就把它立住；以及参数绑定、作用域按语义规则讲、不按用法罗列的组织方式，对应第 3、4 两章</td></tr>
+<tr><td class="nw">Microsoft Learn 的 <code>about_*</code> 主题</td><td>事实的准绳：凡二手资料与它冲突一律以它为准。另一处是版本适用性的标注方式，5.1 与 7 行为不同处两侧写法都写出来，而不是只写新版</td></tr>
+<tr><td class="nw">内建帮助三件套</td><td>「自省命令是自学的入口」这条编排。1.7 把 <code>Get-Help</code>、<code>Get-Command</code>、<code>Get-Member</code> 提到第 1 章，后面章节遇到不熟的命令一律回到这三条，而不是替读者把参数抄一遍</td></tr>
+<tr><td class="nw">PowerShell 的 GitHub 仓库</td><td>文档没写明的边界处以实际实现与变更记录为准。某个参数在哪一版改了默认值这类问题，书里给的是自查方式，不写死版本号</td></tr>
+</tbody>
+</table>
+<h3>讲什么、不讲什么</h3>
+<p>本书覆盖<strong>用 PowerShell 做日常自动化与系统管理所需要的全部机制</strong>，6 章 60 节，每章回答一个问题。</p>
+<table style="contain-intrinsic-size:auto 259px">
+<thead><tr><th class="nw">章</th><th>主题</th><th>它回答的问题</th></tr></thead>
+<tbody>
+<tr><td class="nw">第 1 章</td><td>核心思想、版本线与自省命令</td><td>管道里流的是什么，我站在哪一版上，怎么自学下去</td></tr>
+<tr><td class="nw">第 2 章</td><td>变量、类型与运算</td><td>动态类型到底动态在哪，比较为什么不用等号</td></tr>
+<tr><td class="nw">第 3 章</td><td>管道与对象处理</td><td>怎么筛、怎么排、怎么统计、怎么导出</td></tr>
+<tr><td class="nw">第 4 章</td><td>流程控制、函数与脚本</td><td>怎么把一串命令收成可复用的函数与模块</td></tr>
+<tr><td class="nw">第 5 章</td><td>文件、注册表与系统管理</td><td>文件、进程、服务、计划任务、系统信息各怎么管</td></tr>
+<tr><td class="nw">第 6 章</td><td>错误处理、调试与实用技巧</td><td>出了错怎么接住、怎么定位、怎么留下可查的记录</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚，并指明归谁。</p>
+<table style="contain-intrinsic-size:auto 450px">
+<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td>.NET 类库本身与 C# 语法</td><td class="nw">Microsoft Learn 的 .NET 文档</td><td>本书讲怎么在 PowerShell 里调它们、类型怎么转换，不讲类库内部</td></tr>
+<tr><td>具体产品的模块：Azure、Exchange、Active Directory 等</td><td class="nw">各产品自己的文档</td><td>本书讲模块怎么装、命令怎么找，不讲某个产品的命令集</td></tr>
+<tr><td>批处理与 <code>cmd.exe</code> 的语法</td><td class="nw">《CMD 批处理 · 现代详解》</td><td>本书只讲互相调用，以及为什么读外部程序的退出码要用 <code>$LASTEXITCODE</code></td></tr>
+<tr><td>bash 语法与 Linux 命令行工具</td><td>《Shell 脚本与命令行工具 · 现代详解》</td><td>PowerShell 7 在 Linux 上能跑，但那一套工具链的用法归那本</td></tr>
+<tr><td>Windows 内核与 API 层面的机制</td><td class="nw">《Windows API 手册》</td><td>本书到 WMI/CIM 与 .NET 这一层为止，再往下不碰</td></tr>
+<tr><td>远程管理的完整部署：WinRM 与 SSH 配置、双跳认证</td><td class="nw">产品文档</td><td>5.9 只讲 <code>Invoke-Command</code> 的用法与序列化边界</td></tr>
+<tr><td>期望状态配置与 CI 平台的集成</td><td class="nw">不在本书系范围</td><td>本书讲脚本本身，不讲它被什么调度</td></tr>
+</tbody>
+</table>
+<h3>读之前要会什么</h3>
+<p>本书的前置不高，两档各三条，每条给自测方式；档次之外还有一份「不需要什么」，同样值得先看。</p>
+<table style="contain-intrinsic-size:auto 337px">
+<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>会打开一个终端并运行命令</td><td>打开 PowerShell，运行一条命令，再把它的输出存成一个文件</td></tr>
+<tr><td class="nw">必须</td><td>知道命令行参数是什么</td><td>说出 <code>-Path C:\tmp</code> 里哪个是参数名、哪个是参数值，以及去掉参数名之后还能不能被正确识别</td></tr>
+<tr><td class="nw">必须</td><td>知道文件路径与目录结构</td><td>说出绝对路径与相对路径的差别，并写出「上一级目录」的两种表示法</td></tr>
+<tr><td class="nw">最好有</td><td>写过任何一种带变量与条件的脚本</td><td>说出你用过的那门语言里，数组与字典各是什么写法</td></tr>
+<tr><td class="nw">最好有</td><td>用过面向对象的语言，哪怕只是调别人的类</td><td>说出「属性」与「方法」的区别，并各举一个例子</td></tr>
+<tr><td class="nw">最好有</td><td>用过 CMD 或 bash 的管道</td><td>说出 <code>dir | findstr foo</code> 这条管道里，前一条命令交给后一条的是什么</td></tr>
+</tbody>
+</table>
+<p>三样不需要：不需要会 C# 或 .NET，第 2 章从类型讲起，用到的类型都当场说明；不需要安装任何东西，Windows PowerShell 5.1 随系统自带，7 是可选项；不需要管理员权限，1.6 给出了不改整机设置也能让脚本跑起来的做法。</p>
+<h3>与那些资料相比，本书多给了什么</h3>
+<ul>
+<li><strong>整本书从一条结论推开。</strong>1.8 与 3.1 把一条管道逐段拆开，指出每一段流的是什么类型；后面的筛选、排序、统计、导出、格式化，规矩都能从这一条推出来，包括「格式化命令为什么必须放在最后」。</li>
+<li><strong>5.1 与 7 两条线逐处对照。</strong>1.4 把两者定成并行的两条产品线而不是新旧关系，版本差异处两侧写法都给，并给出 <code>$PSVersionTable</code> 的自查方式，避免「我在 7 里试过没问题」的脚本发到只有 5.1 的机器上。</li>
+<li><strong>教材与速查双结构。</strong>60 节里有 5 节是整节速查：自动变量表、管道配方、本章速查与版本差异等，全书 101 张表。顺读时它们是章末总结，查阅时它们是入口。</li>
+<li><strong>122 个批注里 34 个蓝色、31 个黄色。</strong>这两色合起来占一半以上，把「哪些写法是历史遗留、今天该换成什么」逐处点名：别名在脚本里的代价、<code>+=</code> 拼数组的代价、已被取代的 WMI 命令，都写清了替代写法。</li>
+<li><strong>17 张图画的是对象在管道里的形态与错误流的分支</strong>，不是界面截图：一条管道每一段的类型变化、执行策略的作用域优先级、两类错误各走哪条路。</li>
+</ul>
+<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 在只有 5.1 的机器上跑 7 里验证过的脚本会失败</span><p>两条线的差别不止于语法糖。三元与空合并运算符、<code>ForEach-Object -Parallel</code>、链式的与或操作符在 5.1 上都是语法错误；默认文件编码、部分命令的可用性也不一样。脚本要发给别人时，先确认对方那台机器上是哪一版，再决定按哪一套写；书中凡有差异之处都标了适用版本。</p></div>
+<h3>两条读法：顺读与按需查</h3>
+<p>第一次学 PowerShell 走顺读，手上已经有问题走按需查。</p>
+<table style="contain-intrinsic-size:auto 222px">
+<thead><tr><th>你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
+<tbody>
+<tr><td class="nw">第一次学 PowerShell</td><td>第 1 章顺读到第 4 章，再按方向挑第 5、6 章</td><td class="nw">第 1、2、3 章</td><td class="nw">4.8、4.10、第 5 章</td></tr>
+<tr><td class="nw">从 CMD 或 bash 转过来</td><td>先读 1.2、3.1、3.9 三节把观念转过来，再回第 2 章</td><td class="nw">第 1、3 章</td><td class="nw">2.3 自动变量表</td></tr>
+<tr><td class="nw">做系统管理与自动化</td><td>第 1、3 章打底，直接进第 5 章</td><td class="nw">第 3、5 章</td><td class="nw">4.8、4.10</td></tr>
+<tr><td class="nw">脚本报错看不懂</td><td>先看 1.6 执行策略，再整章读第 6 章</td><td class="nw">第 6 章</td><td>—</td></tr>
+<tr><td class="nw">只想查一条写法</td><td>各章末尾的速查节，或 2.3 的自动变量表</td><td>—</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>主干是第 1、3 章。</strong>它们是同一件事的两遍讲法：第 1 章立观念，第 3 章把观念落成筛选、排序、统计与导出的具体写法。第 2 章的比较运算与「数组在左边会变成过滤器」这两节也属主干，它们是后面每一条管道的基础。</p>
+<p>按需查有三个入口：<strong>1.9 本章速查与五个高频误区</strong>按观念查，<strong>3.10 管道配方</strong>按场景查，<strong>5.10 本章速查与版本差异</strong>按版本查。写脚本时遇到不熟的命令，先用 <code>Get-Command</code> 与 <code>Get-Member</code> 自己探一遍，探不明白再回书里。</p>
+<p>读完第 1 到 3 章，能把一条命令的输出筛选、排序、分组并导出成 CSV 或 JSON，能说出管道每一段流的是什么；读完第 4 章，能写出带参数验证与帮助的函数，并把它收进模块；读完第 5 章，能批量管理文件、注册表、进程、服务与计划任务；读完第 6 章，能把错误接住、分类，并留下可查的日志。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 按目标机器选语言：PowerShell 管数据，CMD 保底</span><p>三本脚本书是一套。要筛选、排序、导出结构化数据、调用接口，用 PowerShell；要在任何一台 Windows 上不做配置双击就跑，用批处理；要用 Linux 的工具链，用 WSL 里的 bash。三者可以互相调用，选错了也能在外面包一层转发。</p></div>
 <h2 id="p1-problem">1.1 从一个真实的痛点说起</h2>
 
 <p>需求很简单：<strong>找出当前内存占用超过 100 MB 的前 5 个进程</strong>。先看 CMD 时代怎么做。</p>
@@ -483,7 +566,7 @@ Get-Command -Verb Export</code></pre>
 <tr><td class="nw"><code>cat</code> <code>type</code> <code>gc</code></td><td class="nw"><code>Get-Content</code></td><td>同上，非 Windows 平台不定义 <code>cat</code></td></tr>
 <tr><td class="nw"><code>cd</code> <code>chdir</code></td><td class="nw"><code>Set-Location</code></td><td>—</td></tr>
 <tr><td class="nw"><code>cp</code> <code>copy</code> <code>rm</code> <code>del</code> <code>mv</code></td><td><code>Copy-Item</code> / <code>Remove-Item</code> / <code>Move-Item</code></td><td>—</td></tr>
-<tr><td class="nw"><code>?</code></td><td class="nw"><code>Where-Object</code></td><td>交互式很爽，脚本里可读性极差</td></tr>
+<tr><td class="nw"><code>?</code></td><td class="nw"><code>Where-Object</code></td><td>交互式简短，脚本里可读性极差</td></tr>
 <tr><td class="nw"><code>%</code></td><td class="nw"><code>ForEach-Object</code></td><td>同上</td></tr>
 <tr><td class="nw"><code>gm</code> / <code>gcm</code> / <code>sls</code></td><td><code>Get-Member</code> / <code>Get-Command</code> / <code>Select-String</code></td><td>—</td></tr>
 <tr><td class="nw"><code>curl</code> <code>wget</code></td><td><code>Invoke-WebRequest</code>（仅 5.1）<span class="badge dead">禁用</span></td><td>5.1 里它们会劫持真正的 curl.exe，参数完全不同；PS7 已移除该别名</td></tr>
@@ -1736,7 +1819,7 @@ $lines -match 'ID-(\d)'<span class="cm">     # 返回两行，但 $Matches 保�
 
 <h2 id="p3-nature">3.1 管道里流的不是文本，是对象</h2>
 
-<p>先看一个你多半遇到过的场景：找出占 CPU 最高的几个进程。在 cmd 里，你得先把 <code>tasklist</code> 的输出打出来，再用 <code>findstr</code> 去匹配某一列——而那「一列」其实只是一串空格分隔的字符，列宽一变、进程名一长，脚本就崩了。</p>
+<p>先看一个你多半遇到过的场景：找出占 CPU 最高的几个进程。在 cmd 里，你得先把 <code>tasklist</code> 的输出打出来，再用 <code>findstr</code> 去匹配某一列——而那「一列」只是一串空格分隔的字符，列宽一变、进程名一长，脚本就崩了。</p>
 
 <pre style="contain-intrinsic-size:auto 169px"><code><span class="cm"># cmd.exe 的思路：先得到一屏文本，再想办法切开它</span>
 tasklist | findstr chrome
@@ -1843,7 +1926,7 @@ tasklist | findstr chrome
 <div class="note new" style="contain-intrinsic-size:auto 133px"><span class="t">🔵 现代提示</span><p>PowerShell 7 引入的 <code>&amp;&amp;</code> 和 <code>||</code> 叫「管道链操作符」，它们按上一条命令的成功/失败决定要不要执行下一条，<strong>不传递对象</strong>，和 <code>|</code> 不是一回事。例如 <code>dotnet build &amp;&amp; dotnet test</code>。</p></div>
 
 <h3>ETS:每个对象都被 PSObject 包了一层,所以你能给任何东西加属性</h3>
-<p>管道里流的其实不是裸 .NET 对象,而是包着一层 <strong>PSObject</strong> 的对象:这层「外套」可以携带<strong>额外的成员</strong>——这就是扩展类型系统(ETS)。<code>Get-Member</code> 列出的成员里,<code>MemberType</code> 为 <code>NoteProperty/ScriptProperty/AliasProperty</code> 的都是外套上的,C# 里的原类型根本没有:</p>
+<p>管道里流的不是裸 .NET 对象,而是包着一层 <strong>PSObject</strong> 的对象:这层「外套」可以携带<strong>额外的成员</strong>——这就是扩展类型系统(ETS)。<code>Get-Member</code> 列出的成员里,<code>MemberType</code> 为 <code>NoteProperty/ScriptProperty/AliasProperty</code> 的都是外套上的,C# 里的原类型根本没有:</p>
 <pre style="contain-intrinsic-size:auto 218px"><code><span class="cl"><span class="cm"># 给任意对象钉一个属性上去 —— 改的是外套,不是 .NET 类型</span></span><span class="cl">$f = Get-Item C:\Windows\notepad.exe</span><span class="cl">$f | Add-Member -NotePropertyName Owner -NotePropertyValue (Get-Acl $f).Owner</span><span class="cl">$f.Owner                          <span class="cm"># 用起来和真属性无异</span></span><span class="cl"> </span><span class="cl"><span class="cm"># 系统早就在这么干:FileInfo 上的这些方便属性全是 ETS 加的</span></span><span class="cl">Get-Item . | Get-Member -MemberType ScriptProperty,AliasProperty,NoteProperty</span><span class="cl"><span class="cm"># BaseName、LinkType… —— types.ps1xml 里按类型统一注入</span></span></code></pre>
 <table style="contain-intrinsic-size:auto 151px">
 <thead><tr><th class="nw">成员种类</th><th>值从哪来</th><th>典型用途</th></tr></thead>
@@ -2182,7 +2265,7 @@ $old[0].psobject.TypeNames[0]
 
 <h2 id="p3-alias">3.9 别名：交互式的糖，脚本里的债</h2>
 
-<p>在命令行上敲 <code>gps | ? cpu -gt 10 | % name</code> 很爽，十几个字符解决问题。但当这行代码出现在别人要维护的 <code>.ps1</code> 文件里时，它就成了债。</p>
+<p>在命令行上敲 <code>gps | ? cpu -gt 10 | % name</code> 很省事，十几个字符解决问题。但当这行代码出现在别人要维护的 <code>.ps1</code> 文件里时，它就成了债。</p>
 
 <table style="contain-intrinsic-size:auto 492px">
 <thead><tr><th>别名</th><th>完整命令</th><th>非 Windows 平台（PS 6+）</th></tr></thead>
@@ -2575,7 +2658,7 @@ Get-ChildItem C:\Logs |
 (Get-ChildItem C:\Logs).Where({ $_.Length -gt 1MB }, <span class="s">'First'</span>, 1)
 </code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">Select-Object -First 是真的会停 <span class="badge ok">仍适用</span></span><p>很多人以为 <code>Select-Object -First 5</code> 只是「把后面的丢掉」。其实它取够数后会向上游抛出一个内部停止异常，让 <code>Get-ChildItem</code> 之类的命令立刻停止枚举。所以在超大目录或长日志上，它既省时间也省内存，是管道里最正统的「提前退出」手段。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">Select-Object -First 是真的会停 <span class="badge ok">仍适用</span></span><p>很多人以为 <code>Select-Object -First 5</code> 只是「把后面的丢掉」。实际上它取够数后会向上游抛出一个内部停止异常，让 <code>Get-ChildItem</code> 之类的命令立刻停止枚举。所以在超大目录或长日志上，它既省时间也省内存，是管道里最正统的「提前退出」手段。</p></div>
 
 <h3>标签：跳出嵌套循环</h3>
 
@@ -2676,7 +2759,7 @@ Get-BigFile -Path C:\Users -MinMB 500 -Verbose
 
 <p>这也解释了为什么 <code>where</code> 在 PowerShell 里不是 <code>where.exe</code>——<code>where</code> 是 <code>Where-Object</code> 的别名，优先级最高。</p>
 
-<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">$args 风格的函数 <span class="badge old">已过时</span></span><p><code>function Say { $args[0] + $args[1] }</code> 这种靠 <code>$args</code> 取参数的写法在 PowerShell 1.0 时代很常见，现在只适合一次性的临时脚本块。它没有参数名、没有类型检查、没有 Tab 补全、<code>Get-Help</code> 也查不出东西。而且只要你写了 <code>[CmdletBinding()]</code> 或任何 <code>[Parameter()]</code> 属性，<code>$args</code> 就<strong>不再可用</strong>。现代替代：老老实实写 <code>param()</code>；确实要收集不定数量的尾部参数，用 <code>[Parameter(ValueFromRemainingArguments)]</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">$args 风格的函数 <span class="badge old">已过时</span></span><p><code>function Say { $args[0] + $args[1] }</code> 这种靠 <code>$args</code> 取参数的写法在 PowerShell 1.0 时代很常见，现在只适合一次性的临时脚本块。它没有参数名、没有类型检查、没有 Tab 补全、<code>Get-Help</code> 也查不出东西。而且只要你写了 <code>[CmdletBinding()]</code> 或任何 <code>[Parameter()]</code> 属性，<code>$args</code> 就<strong>不再可用</strong>。现代替代：写 <code>param()</code>；确实要收集不定数量的尾部参数，用 <code>[Parameter(ValueFromRemainingArguments)]</code>。</p></div>
 
 <h2 id="p4-param">4.6 参数属性：强制、类型、默认值与验证</h2>
 
@@ -3508,7 +3591,7 @@ Test-Path 'D:\work\a.txt' -PathType Leaf      <span class="cm"># 必须是文件
 Test-Path 'D:\a|b.txt' -IsValid               <span class="cm"># 只检查语法合不合法，不看存在性</span>
 Test-Path 'D:\logs\*.log' -NewerThan (Get-Date).AddDays(-1)  <span class="cm"># 有没有一天内改过的日志</span></code></pre>
 
-<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">🟡 陷阱：Test-Path 返回 $false 不等于「不存在」</span><p>没有读取权限、路径超长、网络共享断开，都会让 <code>Test-Path</code> 老老实实返回 <code>$false</code>。它把「不存在」和「看不见」混为一谈了。关键脚本里，与其信 <code>Test-Path</code>，不如直接 <code>Get-Item -ErrorAction Stop</code> 然后 <code>try/catch</code>，这样你能拿到真实的错误原因。另外，注册表里 <code>Test-Path</code> 只能测「项」，测不了「值」——测值要用 <code>Get-ItemPropertyValue ... -ErrorAction SilentlyContinue</code>。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">🟡 陷阱：Test-Path 返回 $false 不等于「不存在」</span><p>没有读取权限、路径超长、网络共享断开，都会让 <code>Test-Path</code> 返回 <code>$false</code>。它把「不存在」和「看不见」混为一谈了。关键脚本里，与其信 <code>Test-Path</code>，不如直接 <code>Get-Item -ErrorAction Stop</code> 然后 <code>try/catch</code>，这样你能拿到真实的错误原因。另外，注册表里 <code>Test-Path</code> 只能测「项」，测不了「值」——测值要用 <code>Get-ItemPropertyValue ... -ErrorAction SilentlyContinue</code>。</p></div>
 
 <h3>New-Item：一个参数两种脾气</h3>
 
@@ -3678,7 +3761,7 @@ Get-Content .\app.log -TotalCount 100     <span class="cm"># 只读前 100 行�
 
 <h2 id="p5-registry">5.5 注册表读写：项是文件夹，值是属性</h2>
 
-<p>注册表让很多人发怵，一半原因是概念对不上号。用 PowerShell 看它，其实只要记住一组映射：</p>
+<p>注册表让很多人发怵，一半原因是概念对不上号。用 PowerShell 看它，只要记住一组映射：</p>
 
 <table style="contain-intrinsic-size:auto 216px">
 <thead><tr><th class="nw">注册表术语</th><th class="nw">对应文件系统</th><th>用什么命令</th></tr></thead>
@@ -4097,7 +4180,7 @@ $s = New-PSSession -HostName 'alice@srv01' -KeyFilePath ~/.ssh/id_ed25519</code>
 </tbody>
 </table>
 
-<p>把这一章的东西串起来看，你会发现 PowerShell 管系统的方式其实只有一个模式：<strong>把资源建模成对象，把对象放进统一的路径命名空间，然后用同一组动词去操作它们。</strong>文件、注册表、进程、服务、远程机器，形态各异，但你面对它们时的手势是一样的。下一章我们会把这些零件装配起来——写出能出错、能重试、能被别人接手维护的真正的脚本。</p>
+<p>把这一章的东西串起来看，你会发现 PowerShell 管系统的方式只有一个模式：<strong>把资源建模成对象，把对象放进统一的路径命名空间，然后用同一组动词去操作它们。</strong>文件、注册表、进程、服务、远程机器，形态各异，但你面对它们时的手势是一样的。下一章我们会把这些零件装配起来——写出能出错、能重试、能被别人接手维护的真正的脚本。</p>
 
 </section>
 
@@ -4458,7 +4541,7 @@ $Error.Clear()                        <span class="cm"># 排查前先清零，�
 
 <h2 id="p6-streams">6.6 六种输出流与 Write-Host 之争</h2>
 
-<p>你可能一直以为 PowerShell 的输出就是"打印到屏幕"。其实屏幕上的东西来自六条<strong>互相独立</strong>的流，各有各的开关、各有各的重定向号。搞清楚它们，你写的函数才能既对人友好、又对脚本友好。</p>
+<p>你可能一直以为 PowerShell 的输出就是"打印到屏幕"。实际上屏幕上的东西来自六条<strong>互相独立</strong>的流，各有各的开关、各有各的重定向号。搞清楚它们，你写的函数才能既对人友好、又对脚本友好。</p>
 
 <figure style="contain-intrinsic-size:auto 407px">
 <svg viewBox="0 16 720 310" role="img" aria-label="六条输出流的去向">
@@ -4628,7 +4711,7 @@ Get-PSBreakpoint                   <span class="cm"># 看看现在有哪些断�
 Get-PSBreakpoint | Disable-PSBreakpoint    <span class="cm"># 临时全禁用</span>
 Get-PSBreakpoint | Remove-PSBreakpoint     <span class="cm"># 清干净</span></code></pre>
 
-<p>进入 <code>[DBG]&gt;&gt;&gt;</code> 提示符后，你其实身处一个<strong>完整的 PowerShell 会话</strong>：可以直接敲变量名看值、调用命令、甚至临时改变量再继续。加上这些单字母命令：</p>
+<p>进入 <code>[DBG]&gt;&gt;&gt;</code> 提示符后，你身处一个<strong>完整的 PowerShell 会话</strong>：可以直接敲变量名看值、调用命令、甚至临时改变量再继续。加上这些单字母命令：</p>
 
 <table style="contain-intrinsic-size:auto 379px">
 <thead><tr><th class="nw">键入</th><th>全称</th><th>作用</th></tr></thead>
@@ -5015,7 +5098,7 @@ $ErrorActionPreference = 'Stop'       <span class="cm"># 入口脚本：宁可�
     Write-Verbose '清理完成'          <span class="cm"># 即使上面 exit 了，这里也会先执行</span>
 }</code></pre>
 
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 注意 $ErrorActionPreference 的两副面孔</span><p>本章前面把"脚本顶部一刀切"标成了禁用，这里却在骨架里写 <code>$ErrorActionPreference = 'Stop'</code> —— 不矛盾。被禁的是 <code>SilentlyContinue</code>（把错误藏起来），而 <code>Stop</code> 是把错误放大：宁可当场停在第一个问题上，也不要带着半截错误状态跑完全程、留下一个更难收拾的现场。<strong>入口脚本用 Stop，可复用的函数库则老老实实逐条写 <code>-ErrorAction Stop</code>，别去改调用者的环境。</strong></p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 200px"><span class="t">🟢 注意 $ErrorActionPreference 的两副面孔</span><p>本章前面把"脚本顶部一刀切"标成了禁用，这里却在骨架里写 <code>$ErrorActionPreference = 'Stop'</code> —— 不矛盾。被禁的是 <code>SilentlyContinue</code>（把错误藏起来），而 <code>Stop</code> 是把错误放大：宁可当场停在第一个问题上，也不要带着半截错误状态跑完全程、留下一个更难收拾的现场。<strong>入口脚本用 Stop，可复用的函数库则逐条写 <code>-ErrorAction Stop</code>，别去改调用者的环境。</strong></p></div>
 
 <h2 id="p6-summary">6.10 本章小结与自查清单</h2>
 

@@ -199,6 +199,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">浏览器 API 与工作原理手册</div>
 <details><summary><a class="ch" href="#d1">DOM:树、查询、增删改与选区</a></summary>
+<a class="sec" href="#d1-open">1.0 开卷:锚定、定位与读法</a>
 <a class="sec" href="#f7-dom">1.1 DOM:树、节点与查询</a>
 <a class="sec" href="#f7-dom-edit">1.2 DOM:增删改、内容写入与几何信息</a>
 <a class="sec" href="#f7-dom-range">1.3 选区:Range 与 Selection</a>
@@ -289,10 +290,109 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 43937px;--thin-h:30197px">
+<section class="chapter" style="contain-intrinsic-size:auto 49306px;--thin-h:35567px">
 <h1 id="d1"><span class="part">DOM 与事件</span>DOM:树、查询、增删改与选区</h1>
 <p>《JavaScript 语言手册》讲的是语言本身,那些代码搬到 Node 里一样能跑;从这一章起,讲的是<strong>只有浏览器才给的对象</strong>,而它们的地基只有一个——DOM。浏览器把 HTML 字节解析成一棵节点树,页面上看得见的每一个字、每一个框都对应树上的一个节点;「用 JS 改页面」的准确说法是改这棵树,渲染引擎再按树和 CSSOM 算出像素(见 <a href="#f8-render">9.2</a>)。所以这一章自始至终只回答三个问题:怎么在树上<strong>找到</strong>节点、怎么<strong>改</strong>它、每种改法<strong>要付出什么代价</strong>。最后一个问题是这一章和一般 API 手册最大的差别:同一份 2000 条数据,五种渲染写法的耗时能差 50 倍,而差别全在几个不起眼的写法上。</p>
 <p>两节讲操作,两节讲操作之外的两块对象模型。<a href="#f7-dom">1.1</a> 是「找」:节点类型与两套遍历属性、<code>querySelector</code> 家族与 <code>getElementsBy</code> 家族的静态/动态之别、以及 <code>TreeWalker</code> 这种选择器管不到的遍历方式。<a href="#f7-dom-edit">1.2</a> 是「改」:创建、插入、替换、删除的现代 API,<code>innerHTML</code>/<code>textContent</code>/<code>innerText</code> 的三方对照,属性与样式的读写,滚动定位,以及为什么「改完样式立刻读 <code>offsetHeight</code>」会把浏览器的惰性批处理打断——同一份 2000 条数据、五种写法的真实耗时就在这一节末尾。<a href="#f7-dom-range">1.3</a> 讲用户划出的选区(<code>Range</code> 与 <code>Selection</code> 不是节点而是区间),<a href="#f7-dom-cssom">1.4</a> 讲样式表自己的对象模型与动态插入的脚本为什么默认是 async。往后 <a href="#f7-events">2.1</a> 讲事件怎么沿着这棵树传播,<a href="#f7-bom">3.1</a> 讲树之外的那个窗口;而 <a href="前端框架与工程化手册.html#f10-why">《前端框架与工程化手册》1.1</a> 里框架替你省掉的,正是这几节里手写的那些 <code>createElement</code> 与 <code>append</code>——知道底下是什么,才解释得通框架为什么要 key、为什么要受控输入。</p>
+<h2 id="d1-open">1.0 开卷:锚定、定位与读法</h2>
+<p>本书讲<strong>浏览器这个运行时能给你什么,以及它内部怎么跑</strong>:只有浏览器才提供的那批对象——DOM、事件、存储、观察者、图形、文件与实时通信;以及它们底下的机制——进程与线程、渲染管线、加载与缓存、网络协议与安全。判断一段内容归不归本书只看一条——<strong>把这段代码搬到浏览器之外还跑不跑得起来</strong>。跑不起来的归本书,跑得起来的归《JavaScript 语言手册》。</p>
+<h3>这个领域有哪些经典与主要资料</h3>
+<p>这个领域接口多、演进快、成体系的书少:讲机制的中文书大多对应较早的代码基线,而规范与官方文档一直在动。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
+<table style="contain-intrinsic-size:auto 737px">
+<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<tbody>
+<tr><td>MDN 的 Web API 分区</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>每个接口给构造方式、属性、方法、事件、示例与规范链接,并标 Baseline。局限:是参考不是教程,接口之间的关系要自己接;中文页滞后于 en-US</td></tr>
+<tr><td>WHATWG 的 DOM、HTML、Fetch、Streams 等规范</td><td class="nw">官方规范</td><td class="nw">锚定</td><td>接口行为、事件分发算法、请求与响应模型的最终裁判。局限:写给实现者读,不给用法建议,也不写各引擎实现到哪一步</td></tr>
+<tr><td>Ilya Grigorik《Web 性能权威指南》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>从延迟与带宽讲到 TCP、TLS 与协议演进,给的全是可量化的数字与优化清单,是理解「为什么慢」的底座。局限:成书较早,QUIC 与 HTTP/3 要看规范与发布说明补;无线网络几章知道结论即可</td></tr>
+<tr><td>Chrome 的渲染与性能文档、web.dev</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>渲染管线的分阶段说明、性能指标的定义与阈值、测量工具的用法都以它为准。局限:Chrome 视角,其他引擎的合成与任务调度策略不同,结论不要直接外推</td></tr>
+<tr><td>OWASP 的攻击面分类与各类速查表</td><td class="nw">官方来源</td><td class="nw">锚定</td><td>攻击怎么成立、防御该放在哪一层,分类完整且持续更新。局限:面向通用 Web 应用,浏览器侧的具体机制仍要回规范查</td></tr>
+<tr><td>《WebKit 技术内幕》</td><td class="nw">进阶专题</td><td class="nw">参考</td><td>渲染引擎内部的模块划分与数据流,中文里少有的成体系材料。局限:对应较早的代码基线,多进程与合成架构已有变化,当结构参考读、不要当现状读</td></tr>
+<tr><td>Chromium 的设计文档与源码</td><td class="nw">源码</td><td class="nw">参考</td><td>进程模型、站点隔离、合成器的实际做法,文档说不清时的仲裁者。局限:实现不是规范承诺,读出的结论换一个引擎可能不成立</td></tr>
+<tr><td>HTTP 相关的 RFC</td><td class="nw">官方规范</td><td class="nw">参考</td><td>语义与状态码、缓存、连接管理与多路复用的定义,第 10 章的协议结论以它们为准。局限:分散在多份文档,交叉引用多,读起来慢</td></tr>
+<tr><td>《JavaScript 语言手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>本书假定的语言基础:异步、闭包、原型与模块。局限:不含浏览器对象</td></tr>
+<tr><td>《HTML 与 CSS 手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>这棵树与这份样式表本身怎么写。局限:不讲脚本操作</td></tr>
+</tbody>
+</table>
+<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 讲引擎结构的书读结构,别读版本;接口一律回规范核对</span><p>渲染引擎的模块划分与数据流变化不大,老书在这一层仍然可读;但进程模型、合成策略与任务调度已经改过好几轮,书上的具体做法不能当现状。接口层更甚:一个方法有没有、参数叫什么、返回什么,只有 MDN 与规范说了算。</p></div>
+<h3>锚定的五样各借鉴了什么</h3>
+<p>下表只收标为「锚定」的,借鉴的内容具体到手法。</p>
+<table style="contain-intrinsic-size:auto 375px">
+<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<tbody>
+<tr><td class="nw">WHATWG 各份规范</td><td>事实层的准绳。事件按规范的分发算法讲成捕获、目标、冒泡三个阶段,而不是只说「会冒泡」;请求按 Fetch 规范讲成模式、凭据、缓存三组开关,而不是罗列参数。1.1、2.1、11.1 的推导照规范条目走</td></tr>
+<tr><td>MDN 的 Web API 分区</td><td>「本章 API 速查」的字段划分:接口、成员、参数、返回值、Baseline 各占一列,全书 7 张速查表用同一个形状;术语与 MDN 中文页一致,便于交叉查阅</td></tr>
+<tr><td>《Web 性能权威指南》</td><td>网络两节的分层顺序(延迟与带宽、TCP、TLS、协议演进),以及「每条结论配一个能自己量出来的数字」这条写法。10.5 与 10.6 整节按它的分层组织</td></tr>
+<tr><td>Chrome 渲染文档与 web.dev</td><td>渲染管线按阶段拆开这条主线:解析、样式计算、布局、绘制、合成,第 9 章按这个顺序排;性能指标一律用官方定义的口径与阈值,不自造名词</td></tr>
+<tr><td class="nw">OWASP</td><td>第 11、12 章的组织:按攻击面分类,每一类固定给三段——攻击怎么成立、防御该放在哪一层、怎么验证已经防住</td></tr>
+</tbody>
+</table>
+<p>这个领域有一条别处没有的情况必须写清:<strong>浏览器接口与网络协议都在快速演进,书出版即滞后</strong>。所以本书系把事实层与组织层分开——书给章节骨架与推导路径,而某个接口当前长什么样、能不能上线,一律以规范、MDN 与 Baseline 为准。上表里四份官方来源标为锚定而非「参考」,原因就在这里。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 浏览器接口失效多数不报错,只是悄悄不生效</span><p>这一层与语言层的最大差别:类型错了会抛异常,而一个观察者没触发、一次拦截没生效、一个权限没拿到,页面照常运行,只是想要的事情没发生。所以本书每个接口除了用法,还固定写清两件事:什么条件下不生效,以及不生效时在哪个面板能看出来。</p></div>
+<h3>讲什么、不讲什么</h3>
+<p>本书覆盖<strong>浏览器提供的接口,加上解释这些接口为什么这样表现所需要的内部机制</strong>,四部分各回答一个问题。</p>
+<table style="contain-intrinsic-size:auto 236px">
+<thead><tr><th class="nw">部分</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
+<tbody>
+<tr><td class="nw">DOM 与事件</td><td class="nw">第 1 到 3 章,15 节</td><td>怎么在树上找到节点、怎么改、每种改法的代价;事件怎么传播;窗口对象与本地存储能存什么</td></tr>
+<tr><td class="nw">浏览器 API</td><td class="nw">第 4 到 8 章,26 节</td><td>观察者与自定义元素、Canvas 与 SVG、文件与媒体与流、离线与实时通信、性能测量与加密</td></tr>
+<tr><td class="nw">浏览器原理</td><td class="nw">第 9 到 10 章,11 节</td><td>一个页面从字节变成像素经过哪些阶段,一次加载的时间花在哪一段</td></tr>
+<tr><td class="nw">安全与排错</td><td class="nw">第 11 到 12 章,12 节</td><td>同源怎么划、请求为什么被拦、常见攻击怎么成立;线上出问题怎么定位</td></tr>
+</tbody>
+</table>
+<p>不讲的部分同样要说清楚,并指明归谁。</p>
+<table style="contain-intrinsic-size:auto 398px">
+<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
+<tbody>
+<tr><td>JavaScript 语言本体:类型、作用域、原型、模块、Promise 的语义</td><td class="nw">《JavaScript 语言手册》</td><td>那本讲的代码离开浏览器照样跑;本书的每一节都离不开浏览器</td></tr>
+<tr><td>HTML 元素与 CSS 属性本身怎么写</td><td class="nw">《HTML 与 CSS 手册》</td><td>本书讲怎么用脚本操作它们,以及操作的代价</td></tr>
+<tr><td>框架怎么封装这些接口、构建、打包与部署</td><td class="nw">《前端框架与工程化手册》</td><td>本书讲底下是什么,那本讲框架替你做了什么;两边合起来才解释得通框架的规矩</td></tr>
+<tr><td>服务端实现:跨源响应头怎么配、令牌怎么签发与校验</td><td class="nw">各自框架的文档</td><td>本书只讲前端要看懂的那一半:请求为什么被拦、该改哪一头</td></tr>
+<tr><td>WebGL、WebGPU 与 WebAssembly</td><td class="nw">不展开</td><td>只在图形与媒体两章交代它们的位置</td></tr>
+<tr><td>浏览器扩展开发、无头浏览器与自动化</td><td class="nw">不在本书系范围</td><td>各有独立的接口面与权限模型</td></tr>
+<tr><td>渲染引擎与网络栈的源码级实现</td><td class="nw">不展开</td><td>只讲到能解释现象、能推出优化手段的层次,再往下随版本变</td></tr>
+</tbody>
+</table>
+<h3>读之前要会什么</h3>
+<p>前置分两档,每条给自测方式。这是五本手册里前置最多的一本,语言、标记与网络三边的基础都要用到。</p>
+<table style="contain-intrinsic-size:auto 537px">
+<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
+<tbody>
+<tr><td class="nw">必须</td><td>会写 JavaScript,包括异步</td><td>说出一段混合定时器、Promise 与 <code>await</code> 的代码的输出顺序,并说清任务与微任务的区别</td></tr>
+<tr><td class="nw">必须</td><td>读得懂 HTML 与基本的 CSS</td><td>给一段三层嵌套的标记,说出哪些元素会生成盒子,并写出能选中第三个列表项的选择器</td></tr>
+<tr><td class="nw">必须</td><td>知道一次 HTTP 请求与响应由哪几部分构成</td><td>说出请求方法、状态码与两个常见缓存头各起什么作用,并说清 304 与 200 的区别</td></tr>
+<tr><td class="nw">必须</td><td>会用开发者工具的元素与网络两个面板</td><td>在任意页面上量出一个请求的耗时构成,并找到某个元素当前生效的样式是哪条规则给的</td></tr>
+<tr><td class="nw">必须</td><td>知道进程与线程的区别</td><td>说出「一段计算把单线程占满」在用户那里表现成什么样,以及多进程为什么能改善</td></tr>
+<tr><td class="nw">最好有</td><td>了解 TCP 与 TLS 的建立过程</td><td>说出建立一条加密连接大致要几个往返,并解释往返次数为什么常常比带宽更影响首屏</td></tr>
+<tr><td class="nw">最好有</td><td>写过服务端接口</td><td>说出你上一次给一个接口加跨源支持时改了哪几个响应头,以及浏览器凭什么放行</td></tr>
+<tr><td class="nw">最好有</td><td>了解常见的 Web 攻击</td><td>说清注入型攻击与伪造请求型攻击各自利用了什么,以及两者的防御手段为什么不能互换</td></tr>
+</tbody>
+</table>
+<h3>与那些资料相比,本书多给了什么</h3>
+<ul>
+<li><strong>每个接口都写代价,不只写用法。</strong>同一份数据五种渲染写法的耗时差多少、读一次几何信息会打断什么批处理、一次布局抖动怎么攒出来——都给在开发者工具里量到的数字,可以照着复现。</li>
+<li><strong>137 个批注里有 71 个红色,是全书系比例最高的一本。</strong>原因在上面那条:这一层的失效多数不抛异常。每个红色批注固定给两样——什么条件下不生效、在哪个面板能看出来。另有 50 个绿色写判据,13 个蓝色写现代替代。</li>
+<li><strong>53 个「完整示例」可运行,17 张图覆盖结构、流程与时序三类。</strong>进程与线程怎么分工、一帧经过哪些阶段、事件沿树走了哪条路、一次连接建立花了几个往返,一律配图而不是靠文字描述。</li>
+<li><strong>安全两章按攻击面组织,每类给三段。</strong>攻击怎么成立、防御该放在哪一层、怎么验证已经防住。最后一段是多数资料缺的,没有验证手段的防御等于没做。</li>
+<li><strong>时效性有固定对策,不写死浏览器版本号。</strong>接口标 Baseline 并指向 MDN 与规范,能不能上线以 Can I Use 加自己的目标浏览器区间为准;协议部分以 RFC 与发布说明为准;涉及实现的结论都写明它属于哪个引擎的当前做法。</li>
+<li><strong>135 个「深入」块与 7 张「本章 API 速查」分工。</strong>规范条文、引擎实现与历史演进折进「深入」,顺读时不打断主线;速查表按接口、成员、参数、返回值、Baseline 五栏排,另配 11 份「要点与易错清单」。</li>
+</ul>
+<h3>两条读法:顺读与按需查</h3>
+<p>第一次系统学浏览器走顺读,手上已经有具体问题走按需查。全书 64 节,不建议从头读到尾。</p>
+<table style="contain-intrinsic-size:auto 285px">
+<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
+<tbody>
+<tr><td class="nw">第一次系统学浏览器</td><td>第 1、2 章顺读,补第 3 章,然后直接跳到第 9 章</td><td class="nw">第 1、2、9、11 章</td><td class="nw">第 5、6 章</td></tr>
+<tr><td class="nw">页面卡顿或首屏慢</td><td>第 9 章顺读到第 10 章,配 8.1 的测量方法</td><td class="nw">9.2、9.3、10.1、10.3</td><td class="nw">第 4 到 7 章</td></tr>
+<tr><td class="nw">要写组件库</td><td>第 4 章整章,配 1.1 与 2.1 打底</td><td class="nw">4.3、4.4、4.5</td><td class="nw">第 9 到 12 章</td></tr>
+<tr><td class="nw">做离线、上传或实时功能</td><td>第 7 章,配 3.3 的存储与 6.6 的流</td><td class="nw">7.1、7.2、7.3</td><td class="nw">第 5 章</td></tr>
+<tr><td class="nw">要做安全评审</td><td>第 11 章顺读到第 12 章,配 3.3 的凭据存放</td><td class="nw">11.1、11.2、12.1</td><td class="nw">第 4 到 8 章</td></tr>
+<tr><td class="nw">手上有具体问题</td><td>先查各章末的「要点与易错清单」与 7 张 API 速查表;报错读不懂查 12.4</td><td class="nw">—</td><td class="nw">—</td></tr>
+</tbody>
+</table>
+<p><strong>第 1、2 章是全书地基,必须按顺序读完。</strong>后面每一章都在用它们的结论:观察者观察的是这棵树上的节点,自定义元素接的是这套生命周期与事件,渲染管线算的是这棵树加样式,安全两章拦的是这棵树发出去的请求。另两处枢纽是第 9 章与第 11 章:前者回答「为什么慢」,后者回答「为什么被拦」,是真实项目里出现最多的两类问题。</p>
+<p>中间的接口五章(第 4 到 8 章)按需取,顺读价值不大。它们共用一套问法:这个接口解决什么问题、什么条件下不生效、代价在哪、怎么验证生效了。读通其中一章,遇到没见过的接口也能按同一套问法自己读懂 MDN。</p>
+<p>读完第 1 到 3 章,能不用框架写出有交互的页面并说清每次改动的代价;读完第 4 到 8 章,能自己读懂一个没见过的浏览器接口;读完第 9、10 章,能说出一次卡顿是长任务还是布局抖动、一次慢加载卡在哪一段;读完第 11、12 章,能读懂一条跨源或内容安全策略的报错该谁改,并给页面做基本的安全评审。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 第 1、2 章顺序读完,再按问题挑第 9 章或第 11 章</span><p>这两章之外都可以跳着读,唯独它们不行:后面所有接口都建立在「节点树」与「事件沿树传播」这两件事上。判断读到位了没有,回答两问即可:同一份数据五种写法为什么能差出几十倍;一个绑在父元素上的处理函数,为什么点子元素也会触发、什么情况下不会。</p></div>
 <h2 id="f7-dom">1.1 DOM:树、节点与查询</h2>
 <p>DOM(Document Object Model)是浏览器把 HTML 文档解析后在内存里建成的<strong>一棵对象树</strong>,以及操作这棵树的一组接口。HTML 源码是字符串,DOM 是对象;JS 不能改「源码」,只能改树,渲染引擎根据树(加上 CSSOM)画出像素(见 <a href="#f8-render">9.2</a>)。所以「用 JS 改页面」这句话的准确说法是:找到树上的某个节点,改它的属性、内容或位置,浏览器在下一帧把变化画出来。</p>
 <p>这一节只解决第一个问题:<strong>怎么在树上找到你要的那个节点</strong>。先认清树上都有哪些种类的节点(以及为什么源码里的换行会变成节点),再看两套遍历属性的差别,然后是两个查询家族——它们返回的集合一个是快照、一个是活的,这个差别会直接决定你的循环删不删得干净。选择器管不到的场景(只要文本节点、按运行时条件取舍)留给 <code>NodeIterator</code> 与 <code>TreeWalker</code>。找到之后怎么改、改的代价是多少,在 <a href="#f7-dom-edit">1.2</a>。</p>
@@ -5443,7 +5543,7 @@ media.addEventListener(<span>'timeupdate'</span> | <span>'ended'</span> | <span>
 <tr><td class="nw"><code>progress</code></td><td>下载进度</td><td>—</td><td>读 <code>buffered</code> 画缓冲条</td></tr>
 </tbody>
 </table>
-<p><code>canPlayType</code> 返回的是三个字符串而不是布尔,这是一个容易误用的点:<code>if (media.canPlayType('audio/wav'))</code> 对 <code>'maybe'</code> 和 <code>'probably'</code> 都为真,只有空串为假——这正是想要的,但反过来写 <code>=== 'probably'</code> 会把很多其实能播的格式(例如 Chrome 对 WAV 只敢说 <code>'maybe'</code>)排除掉。浏览器不可能在真正解码前确定能不能播,所以它只承诺「大概」。更可靠的办法是提供多个 <code>&lt;source type=…&gt;</code> 让浏览器按顺序挑,或者直接 <code>play()</code> 后监听 <code>error</code>。</p>
+<p><code>canPlayType</code> 返回的是三个字符串而不是布尔,这是一个容易误用的点:<code>if (media.canPlayType('audio/wav'))</code> 对 <code>'maybe'</code> 和 <code>'probably'</code> 都为真,只有空串为假——这正是想要的,但反过来写 <code>=== 'probably'</code> 会把很多能播的格式(例如 Chrome 对 WAV 只敢说 <code>'maybe'</code>)排除掉。浏览器不可能在真正解码前确定能不能播,所以它只承诺「大概」。更可靠的办法是提供多个 <code>&lt;source type=…&gt;</code> 让浏览器按顺序挑,或者直接 <code>play()</code> 后监听 <code>error</code>。</p>
 <h3>play() 返回 Promise 与自动播放策略</h3>
 <p><code>play()</code> 返回 Promise 是 2017 年前后各浏览器一起改的:播放可能因为<strong>自动播放策略</strong>被拒绝,而拒绝是异步的。策略的核心规则(Chrome 与 Safari 大同小异):<strong>带声音的媒体只有在用户与页面交互过之后才能由脚本启动</strong>;静音(<code>muted</code>)的视频可以自动播放;用户在本站点历史上频繁播放媒体(Chrome 的 Media Engagement Index)可以放宽。「交互过」的准确含义是文档获得过<strong>用户激活</strong>(sticky user activation):一次真实的点击、按键或触摸(不是 <code>element.click()</code>)之后,整个文档就被标记为已激活,此后任何时候脚本调用 <code>play()</code> 都可以;在那之前,哪怕 <code>play()</code> 写在 <code>setTimeout</code> 里、写在 <code>load</code> 事件里,都会 reject。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 169px"><code><span class="cm">// 页面加载 300ms 后由脚本调用(没有任何用户交互)</span>
@@ -6266,7 +6366,7 @@ stream: client closed after 6 chunks</code></pre>
 <tr><td class="nw">tee() 的代价</td><td>两支各自缓冲,慢的那支把数据堆在内存里</td><td>用它做「一边下载一边缓存」,内存占用直接翻倍</td></tr>
 <tr><td class="nw">文本要过 TextDecoderStream</td><td>一个多字节 UTF-8 字符可能被切在两个 chunk 之间</td><td>对每个 chunk 各 <code>new TextDecoder().decode()</code> 一次,中文在块边界上变乱码</td></tr>
 <tr><td class="nw">进度条要能退化</td><td><code>Content-Length</code> 可能没有,或者是压缩前后不一致的那个数</td><td>百分比超过 100,或者永远停在 99%,没有「不确定进度」这条分支</td></tr>
-<tr><td class="nw">取消要选对方式</td><td><code>reader.cancel()</code> 关上游保留已得数据,<code>abort(signal)</code> 让 read 一起拒绝</td><td>只把变量置空就以为下载停了,连接其实还开着</td></tr>
+<tr><td class="nw">取消要选对方式</td><td><code>reader.cancel()</code> 关上游保留已得数据,<code>abort(signal)</code> 让 read 一起拒绝</td><td>只把变量置空就以为下载停了,连接实际上还开着</td></tr>
 <tr><td class="nw">下载三条路的分界</td><td>下载与剪贴板是一次性递出去,File System Access 给的是能反复写的<strong>句柄</strong></td><td>做编辑器的「保存」却每次都弹另存为</td></tr>
 <tr><td class="nw">句柄的权限</td><td>句柄能存进 IndexedDB,<strong>权限不会跟着持久化</strong></td><td>重开页面直接写,漏了手势里的 <code>requestPermission</code></td></tr>
 <tr><td class="nw">CSV 导出</td><td>开头要加 <code>\uFEFF</code> BOM,换行用 <code>\r\n</code></td><td>不加 BOM,Excel 打开中文全是乱码</td></tr>
@@ -7121,7 +7221,7 @@ dc demo state=open sent=1 recv=1</code></pre>
 <tbody>
 <tr><td><strong><a href="#fapi-sw">7.1</a> 注册与作用域</strong>:<code>register(url, {scope})</code>,scope 默认是脚本所在目录,不能高于它,除非响应头 <code>Service-Worker-Allowed</code></td><td>SW 只控制自己 scope 下的页面,放在哪个目录决定了它能管多大</td><td>把 <code>sw.js</code> 放进 <code>/static/</code> 却想控制 <code>/</code>;SPA 的 history 回退把 <code>/sw.js</code> 也返回成 HTML,注册报 <code>The script has an unsupported MIME type ('text/html')</code></td></tr>
 <tr><td><strong>五个状态</strong>:installing → installed(waiting) → activating → activated,失败或被替换进 redundant</td><td>「新版本什么时候生效」由状态机决定,不由用户刷几次决定</td><td>部署后让用户「刷新一下」——刷新时新旧文档有重叠,旧 SW 的页面数不清零,新版永远停在 waiting</td></tr>
-<tr><td><strong>首次注册本页不受控</strong>:<code>navigator.serviceWorker.controller</code> 仍是 <code>null</code>,要下次导航或 <code>clients.claim()</code></td><td>第一次访问是「装上了但没接管」,第二次访问才有离线能力</td><td>第一次打开就断网验收,看到白屏判定缓存没写进去,其实缓存是好的</td></tr>
+<tr><td><strong>首次注册本页不受控</strong>:<code>navigator.serviceWorker.controller</code> 仍是 <code>null</code>,要下次导航或 <code>clients.claim()</code></td><td>第一次访问是「装上了但没接管」,第二次访问才有离线能力</td><td>第一次打开就断网验收,看到白屏判定缓存没写进去,实际上缓存是好的</td></tr>
 <tr><td><strong>SW 是无状态的</strong>:空闲几十秒被终止,全局变量全丢;异步工作必须挂在 <code>event.waitUntil()</code> 或 <code>respondWith()</code> 上</td><td>每个事件都可能是在一个刚启动的新进程里跑的</td><td>在模块顶层建一个 <code>Map</code> 当内存缓存,下次事件里它是空的;在 <code>fetch</code> 里 fire-and-forget 地发上报,SW 被杀,请求根本没出去</td></tr>
 <tr><td><strong><code>respondWith</code> 必须同步调用</strong>:在事件处理器的同步阶段决定接不接管,之后才能 await</td><td>先同步分类(按 <code>request.method</code>/<code>mode</code>/<code>destination</code>),该管的把整个 Promise 交给 <code>respondWith</code></td><td>写成 <code>async function onFetch(e){ const r = await caches.match(e.request); e.respondWith(r); }</code>,抛 <code>InvalidStateError: Failed to execute 'respondWith' on 'FetchEvent'</code></td></tr>
 <tr><td class="nw"><strong>Response 的 body 只能读一次</strong></td><td>「返回给页面」和「写进缓存」是两次消费,必须 <code>res.clone()</code></td><td>先 <code>cache.put(req, res)</code> 再 <code>return res</code>,页面拿到一个已经被读空的响应</td></tr>
@@ -8140,7 +8240,7 @@ Performance 面板(录制后触发):
 <tr><td><strong>强制同步布局</strong>:写完样式后读 <code>offsetWidth</code>、<code>getBoundingClientRect()</code>、<code>scrollTop</code>、<code>getComputedStyle</code> 的几何属性,浏览器必须当场算完</td><td>判断标准只有一条:在一次同步执行里,有没有在写样式之后又读几何</td><td>循环里「读一次、写一次」,1000 个元素就是 1000 次全树布局;忘了 <code>el.scrollTop = 0</code> 这种<strong>写</strong>也会强制布局(浏览器要先知道能滚多远)</td></tr>
 <tr><td><strong>抖动藏在看起来无害的地方</strong>:<code>scroll</code>/<code>mousemove</code> 回调里量尺寸再改样式;<code>useEffect</code>/<code>watch</code> 里先测量再 set 状态;jQuery 的 <code>.width()</code> 与 <code>.css()</code> 交替</td><td>框架会合并自己的 DOM 写入,但管不了你在 effect 里手写的 <code>offsetHeight</code></td><td>以为「用了 React 就不会抖动」;把每个组件各来一次的测量当成「反正只有一次」</td></tr>
 <tr><td><strong>修法:先全读、再全写</strong>:回调里只读并存起来,写统一放进 <code>requestAnimationFrame</code></td><td>rAF 回调在下一帧样式计算之前执行,所有写在那里汇合,只做一次布局</td><td>把写也塞进 rAF 之后还在里面顺手读一次几何,抖动原样搬进了 rAF</td></tr>
-<tr><td><strong>诊断是现成的</strong>:Performance 面板 Main 轨道上一串带红三角的密集紫色 Layout 块,Summary 里写着 Forced reflow is a likely performance bottleneck 并给出调用栈</td><td>这是少数浏览器主动给诊断的性能问题,看到红三角就去找读写交替</td><td>靠 <code>console.time</code> 到处埋点猜,面板上其实已经指着那一行了</td></tr>
+<tr><td><strong>诊断是现成的</strong>:Performance 面板 Main 轨道上一串带红三角的密集紫色 Layout 块,Summary 里写着 Forced reflow is a likely performance bottleneck 并给出调用栈</td><td>这是少数浏览器主动给诊断的性能问题,看到红三角就去找读写交替</td><td>靠 <code>console.time</code> 到处埋点猜,面板上已经指着那一行了</td></tr>
 <tr><td><strong>把工作交给合成器</strong>:移动用 <code>transform: translateX()</code> 而不是 <code>left</code>,淡出用 <code>opacity</code> 而不是 <code>visibility</code>;<code>will-change: transform</code> 提前提升图层</td><td>这两个属性既不改任何盒子的几何也不改位图内容,正好是合成器的本职</td><td>给几百个元素加 <code>will-change</code>,每层一块「宽 × 高 × 4 字节」的位图把显存吃光,合成反而更慢;动完不移除</td></tr>
 <tr><td><strong>限制重排范围</strong>:<code>contain: layout</code> 切断布局依赖链,<code>content-visibility: auto</code> + <code>contain-intrinsic-size</code> 跳过视口外区块的样式/布局/绘制</td><td>后者是「虚拟列表」思想的 CSS 内建版,不用改 DOM 结构</td><td>用了 <code>content-visibility: auto</code> 却不给 <code>contain-intrinsic-size</code>,滚动条长度乱跳</td></tr>
 <tr><td><strong>虚拟列表</strong>:只把视口内加缓冲的几十行放进 DOM,用一个撑高度的占位元素保证滚动条正确,用 <code>transform: translateY()</code> 定位可见行</td><td>DOM 里永远只有几十个节点,滚到哪里都一样快</td><td>忘了页内查找(Ctrl+F)和屏幕阅读器只能看到已渲染的那几十行;行高不固定时不维护测量表,拖到底部一直跳</td></tr>
@@ -8219,7 +8319,7 @@ HTTP/2 200</code></pre>
 <tr><td class="nw"><code>&lt;link rel="prefetch"&gt;</code></td><td class="nw">Lowest</td><td>空闲时才做</td></tr>
 </tbody>
 </table>
-<p>默认策略猜不到你的意图:它不知道首屏那张大图就是 LCP 元素,也不知道某个异步脚本其实是首屏必需的。<strong><code>fetchpriority</code></strong> 属性就是用来改这个默认值的,取值 <code>high</code> / <code>low</code> / <code>auto</code>,可以写在 <code>&lt;img&gt;</code>、<code>&lt;script&gt;</code>、<code>&lt;link&gt;</code>、<code>&lt;iframe&gt;</code> 上;<code>fetch()</code> 的 init 里对应 <code>priority</code> 选项。最有价值的用法只有两个:给 LCP 图片加 <code>fetchpriority="high"</code>(让它不用等布局就以高优先级发出),给首屏不需要的图片或脚本加 <code>low</code>。Chrome 101+ / Safari 17.2+ / Firefox 132+ 支持,不支持的浏览器忽略它,没有副作用。</p>
+<p>默认策略猜不到你的意图:它不知道首屏那张大图就是 LCP 元素,也不知道某个异步脚本是首屏必需的。<strong><code>fetchpriority</code></strong> 属性就是用来改这个默认值的,取值 <code>high</code> / <code>low</code> / <code>auto</code>,可以写在 <code>&lt;img&gt;</code>、<code>&lt;script&gt;</code>、<code>&lt;link&gt;</code>、<code>&lt;iframe&gt;</code> 上;<code>fetch()</code> 的 init 里对应 <code>priority</code> 选项。最有价值的用法只有两个:给 LCP 图片加 <code>fetchpriority="high"</code>(让它不用等布局就以高优先级发出),给首屏不需要的图片或脚本加 <code>low</code>。Chrome 101+ / Safari 17.2+ / Firefox 132+ 支持,不支持的浏览器忽略它,没有副作用。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 156px"><code>&lt;img src=<span>"hero.jpg"</span> fetchpriority=<span>"high"</span> width=<span>"1200"</span> height=<span>"600"</span> alt=<span>"..."</span>&gt;     <span class="cm">// LCP 图片:高优先级,且不要 loading="lazy"</span>
 &lt;img src=<span>"footer.jpg"</span> loading=<span>"lazy"</span> decoding=<span>"async"</span> width=<span>"600"</span> height=<span>"300"</span> alt=<span>"..."</span>&gt;
 &lt;script src=<span>"/analytics.js"</span> defer fetchpriority=<span>"low"</span>&gt;&lt;/script&gt;
@@ -8455,7 +8555,7 @@ Vary: Accept-Encoding, Origin       <span class="cm">// 这些请求头不同的
 </tbody>
 </table>
 <p>这两套机制组合出今天静态站点的标准策略(见 <a href="前端框架与工程化手册.html#f11-deploy">《前端框架与工程化手册》7.3</a>):构建产物的文件名带内容哈希(<code>app-3f2a9c.js</code>),设 <code>max-age=31536000, immutable</code>——内容一变文件名就变,旧文件永远不会被错用,所以可以缓存一年;而 <code>index.html</code> 设 <code>no-cache</code>(或 <code>max-age=0</code>),每次都用 <code>ETag</code> 验证,保证用户总能拿到指向最新哈希文件的入口。反过来的事故形态是:<code>index.html</code> 被 CDN 缓存了一小时,用户拿到旧 HTML,里面引用的旧哈希文件已经在新发布里被删掉——页面白屏,控制台一串 404。</p>
-<p>浏览器的缓存其实分好几层,Network 面板的 Size 列会告诉你命中了哪层:<code>(memory cache)</code> 是本次页面生命周期内的内存缓存(同一页里重复用到的图片、preload 过的资源);<code>(disk cache)</code> 是跨页面、跨会话的 HTTP 缓存;<code>(prefetch cache)</code> 来自 <code>rel=prefetch</code>;前进/后退时整页从 <strong>bfcache</strong> 恢复(页面被整个冻结保存,不重新加载,<code>pageshow</code> 事件的 <code>persisted</code> 为 true;页面上注册了 <code>unload</code> 监听器或有未关闭的连接会让它失效)。Service Worker 还能在这些之前拦截请求、用自己的 Cache Storage 应答,那是离线与 PWA 的基础(见 <a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a>)。</p>
+<p>浏览器的缓存分好几层,Network 面板的 Size 列会告诉你命中了哪层:<code>(memory cache)</code> 是本次页面生命周期内的内存缓存(同一页里重复用到的图片、preload 过的资源);<code>(disk cache)</code> 是跨页面、跨会话的 HTTP 缓存;<code>(prefetch cache)</code> 来自 <code>rel=prefetch</code>;前进/后退时整页从 <strong>bfcache</strong> 恢复(页面被整个冻结保存,不重新加载,<code>pageshow</code> 事件的 <code>persisted</code> 为 true;页面上注册了 <code>unload</code> 监听器或有未关闭的连接会让它失效)。Service Worker 还能在这些之前拦截请求、用自己的 Cache Storage 应答,那是离线与 PWA 的基础(见 <a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a>)。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 刷新不等于「重新下载一切」</span><p>Chrome 的普通刷新(F5)只对<strong>主文档</strong>发条件请求,子资源仍按缓存规则走;Ctrl+Shift+R(或勾上 Network 面板的 Disable cache)才绕过全部缓存。所以「我明明改了 CSS 刷新没变化」几乎总是强缓存命中——开发服务器一般会给文件发 <code>no-cache</code> 或带哈希的 URL,生产环境则靠文件名哈希,而不是指望用户去强刷。另一个常见误会是 <code>no-cache</code> 的字面意思:它<strong>不是「不缓存」</strong>,是「每次用之前问一下」;真正不缓存是 <code>no-store</code>。</p></div>
 <div class="deep"><h3 class="deep">缓存键、Vary 与缓存分区</h3>
 <p>缓存的键默认是「请求方法 + 完整 URL」——所以给 URL 加查询参数 <code>?v=2</code> 能让缓存失效(老式的「加版本号」),文件名哈希只是更彻底的同一招。<code>Vary</code> 响应头把某些请求头也加进键:<code>Vary: Accept-Encoding</code> 让 gzip 版和 brotli 版分开存;<code>Vary: Origin</code> 让按来源回显不同 <code>Access-Control-Allow-Origin</code> 的响应(见 <a href="#f8-cors">11.2</a>)不会被错用到另一个来源;<code>Vary: *</code> 等于不可缓存。写 CORS 响应头而不写 <code>Vary: Origin</code>,是一类非常难排查的 bug 来源:第一个来源的响应被缓存后,第二个来源拿到的是带着第一个来源的 ACAO 头的缓存副本,CORS 失败。</p>
@@ -8763,7 +8863,7 @@ entry.serverTiming                              <span class="cm">// 服务器通
 </tbody>
 </table>
 <h3>状态码速查</h3>
-<table style="contain-intrinsic-size:auto 574px">
+<table style="contain-intrinsic-size:auto 573px">
 <thead><tr><th>码</th><th>含义</th><th>前端怎么处理</th></tr></thead>
 <tbody>
 <tr><td class="nw">200 / 201 / 204</td><td>成功 / 已创建(常带 <code>Location</code>)/ 成功无体</td><td>204 别去 <code>response.json()</code>,会抛错</td></tr>
@@ -9240,7 +9340,7 @@ vary: Accept-Encoding</code></pre></div>
 <tr><td><strong><code>font-display</code></strong>:<code>block</code>(隐形最多 3 s,FOIT)、<code>swap</code>(先后备再换,FOUT)、<code>fallback</code>、<code>optional</code></td><td>字体是典型的晚发现资源:要先建 CSSOM、做样式计算才知道需要哪个字重</td><td>不写 <code>font-display</code> 就用默认的 block,弱网下正文隐形三秒;换字体造成的版式跳动不用 <code>size-adjust</code> 之类描述符补,直接体现在 CLS 上</td></tr>
 <tr><td><strong>强缓存 vs 协商缓存</strong>:<code>max-age</code> 新鲜期内根本不发请求;过期后用 <code>ETag</code>/<code>If-None-Match</code> 发条件请求换 304,省的是体积不是往返</td><td>标准配方:构建产物 <code>max-age=31536000, immutable</code> + 内容哈希文件名,<code>index.html</code> 用 <code>no-cache</code> + <code>ETag</code></td><td>把 <code>no-cache</code> 当成「不缓存」(它是「每次问一下」,不缓存是 <code>no-store</code>);<code>index.html</code> 被 CDN 缓存一小时,用户拿到旧 HTML 引用已删除的旧哈希文件,白屏加一串 404</td></tr>
 <tr><td><strong>缓存键与 <code>Vary</code></strong>:键默认是「方法 + 完整 URL」;<code>Vary</code> 把指定请求头也加进键;2020 年后还多了「顶层站点」这一维(缓存分区)</td><td><code>Vary: Accept-Encoding</code> 让 br 与 gzip 分开存;按 Origin 回显 CORS 头时必须加 <code>Vary: Origin</code></td><td>动态回显 <code>Access-Control-Allow-Origin</code> 却不写 <code>Vary: Origin</code>,第二个来源拿到带着第一个来源 ACAO 的缓存副本;还在指望「大家都用公共 CDN 上的同一份 jQuery 所以共享缓存」——缓存分区之后这条已经不成立</td></tr>
-<tr><td><strong>缓存分好几层</strong>:Size 列的 <code>(memory cache)</code>、<code>(disk cache)</code>、<code>(prefetch cache)</code>,以及前进后退时整页恢复的 bfcache</td><td>普通刷新(F5)只对主文档发条件请求,子资源仍走缓存;Ctrl+Shift+R 才绕过全部</td><td>「我明明改了 CSS 刷新没变化」还去怀疑构建,其实是强缓存命中;页面上注册了 <code>unload</code> 监听器把 bfcache 整个废掉</td></tr>
+<tr><td><strong>缓存分好几层</strong>:Size 列的 <code>(memory cache)</code>、<code>(disk cache)</code>、<code>(prefetch cache)</code>,以及前进后退时整页恢复的 bfcache</td><td>普通刷新(F5)只对主文档发条件请求,子资源仍走缓存;Ctrl+Shift+R 才绕过全部</td><td>「我明明改了 CSS 刷新没变化」还去怀疑构建,实际上是强缓存命中;页面上注册了 <code>unload</code> 监听器把 bfcache 整个废掉</td></tr>
 <tr><td><strong><a href="#f8-net">10.4</a> 一次请求的固定链路</strong>:URL 解析 → HSTS → 缓存 → DNS → TCP 1 RTT → TLS 1~2 RTT → 请求/响应 1 RTT → 下载 → keep-alive</td><td>冷连接上 RTT 50 ms 就是 150 ms 起步,这解释了 <code>preconnect</code>、h2 单连接、h3 的 0-RTT 各省哪一段</td><td>看到 TTFB 高就一口咬定后端慢,不去分 DNS/连接/TLS/等待四段;跨源资源的分段全是 0 还当成「这些阶段很快」(缺 <code>Timing-Allow-Origin</code>)</td></tr>
 <tr><td><strong>状态码与 <code>fetch</code> 的关系</strong>:只有网络层失败才 reject(断网、DNS 失败、被 CORS 拦、被 abort),4xx/5xx 都是正常 resolve</td><td><code>response.ok</code> 是每个请求封装的第一行</td><td>500 的响应被当成功去 <code>json()</code>,报出一个和真正问题无关的 <code>Unexpected token &lt; in JSON</code>——因为 500 页面通常是 HTML;302 把 POST 变成 GET 还去查前端代码</td></tr>
 <tr><td><strong>HTTP/2 改掉了什么</strong>:二进制分帧 + 单连接多路复用 + HPACK 头部压缩 + 流优先级;只对 https 启用,靠 ALPN 零成本协商</td><td>一条连接上几十个请求并行,「多开连接」和「少发请求」两类老手法同时失去回报</td><td>还在做域名分片(每多一个域名多一次 DNS + TCP + TLS,还打散了优先级调度)和雪碧图(改一个图标整张缓存失效);反过来矫枉过正,以为「HTTP/2 请求免费」而发几百个 1 KB 的模块文件</td></tr>
@@ -9499,7 +9599,7 @@ fetch(url, { credentials: <span>"include"</span> })                    <span cla
 <table style="contain-intrinsic-size:auto 636px">
 <thead><tr><th>报错后半句</th><th>含义</th><th>谁改、怎么改</th></tr></thead>
 <tbody>
-<tr><td><code>No 'Access-Control-Allow-Origin' header is present on the requested resource.</code></td><td class="nw">响应里根本没有 ACAO 头</td><td>服务端加头;或者请求其实 4xx/5xx 了而错误响应没加头(先看 Network 里的真实状态)</td></tr>
+<tr><td><code>No 'Access-Control-Allow-Origin' header is present on the requested resource.</code></td><td class="nw">响应里根本没有 ACAO 头</td><td>服务端加头;或者请求已经 4xx/5xx 了而错误响应没加头(先看 Network 里的真实状态)</td></tr>
 <tr><td><code>Response to preflight request doesn't pass access control check: ...</code></td><td>预检的 OPTIONS 没通过</td><td>服务端要正确响应 OPTIONS:2xx 状态 + Allow-Origin + Allow-Methods + Allow-Headers</td></tr>
 <tr><td><code>The 'Access-Control-Allow-Origin' header has a value 'X' that is not equal to the supplied origin.</code></td><td class="nw">头有,但值不是当前源</td><td>服务端回显正确的 Origin(别硬编码生产域名后在本地调)</td></tr>
 <tr><td><code>The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.</code></td><td class="nw">带凭据时用了 <code>*</code></td><td>服务端回显具体源 + <code>Allow-Credentials: true</code>;或前端去掉 <code>credentials: 'include'</code></td></tr>
@@ -9756,7 +9856,7 @@ function Comment({ c }) {
 <tr><td class="nw">标签名、属性名、HTML 注释里</td><td><strong>没有</strong>安全的转义方式</td><td>这些位置根本不接受用户输入</td><td>用模板拼出 <code>&lt;div data-${userKey}=…&gt;</code></td></tr>
 </tbody>
 </table>
-<p>这张表的要点不是背下每一行,而是记住一句判断:<strong>「转义」不是一个动作,而是一组随位置而变的动作</strong>。同一份用户输入,放进文本节点、放进属性、放进 URL、放进脚本,各有各的编码函数,用错位置等于没做。框架帮你处理的只有前两行(见上一小节),第三、四、五行仍然要自己判断——React 的 <code>href={userInput}</code>、Vue 的 <code>:href="userInput"</code> 都会老老实实把 <code>javascript:</code> 放进去(React 对此只在开发模式给警告)。</p>
+<p>这张表的要点不是背下每一行,而是记住一句判断:<strong>「转义」不是一个动作,而是一组随位置而变的动作</strong>。同一份用户输入,放进文本节点、放进属性、放进 URL、放进脚本,各有各的编码函数,用错位置等于没做。框架帮你处理的只有前两行(见上一小节),第三、四、五行仍然要自己判断——React 的 <code>href={userInput}</code>、Vue 的 <code>:href="userInput"</code> 都会把 <code>javascript:</code> 放进去(React 对此只在开发模式给警告)。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 浏览器校验只管体验,服务端必须原样再验一遍</span><p>表单的 <code>required</code>、<code>pattern</code>、<code>type="email"</code> 与 Constraint Validation API(见 <a href="#f7-forms-js">2.3</a>)拦不住任何攻击者:改 DOM、关 JS、或者干脆一句 <code>curl -d</code> 直接打接口,前端那一层根本不在链路上。所以规矩只有一条——<strong>凡是前端校验过的,服务端必须原样再校验一遍</strong>,而且服务端的校验要按「白名单」而不是「过滤黑名单」来写。同理,权限也一样:按钮藏起来不等于接口拒绝(见 <a href="#f12-auth-oauth">12.3</a> 的漏洞清单)。</p></div>
 <h3>富文本:DOMPurify 是唯一该用的白名单</h3>
 <p>真正要渲染用户提供的 HTML(富文本编辑器、Markdown 转出来的 HTML、邮件正文)时,转义行不通——转义之后就不是富文本了。这时需要的是<strong>净化(sanitize)</strong>:解析成 DOM,按白名单保留标签与属性,把其余全部扔掉,再序列化回字符串。自己写正则过滤 <code>&lt;script&gt;</code> 是一定会被绕过的(大小写、空字符、<code>&lt;scr&lt;script&gt;ipt&gt;</code>、SVG 里的事件、<code>&lt;math&gt;</code> 命名空间切换……),浏览器的 HTML 解析器有太多容错路径。DOMPurify 用浏览器自己的解析器来解析,所以它看到的 DOM 和浏览器最终渲染的 DOM 是同一棵,这是它可靠的根本原因。</p>
