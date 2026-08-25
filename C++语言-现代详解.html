@@ -4397,7 +4397,7 @@ std::<span class="kw">uint32_t</span> safe = (shift &lt; 32) ? (1u &lt;&lt; shif
 <tr><td class="nw"><code>std::bit_width(x)</code></td><td class="nw">表示 <code>x</code> 需要多少位</td><td>手写 <code>log2</code></td></tr>
 <tr><td class="nw"><code>std::bit_ceil(x)</code></td><td class="nw">向上取到 2 的幂</td><td>手写位运算或循环</td></tr>
 <tr><td class="nw"><code>std::has_single_bit(x)</code></td><td class="nw">是不是 2 的幂</td><td><code>x &amp;&amp; !(x &amp; (x-1))</code></td></tr>
-<tr><td class="nw"><code>std::rotl / rotr</code></td><td class="nw">循环移位</td><td><code>(x&lt;&lt;n)&amp;#124;(x&gt;&gt;(w-n))</code>,后者在 <code>n</code> 为 0 时是未定义行为</td></tr>
+<tr><td class="nw"><code>std::rotl / rotr</code></td><td class="nw">循环移位</td><td><code>(x&lt;&lt;n)&#124;(x&gt;&gt;(w-n))</code>,后者在 <code>n</code> 为 0 时是未定义行为</td></tr>
 <tr><td class="nw"><code>std::byteswap</code>(C++23)</td><td class="nw">字节序反转</td><td><code>htonl</code> 一族</td></tr>
 </tbody>
 </table>
@@ -10243,7 +10243,7 @@ IStats* st = static_cast&lt;FileStore*&gt;(s.get());               <span class="
 <div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">🔵 C++11 起用 override 与 final 表达意图,不要再靠注释和命名约定</span><p><code>override</code> 的价值不在于「说明这是一个重写」,而在于<strong>写错签名时编译失败</strong>:基类的函数是 <code>const</code> 而派生类漏写了、参数类型差一个引用、基类后来改了签名——这三种情况在没有 <code>override</code> 时都会静默变成「派生类新增了一个无关的函数」,而重写从此失效,虚调用一直走基类版本。<code>final</code> 的价值则是让编译器有机会去虚化(3.7),同时挡住不该发生的继承。规矩很简单:<strong>重写一律写 <code>override</code> 且不再写 <code>virtual</code>;确定不再被继承的类、不再被重写的虚函数一律加 <code>final</code></strong>。存量代码可以用 <code>clang-tidy</code> 的 <code>modernize-use-override</code> 批量补上。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 50635px;--thin-h:50635px">
+<section class="chapter" style="contain-intrinsic-size:auto 50284px;--thin-h:50284px">
 <h1 id="c8"><span class="part">第 8 章</span>运算符重载与值语义类的设计</h1>
 <h2 id="c8-value">8.1 值语义:什么样的类型该像 int 一样</h2>
 <p>C 里只有一种类型行为:结构体按字节复制,赋值就是覆盖,比较要自己写函数。C++ 允许你决定自己的类型「像什么」——可以像 <code>int</code> 一样是一个纯粹的值,可以像句柄一样表示对某个东西的引用,也可以两者都不像(只能移动、不能复制)。<strong>这个决定应当在写第一个成员之前做出</strong>,因为它决定了后面每一个接口的形态。</p>
@@ -10375,7 +10375,7 @@ Config make() {
 <p>运算符重载是 C++ 里最容易被滥用的特性之一。用对了,自定义类型和内置类型一样自然;用错了,代码变成一堆需要查文档才能读懂的符号。这一节先给使用判据,再给「写成成员还是自由函数」的规则。</p>
 <h3>什么时候该重载运算符</h3>
 <p>唯一的判据是:<strong>读者看到这个符号时的预期,与你的实现是不是同一回事。</strong></p>
-<table style="contain-intrinsic-size:auto 478px">
+<table style="contain-intrinsic-size:auto 379px">
 <thead><tr><th>情况</th><th>该不该重载</th><th>理由</th></tr></thead>
 <tbody>
 <tr><td class="nw">向量相加、金额相加、时长相加</td><td class="nw"><strong>该</strong></td><td><code>+</code> 的含义与内置一致</td></tr>
@@ -10386,7 +10386,7 @@ Config make() {
 <tr><td class="nw">用 <code>+</code> 表示「注册一个回调」</td><td class="nw"><strong>不该</strong></td><td>读者预期是相加</td></tr>
 <tr><td class="nw">用 <code>&lt;&lt;</code> 表示「发送消息」</td><td class="nw">不该</td><td><code>&lt;&lt;</code> 的通行含义是输出到流</td></tr>
 <tr><td class="nw">用 <code>%</code> 表示「格式化」</td><td class="nw">不该</td><td>某些库这么做,但读者要先学一遍</td></tr>
-<tr><td class="nw">重载 <code>&amp;&amp;</code>、<code></td><td class="nw"></td><td></code>、逗号</td><td><strong>不该</strong></td><td>重载之后<strong>短路求值失效</strong>,而且求值顺序改变</td></tr>
+<tr><td class="nw">重载 <code>&amp;&amp;</code>、<code>&#124;&#124;</code>、逗号</td><td class="nw"><strong>不该</strong></td><td>重载之后<strong>短路求值失效</strong>,而且求值顺序改变</td></tr>
 </tbody>
 </table>
 <p>最后一行是硬性禁止,不是风格建议:内置的 <code>&amp;&amp;</code> 保证左边为假时右边不求值,而重载之后它变成一次普通的函数调用,<strong>两个操作数都会被求值</strong>。依赖短路的代码(<code>p &amp;&amp; p-&gt;f()</code>)会当场解引用空指针。</p>
@@ -10436,19 +10436,19 @@ Money m{100};
 <div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 运算符重载优先写成类内定义的隐藏友元</span><p>三个好处:能访问私有成员而不必写一堆访问器;两个操作数的隐式转换规则对称;不污染常规名字查找,只在实参类型相关时才被找到——这一条在大型工程里显著减少了 6.2 节那类「候选集里出现意外函数」的问题。代价是这些函数<strong>不能</strong>被显式调用(写不出 <code>operator+(a, b)</code> 的限定形式),但这几乎从来不是需求。</p></div>
 <h3>一张运算符归属速查</h3>
 <p>哪些必须是成员、哪些应当是自由函数,记规则不如记表。下面这张按运算符列全,写类的时候对照即可。</p>
-<table style="contain-intrinsic-size:auto 530px">
+<table style="contain-intrinsic-size:auto 454px">
 <thead><tr><th>运算符</th><th>成员还是自由</th><th>说明</th></tr></thead>
 <tbody>
 <tr><td class="nw"><code>=</code> <code>[]</code> <code>()</code> <code>-&gt;</code> <code>-&gt;*</code></td><td class="nw"><strong>必须成员</strong></td><td>语言规定</td></tr>
 <tr><td class="nw">类型转换 <code>operator T()</code></td><td class="nw"><strong>必须成员</strong></td><td>同上</td></tr>
-<tr><td class="nw"><code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>&amp;=</code> <code></td><td class="nw">=</code> <code>^=</code> <code>&lt;&lt;=</code> <code>&gt;&gt;=</code></td><td>应当成员</td><td>修改左操作数</td></tr>
+<tr><td><code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>&amp;=</code> <code>&#124;=</code> <code>^=</code> <code>&lt;&lt;=</code> <code>&gt;&gt;=</code></td><td class="nw">应当成员</td><td>修改左操作数</td></tr>
 <tr><td class="nw">前置 <code>++</code> <code>--</code></td><td class="nw">应当成员</td><td>同上</td></tr>
 <tr><td class="nw">后置 <code>++</code> <code>--</code></td><td class="nw">应当成员</td><td>签名带一个哑元 <code>int</code> 参数</td></tr>
 <tr><td class="nw">一元 <code>*</code> <code>&amp;</code> <code>!</code> <code>~</code> <code>+</code> <code>-</code></td><td class="nw">应当成员</td><td>作用于自身</td></tr>
 <tr><td class="nw"><code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code> 等二元算术</td><td class="nw"><strong>应当自由</strong></td><td>转换规则对称</td></tr>
 <tr><td class="nw"><code>==</code> <code>!=</code> <code>&lt;</code> <code>&lt;=&gt;</code> 等比较</td><td class="nw"><strong>应当自由</strong></td><td>同上;C++20 可写成类内 <code>friend ... = default</code></td></tr>
 <tr><td class="nw"><code>&lt;&lt;</code> <code>&gt;&gt;</code> 作输入输出</td><td class="nw"><strong>必须自由</strong></td><td>第一个参数是流</td></tr>
-<tr><td class="nw"><code>&amp;&amp;</code> <code></td><td class="nw"></td><td></code> <code>,</code></td><td><strong>不要重载</strong></td><td>短路与求值顺序失效</td></tr>
+<tr><td class="nw"><code>&amp;&amp;</code> <code>&#124;&#124;</code> <code>,</code></td><td class="nw"><strong>不要重载</strong></td><td>短路与求值顺序失效</td></tr>
 <tr><td class="nw"><code>new</code> <code>delete</code></td><td class="nw">静态成员或自由</td><td>见 1.5 与 3.5</td></tr>
 </tbody>
 </table>
@@ -11180,12 +11180,12 @@ duration&lt;<span class="kw">double</span>&gt; e = 500ms;           <span class=
 <h2 id="c8-sum">8.7 小结:本章要点与易错清单</h2>
 <p>这一章的主线是:<strong>先决定类型的行为(值、实体、视图),再按这个决定选接口形态。</strong>决定做对了,后面每一步都有明确依据;做错了,后面每一步都在打补丁。</p>
 <h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 736px">
+<table style="contain-intrinsic-size:auto 560px">
 <thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
 <tbody>
 <tr><td class="nw">三种类型行为:值、实体、视图</td><td class="nw">8.1</td><td>判据是「内容一样时算不算同一个」</td></tr>
 <tr><td class="nw">值类型的六条要求</td><td class="nw">8.1</td><td>拷贝独立、相等是等价关系、顺序是严格弱序</td></tr>
-<tr><td class="nw">运算符重载的唯一判据是「读者的预期」</td><td class="nw">8.2</td><td><code>&amp;&amp;</code>、<code></td><td></td><td></code>、逗号一律不重载</td></tr>
+<tr><td class="nw">运算符重载的唯一判据是「读者的预期」</td><td class="nw">8.2</td><td><code>&amp;&amp;</code>、<code>&#124;&#124;</code>、逗号一律不重载</td></tr>
 <tr><td class="nw">修改左操作数的写成成员,不修改的写成自由函数</td><td class="nw">8.2</td><td>自由函数才有对称的转换规则</td></tr>
 <tr><td class="nw">二元运算符用复合赋值实现,第一个参数按值</td><td class="nw">8.2</td><td>链式表达式里中间结果全走移动</td></tr>
 <tr><td class="nw">优先写成类内定义的隐藏友元</td><td class="nw">8.2</td><td>不污染常规名字查找</td></tr>
@@ -12779,7 +12779,7 @@ std::apply([](<span class="kw">auto</span>... xs) { (std::cout &lt;&lt; ... &lt;
 <p>实用价值在序列化、反射式的字段映射、以及带名字的强类型上。<strong>C++17 及以前做不到这一点</strong>,只能用宏拼名字。</p>
 <h3>递归展开还是折叠</h3>
 <p>C++11/14 的元编程大量使用递归模板,C++17 之后多数可以换成折叠表达式或 <code>constexpr</code> 循环,性能与可读性都更好。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// C++11:递归,每一步实例化一个新类型,编译慢</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// C++11:递归,每一步实例化一个新类型,编译慢</span>
 <span class="kw">template</span> &lt;<span class="kw">typename</span> T, <span class="kw">typename</span>... Rest&gt;
 <span class="kw">struct</span> max_size { <span class="kw">static</span> <span class="kw">constexpr</span> std::<span class="kw">size_t</span> value =
     <span class="kw">sizeof</span>(T) &gt; max_size&lt;Rest...&gt;::value ? <span class="kw">sizeof</span>(T) : max_size&lt;Rest...&gt;::value; };
@@ -15303,7 +15303,7 @@ use(data);                <span class="cm">// 即使读到 ready,也不保证看
 }</code></pre>
 <h3>「原子的一组操作」不等于「一组原子操作」</h3>
 <p>每个操作各自加锁,组合起来仍然可能出错——因为两次加锁之间状态可以被改变。这是并发里最常见的逻辑缺陷。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 每一步都是线程安全的,组合起来仍然有竞争</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// 每一步都是线程安全的,组合起来仍然有竞争</span>
 <span class="kw">if</span> (!map.contains(key)) {        <span class="cm">// 检查</span>
     map.insert({key, value});    <span class="cm">// 使用 —— 中间可能有别的线程插入了</span>
 }
@@ -15534,7 +15534,7 @@ counter.compare_exchange_strong(expected, 10);   <span class="cm">// 比较并�
 </tbody>
 </table>
 <p>核心的配对是 <strong><code>release</code> 与 <code>acquire</code></strong>:一个线程用 <code>release</code> 写标志,另一个线程用 <code>acquire</code> 读到这个值时,<strong>写线程在 <code>release</code> 之前做的所有事,读线程都能看见</strong>。这正是 13.2 节那个例子需要的保证。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code>std::atomic&lt;<span class="kw">bool</span>&gt; ready{<span class="kw">false</span>};
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code>std::atomic&lt;<span class="kw">bool</span>&gt; ready{<span class="kw">false</span>};
 <span class="kw">int</span> data = 0;                              <span class="cm">// 普通变量,不必是原子的</span>
 
 <span class="cm">// 线程 A</span>
