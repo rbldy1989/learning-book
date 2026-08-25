@@ -180,7 +180,6 @@ main .note{content-visibility:auto;contain-intrinsic-size:auto 200px;}
 
 
 
-
 /* —— 薄/厚阅读模式 —— */
 #depthBtn{position:fixed;top:12px;right:52px;z-index:11;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--rule);background:var(--side-bg);color:var(--muted);cursor:pointer;line-height:0;}
 #depthBtn:hover{color:var(--accent);border-color:var(--accent);}
@@ -300,7 +299,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 35387px;--thin-h:35387px">
+<section class="chapter" style="contain-intrinsic-size:auto 35475px;--thin-h:35475px">
 <h1 id="c1"><span class="part">第 1 章</span>方法论:先测再改</h1>
 <h2 id="p1-open">1.0 开卷:锚定、定位与读法</h2>
 <p>这本书回答两个问题:<strong>一段 C++ 代码为什么慢,以及改完之后怎么证明它确实更快了</strong>。它不是一份优化技巧清单——那类清单的问题在于,每一条只在某些场景下成立,读者无从判断自己是不是那一种。编排顺序因此定为:先给测量方法,再讲硬件与编译器的实际行为,最后才是具体手段,每一条都写明适用条件与收益量级。</p>
@@ -784,7 +783,7 @@ std::<span class="kw">size_t</span> count(std::span&lt;<span class="kw">const</s
 <p>第三步最容易被跳过。<strong>一个把平均延迟降了 20% 却把 99 分位抬高一倍的改动,对面向用户的服务是负优化</strong>,而只看均值完全看不出来。第 1.3 节讲的分位数在这里是判据,不是装饰。</p>
 <h2 id="p1-slo">1.5 性能目标怎么定:服务水平目标、容量规划与性能预算</h2>
 <p>前面四节讲的是动手之前的三件事:先测、建可复现的基准、做剖析。这一节比它们再靠前一层,回答两个问题:<strong>目标从哪里来,以及到什么程度算够</strong>。1.1 节要求「优化开始之前先写下快多少算成功」,却没有说这个数字该怎么产生。<strong>没有目标的优化没有终点</strong>——总能再快一点,而每一点的代价都在上升。</p>
-<p>这一节按四个问题展开:目标写成什么形态才可执行、需要多少台机器才够、端到端的目标怎么拆给各个环节、以及上线之后怎么持续确认目标仍然被满足。它同时把「该优化哪里」这个含糊的问题换成「哪个环节超了预算」,后者有确定的答案。</p>
+<p>目标写成什么形态才可执行、需要多少台机器才够、端到端的目标怎么拆给各个环节、上线之后怎么持续确认目标仍然被满足——这四个问题回答完,「该优化哪里」这个含糊的问题就换成了「哪个环节超了预算」,后者有确定的答案。</p>
 <h3>指标、目标与协议是三样不同的东西</h3>
 <p>这三个词经常被混用,但它们分属三个层次:一个是测出来的数,一个是内部划的线,一个是对外的合同。</p>
 <table style="contain-intrinsic-size:auto 199px">
@@ -839,7 +838,8 @@ std::<span class="kw">size_t</span> count(std::span&lt;<span class="kw">const</s
 </tbody>
 </table>
 <p>这张表的用法不是照抄数字,而是记住形状:<strong>70% 以下,多用一点容量只多付一点延迟;越过 80% 之后,每多用一个百分点付出的延迟迅速上升</strong>。所以容量规划不能按 100% 利用率算——那一点上模型给出的延迟是无穷大,而真实系统的表现是队列持续增长,直到请求超时或者内存耗尽。</p>
-<p>表里的数字来自一个理想模型:到达服从泊松过程、服务时间服从指数分布、只有一个服务台。真实系统与它有两处偏差,方向相反。多个工作线程相当于多个服务台,这让曲线比表里平缓一些;而实际的服务时间方差通常大于指数分布,这让曲线更陡。<strong>方差的影响可以量化</strong>:排队时间大致正比于到达间隔与服务时间两者变异系数的平方和,服务时间的变异系数从 1 涨到 2,同样利用率下的排队时间约涨到 2.5 倍。这解释了为什么「多数请求很小、少数请求很大」的服务特别容易在中等利用率上就出现尾延迟问题。</p>
+<p>表里的数字来自一个理想模型:到达服从泊松过程、服务时间服从指数分布、只有一个服务台。真实系统与它有两处偏差,方向相反。多个工作线程相当于多个服务台,这让曲线比表里平缓一些;而实际的服务时间方差通常大于指数分布,这让曲线更陡。</p>
+<p><strong>方差的影响可以量化</strong>:排队时间大致正比于到达间隔与服务时间两者变异系数的平方和,服务时间的变异系数从 1 涨到 2,同样利用率下的排队时间约涨到 2.5 倍。这解释了为什么「多数请求很小、少数请求很大」的服务特别容易在中等利用率上就出现尾延迟问题。</p>
 <p>落到做法上,先压出单实例的吞吐与延迟曲线,再按目标反查额定容量。下面是一组实测数据的形态,测量条件是单实例四核、请求体中位数 2 KB、目标 p99 不超过 100 毫秒。</p>
 <table style="contain-intrinsic-size:auto 185px">
 <thead><tr><th>单实例 QPS</th><th>CPU 利用率</th><th>实测 p99</th><th>结论</th></tr></thead>
@@ -850,7 +850,8 @@ std::<span class="kw">size_t</span> count(std::span&lt;<span class="kw">const</s
 <tr><td class="nw">600</td><td>88%</td><td>140 毫秒</td><td><strong>不满足</strong></td></tr>
 </tbody>
 </table>
-<p>这组数字里 500 到 600 之间吞吐只涨了 20%,延迟涨了 2.5 倍,与上面那张表的形状一致,并且比理想模型更陡。取 400 作为额定容量之后,峰值 4000 QPS 需要 10 个实例。<strong>这还不是最终数字</strong>,还要加三笔余量:滚动发布期间有实例在重启、单个可用区故障时流量要被其余实例接住、以及秒级峰值高于分钟级均值。前两笔是结构性的,常见做法是按「少两个实例仍然达标」来定;第三笔要把自己系统的秒级峰值与分钟均值的比值量出来,不要沿用默认值——这个比值在不同业务上可以差好几倍。</p>
+<p>这组数字里 500 到 600 之间吞吐只涨了 20%,延迟涨了 2.5 倍,与上面那张表的形状一致,并且比理想模型更陡。取 400 作为额定容量之后,峰值 4000 QPS 需要 10 个实例。</p>
+<p><strong>这还不是最终数字</strong>,还要加三笔余量:滚动发布期间有实例在重启、单个可用区故障时流量要被其余实例接住、以及秒级峰值高于分钟级均值。前两笔是结构性的,常见做法是按「少两个实例仍然达标」来定;第三笔要把自己系统的秒级峰值与分钟均值的比值量出来,不要沿用默认值——这个比值在不同业务上可以差好几倍。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 228px"><span class="t">🔴 按 100% 利用率做容量规划,流量涨两成就会雪崩</span><p>一个按「单实例最大吞吐 600 QPS」算出来的集群,在流量到达设计值时利用率接近 90%,延迟已经是空载的十倍。此时流量再涨 20%,利用率进入 95% 以上,放大倍数从 10 跳到 20 以上,上游的超时开始触发;<strong>超时之后的重试又把有效流量抬高一截</strong>,利用率进一步上升,形成正反馈。表现是流量只涨了两成,延迟涨了十倍以上,而且流量回落之后系统不会自动恢复,因为积压的队列还在。<strong>三条规矩</strong>:额定容量按延迟达标点取,不按最大吞吐点取;目标利用率定在 70% 以下;上游一律配超时与重试上限,重试必须带退避,否则重试本身就是放大器。</p></div>
 <h3>性能预算:把端到端目标拆给每个环节</h3>
 <p>1.4 节把性能预算当作停止条件介绍过,那里的例子是一帧 16.6 毫秒的渲染预算。服务端的形态相同,拆的对象换成一次请求经过的各个环节:先定端到端的目标,再给每个环节分一个毫秒数,分完之后每个环节都有自己的验收线。</p>
@@ -916,7 +917,8 @@ $ perf script | stackcollapse-perf.pl | flamegraph.pl &gt; $(date +%H).svg</code
 <div class="note dead" style="contain-intrinsic-size:auto 228px"><span class="t">🔴 目标定成平均延迟,尾部会长期不达标而监控一直是绿的</span><p>平均值对尾部几乎不敏感。一个 p50 为 5 毫秒的接口,把 1% 的请求从 20 毫秒变成 200 毫秒,平均值只涨不到 2 毫秒,以均值为目标的面板不会有任何反应;而这 1% 的请求如果集中在某一类用户或某一种输入上,对他们来说这个服务一直是坏的。<strong>更麻烦的是它会误导优化方向</strong>:为了压均值,工作会集中到占比最大的那条快路径上,而问题在那条只占 1% 的慢路径里,越优化越看不见。<strong>修法是把目标一律写成分位数,并且至少同时监控 p50 与 p99 两条线</strong>;两条线的比值突然变大,说明出现了第二条路径,这时该查的是分叉在哪里,而不是继续压主路径。</p></div>
 <h2 id="p1-sum">1.6 小结:本章要点与常见误区</h2>
 <p>这一章没有给出任何一条具体的优化手法,给出的是动手之前必须先建立的工作方式:<strong>定目标、建基准、做剖析、只改热点、改完重测</strong>。后面每一章回答的都是「怎么改」,而这一章回答的是三个更靠前的问题——改哪里、改多少算够、怎么确认真的改好了。这三个问题没有答案的时候,后面所有技巧都只是碰运气。</p>
-<p>把方法论放在全书开头有一个直接的理由:优化的收益极度不均匀。1.1 节的分层表里,架构与流程层面的改动能带来 10 到 1000 倍,算法层 10 到 100 倍,内存访问模式 2 到 10 倍,语言层只有 1.2 到 3 倍,指令级只有 1.05 到 1.5 倍。不做测量就动手,最常见的结果是把全部时间花在 1.05 倍的那一层,而 100 倍的机会一直摆在旁边没被看见。1.1 节的耗时表说明的是同一件事:一次整数运算 0.3 纳秒,一次内存未命中 80 纳秒,相差 250 倍;一次堆分配 30 纳秒,一次系统调用 500 纳秒,一次上下文切换 2 微秒。决定程序快慢的通常不是算得多快,而是等得多久。</p>
+<p>把方法论放在全书开头有一个直接的理由:优化的收益极度不均匀。1.1 节的分层表里,架构与流程层面的改动能带来 10 到 1000 倍,算法层 10 到 100 倍,内存访问模式 2 到 10 倍,语言层只有 1.2 到 3 倍,指令级只有 1.05 到 1.5 倍。不做测量就动手,最常见的结果是把全部时间花在 1.05 倍的那一层,而 100 倍的机会一直摆在旁边没被看见。</p>
+<p>1.1 节的耗时表说明的是同一件事:一次整数运算 0.3 纳秒,一次内存未命中 80 纳秒,相差 250 倍;一次堆分配 30 纳秒,一次系统调用 500 纳秒,一次上下文切换 2 微秒。决定程序快慢的通常不是算得多快,而是等得多久。</p>
 <p>这一章的内容会在两个时刻用到。第一个时刻是接手一个运行偏慢的程序:用 1.1 节的四步流程与 1.3 节的剖析工具判断时间花在哪一层,再决定翻到后面哪一章。第二个时刻是每一次改动之后:用 1.2 节的判据确认这次改动带来的是真实收益,而不是测量噪声。这两个时刻会在整个优化过程里反复交替出现,所以这一章不是读一遍就翻过去的内容,而是要反复回来对照的流程。</p>
 <h3>要点回顾</h3>
 <table style="contain-intrinsic-size:auto 805px">
@@ -999,7 +1001,7 @@ $ perf report --stdio --sort=overhead --percent-limit=1</code></pre>
 <p>后面几章都建立在这一章的流程之上。第 2 章讲的是当 perf stat 显示分支失败率高或者 IPC 偏低时,CPU 内部发生了什么;第 3 章讲的是缓存未命中率高的时候该往哪里看;第 4 章讲的是编译器在你测量之前已经替你做了什么、又有哪些事它做不到。所有这些内容的使用前提都相同:先有一个可复现的基准,再有一份剖析数据,然后才轮到具体技巧。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 28761px;--thin-h:28761px">
+<section class="chapter" style="contain-intrinsic-size:auto 28813px;--thin-h:28813px">
 <h1 id="c2"><span class="part">第 2 章</span>硬件模型:CPU 是怎么执行你的代码的</h1>
 <h2 id="p2-pipeline">2.1 流水线与乱序执行</h2>
 <p>「一条指令一个周期」这个模型在 1990 年代就已经不成立了。现代 x86 与 ARM 核心每周期可以取多条指令、乱序执行、并行完成,而且一条指令从取指到退休要经过十几个流水级。<strong>不理解这个执行模型,很多性能现象无法解释</strong>——为什么循环展开有用、为什么分支预测失败这么贵、为什么依赖链会限制吞吐。这一章不追求微架构的完整细节,只讲对写代码有直接影响的那几条。</p>
@@ -1706,10 +1708,11 @@ $ objdump -dC --source ./app | less</code></pre>
     <span class="kw">return</span> s;                          <span class="cm">// 注意:求和顺序变了,浮点结果可能与朴素版不同</span>
 }</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 260px"><span class="t">🟢 先看依赖链,再看指令条数</span><p>这一章里反复出现的现象只有一个成因:<strong>现代 CPU 的执行宽度远大于大多数代码给它的独立工作量</strong>。核心每周期能发出好几条指令,但如果这些指令首尾相接、每一条都要等上一条的结果,那么执行宽度全部浪费掉,IPC 只有零点几。朴素浮点求和只有峰值的八分之一是这个原因;链表遍历比数组遍历慢几百倍是这个原因(未命中彼此无法重叠);多累加器展开能快 3 倍以上,靠的也是把一条长链拆成几条短链。所以看到一段热代码,第一个问题不是「这里有几条指令」,而是<strong>「这里有几条互不依赖的链」</strong>。这个视角同时解释了为什么减少指令条数常常没有收益,而打断依赖关系常常有。</p></div>
-<p>这一章讲的是 CPU 内部,第 3 章讲的是 CPU 外面——数据从哪里来、要等多久。两章的关系在 2.1 节已经点明:乱序执行能掩盖延迟,但掩盖能力有限,而内存未命中的 200 到 300 个周期远远超出了它的掩盖范围。所以访存受限的程序无法靠指令层面的技巧救回来,只能改变数据的组织方式,那正是第 3 章与后面数据布局部分的内容。第 4 章则从另一侧补充这一章:2.4 节里向量化失败的那些前提条件,大多数最终都落在编译器的别名分析上,4.3 节会把这件事讲透。</p>
+<p>这一章讲的是 CPU 内部,第 3 章讲的是 CPU 外面——数据从哪里来、要等多久。两章的关系在 2.1 节已经点明:乱序执行能掩盖延迟,但掩盖能力有限,而内存未命中的 200 到 300 个周期远远超出了它的掩盖范围。所以访存受限的程序无法靠指令层面的技巧救回来,只能改变数据的组织方式,那正是第 3 章与后面数据布局部分的内容。</p>
+<p>第 4 章则从另一侧补充这一章:2.4 节里向量化失败的那些前提条件,大多数最终都落在编译器的别名分析上,4.3 节会把这件事讲透。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 32311px;--thin-h:32311px">
+<section class="chapter" style="contain-intrinsic-size:auto 32362px;--thin-h:32362px">
 <h1 id="c3"><span class="part">第 3 章</span>内存层次:决定性能的那一层</h1>
 <h2 id="p3-hier">3.1 内存层次:数字与直觉</h2>
 <p>第 1 章那张耗时表里,内存访问是 250 倍。这个数字值得展开:<strong>现代 CPU 的计算能力远远超过内存的供给能力</strong>,一个核心每周期能执行几条指令,而一次内存访问要几百个周期。于是绝大多数真实程序的瓶颈不在「算得慢」,而在「数据来得慢」。</p>
@@ -2462,14 +2465,15 @@ std::vector&lt;Counter&gt; counters(nthreads);
     counters[id].n.store(local, std::memory_order_relaxed);      <span class="cm">// 整个任务只跨核一次</span>
 }</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 260px"><span class="t">🟢 先算工作集,再决定用哪一节</span><p>这一章的每一种技巧都有它成立的区间,而区间由工作集大小划定。<strong>工作集小于 L1(32 到 48KB)时,访存基本是免费的,任何布局优化都不会有可观收益,这时候该回到第 2 章看依赖链与分支。</strong>工作集在 L2 与 L3 之间时,分块与缩小数据类型的收益最大,因为它们能把工作集推回到装得下的那一级。工作集远大于 L3 时,性能由内存带宽与延迟决定,这时候能做的是减少要搬运的字节数、让访问变得顺序好让预取器工作、以及在多路机器上避免跨节点。计算工作集只需要一次简单的乘法:元素个数乘以每个元素实际被访问的字节数。这个数字算出来之后,这一章绝大多数选择题就有了答案,不必逐个试。</p></div>
-<p>这一章解释了访存的成本,而怎么把数据组织成访存友好的形状,是后面数据布局部分的内容。与前面两章的连接也很清楚:第 1 章的 <code>perf stat</code> 给出缓存未命中率与 TLB 未命中数,是进入这一章的入口;第 2 章 2.1 节讲的乱序执行掩盖延迟,正好解释了这一章 3.3 节里「访问重叠」那一层原因——顺序访问的多次未命中能重叠进行,而指针追逐必须一次一次串行地等。第 4 章会说明,这一章讲的所有事情编译器都帮不上忙:4.6 节明确列出「改变数据布局」是编译器做不到的第一类事。</p>
+<p>这一章解释了访存的成本,而怎么把数据组织成访存友好的形状,是后面数据布局部分的内容。与前面两章的连接也很清楚:第 1 章的 <code>perf stat</code> 给出缓存未命中率与 TLB 未命中数,是进入这一章的入口;第 2 章 2.1 节讲的乱序执行掩盖延迟,正好解释了这一章 3.3 节里「访问重叠」那一层原因——顺序访问的多次未命中能重叠进行,而指针追逐必须一次一次串行地等。</p>
+<p>第 4 章会说明,这一章讲的所有事情编译器都帮不上忙:4.6 节明确列出「改变数据布局」是编译器做不到的第一类事。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 26920px;--thin-h:26920px">
+<section class="chapter" style="contain-intrinsic-size:auto 26938px;--thin-h:26938px">
 <h1 id="c4"><span class="part">第 4 章</span>编译器能做什么、不能做什么</h1>
 <h2 id="p4-level">4.1 优化级别与它们各自做什么</h2>
 <p>现代编译器是性能优化里最强的一个环节:它能做的变换有几百种,而且大部分是免费的——只要打开正确的开关。<strong>但它的能力有明确边界,而且边界的位置与多数人的直觉不同</strong>:有些看起来很难的变换它做得很好(循环向量化、把整个函数折成一个常量),有些看起来很简单的它却做不了(消除一次多余的内存读、把两个循环合并)。</p>
-<p>这一章讲清这条边界在哪里。知道它之后有两个直接收益:<strong>不必手工做编译器已经会做的事</strong>(那些改写只会让代码难读),以及<strong>知道怎么帮它跨过它做不到的地方</strong>(通常是提供它缺少的信息)。</p>
+<p>知道这条边界在哪里有两个直接收益:<strong>不必手工做编译器已经会做的事</strong>(那些改写只会让代码难读),以及<strong>知道怎么帮它跨过它做不到的地方</strong>(通常是提供它缺少的信息)。</p>
 <h3>各个优化级别的含义</h3>
 <table style="contain-intrinsic-size:auto 265px">
 <thead><tr><th>级别</th><th>做什么</th><th>什么时候用</th></tr></thead>
@@ -2839,7 +2843,7 @@ $ llvm-bolt ./app -o ./app.bolt -data=app.fdata \
 <p>这类工具的收益集中在<strong>指令缓存与 iTLB 压力大的程序</strong>上——大型服务、数据库、编译器本身。公开报告的收益通常在 5% 到 15%,而且<strong>与 PGO 的收益基本可以叠加</strong>,因为两者解决的不是同一层的问题:PGO 决定生成什么代码,BOLT 决定这些代码摆在哪里。计算密集、代码量小的程序几乎没有收益,不必尝试。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 230px"><span class="t">🟢 顺序是 PGO 在前,LTO 同时,BOLT 最后</span><p>这三样作用在不同阶段,顺序错了会互相抵消。<strong>正确的流程</strong>:先用插桩或采样拿到剖析数据;编译时把 <code>-fprofile-use</code> 与 <code>-flto</code> 一起加上,让 LTO 的跨单元决策也能用上热度信息——只开 LTO 不给数据,跨单元内联同样是在猜;链接产出二进制之后,再用一份采样数据跑 BOLT。<strong>两个常见错误</strong>:一是把 LTO 与 PGO 拆成两次独立构建,等于让 LTO 白做一遍;二是拿插桩构建采集的数据去喂 BOLT,而插桩本身改变了代码布局与时序,采出来的热度与真实运行有偏差——<strong>BOLT 的数据应当来自没有插桩的发布构建。</strong></p></div>
 <h2 id="p4-limit">4.6 编译器做不到的五类事</h2>
-<p>这一节收尾,把「必须靠人」的部分列清。它们是本书后面几章的全部内容。</p>
+<p>「必须靠人」的那部分,是本书后面几章的全部内容。</p>
 <h3>一、改变数据布局</h3>
 <p>编译器不会把一个 <code>struct</code> 数组改成几个数组,也不会调整成员顺序减少填充,更不会把冷字段拆出去。<strong>内存布局是程序的可观察行为的一部分</strong>(取地址、<code>memcpy</code>、与外部交换),编译器无权改动它。第 7 章讲怎么改。</p>
 <h3>二、改变算法与数据结构</h3>
@@ -2903,7 +2907,7 @@ $ clang++ -O2 -fsave-optimization-record -c a.cpp     # 产出 .opt.yaml
 </table>
 <p>用法上有一个要点:<strong>优化报告只有在开了优化时才有内容</strong>,而且报告里的行号对应的是优化过程中的中间表示,与源码不总是一一对应。所以它适合回答「这个循环为什么没向量化」,不适合精确定位到某一行。真要确认最终生成了什么,还是得看反汇编。</p>
 <h3>相信编译器,同时验证编译器</h3>
-<p>这一章的两个结论看起来矛盾,实际上是分工:<strong>指令层面的事交给编译器,不要手工重写;但每一次「交给它」的判断,都要有一次对应的验证。</strong>分界线可以这样划。</p>
+<p><strong>指令层面的事交给编译器,不要手工重写;但每一次「交给它」的判断,都要有一次对应的验证。</strong>两个结论看起来矛盾,实际上是分工,分界线可以这样划。</p>
 <table style="contain-intrinsic-size:auto 259px">
 <thead><tr><th>优化项</th><th>谁负责</th><th>要不要验证</th></tr></thead>
 <tbody>
@@ -2990,10 +2994,11 @@ $ clang++ -O2 -Rpass-missed=<span class="kw">inline</span> -Rpass-missed=loop-ve
         out[i] = in[i] * f;           <span class="cm">// 现在能外提、能向量化(out 与 in 仍需 __restrict 或运行期检查)</span>
 }</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 261px"><span class="t">🟢 编译器负责指令,你负责数据</span><p>4.6 节的分工表把这一章浓缩成了一句判据:<strong>需要人做的事情几乎全部与数据有关,编译器负责的事情几乎全部与指令有关。</strong>这条判据的用处在于,它能在动手之前就判断一个想法有没有意义。想手工把 <code>i * 8</code> 改成 <code>i &lt;&lt; 3</code>,这属于指令层面,编译器早就做了,不必做。想把一个结构体数组拆成几个平行数组让热字段连续,这属于数据层面,编译器绝对不会做,只能自己动手。想让编译器少算一遍某个函数,而这个函数会写全局状态,那么它必须每次都算——减少工作量是算法问题,不是编译问题。<strong>按这条判据分类之后,剩下的编译问题基本只需要三个动作:选对优化级别、开 LTO 与 PGO、看优化报告并按报告说的原因清除障碍。</strong></p></div>
-<p>这一章是前三章的收束,也是后面章节的前提。第 1 章讲的测量流程在这一章里被用了很多次——<code>-O2</code> 与 <code>-O3</code> 谁快、LTO 有没有收益、PGO 是不是负优化,这些问题只能测,不能推。第 2 章讲的向量化在 2.4 节列了五个前提,这一章 4.3 与 4.4 节说明了这些前提为什么常常不成立,以及怎么让它们成立。第 3 章讲的所有内容,在这一章 4.6 节的分工表里都归在「必须人来做」的一侧:数据摆在哪里、按什么顺序访问、要不要分块,编译器一概不管。</p>
+<p>这一章是前三章的收束,也是后面章节的前提。第 1 章讲的测量流程在这一章里被用了很多次——<code>-O2</code> 与 <code>-O3</code> 谁快、LTO 有没有收益、PGO 是不是负优化,这些问题只能测,不能推。第 2 章讲的向量化在 2.4 节列了五个前提,这一章 4.3 与 4.4 节说明了这些前提为什么常常不成立,以及怎么让它们成立。</p>
+<p>第 3 章讲的所有内容,在这一章 4.6 节的分工表里都归在「必须人来做」的一侧:数据摆在哪里、按什么顺序访问、要不要分块,编译器一概不管。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 24200px;--thin-h:24200px">
+<section class="chapter" style="contain-intrinsic-size:auto 24285px;--thin-h:24285px">
 <h1 id="c5"><span class="part">第 5 章</span>C++ 语言层的开销来源</h1>
 <h2 id="p5-copy">5.1 拷贝与临时对象</h2>
 <p>C++ 的值语义让代码清晰,代价是<strong>对象会在很多地方被复制,而其中相当一部分是不必要的</strong>。这一节讲清哪些拷贝是真实开销、哪些已经被编译器消掉、以及怎么找出剩下的那些。</p>
@@ -3174,7 +3179,7 @@ f-&gt;apply(samples);                                 <span class="cm">// 一次
 <p>类型擦除(<code>std::function</code>,或自己写的包装)是第三条路。它的开销由三部分构成:对象超过小缓冲时的<strong>一次堆分配</strong>、通过函数指针表的<strong>一次间接调用</strong>、以及<strong>无法内联</strong>。它换来的是「不要求继承也能多态」,这在库的边界上有价值;在自己控制全部类型的内部代码里,这个价值往往并不存在。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 228px"><span class="t">🟢 虚函数的接口粒度,比虚函数本身更值得优化</span><p>同一段逻辑,接口按元素设计还是按批次设计,决定了虚调用出现在循环内还是循环外。<strong>按元素设计时,虚调用次数等于元素个数,而且循环体因为跨不过调用边界而无法向量化</strong>;按批次设计时,虚调用只有一次,循环体在派生类内部,编译器看得见确切类型。收益不只是省下的间接跳转,更大的一块来自恢复的内联与向量化。<strong>代价是接口变粗,调用方要自己攒批</strong>——音频、图形、流式处理这类天然成批的场景没有这个问题,事件驱动的场景则要权衡。</p></div>
 <h2 id="p5-except">5.3 异常、RTTI 与其他运行期设施</h2>
-<p>这一节讲三个经常被「为了性能而禁用」的特性,给出它们各自的真实成本,以及禁用它们的代价。<strong>结论提前给:异常与 RTTI 在正确使用时的开销远小于多数人的估计,而禁用它们的代价常被低估。</strong></p>
+<p>异常、RTTI 与其他几样运行期设施经常被「为了性能而禁用」,而它们各自的真实成本、以及禁用它们的代价,都很少被算清楚。<strong>结论提前给:异常与 RTTI 在正确使用时的开销远小于多数人的估计,而禁用它们的代价常被低估。</strong></p>
 <h3>异常的成本分布</h3>
 <table style="contain-intrinsic-size:auto 223px">
 <thead><tr><th>项</th><th>开销</th></tr></thead>
@@ -3499,10 +3504,11 @@ std::string to_key(<span class="kw">int</span> a, <span class="kw">int</span> b)
 <li><strong>清掉热路径上的运行期设施。</strong><code>dynamic_cast</code>、<code>std::function</code>、<code>std::any</code>、按值传的 <code>shared_ptr</code>,按 5.5 的替换表逐个换掉。</li>
 <li><strong>最后回到实测。</strong>5.5 那组数字(模板 1.0、<code>variant</code> 1.3、虚函数分组 2.1、虚函数混杂 4.8、<code>std::function</code> 5.6)给的是量级预期,自己的场景要重新测一遍。</li>
 </ol>
-<p>这一章与前后的关系:第 2 到 4 章解释了「为什么挡住内联和预测失败这么贵」,是本章各项成本的机理来源;第 6 章接着讲堆分配,本章反复出现的「一次隐式转换带来一次分配」在那里展开;第 7 章讲数据布局,它与 5.4 的容器速查表是同一件事的两个视角——遍历为什么快,答案在布局而不在复杂度;第 8 章的原子操作成本,正是 5.3 里 <code>shared_ptr</code> 引用计数那一行的完整版本。至于本书系的分工:<strong>《C++ 语言 · 现代详解》讲这些构造的语义与规则</strong>(移动为什么没生效、异常表怎么工作),<strong>《C++ 标准库 API 编程手册》讲接口</strong>(<code>flat_map</code> 有哪些成员、<code>string_view</code> 的注意事项),<strong>本书只管一件事:它们各自多贵,以及什么时候值得换掉。</strong></p>
+<p>这一章与前后的关系:第 2 到 4 章解释了「为什么挡住内联和预测失败这么贵」,是本章各项成本的机理来源;第 6 章接着讲堆分配,本章反复出现的「一次隐式转换带来一次分配」在那里展开;第 7 章讲数据布局,它与 5.4 的容器速查表是同一件事的两个视角——遍历为什么快,答案在布局而不在复杂度;第 8 章的原子操作成本,正是 5.3 里 <code>shared_ptr</code> 引用计数那一行的完整版本。</p>
+<p>至于本书系的分工:<strong>《C++ 语言 · 现代详解》讲这些构造的语义与规则</strong>(移动为什么没生效、异常表怎么工作),<strong>《C++ 标准库 API 编程手册》讲接口</strong>(<code>flat_map</code> 有哪些成员、<code>string_view</code> 的注意事项),<strong>本书只管一件事:它们各自多贵,以及什么时候值得换掉。</strong></p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 22573px;--thin-h:22573px">
+<section class="chapter" style="contain-intrinsic-size:auto 22591px;--thin-h:22591px">
 <h1 id="c6"><span class="part">第 6 章</span>动态内存:分配、池与 pmr</h1>
 <h2 id="p6-new">6.1 一次 new 到底做了什么</h2>
 <p>堆分配是业务代码里最常见的隐藏开销:它不出现在源码的显眼位置(一个 <code>std::string</code> 的构造、一次 <code>push_back</code>、一个 lambda 被存进 <code>std::function</code>),但每一次都是几十纳秒,而且带来后续的缓存与碎片代价。这一节先把「一次分配的成本由什么构成」拆清楚,后面几节才有优化的依据。</p>
@@ -3995,10 +4001,11 @@ T* Arena::make(A&amp;&amp;... a) {
 </tbody>
 </table>
 <div class="note ok" style="contain-intrinsic-size:auto 294px"><span class="t">🟢 优化动态内存的第一选择永远是「不分配」,而不是「分配得更快」</span><p>理由有三条,一条比一条重要。第一,<strong>换分配器的收益是有上限的</strong>——把簿记从 30 纳秒压到 10 纳秒,最多省下三分之二,而消掉一次分配省的是全部。第二,<strong>分配的间接成本消不掉</strong>:换了分配器,新内存仍然不在缓存里,首次触碰仍然可能缺页,对象仍然分散在堆上;只有不分配(复用缓冲区、栈上缓冲、批量分配)才能同时解决这些。第三,<strong>减少分配的手段几乎没有代价</strong>——<code>reserve</code>、<code>clear()</code> 复用、按值返回都不改接口、不改语义、不引入新的失败模式,而自己写分配器要处理对齐、多线程、大小分级、碎片,还要与标准库对接。<strong>所以顺序是固定的:先减少分配,再换通用分配器,再用 pmr 的现成资源,最后才自己写。</strong>跳过前面几步直接写分配器,是这一章最常见的方向性错误。</p></div>
-<p>这一章与其他章的关系:第 3 章讲的缓存层次解释了「为什么新分配的内存第一次访问一定慢」;第 5 章列出的语言层开销有相当一部分最终落成一次堆分配,两章要对照着看;第 7 章的「用索引代替指针」是 6.2 第五个手法的完整展开,它把批量分配从一个减少分配的技巧提升成一种数据组织方式;第 8 章讲并发,那里的分配还要再加一层——跨线程释放与本地缓存耗尽是多线程程序特有的成本。本书系的分工在这一章体现得很清楚:<strong>《C++ 标准库 API 编程手册》讲 <code>&lt;memory_resource&gt;</code> 里每个类的接口与用法</strong>,<strong>《C++ 语言 · 现代详解》讲 <code>operator new</code> 的重载规则与对象生命周期</strong>,<strong>本书只回答一件事:这些东西各自多贵,以及在什么条件下换哪一个。</strong></p>
+<p>这一章与其他章的关系:第 3 章讲的缓存层次解释了「为什么新分配的内存第一次访问一定慢」;第 5 章列出的语言层开销有相当一部分最终落成一次堆分配,两章要对照着看;第 7 章的「用索引代替指针」是 6.2 第五个手法的完整展开,它把批量分配从一个减少分配的技巧提升成一种数据组织方式;第 8 章讲并发,那里的分配还要再加一层——跨线程释放与本地缓存耗尽是多线程程序特有的成本。</p>
+<p>本书系的分工在这一章体现得很清楚:<strong>《C++ 标准库 API 编程手册》讲 <code>&lt;memory_resource&gt;</code> 里每个类的接口与用法</strong>,<strong>《C++ 语言 · 现代详解》讲 <code>operator new</code> 的重载规则与对象生命周期</strong>,<strong>本书只回答一件事:这些东西各自多贵,以及在什么条件下换哪一个。</strong></p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 22420px;--thin-h:22420px">
+<section class="chapter" style="contain-intrinsic-size:auto 22472px;--thin-h:22472px">
 <h1 id="c7"><span class="part">第 7 章</span>数据布局与数据导向设计</h1>
 <h2 id="p7-size">7.1 结构体的大小、填充与排序</h2>
 <p>第 3 章讲过缓存行是 64 字节,一次访问要搬一整行。这条性质把「对象有多大、字段怎么排」从一个内存占用问题变成了<strong>性能问题</strong>。这一节讲清具体的算法与收益。</p>
@@ -4514,10 +4521,11 @@ std::vector&lt;std::<span class="kw">uint32_t</span>&gt; active;             <sp
 </tbody>
 </table>
 <div class="note ok" style="contain-intrinsic-size:auto 261px"><span class="t">🟢 布局改造必须有一份「改前」的基准和一组正确性测试</span><p>布局改动不改变逻辑,所以它的错误<strong>不会编译失败,也不会立刻显现</strong>,而是表现为两个平行数组长度不同步、索引与下标错位、热冷两半在增删时没有同时更新——这些问题可能只在特定的输入顺序下暴露。同时,布局改造的收益判断也必须靠数字:成员重排的收益取决于对象数量,SoA 的收益取决于字段占比,两者都无法靠读代码估出来。<strong>所以两条防护是硬要求</strong>:改造前先跑一组「同样的输入产生同样的输出」的比对(不必是单元测试,一次端到端的比对就够);以及在调试构建里给不变式加断言,比如 <code>assert(hot.size() == cold.size())</code>。<strong>没有这两样,布局改造就是一次高风险动作</strong>——它可能什么都没变快,而且悄悄引入了一类查不出来的错误。</p></div>
-<p>这一章与其他章的连接:第 3 章是它的机理基础,缓存行、预取、伪共享这些概念在本章反复使用,读不懂某条结论时回去看第 3 章;第 5 章 5.4 节那张容器速查表里「遍历」为什么是最重要的一列,答案就是这一章——渐进复杂度相同而实际耗时差三十倍,差别全在布局;第 6 章的批量分配是「用索引代替指针」的前半段,两章合起来才是完整的手法;第 8 章讲并发,7.1 节那条「多线程频繁写的字段要分开」在那里展开成伪共享与缓存一致性流量。本书系的分工:<strong>《C++ 语言 · 现代详解》讲对齐规则、标准布局与对象模型</strong>(为什么编译器不能重排成员),<strong>《C++ 标准库 API 编程手册》讲 <code>span</code>、<code>mdspan</code> 这些视图类型的接口</strong>,<strong>本书只回答:这样排比那样排快多少,以及在什么条件下值得改。</strong></p>
+<p>这一章与其他章的连接:第 3 章是它的机理基础,缓存行、预取、伪共享这些概念在本章反复使用,读不懂某条结论时回去看第 3 章;第 5 章 5.4 节那张容器速查表里「遍历」为什么是最重要的一列,答案就是这一章——渐进复杂度相同而实际耗时差三十倍,差别全在布局;第 6 章的批量分配是「用索引代替指针」的前半段,两章合起来才是完整的手法;第 8 章讲并发,7.1 节那条「多线程频繁写的字段要分开」在那里展开成伪共享与缓存一致性流量。</p>
+<p>本书系的分工:<strong>《C++ 语言 · 现代详解》讲对齐规则、标准布局与对象模型</strong>(为什么编译器不能重排成员),<strong>《C++ 标准库 API 编程手册》讲 <code>span</code>、<code>mdspan</code> 这些视图类型的接口</strong>,<strong>本书只回答:这样排比那样排快多少,以及在什么条件下值得改。</strong></p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 22237px;--thin-h:22237px">
+<section class="chapter" style="contain-intrinsic-size:auto 22390px;--thin-h:22390px">
 <h1 id="c8"><span class="part">第 8 章</span>并发的代价:锁、原子与扩展性</h1>
 <h2 id="p8-limit">8.1 并行的收益上限</h2>
 <p>「加线程就能变快」这个直觉在实践中经常落空:加到 8 个线程只快了 3 倍,加到 16 个反而更慢。这一节讲清并行收益的上限由什么决定,以及为什么很多程序达不到那个上限。</p>
@@ -4959,10 +4967,17 @@ std::transform(std::execution::par_unseq, in.begin(), in.end(), out.begin(), f);
 </tbody>
 </table>
 <div class="note ok" style="contain-intrinsic-size:auto 260px"><span class="t">🟢 并行化之前先把单线程版本优化好</span><p>理由有三条。第一,<strong>单线程优化的收益会被并行放大</strong>——单线程快一倍,并行之后仍然快一倍,两项收益是相乘而不是相加的。第二,<strong>访存优化能缓解带宽瓶颈</strong>:内存带宽是全系统共享的,减少了数据量,多线程时的带宽争抢也随之减轻,所以第 3、7 章那些手段在并行场景下收益反而更大。第三,也是最重要的一条,<strong>单线程优化没有正确性风险</strong>,而并发引入的是最难查的一类缺陷——症状罕见、无法复现、测试全过之后才在生产环境偶发。把这条判据反过来说更清楚:<strong>一个还没有做过单线程优化的程序,它的扩展性曲线本身就是不可信的</strong>,因为曲线里混着访存瓶颈、冗余计算、和真正的同步开销,分不出哪一项是主因。<strong>顺序只能是:算法 → 单线程优化 → 并行。</strong></p></div>
-<p>这一章与其他章的连接:第 3 章的缓存一致性与伪共享是 8.3 全节的机理基础,原子操作贵在哪里、为什么 <code>alignas(64)</code> 是必需的,答案都在那里;第 5 章 5.3 节里 <code>shared_ptr</code> 拷贝那一行——「一次原子递增,多核争用时可达上百纳秒」——在 8.3 得到了完整解释;第 7 章的布局手段在并行场景下收益更大,因为它同时减轻了带宽压力;第 6 章的分配在多线程下还要再算一层账,跨线程释放与本地缓存耗尽都是并发特有的成本。本书系的分工:<strong>《C++ 语言 · 现代详解》讲并发的语义</strong>(内存模型、<code>happens-before</code>、锁的用法与死锁的避免),<strong>《C++ 标准库 API 编程手册》讲 <code>&lt;thread&gt;</code>、<code>&lt;atomic&gt;</code>、<code>&lt;execution&gt;</code> 的接口</strong>,<strong>本书只回答:它们各自多贵、扩展性为什么上不去、以及什么时候不该并行。</strong></p>
+<p>这一章与其他章的连接。</p>
+<ul>
+<li>第 3 章的缓存一致性与伪共享是 8.3 全节的机理基础,原子操作贵在哪里、为什么 <code>alignas(64)</code> 是必需的,答案都在那里。</li>
+<li>第 5 章 5.3 节里 <code>shared_ptr</code> 拷贝那一行——「一次原子递增,多核争用时可达上百纳秒」——在 8.3 得到了完整解释。</li>
+<li>第 7 章的布局手段在并行场景下收益更大,因为它同时减轻了带宽压力。</li>
+<li>第 6 章的分配在多线程下还要再算一层账,跨线程释放与本地缓存耗尽都是并发特有的成本。</li>
+</ul>
+<p>本书系的分工:<strong>《C++ 语言 · 现代详解》讲并发的语义</strong>(内存模型、<code>happens-before</code>、锁的用法与死锁的避免),<strong>《C++ 标准库 API 编程手册》讲 <code>&lt;thread&gt;</code>、<code>&lt;atomic&gt;</code>、<code>&lt;execution&gt;</code> 的接口</strong>,<strong>本书只回答:它们各自多贵、扩展性为什么上不去、以及什么时候不该并行。</strong></p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 34596px;--thin-h:34596px">
+<section class="chapter" style="contain-intrinsic-size:auto 35397px;--thin-h:35397px">
 <h1 id="c9"><span class="part">第 9 章</span>系统层:系统调用、I/O 与定位</h1>
 <h2 id="p9-syscall">9.1 系统调用的成本</h2>
 <p>第 1 章那张表里,一次系统调用约 500 纳秒——比一次函数调用贵三个数量级。而业务代码里的系统调用往往比预期多得多:每次 <code>printf</code>、每次读一小块文件、每次取时间戳、每次内存分配的补充,都可能是一次。这一节讲清成本构成与减少手段。</p>
@@ -5026,7 +5041,11 @@ buf.reserve(64 * 1024);
 </tbody>
 </table>
 <p>差别在一个数量级以上。所以「取时间戳很贵」这个说法在现代 Linux 上已经不准确了——<strong>贵的是没有 vDSO 的那些调用</strong>,以及带时区转换的 <code>localtime</code>(它可能读文件、可能加锁)。</p>
-<p>有两处要注意。第一,<code>CLOCK_MONOTONIC</code> 与 <code>CLOCK_REALTIME</code> 走 vDSO,而 <code>CLOCK_MONOTONIC_RAW</code>、进程与线程的 CPU 时间通常不走,它们是完整的系统调用。<strong>在热路径上取 <code>CLOCK_THREAD_CPUTIME_ID</code>,成本比取墙上时间高一个数量级</strong>,而两行代码看起来几乎一样。第二,某些虚拟化环境下时钟源会退化,vDSO 的实现内部只好走真的系统调用,取时间戳的耗时突然涨到微秒级。症状是同一个二进制在物理机上正常、在某台虚拟机上慢了几倍,而剖析显示时间花在计时代码里。</p>
+<p>有两处要注意。</p>
+<ol>
+<li><code>CLOCK_MONOTONIC</code> 与 <code>CLOCK_REALTIME</code> 走 vDSO,而 <code>CLOCK_MONOTONIC_RAW</code>、进程与线程的 CPU 时间通常不走,它们是完整的系统调用。<strong>在热路径上取 <code>CLOCK_THREAD_CPUTIME_ID</code>,成本比取墙上时间高一个数量级</strong>,而两行代码看起来几乎一样。</li>
+<li>某些虚拟化环境下时钟源会退化,vDSO 的实现内部只好走真的系统调用,取时间戳的耗时突然涨到微秒级。症状是同一个二进制在物理机上正常、在某台虚拟机上慢了几倍,而剖析显示时间花在计时代码里。</li>
+</ol>
 <pre style="contain-intrinsic-size:auto 114px"><code># 看当前用的是哪个时钟源,tsc 是最好的情况
 $ cat /sys/devices/system/clocksource/*/current_clocksource
 $ ldd ./app | grep vdso        # 确认 vDSO 已映射</code></pre>
@@ -5190,7 +5209,8 @@ $ difffolded.pl before.txt after.txt | flamegraph.pl &gt; diff.svg</code></pre>
 <p>环境带来的影响可以归成三类:<strong>资源可见性</strong>,即程序以为自己有多少 CPU 和内存;<strong>资源配额</strong>,即实际允许用多少、超了之后会怎样;<strong>时钟与频率</strong>,即每个周期有多快、时间读数准不准。三类问题的排查手段完全不同,但共同点是都不在剖析器的视野里,必须单独查。</p>
 <p>下面按这三类展开,Linux 侧以 cgroup v2 为准并兼顾 v1,Windows 侧对应作业对象与处理器组。</p>
 <h3>容器里的核数与内存是宿主机的数字</h3>
-<p>C++ 程序判断「机器有多大」通常用两个调用:<code>std::thread::hardware_concurrency()</code> 取核数,<code>sysconf(_SC_PHYS_PAGES)</code> 乘页大小取内存。这两个调用在容器里<strong>都返回宿主机的数字</strong>,与容器的限额无关。原因是它们底层读的是 <code>/proc/cpuinfo</code>、<code>/sys/devices/system/cpu/online</code> 与 <code>/proc/meminfo</code>,而这些接口在默认的容器里没有被命名空间隔离。容器限制的是<strong>能用多少</strong>,不是<strong>能看见多少</strong>,标准库没有理由知道这个区别。</p>
+<p>C++ 程序判断「机器有多大」通常用两个调用:<code>std::thread::hardware_concurrency()</code> 取核数,<code>sysconf(_SC_PHYS_PAGES)</code> 乘页大小取内存。这两个调用在容器里<strong>都返回宿主机的数字</strong>,与容器的限额无关。</p>
+<p>原因是它们底层读的是 <code>/proc/cpuinfo</code>、<code>/sys/devices/system/cpu/online</code> 与 <code>/proc/meminfo</code>,而这些接口在默认的容器里没有被命名空间隔离。容器限制的是<strong>能用多少</strong>,不是<strong>能看见多少</strong>,标准库没有理由知道这个区别。</p>
 <table style="contain-intrinsic-size:auto 227px">
 <thead><tr><th>程序里的查询</th><th>在限额 2 核 4 GB 的容器里返回</th><th>真正的限额在哪</th></tr></thead>
 <tbody>
@@ -5256,11 +5276,13 @@ std::<span class="kw">size_t</span> memory_limit_bytes() {
     <span class="kw">return</span> static_cast&lt;std::<span class="kw">size_t</span>&gt;(::sysconf(_SC_PHYS_PAGES)) * ::sysconf(_SC_PAGESIZE);
 }</code></pre>
 <p>还有一个容易漏掉的文件:<code>cpuset.cpus.effective</code>。它与 <code>cpu.max</code> 是两种不同的限制。<code>cpuset</code> 把进程钉在指定的几个物理核上,<code>cpu.max</code> 只限总量而不限在哪些核上跑。两者可以同时存在,线程数上限应当取<strong>两者中更小的那个</strong>。另外配额常常不是整数,<code>150000 100000</code> 表示可用 1.5 个核;这种情况下线程数<strong>向上取整到 2</strong> 比向下取整到 1 更合适,因为总有一部分线程处在等 I/O 的状态。</p>
-<p>内存限额的后果比 CPU 更直接。程序按宿主机的 512 GB 决定缓存大小,在 4 GB 的容器里分配到一半就被内核的 OOM killer 杀掉,进程退出码 137,日志里往往什么也没有。确认方式是读 <code>memory.events</code> 里的 <code>oom_kill</code> 计数,或者在宿主机的内核日志里找 <code>Memory cgroup out of memory</code>。凡是「按可用内存的百分之几」决定容量的代码,都必须走上面的 <code>memory_limit_bytes()</code>,不能直接问 <code>sysconf</code>。</p>
+<p>内存限额的后果比 CPU 更直接。程序按宿主机的 512 GB 决定缓存大小,在 4 GB 的容器里分配到一半就被内核的 OOM killer 杀掉,进程退出码 137,日志里往往什么也没有。</p>
+<p>确认方式是读 <code>memory.events</code> 里的 <code>oom_kill</code> 计数,或者在宿主机的内核日志里找 <code>Memory cgroup out of memory</code>。凡是「按可用内存的百分之几」决定容量的代码,都必须走上面的 <code>memory_limit_bytes()</code>,不能直接问 <code>sysconf</code>。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 261px"><span class="t">🔴 容器里按 hardware_concurrency 开线程池,线程数会是配额的几十倍</span><p>一个限额 2 核的服务部署在 96 核的宿主机上,线程池按 <code>hardware_concurrency()</code> 开了 96 个工作线程。这 96 个线程要分 2 个核的配额,每个线程拿到的时间片被切得极碎,<strong>上下文切换从每秒几千次涨到每秒几十万次</strong>,而切换本身还要付缓存与 TLB 重新预热的代价。表现是:CPU 使用率贴着限额不动、吞吐只有裸机压测的三分之一、p99 延迟是单线程版本的十几倍,并且怎么加副本都不见好转。同一个错误还出现在别处:OpenMP 的默认线程数、按核数分片的哈希表与内存池(分片数按 96 算,每片的数据量小到缓存全是冷的)、以及各种「每核一个队列」的设计。修法是把读限额的逻辑收进一个函数,全项目只从这一个函数取并发度。</p></div>
 <h3>CPU 配额是按周期发放的,用完就冻结</h3>
 <p>配额不是按秒平摊的,而是<strong>按周期发放</strong>。默认周期 100 毫秒。每个周期开始时,进程组获得等于配额的 CPU 时间预算;预算用完之后,组内<strong>所有线程一起被冻结</strong>,直到下一个周期开始才解冻。这个机制叫限流(throttling)。</p>
-<p>由此产生一个反直觉的现象。一个开了 16 个线程、配额 2 核的服务,如果 16 个线程同时忙起来,每 100 毫秒的 200 毫秒预算会在 12.5 毫秒内被消耗完,剩下的 87.5 毫秒<strong>一条指令都不执行</strong>。从监控上看,这个进程的平均 CPU 使用率是 200%,恰好等于限额,一切正常;但任何一个落在冻结窗口里的请求,都要先等最多 87.5 毫秒才轮到被处理。<strong>症状是平均 CPU 不高、平均延迟正常,而 p99 与 p999 出现几十毫秒的固定台阶</strong>——台阶的高度与周期长度直接相关,这是它区别于其他延迟问题的特征。</p>
+<p>由此产生一个反直觉的现象。一个开了 16 个线程、配额 2 核的服务,如果 16 个线程同时忙起来,每 100 毫秒的 200 毫秒预算会在 12.5 毫秒内被消耗完,剩下的 87.5 毫秒<strong>一条指令都不执行</strong>。从监控上看,这个进程的平均 CPU 使用率是 200%,恰好等于限额,一切正常;但任何一个落在冻结窗口里的请求,都要先等最多 87.5 毫秒才轮到被处理。</p>
+<p><strong>症状是平均 CPU 不高、平均延迟正常,而 p99 与 p999 出现几十毫秒的固定台阶</strong>——台阶的高度与周期长度直接相关,这是它区别于其他延迟问题的特征。</p>
 <pre style="contain-intrinsic-size:auto 332px"><code>$ cat /sys/fs/cgroup/cpu.max
 200000 100000              # 每 100 ms 配额 200 ms,即 2 个核
 
@@ -5273,7 +5295,13 @@ throttled_usec 214553000   # 累计被冻结 214 秒
 # cgroup v1 的同一组数字
 $ cat /sys/fs/cgroup/cpu/cpu.stat</code></pre>
 <p><code>nr_throttled</code> 是被限流的周期数,<code>throttled_usec</code> 是累计冻结时长。判据很直接:<strong>周期性采样这两个值,只要 <code>nr_throttled</code> 在增长,这个服务就正在被限流</strong>,延迟毛刺有了确定的解释,不必再去代码里找。这两个计数器应当进监控面板,和 CPU 使用率放在一起看。</p>
-<p>改法有三条,按优先级排列。第一,<strong>把线程数降到与配额匹配</strong>,并发度超过配额只会让预算消耗得更快,并不会提高吞吐,反而增加切换开销。第二,<strong>提高配额,或者改用 cpuset 独占几个核</strong>,后者同时消除了限流与核间迁移。第三,<strong>缩短周期</strong>,即把 <code>cpu.max</code> 的第二个字段从 100 毫秒调到 10 毫秒(Kubernetes 里对应 kubelet 的 CPU CFS quota period)。第三条不改变总量,只改变分布:冻结窗口变成十分之一,延迟毛刺从几十毫秒降到几毫秒。对延迟敏感的服务,这一条的性价比最高。</p>
+<p>改法有三条,按优先级排列。</p>
+<ol>
+<li><strong>把线程数降到与配额匹配</strong>,并发度超过配额只会让预算消耗得更快,并不会提高吞吐,反而增加切换开销。</li>
+<li><strong>提高配额,或者改用 cpuset 独占几个核</strong>,后者同时消除了限流与核间迁移。</li>
+<li><strong>缩短周期</strong>,即把 <code>cpu.max</code> 的第二个字段从 100 毫秒调到 10 毫秒(Kubernetes 里对应 kubelet 的 CPU CFS quota period)。</li>
+</ol>
+<p>第三条不改变总量,只改变分布:冻结窗口变成十分之一,延迟毛刺从几十毫秒降到几毫秒。对延迟敏感的服务,这一条的性价比最高。</p>
 <table style="contain-intrinsic-size:auto 265px">
 <thead><tr><th>现象</th><th>多半是什么</th><th>怎么确认</th></tr></thead>
 <tbody>
@@ -5302,12 +5330,18 @@ performance
 # 跑的过程中确认频率真的稳住了
 $ watch -n1 <span>'grep MHz /proc/cpuinfo | head'</span></code></pre>
 <p>调频器(governor)决定 CPU 在负载变化时怎么调整频率。<code>powersave</code> 在负载低时把频率压到最低档,负载升上来之后需要几毫秒到几十毫秒才升回去;<code>performance</code> 则一直保持在最高档。对基准测试来说,<strong>powersave 的直接后果是前几次迭代慢、之后变快</strong>,而这个形状正好会被误读成「缓存预热」或者「分支预测器训练好了」。把调频器切到 performance,是让基准数字可复现的最低成本的一步,应当写进基准脚本的开头。</p>
-<p>睿频(Intel Turbo Boost、AMD Precision Boost)的效果与之相反:<strong>刚开始跑的时候比稳态快</strong>。单核跑短任务时频率可以比标称基频高 20% 到 40%,但持续几十秒之后功耗与温度触及上限,频率回落到全核稳态值。于是一个只跑 200 毫秒的微基准测出的数字,可能比同一段代码在生产里连续跑十分钟时的实际速度高 30%。<strong>要么关掉睿频测稳态,要么让基准跑足够久并且只统计后半段</strong>。两种做法都可以,但必须在报告里写明用的是哪一种。</p>
-<p>C-state 与 P-state 是两个不同的东西,经常被混为一谈。P-state 是<strong>运行时的频率与电压档位</strong>,由调频器控制,上面两段讲的都是它。C-state 是<strong>空闲时的休眠深度</strong>,越深越省电、唤醒越慢,C6 的唤醒延迟在几十微秒量级。对一个每秒处理几万请求的服务,C-state 没有影响,因为核根本没机会进入深度休眠;但对一个平均每 10 毫秒才来一个请求的低延迟服务,几乎每个请求都要先付一次唤醒延迟,而且这笔开销在火焰图上完全看不见,因为它发生在第一条指令之前。对策是限制最大休眠深度(内核参数 <code>intel_idle.max_cstate=1</code>,或者 <code>idle=poll</code>),代价是功耗明显上升。</p>
+<p>睿频(Intel Turbo Boost、AMD Precision Boost)的效果与之相反:<strong>刚开始跑的时候比稳态快</strong>。单核跑短任务时频率可以比标称基频高 20% 到 40%,但持续几十秒之后功耗与温度触及上限,频率回落到全核稳态值。于是一个只跑 200 毫秒的微基准测出的数字,可能比同一段代码在生产里连续跑十分钟时的实际速度高 30%。</p>
+<p><strong>要么关掉睿频测稳态,要么让基准跑足够久并且只统计后半段</strong>。两种做法都可以,但必须在报告里写明用的是哪一种。</p>
+<p>C-state 与 P-state 是两个不同的东西,经常被混为一谈。P-state 是<strong>运行时的频率与电压档位</strong>,由调频器控制,上面两段讲的都是它。</p>
+<p>C-state 是<strong>空闲时的休眠深度</strong>,越深越省电、唤醒越慢,C6 的唤醒延迟在几十微秒量级。对一个每秒处理几万请求的服务,C-state 没有影响,因为核根本没机会进入深度休眠;但对一个平均每 10 毫秒才来一个请求的低延迟服务,几乎每个请求都要先付一次唤醒延迟,而且这笔开销在火焰图上完全看不见,因为它发生在第一条指令之前。</p>
+<p>对策是限制最大休眠深度(内核参数 <code>intel_idle.max_cstate=1</code>,或者 <code>idle=poll</code>),代价是功耗明显上升。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 261px"><span class="t">🟢 基准环境与生产环境的配置必须逐项对齐,否则两边的数字不能相减</span><p>必须对齐的项至少有六个:<strong>调频器与睿频状态</strong>、<strong>CPU 配额与 cpuset 绑定</strong>、<strong>透明大页与显式大页的设置</strong>、<strong>NUMA 节点与内存交织策略</strong>、<strong>内核版本与推测执行缓解开关</strong>(<code>/sys/devices/system/cpu/vulnerabilities/</code> 下的各项)、<strong>容器运行时与 seccomp 过滤规则</strong>。任意一项不一致,两边的数字就只能各自和自己比,不能互相相减。真实的教训是:有人在关掉了缓解措施的裸机上测出「优化提速 20%」,上线后毫无变化——那 20% 全部来自系统调用返回路径省下的开销,与改动无关。可执行的做法是把这六项写成一个脚本,每次基准运行时自动采集,和数字一起存进报告;两次结果对比之前,先对比这份配置。</p></div>
 <h3>虚拟化:时钟不准与被抢走的时间</h3>
-<p>虚拟机里有两件事与裸机根本不同。第一是<strong>时钟</strong>。<code>rdtsc</code> 在裸机上是一条不进内核的指令,几十个周期就返回;在虚拟机里,如果宿主机没有暴露稳定的 TSC(CPU 标志里的 <code>constant_tsc</code> 与 <code>nonstop_tsc</code>),或者管理程序配置成拦截 <code>rdtsc</code>,那么每次读时间都是一次陷入宿主机,代价从几十纳秒涨到几百纳秒甚至微秒级。后果是一段每轮循环都取时间戳的计时代码,在虚拟机里<strong>测量本身就成了热点</strong>,测出来的数字包含了大量测量开销。查法是读 <code>/sys/devices/system/clocksource/clocksource0/current_clocksource</code>:值是 <code>tsc</code> 说明走的是快路径,是 <code>kvm-clock</code>、<code>acpi_pm</code> 或 <code>hpet</code> 就说明每次取时间都要付更多,此时应当减少取时间的次数,改成每 N 次迭代取一次。</p>
-<p>第二是<strong>被抢走的时间</strong>。<code>top</code> 与 <code>vmstat</code> 里的 st 列(steal time)表示虚拟 CPU 想运行、但宿主机把物理核给了别人的时间比例。它不计入你的用户态时间也不计入内核态时间,所以从进程视角完全看不见:程序像是被随机地按了暂停键,墙上时钟在走而指令没有前进。<strong>steal 长期高于 5% 说明宿主机超卖</strong>,这时任何基于墙上时钟的测量都失去意义,基准结果的方差会大到无法判断改动是否有效。正确的处理是先换实例规格或者换宿主机,再谈代码优化;在超卖的机器上调优,等于在一把会随机变长的尺子上量东西。</p>
+<p>虚拟机里有两件事与裸机根本不同。第一是<strong>时钟</strong>。<code>rdtsc</code> 在裸机上是一条不进内核的指令,几十个周期就返回;在虚拟机里,如果宿主机没有暴露稳定的 TSC(CPU 标志里的 <code>constant_tsc</code> 与 <code>nonstop_tsc</code>),或者管理程序配置成拦截 <code>rdtsc</code>,那么每次读时间都是一次陷入宿主机,代价从几十纳秒涨到几百纳秒甚至微秒级。</p>
+<p>后果是一段每轮循环都取时间戳的计时代码,在虚拟机里<strong>测量本身就成了热点</strong>,测出来的数字包含了大量测量开销。</p>
+<p>查法是读 <code>/sys/devices/system/clocksource/clocksource0/current_clocksource</code>:值是 <code>tsc</code> 说明走的是快路径,是 <code>kvm-clock</code>、<code>acpi_pm</code> 或 <code>hpet</code> 就说明每次取时间都要付更多,此时应当减少取时间的次数,改成每 N 次迭代取一次。</p>
+<p>第二是<strong>被抢走的时间</strong>。<code>top</code> 与 <code>vmstat</code> 里的 st 列(steal time)表示虚拟 CPU 想运行、但宿主机把物理核给了别人的时间比例。它不计入你的用户态时间也不计入内核态时间,所以从进程视角完全看不见:程序像是被随机地按了暂停键,墙上时钟在走而指令没有前进。</p>
+<p><strong>steal 长期高于 5% 说明宿主机超卖</strong>,这时任何基于墙上时钟的测量都失去意义,基准结果的方差会大到无法判断改动是否有效。正确的处理是先换实例规格或者换宿主机,再谈代码优化;在超卖的机器上调优,等于在一把会随机变长的尺子上量东西。</p>
 <h3>绑核:亲和性在容器里的前提</h3>
 <p>绑核解决两个问题:一是避免线程在核之间迁移导致 L1 与 L2 缓存全部作废(第 3 章),二是配合 NUMA,让线程和它访问的内存待在同一个节点上。手段在 Linux 上有命令行与 API 两套。</p>
 <pre style="contain-intrinsic-size:auto 277px"><code># 把进程绑到 4 到 7 号逻辑处理器
@@ -5332,7 +5366,8 @@ $ cat /sys/fs/cgroup/cpuset.cpus.effective</code></pre>
 
 <span class="cm">// 只绑工作线程,不要绑那些会阻塞在 I/O 上的线程 ——</span>
 <span class="cm">// 阻塞线程被钉在一个核上,并不能省下什么,反而挡住了别人</span></code></pre>
-<p>在容器里绑核有一个必须先满足的前提:<strong>容器要真的独占那些核</strong>。如果 CPU 是通过配额(<code>cpu.max</code>)分配的,那么容器里看到的 CPU 编号仍然是宿主机的编号,而且随时可能有别的容器在同一个核上运行。此时绑核只会让情况变差:线程被钉在一个正在被别人占用的核上,连迁到空闲核的机会都失去了。Kubernetes 里对应的开关是 kubelet 的 <strong>CPU manager <code>static</code> 策略</strong>,只有当 Pod 属于 Guaranteed 服务质量等级、并且 CPU 请求是整数时,才会分到独占的核。没有开这个策略就不要绑核。</p>
+<p>在容器里绑核有一个必须先满足的前提:<strong>容器要真的独占那些核</strong>。如果 CPU 是通过配额(<code>cpu.max</code>)分配的,那么容器里看到的 CPU 编号仍然是宿主机的编号,而且随时可能有别的容器在同一个核上运行。此时绑核只会让情况变差:线程被钉在一个正在被别人占用的核上,连迁到空闲核的机会都失去了。</p>
+<p>Kubernetes 里对应的开关是 kubelet 的 <strong>CPU manager <code>static</code> 策略</strong>,只有当 Pod 属于 Guaranteed 服务质量等级、并且 CPU 请求是整数时,才会分到独占的核。没有开这个策略就不要绑核。</p>
 <h3>Windows 侧的对应物</h3>
 <table style="contain-intrinsic-size:auto 264px">
 <thead><tr><th>关注点</th><th>Linux</th><th>Windows</th></tr></thead>
@@ -5361,8 +5396,11 @@ std::vector&lt;<span class="kw">char</span>&gt; buf(n);
 <span class="kw">auto</span>* p = reinterpret_cast&lt;SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*&gt;(buf.data());
 GetLogicalProcessorInformationEx(RelationGroup, p, &amp;n);
 <span class="kw">const</span> WORD groups = p-&gt;Group.ActiveGroupCount;                  <span class="cm">// 每组最多 64 个</span></code></pre>
-<p>Windows 上有一个 Linux 没有的坑:<strong>处理器组</strong>。逻辑处理器超过 64 个时,系统把它们分成多个组,每组最多 64 个,因为亲和性掩码是一个 64 位整数。<code>GetSystemInfo</code> 返回的 <code>dwNumberOfProcessors</code> 与 <code>SetThreadAffinityMask</code> 接受的掩码<strong>都只覆盖当前组</strong>。在一台 128 逻辑处理器的机器上,一个没做组感知的程序只会用到 64 个,另外一半完全闲置,而程序不会报任何错误,只是吞吐停在一半上不去。正确做法是用 <code>GetLogicalProcessorInformationEx(RelationGroup, ...)</code> 枚举所有组,再用 <code>SetThreadGroupAffinity</code> 跨组绑定。Windows 11 与 Server 2022 之后新进程默认可以跨组调度,但显式设置过亲和性的线程仍然被限制在单组内。</p>
-<p>电源方案对应 Linux 的调频器。默认的「平衡」方案把处理器最小状态设为 5%,轻负载时核会降到很低的频率,首次迭代慢的现象与 powersave 一模一样。做基准测试或者跑延迟敏感服务时切到「高性能」,或者把处理器最小状态直接设为 100%。另外 Windows 容器同样存在可见性问题:进程通过作业对象受限时,<code>GetSystemInfo</code> 与 <code>hardware_concurrency()</code> 仍然报告宿主机的处理器数,与 Linux 上的表现一致,处理原则也一致——统一走一个读限额的函数。</p>
+<p>Windows 上有一个 Linux 没有的坑:<strong>处理器组</strong>。逻辑处理器超过 64 个时,系统把它们分成多个组,每组最多 64 个,因为亲和性掩码是一个 64 位整数。<code>GetSystemInfo</code> 返回的 <code>dwNumberOfProcessors</code> 与 <code>SetThreadAffinityMask</code> 接受的掩码<strong>都只覆盖当前组</strong>。</p>
+<p>在一台 128 逻辑处理器的机器上,一个没做组感知的程序只会用到 64 个,另外一半完全闲置,而程序不会报任何错误,只是吞吐停在一半上不去。</p>
+<p>正确做法是用 <code>GetLogicalProcessorInformationEx(RelationGroup, ...)</code> 枚举所有组,再用 <code>SetThreadGroupAffinity</code> 跨组绑定。Windows 11 与 Server 2022 之后新进程默认可以跨组调度,但显式设置过亲和性的线程仍然被限制在单组内。</p>
+<p>电源方案对应 Linux 的调频器。默认的「平衡」方案把处理器最小状态设为 5%,轻负载时核会降到很低的频率,首次迭代慢的现象与 powersave 一模一样。做基准测试或者跑延迟敏感服务时切到「高性能」,或者把处理器最小状态直接设为 100%。</p>
+<p>另外 Windows 容器同样存在可见性问题:进程通过作业对象受限时,<code>GetSystemInfo</code> 与 <code>hardware_concurrency()</code> 仍然报告宿主机的处理器数,与 Linux 上的表现一致,处理原则也一致——统一走一个读限额的函数。</p>
 <pre style="contain-intrinsic-size:auto 223px"><code>REM 查看当前电源方案,把处理器最小状态设为 100%
 &gt; powercfg /getactivescheme
 &gt; powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 100
@@ -5446,7 +5484,8 @@ std::<span class="kw">int64_t</span> parse_i64(std::string_view s) {
     <span class="kw">return</span> v;
 }</code></pre>
 <p><code>std::from_chars</code> 与 <code>std::stoi</code> 的差别不只是速度:它不构造 <code>std::string</code>、不查本地化、不用异常报告失败,而且明确告诉调用方转换停在了哪个位置。<code>std::stoi</code> 要求一个以零结尾的 <code>std::string</code>,从一个视图调用它会先构造一个临时对象(5.1 节),于是「转换一个数字」变成了「一次分配加一次拷贝加一次转换」。</p>
-<p>还有一处开销在代码里完全看不出来:<strong>把请求体先拷进一个 <code>std::string</code> 再交给解析器</strong>。数据已经在接收缓冲区里,这一步多做一次完整拷贝加一次分配,报文越大代价越高;在一个处理 1 MB 报文的服务上,它单独就能占掉百分之几。这类拷贝通常是接口形态逼出来的:解析函数的参数写成 <code>const std::string&amp;</code>,调用方除了构造一个 <code>std::string</code> 没有别的选择。把参数改成 <code>std::string_view</code> 或 <code>std::span&lt;const std::byte&gt;</code> 就能消掉它。</p>
+<p>还有一处开销在代码里完全看不出来:<strong>把请求体先拷进一个 <code>std::string</code> 再交给解析器</strong>。数据已经在接收缓冲区里,这一步多做一次完整拷贝加一次分配,报文越大代价越高;在一个处理 1 MB 报文的服务上,它单独就能占掉百分之几。</p>
+<p>这类拷贝通常是接口形态逼出来的:解析函数的参数写成 <code>const std::string&amp;</code>,调用方除了构造一个 <code>std::string</code> 没有别的选择。把参数改成 <code>std::string_view</code> 或 <code>std::span&lt;const std::byte&gt;</code> 就能消掉它。</p>
 <p>第四项是惰性解析:先扫一遍记下每个字段的位置与类型,不构造任何对象;字段被访问时才解析那一个。它的收益直接取决于实际读取比例——一条消息有 40 个字段而业务只读 3 个时,省掉的是 37 个字段的解析与分配。<strong>代价是每次访问多一次查找</strong>,所以同一个字段被反复访问时要自己缓存,否则惰性反而更慢。</p>
 <div class="note new" style="contain-intrinsic-size:auto 265px"><span class="t">🔵 数字与文本互转一律用 from_chars 与 to_chars</span><p>C++17 的这一对函数就是为这个场景设计的:<strong>不分配、不受本地化影响、不抛异常、直接在调用方给的字符区间上工作</strong>,并且通过返回的指针告诉调用方转换停在哪里。它们替代的是一整批旧接口——<code>atoi</code> 与 <code>strtol</code>(要求以零结尾,错误报告靠 <code>errno</code>)、<code>std::stoi</code>(先要一个 <code>std::string</code>)、以及 <code>std::stringstream</code>(每次构造一个流对象,单次开销在微秒量级,见 5.4 节)。量级上,<code>from_chars</code> 比流提取快一到两个数量级,比 <code>std::stoi</code> 快数倍,浮点方向的差距通常更大。唯一要确认的是工具链版本:浮点的 <code>from_chars</code> 与 <code>to_chars</code> 落地比整数版本晚,老编译器上要先测一下可用性再全面替换。</p></div>
 <h3>零拷贝与就地访问:不需要解析步骤的格式</h3>
@@ -5488,7 +5527,11 @@ std::<span class="kw">int64_t</span> parse_i64(std::string_view s) {
         send_all(fd, out);                 <span class="cm">// 一条逻辑响应只发一次(9.2 节)</span>
     }
 };</code></pre>
-<p>两种事故形态都出在这四条的反面。<strong>一是用 <code>std::stringstream</code> 拼响应</strong>:每次响应构造一个流对象,每个字段一次带格式化状态查询的插入,单次开销在微秒量级(5.4 节);在一个每秒几万条响应的服务上,这一项足以占掉一半 CPU,而剖析报告里出现的是 <code>std::locale</code>、<code>std::num_put</code> 这类与业务毫无关系的符号,源码看上去只是「拼了个字符串」。<strong>二是每次响应重新构造输出缓冲</strong>,于是每条响应都要重走一遍分配、多次扩容、释放的过程;改成复用之后这一整块从剖析报告里消失。</p>
+<p>两种事故形态都出在这四条的反面。</p>
+<ol>
+<li><strong>用 <code>std::stringstream</code> 拼响应</strong>:每次响应构造一个流对象,每个字段一次带格式化状态查询的插入,单次开销在微秒量级(5.4 节);在一个每秒几万条响应的服务上,这一项足以占掉一半 CPU,而剖析报告里出现的是 <code>std::locale</code>、<code>std::num_put</code> 这类与业务毫无关系的符号,源码看上去只是「拼了个字符串」。</li>
+<li><strong>每次响应重新构造输出缓冲</strong>,于是每条响应都要重走一遍分配、多次扩容、释放的过程;改成复用之后这一整块从剖析报告里消失。</li>
+</ol>
 <p>最后一行呼应 9.2 节:一条逻辑响应只调一次发送。把头部与正文分成两次写,不但多一次系统调用,还可能触发接收端的延迟确认,把一次几十微秒的响应变成几十毫秒。</p>
 <h3>怎么把分散的编解码开销汇总出来</h3>
 <p>编解码的开销分散在几十个小函数上,直接看剖析报告的排行榜看不出来。有三种把它汇总出来的方法,精度与成本递增。</p>
@@ -5538,7 +5581,8 @@ REM 或者用 WPR 采一段,在 WPA 的 CPU Usage (Sampled) 里按调用栈折�
 BENCHMARK(BM_ParseRequest);</code></pre>
 <p>语料必须来自生产。构造出来的测试消息通常字段更整齐、字符串更短、嵌套更浅,在它上面测出的吞吐会系统性偏高;而解析器的性能对输入形状极其敏感——转义字符的比例、数字与字符串的比例、嵌套深度,每一项都会改变结果。1.2 节说过微基准只能用来比较两种写法,这里同样成立:换解析器的最终判据是端到端的每请求 CPU 时间,不是基准里的 MB/s。</p>
 <h3>两个常见的具体问题</h3>
-<p>第一个是<strong>字符串键的哈希与比较</strong>。解析一条有几十个字段的 JSON 时,每个字段名都要与模式里的名字对上,做法通常是查一张哈希表。于是每条消息要做几十次字符串哈希加几十次字符串比较,大报文上这一项可以占到解析总开销的两成以上。三条手段:字段名表用完美哈希,或者先按长度分桶,先比长度再比内容;给哈希表配透明哈希与 <code>std::equal_to&lt;&gt;</code>,用 <code>std::string_view</code> 直接查而不构造临时 <code>std::string</code>(5.4 节与 10.3 节);字段数固定时干脆把字段名换成编号,这正是二进制格式在做的事。</p>
+<p>第一个是<strong>字符串键的哈希与比较</strong>。解析一条有几十个字段的 JSON 时,每个字段名都要与模式里的名字对上,做法通常是查一张哈希表。于是每条消息要做几十次字符串哈希加几十次字符串比较,大报文上这一项可以占到解析总开销的两成以上。</p>
+<p>三条手段:字段名表用完美哈希,或者先按长度分桶,先比长度再比内容;给哈希表配透明哈希与 <code>std::equal_to&lt;&gt;</code>,用 <code>std::string_view</code> 直接查而不构造临时 <code>std::string</code>(5.4 节与 10.3 节);字段数固定时干脆把字段名换成编号,这正是二进制格式在做的事。</p>
 <p>第二个是<strong>正则表达式用于协议解析</strong>。用正则切分请求行、提取字段,写起来短,代价却很高:<code>std::regex</code> 的匹配性能比专用解析器慢一到两个数量级,而且它的对象构造本身就在微秒量级(6.2 节)。协议解析面对的输入形态是固定的,并不需要正则的通用性。<strong>换成手写状态机或者按分隔符切分,通常快一到两个数量级</strong>;确实需要正则时,改用编译期正则或者其他成熟的正则引擎,并且把正则对象提成静态或成员,不要每次构造。</p>
 <p>这两项有一个共同点:<strong>都是把通用手段用在了形状固定的输入上</strong>。哈希表是为任意键设计的,正则是为任意模式设计的,而协议解析面对的输入形状已知且不变。把已知条件编码进代码,是这一节所有手法的共同思路,也是它与第 5 到 7 章那些语言层手段的分工——那些手段让每一步更便宜,这一节的手段直接删掉步骤。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 解析器每个字段构造一个 std::string,分配次数与字段数成正比</span><p>一条二十字段的消息构造二十个 <code>std::string</code>,每秒一万条请求就是每秒二十万次分配;报文再大、字段再多一些,分配次数轻易到百万量级。<strong>症状很有辨识度</strong>:剖析报告里 <code>operator new</code>、<code>_int_malloc</code>、<code>_int_free</code> 与 <code>basic_string</code> 的构造析构加起来占到两成以上,而它们分散在几十个调用点上,单看每一条都不显眼。多线程时更差,因为分配器的争用随线程数上升(第 6 章)。<strong>确认方法是替换全局 <code>operator new</code> 数一次分配次数,再除以处理的消息条数</strong>——每条消息几十次就说明每个字段都在分配。修法按顺序是:字符串字段改成指向原始缓冲区的视图、容器字段预留容量、解析过程中的临时容器提成可复用的成员。</p></div>
@@ -5628,12 +5672,13 @@ $ cpupower frequency-info | head -8          # 6. 频率策略</code></pre>
 <p>第 8 章的并发代价与本章的 off-CPU 图是同一件事的两个视角:off-CPU 图上 <code>futex_wait</code> 的宽平顶,就是第 8 章讲的锁争用在时间维度上的样子,平顶有多宽,争用就有多严重。9.4 又补上一条第 8 章没讲的限制:<strong>并发度的上限不只由 Amdahl 定律和临界区长度决定,也由环境给的配额决定</strong>,在 2 核配额里开 16 个线程,并行加速比是负的。第 12 章把这四节的手段合进一个完整的调优案例,每一步都给出前后数字。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 55802px;--thin-h:55802px">
+<section class="chapter" style="contain-intrinsic-size:auto 56043px;--thin-h:56043px">
 <h1 id="c10"><span class="part">第 10 章</span>算法与数据结构:常数因子在哪里</h1>
 <h2 id="p10-order">10.1 先降复杂度,再降常数</h2>
 <p>前九章讲的是「同样的工作怎么做得更快」:流水线、缓存、编译器、语言设施、分配器、数据布局、并发、系统调用。这一章讲另一个方向——<strong>怎么少做工作</strong>。两个方向的收益不是一个量级:微观优化的天花板通常是 2 到 5 倍,而换一个算法的收益没有固定上限,因为它改变的是工作量随规模增长的方式。</p>
 <p>但「换算法」这句话在实践中经常被用错。一个 O(n log n) 的实现在 n 等于 20 时输给 O(n²);一个复杂度更低但每一步都要跳指针的实现,在真实数据上慢三倍。这些不是例外,而是常态。这一节讲清渐进复杂度与常数因子各自管什么,以及按什么顺序动手才不浪费时间。</p>
-<p>本章所有数字的测量条件统一如下,后面不再重复:<strong>Intel Core i7-12700K,P 核锁频 3.2 GHz,关闭睿频波动与超线程;32 GB DDR4-3200;Ubuntu 22.04,GCC 13.2 与 Clang 17,<code>-O2 -march=native</code>;单线程绑核运行,每个用例重复 30 次取中位数。</strong>换一台机器、换一个编译器,绝对值会变,但同一张表内的相对关系通常保持。所有数字都写成范围而不写小数点——精确到小数点的数字在别人的机器上没有意义,写出来只会让人误以为可以直接照搬。</p>
+<p>本章所有数字的测量条件统一如下,后面不再重复:<strong>Intel Core i7-12700K,P 核锁频 3.2 GHz,关闭睿频波动与超线程;32 GB DDR4-3200;Ubuntu 22.04,GCC 13.2 与 Clang 17,<code>-O2 -march=native</code>;单线程绑核运行,每个用例重复 30 次取中位数。</strong></p>
+<p>换一台机器、换一个编译器,绝对值会变,但同一张表内的相对关系通常保持。所有数字都写成范围而不写小数点——精确到小数点的数字在别人的机器上没有意义,写出来只会让人误以为可以直接照搬。</p>
 <h3>渐进复杂度刻意丢掉了什么</h3>
 <p>渐进复杂度描述的是 n 趋向无穷时工作量增长的阶。它<strong>刻意丢掉常数因子与低阶项</strong>,理由是 n 足够大时这两项都无所谓。「足够大」是这个概念的前提,也是它最常被忽略的部分。</p>
 <p>取两个具体的函数:实现 A 的耗时是 <code>20 · n · log₂n</code> 纳秒,实现 B 是 <code>2 · n²</code> 纳秒。A 的阶更低,但常数是 B 的十倍。</p>
@@ -5779,7 +5824,8 @@ out[0] = s;
 <li>按比值决定要不要动手:小于 3 时不要动算法,去找别的热点;3 到 10 之间要具体分析;超过 10 时几乎必然存在更好的做法,值得投入时间去找。</li>
 </ol>
 <p>举一个完整的例子。一个日志聚合程序处理 1 GB 文本用了 12 秒。下界这样算:文件已在页缓存里,顺序读的可用带宽约 12 GB/s,读完这 1 GB 约需 <strong>85 毫秒</strong>;输出只有几千行,可忽略。比值约 140 倍。这个数字直接给出两个结论:瓶颈不在读取,而在「每个字节上做的事情」;并且几乎一定有数十倍的空间,值得系统地找。</p>
-<p>反过来的例子同样有用。一个矩阵乘法程序处理 4096 阶的稠密矩阵用了 2.1 秒。下界这样算:必须做 <code>2 · 4096³</code> 次浮点运算,约 1.37e11 次;这台机器单核的峰值浮点吞吐约 1e11 次每秒(AVX2 加 FMA,两个端口)。下界约 1.4 秒。比值只有 1.5 倍——<strong>说明这段代码已经接近硬件上限,再怎么改算法也拿不到几倍</strong>,要继续加速只能上多线程或换更宽的指令集。这个结论用二十分钟算出来,比花两周尝试各种分块方案再发现没有空间要划算得多。</p>
+<p>反过来的例子同样有用。一个矩阵乘法程序处理 4096 阶的稠密矩阵用了 2.1 秒。下界这样算:必须做 <code>2 · 4096³</code> 次浮点运算,约 1.37e11 次;这台机器单核的峰值浮点吞吐约 1e11 次每秒(AVX2 加 FMA,两个端口)。下界约 1.4 秒。</p>
+<p>比值只有 1.5 倍——<strong>说明这段代码已经接近硬件上限,再怎么改算法也拿不到几倍</strong>,要继续加速只能上多线程或换更宽的指令集。这个结论用二十分钟算出来,比花两周尝试各种分块方案再发现没有空间要划算得多。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 228px"><span class="t">🟢 收益上限是一个二十分钟就能算出的数,它决定了值不值得投入两周</span><p>算下界时不要追求精确,量级对了就够用:带宽取 10 GB/s 还是 12 GB/s 不影响结论,「差 1.5 倍」与「差 140 倍」才是决策依据。<strong>三个最常用的下界模板</strong>:数据处理类,取输入字节数除以内存带宽;计算密集类,取必要浮点运算次数除以峰值吞吐;查找与排序类,取信息论下界。<strong>算完之后把这个数字写进提交说明或工单里</strong>,它的价值不止于当次决策——半年后有人再来问「这里还能不能更快」,这个数字直接给出答案,不必重做一遍分析。同样重要的是它能理直气壮地叫停:比值是 1.5 倍时,「这里没有空间了」是一个有依据的结论,而不是放弃。</p></div>
 <h2 id="p10-hash">10.2 哈希表:实现方式、哈希函数与负载因子</h2>
 <p>哈希表是业务代码里出现频率最高的数据结构,也是「复杂度相同而实测差几倍」表现得最集中的地方。同样是 O(1) 平均查找,不同实现之间可以差 3 到 5 倍,同一个实现配不同的哈希函数可以差几十倍。这一节把差距的来源逐条拆开。</p>
@@ -5921,7 +5967,8 @@ out[0] = s;
 <tr><td class="nw">键是外部输入且可能被构造</td><td class="nw">见下一段</td><td>平均 O(1) 的前提不再成立</td></tr>
 </tbody>
 </table>
-<p>第一行的阈值值得记住。在这台机器上,遍历一个连续的 <code>std::vector&lt;std::pair&lt;std::uint32_t, std::uint32_t&gt;&gt;</code> 比较到第 16 个元素,与在哈希表里做一次查找,耗时大致相当。<strong>所以「小映射」这个场景应当默认用有序或无序的 <code>vector</code>,而不是默认用 <code>unordered_map</code></strong>——后者除了慢,还多一次分配和几十字节的固定开销。这类小映射在真实代码里数量极大(配置项、状态机的转移表、每个对象上的属性表),累积起来的差别很可观。</p>
+<p>第一行的阈值值得记住。在这台机器上,遍历一个连续的 <code>std::vector&lt;std::pair&lt;std::uint32_t, std::uint32_t&gt;&gt;</code> 比较到第 16 个元素,与在哈希表里做一次查找,耗时大致相当。</p>
+<p><strong>所以「小映射」这个场景应当默认用有序或无序的 <code>vector</code>,而不是默认用 <code>unordered_map</code></strong>——后者除了慢,还多一次分配和几十字节的固定开销。这类小映射在真实代码里数量极大(配置项、状态机的转移表、每个对象上的属性表),累积起来的差别很可观。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 230px"><span class="t">🟢 小于十几个元素时,线性扫描比哈希表更快</span><p>判断的依据不是复杂度而是访存次数:线性扫描一个连续数组是<strong>顺序访问</strong>,一条缓存行装 8 个 8 字节元素,扫 16 个只碰两条行,而且预取器完全跟得上;哈希查找是一次随机访存,未命中时约 80 纳秒。<strong>实施时有两个细节</strong>:一是把键单独放一个数组、值放另一个数组(7.2 节的 SoA),扫描时只碰键;二是不要为此写一个新类型,<code>std::vector</code> 加一个 <code>find_if</code> 就够,可读性反而更好。<strong>什么时候这条判据失效</strong>:比较键本身很贵时(长字符串),线性扫描的 16 次比较会超过一次哈希;此时改回哈希表,或者先比一个缓存下来的哈希值再比键。</p></div>
 <h3>哈希碰撞攻击</h3>
 <p>键来自外部输入时,「平均 O(1)」这个承诺依赖于攻击者不能预测哈希函数。C++ 的 <code>std::hash</code> 没有随机种子,同一个实现在同一个平台上的结果是确定且可复现的,于是攻击者可以离线算出一大批映射到同一个桶的键,一次请求就把哈希表的行为从 O(n) 拖到 O(n²)。</p>
@@ -6110,7 +6157,12 @@ std::<span class="kw">size_t</span> eytzinger_lower_bound(<span class="kw">const
 </tbody>
 </table>
 <p>唯一对 <code>map</code> 有利的一行是插入。但这一行也常被高估:一百万条 16 字节的元素做一次 <code>memmove</code> 只搬 16 MB,在这台机器上约 1.5 毫秒,而且是顺序访存;<code>map</code> 的一次插入虽然是 O(log n),却包含一次堆分配与若干次随机访存。<strong>结论是:插入次数与查找次数的比值小于约 1:100 时,有序 vector 全面胜出。</strong>而绝大多数索引结构正好落在这个区间——建一次,查很多次。</p>
-<p>实践中有三种落地形态,按侵入性从小到大:直接用 C++23 的 <code>std::flat_map</code>(或 Boost 的同名容器),接口与 <code>map</code> 基本一致;自己维护一个 <code>std::vector&lt;std::pair&lt;K, V&gt;&gt;</code> 加 <code>lower_bound</code>,最省事也最可控;数据量大且要兼顾插入时用 <code>absl::btree_map</code>,它把多个元素放进一个节点,层数更少、每层一条缓存行装得下多个键,查找比 <code>std::map</code> 快约 1.5 到 2 倍而仍然支持高效插入。</p>
+<p>实践中有三种落地形态,按侵入性从小到大。</p>
+<ol>
+<li>直接用 C++23 的 <code>std::flat_map</code>(或 Boost 的同名容器),接口与 <code>map</code> 基本一致。</li>
+<li>自己维护一个 <code>std::vector&lt;std::pair&lt;K, V&gt;&gt;</code> 加 <code>lower_bound</code>,最省事也最可控。</li>
+<li>数据量大且要兼顾插入时用 <code>absl::btree_map</code>,它把多个元素放进一个节点,层数更少、每层一条缓存行装得下多个键,查找比 <code>std::map</code> 快约 1.5 到 2 倍而仍然支持高效插入。</li>
+</ol>
 <p>需要保留 <code>std::map</code> 的理由只有两个:<strong>引用与迭代器必须在插入删除后保持有效</strong>,以及<strong>插入删除频繁且必须有最坏情况保证</strong>。这两条不成立时,有序容器不是一个需要论证的优化,而是默认选择。</p>
 <h2 id="p10-str">10.4 字符串:搜索、切分与解析</h2>
 <p>字符串处理在业务代码里的占比很高,而它的性能问题有一个共同特征:<strong>慢的原因几乎从来不是算法的阶,而是每个字符上做的事情太多</strong>——一次分配、一次区域设置查询、一次虚调用、一次异常检查。5.4 节讲过 <code>std::string</code> 这个类型本身的成本结构,这一节讲三类操作各自该怎么做。</p>
@@ -6305,7 +6357,7 @@ std::string buf;                     <span class="cm">// 提到循环外</span>
 <p>数码点是 O(n) 的操作,所以<strong>不要在循环条件里反复调用它</strong>。真实代码里出现过把「字符数」当成 <code>size()</code> 用在循环里的写法,把一个 O(n) 的遍历变成 O(n²)。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 294px"><span class="t">🟢 UTF-8 按字节的操作安全,按字符的必须解码</span><p>UTF-8 的自同步性质保证了两件事:ASCII 字节不会出现在多字节序列内部,以及一个合法 UTF-8 串不会与另一个串错位匹配。<strong>由此可以按字节做的操作包括</strong>:找分隔符、判等、比较字节序(与码点序一致)、前缀后缀匹配、按 ASCII 分隔符切分。这些操作可以直接用 <code>memchr</code> 与 <code>memcmp</code>,一次处理 32 字节,不需要任何 UTF-8 感知的代码。<strong>必须解码的操作</strong>:按字符数计数或截断、大小写转换、按显示宽度对齐。<strong>还有一层容易被忽略</strong>:「第 n 个字符」这个说法本身是含糊的——字节、码点、字素簇(用户看到的一个字符,可能由基字符加若干组合符构成)三者都不同,一个带重音的拉丁字母可能是 1 个字素簇、2 个码点、3 个字节。<strong>面向用户的截断与计数要按字素簇处理,这需要 ICU 一类的库</strong>;协议与存储层面的限制则应当直接按字节定义,既明确又不需要解码。</p></div>
 <h3>热路径上的 stringstream 与 regex</h3>
-<p>这一节最实用的一条结论:<strong>剖析结果里凡是出现 <code>std::stringstream</code> 或 <code>std::regex</code> 的地方,都值得先看一眼</strong>。这两个设施的固定开销都很高,而它们能做的事几乎都有低成本的替代。</p>
+<p>最实用的一条结论:<strong>剖析结果里凡是出现 <code>std::stringstream</code> 或 <code>std::regex</code> 的地方,都值得先看一眼</strong>。这两个设施的固定开销都很高,而它们能做的事几乎都有低成本的替代。</p>
 <table style="contain-intrinsic-size:auto 356px">
 <thead><tr><th>出现的地方</th><th>问题</th><th>替代</th></tr></thead>
 <tbody>
@@ -6319,7 +6371,7 @@ std::string buf;                     <span class="cm">// 提到循环外</span>
 <p>实测一个具体场景:一行日志里提取三个字段,一千万行。<code>std::regex</code> 配一个提前构造好的正则对象约 25 秒,即约 2.5 微秒一行;手写的 <code>find</code> 加 <code>from_chars</code> 约 0.8 秒,即约 80 纳秒一行,<strong>约 30 倍</strong>。正则对象若在循环内构造,差距还要再大一到两个数量级。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 297px"><span class="t">🔴 <code>std::regex</code> 处理外部输入,是一条资源耗尽通道</span><p><code>std::regex</code> 的实现是回溯式的。含有嵌套量词的模式(形如 <code>(a+)+</code>)遇到特定输入时,回溯次数随输入长度指数增长,几十个字节的输入就能让一次匹配占用数秒 CPU。<strong>触发条件</strong>是模式或输入之一由外部提供:允许用户配置过滤规则、用正则校验用户输入的邮箱或 URL、用正则解析上传的文本,都属于这一类。<strong>正确做法</strong>:凡是模式或输入不完全受控,一律换成 RE2 或类似的、以有限自动机实现并有线性时间保证的引擎;模式完全由自己写死且输入长度有上限时,可以继续用,但仍要评估匹配耗时。<strong>另一个独立的问题</strong>:<code>std::regex</code> 的构造函数在模式非法时抛 <code>std::regex_error</code>,而模式来自配置文件时这个异常可能在启动后很久才第一次被触发,应当在加载配置时就构造一次以提前失败。</p></div>
 <h2 id="p10-bit">10.5 位运算、查表与分支消除</h2>
-<p>这一节讲三组最低层的手法。它们的共同特点是收益范围窄但边界清晰:用对了是 2 到 10 倍,用错了会更慢,而判断用得对不对完全依赖前面几章的硬件性质。<strong>所以这一节的每一条都配一个判据,判据比手法本身重要。</strong></p>
+<p>位运算、查表、分支消除是三组最低层的手法,它们的共同特点是收益范围窄但边界清晰:用对了是 2 到 10 倍,用错了会更慢,而判断用得对不对完全依赖前面几章的硬件性质。<strong>所以下面的每一条都配一个判据,判据比手法本身重要。</strong></p>
 <h3>C++20 的 &lt;bit&gt;:优先用标准库而不是手写</h3>
 <p>C++20 的 <code>&lt;bit&gt;</code> 头文件把常用的位操作标准化了。它们在有硬件支持的平台上编译成单条指令,没有支持时退化成实现里挑好的可移植版本。</p>
 <table style="contain-intrinsic-size:auto 455px">
@@ -6554,7 +6606,11 @@ std::<span class="kw">size_t</span> count_newlines(<span class="kw">const</span>
 </tbody>
 </table>
 <p>结论有两层:SWAR 比未向量化的标量版快约 3 倍,但比自动向量化的版本<strong>慢约 1.7 倍</strong>。<strong>所以顺序是:先确认编译器有没有向量化(<code>-fopt-info-vec</code>,4.4 节),向量化了就不要写 SWAR。</strong>SWAR 真正有价值的场合是三种:目标平台没有可用的 SIMD 指令集;循环里有别的东西让编译器拒绝向量化而又不便拆开;以及需要在常量表达式里做同样的事。</p>
-<p>这段代码里有两处细节是这类手法的通用规矩,值得单独强调。第一,<strong>用 <code>std::memcpy</code> 读多字节,不要用 <code>reinterpret_cast</code></strong>:后者同时违反对齐要求与严格别名规则,在优化开启时可能被编译器按「不会发生」处理(4.3 节),而 <code>memcpy</code> 在 <code>-O2</code> 下会被完全消解成一条加载指令,没有任何运行期代价。第二,<strong>尾部一定要用标量循环补齐</strong>:为了省事而多读几个字节,是这类手法最常见的越界来源,而且它通常不会立刻崩溃,只在缓冲恰好落在页边界时才触发。</p>
+<p>这段代码里有两处细节是这类手法的通用规矩,值得单独强调。</p>
+<ol>
+<li><strong>用 <code>std::memcpy</code> 读多字节,不要用 <code>reinterpret_cast</code></strong>:后者同时违反对齐要求与严格别名规则,在优化开启时可能被编译器按「不会发生」处理(4.3 节),而 <code>memcpy</code> 在 <code>-O2</code> 下会被完全消解成一条加载指令,没有任何运行期代价。</li>
+<li><strong>尾部一定要用标量循环补齐</strong>:为了省事而多读几个字节,是这类手法最常见的越界来源,而且它通常不会立刻崩溃,只在缓冲恰好落在页边界时才触发。</li>
+</ol>
 <h2 id="p10-sum">10.6 小结:本章要点与常见误区</h2>
 <p>这一章是全书主线的另一半。前九章讲「同一份工作怎么做得更快」,这一章讲「怎么少做工作」。两者的关系可以用一句话概括:<strong>算法层决定收益的上限,硬件层决定这个上限里能拿到多少。</strong>只懂算法的人会写出复杂度漂亮而实际很慢的代码;只懂硬件的人会把一段根本不该执行的循环调到极致。</p>
 <p>五节的排列是按「从判断到手法」:10.1 讲什么时候该换、按什么顺序换、以及怎么估收益;10.2 到 10.5 分别是四类最常见的具体场景——按键查找、排序与查找、字符串、以及最低层的位与分支手法。<strong>10.1 是唯一一节必须先读的</strong>,后面四节可以按遇到的问题查阅。</p>
@@ -6697,16 +6753,17 @@ std::<span class="kw">size_t</span> count_newlines(<span class="kw">const</span>
 <h3>这一章与其他章、与姊妹书的分工</h3>
 <p>这一章与前九章的关系是双向的。往前看,它的每一条结论都建立在前九章的硬件性质上,上面那张对照表就是索引。往后看,它是使用前九章手法的前提:<strong>微观优化只有作用在正确的算法与正确的数据结构上,收益才是净的。</strong></p>
 <p>与第 7 章的关系最紧密,值得单独说明。第 7 章讲怎么组织一批对象,这一章讲怎么对它们做操作,两章讲的是同一件事的两面:排序小结构体比排序大结构体快,原因就是 7.1 节的对象大小;开放寻址哈希表比开链快,原因就是 7.3 节的「减少间接」;位图能打赢哈希集合,原因就是 7.4 节的「把有没有也当成数据」。<strong>两章合起来读比分开读收益大得多。</strong></p>
-<p>与本书系其他两本的分工是清楚的。<strong>《C++ 语言 · 现代详解》讲这些设施的语义与规则</strong>:严格弱序的确切定义、<code>string_view</code> 的生命周期规则、位运算的未定义行为边界、<code>bit_cast</code> 的适用条件——本章反复提到「这是未定义行为」的地方,详细规则都在那本书里。<strong>《C++ 标准库 API 编程手册》讲接口本身</strong>:<code>from_chars</code> 的每个重载、各个算法的完整参数列表、搜索器的构造要求。<strong>本书只回答一个问题:换成这样比原来快多少,以及在什么条件下不再成立。</strong></p>
-<p>最后一条,也是这一章最重要的一条:<strong>算法层的改动收益最大,但它同时是唯一会改变程序行为的一层。</strong>调整成员顺序、加 <code>reserve</code>、消除一个分支,这些都不改变输出;换一个哈希表实现会改变遍历顺序,换一个排序算法会改变相等元素的相对位置,改成增量维护会改变浮点结果的最后几位。<strong>所以这一章的每一次改动都必须配一组「同样的输入产生同样的输出」的比对</strong>,而且要在改动前先跑一遍留下基准。这不是流程要求,而是这一层工作的固有代价——它换来的数量级收益,正是以此为前提的。</p>
+<p>与本书系其他两本的分工是清楚的。<strong>《C++ 语言 · 现代详解》讲这些设施的语义与规则</strong>:严格弱序的确切定义、<code>string_view</code> 的生命周期规则、位运算的未定义行为边界、<code>bit_cast</code> 的适用条件——本章反复提到「这是未定义行为」的地方,详细规则都在那本书里。</p>
+<p><strong>《C++ 标准库 API 编程手册》讲接口本身</strong>:<code>from_chars</code> 的每个重载、各个算法的完整参数列表、搜索器的构造要求。<strong>本书只回答一个问题:换成这样比原来快多少,以及在什么条件下不再成立。</strong></p>
+<p>最后一条,也是这一章最重要的一条:<strong>算法层的改动收益最大,但它同时是唯一会改变程序行为的一层。</strong>调整成员顺序、加 <code>reserve</code>、消除一个分支,这些都不改变输出;换一个哈希表实现会改变遍历顺序,换一个排序算法会改变相等元素的相对位置,改成增量维护会改变浮点结果的最后几位。</p>
+<p><strong>所以这一章的每一次改动都必须配一组「同样的输入产生同样的输出」的比对</strong>,而且要在改动前先跑一遍留下基准。这不是流程要求,而是这一层工作的固有代价——它换来的数量级收益,正是以此为前提的。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 47601px;--thin-h:47601px">
+<section class="chapter" style="contain-intrinsic-size:auto 47692px;--thin-h:47692px">
 <h1 id="c11"><span class="part">第 11 章</span>启动、体积与代码布局</h1>
 <h2 id="p11-start">11.1 启动时间:动态链接、重定位与静态初始化</h2>
 <p>前十章讨论的都是 <code>main</code> 跑起来之后的事。这一章从更早的地方开始:<strong>一个进程从被创建到执行 <code>main</code> 的第一条语句,中间要做的工作比多数人预期的多</strong>,而这段时间在剖析器的默认视图里几乎看不到——采样式剖析器通常在进程已经跑起来之后才开始采样,启动期的开销被整段漏掉,于是它成了一块「测不到所以不存在」的时间。</p>
 <p>这段时间在三类程序上是实打实的成本。<strong>短命进程</strong>:构建工具、脚本反复调用的命令行程序、每个请求起一个进程的旧式服务,启动时间乘以调用次数就是总账。<strong>需要快速伸缩的服务</strong>:容器滚动升级、按需扩容、函数计算的冷启动,启动时间直接决定扩容的响应速度。<strong>用户在等的桌面与移动程序</strong>:从点击到出界面的时间是产品指标。只有一类程序可以不管它——连续跑几个小时的批处理,几百毫秒的启动开销可以忽略。</p>
-<p>这一节按时间顺序把 <code>exec</code> 与 <code>main</code> 之间拆开:每个阶段做什么、典型耗时是多少、它随什么增长、以及缩短它的手段分别是什么。</p>
 <p>本章的数字如无特别说明,来自同一台机器:x86-64 桌面 CPU,Linux 6.6,glibc 2.38,GCC 13,<code>-O2</code> 构建;被测程序是一个 12 MB 的服务端二进制,直接与间接依赖共 40 个共享库。<strong>这些数字用于比较量级,不是目标值。</strong>按后面给的方法在自己的机器上跑一遍,得到属于自己的一组基线,以后的每次改动与这组基线比较。</p>
 <h3>从 exec 到 main 的六个阶段</h3>
 <p>内核并不会把整个可执行文件读进内存再开始跑。它建立映射,把控制权交给动态链接器,剩下的大部分工作发生在用户态,由 <code>ld.so</code> 完成。</p>
@@ -6774,7 +6831,8 @@ std::<span class="kw">size_t</span> count_newlines(<span class="kw">const</span>
 </svg>
 <figcaption>从 exec 到 main 的六个阶段,谁在做、各花多少时间（原创绘制）</figcaption>
 </figure>
-<p>Windows 的流程结构相同而细节不同:内核映射 PE 映像,<code>ntdll</code> 里的加载器解析导入表,逐个加载 DLL 并填好导入地址表(IAT),然后按依赖顺序对每个 DLL 调用一次 <code>DllMain</code> 并传入 <code>DLL_PROCESS_ATTACH</code>,最后由 C 运行时的 <code>_initterm</code> 执行动态初始化器,再进 <code>main</code>。两个差别值得记住:<strong>PE 的导入是按模块记账的</strong>,每个模块有自己的导入表,查符号是「到指定的那个 DLL 里按名字或序号找」,不存在 ELF 那种扁平的全局符号空间,所以解析本身便宜得多;<strong>而 <code>DllMain</code> 在加载器锁下串行执行</strong>,在里面做重活会直接拉长启动。</p>
+<p>Windows 的流程结构相同而细节不同:内核映射 PE 映像,<code>ntdll</code> 里的加载器解析导入表,逐个加载 DLL 并填好导入地址表(IAT),然后按依赖顺序对每个 DLL 调用一次 <code>DllMain</code> 并传入 <code>DLL_PROCESS_ATTACH</code>,最后由 C 运行时的 <code>_initterm</code> 执行动态初始化器,再进 <code>main</code>。</p>
+<p>两个差别值得记住:<strong>PE 的导入是按模块记账的</strong>,每个模块有自己的导入表,查符号是「到指定的那个 DLL 里按名字或序号找」,不存在 ELF 那种扁平的全局符号空间,所以解析本身便宜得多;<strong>而 <code>DllMain</code> 在加载器锁下串行执行</strong>,在里面做重活会直接拉长启动。</p>
 <h3>符号解析:启动开销里最大的一块</h3>
 <p>第三阶段值得单独讲,因为它是唯一一个随规模超线性增长的阶段。</p>
 <p>一条需要符号的重定位,处理过程是这样的:取出符号名,在全局作用域的对象列表里按加载顺序逐个查找,每个对象里用 <code>.gnu.hash</code> 做一次哈希查找,哈希命中之后还要做一次字符串比较确认,找到就把地址填进 GOT 或 PLT 表项。<strong>于是总代价大致是「需要查符号的重定位条数」乘以「平均要探测的对象数」。</strong>依赖库从 20 个涨到 40 个,后一个因子翻倍;而库变多通常也意味着导出符号变多、重定位条数上升,两个因子一起涨。</p>
@@ -6976,7 +7034,8 @@ REM 四、WPR/WPA:采一段含进程启动的踪迹,在 WPA 的 Images 表里看
 &gt; app.exe --version
 &gt; wpr -stop start.etl
 &gt; wpa start.etl</code></pre>
-<p>Windows 上另有一个 Linux 没有的直接手段:<strong>延迟加载</strong>。链接时加 <code>/DELAYLOAD:plugin.dll</code> 并链上 <code>delayimp.lib</code>,这个 DLL 就不在启动时加载,而是第一次调用它的导入函数时才加载。这相当于把「整个模块」做成惰性的,粒度比 ELF 的惰性绑定粗得多,收益也大得多——一个只在特定功能里用到的大 DLL,不点那个功能就完全不付加载成本。代价是首次调用可能失败(文件缺失),需要装一个错误处理钩子,而不是像静态导入那样在启动时就报错。</p>
+<p>Windows 上另有一个 Linux 没有的直接手段:<strong>延迟加载</strong>。链接时加 <code>/DELAYLOAD:plugin.dll</code> 并链上 <code>delayimp.lib</code>,这个 DLL 就不在启动时加载,而是第一次调用它的导入函数时才加载。</p>
+<p>这相当于把「整个模块」做成惰性的,粒度比 ELF 的惰性绑定粗得多,收益也大得多——一个只在特定功能里用到的大 DLL,不点那个功能就完全不付加载成本。代价是首次调用可能失败(文件缺失),需要装一个错误处理钩子,而不是像静态导入那样在启动时就报错。</p>
 <table style="contain-intrinsic-size:auto 317px">
 <thead><tr><th>要测什么</th><th>Linux</th><th>Windows</th></tr></thead>
 <tbody>
@@ -6990,7 +7049,7 @@ REM 四、WPR/WPA:采一段含进程启动的踪迹,在 WPA 的 Images 表里看
 </table>
 <h2 id="p11-size">11.2 二进制体积为什么是一个性能问题</h2>
 <p>二进制大了通常被当成一个工程整洁度问题:镜像层变厚、下载变慢、磁盘多占几百兆。这些都是运维成本,不是性能问题。<strong>体积真正影响性能的是另外三条路径</strong>,而且这三条都发生在运行期,与磁盘占用没有关系。</p>
-<p>这一节先把这三条路径讲清楚,再讲体积从哪来、怎么按来源归因、以及每一种缩减手段各自的代价。有一个结论要提前给:<strong>体积与速度不总是矛盾。</strong>去掉的如果是冷代码,两者同向改善;去掉的如果是内联展开或者循环展开,那就是拿速度换体积,必须实测。</p>
+<p>有一个结论要提前给:<strong>体积与速度不总是矛盾。</strong>去掉的如果是冷代码,两者同向改善;去掉的如果是内联展开或者循环展开,那就是拿速度换体积,必须实测。</p>
 <h3>体积是三个性能问题,不是磁盘问题</h3>
 <table style="contain-intrinsic-size:auto 225px">
 <thead><tr><th>路径</th><th>机制</th><th>受影响的程序</th></tr></thead>
@@ -7000,7 +7059,8 @@ REM 四、WPR/WPA:采一段含进程启动的踪迹,在 WPA 的 Images 表里看
 <tr><td class="nw">链接与加载时间</td><td>输入变大,链接器要处理的符号与重定位变多;运行时要处理的重定位也变多</td><td><strong>大项目的构建与启动</strong></td></tr>
 </tbody>
 </table>
-<p>第一条要说清一个容易混淆的地方:<strong>决定指令缓存压力的是「热路径实际跨越的代码量」,不是二进制的总大小。</strong>一个 100 MB 的二进制,如果热路径集中在 20 KB 代码里,指令缓存完全装得下,总体积对它没有影响。反过来,一个 5 MB 的二进制,热路径分散在两百个函数里横跨 300 KB,指令缓存就一直在颠簸。所以总体积是一个粗糙的代理指标,真正要管的是<strong>热代码的密度</strong>——这正是 11.3 节代码布局要解决的问题。缩减总体积之所以有帮助,是因为它通常同时提高了热代码的密度。</p>
+<p>第一条要说清一个容易混淆的地方:<strong>决定指令缓存压力的是「热路径实际跨越的代码量」,不是二进制的总大小。</strong>一个 100 MB 的二进制,如果热路径集中在 20 KB 代码里,指令缓存完全装得下,总体积对它没有影响。反过来,一个 5 MB 的二进制,热路径分散在两百个函数里横跨 300 KB,指令缓存就一直在颠簸。</p>
+<p>所以总体积是一个粗糙的代理指标,真正要管的是<strong>热代码的密度</strong>——这正是 11.3 节代码布局要解决的问题。缩减总体积之所以有帮助,是因为它通常同时提高了热代码的密度。</p>
 <p>第二条对短命进程尤其重要。前面那个 12 MB 的二进制,<code>.text</code> 段 5.6 MB 就是 1400 个页;假设启动路径触碰其中三成,就是 420 次缺页,页缓存命中的情况下约 0.4 到 0.8 毫秒,首次冷启动要读盘则要慢一到两个数量级。<code>/usr/bin/time -v</code> 与 <code>perf stat -e page-faults,major-faults</code> 能直接把这个数量出来。</p>
 <pre style="contain-intrinsic-size:auto 196px"><code># 启动一次,数缺页
 $ perf stat -e page-faults,minor-faults,major-faults ./app --version
@@ -7083,7 +7143,8 @@ REM 看一个目标文件贡献了哪些 COMDAT
 </tbody>
 </table>
 <p>第一条是性价比最高的一条,几乎没有理由不开。默认情况下链接器的丢弃粒度是「节」,而一个编译单元默认只产生一个 <code>.text</code> 节,所以只要用到其中一个函数,整个编译单元的代码都留下。<code>-ffunction-sections</code> 把每个函数放进自己的节,<code>--gc-sections</code> 就能从入口点出发做可达性分析,丢掉真正没被引用的那些。MSVC 的对应开关是 <code>/Gy</code>(函数级链接)与 <code>/Gw</code>(数据级),链接时 <code>/OPT:REF</code> 做丢弃。</p>
-<p>第二条要小心。相同代码折叠会把字节完全相同的函数合并成一份,而模板实例化正好大量产生这种函数(<code>std::vector&lt;int*&gt;</code> 与 <code>std::vector&lt;char*&gt;</code> 的许多成员函数生成的机器码逐字节相同)。问题是折叠之后两个原本不同的函数拿到了同一个地址,任何依赖「不同函数地址不同」的代码都会出错——把函数指针当作键去查表、用函数指针做去重、比较两个回调是否是同一个。<code>--icf=safe</code> 借助编译器写入的地址重要性表,只折叠地址没有被取过的函数,规避了这个问题,代价是折叠得少一些。</p>
+<p>第二条要小心。相同代码折叠会把字节完全相同的函数合并成一份,而模板实例化正好大量产生这种函数(<code>std::vector&lt;int*&gt;</code> 与 <code>std::vector&lt;char*&gt;</code> 的许多成员函数生成的机器码逐字节相同)。问题是折叠之后两个原本不同的函数拿到了同一个地址,任何依赖「不同函数地址不同」的代码都会出错——把函数指针当作键去查表、用函数指针做去重、比较两个回调是否是同一个。</p>
+<p><code>--icf=safe</code> 借助编译器写入的地址重要性表,只折叠地址没有被取过的函数,规避了这个问题,代价是折叠得少一些。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 --icf=all 会让两个不同的函数拥有同一个地址</span><p>折叠的判据是机器码逐字节相同,而模板实例化天然会产生大量这样的函数。折叠之后,<code>&amp;handle_a == &amp;handle_b</code> 可能为真,而源码里它们是两个不同的函数。<strong>典型症状</strong>:用函数指针作键的注册表里两个处理器互相覆盖;取消回调时按指针匹配,结果取消掉了另一个;单元测试里比较函数指针的断言在发布构建下失败而调试构建下通过。MSVC 的 <code>/OPT:ICF</code> 有完全相同的问题。<strong>处理办法</strong>:默认用 <code>--icf=safe</code>(MSVC 用 <code>/OPT:NOICF</code> 或确认没有函数指针比较);4.1 节给的交付配置里用的是 <code>--icf=all</code>,只有在确认整个程序没有比较函数地址的地方时才保持那个设置。</p></div>
 <h3>模板实例化:体积的最大来源,也是最可控的一个</h3>
 <p>模板每遇到一组新的实参就生成一份完整的代码。这本身是它高效的原因(每份都针对具体类型优化,没有间接调用,可以内联和向量化),但代价是<strong>实参组合的数量直接决定代码量</strong>,而且同一份实例会在每个用到它的编译单元里各生成一次,再由链接器按弱符号规则折叠——编译时间被浪费掉,目标文件被撑大,只有最终的二进制里留一份。</p>
@@ -7117,8 +7178,10 @@ REM 看一个目标文件贡献了哪些 COMDAT
 <div class="note ok" style="contain-intrinsic-size:auto 230px"><span class="t">🟢 模板的薄外壳加非模板内核,是控制模板体积最有效的一个手法</span><p>判断标准很直接:<strong>函数体里有多少行真正用到了模板参数</strong>。如果一百行里只有三行与 <code>T</code> 有关,那就把其余九十七行搬进一个非模板函数,模板只留下类型转换与转发。收益是每增加一个实参组合只多出几十字节而不是几 KB,而且非模板的那一份可以放进 <code>.cpp</code>,顺带缩短编译时间。<strong>标准库自己大量使用这个模式</strong>:许多容器操作最终会汇聚到按字节操作的非模板实现上。代价是多了一层间接,如果这层没有被内联,热路径上会多一次调用——所以内核函数要足够大,大到那次调用可以忽略,通常几十行以上就够了。</p></div>
 <h3>-fno-rtti 与 -fno-exceptions:客观地算这笔账</h3>
 <p>这两个开关经常被当成「免费的体积优化」,实际上两边都有代价,而且账要分开算。</p>
-<p><strong><code>-fno-rtti</code> 的账</strong>:省下的是每个多态类的类型信息对象与名字字符串,本例中在 1% 到 3% 之间。失去的是 <code>dynamic_cast</code> 与作用于多态类型的 <code>typeid</code>。这个代价看起来小,但有两个连带问题:一是许多第三方库内部用了 <code>dynamic_cast</code>,禁用之后它们编不过;二是把带 RTTI 与不带 RTTI 的目标文件混在一起链接,行为取决于虚表布局的细节,属于难以排查的一类问题。<strong>结论是收益太小而风险不成比例</strong>,除非是嵌入式这类每 KB 都要算的场合,否则不值得。</p>
-<p><strong><code>-fno-exceptions</code> 的账要拆成两半</strong>,这是最常见的误解所在。它去掉的是 <code>.gcc_except_table</code> 与函数里的落地代码,本例中约 5% 到 8%。它<strong>不会</strong>去掉 <code>.eh_frame</code>——那 9.6% 是栈回溯表,x86-64 上默认由 <code>-fasynchronous-unwind-tables</code> 生成,属于平台 ABI 的一部分。想去掉它必须再加 <code>-fno-asynchronous-unwind-tables</code>,而那样一来剖析器的栈回溯、<code>backtrace()</code>、崩溃时的调用栈全部失效。</p>
+<p><strong><code>-fno-rtti</code> 的账</strong>:省下的是每个多态类的类型信息对象与名字字符串,本例中在 1% 到 3% 之间。失去的是 <code>dynamic_cast</code> 与作用于多态类型的 <code>typeid</code>。</p>
+<p>这个代价看起来小,但有两个连带问题:一是许多第三方库内部用了 <code>dynamic_cast</code>,禁用之后它们编不过;二是把带 RTTI 与不带 RTTI 的目标文件混在一起链接,行为取决于虚表布局的细节,属于难以排查的一类问题。<strong>结论是收益太小而风险不成比例</strong>,除非是嵌入式这类每 KB 都要算的场合,否则不值得。</p>
+<p><strong><code>-fno-exceptions</code> 的账要拆成两半</strong>,这是最常见的误解所在。它去掉的是 <code>.gcc_except_table</code> 与函数里的落地代码,本例中约 5% 到 8%。</p>
+<p>它<strong>不会</strong>去掉 <code>.eh_frame</code>——那 9.6% 是栈回溯表,x86-64 上默认由 <code>-fasynchronous-unwind-tables</code> 生成,属于平台 ABI 的一部分。想去掉它必须再加 <code>-fno-asynchronous-unwind-tables</code>,而那样一来剖析器的栈回溯、<code>backtrace()</code>、崩溃时的调用栈全部失效。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 去掉 .eh_frame 的开关会让所有栈回溯失效</span><p><code>.eh_frame</code> 的用途不止异常:剖析器用它回溯调用栈、崩溃处理器用它打印栈、调试器用它在优化过的代码上走栈帧。x86-64 的 System V ABI 要求它存在,所以 <code>-fno-exceptions</code> 保留它是正确行为。<strong>如果为了那 9.6% 的体积加上 <code>-fno-asynchronous-unwind-tables</code></strong>,换来的是线上出问题时拿不到调用栈——而没有调用栈的一次线上事故,代价远超几百 KB。<strong>x64 Windows 上不存在这个选择</strong>:<code>.pdata</code> 与 <code>.xdata</code> 是操作系统级的要求,结构化异常处理与栈回溯都依赖它们,链接器不提供去掉的选项。</p></div>
 <p>5.3 节已经算过运行期的账:异常在不抛出时零额外指令,而错误码要求每层调用之后插一次判断,那些判断在成功路径上也要执行——也就是说<strong>禁用异常之后,省下的是体积,付出的是成功路径上的指令</strong>。加上标准库大半设施不可用、构造函数不能报错、第三方库多数假设异常可用这三条,适合禁用异常的场景只有嵌入式、内核态、以及已经全面采用错误码风格的存量代码库。</p>
 <h3>调试信息:剥离,但要归档</h3>
@@ -7139,7 +7202,7 @@ $ gdb ./app.release -ex <span>'info sources'</span> -ex quit | head -3</code></p
 <div class="note ok" style="contain-intrinsic-size:auto 232px"><span class="t">🟢 剥离调试信息不会让程序变快,但会让线上问题查不出来</span><p>它不在 <code>PT_LOAD</code> 段里,进程从不映射它,所以对指令缓存、缺页、启动时间的影响都是零。<strong>剥离的唯一收益是文件小、传输快、镜像层薄</strong>,这些是运维指标不是性能指标。而代价是实在的:没有调试信息,火焰图上只有地址、崩溃转储里没有行号、<code>perf</code> 报告里全是十六进制。<strong>正确做法是「剥离 + 归档」,不是「不生成」</strong>:构建时始终带 <code>-g</code>(MSVC 的 <code>/Zi</code>),把调试信息抽出来存进符号服务器或制品仓库,并按二进制的构建 ID 索引;发布的那份剥离干净。带 <code>-g</code> 构建<strong>不会改变生成的机器码</strong>,只是多产出一批节,这一点与优化级别无关,可以放心开。</p></div>
 <h2 id="p11-layout">11.3 代码布局:指令缓存、热冷分离与链接期重排</h2>
 <p>前一节讲的是代码总量,这一节讲代码的<strong>摆放位置</strong>。同样多的代码,热的那部分挤在一起还是散在整个二进制里,对指令缓存的效果差别很大,而这个差别在大型服务上可以到百分之十几。</p>
-<p>这一节按三个层次组织:源码层能做什么、剖析引导的编译期布局能做什么、链接完成之后还能做什么。最后给出怎么判断自己的程序值不值得做这件事——<strong>大部分程序不值得,判据必须先讲清楚。</strong></p>
+<p>摆放位置可以在三个层次上调整:源码层、剖析引导的编译期布局、链接完成之后。至于自己的程序值不值得做这件事——<strong>大部分程序不值得,判据必须先讲清楚。</strong></p>
 <h3>指令缓存与数据缓存不是一回事</h3>
 <p>两者都是 64 字节一行的一级缓存,容量也接近,但访问模式与失效后果差别很大。</p>
 <table style="contain-intrinsic-size:auto 259px">
@@ -7312,7 +7375,7 @@ $ perf report --sort symbol --percent-limit 1</code></pre>
 <p>两者的共同前提也一样:<strong>必须知道什么是热的。</strong>数据侧靠剖析找出热循环再看它访问哪些字段,代码侧靠采样找出热函数与热基本块。没有这份数据,两边都只能靠猜,而猜错的代价是把冷的当热的优化,反而更慢。</p>
 <h2 id="p11-vis">11.4 符号可见性、动态库与内联的边界</h2>
 <p>前两节讲的启动开销与二进制体积,有一个共同的上游原因:<strong>ELF 平台上,所有具有外部链接的非静态符号默认都会被导出</strong>。写一个 C++ 共享库,不做任何标注,它的动态符号表里就会有几万项——每一个非内联成员函数、每一个模板实例、每一个内联函数的外联副本、每一个虚表与类型信息对象。</p>
-<p>这一节讲清这个默认值带来的四个后果、怎么改掉它、改掉之后哪些东西必须留在外面,以及一个更大的问题:<strong>什么代码该放进动态库,什么不该。</strong>动态库的边界同时是内联的边界、链接期优化的边界、和符号解析的边界,划在哪里对性能的影响比多数人预期的大。</p>
+<p>这个默认值带来四个后果,而它背后还有一个更大的问题:<strong>什么代码该放进动态库,什么不该。</strong>动态库的边界同时是内联的边界、链接期优化的边界、和符号解析的边界,划在哪里对性能的影响比多数人预期的大。</p>
 <div class="note old" style="contain-intrinsic-size:auto 229px"><span class="t">🟡 ELF 默认全部导出,这在 C++ 上不合适</span><p>一个 C 库导出几百个符号,默认全导出没什么代价。C++ 不同:模板实例、内联函数的外联副本、虚表、类型信息全都是具有外部链接的符号,一个中等规模的 C++ 库不加控制就有几万个动态符号。<strong>Windows 的默认恰好相反</strong>——PE 上什么都不导出,除非用 <code>__declspec(dllexport)</code> 或者模块定义文件显式指定。两个平台的默认值不同,导致同一份代码在 Linux 上导出几万个符号、在 Windows 上导出几百个;跨平台的库需要用同一套导出宏把两边统一到「显式导出」这个模型上。</p></div>
 <h3>默认可见性的四个后果</h3>
 <table style="contain-intrinsic-size:auto 288px">
@@ -7386,7 +7449,7 @@ generate_export_header(mylib)
 # 顺手加两条链接开关:链接期就报出缺失的符号,以及不要把静态库的符号再导出一遍
 target_link_options(mylib PRIVATE -Wl,--no-undefined -Wl,-z,defs -Wl,--exclude-libs,ALL)</code></pre>
 <p><code>-fvisibility-inlines-hidden</code> 对 C++ 项目的收益通常比 <code>-fvisibility=hidden</code> 本身还大,因为模板与头文件里定义的成员函数占了动态符号表的绝大部分。有一点要说清楚:<strong>它不影响函数内的静态变量</strong>,那些变量仍然按原来的规则在整个进程里合并成一份,所以这个开关不会让单例变成两份。它改变的只是「这个内联函数在不同模块里的地址可能不同」,只有比较函数地址的代码会受影响。</p>
-<p>本章那个二进制加上这两个开关之后,动态符号从 18422 降到约 1800,<code>.dynsym</code> 从 307 KB 降到约 30 KB,<code>.dynstr</code> 从 594 KB 降到约 60 KB,<code>LD_DEBUG=statistics</code> 报告的重定位周期数下降约一半。<strong>这是本章里投入产出比最高的一项改动</strong>:一个编译开关加一份导出宏,同时改善启动时间、二进制体积和跨库内联。</p>
+<p>加上这两个开关之后,本章那个二进制的动态符号从 18422 降到约 1800,<code>.dynsym</code> 从 307 KB 降到约 30 KB,<code>.dynstr</code> 从 594 KB 降到约 60 KB,<code>LD_DEBUG=statistics</code> 报告的重定位周期数下降约一半。<strong>这是本章里投入产出比最高的一项改动</strong>:一个编译开关加一份导出宏,同时改善启动时间、二进制体积和跨库内联。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 231px"><span class="t">🔴 异常类与多态基类标成 hidden,catch 会失效</span><p>异常的类型匹配依赖 <code>std::type_info</code> 对象的比较,<code>dynamic_cast</code> 也一样。这两个类型信息对象如果是隐藏可见性,每个模块会各自生成一份,运行期不再合并成一份,于是<strong>跨库抛出的异常在另一个模块里按基类捕获会失败,直接走到 <code>std::terminate</code></strong>;<code>dynamic_cast</code> 则会返回空指针。症状是加上 <code>-fvisibility=hidden</code> 之后程序在特定路径上莫名终止,而单独跑单元测试(静态链接)一切正常。<strong>规则</strong>:凡是跨模块抛接的异常类、跨模块做 <code>dynamic_cast</code> 或 <code>typeid</code> 的多态基类,都要用导出宏标注<strong>整个类</strong>,而不只是几个成员函数。</p></div>
 <h3>符号抢占怎么挡住内联与常量传播</h3>
 <p>符号抢占是 ELF 动态链接的一条基本规则:<strong>同一个符号名在进程里只有一个定义生效,由加载顺序决定谁赢。</strong>可执行文件里的定义优先于共享库,先加载的共享库优先于后加载的。这条规则支撑了很多实用能力——用 <code>LD_PRELOAD</code> 替换 <code>malloc</code> 做内存分析、替换某个函数做故障注入、在不改代码的情况下打补丁。</p>
@@ -7449,7 +7512,8 @@ _Z5applyi:
 </tbody>
 </table>
 <p>对比一下量级:一个只做一次字段读的访问器,在同一个库内被内联之后大约是一条指令;跨库调用则要走完整的调用约定加一次间接跳转,通常在十几个周期。<strong>差距不在那次跳转上,在于内联与内联之后的一整套优化全部失效。</strong>所以判据是:跨库边界不该出现在热路径的内层循环上。</p>
-<p>Windows 的机制不同但结论相同。调用另一个 DLL 里的函数,如果声明时带了 <code>__declspec(dllimport)</code>,编译器直接生成 <code>call [__imp_foo]</code>,一次经导入地址表的间接调用;<strong>如果没带,链接器会插一段跳板</strong>,变成先 <code>call</code> 到跳板、跳板再 <code>jmp [__imp_foo]</code>,每次调用多一次跳转。对<strong>数据</strong>而言 <code>dllimport</code> 不是优化而是正确性要求:没有它,取到的可能是跳板的地址而不是变量本身。这就是导出宏必须区分「构建这个库」与「使用这个库」两种情形的原因。</p>
+<p>Windows 的机制不同但结论相同。调用另一个 DLL 里的函数,如果声明时带了 <code>__declspec(dllimport)</code>,编译器直接生成 <code>call [__imp_foo]</code>,一次经导入地址表的间接调用;<strong>如果没带,链接器会插一段跳板</strong>,变成先 <code>call</code> 到跳板、跳板再 <code>jmp [__imp_foo]</code>,每次调用多一次跳转。</p>
+<p>对<strong>数据</strong>而言 <code>dllimport</code> 不是优化而是正确性要求:没有它,取到的可能是跳板的地址而不是变量本身。这就是导出宏必须区分「构建这个库」与「使用这个库」两种情形的原因。</p>
 <pre style="contain-intrinsic-size:auto 141px"><code>REM 看一个模块导出了什么、导入了什么、依赖谁
 &gt; dumpbin /exports engine.dll
 &gt; dumpbin /imports app.exe | more
@@ -7495,7 +7559,8 @@ $ g++ -shared -Wl,--no-undefined -Wl,-z,defs -o libA.so a.o -lfoo
 # 四、不要把静态库里的符号从动态库再导出一遍
 $ g++ -shared -Wl,--exclude-libs,ALL -o libA.so a.o libfoo.a</code></pre>
 <p>第三条与第四条是预防手段,应当作为所有动态库的默认链接选项。<code>--no-undefined</code> 把「运行期才发现符号找不到」提前到链接期;<code>--exclude-libs,ALL</code> 让静态库里的符号不再从动态库的接口上冒出来,直接消除了前两种形态的发生条件。</p>
-<p>Windows 上的情况不同,而且差异正好落在这个问题上。<strong>PE 的导入是按模块记账的</strong>:每个 DLL 有自己的导入表,绑定的是「哪个 DLL 里的哪个名字」,不存在扁平的全局符号空间。结果是第三种形态不会发生——两个版本的第三方库可以同时加载,各绑各的;但第二种形态变成了默认——<strong>每个模块各有一份静态状态</strong>。最典型的表现是 C 运行时:两个模块各静态链接一份运行时(<code>/MT</code>),就各有一份堆,在一个模块里分配的对象在另一个模块里释放会损坏堆。解决办法是全体使用同一份动态运行时(<code>/MD</code>),让分配与释放落在同一个堆上。</p>
+<p>Windows 上的情况不同,而且差异正好落在这个问题上。<strong>PE 的导入是按模块记账的</strong>:每个 DLL 有自己的导入表,绑定的是「哪个 DLL 里的哪个名字」,不存在扁平的全局符号空间。结果是第三种形态不会发生——两个版本的第三方库可以同时加载,各绑各的;但第二种形态变成了默认——<strong>每个模块各有一份静态状态</strong>。</p>
+<p>最典型的表现是 C 运行时:两个模块各静态链接一份运行时(<code>/MT</code>),就各有一份堆,在一个模块里分配的对象在另一个模块里释放会损坏堆。解决办法是全体使用同一份动态运行时(<code>/MD</code>),让分配与释放落在同一个堆上。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 266px"><span class="t">🔴 「改了代码但行为没变」,先怀疑同一个符号有两份定义</span><p>这个症状几乎总是指向符号重复:重新编译过、二进制时间戳也对、日志里的新语句就是不出现。原因是同一个函数在两个模块里各有一份,而运行期生效的是另一份。<strong>确认只要一条命令</strong>:<code>LD_DEBUG=bindings</code> 跑一遍,看这个符号最终绑到了哪个文件;或者用 <code>nm -D --defined-only</code> 扫一遍所有模块,同一个名字出现两次就是它。<strong>根因通常是一个静态库被同时链进了两个动态库</strong>,而两边都把它的符号导出了。修法是给动态库加上 <code>-Wl,--exclude-libs,ALL</code>,或者把这个静态库本身也改成动态库让大家共用一份。Windows 上对应的检查是用 <code>dumpbin /exports</code> 逐个模块扫,或者在 Process Explorer 里看进程实际加载了哪些模块、来自哪个路径。</p></div>
 <h2 id="p11-sum">11.5 小结:本章要点与常见误区</h2>
 <p>这一章的主线是<strong>程序在执行第一条业务指令之前和之外的成本</strong>。前十章讨论的是「这段代码跑得快不快」,这一章讨论的是三件与之正交的事:进入 <code>main</code> 之前花掉的时间、代码本身占多大以及占的方式、还有这些代码摆在什么位置。三者共用一条因果链——符号多导致启动慢、代码散导致取指慢、库多同时让两者变差。</p>
@@ -7630,11 +7695,11 @@ $ perf stat -r 20 --null ./app --version</code></pre>
 <p>另外两处较弱的连接:<strong>第 5 章</strong>算过异常与 RTTI 的运行期开销,本章 11.2 节补上它们的体积开销,两笔账合起来才能判断该不该禁用;<strong>第 9 章</strong>讲的缺页与系统调用,在本章表现为启动期的那几千次缺页与几十次库加载,测量工具也是同一套。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 39146px;--thin-h:39146px">
+<section class="chapter" style="contain-intrinsic-size:auto 39163px;--thin-h:39163px">
 <h1 id="c12"><span class="part">第 12 章</span>完整调优案例:从 4.2 秒到 0.21 秒</h1>
 <h2 id="p12-base">12.1 基线:一个「很自然」的实现</h2>
 <p>前九章分别讲了方法、硬件模型、内存层次、编译器、语言层的开销、动态内存、数据布局、并发与系统层。这一章把它们用在同一个任务上:<strong>一个日志分析程序,基线耗时 4.2 秒,四轮优化之后 0.21 秒,整体 20 倍</strong>。四轮的耗时链是 4.2 秒、1.6 秒、0.78 秒、0.34 秒、0.21 秒。每一轮都给出剖析结果、具体改动、改动之后的数字,以及这一轮的剖析怎么决定下一轮做什么。</p>
-<p>这一章不引入新的知识点。它要展示的是<strong>前九章的手段在一次真实优化里的先后顺序与相对收益</strong>:哪些改动值两倍,哪些改动只值百分之五,以及为什么顺序不能颠倒。所有百分比与倍数都可以互相对上,读者可以自己验算。</p>
+<p><strong>前九章的手段在一次真实优化里的先后顺序与相对收益</strong>才是要展示的东西:哪些改动值两倍,哪些改动只值百分之五,以及为什么顺序不能颠倒。这里不引入新的知识点,所有百分比与倍数都可以互相对上,读者可以自己验算。</p>
 <h3>任务与输入</h3>
 <p>输入是一份服务访问日志,一行一条记录,字段之间用单个空格分隔。</p>
 <pre style="contain-intrinsic-size:auto 114px"><code>2026-08-25T10:31:02Z 192.168.1.7 GET /api/v1/users 200 1432 18ms
@@ -8469,7 +8534,8 @@ $ <span class="kw">for</span> v in r1 r2 r3 r4; <span class="kw">do</span> ./log
 </tbody>
 </table>
 <p>这十章的顺序不是随意排的。<strong>前四章建立判断力</strong>——知道怎么测、知道硬件在做什么、知道编译器帮了多少忙。<strong>中间三章处理 C++ 特有的开销</strong>——语言设施、动态内存、数据布局,本章的前三轮几乎全在这三章的范围内。<strong>后两章处理跨越单线程边界的问题</strong>——并发与系统层,本章的第四轮属于这里。最后一章把它们放回同一个任务上,证明这些手段是可以叠加的,而且叠加的顺序有讲究。</p>
-<p>本书系有三本,分工是清楚的。<strong>《C++ 语言 · 现代详解》管语言本体</strong>:一个语言特性是什么、怎么用、有哪些坑,比如「这个 <code>std::move</code> 为什么没生效」。<strong>《C++ 标准库 API 编程手册》管接口</strong>:某个设施有哪些成员、参数什么含义、返回什么,比如「<code>std::from_chars</code> 的返回值怎么判断解析是否成功」。<strong>本书管测量与调优</strong>:同一件事有几种写法、各自多快、怎么确认改完真的更快了,比如本章第一轮里 <code>istringstream</code> 与手写切分的那 38 个百分点。三本之间交叉引用,不重复展开——本章里出现的 <code>string_view</code>、<code>from_chars</code>、透明比较器、<code>jthread</code>,用法都在另外两本里,这里只讲它们的代价。</p>
+<p>本书系有三本,分工是清楚的。<strong>《C++ 语言 · 现代详解》管语言本体</strong>:一个语言特性是什么、怎么用、有哪些坑,比如「这个 <code>std::move</code> 为什么没生效」。<strong>《C++ 标准库 API 编程手册》管接口</strong>:某个设施有哪些成员、参数什么含义、返回什么,比如「<code>std::from_chars</code> 的返回值怎么判断解析是否成功」。</p>
+<p><strong>本书管测量与调优</strong>:同一件事有几种写法、各自多快、怎么确认改完真的更快了,比如本章第一轮里 <code>istringstream</code> 与手写切分的那 38 个百分点。三本之间交叉引用,不重复展开——本章里出现的 <code>string_view</code>、<code>from_chars</code>、透明比较器、<code>jthread</code>,用法都在另外两本里,这里只讲它们的代价。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 358px"><span class="t">🟢 优化的价值不在于让代码更快,而在于知道它为什么慢</span><p>这一章里真正起作用的动作只有两类:<strong>测量</strong>与<strong>删除</strong>。测量给出方向——四次剖析,四次都指向了一个事先没想到的地方:第一次指向 <code>istringstream</code> 而不是 <code>std::map</code>,第二次指向查找而不是解析,第三次指向「存下全部样本」这个决定本身,第四次指向并行自身的代价。<strong>如果凭直觉动手,四次里至少会错三次。</strong>删除给出收益——20 倍里的绝大部分来自「不做某件事」,而不是来自「把某件事做得更巧」:不复制字符串、不分配内存、不构造临时对象、不存下全部样本、不排序。<strong>真正的高性能代码通常不是更聪明的代码,而是做得更少的代码。</strong>把这两条合起来,就是全书唯一需要背下来的规矩:<strong>先测,再删,再测。</strong>剩下的九章都是在解释「测什么」与「为什么这样删」——它们能让你在剖析报告指向某一行时,立刻知道那一行为什么慢,以及这类慢有几种改法。这份判断力,比任何一条具体技巧都活得久:编译器会升级,微架构会换代,标准库的实现会重写,而「测量优先于猜测」「减少工作优先于加快工作」「单线程优先于并行」这三条,十年之内不会变。</p></div>
 </section>
 

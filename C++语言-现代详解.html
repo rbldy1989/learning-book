@@ -180,7 +180,6 @@ main .note{content-visibility:auto;contain-intrinsic-size:auto 200px;}
 
 
 
-
 /* —— 薄/厚阅读模式 —— */
 #depthBtn{position:fixed;top:12px;right:52px;z-index:11;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--rule);background:var(--side-bg);color:var(--muted);cursor:pointer;line-height:0;}
 #depthBtn:hover{color:var(--accent);border-color:var(--accent);}
@@ -387,11 +386,12 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 87020px;--thin-h:87020px">
+<section class="chapter" style="contain-intrinsic-size:auto 87186px;--thin-h:87186px">
 <h1 id="c0"><span class="part">第 0 章</span>预备:C 程序员够用的 C++ 基础</h1>
 <h2 id="c0-open">0.0 开卷:锚定、定位与读法</h2>
 <p>本书面向<strong>已经写得动 C、C++ 只有零星经验</strong>的读者。讲法是从 C 的已知出发:先说清同一件事在两种语言里差在哪,再说清 C++ 多出来的那部分机制是为解决什么问题而存在的,最后给出它在什么条件下不成立。</p>
-<p>语言基线取 <strong>C++17</strong>——凡是没有标注版本的写法在 C++17 上都成立;C++20 与 C++23 的设施逐处标出最低版本。0.11 节给出的工程配置把标准直接开到 C++20,因为后面的示例用到了 <code>std::format</code> 与 ranges。编译器覆盖 GCC、Clang 与 MSVC,行为不一致处三家分别给出。手上只有旧编译器时有三条替代路线:<code>std::format</code> 换成 fmt 库,格式串语法相同;ranges 换成写全 <code>begin()</code> 与 <code>end()</code>;<code>std::span</code> 换成指针加长度两个参数。</p>
+<p>语言基线取 <strong>C++17</strong>——凡是没有标注版本的写法在 C++17 上都成立;C++20 与 C++23 的设施逐处标出最低版本。0.11 节给出的工程配置把标准直接开到 C++20,因为后面的示例用到了 <code>std::format</code> 与 ranges。编译器覆盖 GCC、Clang 与 MSVC,行为不一致处三家分别给出。</p>
+<p>手上只有旧编译器时有三条替代路线:<code>std::format</code> 换成 fmt 库,格式串语法相同;ranges 换成写全 <code>begin()</code> 与 <code>end()</code>;<code>std::span</code> 换成指针加长度两个参数。</p>
 <h3>这个领域有哪些经典与主要资料</h3>
 <p>C++ 的资料密度在编程语言里排在前列,问题不是找不到,而是版本跨度太大:同一个问题在 1998 年、2011 年与今天有三种正确答案。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。按触发场景决定翻哪一本的对照表另见 1.0 节。</p>
 <table style="contain-intrinsic-size:auto 1051px">
@@ -686,7 +686,7 @@ Widget w{args};              <span class="cm">// 构造在这里,析构在作用
 </tbody>
 </table>
 <h2 id="c0-basic">0.2 引用、重载、默认参数与运算符重载</h2>
-<p>这一节是四样 C 里没有对应物的基本语法。它们出现在几乎每一段 C++ 代码里,不认识就读不下去。</p>
+<p>有四样基本语法在 C 里没有对应物。它们出现在几乎每一段 C++ 代码里,不认识就读不下去。</p>
 <h3>引用:对象的另一个名字</h3>
 <p>引用用 <code>&amp;</code> 声明,必须在定义时绑定,之后<strong>不能改绑</strong>,也没有空引用。它不是对象,只是已有对象的别名。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 223px"><code><span class="kw">int</span> n = 1;
@@ -1440,7 +1440,12 @@ std::string replace_all(std::string s, std::string_view from, std::string_view t
 <tr><td class="nw">写进文件、发到网络</td><td class="nw">可以</td><td>按字节原样写出即可</td></tr>
 </tbody>
 </table>
-<p>Windows 上另有三处需要处理。<strong>源文件保存成带 BOM 的 UTF-8,或者给 MSVC 加 <code>/utf-8</code></strong>,否则源码里的中文字面量会按系统代码页解释,编出来就是乱码;<strong>控制台默认不是 UTF-8</strong>,要先执行 <code>chcp 65001</code> 或者在程序里调用 <code>SetConsoleOutputCP(CP_UTF8)</code>;<strong>文件路径一律交给 <code>std::filesystem::path</code></strong>,它在 Windows 上内部存 <code>wchar_t</code>,能正确处理中文路径,而手工拼出来的 <code>std::string</code> 路径会在中文目录下打不开文件,并且报的是「文件不存在」这种误导性错误。</p>
+<p>Windows 上另有三处需要处理。</p>
+<ul>
+<li><strong>源文件保存成带 BOM 的 UTF-8,或者给 MSVC 加 <code>/utf-8</code></strong>,否则源码里的中文字面量会按系统代码页解释,编出来就是乱码。</li>
+<li><strong>控制台默认不是 UTF-8</strong>,要先执行 <code>chcp 65001</code> 或者在程序里调用 <code>SetConsoleOutputCP(CP_UTF8)</code>。</li>
+<li><strong>文件路径一律交给 <code>std::filesystem::path</code></strong>,它在 Windows 上内部存 <code>wchar_t</code>,能正确处理中文路径,而手工拼出来的 <code>std::string</code> 路径会在中文目录下打不开文件,并且报的是「文件不存在」这种误导性错误。</li>
+</ul>
 <h2 id="c0-io">0.7 输入输出与文件</h2>
 <p>C 的 <code>FILE*</code> 加 <code>fopen</code> / <code>fread</code> / <code>fprintf</code> 在 C++ 里仍然全部可用,而且在纯性能场合仍是合理选择。C++ 另外提供了一套基于流的接口,好处是类型安全、自动管理文件句柄、以及能对自定义类型扩展。</p>
 <h3>读文件的三种形态</h3>
@@ -1879,7 +1884,7 @@ std::expected&lt;<span class="kw">int</span>, ParseError&gt; parse(std::string_v
 <p>断言与异常的分工只有一句话:<strong>断言检查的是「按设计不可能发生」的事,异常表达的是「设计允许发生、但这次没成功」的事。</strong>前者不成立说明代码本身有缺陷,应当在开发阶段当场崩溃;后者不成立是运行期的正常状况,要沿调用栈往上报。所以<strong>断言不用于校验外部输入</strong>——外部输入不合法是预期之内的,而且发布构建里断言整条被去掉,校验就消失了。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 catch 块为空,故障会在完全无关的地方浮现</span><p>吞掉异常之后,程序带着「这一步没做成」的状态继续往下跑,后续操作读到的是半成品数据。症状可能是几百行之后的一次空指针解引用,或者一份内容缺了一半的输出文件,而调用栈里完全看不到真正的出错点。规矩:<strong><code>catch</code> 块里至少要记一条带 <code>e.what()</code> 的日志</strong>;处理不了就用单独的 <code>throw;</code> 原样抛出去,不要包装成一个新异常,那会丢掉原始的类型与信息。</p></div>
 <h2 id="c0-util">0.10 常用工具设施:时间、随机数、文件系统</h2>
-<p>这一节收三个日常一定会用到、而 C 的做法今天已经不该再用的设施。它们的共同特点是:标准库的版本把「容易用错的地方」写进了类型系统。</p>
+<p>有三个设施日常一定会用到,而 C 的做法今天已经不该再用。它们的共同特点是:标准库的版本把「容易用错的地方」写进了类型系统。</p>
 <h3>时间:chrono 把单位写进类型</h3>
 <p>C 的 <code>time_t</code> 与 <code>clock()</code> 都是裸整数,单位靠文档和记忆。把秒当毫秒用不会有任何提示。<code>&lt;chrono&gt;</code> 把单位做成类型的一部分,单位不匹配时编译器会报错,而且不同单位之间自动换算。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 332px"><code><span class="kw">#include</span> &lt;chrono&gt;
@@ -2020,7 +2025,7 @@ std::error_code ec;
 <p>依赖怎么装,目前是两条主流路线:<strong>vcpkg</strong> 与 CMake 集成最省事,清单模式下把依赖写进 <code>vcpkg.json</code>,配置时自动拉取;<strong>Conan</strong> 是独立的包管理器,对预编译二进制包和多套构建配置的支持更强。两者都成熟,团队里统一一个即可。只有一个头文件的小库直接拷进仓库也是正当做法。</p>
 <div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 新项目直接用 std::format,不必再引入 fmt</span><p><code>std::format</code> 就是 fmt 的核心部分标准化之后的结果,格式串语法完全相同,两者之间迁移只是改一个头文件与命名空间。编译器还不支持时可以先用 fmt 过渡,做法是<strong>把它的包含集中到自己的一个头文件里</strong>,将来切换只改那一处。需要彩色输出、按名字取参数这类扩展能力时,fmt 仍然领先标准库一到两个版本。</p></div>
 <h2 id="c0-build">0.11 第一个工程:编译、运行、调试</h2>
-<p>这一节给一份能直接抄的工程骨架。后面所有章节的示例都假设工具链已经按这里配好——尤其是标准版本开关与 sanitizer,少了它们,书里说的很多「会当场报错」就变成了「静默出错」。</p>
+<p>下面这份工程骨架可以直接抄。后面所有章节的示例都假设工具链已经按它配好——尤其是标准版本开关与 sanitizer,少了它们,书里说的很多「会当场报错」就变成了「静默出错」。</p>
 <h3>单文件:先跑起来</h3>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 332px"><code><span class="cm">// main.cpp</span>
 <span class="kw">#include</span> &lt;format&gt;
@@ -2201,7 +2206,8 @@ $ cmake --build build -j
 $ ctest --test-dir build --output-on-failure</code></pre>
 <p>两条惯例:<strong>被测代码要同时编进程序目标和测试目标</strong>,所以把它抽成一个库目标,比在两处各写一遍文件列表更省事;<strong>测试名写成「什么条件下会怎样」</strong>,失败时不看代码就知道坏在哪。调试构建打开 sanitizer 之后,跑测试还会顺带把未定义行为暴露出来,这是加测试最大的额外收益——它让越界与释放后使用发生在你面前,而不是发生在用户那里。</p>
 <h3>编辑器、语言服务与环境自查</h3>
-<p>补全、跳转、实时报错这些能力来自语言服务器,主流选择是 clangd。它需要知道每个文件是用什么开关编译的,而这份信息来自 <code>compile_commands.json</code>:CMake 里加一行 <code>set(CMAKE_EXPORT_COMPILE_COMMANDS ON)</code> 就会生成在构建目录里,再在项目根目录做一个软链接或者拷一份过去。<strong>没有这个文件时,clangd 只能按默认开关猜测</strong>,于是标准版本、宏定义、包含路径全是错的,表现为编辑器里满屏红线而命令行编译完全正常。</p>
+<p>补全、跳转、实时报错这些能力来自语言服务器,主流选择是 clangd。它需要知道每个文件是用什么开关编译的,而这份信息来自 <code>compile_commands.json</code>:CMake 里加一行 <code>set(CMAKE_EXPORT_COMPILE_COMMANDS ON)</code> 就会生成在构建目录里,再在项目根目录做一个软链接或者拷一份过去。</p>
+<p><strong>没有这个文件时,clangd 只能按默认开关猜测</strong>,于是标准版本、宏定义、包含路径全是错的,表现为编辑器里满屏红线而命令行编译完全正常。</p>
 <p>下面这张表把「环境没配好」的常见症状与对应的检查手段列出来。新装的机器上按顺序过一遍,能省掉大量误判。</p>
 <table style="contain-intrinsic-size:auto 431px">
 <thead><tr><th>症状</th><th>多半是什么原因</th><th>怎么检查</th></tr></thead>
@@ -2331,10 +2337,10 @@ $ ctest --test-dir build --output-on-failure</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 每写一段新代码,当天就用 sanitizer 跑一遍</span><p>未定义行为的特点是「今天不出错,换个编译器或者改一行无关代码就出错」,拖得越久越难定位。开着 <code>-fsanitize=address,undefined</code> 跑测试,越界、释放后使用、未初始化读取、有符号溢出会在发生的那一行当场停下,并打印出这块内存是谁分配、谁释放的。代价是程序慢两到三倍、内存占用翻倍,这在开发阶段完全可以接受。这条习惯在整个 C++ 生涯里都成立。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 62200px;--thin-h:62200px">
+<section class="chapter" style="contain-intrinsic-size:auto 62184px;--thin-h:62184px">
 <h1 id="c1"><span class="part">第 1 章</span>从 C 到 C++:分界线在哪</h1>
 <h2 id="c1-guide">1.0 遇到问题时翻哪一本</h2>
-<p>这一章不讲任何 C++ 独有的大特性。它要回答的是更靠前的一个问题:<strong>一段能通过 C 编译器的代码,交给 C++ 编译器之后,哪些地方的行为变了、哪些地方直接编不过、以及为什么。</strong>这些差别不写进书里,读者会在后面每一章反复被绊住。</p>
+<p><strong>一段能通过 C 编译器的代码,交给 C++ 编译器之后,哪些地方的行为变了、哪些地方直接编不过、以及为什么?</strong>这个问题比任何 C++ 独有的大特性都靠前。这些差别不写清楚,读者会在后面每一章反复被绊住。</p>
 <p>上一节给了这个领域的资料全景与本书的锚定关系。这一节给的是使用方式:读到具体某一处卡住时,按下面两张表去查。</p>
 <h3>什么时候翻哪一本</h3>
 <p>经典的价值在于「遇到具体问题时能查到确定的答案」,不在于通读。下面按触发场景给出对应关系,读本书某一章时如果还有疑问,按这张表找。</p>
@@ -3267,7 +3273,8 @@ $ git diff --name-only --diff-filter=ACM \
 <p>与 clang-format 相邻的是 clang-tidy,它管的不是排版而是写法:能自动把 C 风格转换改成具名转换、把裸循环改成范围 <code>for</code>、把裸 <code>new</code> 改成 <code>std::make_unique</code>。存量工程迁移时,<code>modernize-</code> 这一组检查配合 <code>-fix</code> 可以省掉大量手工改动,但每一批自动修改都要单独提交并跑一次测试——自动修改会改变语义的情形虽然少,但存在。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 风格争论一律以配置文件为准,不进评审意见</span><p>判据是「这条意见能不能写进 <code>.clang-format</code>」。能,就去改配置,不要在评审里逐条指出;不能,才是真正需要人判断的问题。这条规矩的收益不在排版本身,而在于把评审的注意力集中到逻辑与边界上——排版意见会挤占评审的容量,而人的注意力是评审里最稀缺的资源。</p></div>
 <h2 id="c1-const">1.8 常量与静态数据放进头文件:inline 变量、constexpr 与匿名命名空间</h2>
-<p>C 里往头文件放数据只有两条路:写一个 <code>#define</code>,或者写一句 <code>extern</code> 声明再在某个 .c 文件里补上定义。C++ 把这件事拆成了五种写法,它们的链接性、实例份数与初始化时机各不相同。选错的后果分两类:一类是链接期报重复定义,当场就知道;另一类是每个编译单元静默地各有一份,程序照常运行,只是计数器对不上、单例不唯一、两个本应相同的地址比较不相等。1.3 节给过一张「头文件里能放什么」的清单,这一节把清单里与数据相关的几行展开,讲清各自的机制与失效边界。</p>
+<p>C 里往头文件放数据只有两条路:写一个 <code>#define</code>,或者写一句 <code>extern</code> 声明再在某个 .c 文件里补上定义。C++ 把这件事拆成了五种写法,它们的链接性、实例份数与初始化时机各不相同。</p>
+<p>选错的后果分两类:一类是链接期报重复定义,当场就知道;另一类是每个编译单元静默地各有一份,程序照常运行,只是计数器对不上、单例不唯一、两个本应相同的地址比较不相等。1.3 节给过一张「头文件里能放什么」的清单,这一节把清单里与数据相关的几行展开,讲清各自的机制与失效边界。</p>
 <h3>头文件里放数据的五种写法</h3>
 <p>先看一条 C 程序员最容易踩的差别:<strong>命名空间作用域的 <code>const</code> 对象在 C++ 里默认是内部链接</strong>,在 C 里是外部链接。同一句 <code>const int N = 10;</code>,在 C 里放进被多个 .c 包含的头文件会得到重复定义,在 C++ 里不会——因为每个编译单元各拿到一份自己的、别人看不见的 <code>N</code>。这条差别 1.1 节的行为差对照表里列过一行,下面把它连同其余四种写法一起摊开。</p>
 <table style="contain-intrinsic-size:auto 541px">
@@ -3397,7 +3404,7 @@ $ git diff --name-only --diff-filter=ACM \
 </tbody>
 </table>
 <h3>事故形态:重复定义与静默的多份实例</h3>
-<p>这一节涉及的错误只有两种表现,一种当场报错,一种完全不报。先看会报错的一类,它的链接期原文是固定的。</p>
+<p>这类错误只有两种表现:一种当场报错,一种完全不报。先看会报错的一类,它的链接期原文是固定的。</p>
 <pre style="contain-intrinsic-size:auto 238px"><code>$ g++ main.o util.o -o app
 /usr/bin/ld: util.o:(.bss+0x0): multiple definition of `g_count<span>'; main.o:(.bss+0x0): first defined here</span>
 collect2: error: ld returned 1 exit status
@@ -3519,7 +3526,7 @@ app.exe : fatal error LNK1169: 找到一个或多个多重定义的符号</code>
 </ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 67315px;--thin-h:67315px">
+<section class="chapter" style="contain-intrinsic-size:auto 67428px;--thin-h:67428px">
 <h1 id="c2"><span class="part">第 2 章</span>类型、初始化与值类别</h1>
 <h2 id="c2-init">2.1 初始化:七种写法与花括号</h2>
 <p>C 的初始化只有两种形态:等号赋初值,以及聚合体的花括号列表。C++ 把这件事扩到了七种,而且不同写法在「未初始化」「调不调构造函数」「允不允许窄化」上有实质差别。写错不一定报错,得到的是一个内容不确定的对象。</p>
@@ -4411,7 +4418,7 @@ REM MSVC
 <p>常量求值还有一条硬约束容易被忽略:编译器对单次常量求值的<strong>步数与递归深度有上限</strong>,超过就报错而不是变慢。GCC 用 <code>-fconstexpr-ops-limit</code> 与 <code>-fconstexpr-depth</code> 调整,Clang 用 <code>-fconstexpr-steps</code> 与 <code>-fconstexpr-depth</code>。需要调高这些上限,通常说明这段计算本来就不该放在编译期。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 编译期计算的规模上限,按「一次全量构建能接受多长」倒推</span><p>判断顺序是:先测当前的全量构建时间,再测加入这段编译期计算之后的增量。这个代价是<strong>每次构建都付</strong>的,而收益只是运行期省下的一次计算,所以增量占比稍大就要重新评估。查找表这类结果固定的东西还有第三条路:用脚本在构建前生成一个源文件,既没有运行期初始化,也不占编译期求值预算,代价是构建流程多一步。</p></div>
 <h2 id="c2-arith">2.7 整数与浮点:提升、转换与溢出</h2>
-<p>这一节的内容 C 和 C++ 基本一致,放在这里是因为<strong>它是最高频的真实缺陷来源之一</strong>,而且 C++20 起标准库补了一组专门的工具来绕开它。</p>
+<p>这一块的规则 C 和 C++ 基本一致,之所以要单独讲,是因为<strong>它是最高频的真实缺陷来源之一</strong>,而且 C++20 起标准库补了一组专门的工具来绕开它。</p>
 <h3>整型提升与常用算术转换</h3>
 <p>任何比 <code>int</code> 窄的整数类型参与算术运算前,先<strong>提升</strong>成 <code>int</code>(放不下就 <code>unsigned int</code>)。这解释了几个反直觉的结果。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code><span class="kw">char</span> a = 100, b = 100;
@@ -4680,7 +4687,8 @@ std::optional&lt;Op&gt; parse_op(std::<span class="kw">uint8_t</span> raw) <span
     <span class="kw">if</span> (!is_valid(op)) <span class="kw">return</span> std::nullopt;
     <span class="kw">return</span> op;
 }</code></pre>
-<p>这段代码里 <code>is_valid</code> 的枚举常量列表是手写的,C++ 到目前为止没有办法自动遍历一个枚举的全部常量。工程上有两种常见的补偿手段:定义一个哨兵常量 <code>kCount</code> 放在末尾,用来做范围判断;或者维护一个 <code>inline constexpr std::array</code> 列出全部值。两种都要靠人保持同步,前者还会让哨兵本身出现在 <code>switch</code> 的覆盖检查里,反而制造噪声。相比之下,把 <code>is_valid</code> 写成一个不带 <code>default</code> 的 <code>switch</code> 是自我维护的:加一个枚举常量而忘了改它,编译器会直接指出来。</p>
+<p>这段代码里 <code>is_valid</code> 的枚举常量列表是手写的,C++ 到目前为止没有办法自动遍历一个枚举的全部常量。工程上有两种常见的补偿手段:定义一个哨兵常量 <code>kCount</code> 放在末尾,用来做范围判断;或者维护一个 <code>inline constexpr std::array</code> 列出全部值。两种都要靠人保持同步,前者还会让哨兵本身出现在 <code>switch</code> 的覆盖检查里,反而制造噪声。</p>
+<p>相比之下,把 <code>is_valid</code> 写成一个不带 <code>default</code> 的 <code>switch</code> 是自我维护的:加一个枚举常量而忘了改它,编译器会直接指出来。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 231px"><span class="t">🔴 不校验就把外部字节转成枚举,后果从走错分支到越界都有</span><p>转换本身在有固定底层类型时是有定义的,问题全部出在下游:用这个值做 <code>switch</code> 时所有分支都不匹配,函数静默走到末尾;用它当数组下标或跳转表索引时直接越界;把它存进结构体再落盘,错误值被持久化下来,之后每次读取都要重新处理一次。<strong>边界很明确:凡是值来自本进程之外,一律先过一遍校验函数,再让它以枚举类型的身份进入业务代码。</strong>无固定底层类型的枚举还要多一层问题——超出值域的转换本身就是未定义行为,<code>-fsanitize=undefined</code> 里的枚举检查能在读取时报出来,前提是构建配置里确实开了它(1.7 节)。</p></div>
 <h3>位标志枚举</h3>
 <p>位标志是枚举的一个特殊用法:每个常量占一个二进制位,值可以按位组合。无作用域枚举做这件事不需要任何额外代码,因为它的值会隐式转成整数。</p>
@@ -4749,7 +4757,12 @@ std::optional&lt;Op&gt; parse_op(std::<span class="kw">uint8_t</span> raw) <span
 <span class="cm">    // open_with(3);                            // 编译错误:整数传不进来</span>
     open_with(rw);                               <span class="cm">// 只有 Perm 能传</span>
 }</code></pre>
-<p>三处实现细节值得说明。第一,底层类型必须写成<strong>无符号</strong>类型:按位取反与左移在有符号类型上有未定义行为的边界,无符号类型没有(2.7 节)。第二,应当定义一个值为 0 的常量,通常叫 <code>None</code>,用于初始化与判空;没有它就只能写一次显式转换。第三,<code>has</code> 与 <code>any</code> 这两个函数是必需的——<code>enum class</code> 不能隐式转成 <code>bool</code>,所以「按位与之后直接当条件用」这个 C 里最顺手的写法在这里编不过,这是采用 <code>enum class</code> 做位标志要付的主要代价。</p>
+<p>三处实现细节值得说明。</p>
+<ol>
+<li>底层类型必须写成<strong>无符号</strong>类型:按位取反与左移在有符号类型上有未定义行为的边界,无符号类型没有(2.7 节)。</li>
+<li>应当定义一个值为 0 的常量,通常叫 <code>None</code>,用于初始化与判空;没有它就只能写一次显式转换。</li>
+<li><code>has</code> 与 <code>any</code> 这两个函数是必需的——<code>enum class</code> 不能隐式转成 <code>bool</code>,所以「按位与之后直接当条件用」这个 C 里最顺手的写法在这里编不过,这是采用 <code>enum class</code> 做位标志要付的主要代价。</li>
+</ol>
 <p>工具链停在 C++17 时,把 <code>requires</code> 子句换成一个带默认值的模板形参即可,函数体不变。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 169px"><code><span class="kw">template</span> &lt;<span class="kw">typename</span> E, <span class="kw">typename</span> = std::enable_if_t&lt;enable_bitmask_v&lt;E&gt;&gt;&gt;
 <span class="kw">constexpr</span> E <span class="kw">operator</span>|(E a, E b) <span class="kw">noexcept</span> {
@@ -4892,7 +4905,7 @@ std::optional&lt;Op&gt; parse_op(std::<span class="kw">uint8_t</span> raw) <span
 </ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 73196px;--thin-h:73196px">
+<section class="chapter" style="contain-intrinsic-size:auto 73265px;--thin-h:73265px">
 <h1 id="c3"><span class="part">第 3 章</span>对象模型:类的内存布局与生命周期</h1>
 <h2 id="c3-layout">3.1 类的内存布局:从 struct 到 class</h2>
 <p>C 程序员对 <code>struct</code> 的心智模型是准确的:成员按声明顺序排布,中间按对齐要求填充,整体大小是最大成员对齐的整数倍。这个模型在 C++ 里<strong>依然成立</strong>,只是多了三样东西可能插进来:虚表指针、基类子对象、以及访问控制段之间的重排许可。把这三样搞清楚,C++ 对象在内存里长什么样就不再是黑盒。</p>
@@ -5997,7 +6010,7 @@ std::memcpy(&amp;h2, buf, <span class="kw">sizeof</span> h2);</code></pre>
 <p>三条前提无论哪种做法都必须满足:<strong>类型必须可平凡复制</strong>;<strong>缓冲区地址必须满足该类型的对齐要求</strong>;<strong>字节序与字段宽度必须显式约定</strong>,不能依赖本机表示。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 就地解析之前先检查对齐,不满足就 memcpy 到一个对齐好的局部对象</span><p>未对齐访问在 x86 上多数情况能跑,在 ARM 的部分配置上直接产生总线错误,而 <code>-fsanitize=alignment</code> 会把它报出来。判据是缓冲区的来源:自己用 <code>new</code> 或 <code>alignas</code> 分配的,对齐有保证;来自网络栈、共享内存、或者从某个非零偏移开始的,一律先 <code>memcpy</code>。这一次拷贝在多数场景下可以忽略,而它同时解决了对齐与生命周期两个问题。</p></div>
 <h2 id="c3-this">3.7 this、成员指针与去虚化</h2>
-<p>这一节收尾三个和对象模型直接相关的细节:成员函数的隐藏参数、指向成员的指针为什么不是普通指针、以及编译器在什么条件下能把虚调用变回直接调用。</p>
+<p>还有三个和对象模型直接相关的细节:成员函数的隐藏参数、指向成员的指针为什么不是普通指针、以及编译器在什么条件下能把虚调用变回直接调用。</p>
 <h3>this 只是第一个参数</h3>
 <p>非静态成员函数编译之后,就是一个多了首参数的普通函数。这解释了为什么成员函数不占对象空间,也解释了 <code>const</code> 成员函数的含义。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 196px"><code><span class="kw">struct</span> Widget {
@@ -6154,7 +6167,8 @@ std::invoke(std::puts, <span>"hi"</span>);        <span class="cm">// 普通函�
 <p>有三种情形会让去虚化整体失效,热路径上值得避免:虚函数的实现在另一个动态库里(链接期优化看不到);类通过运行期加载的模块提供(实现集合到运行期才确定);以及虚函数被取地址存进了函数指针表(编译器无法判定调用目标)。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 200px"><span class="t">🟢 热路径上的多态,先确认去虚化有没有发生,再考虑改设计</span><p>确认手段是看生成的汇编:调用点是 <code>call</code> 一个立即地址,还是 <code>call</code> 一个寄存器。Clang 可以用优化备注(<code>-Rpass</code> 系列)、GCC 可以用 <code>-fdump-ipa-devirt</code> 直接看去虚化的决策。去虚化成功时,虚函数与普通函数的性能差别通常落在噪声范围内;去虚化失败且函数体很小时,差别才会显现。这时的选项依次是:给类加 <code>final</code>、开链接期优化、把开放的多态换成 <code>std::variant</code> 配 <code>std::visit</code>、或者把分派提到循环外面。</p></div>
 <h2 id="c3-union">3.8 联合体与类型双关:活跃成员、bit_cast 与 variant</h2>
-<p>C 里读一个 <code>float</code> 的位模式有两种常见写法:定义一个联合体,写进 <code>float</code> 成员再读整数成员;或者取地址、强转指针、解引用。<strong>这两种写法在 C++ 里的合法性都与 C 不同</strong>,而且不同之处不会有任何诊断——编译通过,调试构建下结果也对。这一节把联合体的规则、类型双关的四种写法、以及 <code>std::variant</code> 的机制讲清楚。3.6 节从「哪些类型能按字节搬运」的角度给过合法做法的清单,这里补的是另一半:其余做法为什么不合法,以及它们具体怎么出事。</p>
+<p>C 里读一个 <code>float</code> 的位模式有两种常见写法:定义一个联合体,写进 <code>float</code> 成员再读整数成员;或者取地址、强转指针、解引用。<strong>这两种写法在 C++ 里的合法性都与 C 不同</strong>,而且不同之处不会有任何诊断——编译通过,调试构建下结果也对。这一节把联合体的规则、类型双关的四种写法、以及 <code>std::variant</code> 的机制讲清楚。</p>
+<p>3.6 节从「哪些类型能按字节搬运」的角度给过合法做法的清单,这里补的是另一半:其余做法为什么不合法,以及它们具体怎么出事。</p>
 <h3>联合体:任意时刻只有一个活跃成员</h3>
 <p>联合体的全部成员共享同一块存储,大小等于最大成员,对齐等于对齐要求最严格的那个成员。这一条 C 与 C++ 相同。不同的是对「能读哪个成员」的约束。</p>
 <table style="contain-intrinsic-size:auto 236px">
@@ -6332,7 +6346,8 @@ std::visit(Printer{}, v);
 
 <span class="cm">// 分支逻辑相同时用泛型 lambda</span>
 std::visit([](<span class="kw">const</span> <span class="kw">auto</span>&amp; x) { log_any(x); }, v);</code></pre>
-<p><code>valueless_by_exception</code> 表示的正是上一小节第三条讲的那个状态:切换活跃成员时,旧对象已经销毁而新对象的构造抛了异常,这块存储上就没有活跃成员了。此时 <code>index()</code> 返回 <code>std::variant_npos</code>,之后每次 <code>std::visit</code> 都抛 <code>std::bad_variant_access</code>。标准给了一条明确的规避条件:<strong>所有备选类型的移动构造函数都是 <code>noexcept</code> 时,赋值不会进入这个状态</strong>,因为实现可以先在临时对象上构造成功、再移动进去。</p>
+<p><code>valueless_by_exception</code> 表示的正是上一小节第三条讲的那个状态:切换活跃成员时,旧对象已经销毁而新对象的构造抛了异常,这块存储上就没有活跃成员了。此时 <code>index()</code> 返回 <code>std::variant_npos</code>,之后每次 <code>std::visit</code> 都抛 <code>std::bad_variant_access</code>。</p>
+<p>标准给了一条明确的规避条件:<strong>所有备选类型的移动构造函数都是 <code>noexcept</code> 时,赋值不会进入这个状态</strong>,因为实现可以先在临时对象上构造成功、再移动进去。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 114px"><code><span class="cm">// 定义完 variant 别名之后逐个断言,是最省事的确认方式</span>
 <span class="kw">static_assert</span>(std::is_nothrow_move_constructible_v&lt;<span class="kw">int</span>&gt;);
 <span class="kw">static_assert</span>(std::is_nothrow_move_constructible_v&lt;std::string&gt;);</code></pre>
@@ -6577,7 +6592,7 @@ std::visit([](<span class="kw">const</span> <span class="kw">auto</span>&amp; x)
 }                                                 <span class="cm">// tmp 带着旧数据析构</span></code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 需要强保证时,把可能失败的动作全部排到「不会失败的那一步」之前</span><p>自查办法:从函数最后一行往前读,找到最靠后的那个可能抛异常的语句;它之后的所有语句必须都不会失败——指针赋值、<code>swap</code>、整数运算、已经 <code>reserve</code> 过的容器写入。做不到就说明这个函数只能给出基本保证,那就把这件事写进接口注释,不要让调用方以为失败之后状态没变。</p></div>
 <h3>常见资源与它们的标准包装:一张完整对照</h3>
-<p>本节开头那张表只列了最常见的七种。工程里会遇到的资源要多得多,下面这张表补齐。用法是:<strong>先在左列找到手上的资源,看第二列有没有现成包装;没有,就按第三列的释放动作套本节 <code>File</code> 那个形态自己写一个。</strong></p>
+<p>开头那张表只列了最常见的七种。工程里会遇到的资源要多得多,下面这张表补齐。用法是:<strong>先在左列找到手上的资源,看第二列有没有现成包装;没有,就按第三列的释放动作套前面 <code>File</code> 那个形态自己写一个。</strong></p>
 <table style="contain-intrinsic-size:auto 985px">
 <thead><tr><th>资源</th><th>包装</th><th>释放动作</th><th>漏掉之后的症状</th></tr></thead>
 <tbody>
@@ -7501,7 +7516,7 @@ FileHandle f{Win32Handle&lt;-1&gt;{::CreateFileW(path, GENERIC_READ, FILE_SHARE_
 <div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 C++20 起线程一律用 std::jthread,不要再用 std::thread</span><p><code>std::thread</code> 的析构函数在线程既没 <code>join</code> 也没 <code>detach</code> 时直接调用 <code>std::terminate</code>,这是标准库里少见的「不符合 RAII 直觉」的设计:它不替你收尾,而是让程序崩溃。<code>std::jthread</code> 修好了这一点——析构时自动请求停止并 <code>join</code>,而且它带一个 <code>std::stop_token</code>,让线程体能配合退出。改用它之后,「函数中途抛异常导致线程没被 <code>join</code>」这类问题自动消失。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45697px;--thin-h:45697px">
+<section class="chapter" style="contain-intrinsic-size:auto 45698px;--thin-h:45698px">
 <h1 id="c5"><span class="part">第 5 章</span>移动语义与完美转发</h1>
 <h2 id="c5-why">5.1 移动语义解决什么问题</h2>
 <p>第 4 章讲的是「资源归谁」,这一章讲的是「资源怎么换主人」。C++11 之前,把一个持有资源的对象从一处传到另一处,只有一条路:<strong>拷贝</strong>——分配新内存、复制内容、释放旧的。但在很多场合,源对象在这次操作之后就再也不会被用到了,复制完全是白做的。移动语义就是给这类场合开的第二条路。</p>
@@ -7973,7 +7988,7 @@ f(w);              <span class="cm">// T = Widget&amp;   → 参数类型 Widget
 f(std::move(w));   <span class="cm">// T = Widget    → 参数类型 Widget&amp;&amp;</span>
 f(Widget{});       <span class="cm">// T = Widget    → 参数类型 Widget&amp;&amp;</span>
 f(cw);             <span class="cm">// T = const Widget&amp; → 参数类型 const Widget&amp;</span></code></pre>
-<figure style="contain-intrinsic-size:auto 344px">
+<figure style="contain-intrinsic-size:auto 345px">
 <svg viewBox="0 0 720 254" xmlns="http://www.w3.org/2000/svg" font-size="13">
   <defs>
     <marker id="gLfr_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
@@ -8067,7 +8082,7 @@ Widget w;
     <span class="kw">return</span> std::forward&lt;<span class="kw">decltype</span>(f)&gt;(f)(std::forward&lt;<span class="kw">decltype</span>(args)&gt;(args)...);
 };</code></pre>
 <h3>为什么类模板成员上的 T&amp;&amp; 不是转发引用</h3>
-<p>本节开头那张表的第五行只给了结论。它的原因值得说清,因为同一个道理能解释另外几个「看起来该推导却没推导」的形态:<strong>转发引用的全部机制建立在「<code>T</code> 由这次调用推导」之上,而类模板的 <code>T</code> 在对象被创建的那一刻就已经定死了。</strong></p>
+<p>开头那张表的第五行只给了结论。它的原因值得说清,因为同一个道理能解释另外几个「看起来该推导却没推导」的形态:<strong>转发引用的全部机制建立在「<code>T</code> 由这次调用推导」之上,而类模板的 <code>T</code> 在对象被创建的那一刻就已经定死了。</strong></p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 332px"><code><span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt;
 <span class="kw">class</span> Vec {
 <span class="kw">public</span>:
@@ -8522,7 +8537,7 @@ ints.emplace_back(3.7);         <span class="cm">// 编译通过:插入的是 3<
 <div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">🔵 C++20 起用引用限定的成员函数表达「消耗」,不要靠函数名约定</span><p><code>auto take() &amp;&amp; -&gt; std::vector&lt;Item&gt; { return std::move(items_); }</code> 这个写法让编译器帮忙检查:只有右值对象能调用它,左值对象调用直接编译错误。调用点因此必须写出 <code>std::move(basket).take()</code>,消耗语义在代码里可见、可搜索、可审查。这比「靠函数名提醒读者」强得多,因为函数名不参与编译。同一个技巧也用在 <code>optional::value()</code> 与 <code>expected::value()</code> 上,标准库自己就提供了 <code>&amp;</code>、<code>const&amp;</code>、<code>&amp;&amp;</code>、<code>const&amp;&amp;</code> 四个版本。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46442px;--thin-h:46442px">
+<section class="chapter" style="contain-intrinsic-size:auto 46494px;--thin-h:46494px">
 <h1 id="c6"><span class="part">第 6 章</span>重载决议、名字查找与隐式转换</h1>
 <h2 id="c6-overview">6.1 一次函数调用,编译器做了三件事</h2>
 <p>C 里 <code>f(x)</code> 的含义是确定的:只有一个 <code>f</code>,参数按标准转换规则转过去。C++ 里同一行代码可能有几十个候选,而最终选中哪一个由一套三阶段的规则决定。<strong>这套规则是 C++ 里出意外最多的地方</strong>——不是因为它不合理,而是因为它在无声地工作:选错了不会报错,只会调到另一个函数。</p>
@@ -8661,7 +8676,7 @@ log(<span>"hello"</span>);     <span class="cm">// 跑一遍就知道进的是�
 <div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 候选集里出现意外的函数时,报错往往指向一个从没听说过的头文件</span><p>真实形态:某天给一个类加了个基类,或者升级了一个第三方库,原本正常的调用突然报「二义」或者行为变了。原因是候选集变了——基类所在的命名空间被实参依赖查找拉了进来,或者库在自己的命名空间里新增了一个同名函数。这类问题的特征是<strong>「改动 A 处,B 处出错,而 B 处的代码一个字没动」</strong>。排查第一步永远是看清候选集(6.2 节给了办法),不要在 B 处的代码里找原因。</p></div>
 <h3>当场验证选中了哪个重载:三种手段</h3>
 <p>前面给了一种(加打印)。三种手段各有适用场景,合起来能覆盖全部情况。</p>
-<table style="contain-intrinsic-size:auto 149px">
+<table style="contain-intrinsic-size:auto 150px">
 <thead><tr><th>手段</th><th>做法</th><th>能回答什么</th><th>代价</th></tr></thead>
 <tbody>
 <tr><td class="nw">运行期标记</td><td>在可疑的几个重载里各加一行打印</td><td><strong>实际跑起来进了哪个</strong></td><td>要能跑到那条路径</td></tr>
@@ -8678,7 +8693,7 @@ log(<span>"hello"</span>);     <span class="cm">// 跑一遍就知道进的是�
 <p>还有一个不改代码的办法:让编译器把实例化的类型打出来。GCC 与 Clang 上,在模板里声明一个未定义的类模板并实例化它,报错信息里会写出确切的模板实参;或者直接用 <code>__PRETTY_FUNCTION__</code>(MSVC 上是 <code>__FUNCSIG__</code>),它打印的函数签名里带着实例化后的全部实参。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 不确定选中了哪个重载时,先看候选集,不要先读规则推理</span><p>读规则推理的成功率很低,因为最容易出意外的恰恰是「你不知道它存在」的那个候选——它可能来自一个间接包含的头文件、来自基类所在的命名空间、或者来自标准库的某次版本更新。制造一次二义让编译器把候选全列出来,通常十几秒就能看到答案,而且列表里往往有完全没预料到的名字。</p></div>
 <h2 id="c6-lookup">6.2 名字查找:常规查找与实参依赖查找</h2>
-<p>这一节把候选集是怎么来的讲透。它决定了「编译器知道哪些函数」,而这是后面一切的前提。</p>
+<p>候选集是怎么来的,决定了「编译器知道哪些函数」,而这是后面一切的前提。</p>
 <h3>常规查找的顺序</h3>
 <p>从使用名字的位置开始,逐层向外找,<strong>第一个找到该名字的作用域获胜,查找立即停止</strong>。</p>
 <ol>
@@ -8846,7 +8861,8 @@ algo(1.5);      <span class="cm">// helper(x):ADL 对 double 没有关联命名�
 <tr><td class="nw">基类是依赖类型时的成员</td><td>实例化时</td><td><strong>要写 <code>this-&gt;</code> 或 <code>Base&lt;T&gt;::</code></strong></td><td>不写就报「找不到该名字」</td></tr>
 </tbody>
 </table>
-<p>最后一行是继承自模板基类时的经典报错。<code>template &lt;typename T&gt; struct D : B&lt;T&gt; { void f() { g(); } };</code> 里的 <code>g()</code> 不会去 <code>B&lt;T&gt;</code> 里找,因为编译器在第一阶段还不知道 <code>B&lt;T&gt;</code> 长什么样。改成 <code>this-&gt;g()</code> 就把它变成了依赖名字,推迟到第二阶段查。MSVC 历史上对两阶段查找的实现不完整,同一份代码在 MSVC 上编得过而在 GCC 上报错,是跨平台移植时的高频问题;新版 MSVC 加上 <code>/permissive-</code> 之后行为与标准一致。</p>
+<p>最后一行是继承自模板基类时的经典报错。<code>template &lt;typename T&gt; struct D : B&lt;T&gt; { void f() { g(); } };</code> 里的 <code>g()</code> 不会去 <code>B&lt;T&gt;</code> 里找,因为编译器在第一阶段还不知道 <code>B&lt;T&gt;</code> 长什么样。改成 <code>this-&gt;g()</code> 就把它变成了依赖名字,推迟到第二阶段查。</p>
+<p>MSVC 历史上对两阶段查找的实现不完整,同一份代码在 MSVC 上编得过而在 GCC 上报错,是跨平台移植时的高频问题;新版 MSVC 加上 <code>/permissive-</code> 之后行为与标准一致。</p>
 <h2 id="c6-conv">6.3 隐式转换序列与排序</h2>
 <p>候选集定下来之后,编译器给每个候选算一笔账:<strong>把每个实参转成对应形参,总共要付多少代价</strong>。代价小的赢。这一节讲这笔账怎么算,因为它解释了几乎所有「为什么选中的是那一个」。</p>
 <h3>一个实参的转换分三档</h3>
@@ -9272,7 +9288,7 @@ set_port(8080);        <span class="cm">// 可以</span>
 </table>
 <p>最后一行是强类型比「加个类型别名」强的地方:<code>using UserId = int;</code> 只是换个名字,<code>UserId</code> 和 <code>OrderId</code> 在编译器眼里仍然都是 <code>int</code>,传反了照样通过。<strong>别名提供的是可读性,强类型提供的是检查。</strong></p>
 <h2 id="c6-cases">6.6 六种「选中了意外的重载」</h2>
-<p>这一节把前面的规则落到具体形态上。每一种都在真实项目里反复出现,而且都<strong>不报错</strong>——这正是它们危险的原因。</p>
+<p>前面的规则落到具体形态上有若干种,每一种都在真实项目里反复出现,而且都<strong>不报错</strong>——这正是它们危险的原因。</p>
 <h3>一、整数字面量选中了 bool 重载</h3>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 141px"><code><span class="kw">void</span> log(<span class="kw">const</span> std::string&amp;);
 <span class="kw">void</span> log(<span class="kw">bool</span>);
@@ -10718,7 +10734,7 @@ IStats* st = static_cast&lt;FileStore*&gt;(s.get());               <span class="
 <div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">🔵 C++11 起用 override 与 final 表达意图,不要再靠注释和命名约定</span><p><code>override</code> 的价值不在于「说明这是一个重写」,而在于<strong>写错签名时编译失败</strong>:基类的函数是 <code>const</code> 而派生类漏写了、参数类型差一个引用、基类后来改了签名——这三种情况在没有 <code>override</code> 时都会静默变成「派生类新增了一个无关的函数」,而重写从此失效,虚调用一直走基类版本。<code>final</code> 的价值则是让编译器有机会去虚化(3.7),同时挡住不该发生的继承。规矩很简单:<strong>重写一律写 <code>override</code> 且不再写 <code>virtual</code>;确定不再被继承的类、不再被重写的虚函数一律加 <code>final</code></strong>。存量代码可以用 <code>clang-tidy</code> 的 <code>modernize-use-override</code> 批量补上。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 50284px;--thin-h:50284px">
+<section class="chapter" style="contain-intrinsic-size:auto 50442px;--thin-h:50442px">
 <h1 id="c8"><span class="part">第 8 章</span>运算符重载与值语义类的设计</h1>
 <h2 id="c8-value">8.1 值语义:什么样的类型该像 int 一样</h2>
 <p>C 里只有一种类型行为:结构体按字节复制,赋值就是覆盖,比较要自己写函数。C++ 允许你决定自己的类型「像什么」——可以像 <code>int</code> 一样是一个纯粹的值,可以像句柄一样表示对某个东西的引用,也可以两者都不像(只能移动、不能复制)。<strong>这个决定应当在写第一个成员之前做出</strong>,因为它决定了后面每一个接口的形态。</p>
@@ -10815,7 +10831,7 @@ IStats* st = static_cast&lt;FileStore*&gt;(s.get());               <span class="
 }</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 230px"><span class="t">🟢 每个值类型的定义后面直接跟一行 static_assert</span><p>放在头文件里、紧跟类定义之后,这样每次编译都会重新检查,而不是等到有人把它放进容器时才发现问题。最常用的三条是 <code>std::regular&lt;T&gt;</code>(结构性要求)、<code>std::is_nothrow_move_constructible_v&lt;T&gt;</code>(容器扩容时才走移动,否则退化成拷贝)、以及需要排序时的 <code>std::totally_ordered&lt;T&gt;</code>。这几行的成本是零——它们不生成任何代码,只在编译期检查一次。收益是<strong>把「这个类型该是什么行为」这个设计决定钉死在代码里</strong>:后来有人给类加了一个不可拷贝的成员、或者删掉了默认构造函数,断言当场失败,而不是留给使用者去发现。</p></div>
 <h3>三种行为决定了接口能怎么写</h3>
-<p>本节开头说「这个决定决定了后面每一个接口的形态」,这句话可以落到具体条目上。下面这张表按使用位置列出三种行为各自的限制,写接口时对照即可。</p>
+<p>开头说的「这个决定决定了后面每一个接口的形态」,可以落到具体条目上。下面这张表按使用位置列出三种行为各自的限制,写接口时对照即可。</p>
 <table style="contain-intrinsic-size:auto 262px">
 <thead><tr><th>使用位置</th><th>值类型</th><th>实体类型</th><th>视图类型</th></tr></thead>
 <tbody>
@@ -11096,7 +11112,7 @@ a == b;   a != b;   a &lt; b;   a &lt;= b;   a &gt; b;   a &gt;= b;      <span c
 </table>
 <div class="note new" style="contain-intrinsic-size:auto 200px"><span class="t">🔵 新写的类型一律用 &lt;=&gt;,但不要为了用它去改动稳定的旧类型</span><p>收益在新类型上最明显:两行 <code>= default</code> 换掉六个手写函数,加成员时自动跟上,而且跨类型比较不必写两组重载。改造旧类型则要谨慎——旧类型的六个运算符如果<strong>本来就不一致</strong>(<code>&lt;</code> 只比了两个字段而 <code>==</code> 比了三个),换成 <code>= default</code> 会把行为改对,而依赖旧行为的代码会跟着变。这类改造应当单独提交、单独测试,不要混在别的改动里。判据是:改造之后 <code>std::map</code> 里键的相等判断会不会变,会变就必须逐个检查调用方。</p></div>
 <h2 id="c8-idiom">8.4 值类型的四个惯用手法</h2>
-<p>这一节收四个写值类型时反复要用的形态。它们不是「技巧」,而是被大量实践收敛出来的标准写法——照着写就不会踩到本章前面列出的那些坑。</p>
+<p>写值类型时有四个形态反复要用。它们不是「技巧」,而是被大量实践收敛出来的标准写法——照着写就不会踩到本章前面列出的那些坑。</p>
 <h3>一、拷贝并交换</h3>
 <p>4.2 节给过代码,这里说清它为什么是异常安全的。赋值运算符的难点在于「先释放旧资源再获取新的」这个顺序:获取失败时旧资源已经没了,对象处于半损坏状态。拷贝并交换把顺序反过来——<strong>先在参数上完成全部可能失败的操作,再用不会失败的 <code>swap</code> 换进来</strong>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 495px"><code><span class="kw">class</span> Buf {
@@ -11387,7 +11403,8 @@ std::print(<span>"{:&gt;12}\n"</span>, Point{1, 2});      <span class="cm">// �
 <tr><td class="nw"><code>operator*</code> 的返回</td><td class="nw">随意</td><td>前向迭代器起<strong>必须是真引用</strong>,返回临时对象只算输入迭代器</td></tr>
 </tbody>
 </table>
-<p>第三、五行是最容易踩的两处。<strong>前向迭代器要求可默认构造</strong>,而手写迭代器经常只写了带参数的构造函数;<strong>前向迭代器要求 <code>operator*</code> 返回真正的引用</strong>,返回按值算出来的临时对象(惰性视图的常见写法)会让它降级成输入迭代器,于是 <code>std::sort</code>、<code>std::ranges::sort</code> 这类需要多趟遍历的算法直接编不过。上面那个 <code>Ring::iterator</code> 的 <code>operator*</code> 返回的是 <code>int</code> 而不是 <code>const int&amp;</code>,所以它<strong>实际上只是输入迭代器</strong>,尽管别名里写的是前向。</p>
+<p>第三、五行是最容易踩的两处。<strong>前向迭代器要求可默认构造</strong>,而手写迭代器经常只写了带参数的构造函数;<strong>前向迭代器要求 <code>operator*</code> 返回真正的引用</strong>,返回按值算出来的临时对象(惰性视图的常见写法)会让它降级成输入迭代器,于是 <code>std::sort</code>、<code>std::ranges::sort</code> 这类需要多趟遍历的算法直接编不过。</p>
+<p>上面那个 <code>Ring::iterator</code> 的 <code>operator*</code> 返回的是 <code>int</code> 而不是 <code>const int&amp;</code>,所以它<strong>实际上只是输入迭代器</strong>,尽管别名里写的是前向。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 141px"><code><span class="cm">// 用概念一次查清,报错会直接说缺哪一条</span>
 <span class="kw">static_assert</span>(std::input_iterator&lt;Ring::iterator&gt;);
 <span class="kw">static_assert</span>(std::forward_iterator&lt;Ring::iterator&gt;);   <span class="cm">// 这一条会失败</span>
@@ -11559,7 +11576,8 @@ std::string <span class="kw">operator</span><span>""</span>_tag(<span class="kw"
 <span class="cm">    // constexpr Meters x3 = t;           // 编译错误:两个类型之间没有转换</span>
     std::printf(<span>"%.2f m/s, %.1f m\n"</span>, v.count(), d2.count());
 }</code></pre>
-<p>有几个设计决定与本章前面的规矩完全一致,值得逐条对上号。<strong>构造函数一律 <code>explicit</code></strong>,裸 <code>double</code> 进不来(6.5 节);<strong>取值用具名的 <code>count()</code>,不提供转换运算符</strong>,与 8.4 节手法四以及 <code>std::chrono::duration</code> 的命名保持一致;<strong>比较用两行 <code>= default</code></strong>(8.3 节);<strong>二元运算写成隐藏友元或自由函数</strong>(8.2 节),于是 <code>2.0 * v</code> 与 <code>v * 2.0</code> 两个方向都能写。全部函数标 <code>constexpr</code>,整段计算在编译期完成。</p>
+<p>有几个设计决定与本章前面的规矩完全一致,值得逐条对上号。<strong>构造函数一律 <code>explicit</code></strong>,裸 <code>double</code> 进不来(6.5 节);<strong>取值用具名的 <code>count()</code>,不提供转换运算符</strong>,与 8.4 节手法四以及 <code>std::chrono::duration</code> 的命名保持一致;<strong>比较用两行 <code>= default</code></strong>(8.3 节);<strong>二元运算写成隐藏友元或自由函数</strong>(8.2 节),于是 <code>2.0 * v</code> 与 <code>v * 2.0</code> 两个方向都能写。</p>
+<p>全部函数标 <code>constexpr</code>,整段计算在编译期完成。</p>
 <p>每种运算给不给、返回什么类型,是量纲类型设计里唯一需要动脑的部分。规则来自量纲本身,不来自代码方便与否。</p>
 <ul>
 <li><strong>同量纲相加减</strong>,结果还是这个量纲。<code>Meters + Meters</code> 给,<code>Meters + Seconds</code> 不给。</li>
@@ -11569,7 +11587,8 @@ std::string <span class="kw">operator</span><span>""</span>_tag(<span class="kw"
 </ul>
 <p>需要完整的量纲代数(任意组合都自动推出结果类型)时,不要自己写,用 C++23 的 <code>std::chrono</code> 之外的第三方单位库,或者等待标准的单位提案。<strong>自己写的量纲类型只覆盖项目里实际出现的那几种组合就够</strong>,再多就变成了一个需要维护的元编程库。</p>
 <h3>std::chrono 是量纲设计的范本</h3>
-<p><code>std::chrono</code> 是标准库里量纲设计最完整的一处,它的每一个决定都值得照抄。核心类型是 <code>duration&lt;Rep, Period&gt;</code>:<code>Rep</code> 是表示类型(存数值的那个算术类型),<code>Period</code> 是一个 <code>std::ratio</code>,表示<strong>一个滴答等于多少秒</strong>。<code>milliseconds</code> 就是 <code>duration&lt;某个有符号整数, std::milli&gt;</code>,<code>seconds</code> 是 <code>duration&lt;某个有符号整数, std::ratio&lt;1&gt;&gt;</code>。标准只规定表示类型至少多少位,具体是 <code>long</code> 还是 <code>long long</code> 由实现决定。</p>
+<p><code>std::chrono</code> 是标准库里量纲设计最完整的一处,它的每一个决定都值得照抄。核心类型是 <code>duration&lt;Rep, Period&gt;</code>:<code>Rep</code> 是表示类型(存数值的那个算术类型),<code>Period</code> 是一个 <code>std::ratio</code>,表示<strong>一个滴答等于多少秒</strong>。</p>
+<p><code>milliseconds</code> 就是 <code>duration&lt;某个有符号整数, std::milli&gt;</code>,<code>seconds</code> 是 <code>duration&lt;某个有符号整数, std::ratio&lt;1&gt;&gt;</code>。标准只规定表示类型至少多少位,具体是 <code>long</code> 还是 <code>long long</code> 由实现决定。</p>
 <p>这个设计里最值得学的一条是转换规则:<strong>隐式转换只在不丢精度的方向上允许</strong>。秒转毫秒是乘 1000,整数运算不丢东西,所以隐式;毫秒转秒要除 1000,整数除法会截断,所以必须显式写 <code>duration_cast</code>。判据可以精确到一句话——换算比是整数倍,或者目标用浮点表示,才允许隐式。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 332px"><code><span class="kw">using</span> <span class="kw">namespace</span> std::chrono;
 
@@ -11595,7 +11614,8 @@ duration&lt;<span class="kw">double</span>&gt; e = 500ms;           <span class=
 <tr><td class="nw">表达「不限时」</td><td class="nw">靠约定,例如 -1 或 0</td><td>用 <code>std::optional</code>,或者一个具名常量</td></tr>
 </tbody>
 </table>
-<p>参数写具体单位还是写模板,判据是两条:<strong>接口的实现要不要放进 <code>.cpp</code></strong>,以及<strong>调用方会不会用到比它更细的单位</strong>。写成 <code>milliseconds</code> 时签名简单、实现可以藏进实现文件,代价是调用方传 <code>500us</code> 会编译错误;写成 <code>template &lt;class R, class P&gt; void wait(std::chrono::duration&lt;R, P&gt;)</code> 时任何单位都能传,代价是实现必须留在头文件里。标准库两种都有——<code>sleep_for</code> 是模板,而多数应用层接口用具体单位就够。</p>
+<p>参数写具体单位还是写模板,判据是两条:<strong>接口的实现要不要放进 <code>.cpp</code></strong>,以及<strong>调用方会不会用到比它更细的单位</strong>。</p>
+<p>写成 <code>milliseconds</code> 时签名简单、实现可以藏进实现文件,代价是调用方传 <code>500us</code> 会编译错误;写成 <code>template &lt;class R, class P&gt; void wait(std::chrono::duration&lt;R, P&gt;)</code> 时任何单位都能传,代价是实现必须留在头文件里。标准库两种都有——<code>sleep_for</code> 是模板,而多数应用层接口用具体单位就够。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 接口用裸整数表示时长,单位搞错时编译器不会报错</span><p>事故形态很典型:一个接口的超时参数写成 <code>int timeout</code>,文档里注明单位是毫秒,而调用方按秒理解,写了 <code>connect(host, 30)</code>。线上表现是连接几乎立刻超时并重试,重试被逐级放大之后占满后端的容量,而请求日志里每一条都显示「30」,看不出任何异常。反方向同样常见:接口要秒而调用方传了毫秒值,超时时间变成一千倍,慢请求把连接池占满。这类缺陷测试通常发现不了,因为测试环境的响应足够快,超时分支根本不会被走到。<strong>规避手段只有一条:时长参数一律用 <code>std::chrono::duration</code> 的具体类型,不接受裸整数</strong>;确实要与 C 接口交界时,在最外层做一次显式的 <code>count()</code>,并且让那一行成为整个程序里唯一出现裸毫秒数的地方。</p></div>
 <h3>constexpr 字面量与编译期校验</h3>
 <p>字面量运算符可以是 <code>constexpr</code>,于是它不只是在编译期算数,还能在编译期<strong>拒绝非法的字面量</strong>。手法是:在函数里对非法输入抛异常。常量求值过程中一旦走到 <code>throw</code>,这个表达式就不再是常量表达式,编译当场失败(2.6 节)。</p>
@@ -11650,7 +11670,8 @@ duration&lt;<span class="kw">double</span>&gt; e = 500ms;           <span class=
 </tbody>
 </table>
 <p>三条判据可以直接用:<strong>这个后缀会在很多调用点出现吗</strong>(不会就不值得);<strong>读者能不能猜对它的含义</strong>(<code>_ms</code> <code>_km</code> <code>_deg</code> 能,<code>_x</code> <code>_t</code> 不能);<strong>这个量有没有公认的单位符号</strong>(有就用它,没有说明这里本来就不适合用后缀)。</p>
-<p>最后是一个会让整套防护失效的写法。<strong>给量纲类型加上转换运算符,单位检查立刻全部作废</strong>:两边都能隐式转成 <code>double</code> 之后,<code>Meters + Seconds</code> 又能编译通过了,走的是内置的加法,而类型信息在那一步已经丢光。这正是 8.4 节手法四那条规矩的具体后果——<strong>转换构造与转换运算符最多提供一个,而且加 <code>explicit</code></strong>。量纲类型对这一条比普通值类型更敏感:普通值类型加一个隐式转换只是多几条重载候选,量纲类型加一个隐式转换,等于把这个类型提供的全部防护一次取消。</p>
+<p>最后是一个会让整套防护失效的写法。<strong>给量纲类型加上转换运算符,单位检查立刻全部作废</strong>:两边都能隐式转成 <code>double</code> 之后,<code>Meters + Seconds</code> 又能编译通过了,走的是内置的加法,而类型信息在那一步已经丢光。</p>
+<p>这正是 8.4 节手法四那条规矩的具体后果——<strong>转换构造与转换运算符最多提供一个,而且加 <code>explicit</code></strong>。量纲类型对这一条比普通值类型更敏感:普通值类型加一个隐式转换只是多几条重载候选,量纲类型加一个隐式转换,等于把这个类型提供的全部防护一次取消。</p>
 <p>与它同源的还有一种写法:为了「方便」而给量纲类型加一个接受裸数字的非 <code>explicit</code> 构造函数。它的后果一样——<code>wait(500)</code> 又能编过了,而 500 是秒还是毫秒重新变成一个只有文档知道的事。<strong>量纲类型的构造入口只有两个:<code>explicit</code> 构造函数,和字面量后缀。</strong></p>
 <h2 id="c8-sum">8.7 小结:本章要点与易错清单</h2>
 <p>这一章的主线是:<strong>先决定类型的行为(值、实体、视图),再按这个决定选接口形态。</strong>决定做对了,后面每一步都有明确依据;做错了,后面每一步都在打补丁。</p>
@@ -11737,7 +11758,7 @@ duration&lt;<span class="kw">double</span>&gt; e = 500ms;           <span class=
 <p>判断方法仍然回到 8.1 的第一个问题:<strong>两个内容相同的对象算不算同一个?</strong>算,就是值类型,它不该有虚函数,也不该被继承;不算,就走第 7 章那套规矩。<strong>一个类型只能选一条路线</strong>,同时想要两边的性质是行不通的。需要「一批不同类型的对象都能按值放进容器」时,答案是 <code>std::variant</code> 或类型擦除(7.5),它们的做法正是<strong>在外面套一层值类型,把多态关在里面</strong>——这也是那两个方案在设计上的真正价值,而不只是「不用写继承」。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 48324px;--thin-h:48324px">
+<section class="chapter" style="contain-intrinsic-size:auto 48382px;--thin-h:48382px">
 <h1 id="c9"><span class="part">第 9 章</span>模板基础</h1>
 <h2 id="c9-deduce">9.1 函数模板与实参推导</h2>
 <p>模板是 C++ 泛型的实现方式:<strong>编译器按用到的类型各生成一份代码</strong>。这一句话解释了模板的全部优点与全部代价——优点是生成出来的代码与手写的专用版本完全一样快,没有任何间接层;代价是每个类型一份,编译时间与二进制体积都随类型数增长。第 0.8 节给过最小形态,这一章讲清规则。</p>
@@ -12069,7 +12090,7 @@ h.reset();              <span class="cm">// 也合法</span>
 f(p);        <span class="cm">// 重载决议:主模板二更特化,胜出</span>
 <span class="cm">             // 于是调的是主模板二,上面那个特化完全没被用到</span></code></pre>
 <div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 给函数模板写全特化,几乎总是得到「写了但没生效」</span><p>问题的根源是特化不参与重载决议,而是在决议之后才被查找。加一个新的重载就可能让原本生效的特化失效,而且没有任何提示。<strong>正确做法是写一个普通函数重载</strong>——普通函数参与决议,而且在转换代价相同时赢过模板(6.4)。需要按类型分派而普通函数写不出来时,用 <code>if constexpr</code>(C++17)或者把逻辑放进一个类模板再特化那个类。这是 Sutter 在《C++ 编程规范》第 66 条的结论。</p></div>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 推荐:普通函数重载</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// 推荐:普通函数重载</span>
 <span class="kw">template</span> &lt;<span class="kw">typename</span> T&gt; <span class="kw">void</span> f(T);
 <span class="kw">void</span> f(<span class="kw">int</span>*);                          <span class="cm">// 普通函数,参与决议,优先级明确</span>
 
@@ -12478,7 +12499,11 @@ T&amp; emplace(Args&amp;&amp;... args) {
 </tbody>
 </table>
 <p>表里第一行与第二行的差别值得记牢:<strong><code>...</code> 之前的整个模式决定了展开的单位</strong>,模式里含几个包,这几个包就同步展开。<code>a...</code> 与 <code>b...</code> 是两个独立的模式,各展各的;<code>g(a, b)...</code> 是一个模式,里面两个包必须步调一致。</p>
-<p>调试参数包时有两个手法值得记。<strong>一是把长度检查提前</strong>:在函数体第一行写 <code>static_assert(sizeof...(Ts) == sizeof...(Us), "两个参数包长度必须相同");</code>,报错信息就是自己写的那句话,而不是编译器那句含糊的提示。<strong>二是把包的内容打印出来</strong>:用 9.1 节那个未定义模板的手法,声明 <code>template &lt;typename...&gt; struct Show;</code> 然后写 <code>Show&lt;Ts...&gt; _;</code>,编译器会把整个包的类型列在错误信息里。</p>
+<p>调试参数包时有两个手法值得记。</p>
+<ol>
+<li><strong>把长度检查提前</strong>:在函数体第一行写 <code>static_assert(sizeof...(Ts) == sizeof...(Us), "两个参数包长度必须相同");</code>,报错信息就是自己写的那句话,而不是编译器那句含糊的提示。</li>
+<li><strong>把包的内容打印出来</strong>:用 9.1 节那个未定义模板的手法,声明 <code>template &lt;typename...&gt; struct Show;</code> 然后写 <code>Show&lt;Ts...&gt; _;</code>,编译器会把整个包的类型列在错误信息里。</li>
+</ol>
 <div class="note dead" style="contain-intrinsic-size:auto 261px"><span class="t">🔴 同一个模式里的两个参数包长度不同,报错不会告诉你是哪两个</span><p>GCC 的提示是「mismatched argument pack lengths」,Clang 是「pack expansion contains parameter packs of different lengths」,两者都会给出长度数字,但不会指出是哪两个包对不上——模式里包了三四个包时就只能自己推。而更麻烦的形态是长度<strong>恰好相同但语义配错了</strong>:两个包都是三个元素,只是顺序或含义不对,这时连报错都没有,展开出来的是一组类型正确、值错误的实参。<strong>规避办法是在入口写 <code>static_assert</code> 检查长度</strong>,并且把「哪个包对应哪个包」写进函数名或注释——两个包同步展开的代码,可读性天然很差,应当尽量拆成一层薄薄的转发。</p></div>
 <h2 id="c9-cost">9.6 模板的工程代价与控制手段</h2>
 <p>模板的运行期开销是零,但它把成本转移到了编译期。一个大量使用模板的工程,编译时间可能是同等规模 C 工程的十倍,二进制也可能大出几倍。这一节讲这些成本从哪来,以及能做什么。</p>
@@ -12707,7 +12732,7 @@ ClangBuildAnalyzer --analyze capture.bin</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 模板报错先看 required from here,不要从第一行开始读</span><p>模板报错的结构是固定的:开头几行是编译器在最深处发现的问题,中间是从调用点到出错点的整条实例化链,最后是具体的错误。<strong>有价值的信息在两头,中间那几十行只是路径。</strong>从第一行开始顺着读,读到的是标准库内部的实现细节,与自己的代码无关,读完也不知道该改哪里。正确顺序是:先找实例化链的<strong>第一环</strong>(那是自己写的代码,也是唯一能改的地方),再看<strong>最后一个</strong> <code>error:</code>(那是缺的具体东西),两者一对照通常就有答案。把这条当成机械流程执行,读模板报错的时间能缩短一大半。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 43765px;--thin-h:43765px">
+<section class="chapter" style="contain-intrinsic-size:auto 43766px;--thin-h:43766px">
 <h1 id="c10"><span class="part">第 10 章</span>模板进阶:元编程、SFINAE 与 concepts</h1>
 <h2 id="c10-traits">10.1 类型萃取:在编译期向类型提问</h2>
 <p>泛型代码经常需要根据类型的性质分岔:这个类型是不是整数?能不能默认构造?有没有 <code>size()</code> 成员?这些问题在运行期问不了——类型是编译期的东西。<strong>类型萃取</strong>就是在编译期提问并得到答案的机制,它是后面 SFINAE 与 concepts 的基础。</p>
@@ -13254,7 +13279,7 @@ std::apply([](<span class="kw">auto</span>... xs) { (std::cout &lt;&lt; ... &lt;
 <p>实用价值在序列化、反射式的字段映射、以及带名字的强类型上。<strong>C++17 及以前做不到这一点</strong>,只能用宏拼名字。</p>
 <h3>递归展开还是折叠</h3>
 <p>C++11/14 的元编程大量使用递归模板,C++17 之后多数可以换成折叠表达式或 <code>constexpr</code> 循环,性能与可读性都更好。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// C++11:递归,每一步实例化一个新类型,编译慢</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// C++11:递归,每一步实例化一个新类型,编译慢</span>
 <span class="kw">template</span> &lt;<span class="kw">typename</span> T, <span class="kw">typename</span>... Rest&gt;
 <span class="kw">struct</span> max_size { <span class="kw">static</span> <span class="kw">constexpr</span> std::<span class="kw">size_t</span> value =
     <span class="kw">sizeof</span>(T) &gt; max_size&lt;Rest...&gt;::value ? <span class="kw">sizeof</span>(T) : max_size&lt;Rest...&gt;::value; };
@@ -13520,7 +13545,7 @@ c.describe();          <span class="cm">// 全程无虚调用,area_impl 可以�
     <span class="kw">void</span> run() { static_cast&lt;D*&gt;(<span class="kw">this</span>)-&gt;run_impl(); }
 };
 <span class="cm">// Base&lt;Impl&gt;* p = new Impl; delete p;    // 现在编译不过,而不是运行期出错</span></code></pre>
-<table style="contain-intrinsic-size:auto 151px">
+<table style="contain-intrinsic-size:auto 150px">
 <thead><tr><th>使用方式</th><th>CRTP 基类</th><th>带虚析构的基类</th></tr></thead>
 <tbody>
 <tr><td class="nw">通过基类指针 <code>delete</code></td><td class="nw"><strong>未定义行为</strong>,应当在编译期挡住</td><td>正确</td></tr>
@@ -13612,7 +13637,7 @@ c.describe();          <span class="cm">// 全程无虚调用,area_impl 可以�
 <div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 类模板的成员函数不被调用就不检查,「编过了」不等于「对」</span><p>这是模板与普通代码最大的行为差别:<code>template &lt;typename T&gt; struct Ring { void flush() { this-&gt;no_such_member(); } };</code> 只要没人调用 <code>flush</code>,编译完全通过。<strong>症状是模板在自己的测试里一切正常,交付出去之后第一个用它的人撞上一堆报错</strong>,而那些代码作者从来没有编译过。显式实例化 <code>template class Ring&lt;int&gt;;</code> 会强制实例化全部成员函数,把这类错误在本地一次逼出来;有约束的模板还要为每个约束分支各写一行。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46890px;--thin-h:46890px">
+<section class="chapter" style="contain-intrinsic-size:auto 46874px;--thin-h:46874px">
 <h1 id="c11"><span class="part">第 11 章</span>lambda 与可调用对象</h1>
 <h2 id="c11-what">11.1 lambda 是什么:编译器生成的一个类</h2>
 <p>C 里「把一段逻辑传给另一个函数」只有一条路:函数指针。它的两个缺点很具体——<strong>不能带状态</strong>(要靠一个额外的 <code>void*</code> 参数把上下文传进去),以及<strong>不能内联</strong>(编译时不知道最终指向哪个函数)。lambda 同时解决了这两个问题,代价是理解它需要知道编译器在背后做了什么。</p>
@@ -14011,7 +14036,7 @@ std::invoke(std::plus&lt;&gt;{}, 1, 2);</code></pre>
 <p>配套的 <code>std::invoke_result_t&lt;F, Args...&gt;</code> 给出调用的返回类型,<code>std::is_invocable_v&lt;F, Args...&gt;</code> 判断能不能这样调用。<strong>写包装层时一律用 <code>std::invoke</code></strong>,否则成员函数指针要单独写一套(5.5 节)。</p>
 <h3>std::function 的三种替代品</h3>
 <p>11.3 节的表列了五种可调用形态,这里补充「已经在用 <code>std::function</code>,想去掉它的开销」时的三条路。</p>
-<table style="contain-intrinsic-size:auto 151px">
+<table style="contain-intrinsic-size:auto 150px">
 <thead><tr><th>替代品</th><th>适用条件</th><th>收益</th></tr></thead>
 <tbody>
 <tr><td class="nw">模板参数</td><td class="nw">回调只在函数执行期间使用</td><td><strong>零开销</strong>,完全内联</td></tr>
@@ -14073,7 +14098,7 @@ g();  g();                                <span class="cm">// 返回 1、2 —�
 <div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 const 的 std::function 挡不住内部的可变状态</span><p>一个 <code>const std::function</code> 成员看起来是安全的共享对象,于是很容易被多个线程同时调用。但 <code>const</code> 只作用在包装层,里面那个带 <code>mutable</code> 状态的 lambda 完全不受约束。<strong>结果是一处没有任何同步的并发写,而代码上看不出来</strong>——包装层与调用点都写着 <code>const</code>。症状是计数错乱,或者数据竞争检测器(<code>-fsanitize=thread</code>)报在标准库内部,看不到自己的代码。规矩:<strong>要跨线程共享的可调用对象必须自身无状态</strong>,有状态就必须自带同步,<code>const</code> 在这里提供不了任何保证。</p></div>
 <div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">🟡 std::bind 的每一种用法都能用 lambda 写得更清楚</span><p><code>std::bind</code> 是 lambda 之前的绑定手段,它能做的事 lambda 都能做,而且做得更明白:占位符 <code>_1</code>、<code>_2</code> 的顺序要靠数,嵌套绑定几乎不可读,绑定的参数默认按值复制而这一点不写在代码里,绑定重载的函数还必须先显式转型。lambda 把这些全部变成可见的普通代码——参数写在参数表里,捕获写在捕获列表里,而且能被内联。<code>std::bind</code> 至今没有被移除,读老代码时仍会遇到,<strong>但没有一种情况值得在新代码里选它</strong>。</p></div>
 <h2 id="c11-use">11.4 实战形态</h2>
-<p>这一节把 lambda 在真实代码里最常出现的六个形态收在一起。它们是「见到这个需求就照抄」级别的固定写法。</p>
+<p>lambda 在真实代码里最常出现的形态有六个,都是「见到这个需求就照抄」级别的固定写法。</p>
 <h3>一、给算法传比较器与谓词</h3>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code>std::sort(v.begin(), v.end(), [](<span class="kw">const</span> Item&amp; a, <span class="kw">const</span> Item&amp; b) {
     <span class="kw">return</span> std::tie(a.priority, a.id) &gt; std::tie(b.priority, b.id);   <span class="cm">// 多字段排序</span>
@@ -14492,7 +14517,7 @@ std::erase_if(names, std::not_fn(is_txt));               <span class="cm">// not
 <p><code>std::bind_front</code> 相对 lambda 的唯一优势是<strong>短,而且不必把参数列表再抄一遍</strong>——参数很多、或者参数类型是模板时,lambda 要写一串 <code>auto&amp;&amp;</code> 加 <code>std::forward</code>,<code>bind_front</code> 一行就够。这也是它今天唯一站得住的用途。</p>
 <div class="note old" style="contain-intrinsic-size:auto 299px"><span class="t">🟡 bind1st 这一族在 C++17 已被移除</span><p>C++98 时代的绑定设施是 <code>std::bind1st</code>、<code>std::bind2nd</code>、<code>std::ptr_fun</code>、<code>std::mem_fun</code>、<code>std::mem_fun_ref</code>,配合 <code>std::unary_function</code> 与 <code>std::binary_function</code> 提供的类型别名工作。它们在 C++11 被弃用,<strong>C++17 全部移除</strong>,<code>std::not1</code> 与 <code>std::not2</code> 也在 C++20 被移除。遇到它们不必先读懂再翻译,直接换成 lambda 即可:<code>std::bind2nd(std::less&lt;int&gt;(), 10)</code> 就是 <code>[](int x) { return x &lt; 10; }</code>,<code>std::not1(p)</code> 就是 <code>std::not_fn(p)</code>。<code>std::mem_fn</code> 是这一族里唯一保留下来的,但它今天也很少需要——<code>std::invoke</code> 与 <code>std::bind_front</code> 直接接受成员指针,不必再包一层。升级工具链时这一族是最先撞上的一批编译错误,改法机械,可以一次改完。</p></div>
 <h3>三种事故形态</h3>
-<p>本节这六种可调用对象各有典型的失效方式,归拢起来是三条。</p>
+<p>这六种可调用对象各有典型的失效方式,归拢起来是三条。</p>
 <ol>
 <li><strong><code>std::function</code> 里存了按引用捕获的 lambda,而被引用的对象已经销毁。</strong>这是 11.2 节那条规矩在类型擦除层的表现,而且更隐蔽:擦除之后,持有它的容器或成员上完全看不出里面装的是什么。</li>
 <li><strong>成员指针跨继承形态转换之后调用错位。</strong><code>Derived::*</code> 转回 <code>Base::*</code> 之后用在一个并不是 <code>Derived</code> 的对象上,读到的是别的成员的字节;MSVC 下在不完整类型上形成成员指针,是同一类问题的另一个入口。</li>
@@ -14570,7 +14595,8 @@ std::erase_if(names, std::not_fn(is_txt));               <span class="cm">// not
 <li><strong>回调参数默认写模板,只有确实要存起来才用 <code>std::function</code>。</strong>这条同时管正确性(可拷贝的限制)与性能(间接调用与堆分配)。</li>
 </ol>
 <h3>与其他章的连接</h3>
-<p>lambda 几乎在每一章都出现过,它是把前面各章的机制串起来的地方:捕获涉及<strong>值语义与生命周期</strong>(第 2、4 章);<code>mutable</code> 涉及 <code>const</code> <strong>成员函数</strong>(2.5);无捕获 lambda 是空类涉及<strong>空基类优化</strong>(3.5);泛型 lambda 是<strong>成员模板</strong>(9.2);完美转发形态涉及<strong>转发引用</strong>(5.5);<code>overloaded</code> 惯用法涉及 <code>using</code> <strong>解除名字隐藏</strong>(6.4)。<strong>读完这一章回头看,会发现它没有引入任何新机制,只是把已有的机制包装得更好用。</strong></p>
+<p>lambda 几乎在每一章都出现过,它是把前面各章的机制串起来的地方:捕获涉及<strong>值语义与生命周期</strong>(第 2、4 章);<code>mutable</code> 涉及 <code>const</code> <strong>成员函数</strong>(2.5);无捕获 lambda 是空类涉及<strong>空基类优化</strong>(3.5);泛型 lambda 是<strong>成员模板</strong>(9.2);完美转发形态涉及<strong>转发引用</strong>(5.5);<code>overloaded</code> 惯用法涉及 <code>using</code> <strong>解除名字隐藏</strong>(6.4)。</p>
+<p><strong>读完这一章回头看,会发现它没有引入任何新机制,只是把已有的机制包装得更好用。</strong></p>
 <h3>lambda 的能力年表</h3>
 <p>lambda 从 C++11 到 C++23 一直在补齐能力。知道哪条能力属于哪个标准,能解释「同样的写法在另一个项目里编不过」这类问题——多半是那个项目的标准版本更低。</p>
 <table style="contain-intrinsic-size:auto 351px">
@@ -14606,7 +14632,7 @@ std::erase_if(names, std::not_fn(is_txt));               <span class="cm">// not
 <div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 审查 lambda 只看两件事:它活多久,以及捕获列表里有什么</span><p>其余问题都是这两件事的推论。<strong>「活多久」决定捕获方式</strong>:活不过当前语句的可以放心用引用捕获,要存下来的一个引用都不能有,而且要顺着捕获进去的指针与视图再追一层。<strong>「捕获了什么」决定成本与副作用</strong>:捕获大对象是拷贝开销,捕获可变状态是并发风险,捕获 <code>this</code> 是生命周期风险。把这两个问题写进审查清单,比逐条背本章的易错项管用得多。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 51225px;--thin-h:51225px">
+<section class="chapter" style="contain-intrinsic-size:auto 51224px;--thin-h:51224px">
 <h1 id="c12"><span class="part">第 12 章</span>异常与错误处理</h1>
 <h2 id="c12-machine">12.1 异常的运行期机制</h2>
 <p>C 里错误只有返回值一条通道,调用方可以忽略,而且构造对象、重载运算符这些位置根本没有返回值可用(1.1 节)。异常是 C++ 给出的第二条通道。要用好它,先要知道它在运行期到底做了什么——很多关于「异常慢不慢」「该不该用」的争论,根子都在对这套机制的误解上。</p>
@@ -15448,7 +15474,7 @@ Config load_config(<span class="kw">const</span> std::filesystem::path&amp; p); 
 <li><strong>能在编译期判定的一律用 <code>static_assert</code>。</strong>类型性质、对象大小、对齐、常量配置都属于这一类,它们不该等到运行期才发现。</li>
 <li><strong>断言要说清楚违反了什么。</strong><code>assert(i &lt; n)</code> 失败时只能看到表达式的文本,看不到 <code>i</code> 与 <code>n</code> 的值。C 传下来的惯用法是 <code>assert(i &lt; n &amp;&amp; "index out of range")</code>:字符串字面量恒为真,不改变条件,但会出现在诊断信息里。</li>
 </ol>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// 错:发布构建里 pop() 根本不会被调用</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 错:发布构建里 pop() 根本不会被调用</span>
 assert(stack.pop() == 3);
 
 <span class="cm">// 对:有副作用的调用写成独立语句</span>
@@ -15814,7 +15840,7 @@ std::jthread t{[](std::stop_token st) {
 <h3>数据竞争的精确定义</h3>
 <p>标准的定义有三个条件,<strong>同时满足才是数据竞争</strong>:两个或更多线程访问同一个内存位置;至少有一个是<strong>写</strong>;而且这些访问之间<strong>没有先后关系</strong>(没有同步)。</p>
 <p>数据竞争是<strong>未定义行为</strong>,不是「结果不确定」。这个区别很重要:编译器假设数据竞争不存在,并据此优化——把变量放进寄存器、重排读写、消除看似重复的读取。所以后果不只是「读到旧值」,还可能是整段逻辑被优化掉。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">bool</span> ready = <span class="kw">false</span>;
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">bool</span> ready = <span class="kw">false</span>;
 <span class="kw">int</span>  data  = 0;
 
 <span class="cm">// 线程 A</span>
@@ -15889,7 +15915,7 @@ use(data);                <span class="cm">// 即使读到 ready,也不保证看
 }</code></pre>
 <h3>「原子的一组操作」不等于「一组原子操作」</h3>
 <p>每个操作各自加锁,组合起来仍然可能出错——因为两次加锁之间状态可以被改变。这是并发里最常见的逻辑缺陷。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 每一步都是线程安全的,组合起来仍然有竞争</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// 每一步都是线程安全的,组合起来仍然有竞争</span>
 <span class="kw">if</span> (!map.contains(key)) {        <span class="cm">// 检查</span>
     map.insert({key, value});    <span class="cm">// 使用 —— 中间可能有别的线程插入了</span>
 }
@@ -17139,7 +17165,7 @@ target_sources(math
 <p><code>import &lt;vector&gt;;</code> 这种形式叫头文件单元:它把一个<strong>现有的头文件</strong>当模块导入,不必修改那个头文件。这是从头文件迁移到模块的过渡路径,收益是「解析一次」,但宏仍然会泄漏(因为头文件本来就是那样写的)。</p>
 <h3>模块与头文件的共存策略</h3>
 <p>迁移期里两者必然共存,有三种组织方式,风险递增。</p>
-<table style="contain-intrinsic-size:auto 151px">
+<table style="contain-intrinsic-size:auto 150px">
 <thead><tr><th>方式</th><th>做法</th><th>风险</th></tr></thead>
 <tbody>
 <tr><td class="nw"><strong>模块内部包含头文件</strong></td><td>在模块的<strong>全局模块片段</strong>里 <code>#include</code></td><td>低,最常用</td></tr>
@@ -17201,7 +17227,7 @@ export <span class="kw">bool</span> <span class="kw">operator</span>==(<span cla
 std::string_view trim(std::string_view s);</code></pre>
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 模块内部不再需要匿名命名空间与 static 来隔离实现细节</span><p>1.4 节讲过,在「头文件加实现文件」的模型里,「不想被别人用到」只能靠匿名命名空间、<code>static</code>、或者约定俗成的 <code>detail</code> 命名空间,而这三种都停留在<strong>约定层面</strong>:链接期仍可能撞名,<code>detail</code> 里的东西别人照样能用。模块把它变成了语言层面的规则——<strong>不写 <code>export</code> 就是外部不可见</strong>,由编译器保证。这是模块除编译速度之外最实质的收益,而且它对代码组织的影响比速度更长远。</p></div>
 <h2 id="c14-misc">14.5 其余立刻能用的新特性</h2>
-<p>这一节收的是「不改代码结构、加进来就有用」的改进。它们的实际收益往往比四大件更高,而且没有任何采用门槛。</p>
+<p>还有一类改进是「不改代码结构、加进来就有用」的。它们的实际收益往往比四大件更高,而且没有任何采用门槛。</p>
 <h3>输出与格式化</h3>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 332px"><code><span class="kw">#include</span> &lt;format&gt;
 <span class="kw">#include</span> &lt;print&gt;                          <span class="cm">// C++23</span>
@@ -17647,7 +17673,7 @@ std::ranges::sort(a);                 <span class="cm">// 因为提供了 begin/
 <p>这个划分有实际意义:<strong>三类的防护手段不同。</strong>第一类靠 sanitizer 与静态分析;第二类靠标准库的调试模式(15.3 节的 <code>_GLIBCXX_ASSERTIONS</code>);第三类只能靠你自己——把契约写进类型(用不可空的包装、用构造函数保证不变式、用 <code>span</code> 代替指针加长度),或者至少写进断言。</p>
 <div class="note new" style="contain-intrinsic-size:auto 197px"><span class="t">🔵 C++26 把「读未初始化变量」从未定义行为改成了错误行为</span><p>新引入的「错误行为」这一类的规定是:实现<strong>必须</strong>给出一个确定的值,而且<strong>允许</strong>把它诊断出来。这样一来,读一个未初始化的 <code>int</code> 不再让整个程序失去意义,最坏情况只是拿到一个确定但无意义的值,同时编译器与 sanitizer 可以合法地报错。这是标准第一次系统性地把一类常见的未定义行为降级,方向与本章其余内容一致——<strong>缩小未定义行为的范围,把后果限制在局部。</strong>在这项被广泛实现之前,写代码的规矩不变:变量一律初始化(2.1 节)。</p></div>
 <h2 id="c15-list">15.2 C++ 里最常撞到的未定义行为</h2>
-<p>这一节把前面各章分散提到的未定义行为收成一张清单,按类别组织。<strong>它的用法是审查代码时对照</strong>,以及遇到诡异现象时逐条排除。</p>
+<p>前面各章分散提到的未定义行为,收成下面这张按类别组织的清单。<strong>它的用法是审查代码时对照</strong>,以及遇到诡异现象时逐条排除。</p>
 <h3>一、内存与生命周期</h3>
 <table style="contain-intrinsic-size:auto 373px">
 <thead><tr><th>行为</th><th>前面出现在</th></tr></thead>
@@ -18392,7 +18418,7 @@ $ cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release &amp;&amp; cmake --buil
 <div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 工具链的收益是「一次配置、每次提交都在兑现」,而且随代码量增长</span><p>这与写测试不同:测试的覆盖要一个用例一个用例地加,而打开一个警告或者接上一个 sanitizer,<strong>是对整份代码库同时生效的</strong>,并且对以后写的每一行也自动生效。所以它的投入产出比随代码量与团队规模上升,是所有工程实践里最先该做的一项。<strong>反过来,它也是最容易被无限期推迟的一项</strong>——不做也能交付功能,代价要到几个月之后才以「一个查了三天的崩溃」的形式出现。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 71739px;--thin-h:71739px">
+<section class="chapter" style="contain-intrinsic-size:auto 72232px;--thin-h:72232px">
 <h1 id="c16"><span class="part">第 16 章</span>与标准库接合:让自己的类型用起来像内建类型</h1>
 <h2 id="c16-shape">16.1 标准库对一个类型提了哪些要求</h2>
 <p>C 里让自己的类型被库用起来,靠的是在调用点补齐函数指针:<code>qsort</code> 要一个比较函数,<code>bsearch</code> 要一个比较函数,第三方哈希表要一个哈希函数加一个相等函数。类型本身不需要具备任何性质,一切都在调用处现场拼装。C++ 标准库走的是另一条路——<strong>设施对类型提出一组要求,类型满足了就能用,不满足就编不过,或者编得过但行为未定义。</strong>这组要求既不是基类也不是接口声明,而是「这个类型上必须存在哪些操作,这些操作必须满足哪些性质」。</p>
@@ -18587,7 +18613,9 @@ sku.cpp:26:15: note: constraints not satisfied
 <tr><td class="nw">先转小写再比较</td><td>大小写不敏感</td><td><code>==</code> 区分大小写</td><td><code>map</code> 里已有键 <code>Foo</code> 时插入 <code>foo</code> 不生效,取出来的键仍是 <code>Foo</code></td></tr>
 </tbody>
 </table>
-<p>第二行是一个值得展开的真实事故。用户注册时用户名存成 <code>std::map&lt;std::string, User, CaseInsensitiveLess&gt;</code>,先有人注册了 <code>Alice</code>,后来另一个人输入 <code>alice</code> 注册。<code>insert</code> 返回的 <code>second</code> 是 <code>false</code>,如果调用处没检查返回值,第二个人的记录就没建立;更隐蔽的是即使用 <code>operator[]</code> 覆盖了值,<strong>键仍然是最早插入的那个 <code>Alice</code></strong>——因为 <code>insert</code> 与 <code>operator[]</code> 在键已存在时都不替换键。界面上于是显示成 <code>Alice</code>,而用户刚才输入的是 <code>alice</code>。报障描述是「我的用户名大小写自己变了」。</p>
+<p>第二行是一个值得展开的真实事故。用户注册时用户名存成 <code>std::map&lt;std::string, User, CaseInsensitiveLess&gt;</code>,先有人注册了 <code>Alice</code>,后来另一个人输入 <code>alice</code> 注册。</p>
+<p><code>insert</code> 返回的 <code>second</code> 是 <code>false</code>,如果调用处没检查返回值,第二个人的记录就没建立;更隐蔽的是即使用 <code>operator[]</code> 覆盖了值,<strong>键仍然是最早插入的那个 <code>Alice</code></strong>——因为 <code>insert</code> 与 <code>operator[]</code> 在键已存在时都不替换键。</p>
+<p>界面上于是显示成 <code>Alice</code>,而用户刚才输入的是 <code>alice</code>。报障描述是「我的用户名大小写自己变了」。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 231px"><span class="t">🔴 容器的 find 与算法的 find 可能给出不同答案</span><p><code>s.find(x)</code> 走的是比较器的等价关系,<code>std::find(s.begin(), s.end(), x)</code> 走的是 <code>operator==</code>。比较器只看部分字段时,前者能找到而后者找不到——因为容器里那条记录只是 id 相同,内容并不相等。<strong>这不是容器出错,是两个函数在回答两个不同的问题。</strong>排查这类现象的入口是把比较器和 <code>operator==</code> 并排读一遍,确认它们看的是不是同一组字段。要让两者一致,规则很简单:<strong>比较器用到的字段集合,必须与 <code>operator==</code> 用到的字段集合完全相同。</strong></p></div>
 <h3>严格弱序被违反时,std::sort 会越界读写</h3>
 <p>严格弱序有四条要求,写代码时最常破坏的是第一条。</p>
@@ -18631,7 +18659,8 @@ std::sort(v.begin(), v.end(), [](<span class="kw">const</span> Task&amp; a, <spa
 <tr><td class="nw">传自定义哈希器</td><td>自己的命名空间里,作为模板实参传入</td><td><code>T</code> 不是自己的类型;或者同一个类型需要多种口径</td><td>每个使用点都要写出完整的模板实参,可用别名收敛</td></tr>
 </tbody>
 </table>
-<p>「只允许对含用户定义类型的特化」是标准的硬性规定:程序不得向 <code>std</code> 添加声明或定义,唯一的例外是对标准库模板的特化,而且特化必须<strong>依赖至少一个用户定义类型</strong>。特化 <code>std::hash&lt;int&gt;</code> 或 <code>std::hash&lt;std::pair&lt;int,int&gt;&gt;</code> 都是未定义行为——后者不含任何用户定义类型。这也解释了标准库为什么至今没有为 <code>std::pair</code> 与 <code>std::tuple</code> 提供 <code>std::hash</code>:它没提供,而你又不许补,所以这两个类型当键时必须走第二条路。</p>
+<p>「只允许对含用户定义类型的特化」是标准的硬性规定:程序不得向 <code>std</code> 添加声明或定义,唯一的例外是对标准库模板的特化,而且特化必须<strong>依赖至少一个用户定义类型</strong>。特化 <code>std::hash&lt;int&gt;</code> 或 <code>std::hash&lt;std::pair&lt;int,int&gt;&gt;</code> 都是未定义行为——后者不含任何用户定义类型。</p>
+<p>这也解释了标准库为什么至今没有为 <code>std::pair</code> 与 <code>std::tuple</code> 提供 <code>std::hash</code>:它没提供,而你又不许补,所以这两个类型当键时必须走第二条路。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 往 std 里补 pair 的哈希特化是未定义行为</span><p>标准库没有为它们特化 <code>std::hash</code>,直接用会得到「使用了被删除的函数」这类编译错误。<strong>常见的错误应对是自己往 <code>std</code> 里塞一个 <code>std::hash&lt;std::pair&lt;int, int&gt;&gt;</code> 的特化</strong>,它编译通过、运行正常,但违反了「特化必须依赖用户定义类型」这条规定,属于未定义行为;实际风险是将来标准或者某个实现补上了同名特化,链接期出现重复定义,或者两个翻译单元用了不同的定义,得到不一致的哈希值。<strong>正确做法是写一个自己的哈希器传进去</strong>,或者把这一对值包成一个自己的结构体再特化。</p></div>
 <h3>铁律:相等的对象必须哈希相同</h3>
 <p>无序容器的查找分两步:<strong>先用哈希值定位到一个桶,再在这个桶内用 <code>KeyEqual</code> 逐个比较。</strong>整个过程只在一个桶里找。因此一旦两个相等的键算出了不同的哈希值,它们会落进不同的桶,查找永远走不到对方所在的那个桶,元素就「查不到」。</p>
@@ -18707,7 +18736,8 @@ std::sort(v.begin(), v.end(), [](<span class="kw">const</span> Task&amp; a, <spa
 std::unordered_map&lt;Sku, <span class="kw">int</span>&gt; stock;</code></pre>
 <p>三个细节值得留意:<code>operator()</code> 必须是 <code>const</code> 的,因为容器持有的是 const 的哈希器;标 <code>noexcept</code> 不是硬性要求,但哈希抛异常会让容器的多个操作失去异常保证;特化必须出现在<strong>第一次使用 <code>std::unordered_map&lt;Sku, ...&gt;</code> 之前</strong>,否则不同翻译单元可能一个看到特化一个看不到,违反单一定义规则,链接期不报错而运行期行为不一致。稳妥的做法是把特化紧跟在类型定义后面,放在同一个头文件里。</p>
 <h3>透明哈希:用 string_view 查 string 键</h3>
-<p><code>std::unordered_map&lt;std::string, V&gt;::find</code> 的参数类型是 <code>const std::string&amp;</code>。传一个 <code>std::string_view</code> 或者一个 <code>const char*</code> 进去,会先构造一个临时的 <code>std::string</code>——短字符串还好,超过短字符串优化的长度就是一次堆分配加一次拷贝,只为了做一次查找。在热路径上这笔开销很容易占到查找总耗时的一半以上,perf 的火焰图里表现为 <code>find</code> 之下挂着 <code>operator new</code>。</p>
+<p><code>std::unordered_map&lt;std::string, V&gt;::find</code> 的参数类型是 <code>const std::string&amp;</code>。传一个 <code>std::string_view</code> 或者一个 <code>const char*</code> 进去,会先构造一个临时的 <code>std::string</code>——短字符串还好,超过短字符串优化的长度就是一次堆分配加一次拷贝,只为了做一次查找。</p>
+<p>在热路径上这笔开销很容易占到查找总耗时的一半以上,perf 的火焰图里表现为 <code>find</code> 之下挂着 <code>operator new</code>。</p>
 <p>C++20 给无序容器加上了<strong>异构查找</strong>:当哈希器与相等器<strong>同时</strong>提供 <code>is_transparent</code> 这个成员类型时,<code>find</code>、<code>count</code>、<code>contains</code>、<code>equal_range</code> 会额外提供接受任意类型的模板重载,不再构造临时对象。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 549px"><code><span class="kw">#include</span> &lt;string&gt;
 <span class="kw">#include</span> &lt;string_view&gt;
@@ -18728,7 +18758,8 @@ std::unordered_map&lt;Sku, <span class="kw">int</span>&gt; stock;</code></pre>
     <span class="kw">auto</span> it = d.find(key);                             <span class="cm">// 不构造临时 std::string</span>
     <span class="kw">return</span> it == d.end() ? -1 : it-&gt;second;
 }</code></pre>
-<p>这个写法能成立,依赖标准的一条明确保证:<strong><code>std::hash&lt;std::string&gt;</code> 与 <code>std::hash&lt;std::string_view&gt;</code> 对同一串字符必须给出相同的结果。</strong>没有这条保证,把 <code>string_view</code> 路径和 <code>string</code> 路径分别哈希就会算出两个值,异构查找立刻退化成「查不到」。给自己的类型写透明哈希器时没有这条保证兜底,必须自己确保所有重载走同一条计算路径——最省事的做法就是像上面这样,只写一个接受最宽泛类型的重载,让别的类型隐式转换过来。</p>
+<p>这个写法能成立,依赖标准的一条明确保证:<strong><code>std::hash&lt;std::string&gt;</code> 与 <code>std::hash&lt;std::string_view&gt;</code> 对同一串字符必须给出相同的结果。</strong>没有这条保证,把 <code>string_view</code> 路径和 <code>string</code> 路径分别哈希就会算出两个值,异构查找立刻退化成「查不到」。</p>
+<p>给自己的类型写透明哈希器时没有这条保证兜底,必须自己确保所有重载走同一条计算路径——最省事的做法就是像上面这样,只写一个接受最宽泛类型的重载,让别的类型隐式转换过来。</p>
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 有序容器换成 std::less&lt;&gt; 就能异构查找</span><p><code>std::map</code> 与 <code>std::set</code> 的异构查找在 C++14 就落地了,比无序容器早六年,启用方式也更简单:把比较器从默认的 <code>std::less&lt;Key&gt;</code> 换成 <code>std::less&lt;&gt;</code>,后者是 void 特化,自带 <code>is_transparent</code>。<code>std::map&lt;std::string, V, std::less&lt;&gt;&gt;</code> 之后就可以用 <code>string_view</code> 直接查。<strong>已有工程里这是一处收益确定、风险极低的改动</strong>,唯一要确认的是异构比较与原比较给出同一个顺序,否则查找会走错分支。</p></div>
 <h3>哈希质量怎么量,退化了什么样</h3>
 <p>哈希函数写错会查不到,写得差则是另一种故障:<strong>能查到,但慢一个数量级。</strong>极端情况是所有键落进同一个桶,查找从常数时间退化成线性,而容器接口和返回值都完全正常。</p>
@@ -18782,7 +18813,8 @@ std::unordered_map&lt;Sku, <span class="kw">int</span>&gt; stock;</code></pre>
 }</code></pre>
 <p>这是 <code>std::swap</code> 的实际实现。它对绝大多数类型都足够好,但有两个前提:<code>T</code> 必须可移动构造且可移动赋值,而且这三步的代价可以接受。两个前提任何一个不成立,就需要类型自己提供一个更好的 <code>swap</code>。</p>
 <p>标准库内部大量使用 <code>swap</code>,而且用的都是<strong>非限定调用</strong>:<code>std::sort</code> 的分区、<code>std::reverse</code>、<code>std::rotate</code>、<code>std::partition</code>、<code>std::nth_element</code> 都通过 <code>std::iter_swap</code> 走到 <code>swap</code>。所以一个类型提供的 <code>swap</code> 好不好,直接影响这批算法的性能。第 4 章的 copy-and-swap 赋值运算符也建立在 <code>swap</code> 之上。</p>
-<p>这里有一个容易被忽略的区别:<strong><code>swap</code> 是「行为的定制」,不是「实现的替换」。</strong>类型提供 <code>swap</code> 之后,标准库不会去检查它做了什么,只会在需要交换两个对象时调用它。因此 <code>swap</code> 的语义必须严格是「把两个对象的值对调」——不能顺手做别的事(例如更新计数、写日志、触发回调),因为调用它的地方全部在标准库内部,调用次数和时机都不受控制。见过的错误形态是有人在 <code>swap</code> 里维护了一个「被交换次数」的统计,结果排序一次这个数就涨几千,而且不同编译器给出的数字不同。</p>
+<p>这里有一个容易被忽略的区别:<strong><code>swap</code> 是「行为的定制」,不是「实现的替换」。</strong>类型提供 <code>swap</code> 之后,标准库不会去检查它做了什么,只会在需要交换两个对象时调用它。因此 <code>swap</code> 的语义必须严格是「把两个对象的值对调」——不能顺手做别的事(例如更新计数、写日志、触发回调),因为调用它的地方全部在标准库内部,调用次数和时机都不受控制。</p>
+<p>见过的错误形态是有人在 <code>swap</code> 里维护了一个「被交换次数」的统计,结果排序一次这个数就涨几千,而且不同编译器给出的数字不同。</p>
 <h3>两步查找惯用法的机制</h3>
 <p>正确的调用形态只有两行,顺序不能颠倒:</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 87px"><code><span class="kw">using</span> std::swap;          <span class="cm">// 第一步:把标准库版本引入,作为兜底候选</span>
@@ -18911,7 +18943,7 @@ swap(a, b);               <span class="cm">// 第二步:非限定调用,让实�
 <div class="note old" style="contain-intrinsic-size:auto 199px"><span class="t">🟡 两步写法仍然要会,它遍布现有代码</span><p>C++20 之后新写的泛型代码可以直接用 <code>std::ranges::swap</code>,但<strong>两步写法不会消失</strong>:一是绝大多数存量代码这么写,读代码时要能认出来;二是自己的类型仍然要通过隐藏友元提供 <code>swap</code>——定制点对象查找的正是这个重载,提供方式没有变。<strong>变的只是调用方的写法,不是定制方的写法。</strong>另外,项目基线低于 C++20 时没有别的选择,那时唯一的保险是把两步写法写进代码规范,并在评审里盯住 <code>std::swap(</code> 这个字符串。</p></div>
 <h2 id="c16-iter">16.5 迭代器:让自己的容器能被算法与范围 for 用</h2>
 <p>迭代器是标准库里要求最密集的一处接合点。它承担两件事:<strong>对外把「位置」这个概念统一成指针的形态</strong>,让一百多个算法不必知道容器长什么样;<strong>对内向算法申报自己的能力</strong>,让算法据此选择实现路径。第一件事只要几个运算符,第二件事需要四个类型别名和一个类别标签。两件事分开理解,后面所有的坑都能对上号。</p>
-<p>本节的目标是给出一份可以照抄的最小实现,并讲清三件容易做错的事:类别申报与实际能力不符会怎样、后置递增写错会怎样、以及为什么返回代理对象的迭代器不满足前向迭代器的要求。</p>
+<p>一份可以照抄的最小实现,加上三件容易做错的事:类别申报与实际能力不符会怎样、后置递增写错会怎样、以及为什么返回代理对象的迭代器不满足前向迭代器的要求。</p>
 <h3>迭代器要交出的六样东西</h3>
 <p>一个能被标准算法使用的迭代器,必须提供下面六样。前四样是编译期的类型信息,后两样是运行期的操作。</p>
 <table style="contain-intrinsic-size:auto 316px">
@@ -19369,7 +19401,8 @@ swap(a, b);               <span class="cm">// 第二步:非限定调用,让实�
 <li><strong>不受流状态影响。</strong>格式说明符只作用于当前这一个占位符,不会留下任何全局痕迹,详见本节最后一段。</li>
 <li><strong>参数被类型擦除后交给一个非模板函数处理。</strong><code>std::format</code> 只是把参数打包成 <code>std::format_args</code>,真正干活的 <code>std::vformat</code> 不是模板,因此不会像 <code>operator&lt;&lt;</code> 那样为每种参数组合各生成一份代码,生成的目标文件明显更小。</li>
 </ul>
-<p>输出顺序上还有一处实际差别。<code>std::cout</code> 与 <code>printf</code> 各有各的缓冲区,默认状态下标准库靠 <code>sync_with_stdio</code> 让两者保持同步,代价是 <code>std::cout</code> 的每次输出都要经过 C 的标准输入输出层,吞吐明显下降。常见的提速手段是关掉同步,但关掉之后两套设施的输出顺序就不再保证,混用会出现「日志行前后颠倒」。<code>std::print</code> 直接写到 <code>FILE*</code>,不引入第二套缓冲,所以既不需要同步开关,也不会与 <code>printf</code> 乱序。混合了两种输出方式的存量代码,这是迁移到 <code>std::print</code> 的一个额外理由。</p>
+<p>输出顺序上还有一处实际差别。<code>std::cout</code> 与 <code>printf</code> 各有各的缓冲区,默认状态下标准库靠 <code>sync_with_stdio</code> 让两者保持同步,代价是 <code>std::cout</code> 的每次输出都要经过 C 的标准输入输出层,吞吐明显下降。</p>
+<p>常见的提速手段是关掉同步,但关掉之后两套设施的输出顺序就不再保证,混用会出现「日志行前后颠倒」。<code>std::print</code> 直接写到 <code>FILE*</code>,不引入第二套缓冲,所以既不需要同步开关,也不会与 <code>printf</code> 乱序。混合了两种输出方式的存量代码,这是迁移到 <code>std::print</code> 的一个额外理由。</p>
 <h3>格式说明符的标准语法</h3>
 <p>占位符的完整形态是 <code>{参数序号:填充与对齐 符号 井号 零 宽度 精度 L 类型}</code>,冒号后面的部分统称格式说明符,由 <code>std::formatter</code> 的 <code>parse</code> 负责解析。写自己的 formatter 之前先认清这套语法,才知道哪些部分可以直接复用标准库的实现。</p>
 <table style="contain-intrinsic-size:auto 341px">
@@ -19396,7 +19429,12 @@ swap(a, b);               <span class="cm">// 第二步:非限定调用,让实�
 </tbody>
 </table>
 <p><code>parse</code> 必须是 <code>constexpr</code>,否则格式串的编译期检查会失败,报错形式是「不是常量表达式」。<code>format</code> 必须是 <code>const</code>,因为格式化过程中 formatter 对象是常量;这条在 C++20 发布后才被明确,早期示例代码里有不少漏了 <code>const</code> 的版本,在新的标准库上会编不过。</p>
-<p>还有两条约束不写出来就不成立。<strong>特化必须是可默认构造的</strong>,标准库会先默认构造一个 formatter 再调用它的 <code>parse</code>;给 formatter 加一个必须显式初始化的成员会让它失去默认构造函数,报错指向标准库内部。<strong>特化必须写在 <code>std</code> 命名空间里</strong>,这与 <code>std::hash</code> 一样(16.3 节),而且同样受「特化必须依赖至少一个用户定义类型」的限制——不能为 <code>std::vector&lt;int&gt;</code> 补一个 formatter,只能为自己的类型补。这解释了为什么 C++23 才由标准补上容器与 <code>std::pair</code> 的格式化支持:在此之前用户想补也补不了。</p>
+<p>还有两条约束不写出来就不成立。</p>
+<ul>
+<li><strong>特化必须是可默认构造的</strong>,标准库会先默认构造一个 formatter 再调用它的 <code>parse</code>;给 formatter 加一个必须显式初始化的成员会让它失去默认构造函数,报错指向标准库内部。</li>
+<li><strong>特化必须写在 <code>std</code> 命名空间里</strong>,这与 <code>std::hash</code> 一样(16.3 节),而且同样受「特化必须依赖至少一个用户定义类型」的限制——不能为 <code>std::vector&lt;int&gt;</code> 补一个 formatter,只能为自己的类型补。</li>
+</ul>
+<p>这解释了为什么 C++23 才由标准补上容器与 <code>std::pair</code> 的格式化支持:在此之前用户想补也补不了。</p>
 <p>不接受任何说明符的类型,<code>parse</code> 只需确认下一个字符就是 <code>}</code>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 468px"><code><span class="kw">#include</span> &lt;format&gt;
 
@@ -19544,7 +19582,8 @@ std::string render(<span class="kw">const</span> std::string&amp; pattern, <span
 <tr><td class="nw"><code>operator&lt;&lt;</code> 找不到</td><td>重载写在了与类型不同的命名空间里,实参依赖查找找不到</td><td>编译错误提示没有匹配的运算符;更隐蔽的是类型有 <code>operator bool</code> 时匹配上了 <code>bool</code> 的重载,打印出 <code>1</code></td><td>写成隐藏友元,与类型放在一起(16.2 节)</td></tr>
 </tbody>
 </table>
-<p>第一行的 <code>std::endl</code> 值得再说一句机制。刷新的代价不在那一次 <code>write</code>,而在于它<strong>取消了缓冲带来的合并</strong>:原本几十行输出可以攒成一次系统调用,逐行刷新之后变成几十次。输出重定向到文件或者管道时差距最大,因为终端本身通常就是行缓冲的,交互式运行时反而看不出来——这正是这个问题常常在上线之后才暴露的原因。程序结束时缓冲区会被自动刷新,崩溃时不会,所以「怕丢日志」这个理由只在需要防崩溃的场合成立,而那种场合应当用专门的日志设施,不是靠 <code>std::endl</code>。</p>
+<p>第一行的 <code>std::endl</code> 值得再说一句机制。刷新的代价不在那一次 <code>write</code>,而在于它<strong>取消了缓冲带来的合并</strong>:原本几十行输出可以攒成一次系统调用,逐行刷新之后变成几十次。输出重定向到文件或者管道时差距最大,因为终端本身通常就是行缓冲的,交互式运行时反而看不出来——这正是这个问题常常在上线之后才暴露的原因。</p>
+<p>程序结束时缓冲区会被自动刷新,崩溃时不会,所以「怕丢日志」这个理由只在需要防崩溃的场合成立,而那种场合应当用专门的日志设施,不是靠 <code>std::endl</code>。</p>
 <p>第二行的粘性状态值得展开一个可抄的写法。需要临时改格式又不想影响别人时,用 RAII 存取整套状态:</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 386px"><code><span class="kw">#include</span> &lt;ios&gt;
 <span class="kw">#include</span> &lt;ostream&gt;
@@ -19653,10 +19692,12 @@ std::string render(<span class="kw">const</span> std::string&amp; pattern, <span
     <span class="kw">for</span> (<span class="kw">int</span> i = 0; i &lt; n; ++i) v.push_back(src[i]);
 }</code></pre>
 <p>前一个函数的总代价是 n 的平方级搬运加 n 次分配,而它看起来像是在做优化。这类代码在实际项目里出现过多次,通常来自「push_back 前先 reserve」这句被误记的规则。<strong>正确的规则是:知道最终数量就在循环外 reserve 一次,不知道就什么都不做。</strong></p>
-<p>另外三条容易忽略的性质:<code>reserve</code> 与任何扩容都会让<strong>全部</strong>迭代器、引用和指针失效,包括 <code>end()</code>;<code>shrink_to_fit</code> 是非绑定请求,实现可以什么都不做;<code>resize</code> 缩小不会释放内存,只析构多余元素。第一条造成的事故最常见:在遍历过程中往同一个 <code>vector</code> 里追加元素,循环变量在某次扩容之后指向了已释放的旧缓冲区。这类问题用 <code>-D_GLIBCXX_DEBUG</code> 或 MSVC 的迭代器调试能当场抓到,AddressSanitizer 也能报出「heap-use-after-free」(第 15 章)。</p>
+<p>另外三条容易忽略的性质:<code>reserve</code> 与任何扩容都会让<strong>全部</strong>迭代器、引用和指针失效,包括 <code>end()</code>;<code>shrink_to_fit</code> 是非绑定请求,实现可以什么都不做;<code>resize</code> 缩小不会释放内存,只析构多余元素。</p>
+<p>第一条造成的事故最常见:在遍历过程中往同一个 <code>vector</code> 里追加元素,循环变量在某次扩容之后指向了已释放的旧缓冲区。这类问题用 <code>-D_GLIBCXX_DEBUG</code> 或 MSVC 的迭代器调试能当场抓到,AddressSanitizer 也能报出「heap-use-after-free」(第 15 章)。</p>
 <p>增长因子的差别还有一个不那么明显的后果。<strong>2 倍增长下,新申请的空间永远大于之前所有已释放空间的总和</strong>,分配器无法复用前面那些块;1.5 倍则在若干次增长之后可以复用。这解释了为什么同一份代码在 MSVC 上的峰值内存有时反而更低,而在 libstdc++ 上更快——两者是同一个权衡的两端。真正要控制内存时,办法不是挑标准库,而是 <code>reserve</code> 一次到位。</p>
 <h3>分配器感知与 std::pmr</h3>
-<p>容器把内存分配委托给分配器。C++17 之前分配器是模板参数,换一个分配器就换一个类型,<code>std::vector&lt;int, PoolAlloc&gt;</code> 与 <code>std::vector&lt;int&gt;</code> 不能互相赋值,也不能传给同一个函数。<code>std::pmr</code> 把这一层改成运行期多态:<code>std::pmr::vector&lt;int&gt;</code> 的分配器是 <code>std::pmr::polymorphic_allocator</code>,它持有一个指向 <code>std::pmr::memory_resource</code> 的指针,<strong>用哪块内存是构造时传进去的运行期参数,不改变类型</strong>。</p>
+<p>容器把内存分配委托给分配器。C++17 之前分配器是模板参数,换一个分配器就换一个类型,<code>std::vector&lt;int, PoolAlloc&gt;</code> 与 <code>std::vector&lt;int&gt;</code> 不能互相赋值,也不能传给同一个函数。</p>
+<p><code>std::pmr</code> 把这一层改成运行期多态:<code>std::pmr::vector&lt;int&gt;</code> 的分配器是 <code>std::pmr::polymorphic_allocator</code>,它持有一个指向 <code>std::pmr::memory_resource</code> 的指针,<strong>用哪块内存是构造时传进去的运行期参数,不改变类型</strong>。</p>
 <p>让自己的类型也能接住这套机制,需要满足<strong>分配器感知</strong>的约定:提供 <code>allocator_type</code> 别名,提供接受分配器的构造函数,并把分配器传给各个成员。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 549px"><code><span class="kw">#include</span> &lt;memory_resource&gt;
 <span class="kw">#include</span> &lt;string&gt;
@@ -19677,7 +19718,8 @@ std::string render(<span class="kw">const</span> std::string&amp; pattern, <span
     std::pmr::string              id_;
     std::pmr::vector&lt;std::string&gt; tags_;
 };</code></pre>
-<p>容器识别到 <code>allocator_type</code> 之后,在容器内部构造元素时会自动把自己的分配器传下去,这叫<strong>uses-allocator 构造</strong>。少了这个别名,<code>std::pmr::vector&lt;Record&gt;</code> 里的每个 <code>Record</code> 都会用默认的全局资源分配内存,内存池等于白建。这个失败是完全静默的:代码照编、结果照对,只是内存池里空空如也,而所有分配仍然走全局堆。<strong>确诊办法是给自定义的 <code>memory_resource</code> 加一个分配计数,跑一遍之后看它是不是零。</strong></p>
+<p>容器识别到 <code>allocator_type</code> 之后,在容器内部构造元素时会自动把自己的分配器传下去,这叫<strong>uses-allocator 构造</strong>。少了这个别名,<code>std::pmr::vector&lt;Record&gt;</code> 里的每个 <code>Record</code> 都会用默认的全局资源分配内存,内存池等于白建。</p>
+<p>这个失败是完全静默的:代码照编、结果照对,只是内存池里空空如也,而所有分配仍然走全局堆。<strong>确诊办法是给自定义的 <code>memory_resource</code> 加一个分配计数,跑一遍之后看它是不是零。</strong></p>
 <p>三个成员构造函数的形态也不能随意简化。带分配器的拷贝构造与移动构造必须显式写出来并把分配器逐个传给成员,否则成员会各自去取默认资源。<code>get_allocator</code> 不是硬性要求,但少了它,把这个类型再放进另一个分配器感知的容器时,外层就无法确认内层用的是哪块资源。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 265px"><span class="t">🔴 pmr 容器的拷贝构造不会继承源容器的内存资源</span><p><code>std::pmr::vector&lt;int&gt; b = a;</code> 之后,<code>b</code> 用的是<strong>默认资源</strong>,不是 <code>a</code> 的资源。这是标准明确规定的行为——<code>polymorphic_allocator</code> 的 <code>select_on_container_copy_construction</code> 返回一个默认构造的分配器。同理,移动赋值也不传播分配器,两个资源不同的 pmr 容器互相移动赋值会<strong>退化成逐元素移动甚至拷贝</strong>。<strong>症状是内存池明明建好了,profiler 里却仍然看到全局 <code>operator new</code></strong>,或者「移动」操作的耗时与元素数量成正比。规矩:pmr 容器的拷贝与移动一律显式写出目标资源 <code>std::pmr::vector&lt;int&gt; b(a, &amp;pool);</code>。分配器的完整机制见《C++ 性能优化 · 现代详解》第 6 章。</p></div>
 <h3>把性能相关的性质写成断言</h3>
@@ -19779,7 +19821,8 @@ std::string render(<span class="kw">const</span> std::string&amp; pattern, <span
 <span class="kw">static_assert</span>(std::is_standard_layout_v&lt;PacketHeader&gt;);
 <span class="kw">static_assert</span>(<span class="kw">sizeof</span>(PacketHeader) == 16, <span>"PacketHeader 出现了填充,与协议不符"</span>);</code></pre>
 <p><code>std::formattable</code> 是 C++23 加入的概念,C++20 下可以用 <code>std::is_default_constructible_v&lt;std::formatter&lt;Order, char&gt;&gt;</code> 近似代替——formatter 的主模板是被禁用的,没写特化时它不可默认构造。</p>
-<p>这块断言放在哪里也有讲究。<strong>值语义与性能路径的断言放在类型定义的同一个头文件里</strong>,紧跟类定义之后,这样任何包含这个头文件的地方都会检查一遍,改动者也一定看得见。<strong>迭代器与范围的断言放在容器定义之后</strong>,理由相同。<strong>协议结构的 <code>sizeof</code> 与 <code>offsetof</code> 断言可以单独放一个 .cpp</strong>,因为它们与编译选项相关(打包方式、对齐设置),集中在一处便于在换平台时统一检查。断言不进头文件的唯一理由是它显著拖慢编译,而上面这些全部是类型特性查询,代价可以忽略。</p>
+<p>这块断言放在哪里也有讲究。<strong>值语义与性能路径的断言放在类型定义的同一个头文件里</strong>,紧跟类定义之后,这样任何包含这个头文件的地方都会检查一遍,改动者也一定看得见。<strong>迭代器与范围的断言放在容器定义之后</strong>,理由相同。<strong>协议结构的 <code>sizeof</code> 与 <code>offsetof</code> 断言可以单独放一个 .cpp</strong>,因为它们与编译选项相关(打包方式、对齐设置),集中在一处便于在换平台时统一检查。</p>
+<p>断言不进头文件的唯一理由是它显著拖慢编译,而上面这些全部是类型特性查询,代价可以忽略。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 断言的说明文字写「破坏了会怎样」,不要重复条件本身</span><p><code>static_assert(std::is_nothrow_move_constructible_v&lt;T&gt;, "T 必须可无异常移动构造")</code> 这句说明等于把条件念了一遍,对看到失败的人没有帮助。<strong>换成「移动构造不是 noexcept,vector 扩容会退化成深拷贝」,读到的人立刻知道这条断言在保护什么,从而判断是该修改动还是该改断言。</strong>这条对所有断言都成立,而在接合断言上尤其重要——它们保护的多数是不会报错的性质,失败信息是唯一的解释入口。</p></div>
 <h3>症状反查:出了这个现象,缺的是哪一项</h3>
 <p>排查总是从现象开始。下表按症状组织,是本章的反向索引。使用它之前先做一次粗分类:<strong>编译失败去查语法要求,结果不对去查语义要求,只是变慢去查性能性质。</strong>三类的排查手段完全不同——第一类读报错信息,第二类靠断言与调试版标准库,第三类靠 profiler。</p>
@@ -19821,7 +19864,7 @@ std::string render(<span class="kw">const</span> std::string&amp; pattern, <span
 <div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 接合工作的正确时机是写下类型定义的当天,不是出问题之后</span><p>本章列出的事情加起来不到二十行代码:一个 <code>= default</code> 的相等比较、一个三路比较、一个哈希特化、一个 formatter 特化、几行断言。<strong>写类型的时候顺手加上,成本是十分钟;等到某个下游模块编不过、或者压测发现容器慢了十倍再回来补,成本是几个人天的排查加一次跨模块改动。</strong>差别不在工作量,在于第一种情况下你手边有完整的上下文,第二种情况下要先把上下文重建出来。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 73195px;--thin-h:73195px">
+<section class="chapter" style="contain-intrinsic-size:auto 73560px;--thin-h:73560px">
 <h1 id="c17"><span class="part">第 17 章</span>接口设计:把判据写进类型</h1>
 <h2 id="c17-shape">17.1 设计一个接口要决定的六件事</h2>
 <p>前面十七章讲的都是语言机制:初始化与值类别、对象模型、拷贝控制、移动、重载决议、继承与多态、模板、lambda、异常、并发。这些是材料。接口是用材料搭出来的形状——一个函数的声明写成什么样,一个类把哪些东西放在 <code>public</code> 下面。这一章回答的是:材料齐了之后,怎么决定形状。</p>
@@ -20026,7 +20069,8 @@ resize(ImageView src, Extent dst, ResizeOptions opts = {});</code></pre>
 <tr><td class="nw">输出</td><td class="nw"><strong>返回值</strong></td><td>不用输出参数。多个输出用结构体</td></tr>
 </tbody>
 </table>
-<p>这张表的第一行有个具体的分界线:<strong>「小对象」的实际含义是「大小不超过两个指针,而且拷贝构造是平凡的」。</strong>常见的主流调用约定里,不超过两个字长的平凡可拷贝类型走寄存器传递,一次拷贝没有任何内存访问;而 <code>const T&amp;</code> 要占一个寄存器存地址,函数体每次读成员都要解引用。<code>std::string_view</code>(两个字长)、<code>std::span</code>(两个字长)、<code>std::chrono::duration</code>、一个 <code>Point{int,int}</code>,这些都属于按值传更好的一侧。<code>std::string</code> 与 <code>std::vector</code> 不属于——它们虽然也是三个字长,但拷贝构造不平凡,要分配内存。</p>
+<p>这张表的第一行有个具体的分界线:<strong>「小对象」的实际含义是「大小不超过两个指针,而且拷贝构造是平凡的」。</strong>常见的主流调用约定里,不超过两个字长的平凡可拷贝类型走寄存器传递,一次拷贝没有任何内存访问;而 <code>const T&amp;</code> 要占一个寄存器存地址,函数体每次读成员都要解引用。</p>
+<p><code>std::string_view</code>(两个字长)、<code>std::span</code>(两个字长)、<code>std::chrono::duration</code>、一个 <code>Point{int,int}</code>,这些都属于按值传更好的一侧。<code>std::string</code> 与 <code>std::vector</code> 不属于——它们虽然也是三个字长,但拷贝构造不平凡,要分配内存。</p>
 <h3>只读参数:<code>const T&amp;</code> 的三个失效场合</h3>
 <p><code>const T&amp;</code> 是只读大对象的默认写法,机制上它只是传一个地址进去。但有三种场合它会给出错误的结果或者多余的开销。</p>
 <p>第一种是<strong>别名</strong>。<code>const</code> 承诺的是「这个函数不通过这个引用修改对象」,不是「这个对象在调用期间不变」。如果同一个对象还能通过别的路径到达,函数体里的读取就可能读到中途被改过的值。</p>
@@ -20418,7 +20462,7 @@ p-&gt;a = 7;                       <span class="cm">// 没有任何检查会阻�
 };</code></pre>
 <p>这个写法有两条必须遵守的规矩。第一,<strong>每一个会改变源数据的函数,都必须让缓存失效</strong>;漏掉一处,<code>area()</code> 就会一直返回旧值,而且这个错误不会崩溃,只会给出错误的数字。把「缓存要么为空,要么与 <code>pts_</code> 一致」写成不变式,并在调试构建里检查(17.3 节),能挡住这类遗漏。第二,<code>mutable</code> 只能用在这类真正的实现细节上;用它绕开 <code>const</code> 去改可观察状态,等于把这个函数的 <code>const</code> 承诺变成假的,而调用方仍然会依赖它。</p>
 <p>有一个容易忽略的点:<strong><code>const</code> 只作用于对象自己的存储,不穿透指针。</strong>一个 <code>const</code> 成员函数里,<code>T* p_</code> 的类型是 <code>T* const</code>,而不是 <code>const T*</code>——指针本身不能改,但指向的对象可以随便改。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">class</span> Widget {
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">class</span> Widget {
     Impl* p_;                       <span class="cm">// 裸指针</span>
     std::unique_ptr&lt;Impl&gt; u_;       <span class="cm">// 智能指针,行为相同</span>
 <span class="kw">public</span>:
@@ -20446,7 +20490,7 @@ p-&gt;a = 7;                       <span class="cm">// 没有任何检查会阻�
 <div class="note dead" style="contain-intrinsic-size:auto 263px"><span class="t">🔴 mutable 缓存不加锁,const 函数就有数据竞争</span><p><code>const</code> 在调用方看来意味着「可以并发调用」,而带缓存的实现在内部执行了写操作。两个线程同时进入 <code>area()</code>、缓存又恰好是空的时候,双方同时写 <code>area_cache_</code>——<code>std::optional</code> 的写不是原子的,可能一个线程写了「有值」标志、另一个线程还在写数值。<strong>症状是偶发的错误数值、或者析构时崩溃,复现概率与线程数和调用频率有关,单线程测试永远抓不到。</strong>排查手段是 ThreadSanitizer,它会直接报出两个线程写同一地址的栈(第 13 章、第 15 章)。<strong>修法:<code>mutable</code> 缓存一律配一把 <code>mutable std::mutex</code>,或者把缓存改成 <code>std::atomic</code> 并接受偶尔重复计算。</strong></p></div>
 <h3><code>noexcept</code>:承诺的强度与代价</h3>
 <p><code>noexcept</code> 是这几个承诺里后果最重的一个。它的含义不是「这个函数不抛异常,抛了就传出去」,而是<strong>「异常绝对不会离开这个函数;一旦有异常试图离开,程序直接调用 <code>std::terminate</code>」</strong>。中间不经过栈展开,外层的 <code>catch</code> 一个也不会执行,已经在栈上的对象的析构函数是否被调用由实现决定。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">void</span> handler() <span class="kw">noexcept</span> {
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">void</span> handler() <span class="kw">noexcept</span> {
     <span class="kw">throw</span> std::runtime_error(<span>"boom"</span>);      <span class="cm">// 编译通过(可能有警告)</span>
 }
 
@@ -20705,7 +20749,7 @@ std::string to_string(<span class="kw">const</span> ConfigError&amp; e);   <span
 <p>这段代码的每一个细节都是必需的:<code>noexcept</code> 让「万一还是有东西漏出去」变成立刻终止而不是未定义行为;三个 <code>catch</code> 分层是为了把内存不足与业务错误区分开;每一个 <code>catch</code> 都记录了日志,因为错误码丢失了原始信息,日志是唯一的线索。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 263px"><span class="t">🔴 空的 catch 块把失败变成没有线索的错误行为</span><p><code>catch (...) {}</code> 这一行的效果是:异常携带的类型、消息、以及抛出点的调用栈全部丢失,程序带着一个未完成的操作继续往下走。<strong>症状是下游出现「不可能发生」的状态</strong>——一个应当非空的容器是空的,一个应当已经写入的文件不存在,而且日志里没有任何异常记录。这类问题的排查成本极高,因为现场已经被完全抹掉。<strong>确认手段是在所有 <code>catch (...)</code> 里临时加一行 <code>std::fprintf(stderr, "caught at %s:%d\n", __FILE__, __LINE__);</code> 再复现一次</strong>,通常立刻就能定位。<strong>规矩:每一个 <code>catch</code> 块要么处理这个异常并且能说清楚怎么处理的,要么记录日志后重新抛出,不允许第三种。</strong></p></div>
 <h3>三种真实的事故形态</h3>
-<p>这一节讲的判据,违反之后有三种反复出现的形态。</p>
+<p>这条判据违反之后,有三种反复出现的形态。</p>
 <p><strong>形态一:返回码被忽略。</strong>一个返回错误码的函数,调用点写成一条裸的表达式语句。编译器默认不给任何提示。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code>write_config(path, cfg);        <span class="cm">// 返回 int 错误码,这里被丢弃</span>
 <span class="cm">// 症状:配置在磁盘满的时候没有写进去,而程序继续按内存里的值运行,</span>
@@ -20747,7 +20791,8 @@ write_config(<span class="kw">const</span> std::filesystem::path&amp;, <span cla
 </tbody>
 </table>
 <p>第二行是最容易被忽略的一条:<strong>私有成员写在头文件里,调用方虽然不能访问它们,但仍然依赖它们。</strong>理由是编译器需要知道对象有多大、成员在什么偏移上,才能在栈上分配对象、才能生成成员访问的代码。因此加一个私有成员,所有包含这个头文件的文件都要重新编译。</p>
-<p>这个连锁效应在真实项目里的量级值得具体说一说。一个被两百个源文件直接或间接包含的头文件,改动一次意味着两百次编译;每次编译两秒,就是接近七分钟。而 C++ 的头文件包含是传递的:一个头文件里写 <code>#include &lt;vector&gt;</code>,所有包含它的文件都会展开 <code>&lt;vector&gt;</code>。<strong>诊断手段是编译时加 <code>-H</code>(GCC 与 Clang),它会打印出完整的包含树;或者用 <code>-ftime-trace</code>(Clang)生成一份可视化的编译耗时报告,能直接看出哪个头文件贡献了多少时间。</strong></p>
+<p>这个连锁效应在真实项目里的量级值得具体说一说。一个被两百个源文件直接或间接包含的头文件,改动一次意味着两百次编译;每次编译两秒,就是接近七分钟。而 C++ 的头文件包含是传递的:一个头文件里写 <code>#include &lt;vector&gt;</code>,所有包含它的文件都会展开 <code>&lt;vector&gt;</code>。</p>
+<p><strong>诊断手段是编译时加 <code>-H</code>(GCC 与 Clang),它会打印出完整的包含树;或者用 <code>-ftime-trace</code>(Clang)生成一份可视化的编译耗时报告,能直接看出哪个头文件贡献了多少时间。</strong></p>
 <pre style="contain-intrinsic-size:auto 141px"><code>$ clang++ -c src/session.cpp -ftime-trace -o /dev/null
 $ python3 -c <span>"import json;d=json.load(open('session.json'));\</span>
 print(sorted([(e[<span>'dur'</span>],e[<span>'name'</span>]) <span class="kw">for</span> e in d[<span>'traceEvents'</span>] \
@@ -20769,7 +20814,7 @@ print(sorted([(e[<span>'dur'</span>],e[<span>'name'</span>]) <span class="kw">fo
 <tr><td class="nw">放进 <code>std::vector&lt;T&gt;</code></td><td class="nw"><strong>需要</strong>(实例化成员函数时)</td><td><code>std::unique_ptr&lt;T&gt;</code> 的成员则不需要</td></tr>
 </tbody>
 </table>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// widget.h —— 不必包含 renderer.h</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// widget.h —— 不必包含 renderer.h</span>
 <span class="kw">class</span> Renderer;                       <span class="cm">// 前向声明</span>
 
 <span class="kw">class</span> Widget {
@@ -20909,7 +20954,12 @@ std::<span class="kw">size_t</span> Session::bytes_sent() <span class="kw">const
     can<span>'t delete an incomplete type</span>
 main.cpp:5:22: note: in instantiation of member function
     <span>'std::default_delete&lt;Session::Impl&gt;::operator()'</span> requested here</code></pre>
-<p>原因链条是这样的:头文件里没有声明析构函数,编译器就在每个需要它的翻译单元里<strong>隐式生成</strong>一个;隐式生成的析构函数要销毁成员 <code>p_</code>,也就是要实例化 <code>std::default_delete&lt;Impl&gt;::operator()</code>,那里面是一句 <code>delete ptr;</code>;而 <code>delete</code> 一个不完整类型的指针要求这个类型是完整的,<code>std::unique_ptr</code> 用一句 <code>static_assert</code> 把这件事变成了明确的编译错误——如果没有这句断言,标准的规定是未定义行为,通常表现为<strong>析构函数不被调用,资源静默泄漏</strong>。</p>
+<p>原因链条是这样的。</p>
+<ol>
+<li>头文件里没有声明析构函数,编译器就在每个需要它的翻译单元里<strong>隐式生成</strong>一个。</li>
+<li>隐式生成的析构函数要销毁成员 <code>p_</code>,也就是要实例化 <code>std::default_delete&lt;Impl&gt;::operator()</code>,那里面是一句 <code>delete ptr;</code>。</li>
+<li>而 <code>delete</code> 一个不完整类型的指针要求这个类型是完整的,<code>std::unique_ptr</code> 用一句 <code>static_assert</code> 把这件事变成了明确的编译错误——如果没有这句断言,标准的规定是未定义行为,通常表现为<strong>析构函数不被调用,资源静默泄漏</strong>。</li>
+</ol>
 <p>修法固定为三步:</p>
 <ol>
 <li>在头文件里<strong>声明</strong>析构函数:<code>~Session();</code></li>
@@ -21257,7 +21307,19 @@ d.draw();          <span class="cm">// 打印 width=3</span></code></pre>
 <div class="note dead" style="contain-intrinsic-size:auto 261px"><span class="t">🔴 一半的症状不在出错处出现,读代码这条路走不通</span><p>所有权、生命周期、不变式、ABI 这四类问题的共同特征是:<strong>错误在写下的那一刻不产生任何效果,要等到很久以后某个无关的操作才显现。</strong>一次悬垂写要等分配器复用那块内存,一次不变式破坏要等某个依赖它的查询,一次 ABI 破坏要等那个成员被读到。<strong>因此排查的第一步不是读代码,而是选对工具让症状回到成因处</strong>:AddressSanitizer 把悬垂与越界报在访问的一刻并给出分配与释放的栈;ThreadSanitizer 把数据竞争报在两次访问上;调试构建里的不变式断言把破坏报在破坏它的函数返回时;<code>abi-compliance-checker</code> 这类工具在发布前对比两个版本的 ABI。<strong>这四样工具覆盖了表里绝大部分的症状,而且都是在改代码之前就能用上的。</strong></p></div>
 <h3>把全书的判据串起来</h3>
 <p>这一章反复出现的一条线索是:<strong>接口设计的每一个决定,都是在选择「让谁在什么时候承担代价」。</strong>把约束写进类型,是让编译器在编译期承担;写成断言,是让调试构建在运行期承担;写成文档,是让人在阅读时承担;什么都不写,是让线上系统在故障时承担。从左到右,代价一路上升。</p>
-<p>前面各章讲的机制,现在可以按这条线索重新排列。第 2 章的初始化与值类别决定了参数传进来的是什么、拷贝会不会发生;第 4 章的 RAII 与拷贝控制决定了所有权能不能写进类型;第 5 章的移动语义决定了「按值收再 <code>move</code>」这条规约成立;第 6 章的重载决议决定了加一个重载会不会破坏已有的调用;第 7 章的继承与多态决定了 <code>virtual</code> 与 <code>final</code> 这两个承诺的边界;第 9 章与第 10 章的模板决定了约束能被表达到什么程度;第 12 章的异常决定了失败报告的一整条路径;第 13 章的并发给 <code>const</code> 加上了第二重含义;第 15 章的工具链决定了违反承诺时能不能被抓住;第 16 章的标准库提供了 <code>span</code>、<code>string_view</code>、<code>optional</code>、<code>expected</code> 这些用来写约束的现成词汇。</p>
+<p>前面各章讲的机制,现在可以按这条线索重新排列。</p>
+<ul>
+<li>第 2 章的初始化与值类别决定了参数传进来的是什么、拷贝会不会发生。</li>
+<li>第 4 章的 RAII 与拷贝控制决定了所有权能不能写进类型。</li>
+<li>第 5 章的移动语义决定了「按值收再 <code>move</code>」这条规约成立。</li>
+<li>第 6 章的重载决议决定了加一个重载会不会破坏已有的调用。</li>
+<li>第 7 章的继承与多态决定了 <code>virtual</code> 与 <code>final</code> 这两个承诺的边界。</li>
+<li>第 9 章与第 10 章的模板决定了约束能被表达到什么程度。</li>
+<li>第 12 章的异常决定了失败报告的一整条路径。</li>
+<li>第 13 章的并发给 <code>const</code> 加上了第二重含义。</li>
+<li>第 15 章的工具链决定了违反承诺时能不能被抓住。</li>
+<li>第 16 章的标准库提供了 <code>span</code>、<code>string_view</code>、<code>optional</code>、<code>expected</code> 这些用来写约束的现成词汇。</li>
+</ul>
 <p>这些机制单独学时是一条条规则,合起来用时是同一件事的不同侧面:<strong>把「必须记住」变成「必须写出来」,再把「必须写出来」变成「不写就编译不过」。</strong>一个接口做到哪一步,决定了它在两年后还能不能被安全地改动。</p>
 <p>最后是一条可以立刻执行的建议。写下一个新的公开接口之前,把 17.1 节那六件事逐条问一遍,每条给一个明确的答案,写在这个接口的注释里。六个答案里有任何一个是「还没想好」,这个接口就不要先发布出去——因为发布之后,这六个答案就由所有调用方共同决定了。</p>
 </section>
@@ -21338,7 +21400,7 @@ d.draw();          <span class="cm">// 打印 width=3</span></code></pre>
 </tbody>
 </table>
 <h3>哪些 C 的写法可以保留</h3>
-<p>这一章列了大量替换,但不是所有 C 的写法都该改。下面这些在 C++ 里仍然是正确甚至更好的选择。</p>
+<p>前面列了大量替换,但不是所有 C 的写法都该改。下面这些在 C++ 里仍然是正确甚至更好的选择。</p>
 <table style="contain-intrinsic-size:auto 301px">
 <thead><tr><th>C 的写法</th><th>为什么可以保留</th></tr></thead>
 <tbody>
@@ -21644,7 +21706,7 @@ config_free(&amp;c);                              <span class="cm">// 忘了这�
 <span class="kw">for</span> (<span class="kw">const</span> <span class="kw">auto</span>&amp; [k, val] : *cfg) log(<span>"{} = {}"</span>, k, val);</code></pre>
 <h3>第六步:什么时候才做结构性改动</h3>
 <p>到第五步为止,这个模块已经没有内存管理问题、没有缓冲区问题、错误可诊断、接口自解释。<strong>再往下的改动(拆成解析器与存储两个类、支持多种格式、加缓存)应当由具体需求驱动</strong>,而不是「因为 C++ 应该这么写」。</p>
-<p>这一节演示的六步,前四步是<strong>把缺陷消掉</strong>,第五步是<strong>把契约写进类型</strong>,第六步才是设计。三者的风险与收益完全不同,不要混在一次改动里做。</p>
+<p>上面演示的六步里,前四步是<strong>把缺陷消掉</strong>,第五步是<strong>把契约写进类型</strong>,第六步才是设计。三者的风险与收益完全不同,不要混在一次改动里做。</p>
 <h3>这次改写的收益清单</h3>
 <p>演练走完了,把收益逐条列出来,便于向团队说明「为什么值得改」。</p>
 <table style="contain-intrinsic-size:auto 339px">
@@ -21776,7 +21838,7 @@ config_free(&amp;c);                              <span class="cm">// 忘了这�
 <li><strong>与既有代码风格冲突时。</strong>一个工程内部的一致性,通常比某一处的「更好写法」更有价值。要改就整体改,不要一个文件一个风格。</li>
 </ol>
 <h3>判据的使用方式</h3>
-<p>这一节列的判据不是让人背下来的,它们的正确用法是<strong>在做决定的那一刻查一次</strong>。三个使用场景。</p>
+<p>这些判据不是让人背下来的,正确用法是<strong>在做决定的那一刻查一次</strong>。三个使用场景。</p>
 <ul>
 <li><strong>写新代码时。</strong>要新建一个类、新设计一个接口、新写一个模板,先扫一眼对应的那一组判据,通常一分钟内就能确定几个关键决定。</li>
 <li><strong>做代码审查时。</strong>这些判据都是「能当场判断」的形式,适合作为审查清单。比笼统的「代码风格要好」有用得多。</li>
