@@ -282,7 +282,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c7-notify">7.9 控件通知消息</a>
 <a class="sec" href="#c7-getdlgitem">7.10 GetDlgItem vs 控件变量</a>
 <a class="sec" href="#c7-lab">7.11 动手实验：登录对话框</a>
-<a class="sec" href="#c7-summary">7.12 小结与自测</a>
 </details>
 <details><summary><a class="ch" href="#c8">第 8 章 对话框(二)：高级控件与属性表</a></summary>
 <a class="sec" href="#c8-overview">8.1 通用控件总览</a>
@@ -296,7 +295,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c8-propsheet">8.9 属性表与向导</a>
 <a class="sec" href="#c8-commondlg">8.10 通用对话框</a>
 <a class="sec" href="#c8-ownerdraw">8.11 控件自绘</a>
-<a class="sec" href="#c8-summary">8.12 小结与练习</a>
 </details>
 <details><summary><a class="ch" href="#s9">第 9 章 定制应用程序外观</a></summary>
 <a class="sec" href="#s9-timing">9.1 改外观的三个时机</a>
@@ -389,7 +387,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#s16-chat">16.6 聊天程序骨架</a>
 <a class="sec" href="#s16-tradeoff">16.7 与多线程的取舍</a>
 <a class="sec" href="#s16-modern">16.8 现代批注：IOCP 与 asio</a>
-<a class="sec" href="#s16-recap">16.9 本章小结</a>
 </details>
 <details><summary><a class="ch" href="#c11">第 17 章 进程间通信</a></summary>
 <a class="sec" href="#c11-why">17.1 为什么需要进程间通信</a>
@@ -478,14 +475,14 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </table>
 
 <h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>原书划定的那条从 Windows 机制到系统编程的完整路线</strong>,20 章 199 节分五段推进。</p>
+<p>本书覆盖<strong>原书划定的那条从 Windows 机制到系统编程的完整路线</strong>,20 章 196 节分五段推进。</p>
 <table style="contain-intrinsic-size:auto 298px">
 <thead><tr><th class="nw">段落</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
 <tbody>
 <tr><td class="nw">机制与框架</td><td class="nw">第 1 到 3 章,33 节</td><td>Windows 程序靠什么运转、C++ 提供了哪些性质、MFC 怎么把这两者接起来</td></tr>
-<tr><td class="nw">界面与绘图</td><td class="nw">第 4 到 11 章,81 节</td><td>怎么画、怎么写字、菜单与命令怎么走、对话框与控件怎么用、外观怎么改、画下去的东西怎么在遮挡后还在</td></tr>
+<tr><td class="nw">界面与绘图</td><td class="nw">第 4 到 11 章,79 节</td><td>怎么画、怎么写字、菜单与命令怎么走、对话框与控件怎么用、外观怎么改、画下去的东西怎么在遮挡后还在</td></tr>
 <tr><td class="nw">数据落盘</td><td class="nw">第 12 到 13 章,20 节</td><td>文件的四层接口怎么选、注册表与配置写在哪、文档怎么序列化成文件</td></tr>
-<tr><td class="nw">并发与通信</td><td class="nw">第 14 到 17 章,38 节</td><td>套接字怎么用、线程怎么开与怎么同步、界面怎么不被网络调用冻住、进程之间怎么传数据</td></tr>
+<tr><td class="nw">并发与通信</td><td class="nw">第 14 到 17 章,37 节</td><td>套接字怎么用、线程怎么开与怎么同步、界面怎么不被网络调用冻住、进程之间怎么传数据</td></tr>
 <tr><td class="nw">组件与外部系统</td><td class="nw">第 18 到 20 章,27 节</td><td>COM 与 ActiveX 的二进制复用怎么成立、钩子怎么插进消息流、DLL 怎么导出、数据库怎么连上去</td></tr>
 </tbody>
 </table>
@@ -537,9 +534,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <ul>
 <li><strong>与原著的关系逐块交代。</strong>保留的是二十章的目录与讲解顺序,便于对着原书或配套视频查;重写的是全部代码、API 与开发环境;网络、数据库、COM 三块另加了今天的接口对照。</li>
 <li><strong>15 个小节专门写现代批注。</strong>它们不是附在章末的一句感想,而是把这一章的技术放回今天的位置:哪些仍是首选、哪些只在维护旧代码时才碰、替代物是什么、迁移从哪一步开始。</li>
-<li><strong>220 个批注按四色分工。</strong>109 条蓝色给现代替代与迁移顺序,42 条黄色标出「能用但别选」的老写法,56 条绿色是能直接执行的判据,13 条红色写会出事的失效模式。</li>
+<li><strong>218 个批注按四色分工。</strong>108 条蓝色给现代替代与迁移顺序,42 条黄色标出「能用但别选」的老写法,55 条绿色是能直接执行的判据,13 条红色写会出事的失效模式。</li>
 <li><strong>横向覆盖最宽的一本。</strong>四本 Windows 桌面书里只有这一本把网络、多线程、进程间通信、COM、DLL 与数据库放在同一条线上讲,并给出选型分界。</li>
-<li><strong>21 张图与 108 张表分工明确。</strong>图画结构与路径,表承担横向对比:文件四层接口怎么选、六种进程间通信方式怎么选、四种同步原语各解决什么。</li>
+<li><strong>21 张图与 107 张表分工明确。</strong>图画结构与路径,表承担横向对比:文件四层接口怎么选、六种进程间通信方式怎么选、四种同步原语各解决什么。</li>
 </ul>
 
 <h3>两条读法:顺读与按需查</h3>
@@ -987,8 +984,9 @@ w-&gt;doWork();
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 13165px;--thin-h:13165px">
+<section class="chapter" style="contain-intrinsic-size:auto 13297px;--thin-h:13297px">
 <h1 id="c3"><span class="part">第 3 章</span>MFC 框架程序剖析</h1>
+<p>用裸 Win32 写完一个窗口,就会明白为什么需要框架:满屏样板代码里,真正属于业务的只有几行。本章剖析 MFC 应用程序的骨架——CWinApp 与 CFrameWnd 如何接管 WinMain 与窗口过程,消息如何经由消息映射送到成员函数,向导生成的每个文件各自负责什么。读完这一章,MFC 程序对你不再是黑盒。</p>
 
 <h2 id="c3-what-is-mfc">3.1 MFC 到底是什么：给 Win32 穿上 C++ 外衣</h2>
 <p>先问你一个问题：既然用 Win32 API 已经能写出完整的 Windows 程序，微软为什么还要再造一个 MFC？答案不在"能不能"，而在"累不累"。纯 Win32 是一套 C 风格的接口——满屏的全局函数、句柄和 <code>switch</code> 消息分发，写一个空窗口都要上百行样板代码。MFC（Microsoft Foundation Classes，微软基础类库）就是把这一大堆散装函数，按面向对象的思路重新打包成一组 C++ 类。</p>
@@ -1655,8 +1653,9 @@ pRT-&gt;DrawText(text, len, pFmt, layoutRect, pBrush);</code></pre>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 9227px;--thin-h:9227px">
+<section class="chapter" style="contain-intrinsic-size:auto 9393px;--thin-h:9393px">
 <h1 id="c6"><span class="part">第 6 章</span>菜单与命令消息</h1>
+<p>菜单、工具栏按钮与快捷键做的常常是同一件事,MFC 把它们统一为「命令」。本章讲命令消息独有的路由机制:WM_COMMAND 如何沿视图、文档、框架、应用一路找处理者,ON_COMMAND 与 ON_UPDATE_COMMAND_UI 各管什么,以及动态菜单与右键菜单的做法。命令路由是 MFC 与普通窗口消息分岔最大的地方,也是最容易「写了处理函数却不响应」的地方。</p>
 
 <h2 id="c6-why">6.1 这一章到底在解决什么问题</h2>
 <p>先不要急于背 API。你要抓住这一章真正的主角——不是「菜单」这个界面元素，而是「命令(command)」这个概念。设问：当你点「保存」这个菜单项、点工具栏上那个软盘图标、或者按下 Ctrl+S，这三件事从物理上讲发生在完全不同的地方(菜单条、工具栏、键盘),可它们要做的是同一件事。谁来把这三条路合并成一件事?又是谁决定这件事该交给程序里的哪个对象去干?这就是本章要回答的核心问题。</p>
@@ -1833,7 +1832,7 @@ END_MESSAGE_MAP()
 <div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 这一章真正留下的东西</span><p>MFC 的宏会过时,ClassWizard 会消失,但你在本章学到的三条底层事实是耐用的:(1) 用户动作应被抽象成带稳定身份的「命令」;(2) 命令的<strong>可用性</strong>应当按需求值,而非到处推更新;(3) 触发命令的界面与执行命令的逻辑应当解耦,靠某种<strong>路由/绑定</strong>连接。这三条,从 VC6 的 WM_COMMAND 一路走到今天的 ICommand、再到 Web 前端里「派发一个 action」,内核纹丝未动。你学的不是一段旧 API,是一套会不断改名重生的架构直觉。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 23908px;--thin-h:23908px">
+<section class="chapter" style="contain-intrinsic-size:auto 22790px;--thin-h:22790px">
 <h1 id="c7"><span class="part">第 7 章</span>对话框(一)：基础与常用控件</h1>
 
 <p>前面几章我们一直在"裸窗口"上工作：自己注册窗口类、自己在 <code>OnPaint</code> 里画字、自己响应菜单命令。从这一章开始，我们进入 Windows 桌面程序最常见、也最实用的领域——<strong>对话框</strong>。设置页、登录框、查找替换、"另存为"……你日常用到的桌面软件界面，十有八九是对话框。本章讲清楚三件事：对话框由什么构成、它怎么生怎么死、数据如何在控件与 C++ 变量之间往返。下一章(对话框(二))再讨论属性表单、向导和通用对话框等进阶话题。</p>
@@ -2383,39 +2382,9 @@ m_editUser.ReplaceSel(_T("admin"));</code></pre>
 }</code></pre>
 
 <p><strong>验证清单</strong>——运行起来逐条打钩：启动时用户名框显示灰色提示、确定按钮置灰；输入用户名后确定变为可用；端口框填 0 或 99999 点确定会被 DDV 拦下且焦点回到端口框；密码填 3 位点确定弹业务提示且窗口不关；全部合法时 <code>DoModal</code> 返回 <code>IDOK</code>，主窗口能拿到全部五个值。五条全过，本章机制你就真的都摸过一遍了。</p>
-
-<h2 id="c7-summary">7.12 小结与自测</h2>
-
-<p>本章核心一句话：<strong>对话框 = 模板(长相) + 类(行为) + DDX/DDV(数据管道)</strong>。要点回顾：</p>
-
-<ul>
-<li>模板资源声明界面，对话框类靠 <code>enum { IDD }</code> 与之绑定；控件本质是系统窗口类的子窗口；</li>
-<li>模态 <code>DoModal</code> 阻塞调用处、靠 <code>EndDialog</code> 收场；"窗口亡、对象在"的时间差是取数通道；</li>
-<li>非模态 <code>Create</code> 三件套：堆上分配、<code>DestroyWindow</code> 关闭、<code>PostNcDestroy</code> 里 <code>delete this</code>；</li>
-<li><code>UpdateData</code> 扣动 <code>DoDataExchange</code>，方向由参数决定；DDV 紧跟 DDX，失败靠异常中断并聚焦肇事控件(机制古老但至今可用)；</li>
-<li>五大控件类各有一张成员函数速查表；控件通知经 WM_COMMAND 由 <code>ON_XXX</code> 宏路由；</li>
-<li><code>GetDlgItem</code> 是临时工，<code>DDX_Control</code> 控件变量是正式工，长期持有必须用后者；</li>
-<li>这一整套在现代对应 XAML + 数据绑定 + 校验规则 + 命令——概念同源，自动化程度天壤之别。</li>
-</ul>
-
-<p><strong>自测题</strong>(答案都藏在本章正文里)：</p>
-
-<ol>
-<li><code>DoModal</code> 返回后，对话框的窗口和 C++ 对象各处于什么状态？这对取回用户输入意味着什么？</li>
-<li>非模态对话框为什么不能定义为局部变量？为什么 <code>OnCancel</code> 里必须调 <code>DestroyWindow</code> 而不是 <code>EndDialog</code>？</li>
-<li><code>UpdateData(TRUE)</code> 和 <code>UpdateData(FALSE)</code> 各在什么时刻被框架自动调用？在哪个函数的基类实现里？</li>
-<li>为什么 <code>DDV_MinMaxInt</code> 必须紧跟在对应的 <code>DDX_Text</code> 之后？校验失败时框架内部发生了什么？</li>
-<li><code>DDX_Radio</code> 要求绑定到组内哪个按钮？单选按钮的"组"是由什么划定的？</li>
-<li>在 <code>EN_CHANGE</code> 处理函数里调用 <code>UpdateData(FALSE)</code> 会发生什么？正确做法是什么？</li>
-<li>把 <code>GetDlgItem</code> 的返回值存进成员变量为什么危险？什么机制导致它"过期"？</li>
-<li>(现代批注题)把 <code>DDX_Check(pDX, IDC_CHK, m_bFlag)</code> 翻译成等价的 WPF XAML 绑定写法，并说明 MFC 缺了哪个"引擎"才需要手动 UpdateData。</li>
-</ol>
-
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 下章预告</span><p>对话框(二)将处理更花哨的话题：属性表单(CPropertySheet)与向导、逃跑的按钮(运行时移动控件)、颜色/字体/文件等通用对话框，以及如何在对话框里干掉 Esc 和 Enter 的默认行为。本章的生命周期与 DDX 功底，在那里全都用得上。</p></div>
-
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 26000px;--thin-h:26000px">
+<section class="chapter" style="contain-intrinsic-size:auto 25041px;--thin-h:25041px">
 <h1 id="c8"><span class="part">第 8 章</span>对话框(二)：高级控件与属性表</h1>
 
 <p>上一章我们掌握了对话框的创建、DDX/DDV 数据交换以及基本控件(按钮、编辑框、组合框)的用法。原书第 8 章以"收缩扩展对话框""逃跑的按钮"和"属性表单与向导"作为进阶内容收尾。</p>
@@ -3017,31 +2986,6 @@ END_MESSAGE_MAP()
 </tbody></table>
 
 <div class="note new" style="contain-intrinsic-size:auto 229px"><span class="t">🔵 现代批注:能不自绘就不自绘</span><p>视觉样式时代,手绘控件很难与系统主题、高 DPI、深色模式保持一致——自绘按钮在别人机器上"格格不入"是常见反馈。需求若只是"重点行标红",custom draw 足够;若要成套的现代外观,MFC Feature Pack 的 <code>CMFCButton</code>、<code>CMFCListCtrl</code> 已内置大量绘制逻辑;更进一步就该考虑把界面层迁到现代框架。另外注意:对话框整体背景/静态文本变色走的是另一条路——<b>WM_CTLCOLOR</b>(MFC 中 OnCtlColor),别与本节两种机制混淆。</p></div>
-
-<h2 id="c8-summary">8.12 小结与练习</h2>
-
-<p>本章的知识地图:所有通用控件寄居在 ComCtl32.dll,以 <b>WM_NOTIFY + NMHDR 扩展结构</b>向父窗口汇报,MFC 用 ON_NOTIFY 映射、用 ON_NOTIFY_REFLECT 把处理权反射回控件派生类。</p>
-<ul>
-<li>CListCtrl 报表模式"先建列再插行",图标统一由 CImageList 供给。</li>
-<li>CTreeCtrl 以 HTREEITEM 导航,大树靠 TVN_ITEMEXPANDING 懒加载。</li>
-<li>CTabCtrl 只管页签,内容切换自己做。</li>
-<li>进度条无通知、滑块走 WM_HSCROLL、Spin 靠 UDN_DELTAPOS 否决越界。</li>
-<li>CDateTimeCtrl 用 SetFormat 定制显示但存储应取标准格式。</li>
-<li>工具栏/状态栏记住"框架层与控件层"双层封装。</li>
-<li>CPropertySheet 加一行 SetWizardMode 即成向导,页面校验靠 OnWizardNext 返回 -1。</li>
-<li>通用对话框"构造 → DoModal → Get"。</li>
-<li>自绘优先 custom draw,彻底重造才用 owner-draw。</li>
-</ul>
-
-<p>练习:</p>
-<ol>
-<li>做一个"通讯录"对话框:CListCtrl 报表模式显示姓名/电话/分组,支持点击列头排序(LVN_COLUMNCLICK + SortItems,提示:比较回调拿到的是 ItemData)、右键弹出删除菜单(NM_RCLICK + SubItemHitTest)。</li>
-<li>用 CTreeCtrl 显示 C 盘目录结构,采用哑元节点 + TVN_ITEMEXPANDING 懒加载;选中目录时在旁边的 CListCtrl 中列出其文件。</li>
-<li>把滑块(0~255 三根)与颜色预览静态框联动,做一个 RGB 调色器;拖动时实时刷新(TB_THUMBTRACK),再加一组 Spin+编辑框做精确输入,并用 UDN_DELTAPOS 限制范围。</li>
-<li>用 CPropertySheet 向导模式实现三步"新建连接向导":第一页欢迎(PSWIZB_NEXT),第二页必填服务器地址(为空时 OnWizardNext 返回 -1),第三页摘要 + PSWIZB_FINISH。</li>
-<li>为第 1 题的列表加上 NM_CUSTOMDRAW 隔行变色,并把"分组=重要"的行文字染红;再把这段逻辑移进 CListCtrl 派生类,用 ON_NOTIFY_REFLECT 封装成可复用控件。</li>
-</ol>
-
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 14829px;--thin-h:14829px">
@@ -4372,8 +4316,9 @@ std::ofstream(path) &lt;&lt; j.dump(2);   <span class="cm">// 缩进 2 格的可
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 12552px;--thin-h:12552px">
+<section class="chapter" style="contain-intrinsic-size:auto 12684px;--thin-h:12684px">
 <h1 id="c9"><span class="part">第 14 章</span>网络编程（Winsock）</h1>
+<p>程序走出单机,首先要回答三件事:找哪台机器、交给哪个程序、按什么规矩传。本章从 IP、端口与协议讲起,用 Winsock 依次写出 TCP 与 UDP 的收发双方,弄清阻塞在哪里发生、字节序为什么要转换、粘包从何而来。网络细节后面的章节不再重复,这里一次讲透。</p>
 
 <h2 id="c9-what">14.1 从两台机器互相说话说起</h2>
 <p>到这一章为止，你写的程序都活在一台机器里：进程读写自己的内存、自己的文件、自己的窗口。现在把镜头拉远——你想让「我这台机器上的程序」和「另一台机器上的程序」交换数据。这就是网络编程要解决的全部问题。别被术语吓住，它本质上只回答三件事：<b>去找哪台机器？找到之后交给哪个程序？按什么规矩传？</b></p>
@@ -4727,7 +4672,7 @@ awaitable&lt;<span class="kw">void</span>&gt; session(tcp::socket sock) {
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 13367px;--thin-h:13367px">
+<section class="chapter" style="contain-intrinsic-size:auto 12461px;--thin-h:12461px">
 <h1 id="s16"><span class="part">第 16 章</span>线程同步与异步套接字编程</h1>
 
 <p>上一章我们把程序拆成了多个线程，也初尝了"共享数据被踩乱"的苦头。本章先用一张表把四种经典同步原语彻底盘清楚，再回答一个更折磨初学者的问题：为什么套接字函数一调用，整个窗口就"白屏未响应"了？答案将引出 Winsock 里最有 Windows 味道的发明——<strong>把网络事件变成窗口消息</strong>的 <code>WSAAsyncSelect</code>，并用它搭出一个界面永不卡顿的聊天程序骨架。最后站在今天回望：这套"消息式异步"从哪来、到哪去。</p>
@@ -4942,30 +4887,6 @@ LRESULT CChatDlg::OnNetData(WPARAM, LPARAM lParam)
 <p><strong>通俗比方：</strong>三十年的演化只换了一件事——"谁去等"。<code>WSAAsyncSelect</code> 时代前台自己兼职看快递；黄金模式雇了专人蹲仓库、办完用内部邮件汇报；IOCP/asio 干脆把仓库改成自动分拣线，货直接送到工位。前台的角色从未变过：<strong>只刷界面，永不等待</strong>。</p>
 
 <p><strong>设计动机与现代批注：</strong><code>WSAAsyncSelect</code> 值得学，不是因为你将来会大量使用它，而是它用最少的概念完整演示了"事件驱动 I/O"的闭环：注册兴趣 → 事件到达 → 解包分发 → 就绪处理 → 重新武装。看懂这个闭环，再看 <code>epoll</code>、看 Node.js、看 asio 的 <code>io_context</code>，都是熟人。</p>
-
-<h2 id="s16-recap">16.9 本章小结与自测</h2>
-
-<p><strong>本章你应当带走的：</strong></p>
-
-<table style="contain-intrinsic-size:auto 349px">
-<thead><tr><th class="nw">知识点</th><th>一句话版本</th></tr></thead>
-<tbody>
-<tr><td class="nw">四原语分工</td><td>临界区管进程内互斥（最快），互斥量管跨进程互斥，事件管"通知"，信号量管"限流"</td></tr>
-<tr><td class="nw">死锁两条件</td><td>持有并等待 + 循环等待；工程解药是全项目统一加锁顺序（或 <code>std::scoped_lock</code>）</td></tr>
-<tr><td class="nw">阻塞之祸</td><td>UI 线程 = 消息泵；泵停转 = 界面死；阻塞 I/O 绝不进 UI 线程</td></tr>
-<tr><td class="nw"><code>WSAAsyncSelect</code></td><td>把 FD_ACCEPT/FD_READ/FD_WRITE/FD_CLOSE 变成自定义窗口消息；调用后套接字自动非阻塞；后一次登记整体覆盖前一次</td></tr>
-<tr><td class="nw">解包两只宏</td><td><code>wParam</code> 是套接字；<code>lParam</code> 用 <code>WSAGETSELECTEVENT</code>/<code>WSAGETSELECTERROR</code> 拆事件与错误，<strong>先验错再办事</strong></td></tr>
-<tr><td class="nw">单线程事件循环红利</td><td>网络事件与界面事件同队列串行，共享数据不需要锁</td></tr>
-<tr><td class="nw">现代路线</td><td>高并发 IOCP、跨平台 asio、GUI 集成用"线程 + PostMessage"黄金模式</td></tr>
-</tbody>
-</table>
-
-<p><strong>自测五题</strong>（能不翻书答出，本章过关）：</p>
-<p>① 程序单实例检测为什么用命名互斥量而不用临界区？② 两个线程、两把临界区，写出一个必然死锁的加锁顺序，再写出修复版。③ <code>WSAAsyncSelect</code> 调用之后，<code>send</code> 返回 <code>WSAEWOULDBLOCK</code> 意味着什么？</p>
-<p>该做什么、等哪个事件？④ 为什么 <code>FD_READ</code> 的处理函数里只需 <code>recv</code> 一次而不必循环收干？⑤ 工作线程想把收到的数据交给 UI 线程显示，为什么必须 <code>PostMessage</code> 堆指针，而不能 <code>SendMessage</code> 栈缓冲区的地址？</p>
-
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 下章预告</span><p>消息式异步撑起了小而美的聊天工具；当连接从"几个"变成"几万个"，就轮到重叠 I/O 与完成端口登场——那是 Windows 网络编程真正的性能之巅。</p></div>
-
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 11607px;--thin-h:11607px">
@@ -5468,8 +5389,9 @@ EXPORTS
 <p><strong>本章小结：</strong>DLL 的一切，都围绕一个核心动作——<em>把代码从"编译期焊死"解放成"运行期接通"</em>。为此需要一张对外的导出表（<code>dllexport</code>/<code>.DEF</code>），需要两种接通方式（隐式靠导入库、显式靠 <code>LoadLibrary</code>），需要一个生命周期钩子（<code>DllMain</code>），还要提防名字修饰和跨模块边界的暗礁。把这条主线记牢，无论面对 20 年前的 VC6 还是今天的跨平台工程，你都能一眼看穿它在做什么。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 12485px;--thin-h:12485px">
+<section class="chapter" style="contain-intrinsic-size:auto 12617px;--thin-h:12617px">
 <h1 id="c13"><span class="part">第 20 章</span>数据库访问</h1>
+<p>内存里的数据程序一关就没了,文件能存却扛不住并发、查询与事务。本章讲 Windows 程序访问数据库的标准路径:ODBC 的句柄模型与 SQL 执行流程,再到用 ADO 智能指针把连接、命令、记录集串成完整的增删改查。示例统一落在本地 SQL 数据库上,可以直接照跑。</p>
 
 <h2 id="c13-why">20.1 这一章到底在解决什么问题</h2>
 <p>到这一章之前，你写的程序里所有数据都活在内存里：一个 <code>CArray</code>、一棵树、几个成员变量。程序一关，全没了。前面第 5 章讲文档/视图时你也见过序列化，把对象存进 <code>.dat</code> 文件，下次再读回来。那问题来了：<b>既然有文件可以持久化，为什么还要专门学「数据库」？</b>你不能自己拿文件存吗？</p>

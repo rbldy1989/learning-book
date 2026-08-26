@@ -203,26 +203,22 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l0-stage">0.1 一次编译到底跑了哪些程序</a>
 <a class="sec" href="#l0-keep">0.2 留下中间产物:三大编译器各自的开关</a>
 <a class="sec" href="#l0-tool">0.3 查看产物的工具:两侧对照</a>
-<a class="sec" href="#l0-sum">0.4 小结</a>
 </details>
 <details><summary><a class="ch" href="#l1">预处理</a></summary>
 <a class="sec" href="#l1-what">1.1 预处理器只做文本替换</a>
 <a class="sec" href="#l1-include">1.2 包含展开与头文件搜索顺序</a>
 <a class="sec" href="#l1-guard">1.3 包含守卫、pragma once 与它们的边界</a>
-<a class="sec" href="#l1-sum">1.4 小结</a>
 </details>
 <details><summary><a class="ch" href="#l2">编译:从源码到目标文件</a></summary>
 <a class="sec" href="#l2-unit">2.1 编译单元:编译器一次只看见一个</a>
 <a class="sec" href="#l2-emit">2.2 编译器产出了什么:代码、数据与符号</a>
 <a class="sec" href="#l2-inline">2.3 内联函数、模板与 vague linkage</a>
-<a class="sec" href="#l2-sum">2.4 小结</a>
 </details>
 <details><summary><a class="ch" href="#l3">目标文件的格式</a></summary>
 <a class="sec" href="#l3-elf">3.1 ELF:节、段与两种视图</a>
 <a class="sec" href="#l3-pe">3.2 PE/COFF:节表、导入表与导出表</a>
 <a class="sec" href="#l3-macho">3.3 Mach-O:段、节与加载命令</a>
 <a class="sec" href="#l3-cmp">3.4 三种格式的同场对照,以及怎么把一个目标文件读明白</a>
-<a class="sec" href="#l3-sum">3.5 小结</a>
 </details>
 <details><summary><a class="ch" href="#l4">符号</a></summary>
 <a class="sec" href="#l4-what">4.1 符号是什么:名字、类型、绑定与所在节</a>
@@ -230,20 +226,17 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l4-extern">4.3 extern "C" 与它解决的问题</a>
 <a class="sec" href="#l4-vis">4.4 可见性:default、hidden 与 dllexport</a>
 <a class="sec" href="#l4-weak">4.5 弱符号、公共符号与它们的用途</a>
-<a class="sec" href="#l4-sum">4.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#l5">静态链接</a></summary>
 <a class="sec" href="#l5-resolve">5.1 符号解析:未定义、重复定义与它们的报错原文</a>
 <a class="sec" href="#l5-odr">5.2 ODR 违规:链接期不报错的那一类</a>
 <a class="sec" href="#l5-reloc">5.3 重定位:链接器改写了哪些字节,以及地址怎么分配</a>
 <a class="sec" href="#l5-order">5.4 链接顺序为什么会影响结果</a>
-<a class="sec" href="#l5-sum">5.5 小结</a>
 </details>
 <details><summary><a class="ch" href="#l6">静态库</a></summary>
 <a class="sec" href="#l6-ar">6.1 归档文件:它只是一袋目标文件</a>
 <a class="sec" href="#l6-pick">6.2 抽取规则:整个成员要么不要,以及 --whole-archive</a>
 <a class="sec" href="#l6-circle">6.3 循环依赖与重复列库</a>
-<a class="sec" href="#l6-sum">6.4 小结</a>
 </details>
 <details><summary><a class="ch" href="#l7">动态库</a></summary>
 <a class="sec" href="#l7-why">7.1 动态库解决什么、带来什么</a>
@@ -251,43 +244,37 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l7-load">7.3 加载:动态链接器做的事</a>
 <a class="sec" href="#l7-search">7.4 运行期查找路径:三平台各自的规则</a>
 <a class="sec" href="#l7-win">7.5 Windows 的导入库与 DLL:另一套做法</a>
-<a class="sec" href="#l7-sum">7.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#l8">启动、初始化与退出</a></summary>
 <a class="sec" href="#l8-start">8.1 从进程入口到 main</a>
 <a class="sec" href="#l8-init">8.2 静态初始化次序问题</a>
 <a class="sec" href="#l8-exit">8.3 退出路径与析构次序</a>
-<a class="sec" href="#l8-sum">8.4 小结</a>
 </details>
 <details><summary><a class="ch" href="#l9">LTO、体积与可复现构建</a></summary>
 <a class="sec" href="#l9-lto">9.1 链接期优化:它做了什么、代价在哪</a>
 <a class="sec" href="#l9-size">9.2 体积:从哪来、怎么量、怎么砍</a>
 <a class="sec" href="#l9-strip">9.3 符号剥离与调试符号归档</a>
 <a class="sec" href="#l9-repro">9.4 可复现构建:路径、时间戳与随机化</a>
-<a class="sec" href="#l9-sum">9.5 小结</a>
 </details>
 <details><summary><a class="ch" href="#l10">标准之外:编译器扩展与平台约定</a></summary>
 <a class="sec" href="#l10-who">10.1 标准、ABI 与编译器扩展:三层各管什么</a>
 <a class="sec" href="#l10-call">10.2 调用约定:参数怎么传、谁清栈、名字怎么变</a>
 <a class="sec" href="#l10-decl">10.3 声明修饰:__declspec 与 __attribute__ 的对照</a>
 <a class="sec" href="#l10-layout">10.4 结构体布局:对齐、填充与 pragma pack</a>
-<a class="sec" href="#l10-sum">10.5 小结:遇到一个不认识的关键字按什么顺序查</a>
 </details>
-<details><summary><a class="ch" href="#l11">排错与小结</a></summary>
+<details><summary><a class="ch" href="#l11">排错对照与平台差异</a></summary>
 <a class="sec" href="#l11-diag">11.1 报错原文到根因:一张对照表</a>
 <a class="sec" href="#l11-plat">11.2 三平台差异汇总</a>
-<a class="sec" href="#l11-index">11.3 判据索引</a>
-<a class="sec" href="#l11-sum">11.4 小结</a>
 </details>
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 27766px;--thin-h:27766px">
+<section class="chapter" style="contain-intrinsic-size:auto 24525px;--thin-h:24525px">
 <h1 id="l0"><span class="part">第 0 章</span>预备:把工具链拆开看</h1>
 <h2 id="l0-open">0.0 导读</h2>
 <p>一条 <code>gcc a.c b.c -o app</code> 在终端里只占一行,背后有五个程序先后运行,产出四种中间物,最后在磁盘上留下一个文件。这五个程序各有自己的输入、自己的数据结构与自己的报错格式,而绝大多数「编不过」「链不上」「装到别的机器上跑不起来」的问题,都出现在两个程序的交界处。</p>
 <p><strong>本书讲清这条链上每一步产出了什么、下一步拿它做了什么,以及一条报错原文对应哪一步。</strong>平台以 Linux(ELF)与 Windows(PE/COFF)双轨为主,macOS(Mach-O)在结构性不同处单列;编译器覆盖 GCC、Clang 与 MSVC;凡是随工具版本变动的取值,书里给的是查证命令,不是写作当时的输出。</p>
-<p>立足点只有一条,贯穿全部十一章:<strong>拿到一条报错,先确定它是哪一步打印的</strong>。预处理、编译、汇编、链接、加载、运行期符号解析六段各有各的输入与产出,排查手段几乎不重叠。步骤归错了,后面每一步都是无用功——把运行期找不到动态库当成链接问题,反复改链接命令行,而要动的是运行期查找配置。</p>
+<p>立足点只有一条,贯穿全书十二章:<strong>拿到一条报错,先确定它是哪一步打印的</strong>。预处理、编译、汇编、链接、加载、运行期符号解析六段各有各的输入与产出,排查手段几乎不重叠。步骤归错了,后面每一步都是无用功——把运行期找不到动态库当成链接问题,反复改链接命令行,而要动的是运行期查找配置。</p>
 <h3>这个领域有哪些资料</h3>
 <p>链接这件事的资料分布很特别:<strong>中文与英文的经典都写于二十年前左右,而这二十年里变化最大的几块恰好都不在它们的覆盖范围内。</strong>经典书把 ELF 讲得很透,PE 只作对照,Mach-O 基本不涉及。</p>
 <p>三本经典之间也有分工,不是可以互相替代的三份材料。俞甲子等的书给的是一条完整的路线,从预处理一直走到运行库;Levine 的书给的是概念的定义方式;Taylor 的连载给的是实现者当年面对的约束。三者叠起来才构成一个骨架,单读任何一本都会缺一块。</p>
@@ -339,22 +326,22 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 经典书缺的四块在本书里各有独立落点</span><p>链接期优化落在 9.1 节,符号可见性与导出面的收缩落在 4.4 节与 9.2 节,可复现构建落在 9.4 节,三平台各自的运行期查找规则落在 7.4 节并在 11.2 节汇总。这四块在二十年前的经典里要么没有、要么只有一两页,因此它们的事实层不引任何二手总结,全部落在规范、手册页与本机实测上。四块之间还互相牵制:开了链接期优化,静态库的归档工具要换;收了导出面,注册式代码可能被裁掉;要可复现,就不能让构建路径与时间戳进产物。</p></div>
 <div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 把书里的输出当成本机的期望值,会得出相反的结论</span><p>工具输出随架构、发行版、优化级别与工具版本变化。<code>nm</code> 打印的地址列是节内偏移,随变量排布而变;重定位类型编号随架构不同;Mach-O 的绑定信息换过一代实现,新旧系统上分析工具的输出差别很大。逐字对照书上的输出,差一个字段就以为环境坏了,是常见的时间浪费。正确用法是:书里的输出用来说明该看哪一列,本机的输出用来得出结论。4.1 节、3.3 节与 5.3 节都在正文里点明了这一点。</p></div>
 <h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>从一行编译命令到一个能在别人机器上启动的产物之间的全部机制</strong>,十一章按五组归类。分组不是阅读顺序,是问题的归类。</p>
+<p>本书覆盖<strong>从一行编译命令到一个能在别人机器上启动的产物之间的全部机制</strong>,十二章按六组归类。分组不是阅读顺序,是问题的归类。</p>
 <table style="contain-intrinsic-size:auto 362px">
 <thead><tr><th>组</th><th>章与节</th><th>它回答的问题</th></tr></thead>
 <tbody>
-<tr><td class="nw">一次编译拆开看</td><td class="nw">第 0 到 2 章,12 节</td><td>一条命令行派生了哪几个进程、每个选项交给谁,中间产物怎么留下来,一个编译单元最后在目标文件里留下了什么</td></tr>
-<tr><td class="nw">格式与符号</td><td class="nw">第 3、4 章,11 节</td><td>ELF、PE/COFF、Mach-O 各自怎么安放代码、数据与元数据,以及一个符号的名字、绑定与可见性分别决定了什么</td></tr>
-<tr><td class="nw">链接</td><td class="nw">第 5 到 7 章,15 节</td><td>符号怎么被解析、哪些字节被链接器改写、静态库按什么粒度抽取、动态库在运行期怎么被找到并绑定</td></tr>
-<tr><td class="nw">运行期与交付</td><td class="nw">第 8、9 章,9 节</td><td>程序在 <code>main</code> 之前与退出之后各做了什么,以及链接期优化、体积、符号剥离与可复现构建</td></tr>
-<tr><td class="nw">标准之外</td><td class="nw">第 10 章,5 节</td><td>调用约定、声明修饰与结构体布局由谁规定,标准、ABI 与编译器扩展三层怎么分</td></tr>
-<tr><td class="nw">排错</td><td class="nw">第 11 章,4 节</td><td>报错原文到根因的固定路径、三平台差异汇总,以及全书判据的总索引</td></tr>
+<tr><td class="nw">一次编译拆开看</td><td class="nw">第 0 到 2 章,9 节</td><td>一条命令行派生了哪几个进程、每个选项交给谁,中间产物怎么留下来,一个编译单元最后在目标文件里留下了什么</td></tr>
+<tr><td class="nw">格式与符号</td><td class="nw">第 3、4 章,9 节</td><td>ELF、PE/COFF、Mach-O 各自怎么安放代码、数据与元数据,以及一个符号的名字、绑定与可见性分别决定了什么</td></tr>
+<tr><td class="nw">链接</td><td class="nw">第 5 到 7 章,12 节</td><td>符号怎么被解析、哪些字节被链接器改写、静态库按什么粒度抽取、动态库在运行期怎么被找到并绑定</td></tr>
+<tr><td class="nw">运行期与交付</td><td class="nw">第 8、9 章,7 节</td><td>程序在 <code>main</code> 之前与退出之后各做了什么,以及链接期优化、体积、符号剥离与可复现构建</td></tr>
+<tr><td class="nw">标准之外</td><td class="nw">第 10 章,4 节</td><td>调用约定、声明修饰与结构体布局由谁规定,标准、ABI 与编译器扩展三层怎么分</td></tr>
+<tr><td class="nw">排错</td><td class="nw">第 11 章,2 节</td><td>报错原文到根因的固定路径,以及三平台差异按层次汇总</td></tr>
 </tbody>
 </table>
-<p>第 4 章与第 7 章各六节,是全书最厚的两章,原因相同:符号与动态库这两件事在三个平台上分叉最多,而分叉处的失败形态互不相同,合成一节写会互相干扰。第 4 章按名字、修饰规则、外部链接、可见性、弱符号逐层剥开,第 7 章按动机、位置无关代码、加载、查找、Windows 一侧分开处理。</p>
-<p>合计 12 章 56 节。六组之间是单向依赖:后面每一组都在用前面的结论,而第 0 到 2 章不用后面任何一章的内容,可以放心先读。</p>
+<p>第 4 章与第 7 章各五节,是全书最厚的两章,原因相同:符号与动态库这两件事在三个平台上分叉最多,而分叉处的失败形态互不相同,合成一节写会互相干扰。第 4 章按名字、修饰规则、外部链接、可见性、弱符号逐层剥开,第 7 章按动机、位置无关代码、加载、查找、Windows 一侧分开处理。</p>
+<p>合计 12 章 44 节,其中 0.0 导读不计入分组。六组之间是单向依赖:后面每一组都在用前面的结论,而第 0 到 2 章不用后面任何一章的内容,可以放心先读。</p>
 <p>平台基线在这里再明确一次:<strong>Linux 与 ELF、Windows 与 PE/COFF 双轨为主,macOS 与 Mach-O 在结构性不同处单列</strong>。双轨的含义是同一个问题两侧都给完整答案,而不是主讲一侧、另一侧一句带过;单列的含义是 Mach-O 只在与前两者结构不同的地方出现,例如加载命令、安装名与三个路径记号。</p>
-<p>每一章的收尾形态是统一的:小结先把本章的机制收成一两张表,再给一组可以直接抄走的观察命令。排查时往往只需要这一节;要判断某个结论为什么成立,才回到正文对应的小节。</p>
+<p>排查一个具体问题时不必从头顺读:第 11 章的两张对照表按报错原文与平台差异直接指到章节,查到之后再回正文对应的小节,看该结论为什么成立。</p>
 <p>不讲的部分同样要说清楚,并指明归谁。<strong>分界一律写成一句能当场判断的话</strong>,遇到一个话题时可以立刻知道该翻哪一本。</p>
 <table style="contain-intrinsic-size:auto 691px">
 <thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
@@ -391,21 +378,20 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <p>必须那一档的分界可以用一句话概括:<strong>说得出一条编译命令里每个参数在做什么</strong>,才算过了这一档。说不出来时,读到的每条规矩都只能当口诀记,而这本书里的规矩全都要从机制推出来。</p>
 <h3>本书的特点</h3>
 <p>特点要能被当场核对,因此每一条都配了去哪一节验证。</p>
-<table style="contain-intrinsic-size:auto 529px">
+<table style="contain-intrinsic-size:auto 466px">
 <thead><tr><th>特点</th><th>到哪一节核对</th></tr></thead>
 <tbody>
 <tr><td class="nw">报错原文用真实措辞,不转述</td><td>5.1 节把「找不到定义」与「重复定义」两类的原文按 GNU ld、LLVM lld、macOS ld、MSVC link 四侧并排列出,<code>undefined reference to</code>、<code>duplicate symbol for architecture arm64</code>、<code>LNK2019</code> 逐条给全</td></tr>
-<tr><td>七章的小结各带一张按报错或症状反查的表,合计 54 行</td><td>第 0、1、2、3 章的表头是「报错原文 → 根因 → 第一件该做的事」,第 5、6、7 章按关键词与症状分类;第 4、8、9 章的小结改用判据表,不硬凑</td></tr>
-<tr><td class="nw">第 11 章是三张可以直接查的大表</td><td>11.1 节 40 行的报错原文对照表,11.2 节 22 行的三平台差异表,11.3 节 52 行的判据索引</td></tr>
+<tr><td class="nw">第 11 章是两张可以直接查的大表</td><td>11.1 节 40 行的报错原文对照表,逐条给出根因与第一步该查什么;11.2 节 22 行的三平台差异表,按格式、机制、策略分层</td></tr>
 <tr><td class="nw">工具输出会随版本变的地方逐处点明</td><td>4.1 节说明 <code>nm</code> 的地址列不值得记忆,3.3 节说明 Mach-O 的绑定信息换过一代实现,5.3 节说明重定位类型编号随架构与版本变化,三处都要求以本机实际输出为准</td></tr>
 <tr><td class="nw">三平台不是一句带过</td><td>ELF 与 PE 双轨落在 3.1 与 3.2 节、7.1 到 7.3 节与 7.5 节;Mach-O 单列落在 3.3 节的加载命令、7.4 节的三个路径记号,以及 11.2 节的差异表</td></tr>
-<tr><td class="nw">全书 20 张插图,只画文字讲不清的三类</td><td>5.3 节「重定位前后同一段字节」、7.2 节「一次跨库调用经过 PLT 与 GOT 的完整路径」、6.2 节「抽取以整个成员为单位」</td></tr>
-<tr><td class="nw">全书 200 个批注四色分工固定</td><td>红色 76 个写陷阱与事故,绿色 79 个写判据,蓝色 29 个写现代替代,黄色 16 个写历史包袱;7.4 节的 <code>DT_RPATH</code> 与 7.5 节的 <code>/DELAYLOAD</code> 是两个典型</td></tr>
+<tr><td class="nw">全书 19 张插图,只画文字讲不清的三类</td><td>5.3 节「重定位前后同一段字节」、7.2 节「一次跨库调用经过 PLT 与 GOT 的完整路径」、6.2 节「抽取以整个成员为单位」</td></tr>
+<tr><td class="nw">全书 170 个批注四色分工固定</td><td>红色 66 个写陷阱与事故,绿色 62 个写判据,蓝色 26 个写现代替代,黄色 16 个写历史包袱;7.4 节的 <code>DT_RPATH</code> 与 7.5 节的 <code>/DELAYLOAD</code> 是两个典型</td></tr>
 </tbody>
 </table>
-<p>七条里有两条是负面约束:报错原文不转述,工具输出不当成期望值。它们决定的不是书里多了什么,而是书里刻意不做什么——转述一遍的报错在搜索引擎里搜不到,写死的输出会在下一个工具版本上失效。</p>
+<p>六条里有两条是负面约束:报错原文不转述,工具输出不当成期望值。它们决定的不是书里多了什么,而是书里刻意不做什么——转述一遍的报错在搜索引擎里搜不到,写死的输出会在下一个工具版本上失效。</p>
 <p>报错原文照抄而不转述,还有一个直接的用处:书里的字符串可以整段复制到搜索框里,命中同一条报错的其他讨论。转述过的报错做不到这一点,而排查时最常见的第一个动作恰好是搜索。</p>
-<p>20 张插图集中在三类地方:结构,一份产物内部的几张表互相指向什么;路径,一次解析或一次查找按什么顺序走;前后对照,同一段字节在某一步之前与之后分别是什么。文字讲得清的地方不配图。</p>
+<p>19 张插图集中在三类地方:结构,一份产物内部的几张表互相指向什么;路径,一次解析或一次查找按什么顺序走;前后对照,同一段字节在某一步之前与之后分别是什么。文字讲得清的地方不配图。</p>
 <h3>怎么读</h3>
 <p>四条路线按处境划分,起点不同,主干也不同。</p>
 <table style="contain-intrinsic-size:auto 287px">
@@ -732,76 +718,11 @@ app:
 <p>macOS 的 <code>otool</code> 与 <code>nm</code> 在近几年的 Xcode 里已由 LLVM 实现,<code>llvm-otool</code> 与 <code>otool</code> 指向同一个程序。用到冷门选项时以本机 <code>man</code> 为准,不同 Xcode 版本之间有差异。</p>
 <div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 交叉分析多种格式时,LLVM 的一套工具比 binutils 更省事</span><p><code>llvm-objdump</code> 与 <code>llvm-readobj</code> 同时认识 ELF、PE/COFF、Mach-O 与 WebAssembly,一个命令走三个平台;<code>llvm-readobj --file-headers</code> 对三种格式都给出结构化输出。binutils 的 <code>readelf</code> 只认 ELF,<code>objdump</code> 认得多但对 PE 的导入表支持有限。做跨平台构建的排错时,装一套 LLVM 工具可以少切换三套命令语法。</p></div>
 <p>版本差异带来的实际影响集中在两处:节名与默认开关。GCC 10 起 <code>-fno-common</code> 成为默认,未初始化的全局变量落在 <code>.bss</code> 而不再是 COMMON;binutils 2.39 起 <code>ld</code> 对缺少 <code>.note.GNU-stack</code> 的目标文件发出警告。读输出时先确认工具与编译器的版本。</p>
-<h2 id="l0-sum">0.4 小结</h2>
-<p>这一章把一次编译拆成了可以分别观察的几段。后面十章的每一个结论,都会落回这里的某一段上。</p>
-<h3>五个程序与四个停车点</h3>
-<p>五个程序按固定顺序运行,四个停车点正好落在它们之间。记住这张对应关系,就能把任意一条报错或一个疑问定位到具体的一步。</p>
-<table style="contain-intrinsic-size:auto 227px">
-<thead><tr><th>第几步</th><th>程序</th><th>输入</th><th>输出</th><th>停在这一步的开关</th></tr></thead>
-<tbody>
-<tr><td class="nw">1</td><td><code>gcc</code> / <code>cl</code> 驱动程序</td><td>命令行</td><td>下面几步的具体命令</td><td>无</td></tr>
-<tr><td class="nw">2</td><td><code>cc1</code> / <code>cc1plus</code></td><td>源文件与头文件</td><td>汇编源码</td><td><code>-E</code> 停在预处理后,<code>-S</code> 停在编译后</td></tr>
-<tr><td class="nw">3</td><td><code>as</code></td><td>汇编源码</td><td>目标文件</td><td><code>-c</code></td></tr>
-<tr><td class="nw">4</td><td><code>collect2</code></td><td>全部目标文件与库</td><td>转交给链接器</td><td>无</td></tr>
-<tr><td class="nw">5</td><td><code>ld</code> / <code>link</code></td><td>目标文件、库、启动文件</td><td>可执行文件或动态库</td><td>无</td></tr>
-</tbody>
-</table>
-<p>Windows 一侧的第 2 步与第 3 步都在 <code>cl.exe</code> 进程内完成,第 4 步不存在,进程级别只看得到「编译」与「链接」两段。macOS 一侧与 Linux 结构相同,clang 默认把第 3 步集成进第 2 步。</p>
-<h3>报错原文归到哪一步</h3>
-<p>这本书的判据是报错原文对应哪一步。下面这张表是这条判据的起点,后面每一章都会往里补新的行。</p>
-<table style="contain-intrinsic-size:auto 378px">
-<thead><tr><th>报错原文的形状</th><th>来自</th><th>第一件该做的事</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>文件:行:列: error:</code></td><td class="nw">编译器</td><td>按行列号读源码,与语言规则对照</td></tr>
-<tr><td class="nw"><code>文件:行: Error:</code>(无列号)</td><td class="nw">汇编器</td><td>检查 <code>-march</code> / <code>-mcpu</code> 与目标架构</td></tr>
-<tr><td class="nw">只有符号名,没有行号</td><td class="nw">链接器</td><td>确认这个符号是谁定义的、有没有被链进来</td></tr>
-<tr><td><code>cannot find -lxxx</code> / <code>LNK1104</code></td><td class="nw">链接器</td><td>检查 <code>-L</code> / <code>/LIBPATH</code> 与库文件名</td></tr>
-<tr><td class="nw"><code>C2065</code> / <code>C2143</code></td><td class="nw">MSVC 编译器</td><td>与 GNU 侧的 <code>error:</code> 同类</td></tr>
-<tr><td class="nw"><code>LNK2019</code> / <code>LNK2001</code></td><td class="nw">MSVC 链接器</td><td>与 <code>undefined reference</code> 同类</td></tr>
-<tr><td class="nw"><code>LNK2005</code></td><td class="nw">MSVC 链接器</td><td>与 <code>multiple definition</code> 同类</td></tr>
-<tr><td><code>error while loading shared libraries</code></td><td class="nw">运行期加载器</td><td>与编译链接无关,查运行时搜索路径</td></tr>
-<tr><td class="nw"><code>0xc0000135</code> / <code>0xc000007b</code></td><td class="nw">Windows 加载器</td><td>前者缺 DLL,后者位数不匹配</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 拿到一段报错先找最上面那条带具体信息的行,不要从最后一行读起</span><p>构建工具会在真正的诊断之后再叠加几层转述:<code>collect2: error: ld returned 1 exit status</code>、<code>make: *** [Makefile:12: app] Error 1</code>、<code>ninja: build stopped</code>。这三行都不含根因,只是逐层上报退出码。有效信息在它们上面,而终端与 CI 日志的截断往往正好切掉那一段。并行构建时还要先按目标名把交错的输出拆开。</p></div>
-<p>表里有两类容易混淆的对子。<code>undefined reference</code> 与 <code>cannot find -lxxx</code> 都在链接期出现,前者是「库找到了但里面没有这个符号」,后者是「库文件本身没找到」,两者的排查方向相反。</p>
-<p>另一对是 <code>cannot find -lfoo</code> 与 <code>error while loading shared libraries: libfoo.so.1</code>。前者发生在构建期,归 <code>-L</code> 管;后者发生在运行期,归运行时搜索路径管。构建成功不代表运行时找得到同一个文件,这两套路径互不相干。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 构建期能找到库不等于运行期也能找到,两套搜索路径互不相干</span><p>构建期由 <code>-L</code> 与链接器的默认目录决定,运行期由可执行文件里记的 rpath、<code>LD_LIBRARY_PATH</code>、<code>ld.so.cache</code> 与系统默认目录决定。开发机上两套路径常常重合,换到目标机器就分开了,典型症状是本机跑得好好的程序在别处启动即报 <code>error while loading shared libraries</code>。判断方法是在目标机器上跑一次 <code>ldd</code>,凡是显示 <code>not found</code> 的都属于运行期路径问题,与链接命令行无关。</p></div>
-<h3>观察手段速查</h3>
-<p>三类观察手段各自的适用位置已经固定下来。</p>
-<ul>
-<li><strong>停在中间。</strong><code>-E</code> / <code>-S</code> / <code>-c</code> 与 MSVC 的 <code>/P</code> / <code>/FA</code> / <code>/c</code>,用来取出某一步的产物。要同时拿到多份就用 <code>-save-temps=obj</code>。</li>
-<li><strong>把命令行打出来。</strong><code>gcc -###</code> 与 <code>clang -###</code> 打印不执行,<code>-v</code> 执行并打印。MSVC 用 <code>cl /Bv</code> 看内部工具,用拆成 <code>cl /c</code> 加 <code>link</code> 的方式让链接命令可见。</li>
-<li><strong>解析二进制。</strong>Linux 用 <code>readelf</code> / <code>objdump</code> / <code>nm</code>,Windows 用 <code>dumpbin</code> 的各个开关,macOS 用 <code>otool</code> / <code>nm</code>。先确认要看的信息在哪张表里,再选工具。</li>
-</ul>
-<pre style="contain-intrinsic-size:auto 169px"><code># 拿到一个陌生的二进制,最先跑的四条命令
-file app                      # 类型、架构、静态还是动态、有没有 strip
-readelf -h app                # ELF 头:类型、入口地址、节头表位置
-readelf -S app | head -30     # 节表:代码、数据、符号表各在哪
-readelf -d app | grep NEEDED  # 动态依赖记了哪些名字</code></pre>
-<p>同一组问题在 Windows 上对应 <code>dumpbin /headers</code> 与 <code>dumpbin /dependents</code>,在 macOS 上对应 <code>otool -h</code> 与 <code>otool -l</code>。完整的读法在第 3 章给出固定步骤。</p>
-<h3>通向后面各章</h3>
-<p>这一章交代的是流水线的形状,后面各章逐段填内容。每一章的落点都在上面那张五步表的某一行上。</p>
-<table style="contain-intrinsic-size:auto 407px">
-<thead><tr><th>章</th><th>填的是哪一段</th><th>核心问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 1 章</td><td class="nw">第 2 步的前半段</td><td>文本替换与头文件搜索</td></tr>
-<tr><td class="nw">第 2 章</td><td>第 2 步的后半段与第 3 步</td><td>一个目标文件里到底有什么</td></tr>
-<tr><td class="nw">第 3 章</td><td class="nw">第 3 步的产物</td><td>ELF、PE/COFF、Mach-O 的结构</td></tr>
-<tr><td class="nw">第 4 章</td><td class="nw">第 5 步的输入</td><td>符号是什么、怎么命名、怎么被解析</td></tr>
-<tr><td class="nw">第 5 章</td><td class="nw">第 5 步的过程</td><td>节合并与重定位</td></tr>
-<tr><td class="nw">第 6 章</td><td class="nw">第 5 步的输入之一</td><td>静态库的抽取规则</td></tr>
-<tr><td class="nw">第 7 章</td><td class="nw">运行期</td><td>动态库、加载器与搜索顺序</td></tr>
-<tr><td class="nw">第 8 章</td><td class="nw">运行期的开头与结尾</td><td>启动、全局初始化与退出</td></tr>
-<tr><td class="nw">第 9 章</td><td class="nw">贯穿第 2 到第 5 步</td><td>LTO、体积与可复现构建</td></tr>
-<tr><td class="nw">第 11 章</td><td class="nw">全流程</td><td>报错到根因的固定排查路径</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 工程里怎么把这些开关写进构建配置,一律见姊妹书</span><p>本书全部使用手写命令行,原因是构建系统会自动补上大量默认选项,干扰对照。真实工程里这些开关应当写进构建脚本而不是每次手敲,写法见《CMake 构建手册》。语言层面的规则,例如编译单元、单一定义规则、模板实例化本身的语义,见《C++ 语言》。编译器优化能做到什么程度、内联与体积的取舍,见《C++ 性能优化》。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 18564px;--thin-h:18564px">
+<section class="chapter" style="contain-intrinsic-size:auto 15037px;--thin-h:15037px">
 <h1 id="l1"><span class="part">第 1 章</span>预处理</h1>
+<p>第 0 章把一条编译命令拆成五个程序,本章进入流水线的第一段。预处理器的全部能力只是文本替换,它不懂类型也不懂作用域,却决定了编译器随后看见的每一行。三节依次讲这条能力边界与宏展开的规则、<code>#include</code> 的递归展开与头文件搜索顺序为什么错一位就会包含到另一个同名文件,以及防止重复展开的包含守卫与 <code>#pragma once</code> 各自的适用边界。观察手段沿用第 0 章的做法:停在 <code>-E</code>,产物落盘,先量规模再读。</p>
 <h2 id="l1-what">1.1 预处理器只做文本替换</h2>
 <p>预处理是流水线上的第一段。它的输入是源文件,输出仍然是一份 C 或 C++ 源码,只是 <code>#</code> 打头的指令都已执行、宏都已展开、头文件都已就地铺开。编译器随后拿到的只有这份展开结果,原始的源文件对它不再存在。</p>
 <p>预处理器的能力边界非常窄:<strong>它不解析 C 与 C++ 的语法</strong>。不知道什么是类型,不知道什么是函数,不知道什么是命名空间,不知道当前处在哪个作用域里。它认得的只有 <code>#</code> 指令、宏名和记号。</p>
@@ -1028,79 +949,11 @@ collect2: error: ld returned 1 exit status</code></pre>
 <p>守卫在这里完全正常地工作了:<code>a.c</code> 与 <code>b.c</code> 各自都只展开了一次 <code>util.h</code>。问题是两次展开分属两个翻译单元,产出两个目标文件,每个里面都有一份 <code>counter</code> 与 <code>helper</code> 的强定义,链接器把它们碰到一起才报错。</p>
 <p>改法有三条:头文件里只留声明 <code>extern int counter;</code>,定义放进某一个源文件;或者给函数加 <code>inline</code>;C++17 起变量也可以写成 <code>inline int counter = 0;</code>。三者背后的机制是同一个,第 2 章讲清楚。</p>
 <div class="note new" style="contain-intrinsic-size:auto 197px"><span class="t">🔵 C++20 模块把文本包含换成导入,守卫与 pragma once 都不再需要</span><p>模块的接口单元编译一次产出二进制形式的接口文件,<code>import</code> 读的是这份文件而不是源码文本,因此不存在重复展开,宏也不会跨模块泄漏。代价是构建系统必须知道模块之间的依赖并按拓扑序编译,这一层的配置见《CMake 构建手册》;语言层面的规则与迁移路径见《C++ 语言》。对本书而言,模块改变的是编译单元的划分方式,链接期的符号形态与本章讲的没有区别。</p></div>
-<h2 id="l1-sum">1.4 小结</h2>
-<p>预处理是整条流水线上唯一不理解 C 与 C++ 语法的一段。它的全部行为都可以用「记号序列替换」概括,而绝大多数与它相关的问题,根子都在这句话被当成了别的意思。</p>
-<h3>预处理做的事只有四类</h3>
-<p>指令按作用分成四类,每一类的观察手段不同。</p>
-<table style="contain-intrinsic-size:auto 292px">
-<thead><tr><th>类别</th><th>指令</th><th>做什么</th><th>怎么观察</th></tr></thead>
-<tbody>
-<tr><td class="nw">文本插入</td><td><code>#include</code></td><td>把另一个文件的内容原样铺开</td><td><code>-E</code> 的行标记、<code>-H</code>、<code>/showIncludes</code></td></tr>
-<tr><td class="nw">记号替换</td><td><code>#define</code> <code>#undef</code> <code>#</code> <code>##</code></td><td>按宏名替换记号序列</td><td><code>-E</code> 看展开结果、<code>-dM -E</code> 看全部宏</td></tr>
-<tr><td class="nw">条件裁剪</td><td><code>#if</code> <code>#ifdef</code> <code>#elif</code> <code>#else</code> <code>#endif</code></td><td>按宏的取值删掉整段文本</td><td><code>-E</code> 看哪一支留了下来</td></tr>
-<tr><td class="nw">其他</td><td><code>#line</code> <code>#error</code> <code>#pragma</code></td><td>改行号标记、主动报错、给编译器下指令</td><td>直接看编译输出</td></tr>
-</tbody>
-</table>
-<p>条件裁剪这一类有一个常被忽略的性质:被删掉的分支<strong>不参与后续编译</strong>,里面的语法错误、类型错误一律不会被发现。跨平台代码里另一个平台的分支长期编不过而没人察觉,原因就在这里。</p>
-<h3>三条判据</h3>
-<p>这一章可以压缩成三句话,每一句都能直接用来判断问题归不归预处理管。</p>
-<ul>
-<li><strong>报错里出现的名字,如果它是宏,就不会以宏名的形态出现。</strong>宏在预处理结束时已被替换。链接器报的 <code>undefined reference to 'X'</code> 里的 <code>X</code> 一定是真实的符号名。</li>
-<li><strong>报错与源码对不上时,先取展开结果。</strong>编译器的诊断针对的是展开之后的文本。<code>-E</code> 或 <code>/P</code> 拿到的 <code>.i</code> 才是编译器实际看到的东西。</li>
-<li><strong>守卫只在一个翻译单元内有效。</strong>跨翻译单元的重复定义与守卫无关,归链接期管,报错形状是 <code>multiple definition</code> 或 <code>LNK2005</code>。</li>
-</ul>
-<h3>归到预处理这一步的报错</h3>
-<p>下面这些报错原文的根因都在本章范围内。第 0 章那张归属表在这里补上第一批具体行。</p>
-<table style="contain-intrinsic-size:auto 407px">
-<thead><tr><th>报错原文</th><th>根因</th><th>第一件该做的事</th></tr></thead>
-<tbody>
-<tr><td><code>fatal error: xxx.h: No such file or directory</code></td><td class="nw">搜索路径里没有这个文件</td><td><code>echo &#124; gcc -xc -E -v -</code> 看链条,再核对 <code>-I</code></td></tr>
-<tr><td class="nw"><code>C1083: 无法打开包括文件</code></td><td class="nw">同上,MSVC 侧</td><td>核对 <code>/I</code> 与 <code>INCLUDE</code></td></tr>
-<tr><td><code>macro "M" passed 3 arguments, but takes just 2</code></td><td class="nw">实参里有顶层逗号</td><td>加一层圆括号,或改成可变参数宏</td></tr>
-<tr><td class="nw"><code>error C2589: 非法标记</code></td><td class="nw">标识符被宏替换掉了</td><td>查 <code>NOMINMAX</code> 之类的宏冲突</td></tr>
-<tr><td><code>unknown type name 'Foo'</code> 而头文件明明写了</td><td class="nw">守卫宏名撞车,文件被静默跳过</td><td><code>-E</code> 后搜这个类型名,确认有没有被展开</td></tr>
-<tr><td class="nw"><code>#error</code> 打印的自定义消息</td><td class="nw">条件裁剪走进了不该走的分支</td><td><code>-dM -E</code> 看相关宏的实际取值</td></tr>
-<tr><td><code>pasting "x" and "+" does not give a valid token</code></td><td class="nw"><code>##</code> 粘出了非法记号</td><td>检查粘接两侧的记号</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 头文件找不到与库找不到是两套完全独立的路径,不要互相加</span><p><code>fatal error: foo.h: No such file or directory</code> 归 <code>-I</code> 管,<code>cannot find -lfoo</code> 归 <code>-L</code> 管。前者由编译器在预处理阶段报出,后者由链接器在最后一步报出。把库目录加进 <code>-I</code> 或把头文件目录加进 <code>-L</code> 都不会有任何效果,而且两者都不产生警告,很容易让排查绕远路。判断依据是报错来自哪个程序,第 0 章那张表可以直接查。</p></div>
-<h3>本章用到的命令</h3>
-<p>全部观察手段集中在两组命令上,一组取展开结果,一组看搜索与包含关系。</p>
-<pre style="contain-intrinsic-size:auto 359px"><code># 取展开结果
-gcc -E  src/app.c -o app.i          # 完整展开
-gcc -E -P src/app.c -o app.i        # 不带行标记,便于人读
-gcc -E -fdirectives-only src/app.c  # 处理 #include 但不展开宏
-gcc -dM -E - &lt; /dev/null            # 列出全部内置宏
-cl /P /Zc:preprocessor src\app.c    # MSVC 侧,写出 app.i
-
-# 看搜索与包含关系
-echo | gcc -xc -E -v -              # 打印两条搜索链
-gcc -H -c src/app.c                 # 打印包含树,点数表示深度
-cl /c /showIncludes src\app.c       # MSVC 侧,缩进表示深度
-gcc -MMD -MP -c src/app.c           # 顺便生成依赖文件</code></pre>
-<p>这一组命令在后面几章不再重复列出,遇到「编译器到底看到了什么」的问题一律回到这里。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 每次只改一个变量,两次预处理的结果才有对照价值</span><p><code>-D</code>、<code>-I</code>、<code>-std=</code>、目标架构中的任何一项不同,展开结果都会跟着变。对照两台机器或两套配置时,先用 <code>gcc -###</code> 把完整命令行取出来逐项比对,再动手改。直接对照两份 <code>.i</code> 文件的差异往往有成千上万行,其中绝大部分与要查的问题无关。</p></div>
-<h3>留给后面各章的三个伏笔</h3>
-<p>预处理这一段本身相对独立,但它埋下了三条会在后面反复出现的因果链。把它们单独列出来,读到对应章节时就不必回头重看。</p>
-<table style="contain-intrinsic-size:auto 226px">
-<thead><tr><th>本章的事实</th><th>后果</th><th>在哪一章兑现</th></tr></thead>
-<tbody>
-<tr><td class="nw">同一个头文件在每个翻译单元里各展开一次</td><td>头文件里的定义会在每个目标文件里各生成一份</td><td>第 2 章的 <code>inline</code> 与 vague linkage</td></tr>
-<tr><td class="nw">不同的 <code>-D</code> 让同一个头文件展开成不同的代码</td><td>两个目标文件里的同名实体布局不一致,而链接器不检查</td><td>第 2 章与第 4 章</td></tr>
-<tr><td class="nw">宏在预处理结束时消失</td><td>符号名与宏名之间没有对应关系,调试信息里默认也没有宏</td><td>第 4 章的符号命名</td></tr>
-</tbody>
-</table>
-<p>第一条是最重要的。头文件被 N 个源文件包含,里面的每一行代码就在 N 个翻译单元里各出现一次。函数定义、模板、虚表都会因此产生 N 份,链接器需要一套规则把它们合并成一份,而不是报重复定义。</p>
-<p>第二条的危险在于它不产生任何诊断。一个源文件在编译时定义了 <code>NDEBUG</code>,另一个没有,同一个类在两边的成员数量可能不同。两个目标文件各自合法,链接也成功,运行时读到的成员偏移却对不上。</p>
-<p>第三条决定了排错时的检索方式。报错里给出的名字是编译器与链接器眼中的符号名,C++ 里还经过了名字修饰,与源码里的写法可能差得很远。第 4 章给出两者之间的换算方法。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 条件编译使得另一个分支的代码长期不被编译,错误积累到切换平台时集中爆发</span><p><code>#ifdef _WIN32</code> 里的那一支在 Linux 上连语法都不会被检查,函数改了签名、变量改了名字都不会有任何提示。症状是平时一切正常,某次需要出 Windows 版本时几十上百条编译错误一起出现。缓解办法有两条:能用运行期分支或普通 <code>if constexpr</code> 表达的差异就不要用 <code>#ifdef</code>;必须用条件编译时,让持续集成把每个平台各编一遍,而不是只编主力平台。</p></div>
-<p>三条伏笔有一个共同的形状:预处理阶段的操作在<strong>单个翻译单元内</strong>都是正确的,问题要等到多个翻译单元汇合时才出现。而汇合发生在链接期,与预处理隔了三个程序。</p>
-<p>这也解释了为什么本章的观察手段全部围绕 <code>-E</code>。预处理阶段的产物是唯一能证明「编译器实际看到了什么」的证据,一旦进入编译,展开结果就不再保留,后面只剩下汇编与二进制。</p>
-<p>第 2 章从展开结果接着往下走:编译器拿到这份纯文本之后,产出了什么样的代码、什么样的数据、什么样的符号。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 20528px;--thin-h:20528px">
+<section class="chapter" style="contain-intrinsic-size:auto 17096px;--thin-h:17096px">
 <h1 id="l2"><span class="part">第 2 章</span>编译:从源码到目标文件</h1>
+<p>预处理展开后的纯文本交给编译器,产出目标文件,本章讲这一步吐出了什么。全章立足于一条限制:<strong>编译器一次只看见一个编译单元</strong>——链接器为什么必须存在、重复定义为什么拖到链接期才暴露,都由它推出。三节依次讲编译单元的边界从哪里划,目标文件里内容、名字与待填清单三类产物各自是什么,以及头文件里的内联函数与模板如何靠「允许重复、取其一」的链接属性避开重复定义。</p>
 <h2 id="l2-unit">2.1 编译单元:编译器一次只看见一个</h2>
 <p>预处理结束后得到的那份纯文本,就是一个<strong>编译单元</strong>,标准里叫翻译单元。编译器每次调用处理一个,处理完就退出,不保留任何跨单元的信息。</p>
 <p>这条限制是本书最重要的前提。链接器为什么必须存在、符号为什么要有名字、重复定义为什么要到最后一步才暴露,全部由它推出来。</p>
@@ -1449,87 +1302,11 @@ collect2: error: ld returned 1 exit status</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 vtable for X 未定义的根因是 key function 没有函数体</span><p>报错里的名字不是源码里写过的任何东西,而是编译器生成的虚表符号。按 key function 规则,虚表跟着第一个非内联非纯虚的虚函数走;那个函数只有声明没有定义时,虚表就没有任何单元负责生成,于是所有引用它的地方都悬空。排查顺序是:找出这个类第一个非内联非纯虚的虚函数,确认它的定义存在、并且所在的目标文件确实参与了链接。最常见的具体形态是析构函数声明了 <code>virtual ~Foo();</code> 却忘了写函数体。</p></div>
 <p>MSVC 不使用 key function 规则,虚表一律作为 COMDAT 在每个用到的单元里生成。同一份代码在 GCC 上报 <code>undefined reference to 'vtable for Foo'</code>,在 MSVC 上可能链接成功,直到调用那个虚函数时才报 <code>LNK2019</code>。跨平台工程遇到只在一侧出现的链接错误,这是常见来源之一。</p>
 <div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 C++17 的 inline 变量让头文件里可以直接给出全局对象的定义</span><p>旧写法要在头文件里写 <code>extern Config g_config;</code>,再挑一个 <code>.cpp</code> 写一遍定义,两处必须同步维护。C++17 起写 <code>inline Config g_config{};</code> 即可,头文件一处即可,链接器按 vague linkage 合并成一份。静态数据成员同理,类内直接写 <code>inline static int count = 0;</code>。语言层面的规则见《C++ 语言》;需要注意的是初始化顺序仍受静态初始化次序的约束,见第 8 章。</p></div>
-<h2 id="l2-sum">2.4 小结</h2>
-<p>编译这一步把一份纯文本变成了一个结构化的二进制文件。理解它的产物,等于拿到了后面全部章节的输入。</p>
-<h3>一个目标文件的三件套</h3>
-<p>目标文件里只有三类东西,后面每一章都会回到这三类上。</p>
-<table style="contain-intrinsic-size:auto 151px">
-<thead><tr><th>组成</th><th>回答什么问题</th><th>观察命令(Linux / Windows)</th></tr></thead>
-<tbody>
-<tr><td class="nw">节</td><td>内容按属性分成哪几堆,各占多大</td><td><code>objdump -h</code> / <code>dumpbin /headers</code></td></tr>
-<tr><td class="nw">符号表</td><td>每个名字对应文件里的哪个位置,是定义还是引用</td><td><code>nm</code>、<code>objdump -t</code> / <code>dumpbin /symbols</code></td></tr>
-<tr><td class="nw">重定位表</td><td>哪些字节还没填好,该按什么公式填哪个符号</td><td><code>objdump -r</code> / <code>dumpbin /relocations</code></td></tr>
-</tbody>
-</table>
-<p>三者之间的指向关系是固定的:符号表指向节里的位置,重定位表既指向节里待填的字节,也指向符号表里的一项。链接器要做的全部工作,就是沿着这些指向把空填上。</p>
-<h3>编译期能发现什么、发现不了什么</h3>
-<p>编译单元的边界把「谁负责发现问题」划得很清楚。</p>
-<table style="contain-intrinsic-size:auto 297px">
-<thead><tr><th>问题</th><th>编译期能否发现</th><th>理由</th></tr></thead>
-<tbody>
-<tr><td class="nw">语法错误、类型不匹配、未声明的标识符</td><td class="nw">能</td><td>全部信息都在本单元内</td></tr>
-<tr><td class="nw">同一个单元里重复定义同一个类</td><td class="nw">能</td><td>两份定义都在眼前</td></tr>
-<tr><td class="nw">另一个源文件里函数签名写错(C)</td><td class="nw">不能</td><td>编译器看不到另一个单元</td></tr>
-<tr><td class="nw">另一个源文件里函数签名写错(C++)</td><td class="nw">链接期能</td><td>修饰名不一致,表现为未定义引用</td></tr>
-<tr><td class="nw">同一个类在两个单元里定义得不一样</td><td class="nw">都不能</td><td>各单元自身合法,链接器不比较类型</td></tr>
-<tr><td class="nw">函数只声明未定义</td><td class="nw">链接期能</td><td>符号表里是未定义引用</td></tr>
-<tr><td class="nw">头文件里的定义在多个单元里重复</td><td class="nw">视有无 <code>inline</code> 而定</td><td>无则链接期报重复定义,有则静默合并</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 编译成功只说明每个单元自身合法,一致性要到链接期甚至运行期才见分晓</span><p>把这条当成默认预期,能省掉很多无效排查。编译全绿而链接失败,说明单元之间的约定对不上;编译链接都绿而运行异常,要先怀疑各单元看到的头文件是否一致。第 4 章讲符号怎么配对,第 5 章讲配对之后怎么填地址,两章合起来覆盖「一致性」在构建期能被检查到的全部范围。</p></div>
-<h3>归到编译这一步的报错</h3>
-<table style="contain-intrinsic-size:auto 354px">
-<thead><tr><th>报错原文</th><th>根因</th><th>第一件该做的事</th></tr></thead>
-<tbody>
-<tr><td><code>error: &#039;x&#039; undeclared</code> / <code>C2065</code></td><td class="nw">本单元里没有这个名字的声明</td><td>检查头文件有没有被包含、有没有被守卫跳过</td></tr>
-<tr><td><code>error: redefinition of &#039;struct X&#039;</code></td><td class="nw">同一单元里两份定义</td><td><code>-E</code> 看展开结果,找出两个来源</td></tr>
-<tr><td><code>undefined reference to &#039;f&#039;</code></td><td class="nw">有引用没有定义</td><td>确认定义所在的 <code>.o</code> 参与了链接</td></tr>
-<tr><td><code>undefined reference to &#039;f(double)&#039;</code></td><td class="nw">声明与定义的签名不一致</td><td>以头文件为准统一签名</td></tr>
-<tr><td><code>undefined reference to &#039;vtable for X&#039;</code></td><td>key function 只声明未定义</td><td>补上第一个非内联虚函数的定义</td></tr>
-<tr><td><code>multiple definition of &#039;g&#039;</code></td><td class="nw">头文件里写了定义而不是声明</td><td>改成 <code>extern</code> 声明,或加 <code>inline</code></td></tr>
-<tr><td class="nw"><code>LNK2005: 已经定义</code></td><td class="nw">同上,MSVC 侧</td><td>同上</td></tr>
-</tbody>
-</table>
-<p>表里后四行都出自链接器,却全部由编译期的写法决定。把它们放在这一章,是因为修改的位置在源码而不在链接命令行。</p>
-<p>前三行与后四行的分界值得记住:<strong>报错里带行号的改源码,不带行号的先确认目标文件参没参与链接</strong>。同一句 <code>undefined reference</code>,可能是签名写错,也可能只是某个 <code>.o</code> 或某个库没写进命令行。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 头文件里写函数定义而忘了加 inline,重复定义要到链接期才暴露</span><p>把一个工具函数直接写成 <code>int clamp(int v) { ... }</code> 放进头文件,只有一个源文件包含它时一切正常,加到第二个源文件就报 <code>multiple definition of &#039;clamp&#039;</code>。症状的迷惑之处在于「这个函数一行没改,加了一个不相干的文件就编不过了」。三条修法各有适用面:加 <code>inline</code> 适合小函数;改成 <code>static</code> 适合只在本单元用的;把定义挪进某个 <code>.c</code> 并在头文件里留声明,适合体积较大的实现。</p></div>
-<h3>三条贯穿全书的结论</h3>
-<p>这一章确立了三条结论,后面每一章都会用到。</p>
-<ul>
-<li><strong>编译器一次只看见一个翻译单元。</strong>跨单元的一致性没有任何人在编译期检查,一部分留给链接器,另一部分谁也不检查。</li>
-<li><strong>目标文件由节、符号表、重定位表构成。</strong>节装内容,符号表给内容起名字,重定位表标出还没填好的位置。三者的指向关系决定了链接器的全部工作。</li>
-<li><strong><code>inline</code> 管的是链接不是内联。</strong>头文件里的定义天然会重复,合并靠弱符号与 COMDAT,而合并的正确性由写代码的人保证,工具不检查。</li>
-</ul>
-<p>三条结论的共同后果是:<strong>构建成功的门槛低于正确的门槛</strong>。链接器的职责是把引用和定义配上并填好地址,不是验证程序的一致性。凡是希望被检查的东西,都要主动挑一件工具去查——头文件统一签名、LTO 查类型、消毒器查重复定义。</p>
-<p>与本章相邻的三本姊妹书各自负责一块。语言层面的单一定义规则、模板实例化的语义、匿名命名空间与 <code>inline</code> 的精确语义,见《C++ 语言》;把编译选项统一到全工程、让每个目标用同一套定义,见《CMake 构建手册》;内联到底该不该做、对体积与速度的实际影响,见《C++ 性能优化》。</p>
-<h3>本章用到的命令</h3>
-<pre style="contain-intrinsic-size:auto 549px"><code># 看节
-objdump -h demo.o                 # 节名、尺寸、文件偏移、属性标志
-readelf -S demo.o                 # 同上,字段更完整,NOBITS 一目了然
-size demo.o                       # 三类合计尺寸
-
-# 看符号
-nm demo.o                         # 简表,大小写区分全局与本地
-nm -C demo.o                      # C++ 名字还原
-objdump -t demo.o                 # 详表,含所在节、大小、类型
-readelf -g demo.o                 # 段组,看 COMDAT 去重的单位
-
-# 看重定位
-objdump -r demo.o                 # 重定位记录
-objdump -d -r demo.o              # 反汇编并把重定位标注在待填位置上
-
-# Windows 侧
-dumpbin /headers demo.obj
-dumpbin /symbols demo.obj
-dumpbin /directives demo.obj</code></pre>
-<p>这一组命令的共同点是<strong>只读文件,不需要运行程序</strong>,因此对交叉编译的产物、对无法在本机执行的二进制同样有效。排查嵌入式或异构平台的构建问题时,这一点很重要。</p>
-<p>用它们的顺序也是固定的:先 <code>objdump -h</code> 确认内容分在哪几个节里,再 <code>nm</code> 确认名字是定义还是引用,最后 <code>objdump -r</code> 确认哪些位置留给了链接器。三步走完,一个目标文件里的信息就基本取尽了。</p>
-<p>有一类问题这套命令回答不了:目标文件是用什么选项编出来的。<code>.comment</code> 节里只有编译器版本,没有命令行。想要留下这条线索,可以在构建时加 <code>-frecord-gcc-switches</code>,选项会被写进 <code>.GCC.command.line</code> 节,用 <code>readelf -p .GCC.command.line</code> 读出。</p>
-<p>第 3 章把镜头拉近,逐字段讲这些命令背后的文件格式:ELF 的节与段、PE/COFF 的节表与导入导出表、Mach-O 的加载命令,以及拿到一个陌生的目标文件之后按什么顺序把它读明白。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 26444px;--thin-h:26444px">
+<section class="chapter" style="contain-intrinsic-size:auto 22494px;--thin-h:22494px">
 <h1 id="l3"><span class="part">第 3 章</span>目标文件的格式</h1>
+<p>第 2 章说清了目标文件装着内容、名字与待填清单三类东西,本章回答它们在磁盘上究竟怎么摆。前三节按各自规范的分节顺序讲 ELF 的节与段双视图、PE/COFF 的节表与导入导出表、Mach-O 的加载命令,第四节把三种格式按「层」放进同一张对照表,并给出把一个陌生目标文件读明白的固定步骤。字段的名字、宽度与取值一律以规范和本机 <code>readelf</code>、<code>dumpbin</code>、<code>otool</code> 的实际输出为准。</p>
 <h2 id="l3-elf">3.1 ELF:节、段与两种视图</h2>
 <p>ELF 是 System V ABI 定义的目标文件格式,Linux、多数 Unix、Android 与大量嵌入式系统都用它。目标文件、可执行文件、共享库、核心转储用的是同一套格式,只有文件头里的类型字段不同。</p>
 <p>ELF 最值得先讲清楚的性质是:<strong>同一份字节可以按两种方式切开</strong>。链接器按「节」读它,加载器按「段」读它。两套索引描述的是同一批数据,只是分组依据不同。</p>
@@ -2151,90 +1928,11 @@ llvm-objdump -d --demangle             任意一种格式</code></pre>
 <p>魔数判断在两种场合特别有用:构建脚本里想确认某个中间产物是不是预期的格式;拿到一个没有扩展名或者扩展名不可信的文件时,先用 <code>xxd file &#124; head -1</code> 看头一行,再决定用哪套工具。</p>
 <p>同一批命令还能顺手回答一个常见问题:这个库是静态库还是动态库。开头是 <code>!&lt;arch&gt;</code> 的是 ar 归档,也就是静态库,里面装着若干个完整的目标文件;开头是 ELF 或 Mach-O 魔数的是共享库。Windows 一侧两者都用 <code>.lib</code> 扩展名,靠 <code>dumpbin /archivemembers</code> 能否列出成员来区分。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 通用二进制与 Java 类文件的魔数完全相同,只看四个字节会认错</span><p>两者都以 <code>ca fe ba be</code> 开头。区分要看后面:通用二进制的第 5 到 8 字节是架构条数,数值很小;Java 类文件那个位置是版本号。<code>file</code> 命令内部就做了这一步额外判断,所以它给的结论可信,而自己写脚本按四字节匹配则会误判。分析未知文件时,魔数只用来缩小范围,最终结论以 <code>file</code> 或专用工具为准。</p></div>
-<h2 id="l3-sum">3.5 小结</h2>
-<p>三种格式讲完,一个目标文件里的每一个字节都有了归属。这一章是全书结构最密的一章,后面各章都建立在它给出的名词之上。</p>
-<h3>三种格式的共同骨架</h3>
-<p>剥掉名字上的差别,一个目标文件永远由四层组成。</p>
-<table style="contain-intrinsic-size:auto 263px">
-<thead><tr><th>层</th><th>回答什么</th><th>ELF</th><th>PE/COFF</th><th>Mach-O</th></tr></thead>
-<tbody>
-<tr><td class="nw">文件头</td><td>这是什么文件、给谁运行</td><td>ELF 头</td><td>DOS 头加 PE 头加可选头</td><td>Mach-O 头</td></tr>
-<tr><td class="nw">索引层</td><td>内容分成几块、各在哪里</td><td>节头表与程序头表</td><td>数据目录与节表</td><td>加载命令流</td></tr>
-<tr><td class="nw">内容层</td><td>代码、数据、只读数据、未初始化数据</td><td>各个节</td><td>各个节</td><td>段里内嵌的各节</td></tr>
-<tr><td class="nw">元数据层</td><td>名字、待填的位置、依赖</td><td>符号表、重定位表、动态段</td><td>符号表、重定位、导入导出表</td><td><code>__LINKEDIT</code> 与相关加载命令</td></tr>
-</tbody>
-</table>
-<p>索引层是三种格式差别最大的一层,也是理解成本最高的一层。ELF 用两张平行的表分别服务链接器与加载器,PE 用定长的数据目录直接定位十六种结构,Mach-O 用一串变长命令描述一切。</p>
-<p>内容层几乎完全一致。代码、只读数据、可写数据、未初始化数据这四类划分在三种格式里都存在,划分依据都是运行时需要的页权限。</p>
-<p>四层之间有一条固定的读法:<strong>从索引层进,不要从内容层进</strong>。直接对着文件的字节找结构,永远比先读索引再按偏移取内容慢,而且容易在对齐与填充上出错。所有工具的做法都是先解析索引层。</p>
-<p>三种格式的另一个共同点是<strong>元数据与内容分离</strong>。代码和数据是被使用的东西,符号表、重定位表、依赖列表是描述这些东西的东西。前者删不得,后者可以按需裁剪:<code>strip</code> 删符号,链接完成后重定位记录也不再需要,调试信息可以拆到单独的文件里。</p>
-<h3>这一章确立的四条判据</h3>
-<ul>
-<li><strong>节是链接视图,段是执行视图,同一份字节两种切法。</strong>问「链接器为什么这么合并」看节,问「进程里为什么是这个权限」看段。ELF 的 <code>readelf -l</code> 直接给出两者的对应关系。</li>
-<li><strong>未初始化数据占内存不占文件。</strong>三种格式的判据都是比较两个尺寸:ELF 看 <code>FileSiz</code> 与 <code>MemSiz</code>,PE 看 <code>virtual size</code> 与 <code>size of raw data</code>,Mach-O 看节类型是不是零填充。</li>
-<li><strong>符号信息分两套,一套给链接器一套给加载器。</strong><code>strip</code> 只删前者。判断一个发布版二进制还剩什么,看的是后者。</li>
-<li><strong>PE 的依赖关系能静态读出,ELF 的不能。</strong>导入表逐条记着「哪个 DLL 的哪个函数」,而 ELF 只记库名,符号来源由运行期的查找顺序决定。</li>
-</ul>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 所有关于格式的疑问都可以靠一条命令当场证实,不要靠记忆</span><p>节名、字段名、标志位在不同版本的工具链下会有出入,记住的结论未必对得上手里这个文件。可靠的做法是把问题翻译成一条命令:想知道某个变量在哪个节,用 <code>nm</code> 查它的字母;想知道某个节运行时在不在内存,用 <code>readelf -S</code> 看 <code>A</code> 标志;想知道某个依赖从哪里来,用 <code>readelf -d</code> 或 <code>dumpbin /imports</code>。这一章给出的是问题到命令的映射,而不是一份需要背下来的字段表。</p></div>
-<h3>归到格式这一层的报错</h3>
-<table style="contain-intrinsic-size:auto 342px">
-<thead><tr><th>报错原文</th><th>根因</th><th>第一件该做的事</th></tr></thead>
-<tbody>
-<tr><td><code>file format not recognized</code></td><td class="nw">输入不是这个链接器认识的格式</td><td><code>file</code> 确认它到底是什么</td></tr>
-<tr><td><code>incompatible target</code> / <code>LNK1112</code></td><td class="nw">架构或位数不一致</td><td>三方分别 <code>readelf -h</code> 或 <code>dumpbin /headers</code> 看 Machine</td></tr>
-<tr><td class="nw"><code>is not an object file</code></td><td>把源文件、文本文件或损坏的文件当成输入</td><td>检查构建脚本里的文件名与生成顺序</td></tr>
-<tr><td class="nw"><code>cannot find section</code></td><td class="nw">节头表损坏或被裁剪工具清掉</td><td>改用 <code>readelf -l</code> 与 <code>readelf -d</code></td></tr>
-<tr><td><code>Library not loaded: @rpath/...</code></td><td>Mach-O 的安装名与实际布局不符</td><td><code>otool -D</code> 看库自己声明的安装名</td></tr>
-<tr><td class="nw"><code>LNK1107: 文件无效或损坏</code></td><td>把 <code>.dll</code> 当成 <code>.lib</code> 传给了链接器</td><td>改传对应的导入库</td></tr>
-</tbody>
-</table>
-<p>这一类报错的共同特征是<strong>没有符号名也没有行号</strong>,只提到文件。它们都发生在链接器刚打开输入文件的阶段,离真正的符号解析还有一步。</p>
-<p>排查这一类问题的顺序也因此固定:先对报错里提到的那个文件跑一遍 <code>file</code>,确认它究竟是什么;再跑 <code>readelf -h</code> 或 <code>dumpbin /headers</code>,把架构与位数和其他输入对齐。两步走完,绝大多数这类报错就有了答案。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 架构不匹配的报错措辞往往指向文件名,真正要比对的是三方的 Machine 字段</span><p><code>incompatible target</code> 与 <code>LNK1112: 模块计算机类型冲突</code> 都只点名一个文件,而问题出在它与其余输入不一致。把全部输入连同要生成的目标一起列出 Machine 字段再比对,才能看出是哪一个走偏了。常见来源有三个:第三方库只提供了另一个架构的版本;交叉编译时误用了宿主机的工具链;Windows 上开着 x86 的命令提示符却链接 x64 的对象。<code>dumpbin /headers</code> 输出开头那一行的 machine 值,或者 <code>file *.o</code> 的批量输出,都能一次看完。</p></div>
-<h3>三侧命令速查</h3>
-<pre style="contain-intrinsic-size:auto 576px"><code># Linux / ELF
-readelf -h  file      # 头:类型、架构、两张表的位置
-readelf -S  file      # 节头表(链接视图)
-readelf -l  file      # 程序头表与节到段的映射(执行视图)
-readelf -d  file      # 动态段:依赖、soname、搜索路径
-nm -D file            # 动态符号表;不加 -D 读 .symtab
-
-# Windows / PE
-dumpbin /headers file      # PE 头、可选头、数据目录、节表
-dumpbin /imports file      # 导入表:用了哪个 DLL 的哪个函数
-dumpbin /exports file      # 导出表:对外提供哪些名字
-dumpbin /dependents file   # 只列依赖的 DLL 名
-dumpbin /symbols file      # COFF 符号表,对 .obj 有效
-
-# macOS / Mach-O
-otool -h file         # Mach-O 头
-otool -l file         # 全部加载命令,含段与节
-otool -L file         # 依赖及其安装名
-otool -D file         # 这个库自己声明的安装名
-nm -m file            # 符号,带段与节的归属</code></pre>
-<p>三列命令的行与行之间可以直接对应:第一行都是看头,第二行都是看内容分堆,后面依次是依赖与符号。换平台时按行找对应命令,比重新查手册快。</p>
-<p>有两处不对称需要留意。Windows 一侧没有与 <code>readelf -l</code> 对应的命令,因为 PE 没有段这一层,页权限直接写在节头的属性位里;macOS 一侧的 <code>otool -l</code> 则同时承担了 ELF 那边 <code>-S</code> 与 <code>-l</code> 两条命令的职责,因为段与节在 Mach-O 里本来就是一个结构。</p>
-<p>三侧还共有一个盲区:<strong>这些命令都读不出文件是用什么选项构建的</strong>。ELF 可以靠 <code>-frecord-gcc-switches</code> 主动留下记录,PE 的 <code>.obj</code> 能从 <code>.drectve</code> 看到一部分链接指令,Mach-O 的 <code>LC_BUILD_VERSION</code> 只给平台与最低系统版本。想要完整的构建信息,只能靠构建系统自己记录。</p>
-<h3>通向后面各章</h3>
-<p>前三章走完了流水线的前半程:预处理把源文件铺成一份纯文本,编译把它变成节、符号与重定位,格式规定了这三样东西在文件里怎么摆。从第 4 章起,视角换到链接器一侧,处理的对象不再是一个文件,而是一堆文件。</p>
-<p>这一章给出的名词在后面各章分别展开。</p>
-<table style="contain-intrinsic-size:auto 300px">
-<thead><tr><th>本章的结构</th><th>在哪一章展开</th><th>展开成什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">符号表与 <code>.dynsym</code></td><td class="nw">第 4 章</td><td>符号的种类、命名规则、名字修饰与解析规则</td></tr>
-<tr><td class="nw">重定位表</td><td class="nw">第 5 章</td><td>重定位类型的计算公式,以及节合并与地址分配</td></tr>
-<tr><td class="nw">静态库的 ar 结构</td><td class="nw">第 6 章</td><td>成员的抽取规则与链接顺序</td></tr>
-<tr><td><code>.dynamic</code>、导入导出表、<code>LC_LOAD_DYLIB</code></td><td class="nw">第 7 章</td><td>运行期的查找顺序、GOT 与 PLT、符号版本</td></tr>
-<tr><td class="nw"><code>.init_array</code> 与 <code>LC_MAIN</code></td><td class="nw">第 8 章</td><td>启动流程、全局对象的构造与析构</td></tr>
-<tr><td class="nw"><code>.debug_*</code> 与节的裁剪</td><td class="nw">第 9 章</td><td>体积、LTO 与可复现构建</td></tr>
-<tr><td class="nw">全部结构</td><td class="nw">第 11 章</td><td>从报错原文倒推到具体结构的固定路径</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 这一章的内容不必记住,需要的是知道去哪里查以及用哪条命令查</span><p>字段名与节名在后面各章会反复出现,每次出现都会带上当时的语境与对应的命令。回头翻这一章的正确用法是查表,而不是通读。真正需要固化下来的只有四条判据与那份六步读法,其余部分随用随查即可。第 4 章从符号开始,把这一章里那张符号表的每一列讲透。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 35224px;--thin-h:35224px">
+<section class="chapter" style="contain-intrinsic-size:auto 30707px;--thin-h:30707px">
 <h1 id="l4"><span class="part">第 4 章</span>符号</h1>
+<p>链接器不认识 C 也不认识 C++,它能处理的全部信息就是符号表,本章把这张表逐项讲清。这是全书最厚的两章之一,原因是符号这件事在三个平台分叉最多,合起来写会互相干扰。五节逐层剥开:符号的名字、类型、绑定与所在节;三大编译器各自的名字修饰规则;<code>extern "C"</code> 解决的两个方向;ELF 与 PE 默认值刚好相反的可见性与导出面;以及在解析规则上开口子的弱符号与公共符号。</p>
 <h2 id="l4-what">4.1 符号是什么:名字、类型、绑定与所在节</h2>
 <p>目标文件里除了机器码与数据,还有一张表,记录着「哪个名字落在哪一段字节上」。这张表叫符号表。链接器不认识 C,也不认识 C++,它能处理的全部信息就是这张表里的条目加上重定位项。</p>
 <p>把符号表看清楚,链接期的绝大多数报错就不再是玄学。<code>undefined reference</code> 是符号表里有一条未定义记录而全局找不到对应的定义;<code>multiple definition</code> 是同一个名字上出现了两条定义记录。两句报错都在描述这张表的状态。</p>
@@ -2804,115 +2502,11 @@ __declspec(selectany) <span class="kw">int</span> g_mylib_flags = 0;</code></pre
 <p>还有一个链接器开关 <code>/ALTERNATENAME:符号=替代符号</code>,作用是某个符号解析不到时改用替代符号。运行库内部用它实现可选组件,写法是 <code>#pragma comment(linker, "/alternatename:foo=foo_default")</code>。它没有正式文档,不建议写进产品代码。</p>
 <p>需要「可替换的默认实现」这个效果时,Windows 上更稳妥的做法是显式的函数指针注册:库里放一个默认实现与一个可写的函数指针,使用者在初始化时改指针。这条路在三个平台上行为一致,不依赖任何链接器特性。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 需要可替换实现时优先用函数指针注册,弱符号留给必须在链接期决定的场合</span><p>函数指针注册的行为不依赖链接顺序、不依赖归档抽取规则、三平台一致,而且改哪一个实现在代码里读得出来。弱符号的不可替代之处只有一处:替换必须在链接期完成,运行期已经来不及,例如接管全程序的内存分配。除此之外的场景,弱符号带来的顺序敏感性得不偿失。</p></div>
-<h2 id="l4-sum">4.6 小结</h2>
-<p>符号是链接器唯一认识的东西。名字、类型、绑定、所在节、值、大小、可见性这七项属性,决定了一个名字能不能被别人引用、重复时报不报错、做成动态库后还在不在。第 5 章的全部报错,归根结底都是这七项属性上的冲突。</p>
-<p>把这一章的判据收拢成几张可以直接查的表。排查时按表走比凭印象试快得多,而且每一行都对应一条能立刻执行的命令,不需要在几个可能的原因之间反复权衡。表格之后再给出一组固定的排查动作。</p>
-<h3>看到这个符号标记,说明什么</h3>
-<table style="contain-intrinsic-size:auto 465px">
-<thead><tr><th>看到的标记</th><th>说明</th><th>最可能的下一步</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>nm</code> 里是 <code>U</code></td><td class="nw">这个文件欠着这个符号</td><td>去所有候选库上跑 <code>nm --defined-only</code> 找定义</td></tr>
-<tr><td class="nw"><code>nm</code> 里是 <code>t</code> / <code>d</code> / <code>b</code></td><td>符号是文件内可见的,别人根本看不见</td><td>检查是不是误加了 <code>static</code>,或者匿名命名空间</td></tr>
-<tr><td class="nw"><code>nm</code> 里是 <code>W</code> / <code>V</code></td><td class="nw">这是可被覆盖的弱定义</td><td>确认最终留下的是不是期望的那一个,查链接顺序</td></tr>
-<tr><td class="nw"><code>nm</code> 里是 <code>w</code> / <code>v</code></td><td>弱引用,始终没有解析上,地址是零</td><td>定义如果在静态库里,加 <code>-Wl,-u,符号名</code></td></tr>
-<tr><td class="nw"><code>nm</code> 里是 <code>C</code></td><td>公共符号,说明用的是 <code>-fcommon</code></td><td>头文件里的全局变量定义改成 <code>extern</code> 声明</td></tr>
-<tr><td class="nw"><code>nm -D</code> 里没有而 <code>nm</code> 里有</td><td>符号是隐藏的,动态库外面看不见</td><td>检查 <code>-fvisibility</code> 与导出宏有没有漏标</td></tr>
-<tr><td class="nw"><code>dumpbin</code> 里是 <code>UNDEF</code></td><td class="nw">等价于 <code>nm</code> 的 <code>U</code></td><td>同第一行</td></tr>
-<tr><td class="nw"><code>dumpbin</code> 里是 <code>Static</code></td><td class="nw">等价于小写字母,文件内可见</td><td>同第二行</td></tr>
-<tr><td class="nw">导出表里没有而目标文件里有</td><td>PE 默认不导出,缺 <code>dllexport</code></td><td>补导出宏或者 <code>.def</code> 文件</td></tr>
-<tr><td class="nw">只有 <code>__imp_</code> 前缀的那一份</td><td>使用方引用数据时漏了 <code>dllimport</code></td><td>给头文件里的变量声明加导出宏</td></tr>
-</tbody>
-</table>
-<h3>修饰名的形态与它指向的根因</h3>
-<table style="contain-intrinsic-size:auto 341px">
-<thead><tr><th>符号名的形态</th><th>说明</th><th>回到哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">以 <code>_Z</code> 开头</td><td>Itanium ABI 的 C++ 修饰名,GCC 或 Clang 生成</td><td>4.2</td></tr>
-<tr><td class="nw">以 <code>?</code> 开头、以 <code>@Z</code> 结尾</td><td class="nw">MSVC 的 C++ 修饰名</td><td>4.2</td></tr>
-<tr><td class="nw">报错里带参数列表</td><td>正在找 C++ 修饰名,可能缺 C 一侧的 <code>extern "C"</code></td><td>4.3</td></tr>
-<tr><td class="nw">报错里不带参数列表</td><td>正在找 C 名字,可能缺 C++ 一侧的 <code>extern "C"</code></td><td>4.3</td></tr>
-<tr><td class="nw">带 <code>std::__cxx11::</code></td><td>GCC 双 ABI 不匹配,不是漏链</td><td>4.2</td></tr>
-<tr><td class="nw"><code>vtable for X</code> 找不到</td><td>类 <code>X</code> 的第一个非纯虚非内联虚函数没有定义</td><td>4.2</td></tr>
-<tr><td class="nw"><code>operator new</code> 找不到</td><td>链接驱动用了 <code>gcc</code> 而不是 <code>g++</code></td><td>4.2</td></tr>
-<tr><td class="nw">带 <code>@数字</code> 后缀或前导下划线对不上</td><td>32 位与 64 位混用,或者调用约定不一致</td><td>4.1、4.2</td></tr>
-</tbody>
-</table>
-<h3>两套导出模型的对照</h3>
-<table style="contain-intrinsic-size:auto 301px">
-<thead><tr><th>项目</th><th>Linux / macOS(ELF、Mach-O)</th><th>Windows(PE)</th></tr></thead>
-<tbody>
-<tr><td class="nw">默认行为</td><td class="nw">全局符号全部导出</td><td>一个都不导出</td></tr>
-<tr><td class="nw">要做的动作</td><td>主动关:<code>-fvisibility=hidden</code></td><td>主动开:<code>__declspec(dllexport)</code></td></tr>
-<tr><td class="nw">接口标记</td><td><code>__attribute__((visibility("default")))</code></td><td><code>__declspec(dllexport)</code> / <code>dllimport</code></td></tr>
-<tr><td class="nw">清单式控制</td><td><code>-exported_symbols_list</code>(macOS)、版本脚本</td><td><code>.def</code> 文件的 <code>EXPORTS</code> 段</td></tr>
-<tr><td class="nw">数据的特殊要求</td><td class="nw">无</td><td>使用方必须写 <code>dllimport</code>,否则链不上</td></tr>
-<tr><td class="nw">核对命令</td><td><code>nm -D --defined-only</code> / <code>nm -gU</code></td><td><code>dumpbin /exports</code></td></tr>
-<tr><td class="nw">同名符号跨库冲突</td><td>ELF 会抢占,Mach-O 两级命名空间不会</td><td>不会,导入按 DLL 记录</td></tr>
-</tbody>
-</table>
-<h3>弱符号与公共符号:什么时候该用,什么时候不该</h3>
-<table style="contain-intrinsic-size:auto 415px">
-<thead><tr><th>需求</th><th>该用什么</th><th>不该用什么</th><th>理由</th></tr></thead>
-<tbody>
-<tr><td class="nw">可选功能的探测</td><td>弱引用加判空</td><td>条件编译宏</td><td>宏要求编译期就知道对方在不在,弱引用推迟到链接期</td></tr>
-<tr><td class="nw">默认实现被替换</td><td>弱定义,或函数指针注册</td><td>同名强定义硬覆盖</td><td>同名强定义在两个模块里各有一份时直接报重复定义</td></tr>
-<tr><td class="nw">接管全程序的内存分配</td><td>弱符号与抽取规则</td><td>运行期改函数指针</td><td>分配在 <code>main</code> 之前就已经发生,运行期改已经来不及</td></tr>
-<tr><td class="nw">头文件里给全局变量一个定义</td><td><code>extern</code> 声明加唯一定义,或 C++17 的 <code>inline</code></td><td>依赖 <code>-fcommon</code> 合并</td><td>合并会掩盖类型不一致,越界写不产生任何征兆</td></tr>
-<tr><td class="nw">库内部调用不受用户替换影响</td><td>保留名加弱别名</td><td>直接调用对外的名字</td><td>用户替换掉对外的名字后,库自己的逻辑也会被改变</td></tr>
-<tr><td class="nw">跨平台一致的可替换点</td><td>函数指针注册</td><td>弱符号</td><td>MSVC 没有弱符号的正式对应物,行为无法对齐</td></tr>
-</tbody>
-</table>
-<p>这张表的取舍标准只有一条:<strong>替换动作必须在链接期完成的,才值得用弱符号;能推迟到运行期的,一律用函数指针</strong>。弱符号带来的顺序敏感性是实打实的维护成本,换来的只有「链接期就定下来」这一项能力。</p>
-<p>公共符号则没有任何值得保留的用途。<code>-fcommon</code> 是 C 语言早期留下的宽松行为,GCC 10 与 Clang 11 把默认改成 <code>-fno-common</code> 是纠正而不是收紧。新代码不应当依赖它,老代码加回这个开关只能当作过渡。</p>
-<p>两类符号的共同点是它们都让链接器少报了一次错。少报错在当时看着方便,代价是把问题推到运行期,而运行期的现场比链接期难读得多。第 5 章的 ODR 违规是同一类问题的另一种形态:链接器同样没有报错,后果同样落在运行期。</p>
-<h3>一遍就能跑完的排查动作</h3>
-<p>遇到符号相关的问题,下面这组命令按顺序跑一遍,绝大多数根因会在第三步之前暴露。</p>
-<pre style="contain-intrinsic-size:auto 401px"><code># 一、报错里的符号在哪个文件里是未定义的
-nm -C --undefined-only main.o | grep -i 关键字
-
-# 二、所有候选库里谁能提供它
-<span class="kw">for</span> f in libs/*.a libs/*.so; <span class="kw">do</span> echo <span>"== $f"</span>; nm -C --defined-only <span>"$f"</span> 2&gt;/dev/null | grep -i 关键字; done
-
-# 三、找到了但对不上,把两侧的真实名字抄出来逐字比对
-nm --defined-only libfoo.a | grep 关键字
-nm --undefined-only main.o  | grep 关键字
-
-# 四、确认最终产物里留下的是哪一个定义
-nm -C a.out | grep 关键字
-gcc ... -Wl,-Map=out.map &amp;&amp; grep -n 关键字 out.map</code></pre>
-<pre style="contain-intrinsic-size:auto 169px"><code>REM Windows 一侧的同一组动作
-dumpbin /symbols main.obj | findstr /i 关键字
-dumpbin /symbols foo.lib  | findstr /i 关键字
-dumpbin /exports foo.dll  | findstr /i 关键字
-link ... /MAP:out.map</code></pre>
-<p>四步的逻辑是固定的:先确认欠债的是谁,再确认谁能还债,再逐字比对为什么对不上,最后确认最终留下的是哪一份。<strong>每一步都在读符号表,没有一步靠猜。</strong></p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 符号相关的问题一律先跑 nm 或 dumpbin,再决定改什么</span><p>反复调整编译选项试错的代价远高于跑两条查询命令。符号表是客观事实,报错文字只是它的一种呈现;把两侧的真实名字抄到一起逐字比对,是所有链接问题最短的排查路径。第 5 章会把这套动作扩展成一张完整的根因对照表。</p></div>
-<h3>macOS 一侧的同一组动作</h3>
-<p>前面那组命令覆盖 Linux 与 Windows,macOS 的工具名与输出形态都不同,单独列出来对照。</p>
-<pre style="contain-intrinsic-size:auto 359px"><code># 欠债的是谁 —— 未定义符号带前置下划线
-nm -u main.o | c++filt
-
-# 谁能还债 —— -g 只看全局符号,-U 排除未定义的
-nm -gU libfoo.a | c++filt | grep -i 关键字
-
-# 动态库对外提供什么,以及它自己依赖谁
-nm -gU libfoo.dylib
-otool -L app
-
-# 某个符号为什么被保留下来
-ld ... -why_live _plugin_create</code></pre>
-<p>三平台的对应关系可以压成一句:<code>nm</code> 与 <code>nm -m</code> 对应 <code>dumpbin /symbols</code>,<code>nm -D</code> 与 <code>nm -gU</code> 对应 <code>dumpbin /exports</code>,<code>readelf -d</code> 与 <code>otool -L</code> 对应 <code>dumpbin /dependents</code>。</p>
-<p>Mach-O 侧还有一处要记住:符号名带前置下划线,把 Linux 上抄来的名字直接拿去搜会一无所获。搜索时统一去掉前缀再比对,或者直接用 <code>c++filt</code> 还原后再看。</p>
-<h3>与相邻各章的分工</h3>
-<p>符号这一章只回答「一个名字在符号表里是什么状态」。名字怎么来的、状态由谁决定,都在这一章;拿这些状态去做解析、去改写字节、去分配地址,是第 5 章的内容。</p>
-<p>第 5 章接着讲三件事:符号解析的规则与三类失败各自的报错原文、链接器不会报错的那一类不一致、重定位与地址分配的实际过程。第 4 章的每一项判据都会在那里被用到,尤其是修饰名形态与绑定这两项。</p>
-<p>第 6 章讲静态库。归档只是一袋目标文件,但抽取规则会让符号是否被解析取决于成员的粒度与命令行顺序,4.5 节里两个弱符号陷阱的完整机制在那一章补齐。</p>
-<p>可见性对运行期的影响属于第 7 章:动态符号表怎么被加载器使用、符号抢占按什么顺序发生、隐藏符号能省掉多少解析工作。语言层面的规则,例如什么样的实体属于同一个实体、模板实例化在哪里发生,主场在《C++ 语言》;编译选项在工程里怎么配,主场在《CMake 构建手册》。</p>
-<p>把三章连起来看,链接期的因果链是完整的:编译器按 ABI 规则生成符号名与绑定,链接器按解析规则把未定义符号填上,填不上就报错,填上了就按重定位项改写字节。任何一步的报错都能落回到这条链上的某一环。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 30018px;--thin-h:30018px">
+<section class="chapter" style="contain-intrinsic-size:auto 25730px;--thin-h:25730px">
 <h1 id="l5"><span class="part">第 5 章</span>静态链接</h1>
+<p>符号的语义在第 4 章立好,本章讲链接器拿这张表做的两件核心工作:把引用与定义配对,再把待填的字节改写掉。四节分别覆盖符号解析与未定义、重复定义两类报错的各侧原文;链接期不报错、后果留到运行期的 ODR 违规;重定位项的读法与地址分配;以及一遍扫描的处理方式为什么让链接顺序影响结果。报错原文照抄不转述,可以整段复制进搜索框。</p>
 <h2 id="l5-resolve">5.1 符号解析:未定义、重复定义与它们的报错原文</h2>
 <p>静态链接的第一步是符号解析。链接器把所有输入文件的符号表合并成一张全局表,然后逐个处理其中的未定义条目:每一个未定义符号,必须在这张表里找到定义,而且只能找到一个。</p>
 <p>这条规则的两个方向对应两类失败。一个都找不到是未定义符号,找到两个及以上是重复定义。<strong>链接期几乎所有的失败,都是这两句话之一的具体表现。</strong></p>
@@ -3528,90 +3122,11 @@ gcc main.o -Wl,--no-as-needed -lfoo -Wl,--as-needed -o app</code></pre>
 <p>排查时最有效的两个开关是 <code>-Wl,-Map=out.map</code> 与 <code>-Wl,--trace</code>。前者给出最终的来源账本,后者按处理顺序打印每一个被读入的文件,能直接看出扫描到某个库时发生了什么。</p>
 <pre style="contain-intrinsic-size:auto 87px"><code>gcc main.o -L. -lA -lB -o app -Wl,--trace -Wl,-Map=app.map
 link main.obj A.lib B.lib /OUT:app.exe /VERBOSE:LIB /MAP:app.map</code></pre>
-<h2 id="l5-sum">5.5 小结</h2>
-<p>静态链接做四件事:合并符号表、解析未定义符号、分配地址、执行重定位。四件事按固定顺序发生,前一件没做完后一件就无从开始。四件事里只有前两件会产生大量报错,后两件几乎总是安静完成——正因为安静,它们出问题时更难查。</p>
-<p>报错集中在前两件事上,还有一个原因:前两件事有明确的对错标准,而后两件事只要输入合法就总能算出一个结果。地址分配算错了不会有人告诉链接器,重定位填错了字节也一样,它们的问题只会以运行期的异常形态出现。</p>
-<p>这一章的判据可以压成几张表,排查时按表走。先按报错关键词归类,再按判据逐条确认,最后才动代码——这个顺序颠倒过来会浪费大量时间。</p>
-<h3>三类失败与第一步动作</h3>
-<table style="contain-intrinsic-size:auto 516px">
-<thead><tr><th>报错关键词</th><th>属于哪一类</th><th>第一步动作</th><th>回到哪一节</th></tr></thead>
-<tbody>
-<tr><td><code>undefined reference to</code> / <code>LNK2019</code> / <code>LNK2001</code></td><td>找不到定义</td><td>在所有输入与候选库上跑 <code>nm --defined-only</code></td><td>5.1</td></tr>
-<tr><td><code>multiple definition of</code> / <code>LNK2005</code></td><td>找到多个定义</td><td>看报错给出的两个文件名,确认谁不该定义它</td><td>5.1</td></tr>
-<tr><td class="nw"><code>cannot find -l</code> / <code>LNK1104</code></td><td>文件本身没打开</td><td>查 <code>-L</code> 路径与文件名,用 <code>--verbose</code> 看搜索过程</td><td>5.1</td></tr>
-<tr><td class="nw"><code>skipping incompatible</code></td><td>架构不匹配</td><td><code>readelf -h</code> 或 <code>dumpbin /headers</code> 确认位数</td><td>5.1</td></tr>
-<tr><td class="nw"><code>LNK2038</code> 检测到不匹配项</td><td>配置不一致被提前拦下</td><td>统一运行库与迭代器调试级别</td><td>5.2</td></tr>
-<tr><td class="nw"><code>LNK4006</code> 已经定义,将忽略第二个</td><td>重复定义被降级成警告</td><td>从 map 文件里确认最终用的是哪一份</td><td>5.1、5.4</td></tr>
-<tr><td class="nw">链接通过但运行期异常崩溃</td><td>可能是 ODR 违规</td><td>开 <code>-flto -Wodr</code> 重新构建一次</td><td>5.2</td></tr>
-<tr><td class="nw">链接通过但注册项为空</td><td>归档成员没被抽取</td><td>从 map 文件里看该成员在不在</td><td>5.3、6.2</td></tr>
-</tbody>
-</table>
-<h3>链接器不会报错的那些事</h3>
-<p>需要单独列一张清单的原因是:这些情况都不会让链接停下来,而后果全部落在运行期。</p>
-<table style="contain-intrinsic-size:auto 391px">
-<thead><tr><th>情况</th><th>链接器的处理</th><th>后果</th><th>怎么发现</th></tr></thead>
-<tbody>
-<tr><td class="nw">同名类在两个编译单元里定义不同</td><td>不比较,各自的布局已编进机器码</td><td>大小不一致、成员偏移错位、越界写</td><td><code>-flto -Wodr</code></td></tr>
-<tr><td class="nw">同名内联函数的函数体不同</td><td>按名字折叠,只留一份</td><td>留哪一份取决于顺序与优化级别</td><td><code>-flto -Wodr</code>、比对反汇编</td></tr>
-<tr><td class="nw">弱定义与弱定义相遇</td><td>取先遇到的</td><td>执行的实现随链接顺序变化</td><td>map 文件</td></tr>
-<tr><td class="nw">公共符号被合并</td><td>按最大的大小合并</td><td>类型不一致时越界写</td><td>改用 <code>-fno-common</code> 让它报错</td></tr>
-<tr><td class="nw">静态库成员未被抽取</td><td>按规则跳过</td><td>自注册的内容一个都不在</td><td>map 文件、<code>--whole-archive</code> 对照</td></tr>
-<tr><td class="nw">动态库依赖被 <code>--as-needed</code> 丢弃</td><td>按规则丢弃</td><td>全局构造函数不执行</td><td><code>ldd</code> 看依赖记录在不在</td></tr>
-</tbody>
-</table>
-<p>六行的共同点是<strong>链接器按自己的规则做了一个合理的选择,而这个选择恰好不是期望的那个</strong>。它们不是缺陷,是分离编译模型必然留下的缝隙。能做的是知道缝隙在哪里,以及各自用什么手段照进去。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 链接通过不等于链接正确,有六类不一致链接器按设计就不会报</span><p>把「链接成功」当成正确性的证明,是这一章要纠正的第一个认知。类定义不一致、内联函数体不同、弱符号取舍、公共符号合并、成员未抽取、依赖被丢弃,这六类全部安静通过,后果落在运行期而且现场与根因隔得很远。相应的检查手段各不相同,共同的前提是先知道它们存在。</p></div>
-<h3>六个最常被误判的现象</h3>
-<p>报错文字与真实根因之间常常隔着一层。下面六条是这一章里最容易把排查方向带偏的形态。</p>
-<table style="contain-intrinsic-size:auto 416px">
-<thead><tr><th>现象</th><th>常见的第一反应</th><th>实际根因</th><th>判据</th></tr></thead>
-<tbody>
-<tr><td class="nw">报错说符号找不到,而库就在命令行上</td><td>怀疑库没编出来</td><td>库写在了引用它的目标文件之前</td><td>把库移到命令行末尾再链一次</td></tr>
-<tr><td class="nw">报错说找不到库文件</td><td>怀疑 <code>-L</code> 路径写错</td><td>架构不匹配,库被跳过了</td><td>往上翻几行看有没有 <code>skipping incompatible</code></td></tr>
-<tr><td class="nw">函数都能链上,只有几个全局变量不行</td><td>怀疑导出漏了</td><td>使用方引用数据时漏写 <code>dllimport</code></td><td><code>dumpbin /symbols foo.lib</code> 里只有 <code>__imp_</code> 那一份</td></tr>
-<tr><td class="nw">链接通过,却崩在与改动无关的代码上</td><td>当成普通的内存越界缺陷</td><td>ODR 违规,两侧的类布局不一致</td><td>加 <code>-flto -Wodr</code> 重新构建一次</td></tr>
-<tr><td class="nw">自注册的命令或用例一个都没生效</td><td>怀疑注册宏写错了</td><td>归档成员没有被抽取</td><td>从 map 文件里找该成员在不在</td></tr>
-<tr><td class="nw">升级编译器后突然大量重复定义</td><td>怀疑新编译器有问题</td><td><code>-fno-common</code> 成了默认值</td><td>报错形态是 <code>.bss</code> 加偏移而不是函数名</td></tr>
-</tbody>
-</table>
-<p>六行的共同结构是:<strong>报错文字描述的是链接器观察到的状态,而不是造成这个状态的原因。</strong>把这两者分开,是排查效率的分水岭。</p>
-<p>判据一列全部是可以立刻执行的动作,而且每一条都只需要一次操作就能给出确定的是或否。排查时优先做这类动作,而不是先去修改代码或者调整编译选项。</p>
-<p>第四行与第五行值得再强调一次:它们的现场与根因隔得最远,而且都不会在链接期留下任何痕迹。遇到「构建全绿而行为不对」时,这两条应当排在怀疑清单的前面。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 报错文字描述的是链接器看到的状态,不是造成这个状态的原因</span><p>把两者混为一谈会让排查方向从一开始就偏掉:看到「找不到符号」就去检查符号有没有写对,看到「找不到库」就去检查路径,而真实根因往往是顺序、架构或者修饰名。稳妥的做法是先按报错关键词归类,再按这一节的判据表逐条确认,每条判据都只需要一次操作。</p></div>
-<h3>一组必须会用的命令</h3>
-<p>这一章用到的全部查看手段,按目的收在一起。</p>
-<pre style="contain-intrinsic-size:auto 440px"><code># 符号:谁欠债,谁能还债
-nm -C --undefined-only main.o
-nm -C --defined-only libfoo.a
-
-# 重定位:哪条指令等着被填,填的是什么规则
-objdump -dr r.o
-objdump -d  a.out
-readelf --relocs --wide r.o
-
-# 地址分配与来源:最终的完整账本
-gcc ... -Wl,-Map=app.map
-gcc ... -Wl,--trace
-
-# 顺序与库:链接器实际读了哪些文件、按什么顺序
-gcc ... -Wl,--verbose</code></pre>
-<pre style="contain-intrinsic-size:auto 169px"><code>REM Windows 一侧的同一组动作
-dumpbin /symbols main.obj
-dumpbin /relocations r.obj
-dumpbin /disasm r.obj
-link ... /MAP:app.map /VERBOSE:LIB</code></pre>
-<p>四组命令对应四个问题:符号对不对、字节填没填、地址分在哪、文件按什么顺序读的。<strong>任何一个链接问题都能归到这四个问题之一,先归类再选命令,比逐个开关试快得多。</strong></p>
-<p>四组命令都不改变构建结果,可以在任何时候安全地跑。把它们写进一个排查脚本,遇到问题时一次跑完再看输出,比一条一条试更省时间。</p>
-<h3>与相邻各章的分工</h3>
-<p>符号名怎么来的、绑定与可见性由谁决定,在第 4 章;这一章把这些属性拿来做解析、改写字节与分配地址。</p>
-<p>归档的抽取规则在第 6 章。这一章多次提到「归档按需抽取」,但只用到了结论;抽取的单位是什么、为什么整个成员一起进来、循环依赖怎么处理、体积与全局构造函数各自受什么影响,在那一章讲全。5.4 节里的顺序问题与 4.5 节里的两个弱符号陷阱,都要等抽取规则讲完才算闭环。</p>
-<p>加载期发生的事在第 7 章:动态库的符号在运行时怎么解析、位置无关代码与加载期重定位的关系、依赖记录怎么被加载器使用。这一章讲的重定位全部在链接期完成,产物落盘时字节已经填好;那一层是在程序启动时再填一次,两者用的是不同的重定位项,也运行在完全不同的时机。</p>
-<p>语言层面的规则,包括什么构成同一个实体、内联与模板的定义可以出现在几处、编译单元的边界在哪里,主场在《C++ 语言》。这一章只讲这些规则在链接期的表现与报错原文。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 把这一章的四步模型记住,任何链接报错都能先归类再动手</span><p>合并符号表、解析、分配地址、执行重定位,四步顺序固定。报错出现在第二步的最多,第一步与第三步几乎不出错,第四步的问题通常表现为运行期而不是链接期。归类之后,可用的命令与可能的根因都会收敛到很小的范围,不需要在几十个编译选项之间试错。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 20673px;--thin-h:20673px">
+<section class="chapter" style="contain-intrinsic-size:auto 16528px;--thin-h:16528px">
 <h1 id="l6"><span class="part">第 6 章</span>静态库</h1>
+<p>第 5 章的输入是逐个列在命令行上的目标文件,本章讲把它们装进归档之后多出来的规则。静态库没有经过任何链接处理,只是一袋原封不动的目标文件加一张索引,但「按需抽取、以整个成员为单位」这条规则带来的后果远比字面多。三节依次讲归档文件的构成、抽取粒度与 <code>--whole-archive</code> 的代价,以及两个库互相引用时为什么默认链不通、把库重复列一遍为什么就能通。</p>
 <h2 id="l6-ar">6.1 归档文件:它只是一袋目标文件</h2>
 <p>静态库这个名字容易让人以为它经过了某种加工。实际上 <code>.a</code> 与 <code>.lib</code> 里装的就是原封不动的目标文件,外加一张索引表。<strong>归档没有经过任何链接步骤</strong>,这是理解后面两节全部规则的前提。</p>
 <p>把它当成一个专为链接器优化过的压缩包更准确:压缩包本身不做任何事,只是让链接器少打开几百个文件,并且能按符号快速定位到需要的那一个成员。</p>
@@ -3951,92 +3466,11 @@ findstr /c:<span>"UNDEF"</span> A.txt</code></pre>
 <p>跨平台的构建脚本应当统一用重复列库:三个平台语义一致,不需要平台判断,在不需要它的平台上也只是多读一次索引。构建系统通常已经内置了这个处理,自己写命令行时按同样的方式做,配置见《CMake 构建手册》。</p>
 <p>治本的做法是消除循环本身。<strong>两个库互相引用,几乎总是意味着有一部分代码归属划错了。</strong>常见的两种整理方式:把两边都需要的公共部分抽成第三个库,或者把跨边界的调用改成由上层注入的回调,让依赖方向变成单向。</p>
 <p>消除循环的收益不止于链接:依赖单向之后,单个库可以被独立测试、独立替换,构建的并行度也更高。目标怎么划分、依赖怎么表达,主场在《CMake 构建手册》。</p>
-<h2 id="l6-sum">6.4 小结</h2>
-<p>静态库的全部行为可以由三条规则推导出来。这三条规则本身都不复杂,难的是记住它们会在什么地方产生后果。</p>
-<ol>
-<li>归档只是一袋目标文件加一张索引,它没有经过任何链接步骤。</li>
-<li>抽取的单位是整个成员,一个符号被需要,同一个目标文件里的全部内容都进来。</li>
-<li>链接器从左到右一遍扫过,归档只满足扫到它时已经存在的未定义符号,之后不回头。</li>
-</ol>
-<p>第 6.1 节讲第一条,6.2 节讲第二条,6.3 节讲第三条在两个库互相依赖时的表现。三条合起来,静态库相关的现象基本都能提前预测。</p>
-<h3>症状到根因的对照</h3>
-<table style="contain-intrinsic-size:auto 598px">
-<thead><tr><th>症状</th><th>根因</th><th>确认手段</th><th>修法</th></tr></thead>
-<tbody>
-<tr><td class="nw">自注册的插件或用例一个都不生效</td><td>成员没有被抽取</td><td>map 文件里找不到该成员</td><td><code>--whole-archive</code>、<code>-u 符号名</code>,或改成显式初始化</td></tr>
-<tr><td class="nw">产物体积远大于预期</td><td>抽取以成员为单位,用不到的内容跟着进来</td><td>map 文件里看各成员贡献的字节</td><td>降低粒度:<code>-ffunction-sections</code> 加 <code>--gc-sections</code></td></tr>
-<tr><td class="nw">程序启动时做了没人要求的事</td><td>被抽取成员里的全局构造函数在执行</td><td><code>readelf -x .init_array</code>,再逐个成员查</td><td>把带副作用的全局对象改成显式初始化</td></tr>
-<tr><td class="nw">命令行里有库却报符号找不到</td><td>库写在了引用它的目标文件之前</td><td>把库移到末尾再链一次</td><td>固定命令行形态:目标文件在前,库在后</td></tr>
-<tr><td class="nw">交换两个库的顺序,报错换了个符号</td><td>循环依赖</td><td>用 <code>nm</code> 做集合运算确认</td><td>重复列库或分组开关,治本是拆分模块</td></tr>
-<tr><td class="nw">报 archive has no index</td><td>建库时漏了 <code>s</code> 选项</td><td><code>nm --print-armap</code> 输出为空</td><td><code>ranlib libfoo.a</code></td></tr>
-<tr><td class="nw">静态库链进动态库时报 relocation 错误</td><td>成员没有用 <code>-fPIC</code> 编译</td><td>看报错点名的成员属于哪个归档</td><td>整个归档的源文件加 <code>-fPIC</code> 重编</td></tr>
-<tr><td class="nw">两次构建的库字节不同</td><td>归档头里写了时间戳与属主</td><td><code>cmp</code> 比对两次产物</td><td>用 <code>ar rcsD</code> 建库</td></tr>
-</tbody>
-</table>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 静态库最容易被忽略的不是链接失败,而是链接成功却少了东西</span><p>失败会停下来,成功不会。自注册的成员没被抽取、依赖被丢弃、构造函数没执行,这三类问题的共同表现是构建全绿而行为不对,现场与根因隔着整个链接过程。养成两个习惯能挡住绝大多数:一是保留 map 文件并在体积或成员清单异常变化时看一眼,二是给依赖自注册的库明确标出它需要整体拉入。</p></div>
-<h3>一组必须会用的命令</h3>
-<pre style="contain-intrinsic-size:auto 495px"><code># 归档本身:有哪些成员、索引里有什么
-ar t  libutil.a
-ar tv libutil.a
-nm --print-armap libutil.a | head -40
-ar x libutil.a dump.o          # 单独取出一个成员来查
-
-# 最终产物:哪些成员被抽了进来,各自贡献了多少
-gcc main.o -L. -lutil -o app -Wl,-Map=app.map
-grep -n <span>'libutil.a'</span> app.map
-
-# 强制引入与整体拉入
-gcc main.o -Wl,-u,png_codec_anchor -L. -lcodecs -o app
-gcc main.o -Wl,--whole-archive -lcodecs -Wl,--no-whole-archive -lz -o app
-
-# 裁掉进来之后用不上的部分
-gcc -ffunction-sections -fdata-sections -c dump.c
-gcc main.o -L. -lutil -Wl,--gc-sections -Wl,--print-gc-sections -o app</code></pre>
-<pre style="contain-intrinsic-size:auto 223px"><code>REM Windows 一侧的同一组动作
-lib /LIST util.lib
-dumpbin /archivemembers util.lib
-dumpbin /linkermember:1 util.lib
-link main.obj util.lib /MAP:app.map /OUT:app.exe
-link main.obj /WHOLEARCHIVE:codecs.lib /OUT:app.exe
-link main.obj /INCLUDE:png_codec_anchor codecs.lib /OPT:REF /OUT:app.exe</code></pre>
-<p>四组命令对应四个问题:库里有什么、进来了什么、怎么让它进来、怎么把多余的裁掉。<strong>map 文件在四个问题里出现了两次,它是静态库排查中信息密度最高的一份产物。</strong></p>
-<h3>三个取舍</h3>
-<p>静态库上有三处需要明确取舍的地方,没有普遍正确的答案,但判断依据是清楚的。</p>
-<table style="contain-intrinsic-size:auto 229px">
-<thead><tr><th>取舍</th><th>一侧</th><th>另一侧</th><th>判断依据</th></tr></thead>
-<tbody>
-<tr><td class="nw">成员粒度</td><td>一个源文件放很多函数</td><td>拆细,或用 <code>-ffunction-sections</code></td><td>使用者只用一小部分时,粗粒度会明显浪费体积</td></tr>
-<tr><td class="nw">自注册</td><td>保留自注册,配 <code>--whole-archive</code></td><td>改成显式初始化函数</td><td>插件数量与是否要跨平台一致</td></tr>
-<tr><td class="nw">循环依赖</td><td>重复列库或分组开关</td><td>拆出第三个库</td><td>循环是否稳定存在,以及是否还要继续加依赖</td></tr>
-</tbody>
-</table>
-<p>三处取舍有一个共同的倾向:<strong>把不确定性从链接期挪走。</strong>粒度靠编译选项而不是源码组织来控制,注册靠显式调用而不是链接器行为来保证,依赖靠单向图而不是反复扫描来解析。</p>
-<p>这个倾向的收益是行为可预测,代价通常只是多写几行代码或多配一个开关。在需要长期维护、多人协作、跨平台构建的工程里,这个交换几乎总是划算的。</p>
-<h3>三个规模上的分界</h3>
-<p>静态库的三条规则在小工程上几乎不产生可见后果,规模一上来才开始显形。三处分界值得提前知道,因为跨过去之后再改代价要大得多。</p>
-<table style="contain-intrinsic-size:auto 225px">
-<thead><tr><th>分界</th><th>跨过去之前</th><th>跨过去之后</th><th>提前做什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">归档里的成员数</td><td>几十个,抽取范围靠人也能算清</td><td>上百个,哪些进来只能靠 map 文件</td><td>从第一天起就在构建里留 map 文件</td></tr>
-<tr><td class="nw">依赖层数</td><td>两三层,命令行手写库顺序还能维护</td><td>五层以上,顺序靠人排必然出错</td><td>交给构建系统算拓扑序,见《CMake 构建手册》</td></tr>
-<tr><td class="nw">自注册的类型数</td><td>个位数,漏一个当场能发现</td><td>几十个,漏一个可能几个月后才暴露</td><td>加一条构建期断言,核对注册数与预期数</td></tr>
-</tbody>
-</table>
-<p>第三条最容易被低估。自注册的插件、序列化类型、命令处理器这类东西,数量少的时候「少了一个」很快会被人用出来;数量一多,冷门的那几个可能长期没人碰。<strong>把「注册了多少个」变成一个可以断言的数字,比事后排查便宜得多。</strong></p>
-<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 自注册数量超过十几个之后,就该有一条断言守着注册数</span><p>做法有两种:构建期用 <code>nm</code> 统计归档里符合命名约定的符号数,与源码里的声明数比对;或者运行期在初始化完成后检查注册表大小,不符就直接终止。前者不进产物,后者能挡住运行期的动态加载路径,两者可以同时用。</p></div>
-<h3>这一章与「换个构建系统会不会变」</h3>
-<p>这一章讲的全部是链接器的行为,与用什么构建系统无关。同一组目标文件与同一个链接顺序,在 Make、Ninja、Visual Studio 工程里得到的结果完全相同;构建系统只决定<strong>顺序是怎么算出来的</strong>,不决定链接器拿到顺序之后做什么。</p>
-<p>这条分界在排查时很有用:一个静态库相关的现象如果在换了构建系统之后消失了,那它多半不是抽取规则的问题,而是依赖声明或链接顺序被算错了——该去看构建脚本,不该去看归档。反过来,现象在两套构建系统上一模一样,就说明它落在这一章讲的规则里。</p>
-<h3>与相邻各章的分工</h3>
-<p>符号本身的属性在第 4 章:归档索引里只登记全局的已定义符号这一条,直接来自那一章讲的绑定与可见性。4.5 节里两个弱符号陷阱的完整机制,到这一章的抽取规则才算讲全。</p>
-<p>符号解析、顺序扫描与重定位在第 5 章。这一章反复用到的「待办表」模型,以及库必须写在目标文件之后这条结论,都出自 5.4 节。</p>
-<p>动态库是完全不同的一套东西:它经过了完整链接,不按成员抽取,符号在运行期由加载器解析,依赖记录写在产物里。这一层在第 7 章。<strong>静态库与动态库唯一共享的只有「符号解析」这个概念本身,机制没有一处相同。</strong></p>
-<p>库怎么划分目标、怎么表达依赖、怎么安装与分发,主场在《CMake 构建手册》;体积与启动时间的量化影响见《C++ 性能优化》。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 静态库的三条规则合起来能预测几乎全部现象,记住它们比记住开关更有用</span><p>一袋目标文件、按成员抽取、一遍扫描不回头。任何一个静态库相关的疑问,先用这三条推一遍,通常在动手之前就能得出结论。开关是这三条规则的补救手段,记住开关而不理解规则,遇到没见过的形态仍然只能试错。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 36669px;--thin-h:36669px">
+<section class="chapter" style="contain-intrinsic-size:auto 32172px;--thin-h:32172px">
 <h1 id="l7"><span class="part">第 7 章</span>动态库</h1>
+<p>静态链接的产物是自足的,动态库把合并推迟到运行期,可执行文件里只留下一个名字和一张要取用的符号清单。这一改动换来共享与独立更新,也带来全书分叉最多的一片地形,本章因此与第 4 章同为最厚。五节依次讲动态库解决什么、带来什么,位置无关代码与 GOT、PLT 的由来,动态链接器在加载时做的事,三平台各自的运行期查找规则,以及 Windows 用导入库把引用绑定到具体 DLL 的另一套做法。</p>
 <h2 id="l7-why">7.1 动态库解决什么、带来什么</h2>
 <p>第 5 章讲完符号解析与重定位时,产物是一个自足的可执行文件:需要的代码都已经搬进去,内核映射完就能跑。第 6 章的静态库只是这条路上的中转站,抽取规则决定哪些成员进来,进来之后与普通目标文件没有区别。</p>
 <p>动态库改的是合并的时间点。可执行文件里不再放库的代码,只留一条记录——运行时需要名为 <code>libcalc.so.1</code> 的对象,并从中取用若干符号。真正的地址由动态链接器在进程启动之后填上。</p>
@@ -4843,110 +4277,11 @@ link main.obj calc.lib /DELAYLOAD:calc.dll delayimp.lib /OUT:app.exe
 dumpbin /dependents app.exe
 dumpbin /imports app.exe | findstr /C:<span>"Delay Import"</span></code></pre>
 <div class="note new" style="contain-intrinsic-size:auto 230px"><span class="t">🔵 可选依赖用 /DELAYLOAD,让「这个 DLL 不在」变成一个能处理的错误</span><p>默认的隐式依赖是全有全无:任何一个 DLL 缺失,进程在 <code>main</code> 之前就被终止,只留一个系统弹窗,程序没有机会给出有意义的提示。<code>/DELAYLOAD</code> 把加载推迟到第一次调用,失败时抛出一个可捕获的结构化异常,程序可以据此关闭对应功能并继续运行。适用场景是可选功能模块、按需加载的硬件加速库、以及只在新版本系统上存在的接口。三条限制要记住:被延迟的 DLL 里的数据导出不能用;卸载语义需要显式调用辅助接口;安全敏感的进程要配合限定搜索路径,否则延迟加载的时机更晚,查找规则被篡改的窗口更大。</p></div>
-<h2 id="l7-sum">7.6 小结</h2>
-<p>动态库把符号解析从链接期推迟到运行期,由此换来共享代码页、独立升级与插件化三项能力,也由此把一类故障从链接期推到了运行期。本章的全部内容都围绕这一次推迟展开。</p>
-<h3>这一章的骨架</h3>
-<table style="contain-intrinsic-size:auto 559px">
-<thead><tr><th>问题</th><th>结论</th><th>所在小节</th></tr></thead>
-<tbody>
-<tr><td class="nw">动态库换来什么</td><td>共享的是只读代码页,不是整个库;可以独立升级,前提是 ABI 不变;可以运行期决定加载谁</td><td>7.1</td></tr>
-<tr><td class="nw">代价在哪</td><td>启动期的重定位与符号查找、版本管理、部署复杂度</td><td>7.1</td></tr>
-<tr><td class="nw">为什么必须位置无关</td><td>代码段要跨进程共享就不能被改写,绝对地址集中进可写的表</td><td>7.2</td></tr>
-<tr><td class="nw">GOT 与 PLT 各管什么</td><td>GOT 管数据地址,PLT 管函数调用并支持延迟绑定</td><td>7.2</td></tr>
-<tr><td class="nw">延迟绑定的后果</td><td>缺符号的问题推迟到第一次调用才暴露,<code>LD_BIND_NOW</code> 可提前</td><td>7.2</td></tr>
-<tr><td class="nw">谁在做加载</td><td>内核只映射与转交,其余由 <code>PT_INTERP</code> 指定的动态链接器完成</td><td>7.3</td></tr>
-<tr><td class="nw">依赖是什么形状</td><td>一棵树,广度优先展开成有序作用域,第一个定义胜出</td><td>7.3</td></tr>
-<tr><td class="nw">运行期怎么找到文件</td><td>Linux 六档、Windows 六档、macOS 由被依赖方规定安装名</td><td>7.4</td></tr>
-<tr><td class="nw">RPATH 与 RUNPATH 差在哪</td><td>优先级不同;后者不作用于传递依赖</td><td>7.4</td></tr>
-<tr><td>Windows 为什么把 DLL 放 exe 旁边</td><td>应用目录排在搜索顺序最前,且不依赖任何环境配置</td><td>7.4</td></tr>
-<tr><td class="nw">链接 DLL 为什么给 .lib</td><td>导入库只提供槽位与跳转桩,实现留在 DLL 里</td><td>7.5</td></tr>
-<tr><td class="nw">为什么没有 LD_PRELOAD</td><td>PE 的引用绑定到具体 DLL,不存在全局作用域可供插入</td><td>7.5</td></tr>
-</tbody>
-</table>
-<h3>运行期找不到库的固定排查顺序</h3>
-<p>这类故障的报错都指向同一个事实:某个名字没有变成一个可用的文件。按下面的顺序走,每一步都有确定的判定结果,不需要猜。</p>
-<ol>
-<li><strong>确认缺的到底是哪一个名字。</strong>报错里的名字可能是依赖的依赖,不在自己的清单里。先把完整依赖树打出来。</li>
-<li><strong>确认那个文件在不在磁盘上。</strong>存在则问题在查找规则,不存在则问题在打包或安装。这一步把后续排查劈成两条完全不同的路。</li>
-<li><strong>打印真实的查找轨迹。</strong>让加载器把它逐档尝试的路径列出来,与自己以为的规则对照,不一致处即是根因。</li>
-<li><strong>检查产物里记的路径。</strong>确认有没有 <code>RUNPATH</code>、写的是什么、<code>$ORIGIN</code> 有没有被提前展开成空串。</li>
-<li><strong>检查是不是传递依赖的空洞。</strong>缺的那个库是某个中间库的依赖时,看那个中间库自己有没有查找路径。</li>
-<li><strong>确认架构与位数一致。</strong>找到了文件却仍然报错时,多半是 32 位与 64 位混装,或者交叉编译产物装到了本机。</li>
-<li><strong>确认符号而不只是文件。</strong>文件找到了、程序仍然报符号相关的错误,说明版本不对,问题从查找转到了接口。</li>
-</ol>
-<pre style="contain-intrinsic-size:auto 685px"><code># 一 完整依赖树,含依赖的依赖
-ldd -v app
-readelf -d app | grep NEEDED
-
-# 二 文件在不在
-find / -name <span>'libcalc.so*'</span> 2&gt;/dev/null
-ldconfig -p | grep libcalc
-
-# 三 真实查找轨迹,括号里的来源直接对应 7.4 节的档位
-LD_DEBUG=libs ./app 2&gt;&amp;1 | grep -E <span>'find library|trying file|search path'</span>
-
-# 四 产物自己带的路径
-readelf -d app | grep -E <span>'RPATH|RUNPATH'</span>
-
-# 五 中间库自己有没有路径
-readelf -d /opt/demo/lib/libA.so | grep -E <span>'RUNPATH|NEEDED'</span>
-
-# 六 架构与位数
-file app /opt/demo/lib/libcalc.so.1
-readelf -h app | grep -E <span>'Class|Machine'</span>
-
-# 七 符号在不在,以及版本
-nm -D --defined-only /opt/demo/lib/libcalc.so.1 | grep calc_add
-objdump -T /opt/demo/lib/libcalc.so.1 | grep calc_add</code></pre>
-<pre style="contain-intrinsic-size:auto 196px"><code>:: Windows 侧的同一套顺序
-dumpbin /dependents app.exe
-where calc.dll
-:: 查找轨迹用 Process Monitor,过滤条件:进程名 = app.exe 且操作 = CreateFile
-dumpbin /headers app.exe | findstr /C:<span>"machine"</span>
-dumpbin /exports calc.dll | findstr calc_add</code></pre>
-<p>第七步与前六步的性质不同。前六步解决「文件在哪」,第七步解决「文件对不对」,后者的报错形态是 <code>symbol lookup error</code> 或者 <code>version not found</code>,处理方式见第 4 章与第 11 章。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 231px"><span class="t">🟢 排查从「文件在不在磁盘上」这一步分叉,先分叉再往下走</span><p>这一步之前的所有猜测都可能白费。文件根本不存在,说明问题在打包、安装或者构建产物清单,与查找规则毫无关系,继续调 <code>LD_LIBRARY_PATH</code> 只会掩盖真正的缺口;文件存在却没被找到,才轮到查找规则那一整套。把这一步放在第二位而不是最后,能省掉大部分无效尝试。判定命令在 Linux 上是 <code>find</code> 加 <code>ldconfig -p</code>,在 Windows 上是 <code>where</code>,在 macOS 上是 <code>ls</code> 加 <code>otool -L</code> 里给出的那个路径。容器与最小化镜像里最常见的形态是前者:镜像只拷了可执行文件,依赖的共享库一个都没进去。</p></div>
-<h3>三平台命令对照</h3>
-<p>同一件事在三个平台上的命令名字完全不同,记忆成本主要花在这张表上。左列是要回答的问题,不是工具名。</p>
-<table style="contain-intrinsic-size:auto 652px">
-<thead><tr><th>要回答的问题</th><th>Linux / ELF</th><th>Windows / PE</th><th>macOS / Mach-O</th></tr></thead>
-<tbody>
-<tr><td class="nw">这是什么文件、什么架构</td><td><code>file app</code> 与 <code>readelf -h app</code></td><td><code>dumpbin /headers app.exe</code></td><td><code>file app</code> 与 <code>lipo -info app</code></td></tr>
-<tr><td class="nw">依赖哪些动态库</td><td><code>readelf -d app &#124; grep NEEDED</code></td><td><code>dumpbin /dependents app.exe</code></td><td><code>otool -L app</code></td></tr>
-<tr><td class="nw">产物里记的查找路径</td><td><code>readelf -d app &#124; grep RUNPATH</code></td><td>无对应字段</td><td><code>otool -l app &#124; grep -A 2 LC_RPATH</code></td></tr>
-<tr><td class="nw">导出了哪些符号</td><td><code>nm -D --defined-only lib.so</code></td><td><code>dumpbin /exports x.dll</code></td><td><code>nm -gU lib.dylib</code></td></tr>
-<tr><td class="nw">需要哪些外部符号</td><td><code>nm -D --undefined-only app</code></td><td><code>dumpbin /imports app.exe</code></td><td><code>nm -u app</code></td></tr>
-<tr><td class="nw">运行期的查找轨迹</td><td><code>LD_DEBUG=libs ./app</code></td><td>Process Monitor 过滤 <code>CreateFile</code></td><td><code>DYLD_PRINT_LIBRARIES=1 ./app</code></td></tr>
-<tr><td class="nw">符号最终绑到了谁</td><td><code>LD_DEBUG=bindings ./app</code></td><td>调试器里看 IAT 槽位取值</td><td><code>DYLD_PRINT_BINDINGS=1 ./app</code></td></tr>
-<tr><td class="nw">临时改查找路径</td><td><code>LD_LIBRARY_PATH=...</code></td><td>把目录加进 <code>PATH</code></td><td><code>DYLD_LIBRARY_PATH=...</code></td></tr>
-<tr><td class="nw">事后修改产物里的路径</td><td><code>patchelf --set-rpath</code></td><td>无,只能改文件布局</td><td><code>install_name_tool -add_rpath</code></td></tr>
-<tr><td class="nw">启动时解析全部符号</td><td><code>LD_BIND_NOW=1</code></td><td>默认即如此,除非用了延迟加载</td><td><code>DYLD_BIND_AT_LAUNCH=1</code></td></tr>
-</tbody>
-</table>
-<p>表里有两处不对称值得记住。Windows 没有可写进产物的查找路径,一切靠目录布局;macOS 的安装名由被依赖方规定,因此改一个依赖关系要改的是库自己,不是使用者。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 patchelf 与 install_name_tool 是救火手段,不是构建手段</span><p>两者都能改已构建产物里的路径记录,在排查阶段用来快速验证某个猜想很方便。但把它们写进发布流程会带来三个问题:改动不在源码与构建脚本里,别人看不到也复现不了;<code>patchelf</code> 修改 ELF 的动态段可能需要移动段位置,个别版本改完的产物在某些加载器上行为异常;macOS 上用 <code>install_name_tool</code> 改完之后代码签名立即失效,必须重新签名,而重新签名需要证书。正确的位置是链接时就写对——链接命令里给 <code>-Wl,-rpath</code> 或 <code>-install_name</code>,由构建系统统一生成,见《CMake 构建手册》。</p></div>
-<h3>按症状反查</h3>
-<table style="contain-intrinsic-size:auto 509px">
-<thead><tr><th>症状</th><th>最可能的根因</th><th>第一条命令</th></tr></thead>
-<tbody>
-<tr><td><code>cannot open shared object file</code></td><td class="nw">文件不在任何一档搜索路径里</td><td><code>LD_DEBUG=libs ./app</code></td></tr>
-<tr><td class="nw">报的名字不在自己的依赖清单里</td><td>传递依赖没人负责查找,<code>RUNPATH</code> 不继承</td><td><code>readelf -d 中间库 &#124; grep RUNPATH</code></td></tr>
-<tr><td class="nw">开发机能跑,干净环境不能</td><td>依赖了开发机上的 <code>LD_LIBRARY_PATH</code> 或系统里的旧版本</td><td>清空环境变量后重跑</td></tr>
-<tr><td class="nw">安装树一搬走就不能跑</td><td>路径写死,或 <code>$ORIGIN</code> 被 shell 提前展开</td><td><code>readelf -d app &#124; grep RUNPATH</code></td></tr>
-<tr><td class="nw">升级库的小版本后全挂</td><td class="nw">库没写 <code>DT_SONAME</code></td><td><code>readelf -d 库 &#124; grep SONAME</code></td></tr>
-<tr><td class="nw">Windows 上提示缺少某个 DLL</td><td>DLL 不在 exe 目录也不在系统目录</td><td><code>dumpbin /dependents</code> 加 Process Monitor</td></tr>
-<tr><td class="nw">Windows 上提示找不到入口点</td><td>DLL 找到了但版本不对,导出表里没有那个名字</td><td><code>dumpbin /exports</code></td></tr>
-<tr><td class="nw">macOS 上报路径里带别人的用户名</td><td class="nw">库的安装名是构建时的绝对路径</td><td><code>otool -L app</code></td></tr>
-<tr><td class="nw">启动正常,跑一阵才报缺符号</td><td class="nw">延迟绑定推迟了失败时机</td><td><code>LD_BIND_NOW=1 ./app</code></td></tr>
-</tbody>
-</table>
-<h3>通向后面几章</h3>
-<p>加载完成之后,控制权还没有交到 <code>main</code> 手里。共享对象的初始化函数、C++ 全局对象的构造函数都排在这之间,而它们的次序正是第 8 章的主题。</p>
-<p>导出符号的多少直接决定启动期符号查找的成本,减少导出既是体积问题也是启动性能问题,手段在第 4 章与第 9 章。产物里的调试信息与剥离方式见第 9 章,报错原文到根因的完整对照表在第 11 章。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 21682px;--thin-h:21682px">
+<section class="chapter" style="contain-intrinsic-size:auto 18037px;--thin-h:18037px">
 <h1 id="l8"><span class="part">第 8 章</span>启动、初始化与退出</h1>
+<p>第 7 章结束在动态链接器跑完各模块初始化、交出控制权的那一刻,本章接着讲控制权的完整行程。<code>main</code> 的第一条语句之前已经执行过成批的代码,离开 <code>main</code> 之后还有四条互不相同的终止路径,启动期与退出期的崩溃都要按这条时间线排查。三节依次讲从进程入口到 <code>main</code> 的接力过程、标准完全没有规定的跨编译单元静态初始化次序,以及退出路径与析构次序。</p>
 <h2 id="l8-start">8.1 从进程入口到 main</h2>
 <p>第 7 章讲到动态链接器把所有模块的初始化跑完,然后把控制权交出去。交给谁,交出去之后又发生了什么,是这一节的内容。</p>
 <p>一个常见的印象是「程序从 <code>main</code> 开始」。这个说法对写业务代码是够用的,对排查启动期崩溃就不够——在 <code>main</code> 的第一条语句执行之前,已经跑过成百上千条指令,涉及三方代码:内核、动态链接器、C 运行库。</p>
@@ -5334,93 +4669,11 @@ plug 的全局对象析构
 </table>
 <p>表里最后一行给出了验证手段:清理动作是可以在产物里数出来的,不必靠加日志推断有多少个析构会跑。</p>
 <p>三个平台的共同点值得单独说一遍:<strong>没有任何一个平台保证跨模块的析构次序</strong>。设计上依赖这个次序的代码,在任何一个平台上都是错的。</p>
-<h2 id="l8-sum">8.4 小结</h2>
-<p>这一章把 <code>main</code> 前后两段黑箱拆开了。前一段的执行者依次是内核、动态链接器、C 运行库的启动代码;后一段是 <code>exit</code> 的四步清理。中间夹着的 <code>main</code>,只是这条链上的一环。</p>
-<h3>这一章的骨架</h3>
-<table style="contain-intrinsic-size:auto 378px">
-<thead><tr><th>问题</th><th>机制</th><th>判据</th></tr></thead>
-<tbody>
-<tr><td class="nw">程序从哪里开始</td><td>入口是 <code>_start</code>,由 <code>crt1.o</code> 提供</td><td><code>readelf -h</code> 的 <code>Entry point</code></td></tr>
-<tr><td class="nw"><code>main</code> 之前跑了什么</td><td><code>.preinit_array</code> → <code>_init</code> → <code>.init_array</code></td><td><code>objdump -s -j .init_array</code></td></tr>
-<tr><td class="nw">初始化数组的顺序</td><td>等于链接命令行上目标文件的顺序</td><td><code>nm</code> 里 <code>_GLOBAL__sub_I_</code> 的地址排序</td></tr>
-<tr><td class="nw">跨编译单元的构造次序</td><td class="nw">标准不规定</td><td>栈回溯里没有 <code>main</code> 就是这一类</td></tr>
-<tr><td class="nw">可靠的替代写法</td><td class="nw">函数内静态局部对象</td><td>首次调用时构造,C++11 起线程安全</td></tr>
-<tr><td class="nw">模块之间的初始化次序</td><td class="nw">动态链接器按依赖逆序</td><td><code>LD_DEBUG=libs</code> 的 <code>calling init</code> 行</td></tr>
-<tr><td class="nw">退出走哪条路</td><td class="nw">四条路径清理范围不同</td><td>输出丢失多半是没走 <code>exit</code></td></tr>
-<tr><td class="nw">析构次序</td><td>登记的逆序,与 <code>atexit</code> 共用一张链表</td><td>按登记顺序倒推</td></tr>
-<tr><td class="nw">库卸载时的清理</td><td>按 <code>__dso_handle</code> 筛选</td><td><code>dlclose</code> 未必真卸载</td></tr>
-</tbody>
-</table>
-<p>八行里有两行是本章的核心结论:第三行说明「次序由链接命令决定」,第四行说明「标准不规定」。两条合起来解释了为什么这类问题会随着无关的重构而出现和消失。</p>
-<h3>启动期崩溃的固定排查顺序</h3>
-<p>顺序是固定的,每一步都有一条能立即执行的命令,做完这一步才做下一步。</p>
-<ol>
-<li>确认崩溃在 <code>main</code> 之前还是之后——看栈回溯里有没有 <code>main</code></li>
-<li>如果在 <code>main</code> 之前,确认是模块加载失败还是构造函数崩溃——看报错是 <code>cannot open shared object file</code> 还是段错误</li>
-<li>构造函数崩溃时,从栈回溯里读出是哪个编译单元的 <code>_GLOBAL__sub_I_</code></li>
-<li>打开那个编译单元,找出它的全局对象依赖了哪些跨单元的状态</li>
-<li>把这些依赖改成函数内静态局部对象,或者改成显式初始化</li>
-</ol>
-<pre style="contain-intrinsic-size:auto 386px"><code># Linux:一步到位拿到现场
-$ ulimit -c unlimited
-$ ./app                                   # 崩溃,产生 core
-$ gdb ./app core -ex bt -ex quit
-#0  0x... in Registry::add (...) at registry.cpp:22
-#1  0x... in Logger::Logger (...) at logger.cpp:11
-#2  0x... in _GLOBAL__sub_I_logger.cpp ()
-#3  0x... in __libc_start_main ()
-#4  0x... in _start ()
-
-# 确认初始化数组里的顺序
-$ objdump -s -j .init_array ./app
-$ nm -C ./app | grep _GLOBAL__sub_I_ | sort</code></pre>
-<pre style="contain-intrinsic-size:auto 141px"><code>&gt; REM Windows:用 WinDbg 或 Visual Studio 的即时调试
-&gt; REM 栈里出现 _initterm 或 __scrt_common_main_seh 而没有 main,即为同一类
-&gt; dumpbin /dependents app.exe
-&gt; link /VERBOSE:LIB app.obj ... &gt; order.txt</code></pre>
-<p>两侧的第一步是同一个动作:确认栈回溯里有没有 <code>main</code>。这一步花不到一分钟,却能把排查范围减掉一大半。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 栈回溯有没有 main,是启动期问题与运行期问题的分界线</span><p>没有 <code>main</code>,说明业务逻辑一行都没执行,输入数据、配置文件、命令行参数全部无关,直接查全局对象与模块初始化。有 <code>main</code>,说明初始化已经跑完,这一章的内容都不适用,该按普通的运行期问题查。这条分界线两侧的排查手段几乎不重叠,先分清再动手,能省掉绝大部分无效尝试。Windows 侧的等价判据是回溯里有没有 <code>__scrt_common_main_seh</code> 之后的用户函数。</p></div>
-<h3>判据清单</h3>
-<ul>
-<li>入口不是 <code>main</code> 而是 <code>_start</code>,它由 <code>crt1.o</code> 提供;<code>-nostartfiles</code> 会把它一起去掉</li>
-<li><code>xor %ebp,%ebp</code> 是给调试器的栈底标记,不是清理动作</li>
-<li>glibc 2.34 起 <code>__libc_csu_init</code> 不再存在,老资料里的调用图对不上新系统</li>
-<li>Windows 的入口由 <code>/SUBSYSTEM</code> 与主函数名共同决定,缺的符号会报成主函数名</li>
-<li>同一编译单元内构造次序严格按定义先后,跨编译单元标准不规定</li>
-<li><code>.init_array</code> 的顺序等于链接命令行上目标文件的顺序,静态库还要叠加抽取规则</li>
-<li>未构造的静态对象内容是全零而不是随机值,因此故障常常不表现为立即崩溃</li>
-<li>函数内静态局部对象是通用解法,代价是把次序问题从构造挪到了析构</li>
-<li>动态链接器按依赖逆序初始化模块,可执行文件自己排在最后</li>
-<li><code>exit</code> 与 <code>_exit</code> 的区别是「跑不跑清理」,输出丢失多半来自后者</li>
-<li>全局对象的析构与 <code>atexit</code> 共用一张链表,按登记的逆序执行</li>
-<li>在析构函数里访问另一个全局对象是未定义行为,不是概率问题</li>
-<li><code>dlclose</code> 未必真的卸载,带线程局部存储或唯一符号的库会被留下</li>
-<li>Windows 进程退出时的 <code>DLL_PROCESS_DETACH</code> 里不能做复杂清理</li>
-</ul>
-<div class="note new" style="contain-intrinsic-size:auto 231px"><span class="t">🔵 把「有多少个全局构造」变成一条可审查的编译警告</span><p>Clang 的 <code>-Wglobal-constructors</code> 会为每一个需要动态初始化的静态对象给出一条警告,输出就是这份清单本身。把它加进构建的警告集合之后,新增一个全局对象会立刻在评审里可见,而不是等到某次链接顺序变化才暴露。数量本身也是一个有用的量级指标:一个只有几个全局构造的产物,基本不会遇到这一章的问题;一个有几百个的产物,遇到只是时间问题。同一份信息在产物里的对应量是 <code>.init_array</code> 节的字节数除以指针宽度,<code>readelf -S</code> 能直接读到,不需要重新编译就能对任何二进制做这个统计。</p></div>
-<h3>两侧命令速查</h3>
-<table style="contain-intrinsic-size:auto 356px">
-<thead><tr><th>要回答的问题</th><th>Linux</th><th>Windows</th></tr></thead>
-<tbody>
-<tr><td class="nw">入口地址是哪一个符号</td><td><code>readelf -h app</code> 加 <code>nm app</code> 对地址</td><td><code>dumpbin /headers app.exe</code> 看 <code>entry point</code></td></tr>
-<tr><td class="nw">有多少个全局构造</td><td><code>readelf -S app</code> 看 <code>.init_array</code> 的大小</td><td><code>dumpbin /section:.rdata /rawdata</code> 找 <code>.CRT$XC</code></td></tr>
-<tr><td class="nw">构造次序是什么</td><td><code>nm -C app &#124; grep _GLOBAL__sub_I_ &#124; sort</code></td><td><code>link /VERBOSE</code> 的目标文件顺序</td></tr>
-<tr><td class="nw">链接进来了哪些启动文件</td><td><code>gcc -v</code> 看 <code>collect2</code> 命令行</td><td><code>link /VERBOSE:LIB</code></td></tr>
-<tr><td class="nw">模块初始化的先后</td><td><code>LD_DEBUG=libs</code> 的 <code>calling init</code></td><td>Process Monitor 看模块加载顺序</td></tr>
-<tr><td class="nw">退出时会跑哪些清理</td><td><code>objdump -s -j .fini_array app</code></td><td><code>dumpbin /exports dll</code> 确认 <code>DllMain</code></td></tr>
-<tr><td class="nw">崩在 <code>main</code> 之前还是之后</td><td><code>gdb ./app core -ex bt</code></td><td>WinDbg 的 <code>k</code> 命令</td></tr>
-</tbody>
-</table>
-<p>七行都是只读操作,对已经交付出去的二进制同样能跑,不需要源码,也不需要重新构建。排查别人的产物时这一点很要紧。</p>
-<p>有两行需要注意口径。<code>.init_array</code> 的字节数除以指针宽度才是构造函数的个数;<code>.fini_array</code> 里通常只有编译器插入的那一两项,真正的析构走的是 <code>__cxa_atexit</code> 链表,静态看不出来,只能在运行期观察。</p>
-<h3>通向后面几章</h3>
-<p>初始化数组的顺序由链接顺序决定这条,在开启链接期优化之后仍然成立,但目标文件的边界会变——第 9 章讲 LTO 时会再提一次。</p>
-<p>全局对象数量与 <code>.init_array</code> 的体积,也是第 9 章体积构成里的一项。构造函数本身还常常挡住死代码裁剪:一个只被全局对象引用的类,链接器无法证明它没用。</p>
-<p>本章出现的两类报错——<code>unresolved external symbol WinMain</code> 与栈回溯里的 <code>_GLOBAL__sub_I_</code>——都会进第 11 章那张对照表。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 24827px;--thin-h:24827px">
+<section class="chapter" style="contain-intrinsic-size:auto 21380px;--thin-h:21380px">
 <h1 id="l9"><span class="part">第 9 章</span>LTO、体积与可复现构建</h1>
+<p>前八章把一次构建讲到能在别人机器上启动,本章处理产物正式发布时才浮现的问题,其中链接期优化与可复现构建在二十年前的经典书里还不是常规话题。四节各自独立:链接期优化补上编译器与链接器各缺一半的全局视野,代价也随之而来;体积先量后砍,三种大小分开算;符号剥离必须先归档再剥离,靠一个标识对上号;可复现构建把路径、时间戳与随机化逐类消除,让两次构建逐字节相同。</p>
 <h2 id="l9-lto">9.1 链接期优化:它做了什么、代价在哪</h2>
 <p>编译器一次只看一个编译单元。跨编译单元的调用,它既不知道被调方的函数体,也不知道调用方传进来的实参有没有约束,能做的只有按调用约定老老实实生成 <code>call</code>。</p>
 <p>链接器倒是同时看得见所有编译单元,但它拿到的是机器码,已经没有做优化所需要的信息。两边各缺一半。</p>
@@ -5873,88 +5126,11 @@ $ readelf -n app | grep <span>'Build ID'</span></code></pre>
 <p>第三条在日常开发里价值最直接:声称「只是改了注释与格式」的提交,如果产物逐字节不变,这件事就被证明了;如果变了,<code>diffoscope</code> 能直接指出变在哪个函数。</p>
 <p>这四条收益都建立在同一个前提上——差异一旦出现就是<strong>信号</strong>而不是噪声。在没有做可复现构建的工程里,产物每次都不同,任何比较都得不出结论。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 可复现构建的验收动作只有一条:换个目录构建两次,比较散列</span><p>不需要一次配齐所有开关,也不需要专门的工具链。第一次跑这条验收多半会失败,<code>diffoscope</code> 的输出会直接指出是路径、时间戳还是构建标识,按本节的表逐条消即可。做完之后把这条验收加进持续集成,新引入的不确定性会当场暴露,而不是在某次供应链审计时才发现。构建系统里怎么把这些开关按目标统一注入、怎么让安装步骤也保持确定,是《CMake 构建手册》的内容。</p></div>
-<h2 id="l9-sum">9.5 小结</h2>
-<p>这一章的三个主题指向同一件事:产物是可以被度量、被裁剪、被验证的对象,而不是构建过程的副产品。LTO 改变它的内容,剥离与裁剪改变它的大小,可复现构建让它的每一个字节都有出处。</p>
-<h3>这一章的骨架</h3>
-<table style="contain-intrinsic-size:auto 440px">
-<thead><tr><th>主题</th><th>核心机制</th><th>判据</th></tr></thead>
-<tbody>
-<tr><td class="nw">LTO 为什么能优化更多</td><td>编译期产出中间表示,代码生成推迟到链接期</td><td><code>objdump -d</code> 看 <code>.o</code> 的 <code>.text</code> 是不是空的</td></tr>
-<tr><td class="nw">LTO 的工具链约束</td><td class="nw">中间表示不是稳定接口</td><td><code>bytecode stream ... LTO version</code> 报错即版本不一致</td></tr>
-<tr><td class="nw">LTO 的意外收获</td><td>带类型信息,能比对跨单元的定义</td><td><code>-Wodr</code> 与 <code>-Wlto-type-mismatch</code></td></tr>
-<tr><td class="nw">体积从哪来</td><td class="nw">七个来源,调试信息通常最大</td><td><code>size -A</code> 与 <code>bloaty -d compileunits</code></td></tr>
-<tr><td class="nw">裁剪的粒度</td><td class="nw">默认按节,编译期切细才能回收</td><td><code>--print-gc-sections</code> 的输出</td></tr>
-<tr><td class="nw">调试符号在哪</td><td>ELF 内嵌、PE 独立、Mach-O 靠收集</td><td><code>readelf -n</code> / <code>dumpbin /headers</code> / <code>dwarfdump --uuid</code></td></tr>
-<tr><td class="nw">剥离的正确顺序</td><td class="nw">先归档,再剥离,再建立关联</td><td>剥离后的产物能被调试器配上符号</td></tr>
-<tr><td class="nw">不可复现的来源</td><td>路径、时间戳、构建标识、随机种子、顺序</td><td>换目录构建两次,<code>cmp</code> 比较</td></tr>
-</tbody>
-</table>
-<p>七行里有三条是本章最容易被跳过的:调试信息不占运行期内存、裁剪的粒度默认是节、以及符号必须先归档再剥离。三条都属于「不知道就会做错方向」的类别。</p>
-<h3>三条固定动作序列</h3>
-<p>遇到对应的问题时,按下面的顺序做,不要跳步。</p>
-<ol>
-<li><strong>体积超标</strong>:<code>size -A</code> 看构成 → 剥离并归档符号 → 开分节与 <code>--gc-sections</code> → 用 <code>bloaty -d compileunits</code> 找最大的几个单元 → 最后才考虑语言级开关</li>
-<li><strong>崩溃报告不可读</strong>:确认产物里有 <code>build-id</code> → 按它去制品库取符号 → 取不到就是归档链路断了 → 取得到就配上调试器验证一次</li>
-<li><strong>产物两次不一致</strong>:换目录构建两次 → <code>cmp</code> 确认 → <code>diffoscope</code> 定位 → 按路径、时间戳、构建标识、种子、顺序的次序逐条消</li>
-</ol>
-<pre style="contain-intrinsic-size:auto 359px"><code># 体积:一条命令看清构成,一条命令看清增量
-$ size -A app | sort -k2 -nr | head -8
-$ bloaty -d compileunits -n 15 app
-$ bloaty <span class="kw">new</span>/app -- old/app          # 版本间对比,发布前审查
-
-# 符号:三个平台各一条验证命令
-$ readelf -n app | grep <span>'Build ID'</span>
-&gt; dumpbin /headers app.exe | findstr RSDS
-$ dwarfdump --uuid app
-
-# 可复现:两次构建加一次比较
-$ cmp /tmp/b1/app /tmp/b2/app &amp;&amp; echo 逐字节相同</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 三条序列的共同点是先量后改,量的命令都是只读的</span><p><code>size</code>、<code>bloaty</code>、<code>readelf</code>、<code>cmp</code> 都不修改任何文件,可以在生产产物上直接跑,也可以在别人交付来的二进制上跑。跳过测量直接改选项,最常见的两个后果是:优化了占比很小的那一项而最大的那一块原封不动;以及开了一个有语义副作用的开关(<code>--gc-sections</code>、<code>--icf=all</code>、<code>-fno-rtti</code>)却没有对应的验收,问题拖到运行期才暴露。测量的成本是几秒钟,改错的成本是一个版本周期。</p></div>
-<h3>判据清单</h3>
-<ul>
-<li>LTO 的 <code>.o</code> 里没有机器码,<code>objdump -d</code> 打印为空是正常现象</li>
-<li>LTO 对象进静态库必须用 <code>gcc-ar</code> / <code>llvm-ar</code>,否则索引是空的</li>
-<li>链接命令行上也要给一次 <code>-O2</code>,代码生成发生在那一步</li>
-<li><code>bytecode stream ... LTO version</code> 报错的唯一含义是编译器版本不一致</li>
-<li>开 LTO 后新出现的崩溃,先查未定义行为,不要先怀疑编译器</li>
-<li>调试信息占磁盘不占运行期内存,<code>PT_LOAD</code> 里没有它</li>
-<li>静态库的抽取粒度是成员,细化裁剪要靠 <code>-ffunction-sections</code></li>
-<li><code>--gc-sections</code> 会丢掉只被间接引用的节,注册式代码要用 <code>KEEP</code> 或 <code>--undefined</code> 保住</li>
-<li><code>--icf=all</code> 会让两个不同函数的地址相等,依赖地址比较的代码要用 <code>safe</code> 档</li>
-<li><code>-fno-exceptions</code> 与 <code>-fno-rtti</code> 必须全工程统一,不能与第三方库混用</li>
-<li>对 <code>.o</code> 与 <code>.a</code> 只能用 <code>strip --strip-debug</code>,其余档位会毁掉可链接性</li>
-<li>符号必须先归档再剥离,事后重编得到的符号文件对不上已发布的二进制</li>
-<li><code>--build-id=sha1</code> 是内容散列,<code>uuid</code> 是随机数,可复现构建只能用前者</li>
-<li><code>-ffile-prefix-map</code> 一条覆盖调试信息与 <code>__FILE__</code> 两处路径</li>
-<li><code>SOURCE_DATE_EPOCH</code> 是跨工具约定,设一次整条流水线受益</li>
-<li><code>ar rcsD</code> 与 MSVC 的 <code>/Brepro</code> 分别解决两侧的归档与头部时间戳</li>
-</ul>
-<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 把体积与可复现性做成持续集成里的两条断言,而不是发版前的临时排查</span><p>体积回归与不可复现都是渐进发生的:一次提交多几十 KB、一处新引入的 <code>__DATE__</code>,单看都不值得处理,累积起来就成了没人敢动的现状。两条断言的实现成本都很低:体积用 <code>bloaty new -- old</code> 比对上一版并设一个增量阈值;可复现用换目录构建两次加 <code>cmp</code>。两条都是只读检查,失败时给出的信息足以直接定位到某个编译单元或某一类差异。放进流水线之后,问题在引入它的那次提交上就被拦住,而不是半年后由某个人花几天回溯。</p></div>
-<h3>两侧命令速查</h3>
-<table style="contain-intrinsic-size:auto 416px">
-<thead><tr><th>要做的事</th><th>Linux</th><th>Windows</th></tr></thead>
-<tbody>
-<tr><td class="nw">看产物由哪些节构成</td><td class="nw"><code>size -A app</code></td><td><code>dumpbin /headers app.exe</code></td></tr>
-<tr><td class="nw">按编译单元归因体积</td><td><code>bloaty -d compileunits app</code></td><td><code>link /MAP</code> 后读映射文件</td></tr>
-<tr><td class="nw">开启链接期优化</td><td><code>-flto</code> 编译与链接各给一次</td><td><code>/GL</code> 编译、<code>/LTCG</code> 链接</td></tr>
-<tr><td class="nw">细粒度裁剪</td><td><code>-ffunction-sections</code> 加 <code>--gc-sections</code></td><td><code>/Gy /Gw</code> 加 <code>/OPT:REF</code></td></tr>
-<tr><td class="nw">折叠相同代码</td><td><code>-Wl,--icf=safe</code>(lld / gold)</td><td><code>/OPT:ICF</code></td></tr>
-<tr><td class="nw">归档调试符号</td><td><code>objcopy --only-keep-debug</code></td><td>链接时 <code>/DEBUG</code> 产出 <code>.pdb</code></td></tr>
-<tr><td class="nw">剥离产物</td><td><code>strip --strip-unneeded</code></td><td>无需剥离,符号本就不在 exe 里</td></tr>
-<tr><td class="nw">读出产物标识</td><td class="nw"><code>readelf -n app</code></td><td><code>dumpbin /headers</code> 看 RSDS 记录</td></tr>
-<tr><td class="nw">固定时间戳</td><td><code>SOURCE_DATE_EPOCH</code></td><td><code>/Brepro</code></td></tr>
-<tr><td class="nw">比较两次产物</td><td><code>cmp</code> 与 <code>diffoscope</code></td><td><code>fc /b</code> 与 <code>certutil -hashfile</code></td></tr>
-</tbody>
-</table>
-<p>十行里 Windows 一侧有两处「不需要做」:调试符号天然分离,因此没有剥离这一步,产物体积也天然接近 Linux 剥离后的形态。移植构建脚本时不要机械地给 Windows 补上对应步骤。</p>
-<p>另有一处口径差别。<code>size -A</code> 给的是节的字节数,<code>dumpbin /headers</code> 给的是节的虚拟大小与原始数据大小两个值,后者才对应磁盘占用。两边的数字不能直接相减比较。</p>
-<h3>通向第 11 章</h3>
-<p>本章出现的报错——<code>plugin needed to handle lto object</code>、<code>bytecode stream ... LTO version</code>、以及剥离中间产物之后的一片 <code>undefined reference</code>——都会进第 11 章那张对照表。</p>
-<p>剩下的最后一章不引入新机制,把全书的判据、三平台差异与报错对照收成三张表,并给出「拿到一个陌生二进制怎么读明白」的固定步骤。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 42410px;--thin-h:42410px">
+<section class="chapter" style="contain-intrinsic-size:auto 37706px;--thin-h:37706px">
 <h1 id="l10"><span class="part">第 10 章</span>标准之外:编译器扩展与平台约定</h1>
+<p><code>__stdcall</code> 与 <code>__attribute__((packed))</code> 在 ISO 标准里都查不到,却实实在在决定链接与运行的成败。本章把这类规则归位:语言标准定语法与语义,平台 ABI 定字节与寄存器,编译器扩展补前两层没有覆盖的缝隙。四节依次讲三层各管什么、边界在哪,调用约定与它留在符号名上的痕迹,<code>__declspec</code> 与 <code>__attribute__</code> 的逐项对照,以及结构体布局里对齐、填充与 <code>pragma pack</code> 的边界。</p>
 <h2 id="l10-who">10.1 标准、ABI 与编译器扩展:三层各管什么</h2>
 <p>一个 <code>__stdcall</code> 写在函数声明上,翻遍 ISO C++ 标准也找不到它;一个 <code>__attribute__((packed))</code> 加在结构体上,标准同样只字未提。两者都不是编译器的私自发挥,而是落在标准之外的另外两层里。</p>
 <p>从一行源码到一个能与别人的目标文件链在一起的产物,规则由三层共同给出:<strong>语言标准定语法与语义,平台 ABI 定字节与寄存器,编译器扩展补前两层都没有覆盖的部分</strong>。三层的查证去处互不相同,层判错了,文档翻遍也找不到答案。</p>
@@ -6855,109 +6031,11 @@ b: size=24 ts=16</code></pre>
 }</code></pre>
 <p>这种写法比位域多几行代码,换来的是三件事:布局与编译器无关、字节序显式可见、每一个字段的取出过程都可以单步调试。协议与寄存器定义一旦稳定,这几行代码也不再变动。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 位域的存储顺序与跨边界规则由实现决定,不能用来描述报文</span><p>症状是一段解析代码在开发机上正确,换一个编译器或换到大端设备上读出来的字段全部错乱,而结构体的 <code>sizeof</code> 甚至可能相同。根因是标准把位在存储单元里的排列顺序、能否跨越单元边界、相邻不同类型位域是否共用单元三件事全部交给实现,而这三件事恰好完全决定了报文的解析结果。判据是把同一份定义在两个编译器上各打印一次 <code>sizeof</code> 与各字段的取值,不一致即可确认。修法是把位域整体换成固定宽度整型加显式移位与掩码,并把字节序转换写成显式的一步。</p></div>
-<h2 id="l10-sum">10.5 小结:遇到一个不认识的关键字按什么顺序查</h2>
-<p>本章的全部内容可以压成一句话:<strong>标准之外还有两层,ABI 与编译器扩展,层判对了文档就在手边,层判错了怎么找都找不到</strong>。</p>
-<p>三层的边界不靠记忆维持,靠一个问法与一条排查顺序。问法在 10.1 节给过:同一件事换编译器、换平台各做一遍,看结果变不变。顺序在下面。</p>
-<h3>固定的排查顺序</h3>
-<table style="contain-intrinsic-size:auto 377px">
-<thead><tr><th>步骤</th><th>要回答的问题</th><th>怎么回答</th><th>输出</th></tr></thead>
-<tbody>
-<tr><td class="nw">一、定层</td><td>它属于标准、ABI,还是某个编译器</td><td>看有没有两个前导下划线或下划线加大写字母;把同一件事换编译器与换平台各做一遍,看结果变不变</td><td>三层之一</td></tr>
-<tr><td class="nw">二、查去处</td><td>它到底规定了什么</td><td>标准层查标准文本与《C++ 语言》;ABI 层查对应平台的 psABI 与 Itanium C++ ABI;扩展层查该编译器文档的属性页</td><td>一条明确的语义</td></tr>
-<tr><td class="nw">三、找对应物</td><td>另一侧有没有能表达同一件事的写法</td><td><code>__has_cpp_attribute</code>、<code>__has_attribute</code>、<code>__has_declspec_attribute</code> 各问一次,再查另一侧的文档</td><td>有、没有、或者语义不完全一致</td></tr>
-<tr><td class="nw">四、定策略</td><td>写进代码里的形态是什么</td><td>已被标准收编的直接用标准写法;两侧都有对应物的用宏收口;只有一侧有的隔离到平台目录</td><td>一处改动,而不是散落各处</td></tr>
-<tr><td class="nw">五、验收</td><td>换一个编译器还编不编得过</td><td>把公开头文件单独送进另一侧的编译器,编一个只包含它的空编译单元</td><td>编译通过,或者一条指向具体行的报错</td></tr>
-</tbody>
-</table>
-<p>五步里最容易被跳过的是第一步与第五步。跳过第一步的表现是在标准文本里找 <code>__stdcall</code>;跳过第五步的表现是把未经宏包裹的扩展写进公开头文件,直到使用者报告编不过才发现。</p>
-<pre style="contain-intrinsic-size:auto 413px"><code># 第三步的三个探针,各问一次就够,不必猜版本号
-$ cat &gt; probe.c &lt;&lt;<span>'EOF'</span>
-<span class="kw">#if</span> defined(__has_attribute) &amp;&amp; __has_attribute(packed)
-<span class="kw">#pragma</span> message(<span>"__attribute__((packed)) 可用"</span>)
-<span class="kw">#endif</span>
-EOF
-$ gcc -fsyntax-only probe.c
-probe.c:2:9: note: <span>'#pragma message: __attribute__((packed)) 可用'</span>
-
-# 第五步的验收:只编头文件,不编整个库
-$ echo <span>'#include "calc.h"'</span> &gt; hdrcheck.c
-$ gcc   -fsyntax-only hdrcheck.c        # ELF 一侧
-$ clang -fsyntax-only hdrcheck.c        # Clang 一侧
-&gt; cl /nologo /c /W4 hdrcheck.c          REM MSVC 一侧</code></pre>
-<h3>按使用场景的速查表</h3>
-<p>表按「手上要做的事」分行,与 10.3 节按能力分行的那张互补。末列为空表示只能靠宏收口或隔离到平台目录。</p>
-<table style="contain-intrinsic-size:auto 1191px">
-<thead><tr><th>手上要做的事</th><th>MSVC</th><th>GCC / Clang</th><th>标准写法</th></tr></thead>
-<tbody>
-<tr><td class="nw">写一个跨平台动态库的导出宏</td><td><code>__declspec(dllexport)</code> 与 <code>dllimport</code> 二选一</td><td><code>__attribute__((visibility("default")))</code></td><td>无,写法见 4.4 节</td></tr>
-<tr><td class="nw">让一个内部符号不进导出面</td><td>默认就不导出,无须动作</td><td><code>-fvisibility=hidden</code> 加逐个标 <code>default</code></td><td>无</td></tr>
-<tr><td class="nw">指定一个类型按 64 字节对齐</td><td><code>__declspec(align(64))</code></td><td><code>__attribute__((aligned(64)))</code></td><td><code>alignas(64)</code></td></tr>
-<tr><td class="nw">让一个协议头结构体不带填充</td><td><code>#pragma pack(push, 1)</code> 与 <code>pop</code></td><td><code>__attribute__((packed))</code> 或同样的 <code>pragma</code></td><td>无</td></tr>
-<tr><td class="nw">查一个类型占多少字节、对齐到多少</td><td><code>sizeof</code> 与 <code>__alignof</code></td><td><code>sizeof</code> 与 <code>__alignof__</code></td><td><code>sizeof</code> 与 <code>alignof</code></td></tr>
-<tr><td class="nw">在头文件里把结构体布局钉死</td><td><code>static_assert</code></td><td><code>static_assert</code>,C 一侧 <code>_Static_assert</code></td><td><code>static_assert</code></td></tr>
-<tr><td class="nw">声明一个线程局部变量</td><td><code>__declspec(thread)</code></td><td><code>__thread</code></td><td><code>thread_local</code></td></tr>
-<tr><td class="nw">标记一个即将移除的接口</td><td><code>__declspec(deprecated("…"))</code></td><td><code>__attribute__((deprecated("…")))</code></td><td><code>[[deprecated("…")]]</code></td></tr>
-<tr><td class="nw">让调用方不能忽略返回值</td><td>无对应物</td><td><code>__attribute__((warn_unused_result))</code></td><td><code>[[nodiscard]]</code></td></tr>
-<tr><td class="nw">强制展开一个极短的访问器</td><td><code>__forceinline</code></td><td><code>inline __attribute__((always_inline))</code></td><td>无</td></tr>
-<tr><td class="nw">禁止内联以便打断点</td><td><code>__declspec(noinline)</code></td><td><code>__attribute__((noinline))</code></td><td>无</td></tr>
-<tr><td class="nw">在 main 之前注册一个工厂</td><td>带构造函数的全局对象</td><td><code>__attribute__((constructor))</code> 或同样的全局对象</td><td>全局对象,次序见 8.2 节</td></tr>
-<tr><td class="nw">把一批数据放进自定义节</td><td><code>#pragma section</code> 加 <code>__declspec(allocate)</code></td><td><code>__attribute__((section("…")))</code></td><td>无,机制见 5.3 节</td></tr>
-<tr><td class="nw">让一个无人引用的符号保留下来</td><td><code>#pragma comment(linker, "/include:…")</code></td><td><code>__attribute__((used))</code></td><td>无</td></tr>
-<tr><td class="nw">检查一个自定义日志函数的格式串</td><td>无对应物,靠静态分析注解</td><td><code>__attribute__((format(printf, 1, 2)))</code></td><td>无</td></tr>
-<tr><td class="nw">写一个 Win32 回调</td><td>直接抄文档原型里的 <code>CALLBACK</code> 或 <code>WINAPI</code></td><td>MinGW 下同样有这些宏</td><td>无,用法见《Win32 程序设计》</td></tr>
-<tr><td class="nw">从动态库取地址后强转函数指针</td><td>类型里带上调用约定宏,不要就地拼类型</td><td>同左,ELF 上无调用约定之分</td><td>无</td></tr>
-<tr><td class="nw">判断当前编译器认不认某个属性</td><td><code>__has_cpp_attribute</code>,需开启对应标准模式</td><td><code>__has_attribute</code> 一族</td><td><code>__has_cpp_attribute</code>,C++20 起</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 遇到不认识的关键字,先定层再查文档,顺序反了会白费时间</span><p>定层只需要两个动作:看名字有没有两个前导下划线,以及把同一件事换编译器与换平台各做一遍看结果变不变。两个动作合起来能把绝大多数关键字准确归到三层中的一层。归错层的代价是具体的——把 ABI 层的问题拿到标准文本里找,永远找不到;把编译器扩展当成标准的一部分写进公开头文件,使用者换编译器就编不过。定完层再查文档,五分钟能解决的事不会拖成半天。</p></div>
-<h3>全章判据</h3>
-<table style="contain-intrinsic-size:auto 738px">
-<thead><tr><th>现象或线索</th><th>结论</th><th>去处</th></tr></thead>
-<tbody>
-<tr><td class="nw">关键字带两个前导下划线,或下划线加大写字母</td><td>多半是实现保留的扩展,查编译器文档而不是标准</td><td>10.1</td></tr>
-<tr><td class="nw">同平台换编译器结果一致,换平台结果就变</td><td>落在 ABI 层,查对应平台的 psABI 与 C++ ABI</td><td>10.1</td></tr>
-<tr><td class="nw">换个编译器直接编不过</td><td>落在编译器扩展层,查该编译器的属性页</td><td>10.1、10.3</td></tr>
-<tr><td class="nw">报错里的符号带 <code>@数字</code> 后缀,而库里的不带</td><td>32 位下两侧的调用约定不一致</td><td>10.2</td></tr>
-<tr><td class="nw">崩在函数返回处,调用栈读不出有意义的帧</td><td>栈失衡,先查调用约定与函数指针强转</td><td>10.2</td></tr>
-<tr><td class="nw">调用点前后栈指针差值恰好等于参数占用的字节数</td><td>清栈责任被算了两次或一次都没算</td><td>10.2</td></tr>
-<tr><td class="nw">两个编译单元的 <code>sizeof</code> 不同而链接器不报错</td><td><code>pack</code> 状态不一致,属单一定义规则违规</td><td>10.4、5.2</td></tr>
-<tr><td class="nw">编译器告警取了打包成员的地址</td><td>该指针未对齐,不能传给按正常对齐写成的接口</td><td>10.4</td></tr>
-<tr><td>公开头文件里出现未经宏包裹的 <code>__declspec</code> 或 <code>__attribute__</code></td><td>该头文件不可移植,使用者换编译器即失败</td><td>10.3</td></tr>
-<tr><td><code>#if __has_attribute(x)</code> 报无效的整型常量表达式</td><td class="nw">缺少探针的保底定义</td><td>10.3</td></tr>
-<tr><td class="nw">属性写了但没有任何效果</td><td>未知属性被静默忽略,或写在了不合法的位置上</td><td>10.3</td></tr>
-<tr><td class="nw">位域结构体在两个编译器上 <code>sizeof</code> 不同</td><td>位域的分配规则由实现决定,不能用于报文与寄存器</td><td>10.4</td></tr>
-<tr><td class="nw"><code>alignas(1)</code> 编译报错</td><td><code>alignas</code> 只能加大对齐,减小对齐要用 <code>pack</code></td><td>10.4</td></tr>
-<tr><td class="nw">删掉一个成员而 <code>sizeof</code> 不变</td><td class="nw">被删成员的位置由末尾填充顶替</td><td>10.4</td></tr>
-</tbody>
-</table>
-<h3>与相邻各章的分工</h3>
-<p>本章与前后各章有明确的分界,凡是已经在别处讲透的一律不重复。</p>
-<table style="contain-intrinsic-size:auto 548px">
-<thead><tr><th>这件事</th><th>在哪里</th><th>本章讲到哪一步</th></tr></thead>
-<tbody>
-<tr><td class="nw">名字修饰的编码规则与还原工具</td><td class="nw">4.2 节</td><td>只讲调用约定怎么改变符号名上的装饰</td></tr>
-<tr><td class="nw"><code>extern "C"</code> 与语言链接</td><td class="nw">4.3 节</td><td>只讲它管不到调用约定带来的那一层装饰</td></tr>
-<tr><td class="nw">符号可见性与导出面的收缩</td><td class="nw">4.4 节</td><td>只在对照表里给出两侧的语法</td></tr>
-<tr><td class="nw">弱符号与 <code>selectany</code></td><td class="nw">4.5 节</td><td>只在对照表里给出两侧的语法</td></tr>
-<tr><td class="nw">单一定义规则违规里链接期不报错的那一类</td><td class="nw">5.2 节</td><td>只讲 <code>pack</code> 不一致这一个来源</td></tr>
-<tr><td class="nw">自定义节与链接脚本</td><td class="nw">5.3 节</td><td>只讲 <code>section</code> 属性与 <code>#pragma section</code> 的写法</td></tr>
-<tr><td class="nw">静态初始化次序</td><td class="nw">8.2 节</td><td>只讲 <code>constructor</code> 属性的优先级参数</td></tr>
-<tr><td class="nw">报错原文到根因的完整对照表</td><td class="nw">11.1 节</td><td>本章出现的报错都会进那张表</td></tr>
-<tr><td class="nw">三平台差异的汇总</td><td class="nw">11.2 节</td><td>本章只给三层归属,不做平台汇总</td></tr>
-<tr><td class="nw">保留标识符、单一定义规则本身、标准布局的条件</td><td class="nw">《C++ 语言》</td><td>一律指向那本书,不重讲</td></tr>
-<tr><td class="nw">把这些选项配到工程里去</td><td class="nw">《CMake 构建系统》</td><td>只给机制与判据,不给构建脚本</td></tr>
-<tr><td class="nw">某个扩展换来多少运行速度</td><td class="nw">《C++ 性能优化》</td><td>只给代价的方向,不给数字</td></tr>
-<tr><td class="nw">Win32 API 与回调原型的用法</td><td class="nw">《Win32 程序设计》</td><td>只讲回调原型落到符号名上的那一层</td></tr>
-</tbody>
-</table>
-<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 把平台专有的写法散落在业务代码里,移植时无处下手</span><p>症状是工程要支持第二个平台时,<code>__declspec</code>、<code>#pragma pack</code>、调用约定关键字散落在几百个文件里,改动量无法估计,而每漏改一处都变成一条链接期或运行期的错误。根因是扩展被当成普通语法直接写在了使用处,而不是收进少数几个位置。判据是搜一遍源码树:业务代码里能搜到 <code>__declspec</code> 或 <code>__attribute__</code> 就是这个问题。修法是把全部扩展收进一个属性头文件与一个平台目录,业务代码只用宏与平台无关的接口;工程里怎么按平台选文件,见《CMake 构建系统》。</p></div>
-<h3>通向第 11 章</h3>
-<p>本章出现的三条报错都会进 11.1 节那张对照表:<code>unresolved external symbol _foo@8</code> 指向调用约定不一致,未知 <code>__declspec</code> 参数的编译失败指向扩展没有经宏收口,而 <code>pack</code> 不一致这一类恰恰没有报错,它出现在 11.3 节的判据索引里而不是报错表里。</p>
-<p>三条合起来说明一件事:<strong>标准之外这一层的问题,一部分落在链接期,一部分连报错都没有</strong>。前者靠报错原文定位,后者只能靠判据主动去查——这正是判据索引存在的理由。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 17886px;--thin-h:17886px">
-<h1 id="l11"><span class="part">第 11 章</span>排错与小结</h1>
+<section class="chapter" style="contain-intrinsic-size:auto 10247px;--thin-h:10247px">
+<h1 id="l11"><span class="part">第 11 章</span>排错对照与平台差异</h1>
+<p>前面各章的判据散落在机制展开的地方,排查一条具体报错时需要的却是反向的索引,本章把它们收成两张可以直接查的表。11.1 节按报错原文定位到发生在哪一步,给出根因与第一步该查什么,再指回对应章节;11.2 节把三平台差异汇总成一张表,并按格式、机制、策略三个层次标明各自影响什么。手上有具体报错时从本章查起,查到之后再回正文看机制。</p>
 <h2 id="l11-diag">11.1 报错原文到根因:一张对照表</h2>
 <p>全书的判据是同一条:报错原文对应哪一步。前九章逐步拆开了每一步的产出与消费者,这一节把散落的对应关系收成一张可以直接查的表。</p>
 <p>表的用法是从左往右:先按报错原文定位到「发生在哪一步」,再看根因与第一步该查什么,最后回到对应章节看机制。跳过第二列直接猜根因,是排查耗时最长的做法。</p>
@@ -7124,215 +6202,6 @@ $ install_name_tool -add_rpath @executable_path/../lib app   # macOS</code></pre
 <li><strong>调试符号</strong>——Windows 的 <code>.pdb</code> 必须单独归档,不随 exe 分发,漏掉这一步崩溃报告全不可读,见第 9 章</li>
 </ol>
 <div class="note new" style="contain-intrinsic-size:auto 228px"><span class="t">🔵 跨平台库的接口先收窄成 C,再在上面包一层各平台的胶水</span><p>机制层的差异集中在 C++ 特有的东西上:名字修饰规则不同、异常无法跨编译器传播、标准库类型不是同一个类型、对象布局与虚表结构由各自的 ABI 决定。把对外接口收窄成 C 函数加不透明指针之后,这些差异一次性消失,剩下的只有导出宏与调用约定两项,都能用宏统一。代价是接口写起来更啰嗦、要自己管理生命周期。判据是接口的跨度:同一个工程内部的模块划分不必这么做,交付给外部或需要跨编译器使用的库应当这么做。第 4 章给出了导出宏的完整写法,第 7 章给出了两侧的加载与查找差别。</p></div>
-<h2 id="l11-index">11.3 判据索引</h2>
-<p>判据是全书的组织方式:每一条都是一句可以直接用来判断的结论,后面标出它所属的章节。遇到具体问题时,先在这里找到对应的那一条,再回到原章看机制。</p>
-<h3>构建期的判据</h3>
-<table style="contain-intrinsic-size:auto 1011px">
-<thead><tr><th>一句话结论</th><th>出处</th></tr></thead>
-<tbody>
-<tr><td>预处理只做文本替换,展开结果与人读源码时的想象可能完全不同</td><td class="nw">第 1 章</td></tr>
-<tr><td>包含路径出问题时,<code>-H</code> 与 <code>-M</code> 打印的是实际展开的头,不是配置里写的路径</td><td class="nw">第 1 章</td></tr>
-<tr><td class="nw">编译的单位是编译单元,编译器一次只看得见一个</td><td class="nw">第 2 章</td></tr>
-<tr><td class="nw"><code>.o</code> 里的地址是节内偏移,不是最终地址</td><td class="nw">第 3 章</td></tr>
-<tr><td class="nw">三种目标文件格式的字段名不同,承载的信息是同一套</td><td class="nw">第 3 章</td></tr>
-<tr><td>架构或位宽不一致的报错在链接期才出现,<code>file</code> 能提前发现</td><td class="nw">第 3 章</td></tr>
-<tr><td>判断一个符号有没有定义,只看所在节是不是 <code>UND</code>,不看值</td><td class="nw">第 4 章</td></tr>
-<tr><td><code>nm</code> 的大小写区分全局与局部,唯独 <code>W</code> 与 <code>V</code> 两组例外</td><td class="nw">第 4 章</td></tr>
-<tr><td class="nw">符号的绑定与可见性是两个正交维度,不能合并理解</td><td class="nw">第 4 章</td></tr>
-<tr><td>需要一个修饰名时,编一个最小文件再 <code>nm</code>,不要手推</td><td class="nw">第 4 章</td></tr>
-<tr><td><code>extern "C"</code> 只关掉名字修饰,不改变作用域与可见性</td><td class="nw">第 4 章</td></tr>
-<tr><td>报错里出现 <code>__cxx11</code> 说明两侧的标准库 ABI 不一致</td><td class="nw">第 4 章</td></tr>
-<tr><td>C++ 接口只能在同一套编译器与同一套标准库之间跨模块使用</td><td class="nw">第 4 章</td></tr>
-<tr><td class="nw">链接命令行是有顺序的,使用者在前、库在后</td><td class="nw">第 5 章</td></tr>
-<tr><td><code>collect2</code> 与 <code>LNK1120</code> 那一行是收尾统计,真信息在它上面</td><td class="nw">第 5、10 章</td></tr>
-<tr><td>静态库的抽取粒度是成员,一个成员要么整个进来要么完全不进</td><td class="nw">第 6 章</td></tr>
-<tr><td class="nw">库里有这个符号,不等于链接一定能用上它</td><td class="nw">第 6 章</td></tr>
-<tr><td class="nw">运行库选项在所有目标文件与第三方库之间必须一致</td><td class="nw">第 6 章</td></tr>
-<tr><td>共享库里的目标文件必须用 <code>-fPIC</code> 编,没有链接期开关能绕过</td><td class="nw">第 7 章</td></tr>
-<tr><td>动态库不写 SONAME,构建目录的路径会被抄进产物</td><td class="nw">第 7 章</td></tr>
-<tr><td><code>-Wl,--no-undefined</code> 把动态库的符号缺口拉回构建期</td><td class="nw">第 7 章</td></tr>
-<tr><td>LTO 的 <code>.o</code> 里没有机器码,进静态库必须用带插件的归档工具</td><td class="nw">第 9 章</td></tr>
-<tr><td>LTO 的中间表示不是稳定接口,编译器版本必须完全一致</td><td class="nw">第 9 章</td></tr>
-<tr><td><code>--gc-sections</code> 会丢掉只被间接引用的节,注册式代码要显式保住</td><td class="nw">第 9 章</td></tr>
-<tr><td><code>-fno-exceptions</code> 与 <code>-fno-rtti</code> 必须全工程统一</td><td class="nw">第 9 章</td></tr>
-<tr><td>对 <code>.o</code> 与 <code>.a</code> 只能用 <code>strip --strip-debug</code></td><td class="nw">第 4、9 章</td></tr>
-</tbody>
-</table>
-<h3>运行期与产物的判据</h3>
-<table style="contain-intrinsic-size:auto 1007px">
-<thead><tr><th>一句话结论</th><th>出处</th></tr></thead>
-<tbody>
-<tr><td>位置无关不是为了安全,是为了让代码页保持只读因而可共享</td><td class="nw">第 7 章</td></tr>
-<tr><td>延迟绑定要求 GOT 全程可写,发布版应当开完整 RELRO</td><td class="nw">第 7 章</td></tr>
-<tr><td>排查运行期符号解析问题,第一步是加 <code>LD_BIND_NOW=1</code> 重跑</td><td class="nw">第 7 章</td></tr>
-<tr><td class="nw">依赖是一棵树,查找顺序决定同名符号谁生效</td><td class="nw">第 7 章</td></tr>
-<tr><td><code>ldd</code> 会真的把程序跑起来,不要对来路不明的二进制用它</td><td class="nw">第 7 章</td></tr>
-<tr><td>文件存在却报 <code>No such file or directory</code>,缺的是解释器</td><td class="nw">第 7、8 章</td></tr>
-<tr><td><code>DT_RUNPATH</code> 不作用于传递依赖,每个共享对象都要自己设</td><td class="nw">第 7 章</td></tr>
-<tr><td>安装树能不能整体搬走,是判断 RPATH 设得对不对的唯一验收动作</td><td class="nw">第 7 章</td></tr>
-<tr><td class="nw">Windows 链接时给的是导入库,不是 DLL</td><td class="nw">第 7 章</td></tr>
-<tr><td>Windows 从当前工作目录加载 DLL 的那一档应当由程序自己关掉</td><td class="nw">第 7 章</td></tr>
-<tr><td>入口不是 <code>main</code>,栈回溯里没有 <code>main</code> 就是启动期问题</td><td class="nw">第 8 章</td></tr>
-<tr><td><code>.init_array</code> 的顺序等于链接命令行上目标文件的顺序</td><td class="nw">第 8 章</td></tr>
-<tr><td class="nw">未构造的静态对象内容是全零而不是随机值</td><td class="nw">第 8 章</td></tr>
-<tr><td>函数内静态局部对象是通用解法,代价是把问题挪到了析构</td><td class="nw">第 8 章</td></tr>
-<tr><td>动态链接器按依赖逆序初始化,可执行文件自己排在最后</td><td class="nw">第 8 章</td></tr>
-<tr><td><code>exit</code> 与 <code>_exit</code> 的区别是跑不跑清理,输出丢失多半来自后者</td><td class="nw">第 8 章</td></tr>
-<tr><td>全局对象的析构与 <code>atexit</code> 共用一张链表,按登记逆序执行</td><td class="nw">第 8 章</td></tr>
-<tr><td>在析构函数里访问另一个全局对象是未定义行为,不是概率问题</td><td class="nw">第 8 章</td></tr>
-<tr><td><code>dlclose</code> 未必真的卸载,带线程局部存储的库会被留下</td><td class="nw">第 8 章</td></tr>
-<tr><td>Windows 进程退出时的 <code>DLL_PROCESS_DETACH</code> 里不能做复杂清理</td><td class="nw">第 8 章</td></tr>
-<tr><td class="nw">调试信息占磁盘不占运行期内存</td><td class="nw">第 9 章</td></tr>
-<tr><td>体积优化的顺序是先剥离、再回收、最后才考虑语言级开关</td><td class="nw">第 9 章</td></tr>
-<tr><td>符号必须先归档再剥离,事后重编得到的符号文件对不上</td><td class="nw">第 9 章</td></tr>
-<tr><td><code>--build-id=sha1</code> 是内容散列,<code>uuid</code> 是随机数</td><td class="nw">第 9 章</td></tr>
-<tr><td class="nw">可复现构建的验收动作是换个目录构建两次比较散列</td><td class="nw">第 9 章</td></tr>
-<tr><td>没有报错不等于构建正确,静默失败各有对应的观察手段</td><td class="nw">第 11 章</td></tr>
-</tbody>
-</table>
-<h3>怎么用这张索引</h3>
-<p>两张表加起来是全书的判据总目。用法有三种,对应三种不同的场景。</p>
-<ol>
-<li><strong>遇到具体报错</strong>:先查 10.1 的对照表定位到章节,再来这里确认对应的判据,最后回原章看机制</li>
-<li><strong>做技术选型或评审</strong>:按主题扫一遍相关的几条,把每条当成一个检查项</li>
-<li><strong>接手一个陌生工程</strong>:按 10.4 的步骤读一遍产物,过程中每一步对应的判据都在这里</li>
-</ol>
-<p>索引里没有出现的东西同样值得说明:各章里的具体命令与选项没有进索引,因为它们会随工具版本变化;进索引的是不随版本变化的判断依据。</p>
-<pre style="contain-intrinsic-size:auto 223px"><code># 把索引当检查清单用:一个待发布产物的最小体检
-$ file app                                   # 格式、架构、是否剥离、是否位置无关
-$ readelf -d app | grep -E <span>'NEEDED|RUNPATH'</span>  # 依赖与运行期查找路径
-$ readelf -n app | grep <span>'Build ID'</span>           # 符号归档的索引是否存在
-$ objdump -T app | grep -o <span>'GLIBC_[0-9.]*'</span> | sort -uV | tail -1   # 对 C 库的最低要求
-$ strings app | grep -c <span>"$HOME"</span>              # 构建机路径有没有泄露,应当是 0
-$ size -A app | head -6                      # 体积构成</code></pre>
-<p>六条命令对应索引里的六条判据,跑一遍不到十秒。放进发布前的检查脚本,能挡住本书讲过的大部分部署类问题。</p>
-<div class="note new" style="contain-intrinsic-size:auto 198px"><span class="t">🔵 把判据写成一个可执行的检查脚本,比记在脑子里可靠</span><p>索引里的每一条都对应一个可以自动判定的事实:有没有 <code>build-id</code>、有没有 <code>RUNPATH</code>、对 C 库的最低版本要求是多少、产物里有没有绝对路径、<code>.init_array</code> 有多少项。把它们写成十几行 shell 或 PowerShell,加进发布流水线,判据就从「需要有人记得检查」变成「不合格就构建失败」。这比任何形式的文档与培训都更能保证结论被真正执行。脚本本身要做到只读且不执行被检查的产物,这样它对第三方交付来的二进制同样适用。</p></div>
-<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 判据的价值在于它给出的是判断依据,而不是操作步骤</span><p>操作步骤会过时:选项改名、工具换代、默认值调整,每隔几年就要重学一遍。判断依据不会——「符号有没有定义看所在节是不是 UND」这条,在 <code>nm</code> 的输出格式变了之后依然成立,因为它说的是 ELF 符号表的语义而不是某个工具的用法。因此遇到与书上不同的工具输出时,正确的做法不是照抄书上的命令,而是回到判据本身,再在手上这个工具里找到对应的字段。全书每一节末尾的批注框,写的都是这一类结论。</p></div>
-<h2 id="l11-sum">11.4 小结</h2>
-<p>全书的主线是一次编译的展开:预处理产出一份展开后的源码,编译产出带符号表与重定位表的目标文件,静态链接把它们合并,动态链接把一部分合并推迟到运行期,启动代码把控制权交给 <code>main</code>,退出时再逐层收回。</p>
-<p>每一步的产出都是可以直接看的:文本、节表、符号表、重定位表、动态段、初始化数组。看得见,判断才有依据。</p>
-<h3>五步读懂一个陌生二进制</h3>
-<p>顺序是固定的,由粗到细,每一步的结论会限定下一步该看什么。</p>
-<ol>
-<li><strong>这是什么</strong>——格式、架构、位宽、有没有被剥离、是不是位置无关</li>
-<li><strong>它依赖谁</strong>——直接依赖的库、需要的符号版本、解释器路径</li>
-<li><strong>它对外提供什么</strong>——导出的符号,以及有没有做过可见性收缩</li>
-<li><strong>它由什么构成</strong>——各节的大小、有没有调试信息、异常表占多少</li>
-<li><strong>它启动时做什么</strong>——初始化数组里有多少项,加载过程实际走了哪些路径</li>
-</ol>
-<figure style="contain-intrinsic-size:auto 396px">
-<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="13">
-  <text class="svgmuted" x="12" y="20" text-anchor="start" font-size="11">左列是这一步要回答的问题,右列是 Linux 侧对应的一条命令</text>
-
-  <rect x="12" y="32" width="696" height="38" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
-  <circle cx="36" cy="51" r="12" fill="var(--svg-fill)" stroke="var(--accent)"/>
-  <text class="svgmuted" x="36" y="55" text-anchor="middle" font-size="11">1</text>
-  <text class="svgtext" x="58" y="56" text-anchor="start" font-size="12">这是什么:格式、架构、是否剥离</text>
-  <text class="svgmuted" x="380" y="56" text-anchor="start" font-size="11">file app</text>
-
-  <rect x="12" y="78" width="696" height="38" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
-  <circle cx="36" cy="97" r="12" fill="var(--svg-fill)" stroke="var(--accent)"/>
-  <text class="svgmuted" x="36" y="101" text-anchor="middle" font-size="11">2</text>
-  <text class="svgtext" x="58" y="102" text-anchor="start" font-size="12">它依赖谁:直接依赖与解释器路径</text>
-  <text class="svgmuted" x="380" y="102" text-anchor="start" font-size="11">readelf -d app</text>
-
-  <rect x="12" y="124" width="696" height="38" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
-  <circle cx="36" cy="143" r="12" fill="var(--svg-fill)" stroke="var(--accent)"/>
-  <text class="svgmuted" x="36" y="147" text-anchor="middle" font-size="11">3</text>
-  <text class="svgtext" x="58" y="148" text-anchor="start" font-size="12">它对外提供什么:导出面有多大</text>
-  <text class="svgmuted" x="380" y="148" text-anchor="start" font-size="11">nm -D --defined-only app</text>
-
-  <rect x="12" y="170" width="696" height="38" rx="5" fill="var(--svg-soft)" stroke="var(--rule)"/>
-  <circle cx="36" cy="189" r="12" fill="var(--svg-fill)" stroke="var(--accent)"/>
-  <text class="svgmuted" x="36" y="193" text-anchor="middle" font-size="11">4</text>
-  <text class="svgtext" x="58" y="194" text-anchor="start" font-size="12">它由什么构成:各节各占多少字节</text>
-  <text class="svgmuted" x="380" y="194" text-anchor="start" font-size="11">size -A app</text>
-
-  <rect x="12" y="216" width="696" height="38" rx="5" fill="var(--svg-soft2)" stroke="var(--accent)"/>
-  <circle cx="36" cy="235" r="12" fill="var(--svg-fill)" stroke="var(--accent)"/>
-  <text class="svgmuted" x="36" y="239" text-anchor="middle" font-size="11">5</text>
-  <text class="svgtext" x="58" y="240" text-anchor="start" font-size="12">它启动时做什么:初始化项与查找路径</text>
-  <text class="svgmuted" x="380" y="240" text-anchor="start" font-size="11">LD_DEBUG=libs ./app</text>
-
-  <text class="svgmuted" x="12" y="274" text-anchor="start" font-size="11">Windows 侧依次是 dumpbin /headers、/dependents、/exports、/headers,加载过程用 Process Monitor 看</text>
-  <text class="svgmuted" x="12" y="292" text-anchor="start" font-size="11">前四步是纯静态解析,对来路不明的二进制安全;第五步要真的运行,只对信任的产物使用</text>
-</svg>
-<figcaption>读一个陌生二进制的五步:由粗到细,每一步限定下一步该看什么（原创绘制）</figcaption>
-</figure>
-<pre style="contain-intrinsic-size:auto 604px"><code># 第一步:这是什么
-$ file app
-app: ELF 64-bit LSB pie executable, x86-64, dynamically linked,
-     interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8f3c1a..., stripped
-$ readelf -h app | grep -E <span>'Type|Machine|Entry'</span>
-
-# 第二步:它依赖谁
-$ readelf -d app | grep -E <span>'NEEDED|RUNPATH|RPATH|SONAME'</span>
-$ objdump -T app | grep GLIBC_ | sed <span>'s/.*GLIBC_/GLIBC_/'</span> | sort -uV | tail -3
-
-# 第三步:它对外提供什么
-$ nm -D --defined-only -C app | head -20
-$ readelf -sW --dyn-syms app | wc -l
-
-# 第四步:它由什么构成
-$ size -A app
-$ readelf -SW app | grep -E <span>'debug|eh_frame|dynsym'</span>
-
-# 第五步:它启动时做什么
-$ readelf -S app | grep -A1 init_array
-$ LD_DEBUG=libs ./app 2&gt;&amp;1 | grep -E <span>'find library|calling init'</span></code></pre>
-<pre style="contain-intrinsic-size:auto 196px"><code>&gt; REM Windows 侧的同五步
-&gt; dumpbin /headers app.exe
-&gt; dumpbin /dependents app.exe
-&gt; dumpbin /exports calc.dll
-&gt; dumpbin /headers app.exe | findstr /C:<span>"virtual size"</span>
-&gt; REM 加载过程用 Process Monitor 过滤 CreateFile 事件观察</code></pre>
-<p>五步跑完,一个陌生二进制的形态就清楚了:它是什么、跟谁绑定、暴露多少接口、体积花在哪、启动时做了多少事。之后无论是排错、评估依赖风险还是准备移植,都有了事实基础。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 读二进制的五步全部是只读操作,可以直接在生产产物上跑</span><p><code>file</code>、<code>readelf</code>、<code>objdump</code>、<code>nm</code>、<code>size</code>、<code>dumpbin</code> 都不修改任何文件,也不执行被检查的程序,因此对来路不明的二进制同样安全。唯一的例外是 <code>ldd</code>——它靠让动态链接器加载一遍来得到结果,等价于执行了这个文件的一部分,应当换成 <code>readelf -d</code> 或 <code>objdump -p</code>。第五步里的 <code>LD_DEBUG</code> 需要真的运行程序,只对自己信任的产物使用。</p></div>
-<h3>五步能读出什么、读不出什么</h3>
-<table style="contain-intrinsic-size:auto 413px">
-<thead><tr><th>想知道的事</th><th>能不能从二进制读出来</th><th>读法或替代手段</th></tr></thead>
-<tbody>
-<tr><td class="nw">用了哪个编译器与哪个版本</td><td class="nw"><strong>通常能</strong></td><td><code>readelf -p .comment app</code> 打印编译器标识串</td></tr>
-<tr><td class="nw">开了哪个优化等级</td><td class="nw"><strong>不能直接读</strong></td><td>只能从代码形态推断,不可靠</td></tr>
-<tr><td class="nw">用了哪个 C++ 标准</td><td class="nw"><strong>不能</strong></td><td>标准版本不进产物</td></tr>
-<tr><td class="nw">链接了哪些静态库</td><td class="nw"><strong>不能直接读</strong></td><td>已剥离时无线索;未剥离时可从符号名猜</td></tr>
-<tr><td class="nw">依赖哪些共享库</td><td class="nw">能</td><td><code>readelf -d</code> 的 <code>NEEDED</code></td></tr>
-<tr><td class="nw">需要目标机的 C 库有多新</td><td class="nw">能</td><td><code>objdump -T</code> 里最高的那个版本号</td></tr>
-<tr><td class="nw">有没有开位置无关</td><td class="nw">能</td><td><code>file</code> 打印 <code>pie executable</code> 还是 <code>executable</code></td></tr>
-<tr><td class="nw">有没有开完整 RELRO</td><td class="nw">能</td><td><code>readelf -lW</code> 有 <code>GNU_RELRO</code> 且 <code>readelf -d</code> 有 <code>BIND_NOW</code></td></tr>
-<tr><td class="nw">有没有做过 LTO</td><td class="nw"><strong>基本不能</strong></td><td>中间表示在最终产物里已不存在</td></tr>
-<tr><td class="nw">构建时间与构建机路径</td><td class="nw">视配置而定</td><td><code>strings</code> 能不能搜到绝对路径,即为第 9 章那条检查</td></tr>
-</tbody>
-</table>
-<p>表里三条「不能」值得记住:优化等级、语言标准、是否开过 LTO,这三项都不进产物。需要这些信息时只能靠构建记录,这也是把构建配置连同产物一起归档的理由之一。</p>
-<p>倒数第一行反过来是一条安全检查:<code>strings app | grep '/home/'</code> 如果有输出,说明构建机的目录结构泄露在产物里,处理办法是第 9 章的 <code>-ffile-prefix-map</code>。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 260px"><span class="t">🔴 产物里读不出优化等级与语言标准,不要试图从反汇编反推</span><p>「这个库是不是用 -O2 编的」这类问题没有可靠的静态答案:同一段代码在不同优化等级下的形态差别很大,但反过来从形态判断等级会被内联、循环展开、目标机器特性等因素干扰,得出的结论经常是错的。同理,C++ 标准版本、是否开过 LTO、是否开过某个警告集合,在最终产物里都没有留下可判定的痕迹。需要这些信息的正确做法是让构建过程留下记录:把编译命令行、编译器版本、依赖清单与产物一起归档。第 9 章的可复现构建把这件事推到了极致——记录足够完整时,任何人都能重新构建出逐字节相同的产物,这本身就是最强的构建配置证明。</p></div>
-<h3>全书骨架回顾</h3>
-<table style="contain-intrinsic-size:auto 488px">
-<thead><tr><th>章</th><th>这一步的产出</th><th>下一步拿它做什么</th><th>最典型的报错</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 1 章 预处理</td><td>一份展开后的源码文本</td><td>交给编译器解析</td><td><code>No such file or directory</code>(头文件)</td></tr>
-<tr><td class="nw">第 2 章 编译</td><td>一个编译单元的汇编与目标文件</td><td>等待与别的单元合并</td><td>作用域与类型错误</td></tr>
-<tr><td class="nw">第 3 章 目标文件格式</td><td>节、符号表、重定位表</td><td>链接器读这三样</td><td>架构不兼容</td></tr>
-<tr><td class="nw">第 4 章 符号</td><td>一张名字与定义的对应表</td><td>符号解析的输入</td><td><code>undefined reference</code></td></tr>
-<tr><td class="nw">第 5 章 静态链接</td><td>合并后的节与填好的地址</td><td>可执行文件或库</td><td>重复定义、顺序问题</td></tr>
-<tr><td class="nw">第 6 章 静态库</td><td>一组按需抽取的成员</td><td>参与链接</td><td><code>cannot find -lxxx</code></td></tr>
-<tr><td class="nw">第 7 章 动态库</td><td>一条记账式的依赖记录</td><td>运行期解析</td><td><code>cannot open shared object file</code></td></tr>
-<tr><td class="nw">第 8 章 启动与退出</td><td>初始化数组与清理链表</td><td><code>main</code> 前后各跑一遍</td><td>栈回溯里没有 <code>main</code></td></tr>
-<tr><td class="nw">第 9 章 LTO 与体积</td><td>可度量、可裁剪、可验证的产物</td><td>分发与调试</td><td>LTO 版本不一致</td></tr>
-<tr><td class="nw">第 11 章 排错</td><td>三张对照表</td><td>按报错定位到章节</td><td>—</td></tr>
-</tbody>
-</table>
-<p>表的第二列是全书的主线:每一步的产出都是下一步的输入,而每一类报错都出现在两步的交界处。定位问题就是定位交界。</p>
-<h3>接下来往哪走</h3>
-<p>本书讲的是机制:每一步产出了什么、下一步拿它做了什么。工程里怎么把这些机制配置出来,是姊妹书的范围。</p>
-<ul>
-<li>构建配置的主场是《CMake 构建手册》——RPATH 怎么按构建期与安装期分别设、LTO 怎么按构建类型开、导出宏怎么由目标属性统一注入、安装规则怎么写</li>
-<li>语言层面的规则见《C++ 语言》——单一定义规则、内联与链接性、模板实例化、静态存储期对象的生存期</li>
-<li>优化收益的度量见《C++ 性能优化》——LTO 与 PGO 的实际收益怎么测、怎么归因到具体函数</li>
-<li>打包、签名与崩溃上报的完整链路见《Qt 组件与生态》——从崩溃现场采集到按标识符解析成可读栈回溯</li>
-</ul>
-<p>四本书与本书的边界是清楚的:本书回答「产物长什么样、为什么会这样」,它们回答「工程里怎么把它配成这样」。遇到问题时先用本书定位到机制,再到对应的书里找配置手段。</p>
 </section>
 
 </div></main>

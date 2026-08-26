@@ -204,7 +204,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#k0-first">0.2 第一个工程:七行 CMakeLists 逐行拆开</a>
 <a class="sec" href="#k0-cli">0.3 配置、构建、安装三个动作与构建目录</a>
 <a class="sec" href="#r1-project">0.4 项目与最低版本</a>
-<a class="sec" href="#k0-sum">0.5 小结</a>
 </details>
 <details><summary><a class="ch" href="#k1">目标与它的属性</a></summary>
 <a class="sec" href="#k1-target">1.1 五种目标:可执行、静态库、动态库、接口库、对象库</a>
@@ -213,7 +212,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#k1-imported">1.4 导入目标:第三方库在 CMake 里长什么样</a>
 <a class="sec" href="#r1-define">1.5 定义目标:可执行、库与自定义目标</a>
 <a class="sec" href="#r1-prop">1.6 属性读写:set_target_properties 与 set_property</a>
-<a class="sec" href="#k1-sum">1.7 小结</a>
 </details>
 <details><summary><a class="ch" href="#k2">使用要求的传播</a></summary>
 <a class="sec" href="#k2-why">2.1 使用要求:一个目标对使用者提出的条件</a>
@@ -222,7 +220,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#k2-leak">2.4 传播失控:一个 PUBLIC 写错波及整棵依赖树</a>
 <a class="sec" href="#r1-use">2.5 使用要求七件套</a>
 <a class="sec" href="#r5-build">2.6 目标属性:编译与链接</a>
-<a class="sec" href="#k2-sum">2.7 小结</a>
 </details>
 <details><summary><a class="ch" href="#k3">变量、控制流与生成器表达式</a></summary>
 <a class="sec" href="#k3-var">3.1 普通变量、缓存变量与环境变量,以及它们的优先级</a>
@@ -234,7 +231,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#r3-str">3.7 字符串与文件</a>
 <a class="sec" href="#r4-project">3.8 项目、路径与目标名变量</a>
 <a class="sec" href="#r6-genex">3.9 生成器表达式:五类一览</a>
-<a class="sec" href="#k3-sum">3.10 小结</a>
 </details>
 <details><summary><a class="ch" href="#k4">引入第三方库</a></summary>
 <a class="sec" href="#k4-need">4.1 引一个库进来要解决的四件事</a>
@@ -245,14 +241,12 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#k4-fail">4.6 找不到库时按这个顺序查</a>
 <a class="sec" href="#r2-find">4.7 find_package 与四个 find_*</a>
 <a class="sec" href="#r2-fetch">4.8 FetchContent、ExternalProject 与 add_subdirectory</a>
-<a class="sec" href="#k4-sum">4.9 小结:五条路线的同场对比</a>
 </details>
 <details><summary><a class="ch" href="#k5">让自己的库被别人 find_package</a></summary>
 <a class="sec" href="#k5-export">5.1 install(EXPORT) 与导出目标</a>
 <a class="sec" href="#k5-config">5.2 写 XxxConfig.cmake 与版本文件</a>
 <a class="sec" href="#k5-check">5.3 自检:装到临时目录再用一次</a>
 <a class="sec" href="#r2-export">5.4 导出与配置文件:install(EXPORT)、export、两个 helper</a>
-<a class="sec" href="#k5-sum">5.5 小结</a>
 </details>
 <details><summary><a class="ch" href="#k6">编译选项、标准与三大编译器</a></summary>
 <a class="sec" href="#k6-std">6.1 C++ 标准怎么开才可靠</a>
@@ -261,21 +255,18 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#r4-compiler">6.4 编译器、平台与架构变量</a>
 <a class="sec" href="#r5-lang">6.5 目标属性:语言、标准与平台</a>
 <a class="sec" href="#r6-mod2">6.6 常用模块:检测与配置</a>
-<a class="sec" href="#k6-sum">6.7 小结</a>
 </details>
 <details><summary><a class="ch" href="#k7">生成器、配置与 Presets</a></summary>
 <a class="sec" href="#k7-gen">7.1 单配置与多配置生成器</a>
 <a class="sec" href="#k7-type">7.2 CMAKE_BUILD_TYPE 与四种默认配置</a>
 <a class="sec" href="#k7-presets">7.3 CMakePresets.json 与 IDE 集成</a>
 <a class="sec" href="#r4-build">7.4 构建配置与选项变量</a>
-<a class="sec" href="#k7-sum">7.5 小结</a>
 </details>
 <details><summary><a class="ch" href="#k8">自定义命令、代码生成与测试</a></summary>
 <a class="sec" href="#k8-cmd">8.1 add_custom_command 的两种形态与依赖关系</a>
 <a class="sec" href="#k8-gen">8.2 代码生成的完整例子</a>
 <a class="sec" href="#k8-test">8.3 CTest 与接 GoogleTest</a>
 <a class="sec" href="#r5-other">8.4 目录、源文件、测试与全局属性</a>
-<a class="sec" href="#k8-sum">8.5 小结</a>
 </details>
 <details><summary><a class="ch" href="#k9">安装、打包与交叉编译</a></summary>
 <a class="sec" href="#k9-install">9.1 install() 的各种形态</a>
@@ -286,27 +277,23 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#r5-out">9.6 目标属性:输出、位置与安装</a>
 <a class="sec" href="#r4-find">9.7 查找、安装与打包变量</a>
 <a class="sec" href="#r6-mod">9.8 常用模块:安装与打包</a>
-<a class="sec" href="#k9-sum">9.9 小结</a>
 </details>
-<details><summary><a class="ch" href="#k10">大型工程、速查索引与小结</a></summary>
+<details><summary><a class="ch" href="#k10">大型工程、反模式与参照表</a></summary>
 <a class="sec" href="#k10-split">10.1 拆分、构建时间与编译缓存</a>
 <a class="sec" href="#k10-anti">10.2 十种反模式与从老写法迁过来</a>
 <a class="sec" href="#r1-sum">10.3 一份 CMakeLists 的命令出场顺序</a>
 <a class="sec" href="#r4-sum">10.4 变量三表:只读、project 之前、命令行可传</a>
 <a class="sec" href="#r5-sum">10.5 属性、变量与命令的对应</a>
-<a class="sec" href="#k10-index">10.6 判据索引与速查</a>
-<a class="sec" href="#r6-index">10.7 索引:想做什么查哪一条</a>
-<a class="sec" href="#k10-sum">10.8 小结</a>
 </details>
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 38015px;--thin-h:38015px">
+<section class="chapter" style="contain-intrinsic-size:auto 34914px;--thin-h:34914px">
 <h1 id="k0"><span class="part">第 0 章</span>预备:CMake 做什么、不做什么</h1>
 <h2 id="k0-open">0.0 导读</h2>
 <p>CMake 自身不编译任何东西。它读一份用自己的语言写成的工程描述,输出另一个构建系统的输入文件,再由 Ninja、Make 或 MSBuild 去调用编译器与链接器。这层间接换来了跨平台与跨编译器的统一写法,代价是排错时要先分清报错来自三层里的哪一层。</p>
 <p><strong>本书讲清这套描述语言的现代形态:状态挂在哪里、依赖沿什么路径传播、每个值在哪一步确定下来、构建出来的东西怎么交到别人手上。</strong>基线取 CMake 3.20 以上,平台覆盖 Linux、Windows 与 macOS,编译器覆盖 GCC、Clang 与 MSVC。凡是随版本变动的事实,书里给的是查证入口,不是写作当时的取值。</p>
-<p>全书每一章都是同一种形态:<strong>先讲机制,回答为什么;随后的条目节逐条给出本章命令、变量与属性的写法,回答怎么写;章末小结把判据收成表。</strong>条目与机制同章,凡条目涉及机制的地方一律写「机制见 N.M 节」,不重复推导。长期查阅的两个入口都在第 10 章:10.6 节按判据索引,10.7 节按需求索引。</p>
+<p>全书每一章都是同一种形态:<strong>先讲机制,回答为什么;随后的条目节逐条给出本章命令、变量与属性的写法,回答怎么写。</strong>条目与机制同章,凡条目涉及机制的地方一律写「机制见 N.M 节」,不重复推导。长期查阅的入口在第 10 章末尾的三张参照表:命令出场顺序、变量三表、属性变量命令对应。</p>
 <p>CMake 的语言本身很小:命令、字符串列表、几种控制结构,没有类型系统,变量只有字符串与列表两种形态。难的不是语法,是<strong>三件事同时在起作用</strong>——命令在配置期按书写顺序执行,属性到生成期才被收集,而生成出来的文件要到构建期才被读。三者混在一起,是绝大多数「明明写了却没生效」的来源。</p>
 <h3>这个领域有哪些资料</h3>
 <p>CMake 的资料有一个别处少见的分布:<strong>官方文档是完备的参考,却不给判据;博客与演讲给判据,却往往停在某个旧版本上。</strong>官方手册对每条命令、每个属性、每个生成器表达式都给了准确语义与引入版本,但不回答「这件事该不该这么做」;而回答这个问题的材料多是单篇文章或一次演讲,写成之后不再更新。</p>
@@ -357,21 +344,21 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <table style="contain-intrinsic-size:auto 236px">
 <thead><tr><th>组</th><th>章与节</th><th>它回答的问题</th></tr></thead>
 <tbody>
-<tr><td class="nw">世界观</td><td class="nw">第 0 到 2 章,20 节</td><td>CMake 在整条工具链里占哪一段,一个目标由什么构成,配置与依赖怎么沿目标图传给使用者</td></tr>
-<tr><td class="nw">求值与依赖</td><td class="nw">第 3 到 5 章,24 节</td><td>一个值在哪一步定下来,外部的库怎么进来,自己的库怎么以同样的形态出去</td></tr>
-<tr><td class="nw">工具链与产物</td><td class="nw">第 6 到 9 章,26 节</td><td>标准与选项怎么给到三大编译器,生成器与配置怎么选,构建期还要生成与验证什么,装出来的东西怎么在别人机器上跑起来</td></tr>
-<tr><td class="nw">收尾</td><td class="nw">第 10 章,8 节</td><td>工程大了之后怎么拆、怎么加快,十种反模式,以及判据索引与按需求索引</td></tr>
+<tr><td class="nw">世界观</td><td class="nw">第 0 到 2 章,17 节</td><td>CMake 在整条工具链里占哪一段,一个目标由什么构成,配置与依赖怎么沿目标图传给使用者</td></tr>
+<tr><td class="nw">求值与依赖</td><td class="nw">第 3 到 5 章,21 节</td><td>一个值在哪一步定下来,外部的库怎么进来,自己的库怎么以同样的形态出去</td></tr>
+<tr><td class="nw">工具链与产物</td><td class="nw">第 6 到 9 章,22 节</td><td>标准与选项怎么给到三大编译器,生成器与配置怎么选,构建期还要生成与验证什么,装出来的东西怎么在别人机器上跑起来</td></tr>
+<tr><td class="nw">收尾</td><td class="nw">第 10 章,5 节</td><td>工程大了之后怎么拆、怎么加快,十种反模式,以及三张全书参照表</td></tr>
 </tbody>
 </table>
-<p>合计 11 章 78 节,每章由机制小节、条目节与小结三段构成。四组之间是单向依赖:后三组的每一章都在用第一组的结论——目标是唯一的状态载体,使用要求沿依赖边传播。</p>
+<p>合计 11 章 65 节,每章由机制小节与条目节两段构成。四组之间是单向依赖:后三组的每一章都在用第一组的结论——目标是唯一的状态载体,使用要求沿依赖边传播。</p>
 <p>全书只有一个立足点:<strong>现代 CMake 的主角是目标</strong>。一个目标带着自己的源文件、包含路径、宏定义、编译选项与依赖,这些信息写在目标属性上而不是变量上;别的目标链接它时,该给的那一部分沿依赖边自动传过去。脚本要做的事只有一件,把这张目标图描述清楚。</p>
 <p>由此得到一条贯穿全书的取舍。<code>include_directories</code>、<code>link_libraries</code>、<code>add_definitions</code> 这类目录级命令写的是目录属性,结构上就承担不了使用要求;它们在正文里一次都不作为可选写法与目标级命令并列,只出现在三个位置:<code>old</code> 批注、第 2.1 节末尾的结构对照表、第 10.2 节的迁移表。</p>
 <div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">🟡 目录级老命令不作为可选写法,只在 old 批注里出现</span><p><code>include_directories</code> 一类命令把路径与宏挂在当前目录上,作用范围是「本目录及子目录里、这条命令之后创建的全部目标」。两个方向都错:不该拿到的目标拿到了,而库的使用者又拿不到。把它与 <code>target_include_directories</code> 并列成两种风格,等于让读者在一个已经有答案的问题上再选一次。第 2.1 节末尾的对照表给出结构上的原因,第 10.2 节给出逐条的迁移路径,正文其余位置一律只写目标级命令。</p></div>
 <p>基线定在 CMake 3.20 以上。示例代码的首行统一写 <code>cmake_minimum_required(VERSION 3.20)</code>,并在注释里写明假设的目录结构。更新的版本引入的设施照样讲,但一律先给查证入口:属性查 <code>cmake --help-property</code>,命令查 <code>cmake --help-command</code>,生成器表达式查对应的手册页。</p>
 <div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 基线取 3.20,更新的设施先给查证入口再用</span><p>3.20 是一条工程上的折中:比它更低的版本缺少本书反复用到的几样东西,而比它更高会把仍在用发行版自带 CMake 的使用者挡在门外。头文件集合、<code>FetchContent</code> 的部分参数、跨目录的自定义命令规则都在 3.20 之后才补齐,书里照讲,但每处都写明可用性以 Added in 标注为准,并给出基线为 3.20 时的替代写法。</p></div>
-<p>分组之外还有一条纵向的线索:全书反复出现的四个问题——这件事挂在哪一层、什么时候求值、传不传给使用者、装出去之后还成不成立。任何一条 CMake 写法都可以放到这四个问题下检查一遍,第 10.6 节的判据索引就是按这四个问题重排的。</p>
+<p>分组之外还有一条纵向的线索:全书反复出现的四个问题——这件事挂在哪一层、什么时候求值、传不传给使用者、装出去之后还成不成立。任何一条 CMake 写法都可以放到这四个问题下检查一遍;各章给出的判据,回答的都是其中某一问。</p>
 <p>第 4 章的机制部分比其余各章都厚,六节,另有两节条目。原因是「引入第三方库」在实践里被拆成了互不相同的几条路线:系统里已经装好的库、随工程一起拉下来的源码、包管理器提供的清单、没有配置文件只能自己包装的库。几条路线的失败形态不同,排查手段也不同,合成一节写会互相干扰。</p>
-<p>每一章的收尾形态是统一的:机制小节之后是本章的条目节,给出命令形式、参数与最小示例;章末小结把判据收成一张表,再给一份可以直接抄的完整写法。照着写时往往只需要条目与小结;判断某个改法对不对时,才回到机制小节。</p>
+<p>每一章的形态是统一的:机制小节之后是本章的条目节,给出命令形式、参数与最小示例。照着写时往往只需要条目节;判断某个改法对不对时,才回到机制小节。</p>
 <p>不讲的部分同样要说清楚,并指明归谁。<strong>分界一律写成一句能当场判断的话</strong>,遇到一个话题时可以立刻知道该翻哪一本。</p>
 <table style="contain-intrinsic-size:auto 601px">
 <thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
@@ -404,7 +391,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <p>两样不在前置里:不需要写过 CMake,第 0 章从「它到底产出什么」开始;不需要懂任何一种编译器的内部实现,第 6 章只用到选项名与它们可观察的效果。</p>
 <h3>本书的特点</h3>
 <p>特点要能被当场核对,因此每一条都配了去哪一节验证。</p>
-<table style="contain-intrinsic-size:auto 554px">
+<table style="contain-intrinsic-size:auto 555px">
 <thead><tr><th>特点</th><th>到哪一节核对</th></tr></thead>
 <tbody>
 <tr><td class="nw">目录级老命令一次都不作为可选写法出现</td><td>第 2.1 节末尾有一张目录级命令与 <code>target_</code> 命令的结构对照表,给出它们承担不了使用要求的原因;其余位置只在 <code>old</code> 批注与第 10.2 节的迁移表里提到它们</td></tr>
@@ -412,7 +399,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw">版本敏感的结论不写死版本号</td><td>第 1.3 节的头文件集合、第 4.4 节的 FetchContent 参数、第 8.1 节的跨目录规则,三处都把可用性交给 <code>cmake --help-command</code> 与官方文档的 Added in 标注</td></tr>
 <tr><td class="nw">第 4 章的机制部分全书最厚,六节机制加两节条目</td><td>其中第 4.5 节单独处理三平台差异:库文件形态、链接时交出什么、运行期怎么找、导出符号怎么处理</td></tr>
 <tr><td>第 10.2 节十种反模式,每条给「症状 → 为什么错 → 正确写法」</td><td>开头先集中列一张十条症状的表,便于对照自己的工程,再逐条给出错误写法与正确写法的完整代码</td></tr>
-<tr><td class="nw">条目与机制同章,不重复推导</td><td>每章的条目节紧跟机制小节,凡条目涉及机制处一律写「机制见 N.M 节」,例如 1.5 节的定义目标指回 1.1 节、3.9 节的生成器表达式一览指回 3.3 节;第 10.7 节另有一张按需求组织的索引</td></tr>
+<tr><td class="nw">条目与机制同章,不重复推导</td><td>每章的条目节紧跟机制小节,凡条目涉及机制处一律写「机制见 N.M 节」,例如 1.5 节的定义目标指回 1.1 节、3.9 节的生成器表达式一览指回 3.3 节</td></tr>
 <tr><td class="nw">全书 16 张原创插图</td><td>配置期与生成期的分界、三个作用域关键字的落点、<code>find_package</code> 的查找顺序、装完之后库的解析路径都有图</td></tr>
 </tbody>
 </table>
@@ -426,11 +413,11 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td>接手一个已有工程,看不懂它的 CMakeLists</td><td>第 1 章 → 第 2 章 → 第 3 章 → 第 10 章</td><td>第 2 章与第 3.3 节</td><td>第 5、8、9 章</td></tr>
 <tr><td class="nw">从零起一个新工程</td><td>第 0 章 → 第 1 章 → 第 2 章 → 第 4 章 → 第 9 章</td><td>第 2 章与第 4 章</td><td>第 7.3 节与第 10.1 节</td></tr>
 <tr><td class="nw">要把自己的库发出去给别人用</td><td>第 1 章 → 第 2 章 → 第 5 章 → 第 9 章</td><td>第 5 章与第 9.2 节</td><td>第 6、7、8 章</td></tr>
-<tr><td class="nw">手上已经有一个具体报错</td><td>直接查第 10.6 节的两张表,再按指向回到对应的小节</td><td>—</td><td>—</td></tr>
-<tr><td class="nw">只想确认某条命令、变量或属性怎么写</td><td>直接翻该章的条目节;不确定在哪一章时,从 10.7 节的按需求索引进</td><td>—</td><td>机制小节可后补</td></tr>
+<tr><td class="nw">手上已经有一个具体报错</td><td>按本节末尾「遇到的现象翻哪一章」那张表进到对应章,再按小节标题收窄</td><td>—</td><td>—</td></tr>
+<tr><td class="nw">只想确认某条命令、变量或属性怎么写</td><td>直接翻该章的条目节;不确定在哪一章时,从第 10.3 至 10.5 节的三张参照表进</td><td>—</td><td>机制小节可后补</td></tr>
 </tbody>
 </table>
-<p>前四条路线的主干都是机制小节。读过一遍之后,长期使用的入口转到各章的条目节与第 10 章的两个索引:条目按「想查什么」组织,每条给命令形式、参数、它改了什么与最小示例。<strong>机制小节回答为什么,条目节回答怎么写</strong>,条目里凡涉及机制的地方都指回同章的机制小节,不重复推导。</p>
+<p>前四条路线的主干都是机制小节。读过一遍之后,长期使用的入口转到各章的条目节与第 10 章的三张参照表:条目按「想查什么」组织,每条给命令形式、参数、它改了什么与最小示例。<strong>机制小节回答为什么,条目节回答怎么写</strong>,条目里凡涉及机制的地方都指回同章的机制小节,不重复推导。</p>
 <p>三条路线有一段公共的地基:第 1 章与第 2 章。目标与属性、使用要求与三个作用域关键字,是后面每一章都在用的东西;跳过它们直接读第 4 章或第 9 章,读到的都是「这里要这么写」,而判断自己是不是那个情形的能力恰好在这两章里。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 第 1、2 章按顺序读完再挑章节,其余各章可跳</span><p>后面每一章都建立在这两章上:第 4 章引第三方库,引进来的是一个带使用要求的导入目标;第 5 章导出自己的库,导出的是同一组属性;第 6 章的选项要挂在目标上;第 9 章的安装规则按目标写。跳着读的表现是每一节都看得懂字面,却记不住某条命令为什么要加作用域关键字,遇到没见过的现象也推不出原因。</p></div>
 <p>三条路线里都没有把第 7 章排进主干。生成器与配置这一章的内容在单配置生成器上几乎察觉不到,一旦换到多配置生成器上,不读它就会在「为什么原来的判断在这里失效」上停很久。用到那一步再补,补的时候整章读完。</p>
@@ -894,68 +881,11 @@ cmake_policy(POP)</code></pre>
 <p>策略作用域的建立时机有三处:<code>add_subdirectory()</code> 进入子目录、<code>include()</code> 与 <code>find_package()</code> 载入脚本、以及显式的 <code>cmake_policy(PUSH)</code>。后两者加 <code>NO_POLICY_SCOPE</code> 可以取消这次入栈,让被载入的脚本直接改调用方的策略。</p>
 <p>由此得到一条判据:第三方子目录里的策略问题,优先用 <code>PUSH</code> 与 <code>POP</code> 包住,不要直接改全局基线。全局基线一改,自己工程的全部代码也跟着换语义,影响面远大于要解决的那一条。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 在 function 里改策略,出了函数就还原</span><p>函数体在执行时建立自己的策略作用域,<code>cmake_policy(SET)</code> 的效果随函数返回一并丢弃。把「统一设定一批策略」的代码封装成函数再调用,读日志看不出任何异常,策略却一条都没生效。宏不同:<code>macro()</code> 展开在调用处,没有独立作用域,里面的设定会留下来,这个差别本身又是另一类难查的问题。可靠的做法是把策略设定写在顶层 CMakeLists.txt 的目录作用域里,或者用 <code>include()</code> 加 <code>NO_POLICY_SCOPE</code> 载入。</p></div>
-<h2 id="k0-sum">0.5 小结</h2>
-<p>本章确立的是全书的坐标系:CMake 在整条工具链里占哪一段,一份最小的 CMakeLists 由哪些部分组成,以及日常操作的三个动作。</p>
-<h3>三个阶段与它们的分界</h3>
-<p>配置期执行脚本并建立目标图,生成期把目标图展开成构建文件,构建期由构建工具调度编译器与链接器。三者的边界决定了一批写法成不成立。</p>
-<p>这条分界的第一个用处是给报错归类。CMake 的报错带 <code>CMakeLists.txt</code> 的行号,编译器的报错带源文件与列号,链接器的报错只有符号名。归错类之后所做的修改基本不会奏效,因为三者的输入完全不同。</p>
-<p>第二个用处是判断某个信息在哪一步才可知。构建配置、目标的最终输出路径、编译器最终收到的选项,都要到生成期才能确定;凡是配置期就试图读取这类信息的写法,在多配置生成器上一律失效。</p>
-<table style="contain-intrinsic-size:auto 214px">
-<thead><tr><th>判断</th><th>结论</th><th>依据</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>message()</code> 的输出出现在哪里</td><td class="nw">配置阶段的终端,构建时看不到</td><td><code>message</code> 是配置期命令</td></tr>
-<tr><td><code>if(CMAKE_BUILD_TYPE ...)</code> 可靠吗</td><td class="nw">只在单配置生成器上可靠</td><td>多配置生成器的构建类型在构建期才定</td></tr>
-<tr><td class="nw">新增一个 <code>.cpp</code> 会被自动编译吗</td><td>不会,除非 <code>CMakeLists.txt</code> 也改了</td><td>重新配置的触发条件是脚本文件的时间戳</td></tr>
-<tr><td class="nw">改一个头文件会触发相关源文件重编吗</td><td class="nw">会</td><td>编译器写出依赖记录,构建工具消费</td></tr>
-</tbody>
-</table>
-<h3>最小工程的七行各自回答什么</h3>
-<p>七行对应五个问题,真实工程无论多长,每一行仍落在这五类之一。</p>
-<p>七行里有三条结论值得单独记住。<code>cmake_minimum_required</code> 设定的是策略版本而不只是版本下限;<code>project</code> 的 <code>LANGUAGES</code> 与 <code>VERSION</code> 都应当显式写出;语言标准用 <code>target_compile_features</code> 声明而不是手写 <code>-std</code> 选项。</p>
-<p>还有一条形态上的规律:除去前两行与最后一行,中间每一行都是 <code>target_</code> 开头、目标名紧随其后、再跟一个作用域关键字。这个形态是现代写法的外在特征,第 1 章与第 2 章分别讲清它的两个组成部分。</p>
-<table style="contain-intrinsic-size:auto 227px">
-<thead><tr><th>行</th><th>命令</th><th>回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">1</td><td><code>cmake_minimum_required</code></td><td>按哪一版的语义执行,策略基线在哪</td></tr>
-<tr><td class="nw">2</td><td class="nw"><code>project</code></td><td>用哪些语言、工程叫什么、版本是多少</td></tr>
-<tr><td class="nw">3</td><td class="nw"><code>add_executable</code></td><td>要造出什么,由哪些源文件构成</td></tr>
-<tr><td class="nw">4 到 6</td><td><code>target_include_directories</code> 等</td><td>造它需要哪些条件</td></tr>
-<tr><td class="nw">7</td><td class="nw"><code>install</code></td><td>造好之后放到哪里去</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 读不懂的 CMakeLists 先按五个问题归位,再看细节</span><p>拿到一份几百行的脚本,先把每一行归到「策略基线、工程与语言、创建了什么目标、目标需要什么条件、产物去哪里」五类之一。归位之后能立刻看出两件事:这份脚本一共造出几个目标,以及哪些配置没有挂在目标上。第二件事是判断脚本新旧程度的最快手段——大量配置没有挂在目标上,说明它还停留在目录级命令的写法上。</p></div>
-<h3>命令行与目录约定</h3>
-<p>三个动作与一条硬性约定,构成日常操作的全部。三条命令在 Linux、Windows 与 macOS 上写法一致,差别只在路径的拼法与生成器的选择。</p>
-<ul>
-<li><strong>配置</strong>用 <code>cmake -S 源码目录 -B 构建目录</code>,首次配置时用 <code>-G</code> 选生成器,用 <code>-D</code> 写缓存条目。</li>
-<li><strong>构建</strong>用 <code>cmake --build 构建目录</code>,配合 <code>--parallel</code>、<code>--target</code>、<code>--config</code>、<code>--verbose</code>。</li>
-<li><strong>安装</strong>用 <code>cmake --install 构建目录</code>,用 <code>--prefix</code> 在安装时覆盖前缀,打包时改用 <code>DESTDIR</code>。</li>
-<li><strong>构建目录必须与源码目录分开</strong>,并且整体加进版本控制的忽略规则。</li>
-</ul>
-<p>三个动作之外,有两条命令在排查时高频使用:<code>cmake -LH -B 构建目录</code> 列出全部可调选项,<code>cmake --build 构建目录 --verbose</code> 打印编译器真正收到的命令行。前者回答「有什么可以改」,后者回答「改了到底有没有生效」。</p>
-<pre style="contain-intrinsic-size:auto 114px"><code>cmake -LH -B build                        # 列出全部非内部缓存条目与它们的帮助文字
-cmake --build build --verbose             # 打印真实的编译与链接命令行
-cmake --build build --target help         # 列出可用的构建目标,Makefile 生成器可用</code></pre>
-<h3>易错清单</h3>
-<p>下面六条覆盖了初次使用 CMake 时最常见的失败形态,每一条都能追溯到本章的某条机制。</p>
-<table style="contain-intrinsic-size:auto 441px">
-<thead><tr><th>症状</th><th>根因</th><th>修法</th></tr></thead>
-<tbody>
-<tr><td class="nw">在 Windows 上少了一批调试期的宏</td><td>用 <code>if(CMAKE_BUILD_TYPE ...)</code> 判断配置,多配置生成器下落空</td><td>改用生成器表达式 <code>$&lt;CONFIG:Debug&gt;</code>,见第 3 章</td></tr>
-<tr><td class="nw">新增的源文件没有被编译</td><td class="nw">文件躺在磁盘上不触发重新配置</td><td>把它写进目标的源文件列表,见 1.3 节</td></tr>
-<tr><td class="nw">脚本行为与官方文档描述不符</td><td>首行 <code>cmake_minimum_required</code> 版本过低,沿用旧策略</td><td>提高版本号,逐条修掉暴露出来的问题</td></tr>
-<tr><td class="nw">别人克隆仓库后配置失败</td><td>源码目录里残留并提交了 <code>CMakeCache.txt</code></td><td>删掉它与全部 <code>CMakeFiles/</code>,补忽略规则</td></tr>
-<tr><td>改了 <code>set(... CACHE ...)</code> 的默认值不生效</td><td>缓存里已有旧值,不带 <code>FORCE</code> 不覆盖</td><td>命令行用 <code>-D</code> 覆盖,或删掉缓存重新配置</td></tr>
-<tr><td class="nw">换了编译器却仍在用旧的</td><td>编译器路径记在缓存里,环境变量改不动它</td><td>删掉整个构建目录重新配置</td></tr>
-</tbody>
-</table>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 构建目录里的东西全部可以重新生成,源码目录里不能有任何生成物</span><p>判断一次操作是否安全的标准很简单:删掉整个构建目录之后,重新配置与构建能不能完整恢复。如果有任何产物只存在于源码目录、或者只在某次手工步骤之后才出现,这个工程就无法在一台干净的机器上复现构建。这类问题在本机永远暴露不出来,只会在新同事的机器上或 CI 的首次运行中出现。</p></div>
-<p>本章的条目节是 0.4 节:<code>cmake_minimum_required</code>、<code>project</code>、<code>enable_language</code> 与 <code>cmake_policy</code> 的完整形态、参数与策略的四种设定途径都在那里。照写与排错时直接从条目进,判断该不该这么写,回本章前几节的机制。</p>
-<p>第 1 章从目标本身讲起:五种目标各自是什么形态,属性与变量的分界在哪,源文件应当怎么给。第 2 章接着讲这些属性如何沿目标图传播。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45305px;--thin-h:45305px">
+<section class="chapter" style="contain-intrinsic-size:auto 41245px;--thin-h:41245px">
 <h1 id="k1"><span class="part">第 1 章</span>目标与它的属性</h1>
+<p>第 0 章交代了 CMake 生成构建系统的分工,这一章进入它的核心对象:目标。现代 CMake 的全部配置都挂在目标的属性上,变量只是配置期的过场——这条分界立住了,后面九章才有立足点。前四节讲机制:五种目标各自的产物与用法、属性为什么才是真正的状态、源文件怎么给与为什么不用 GLOB、第三方库以导入目标的形态出现;随后两节条目逐条给出定义目标与读写属性的命令写法。</p>
 <h2 id="k1-target">1.1 五种目标:可执行、静态库、动态库、接口库、对象库</h2>
 <p><strong>目标</strong>是 CMake 里唯一的一等公民。它有名字、有类型、有一组属性,并通过依赖边指向别的目标。全书后面所有机制——使用要求的传播、第三方库的引入、安装与导出——都建立在目标之上。</p>
 <p>创建目标的命令只有两条:<code>add_executable</code> 与 <code>add_library</code>。前者造一种,后者造四种。除此之外的 <code>add_custom_target</code> 属于另一类设施,不参与使用要求的传播,留到第 8 章。</p>
@@ -1715,100 +1645,11 @@ message(STATUS <span>"core kind = ${kind}"</span>)</code></pre>
 <p>没有对应物的属性同样重要,它们只描述本目标怎么构建、怎么命名产物,与使用者无关。这一类包括 <code>CXX_STANDARD</code>、<code>OUTPUT_NAME</code>、<code>VERSION</code> 与 <code>SOVERSION</code>、<code>RUNTIME_OUTPUT_DIRECTORY</code>、<code>WIN32_EXECUTABLE</code>、<code>EXCLUDE_FROM_ALL</code>。</p>
 <p>由此得到一条排查路径:使用者报「找不到头文件」或「宏没定义」,先读上游目标的 <code>INTERFACE_</code> 属性;本目标自己编不过,读不带前缀的那一条。两条属性的取值来源不同,混着看会得出相反的结论。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 199px"><span class="t">🔴 直接写 INTERFACE_ 属性绕过了七条命令的作用域检查</span><p><code>set_target_properties(core PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ...)</code> 能工作,但它整条覆盖,而且不会同时更新非接口那一条。工程里若已有 <code>target_include_directories(core PUBLIC ...)</code> 写进去的内容,这一句会把它们全部抹掉,本目标自己的编译命令行却保持原样,于是「库自己编得过、使用者找不到头文件」。真正需要直接写接口属性的场合只有一个:IMPORTED 目标不能用 <code>target_*</code> 命令修改,只能这样设,写法见 1.4 节。</p></div>
-<h2 id="k1-sum">1.7 小结</h2>
-<p>本章确立的是全书的核心对象:目标。五种目标的形态、属性与变量的分界、源文件列表的写法、第三方库的包装方式,四件事共同构成第 2 章讲传播时的前提。</p>
-<h3>五种目标各自的用途</h3>
-<p>五种目标不是并列的选项,它们的使用频率与场合差别很大。</p>
-<table style="contain-intrinsic-size:auto 222px">
-<thead><tr><th>目标</th><th>日常使用频率</th><th>选它的判据</th></tr></thead>
-<tbody>
-<tr><td class="nw">可执行</td><td class="nw">高</td><td>要造一个能运行的程序</td></tr>
-<tr><td class="nw">静态库</td><td class="nw">高</td><td>工程内部的模块划分,不需要单独发布</td></tr>
-<tr><td class="nw">动态库</td><td class="nw">中</td><td>对外发布、需要独立升级、或者插件宿主</td></tr>
-<tr><td class="nw">接口库</td><td class="nw">中</td><td>纯头文件库,或者把一组使用要求打包成一个名字</td></tr>
-<tr><td class="nw">对象库</td><td class="nw">低</td><td>同一批源码要进多个最终产物,且确实想省掉一次编译</td></tr>
-</tbody>
-</table>
-<p>接口库的价值容易被低估。它是「把一组使用要求变成一个可链接名字」的唯一手段,统一警告开关、统一语言标准、统一的清理选项都靠它落地,并且能被安装与导出。</p>
-<p>对象库的价值容易被高估。它省掉的只是一次编译,代价是两个不易察觉的坑:对象文件按直接使用者逐份并入,以及位置无关代码的开关不随使用者传播。收益不明确时优先用静态库。</p>
-<p>五种之外还有两种修饰形态:别名与导入。别名是同一个目标的另一个名字,导入是对外部已有文件的描述。两者都不产生构建规则,但都能出现在 <code>target_link_libraries</code> 的右侧。</p>
-<h3>属性是状态,变量不是</h3>
-<p>这一条是全章的核心结论,三个推论各自对应一类日常问题。</p>
-<ul>
-<li><strong>状态挂在目标上。</strong>包含路径、编译选项、宏定义、链接的库,一律通过 <code>target_*</code> 命令写进目标属性,不经过变量中转。</li>
-<li><strong>变量只做三件事。</strong>作为创建目标时的初值来源、承载配置期的中间计算、通过缓存条目暴露给使用者的开关。</li>
-<li><strong>拿不准就读属性。</strong><code>get_target_property</code> 得到的是实际值,读变量得到的只是「打算设成什么」。</li>
-</ul>
-<table style="contain-intrinsic-size:auto 186px">
-<thead><tr><th>问题</th><th>变量的答案</th><th>属性的答案</th></tr></thead>
-<tbody>
-<tr><td class="nw">影响范围由什么决定</td><td class="nw">命令的书写位置与目录层级</td><td>依赖图,可以用工具查出来</td></tr>
-<tr><td class="nw">拼错名字会怎样</td><td class="nw">静默得到空字符串</td><td>多数命令报错或返回明确的未找到标记</td></tr>
-<tr><td class="nw">能传给使用者吗</td><td class="nw">不能</td><td><code>INTERFACE_</code> 那一半随依赖边传播</td></tr>
-<tr><td class="nw">生成期还在吗</td><td class="nw">不在</td><td>在,并且是生成期唯一的输入</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 每写一行配置先问它挂在哪个目标上,答不上来就说明写错了地方</span><p>这是判断一行 CMake 代码是否合格最快的检验:包含路径挂在哪个目标上、这条编译选项挂在哪个目标上、这个宏挂在哪个目标上。答案是「挂在当前目录上」或者「挂在一个变量里」时,这行代码的影响范围就无法从依赖关系推出来,只能靠通读整棵目录树确定。全书后面每一章的写法,都可以还原成这一句检验。</p></div>
-<p>这条结论还有一个反向用法:读别人的脚本时,先找出配置究竟落在哪里。落在目标属性上的工程可以逐个目标地读懂,落在目录与变量上的工程只能整体通读,两者的维护成本相差一个量级。</p>
-<h3>源文件列表与导入目标</h3>
-<p>两条结论各自有一条机制作为根据。</p>
-<table style="contain-intrinsic-size:auto 164px">
-<thead><tr><th>结论</th><th>根据</th><th>例外</th></tr></thead>
-<tbody>
-<tr><td class="nw">源文件显式列出,不用 <code>file(GLOB)</code></td><td>重新配置的触发条件是脚本文件的时间戳,磁盘上多一个文件不触发</td><td>文件不由自己增删时可用 <code>CONFIGURE_DEPENDS</code>,并注明原因</td></tr>
-<tr><td class="nw">第三方库包装成带命名空间的导入目标</td><td>含 <code>::</code> 的名字一律按目标解析,拼错当场报错</td><td>没有</td></tr>
-</tbody>
-</table>
-<p>导入目标的形态在第 4 章会反复出现:<code>find_package</code> 成功后交出来的就是它,只不过由库的作者或查找模块代为构造。看得懂手写版本,读别人的配置文件时就不会把它当成黑盒。</p>
-<p>手写导入目标的三步——定位文件、挂使用要求、交出一个带命名空间的名字——在第 4 章会以多种形式再次出现:查找模块是自动化的第一步与第二步,配置文件是库作者预先写好的第二步与第三步。</p>
-<h3>判据速查</h3>
-<p>下表把本章的结论按「遇到什么情形」正查一遍。每一行的做法都能回到前面某一节的机制,不需要单独记忆。</p>
-<table style="contain-intrinsic-size:auto 301px">
-<thead><tr><th>情形</th><th>做法</th></tr></thead>
-<tbody>
-<tr><td class="nw">需要同一批源码产出静态库与动态库</td><td>建两个库目标,或用对象库复用编译产物,并打开位置无关代码</td></tr>
-<tr><td class="nw">工程要统一警告开关</td><td>建一个接口库,由需要的目标链接,不要写 <code>CMAKE_CXX_FLAGS</code></td></tr>
-<tr><td class="nw">需要按平台选择实现文件</td><td>用条件分支显式加进目标,不要靠通配匹配文件名</td></tr>
-<tr><td class="nw">第三方库只提供头文件</td><td>用 <code>INTERFACE IMPORTED</code> 或接口库包装</td></tr>
-<tr><td class="nw">第三方库在 Windows 上是动态库</td><td><code>SHARED IMPORTED</code>,<code>IMPORTED_IMPLIB</code> 指向 <code>.lib</code>,<code>IMPORTED_LOCATION</code> 指向 <code>.dll</code></td></tr>
-<tr><td class="nw">第三方库有调试版与发布版</td><td>设 <code>IMPORTED_CONFIGURATIONS</code> 与带配置后缀的 <code>IMPORTED_LOCATION_*</code></td></tr>
-<tr><td class="nw">不确定某个设置有没有生效</td><td><code>get_target_property</code> 读属性,或 <code>cmake --build --verbose</code> 看真实命令行</td></tr>
-</tbody>
-</table>
-<p>本章的写法可以压缩成一段模板。下面这段是一个库加一个使用者的标准形态,后面各章的扩展都从它出发。</p>
-<pre style="contain-intrinsic-size:auto 304px"><code>cmake_minimum_required(VERSION 3.20)
-project(demo VERSION 0.1.0 LANGUAGES CXX)
-
-add_library(core src/core.cpp)            # 类型交给 BUILD_SHARED_LIBS 决定
-add_library(demo::core ALIAS core)        # 补上带命名空间的别名
-target_include_directories(core PUBLIC include)
-target_compile_features(core PUBLIC cxx_std_17)
-
-add_executable(app src/main.cpp)
-target_link_libraries(app PRIVATE demo::core)</code></pre>
-<p>这段里唯一还没有讲清的是 <code>PUBLIC</code> 与 <code>PRIVATE</code> 的选择依据,以及 <code>core</code> 的包含路径为什么能自动出现在 <code>app</code> 的编译命令行上。两个问题都由第 2 章回答。</p>
-<h3>易错清单</h3>
-<table style="contain-intrinsic-size:auto 594px">
-<thead><tr><th>症状</th><th>根因</th><th>修法</th></tr></thead>
-<tbody>
-<tr><td class="nw">两个子目录里的目标同名,配置期报错</td><td>目标名在整个构建里唯一,与目录无关</td><td>给目标加工程前缀,或改用 <code>find_package</code> 引入第三方</td></tr>
-<tr><td class="nw">新增的源文件没有被编译</td><td><code>file(GLOB)</code> 在配置期扫描一次,不触发重新配置</td><td>显式列出源文件</td></tr>
-<tr><td>链接期报 <code>recompile with -fPIC</code></td><td>对象库没有打开 <code>POSITION_INDEPENDENT_CODE</code></td><td>在对象库上显式设置该属性</td></tr>
-<tr><td class="nw">同一个符号重复定义</td><td>对象库被依赖树上多条路径直接链接,对象文件并入多份</td><td>只让一个目标直接链接对象库</td></tr>
-<tr><td>在顶层设了 <code>CMAKE_CXX_STANDARD</code>,某个目标却是旧标准</td><td class="nw">那个目标在设值之前就被创建了</td><td>把设值提到 <code>add_subdirectory</code> 之前,或直接设目标属性</td></tr>
-<tr><td>第三方库在一个子目录能用,另一个子目录报找不到目标</td><td>导入目标默认只在定义它的目录及其子目录可见</td><td>把 <code>find_package</code> 提到顶层执行</td></tr>
-<tr><td>链接期报 <code>cannot find -lfoo</code>,而脚本里明明写了这个库</td><td>名字不带 <code>::</code>,拼错后被当成裸库名交给链接器</td><td>统一使用带命名空间的别名或导入目标</td></tr>
-<tr><td class="nw">Windows 上链接第三方动态库报找不到库</td><td>只设了 <code>IMPORTED_LOCATION</code> 指向 DLL</td><td>补设 <code>IMPORTED_IMPLIB</code> 指向导入库</td></tr>
-</tbody>
-</table>
-<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 编译能过不等于配置写对,链接期与运行期才暴露的问题占多数</span><p>本章列出的八条易错项里,只有两条在配置期报错,其余六条要到链接期甚至运行期才显形。这个分布决定了排查策略:不要等到出问题才去读配置,而要在写的时候就守住「每一行配置都挂在某个目标上」这条线。挂在目标上的配置可以被 <code>get_target_property</code> 查出来,可以被依赖图工具画出来;铺在目录上或藏在变量里的配置,只能靠通读。</p></div>
-<p>八条里有五条与平台相关:两条是 Windows 特有,一条在 Linux 上才暴露,两条三平台通用。跨平台工程的一条实践是在提交前至少在两个平台上各配置一次,配置期的差异往往比构建期的差异更早暴露问题。</p>
-<p>本章的条目节是 1.5 与 1.6 两节:1.5 节给出 <code>add_executable</code>、<code>add_library</code>、<code>add_custom_target</code> 与 <code>add_dependencies</code> 的完整形态与参数,1.6 节给出五条通用属性读写命令与 <code>INTERFACE_</code> 前缀属性的对照表。照写时从条目进,判断对错时回 1.1 到 1.4 节的机制。</p>
-<p>第 2 章接着回答本章留下的问题:目标属性里带 <code>INTERFACE_</code> 前缀的那一半究竟怎么传给使用者,三个作用域关键字按什么判据选择,以及一个关键字写错会波及多大范围。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 47933px;--thin-h:47933px">
+<section class="chapter" style="contain-intrinsic-size:auto 44094px;--thin-h:44094px">
 <h1 id="k2"><span class="part">第 2 章</span>使用要求的传播</h1>
+<p>目标立起来之后,下一个问题是配置怎么在目标之间流动。这一章讲现代 CMake 的第二块地基:使用要求——一个目标对使用者提出的条件,写在属性上,沿依赖边自动传播。前四节按机制展开:使用要求是什么、<code>PRIVATE</code>、<code>PUBLIC</code>、<code>INTERFACE</code> 的判据、头文件路径与两个 INTERFACE 生成器表达式、一个 PUBLIC 写错怎样波及整棵依赖树;随后两节条目收录七件套命令与编译链接相关的目标属性。</p>
 <h2 id="k2-why">2.1 使用要求:一个目标对使用者提出的条件</h2>
 <p><strong>使用要求</strong>是一个目标对它的使用者提出的条件:谁要用这个目标,谁的编译与链接命令行上就必须带上这些东西。这是现代 CMake 的第二块地基,第一块是第 1 章的目标与属性。</p>
 <p>一个具体例子。库 <code>core</code> 的公开头文件里写了 <code>#include &lt;core/config.hpp&gt;</code>,那么任何包含这个头文件的编译单元都需要 <code>core</code> 的头文件根目录出现在自己的搜索路径上。这就是一条使用要求。</p>
@@ -2666,96 +2507,11 @@ target_link_libraries(app PRIVATE core)
 set_target_properties(core PROPERTIES CXX_CLANG_TIDY <span>""</span>)</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 把静态分析钩子设成空字符串就能对单个目标关掉</span><p>CXX_CLANG_TIDY 一类属性的值是一条命令行,空值表示不插入任何命令。顶层统一打开、个别目标单独置空,比在顶层写一长串 if 判断要清楚。生成的代码目标、第三方源码目标通常都需要这样单独关掉,否则分析器会对着自动生成的文件报出大量无法修复的问题。</p></div>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 作业池只对 Ninja 生成器有意义</span><p>JOB_POOL_COMPILE 与 JOB_POOL_LINK 引用的池由全局属性 JOB_POOLS 定义,用来限制某一类任务的并发数,典型场景是内存吃紧的链接步骤不允许同时跑太多个。Makefile 与 IDE 生成器不理解这套机制,设了不报错也不起作用。是否需要它,先看 10.1 节的量化办法确认瓶颈在链接期。</p></div>
-<h2 id="k2-sum">2.7 小结</h2>
-<p>本章确立的是全书的第二块地基:使用要求,以及它沿目标图的传播规则。第 1 章说清了状态存放在哪里,本章说清了状态怎么流动。</p>
-<h3>使用要求与承载它的属性</h3>
-<p>使用要求是一个目标对使用者提出的条件,共五类,各由一个 <code>INTERFACE_</code> 开头的属性承载。判断某件事是不是使用要求,只问一句:使用者不做这件事会不会出错。</p>
-<table style="contain-intrinsic-size:auto 227px">
-<thead><tr><th>类别</th><th>属性</th><th>写它的命令</th></tr></thead>
-<tbody>
-<tr><td class="nw">包含路径</td><td><code>INTERFACE_INCLUDE_DIRECTORIES</code></td><td><code>target_include_directories</code></td></tr>
-<tr><td class="nw">宏定义</td><td><code>INTERFACE_COMPILE_DEFINITIONS</code></td><td><code>target_compile_definitions</code></td></tr>
-<tr><td class="nw">编译选项</td><td><code>INTERFACE_COMPILE_OPTIONS</code></td><td><code>target_compile_options</code></td></tr>
-<tr><td class="nw">要一起链接的库</td><td><code>INTERFACE_LINK_LIBRARIES</code></td><td><code>target_link_libraries</code></td></tr>
-<tr><td class="nw">语言标准与编译特性</td><td><code>INTERFACE_COMPILE_FEATURES</code></td><td><code>target_compile_features</code></td></tr>
-</tbody>
-</table>
-<p>传播的载体是 <code>target_link_libraries</code>:它建立依赖边,生成期沿边收集各目标的 <code>INTERFACE_</code> 属性,做一次传递闭包。收集发生在生成期,因此脚本的书写顺序不影响结果。</p>
-<p>五类之外还有几个使用要求属性:链接选项、链接目录、位置无关代码,以及让使用者一并编译某些源文件的接口源文件。它们的写法与五类完全一致,用到的场合少得多。</p>
-<p>传播的是属性引用而不是文本快照。这条性质带来两个结果:脚本里 <code>target_link_libraries</code> 与 <code>target_include_directories</code> 的先后次序不影响结果;库的使用要求后来发生变化时,全部使用者自动跟随,不需要各自改一遍。</p>
-<h3>三个关键字的判据</h3>
-<p>一句话判据加一条兜底规则,覆盖全部情形。</p>
-<ul>
-<li><strong>出现在公开头文件里就是 <code>PUBLIC</code></strong>,因为它会进入使用者的编译单元。</li>
-<li><strong>只出现在实现文件里就是 <code>PRIVATE</code></strong>,因为使用者看不到实现文件。</li>
-<li><strong>自己根本不用、只给别人就是 <code>INTERFACE</code></strong>,接口库上只有这一种可能。</li>
-<li><strong>拿不准先写 <code>PRIVATE</code></strong>,写窄了当场报错,写宽了永远不报错。</li>
-</ul>
-<table style="contain-intrinsic-size:auto 151px">
-<thead><tr><th>关键字</th><th>写进哪些属性</th><th>自己编译时生效</th><th>使用者编译时生效</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>PRIVATE</code></td><td>不带前缀的那个</td><td>是</td><td>否</td></tr>
-<tr><td class="nw"><code>INTERFACE</code></td><td>带 <code>INTERFACE_</code> 前缀的那个</td><td>否</td><td>是</td></tr>
-<tr><td class="nw"><code>PUBLIC</code></td><td>两个都写</td><td>是</td><td>是</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 PUBLIC 不是第三种作用域,而是 PRIVATE 与 INTERFACE 的并集</span><p>把 <code>PUBLIC</code> 理解成并集之后,一批看起来需要记忆的规则就变成可以推导的:接口库上不能写 <code>PUBLIC</code>,因为并集里有一半是空转;<code>PUBLIC</code> 依赖同时出现在自己和使用者的命令行上,因为两个属性都写了;把 <code>PUBLIC</code> 改成 <code>PRIVATE</code> 只影响使用者那一半,自己的编译命令行不变。任何关于三个关键字的疑问,都可以还原成「写进哪个属性」这一个问题。</p></div>
-<p>三个关键字在 <code>target_link_libraries</code> 上还多一层含义:是否把这个库放进自己的链接命令行。<code>PRIVATE</code> 链接而不传播,<code>INTERFACE</code> 传播而不链接,<code>PUBLIC</code> 两者都做。</p>
-<h3>头文件路径的两个生成器表达式</h3>
-<p>一个库有两类使用者:同一次构建里的其他目标,以及安装之后通过 <code>find_package</code> 拿到它的外部工程。两类使用者看到的头文件位置不同,这是两个生成器表达式存在的全部理由。</p>
-<p>包含路径是唯一需要区分构建树与安装树的一类使用要求,写法是一段可以直接抄的模板。</p>
-<pre style="contain-intrinsic-size:auto 223px"><code># 可以直接抄的形态。假设公开头文件在 ${CMAKE_CURRENT_SOURCE_DIR}/include 下
-target_include_directories(core
-    PUBLIC
-      $&lt;BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include&gt;
-      $&lt;INSTALL_INTERFACE:include&gt;
-    PRIVATE
-      src)</code></pre>
-<table style="contain-intrinsic-size:auto 161px">
-<thead><tr><th>写法</th><th>构建树里的使用者</th><th>安装树里的使用者</th></tr></thead>
-<tbody>
-<tr><td class="nw">两个表达式成对写</td><td class="nw">拿到源码目录的绝对路径</td><td>拿到安装前缀下的路径</td></tr>
-<tr><td>只写 <code>$&lt;BUILD_INTERFACE:...&gt;</code></td><td class="nw">正常</td><td>包含路径为空,报找不到头文件</td></tr>
-<tr><td class="nw">两个都不写,直接给绝对路径</td><td class="nw">正常</td><td>拿到构建机上的路径,或在导出时被 CMake 拦下</td></tr>
-<tr><td class="nw"></td></tr>
-</tbody>
-</table>
-<p><code>SYSTEM</code> 关键字是包含路径上的另一个常用修饰:标记为系统包含目录之后,编译器不对来自这些目录的头文件报警告。判据是这些头文件归不归自己维护,不归自己维护才加。</p>
-<h3>排查手段</h3>
-<p>五个问题对应五种手段。它们的共同前提是配置已经挂在目标上——铺在目录属性或藏在变量里的配置,这五种手段全部查不出来。</p>
-<table style="contain-intrinsic-size:auto 253px">
-<thead><tr><th>问题</th><th>手段</th><th>命令或做法</th></tr></thead>
-<tbody>
-<tr><td class="nw">这个库对外承诺了什么</td><td class="nw">读接口属性</td><td><code>get_target_property</code> 读 <code>INTERFACE_*</code>,配合 <code>BUILDSYSTEM_TARGETS</code> 遍历</td></tr>
-<tr><td class="nw">这条依赖波及多大范围</td><td class="nw">画依赖图</td><td><code>cmake --graphviz=deps.dot -S . -B build</code></td></tr>
-<tr><td class="nw">某个目标实际拿到了什么</td><td class="nw">看真实命令行</td><td><code>cmake --build build --verbose --target 目标名</code></td></tr>
-<tr><td class="nw">某个设置到底生效没有</td><td class="nw">读目标属性</td><td><code>get_target_property</code> 加 <code>message</code></td></tr>
-<tr><td class="nw">装出去的包在别人那边能不能用</td><td class="nw">独立工程试用</td><td>安装到干净前缀,再用一个空工程 <code>find_package</code></td></tr>
-</tbody>
-</table>
-<p>五种手段里前三种在开发过程中随时可用,后两种适合在发布前作为固定步骤。把最后一种写进发布流程尤其重要,因为构建树里的路径永远是对的,安装树的问题只有在别的工程里才会显形。</p>
-<h3>易错清单</h3>
-<table style="contain-intrinsic-size:auto 542px">
-<thead><tr><th>症状</th><th>根因</th><th>修法</th></tr></thead>
-<tbody>
-<tr><td class="nw">使用者编译时报找不到库的第三方头文件</td><td>该 <code>PUBLIC</code> 的依赖写成了 <code>PRIVATE</code></td><td>改成 <code>PUBLIC</code></td></tr>
-<tr><td class="nw">构建一切正常,但依赖面比脚本上写的宽</td><td>该 <code>PRIVATE</code> 的依赖写成了 <code>PUBLIC</code></td><td>按 2.4 节的顺序整改,从叶子往根改</td></tr>
-<tr><td class="nw">去掉一个第三方库时报出几十处找不到它的头文件</td><td>使用者靠传播过来的包含路径直接用了第三方</td><td>每个目标自己声明用到的库</td></tr>
-<tr><td class="nw">安装出去的包在使用者那边包含路径为空</td><td>只写了 <code>$&lt;BUILD_INTERFACE:...&gt;</code></td><td>补上 <code>$&lt;INSTALL_INTERFACE:...&gt;</code></td></tr>
-<tr><td><code>install(EXPORT ...)</code> 报接口包含路径指向源码目录</td><td>直接写了绝对路径,没有用生成器表达式</td><td>改成两个表达式成对的形态</td></tr>
-<tr><td class="nw">接口库上写 <code>PUBLIC</code> 报错</td><td>接口库不编译源文件,不带前缀的那一半属性无处生效</td><td>改成 <code>INTERFACE</code></td></tr>
-<tr><td class="nw">构建日志被第三方头文件的警告淹没</td><td>第三方包含路径没有标记为系统目录</td><td>加 <code>SYSTEM</code> 关键字</td></tr>
-<tr><td>私有成员的类型对应的依赖写了 <code>PRIVATE</code>,使用者编译失败</td><td>私有成员仍参与对象布局,头文件必须能编译</td><td>改成 <code>PUBLIC</code>,或用指针加前置声明把类型挪出头文件</td></tr>
-</tbody>
-</table>
-<div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">🟡 「库的文档告诉使用者要自己加包含路径」这套做法应当随老工程一起退场</span><p>旧写法把使用要求写在文档里,由每个使用者在自己的脚本里重复一遍。三个后果:文档与实际不同步时没有任何机制发现;库新增一条必需的宏或选项时要通知所有使用者;使用者拼错一处只在自己那边报错,库的作者看不到。把使用要求写进 <code>INTERFACE_</code> 属性之后,这三件事都由构建系统承担,文档只需要写一行「链接 <code>proj::core</code>」。</p></div>
-<p>八条易错项里有三条属于同一个根因:关键字的选择没有回到「出现在哪里」这条判据上。剩下五条分别与生成器表达式、接口库的限制、系统包含目录和对象布局有关,各自对应本章的一个小节。</p>
-<p>本章的条目节是 2.5 与 2.6 两节:2.5 节是七条 <code>target_*</code> 命令的完整形态与参数,2.6 节把编译与链接相关的目标属性连同初值来源列成表。查参数与属性名从条目进,判断关键字选得对不对,回 2.2 节与 2.4 节。</p>
-<p>第 3 章接着讲变量、作用域与生成器表达式:本章反复出现的 <code>$&lt;BUILD_INTERFACE:...&gt;</code> 属于生成器表达式家族,那一章会给出它们的完整求值规则,以及为什么它们必须等到生成期。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 75362px;--thin-h:75362px">
+<section class="chapter" style="contain-intrinsic-size:auto 67510px;--thin-h:67510px">
 <h1 id="k3"><span class="part">第 3 章</span>变量、控制流与生成器表达式</h1>
+<p>前两章把状态放在目标属性上,但属性里的值总要从某处来,这一章讲供值的三套机制:变量、控制流与生成器表达式。贯穿的主线是求值时机——普通变量与缓存变量在配置期定值,生成器表达式到生成期才求值,「设了没反应」「改了不生效」多半出自混淆这两个时刻。三节机制讲三种变量的优先级、缓存为什么会粘住、$&lt;...&gt; 的分界;其后六节条目覆盖控制流、函数与宏、变量与列表、字符串与文件、内建变量,以及生成器表达式五类一览。</p>
 <h2 id="k3-var">3.1 普通变量、缓存变量与环境变量,以及它们的优先级</h2>
 <p>目标是现代 CMake 的主角,但目标属性上的值总要从某处取。CMake 能存值的地方只有三处:普通变量、缓存变量、环境变量。三者的写法接近,存活范围、写入时机与覆盖规则却完全不同。</p>
 <p>三者混用的后果有固定形态:命令行传了 <code>-D</code> 却不生效、子目录里改了变量父目录读不到、配置期读得到的环境变量到了编译命令里又消失。每一种都对应下面某一条规则被违反。</p>
@@ -4006,168 +3762,11 @@ file(GENERATE
     OUTPUT  <span>"${CMAKE_BINARY_DIR}/app-includes-$&lt;CONFIG&gt;.txt"</span>
     CONTENT <span>"$&lt;JOIN:$&lt;REMOVE_DUPLICATES:$&lt;TARGET_PROPERTY:app,INCLUDE_DIRECTORIES&gt;&gt;,\n&gt;\n"</span>)</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 响应文件与工具参数用 JOIN 拼,不要在配置期拼</span><p>传播后的头文件路径列表在配置期还不完整,配置期拼出来的内容会漏掉依赖带过来的那部分。$<JOIN:$<TARGET_PROPERTY:...>,分隔符> 在生成期拿到完整值再拼,结果与编译器实际收到的一致。给外部工具生成参数文件、给编辑器生成索引配置,都应当走这条路。</p></div>
-<h2 id="k3-sum">3.10 小结</h2>
-<p>这一章的全部内容可以压成两句话:<strong>值存在三个地方,查找顺序是普通变量、缓存、空串;命令在配置期跑完,生成器表达式在生成期才展开。</strong>本章列出的每一种失效形态,都能追回到这两句话中的某一条被违反。</p>
-<p>本章的条目节是 3.4 到 3.9 六节:条件与循环、函数宏与包含、变量列表与选项、字符串与文件、项目路径变量、生成器表达式五类一览。写法与参数从条目进,判断该不该这么写,回 3.1 到 3.3 节的机制。</p>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 640px">
-<thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td class="nw">三种变量的存放位置与存活范围各不相同</td><td class="nw">3.1</td><td>普通变量在作用域里、缓存在构建目录里、环境变量在进程里</td></tr>
-<tr><td class="nw">普通变量遮蔽同名缓存变量</td><td class="nw">3.1</td><td>命令行 <code>-D</code> 失效的头号原因</td></tr>
-<tr><td><code>set(... CACHE ...)</code> 只在缓存里没有该项时写入</td><td class="nw">3.1</td><td><code>FORCE</code> 会剥夺使用者的配置权</td></tr>
-<tr><td><code>add_subdirectory</code> 与 <code>function</code> 各新建一层作用域</td><td class="nw">3.1</td><td><code>macro</code> 不新建</td></tr>
-<tr><td class="nw"><code>PARENT_SCOPE</code> 只写父层</td><td class="nw">3.1</td><td>本层要用就得再写一行</td></tr>
-<tr><td class="nw"><code>if()</code> 会把未加引号的实参当变量名解一次</td><td class="nw">3.1</td><td>所以 <code>if(${X})</code> 解了两次</td></tr>
-<tr><td>假值常量包含空串与 <code>-NOTFOUND</code> 结尾的字符串</td><td class="nw">3.1</td><td><code>if(X)</code> 分不出「没定义」与「设成 OFF」</td></tr>
-<tr><td class="nw">缓存会粘住,改了工程不一定生效</td><td class="nw">3.2</td><td>删构建目录是唯一可靠的清法</td></tr>
-<tr><td class="nw"><code>Foo_DIR</code> 缓存住之后不会重新查找</td><td class="nw">3.2</td><td>升级库之后一律重建构建目录</td></tr>
-<tr><td class="nw">库工程的缓存开关必须加工程名前缀</td><td class="nw">3.2</td><td>否则与上层工程共用一个值</td></tr>
-<tr><td class="nw">生成器表达式在生成期求值</td><td class="nw">3.3</td><td>那时 <code>if()</code> 早已跑完</td></tr>
-<tr><td>多配置生成器下 <code>CMAKE_BUILD_TYPE</code> 为空</td><td class="nw">3.3</td><td>按它写 <code>if()</code> 永远不成立</td></tr>
-<tr><td class="nw">不支持生成器表达式的命令把它当普通字符串</td><td class="nw">3.3</td><td>不报错,静默出错</td></tr>
-<tr><td>产物路径只能用 <code>$&lt;TARGET_FILE:...&gt;</code> 取</td><td class="nw">3.3</td><td>手工拼路径换平台即错</td></tr>
-</tbody>
-</table>
-<h3>症状到根因的对照</h3>
-<table style="contain-intrinsic-size:auto 392px">
-<thead><tr><th>症状</th><th>最可能的根因</th><th>下一步</th></tr></thead>
-<tbody>
-<tr><td class="nw">命令行 <code>-DX=ON</code> 没有任何反应</td><td class="nw">工程里有同名普通变量遮蔽</td><td>同时打印 <code>${X}</code> 与 <code>$CACHE{X}</code></td></tr>
-<tr><td class="nw">改了 <code>option()</code> 的默认值,重新配置后不变</td><td class="nw">缓存里已有该项</td><td><code>cmake -U X -B build</code> 或删构建目录</td></tr>
-<tr><td class="nw">子目录里设的变量,父目录读不到</td><td class="nw">作用域是自上而下单向的</td><td>改用 <code>PARENT_SCOPE</code> 或缓存,或改成目标属性</td></tr>
-<tr><td>函数里 <code>PARENT_SCOPE</code> 之后本层拿到空值</td><td><code>PARENT_SCOPE</code> 不写本层</td><td>本层先设一次,再送父层</td></tr>
-<tr><td class="nw">IDE 里构建的产物与命令行的不一致</td><td>按 <code>CMAKE_BUILD_TYPE</code> 写了 <code>if()</code></td><td>改成 <code>$&lt;CONFIG:...&gt;</code></td></tr>
-<tr><td><code>message()</code> 打印出的是 <code>$&lt;...&gt;</code> 原文</td><td class="nw">该位置不支持生成器表达式</td><td>改用 <code>file(GENERATE)</code> 查看</td></tr>
-<tr><td class="nw">同一提交在两台机器上构建结果不同</td><td class="nw">工程里读了 <code>$ENV{}</code></td><td>改成缓存变量加 <code>CMakePresets.json</code></td></tr>
-<tr><td class="nw">换编译器之后行为没变</td><td class="nw">编译器路径锁在缓存里</td><td>新建构建目录</td></tr>
-</tbody>
-</table>
-<h3>一份能把本章结论全部验证一遍的最小工程</h3>
-<p>三种变量的优先级、作用域的方向、生成器表达式的求值时机,都可以用一份不需要编译器的工程验证。把下面这段存成 <code>CMakeLists.txt</code>,配置一次即可看到全部结论。</p>
-<pre style="contain-intrinsic-size:auto 739px"><code>cmake_minimum_required(VERSION 3.20)
-project(varlab LANGUAGES NONE)
-
-# 一、普通变量遮蔽缓存变量
-option(VARLAB_FAST <span>"打开快速路径"</span> OFF)
-set(VARLAB_FAST ON)
-message(STATUS <span>"1 读到=${VARLAB_FAST}  缓存=$CACHE{VARLAB_FAST}"</span>)
-
-# 二、<span class="kw">if</span>() 的实参会被当变量名解一次
-set(NAME_OF_FLAG VARLAB_FAST)
-<span class="kw">if</span>(${NAME_OF_FLAG})
-  message(STATUS <span>"2 判断落到了 VARLAB_FAST 上,不是字符串本身"</span>)
-endif()
-
-# 三、假值常量:空串、0、OFF、以 -NOTFOUND 结尾的字符串都为假
-set(EMPTY <span>""</span>)
-<span class="kw">if</span>(NOT EMPTY)
-  message(STATUS <span>"3 if(NOT EMPTY) 成立:空串是假值常量"</span>)
-endif()
-<span class="kw">if</span>(DEFINED EMPTY)
-  message(STATUS <span>"3 DEFINED EMPTY 为真:定义过,只是值为空"</span>)
-endif()
-
-# 四、生成器表达式在配置期不求值
-message(STATUS <span>"4 配置期打印:$&lt;CONFIG&gt;"</span>)
-file(GENERATE OUTPUT <span>"${CMAKE_BINARY_DIR}/genex.txt"</span> CONTENT <span>"生成期求值:$&lt;CONFIG&gt;\n"</span>)</code></pre>
-<p>运行 <code>cmake -B build</code> 之后逐条对照:第 1 行两个值不同,证明遮蔽存在;第 2 行成立,证明 <code>if(${X})</code> 解了两次;第 4 行打印出的是 <code>$&lt;CONFIG&gt;</code> 五个字符的原文,而 <code>build/genex.txt</code> 里是求值之后的配置名。</p>
-<p><code>project()</code> 写了 <code>LANGUAGES NONE</code>,所以这份工程在没有安装任何编译器的机器上也能配置成功,适合放进持续集成里当作 CMake 语言行为的回归测试。</p>
-<h3>一条写变量时的自查流程</h3>
-<ol>
-<li><strong>这个值是给使用者调的吗?</strong>是,用 <code>option()</code> 或 <code>set(... CACHE ...)</code>,名字加工程前缀;不是,用普通变量,并确认它不与任何缓存项重名。</li>
-<li><strong>它需要跨目录吗?</strong>需要,优先考虑挂到目标属性上;确实只能用变量时,用 <code>PARENT_SCOPE</code> 显式传,不要靠缓存当全局变量。</li>
-<li><strong>它在判断里出现吗?</strong>判断「有没有设过」写 <code>if(DEFINED X)</code>;判断「开没开」写 <code>if(X)</code>;做字符串比较两边都加引号。</li>
-<li><strong>它会随配置变化吗?</strong>会,一律用 <code>$&lt;CONFIG:...&gt;</code>,不要用 <code>CMAKE_BUILD_TYPE</code> 做判断。</li>
-<li><strong>它是路径吗?</strong>目标产物的路径用 <code>$&lt;TARGET_FILE:...&gt;</code> 系列;安装位置用 <code>GNUInstallDirs</code> 提供的变量;两者都不要手工拼。</li>
-<li><strong>它来自环境吗?</strong>只允许用来探测,不允许用来配置。配置一律进缓存或预设文件。</li>
-</ol>
-<h3>三个仍然常见的误解</h3>
-<ul>
-<li><strong>「变量是 CMake 的状态载体。」</strong>不是。现代 CMake 的状态在目标属性上,变量只是计算属性值时的临时容器。判断一段配置写得好不好,看的是它有没有把状态最终落到目标上,而不是变量组织得多整齐。</li>
-<li><strong>「生成器表达式是一种高级写法,能用变量就不用它。」</strong>反了。凡是与配置、编译器、目标产物路径相关的取值,变量表达不了,生成器表达式是唯一正确的手段;把它当成可选的语法糖,得到的是「在我这台机器上是对的」。</li>
-<li><strong>「缓存里的值就是工程当前用的值。」</strong>不一定。同名普通变量会遮蔽它,而图形界面显示的是缓存那一份。两者不一致时,以 <code>${X}</code> 打印出来的为准。</li>
-</ul>
-<h3>脚本化的三条边界</h3>
-<p>CMake 是一门完整的脚本语言,但它的执行时机只有一个:配置期。写进 <code>CMakeLists.txt</code> 的每一行都在 <code>cmake -S . -B build</code> 那一次运行里执行完毕,之后无论构建多少次都不会再跑。这条时机上的限制,决定了哪些事适合写进 CMake。</p>
-<p>三条边界由此而来:该写进 CMake 的、该交给外部脚本的、以及根本不该在配置期做的。判据不是「难不难写」,而是「结果什么时候会变」。</p>
-<table style="contain-intrinsic-size:auto 225px">
-<thead><tr><th>边界</th><th>内容</th><th>判据</th></tr></thead>
-<tbody>
-<tr><td class="nw">写进 CMake</td><td>目标、依赖、使用要求、安装规则、按平台与编译器的分流</td><td>结果直接决定构建图的形状,并且在配置期就已经确定</td></tr>
-<tr><td class="nw">交给外部脚本</td><td>文本处理、数据转换、代码生成、需要重复执行的动作</td><td>输入在配置之后还会变,或者逻辑长到 CMake 的字符串命令写不清楚</td></tr>
-<tr><td class="nw">不在配置期做</td><td>联网、写源码目录、跑测试、取时间戳与提交号、装东西到系统目录</td><td>要么有副作用,要么取到的值会过期,要么让配置本身变得不可复现</td></tr>
-</tbody>
-</table>
-<p>每一行的判据都可以单独使用,不需要读上下文。下表按「要做的事」正查,「放错了会怎样」一列写的是实际观察到的现象,而不是原理。</p>
-<table style="contain-intrinsic-size:auto 1148px">
-<thead><tr><th>要做的事</th><th>写在哪里</th><th>判据</th><th>放错了会怎样</th></tr></thead>
-<tbody>
-<tr><td class="nw">声明目标、依赖与使用要求</td><td><code>CMakeLists.txt</code></td><td>结果就是构建图本身</td><td>—</td></tr>
-<tr><td class="nw">按平台或编译器分流选项</td><td><code>CMakeLists.txt</code>,能推迟就用生成器表达式</td><td>条件在配置期已知</td><td>配置期定死之后,多配置生成器下只有一种配置是对的</td></tr>
-<tr><td class="nw">从 <code>VERSION</code> 文件或头文件里抠版本号</td><td><code>CMakeLists.txt</code> 的 <code>file(STRINGS)</code></td><td>输入是版本控制里的文件,改了就该重新配置</td><td>—</td></tr>
-<tr><td class="nw">用数据表生成 <code>.cpp</code></td><td>外部脚本加 <code>add_custom_command</code>(8.2)</td><td>数据表还会变,每次变都要重新生成</td><td>写进配置期时,改数据表不会触发重新生成,除非手动重配</td></tr>
-<tr><td class="nw">二十行以上的文本处理</td><td>独立的 <code>cmake -P</code> 脚本或别的语言</td><td>CMake 的字符串命令没有函数组合能力,写长了无法调试</td><td>逻辑埋在 <code>CMakeLists.txt</code> 里,出错只能靠 <code>message</code> 逐行打印</td></tr>
-<tr><td class="nw">取第三方依赖</td><td><code>FetchContent</code> 或包管理器(4.4)</td><td>需要缓存、哈希校验与离线复现</td><td><code>file(DOWNLOAD)</code> 在离线机器上直接让配置失败</td></tr>
-<tr><td class="nw">跑测试</td><td>CTest(8.3)</td><td>测试要能单独重跑、并行、按名字筛选</td><td>写进配置期时每次配置都跑一遍,而且没有报告</td></tr>
-<tr><td class="nw">探测编译器是否支持某个选项</td><td><code>check_cxx_compiler_flag</code> 一族</td><td>结果进缓存,只探一次</td><td>自己拼 <code>execute_process</code> 调编译器,换一个编译器就要重写</td></tr>
-<tr><td class="nw">取提交号与构建时间</td><td>构建期的自定义命令(8.2)</td><td>值在配置之后还会变</td><td>配置期取一次,二进制里的版本信息长期停在旧值上</td></tr>
-<tr><td class="nw">往源码目录写文件</td><td>不做,一律写构建目录</td><td>源码目录在配置期应当只读</td><td>污染工作区;两个构建目录用不同选项配置时互相覆盖</td></tr>
-<tr><td class="nw">遍历目录收集源文件</td><td>显式列出(1.3)</td><td>文件集合的改动应当出现在版本控制的 diff 里</td><td>新增文件不重新配置就编不进去,链接期才报符号未定义</td></tr>
-<tr><td class="nw">长耗时的计算或扫描</td><td>结果缓存进 <code>CACHE INTERNAL</code>,或挪到构建期</td><td>只有「探测一次就不会变」的事实才配进缓存</td><td>每次重新配置都要等一遍,IDE 里表现为频繁卡顿</td></tr>
-<tr><td class="nw">拿当前 shell 的环境变量当配置</td><td>做成缓存变量或 CMakePresets.json 里的显式参数(7.3)</td><td>环境只用来探测,不用来配置</td><td>换一个终端、换一次 CI 就得到不同的构建</td></tr>
-<tr><td class="nw">改系统环境或往系统目录装东西</td><td>不做</td><td>配置不应当有持久副作用</td><td>同一台机器上另一个工程的配置结果被改变,且无法追溯</td></tr>
-</tbody>
-</table>
-<h3>cmake -P:把逻辑挪出去的标准形态</h3>
-<p>逻辑挪出 <code>CMakeLists.txt</code> 之后放到哪里,答案通常还是 CMake。<code>cmake -P</code> 用脚本模式执行一个 <code>.cmake</code> 文件:没有工程、没有目标、没有缓存,只有变量与命令。</p>
-<p>这条路线的好处是不引入新的语言依赖。构建机上已经有 CMake,同一份脚本在三个平台上行为一致,不必再要求装 Python 或某个版本的 shell。</p>
-<table style="contain-intrinsic-size:auto 340px">
-<thead><tr><th>形态</th><th>写法</th><th>说明</th></tr></thead>
-<tbody>
-<tr><td class="nw">执行一个脚本</td><td><code>cmake -P gen.cmake</code></td><td>不需要源码目录与构建目录,也不产生缓存</td></tr>
-<tr><td class="nw">往脚本里传参</td><td><code>cmake -DIN=a.csv -DOUT=a.cpp -P gen.cmake</code></td><td><code>-D</code> 必须写在 <code>-P</code> 之前</td></tr>
-<tr><td class="nw">在脚本里读参数</td><td class="nw"><code>${IN}</code>、<code>${OUT}</code></td><td>它们是普通变量,不是缓存变量</td></tr>
-<tr><td class="nw">读命令行原始参数</td><td><code>CMAKE_ARGC</code> 与 <code>CMAKE_ARGV0</code> 起的一族</td><td>需要位置参数而不是 <code>-D</code> 时用</td></tr>
-<tr><td class="nw">从构建里调用它</td><td><code>add_custom_command(... COMMAND ${CMAKE_COMMAND} -P ...)</code></td><td>用 <code>${CMAKE_COMMAND}</code>,不要写死 <code>cmake</code></td></tr>
-<tr><td class="nw">脚本模式下不成立的命令</td><td><code>add_library</code>、<code>target_*</code>、<code>install</code></td><td>脚本模式没有工程,这些命令无从谈起</td></tr>
-</tbody>
-</table>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 413px"><code><span class="kw">if</span>(NOT DEFINED IN OR NOT DEFINED OUT)
-    message(FATAL_ERROR <span>"用法: cmake -DIN=&lt;输入csv&gt; -DOUT=&lt;输出cpp&gt; -P gen.cmake"</span>)
-endif()
-
-file(STRINGS <span>"${IN}"</span> _lines)
-set(_body <span>""</span>)
-foreach(_l IN LISTS _lines)
-    string(REPLACE <span>","</span> <span>";"</span> _cols <span>"${_l}"</span>)
-    list(GET _cols 0 _code)
-    list(GET _cols 1 _name)
-    string(APPEND _body <span>"    { ${_code}, \"${_name}\" },\n"</span>)
-endforeach()
-
-file(WRITE <span>"${OUT}"</span> <span>"static const Entry kTable[] = {\n${_body}};\n"</span>)</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 挪出去的逻辑仍然用 cmake -P 写,构建机上不必多装一门语言</span><p>同一段代码,写在 CMakeLists.txt 里是配置期逻辑,写进独立的 .cmake 文件用 cmake -P 执行就是构建期的一步。语法、可用命令、跨平台行为完全一致,迁移只需要把参数从直接引用变量改成靠 -D 传入。相比换成 Python 或 shell,这条路线不增加构建机上的依赖,也不引入换行符与引号在三个平台上的差异。形态见 8.2 节。</p></div>
-<h3>换写法之前的三个自检</h3>
-<p>一段配置期代码要不要挪出去,按顺序问下面三个问题。第一个答「是」就停下,不必往下问。</p>
-<ol>
-<li>这段代码的输出,会不会在两次构建之间变化?会,就属于构建期,应当写成 <code>add_custom_command</code> 的一条规则,把变化的输入列进 <code>DEPENDS</code>。</li>
-<li>这段代码有没有修改配置目录与构建目录之外的东西?有,就应当挪出去。配置一次不应当改变机器上的任何其他状态。</li>
-<li>这段代码去掉之后,配置还能不能完成?不能,说明它是构建图的一部分,留在 CMake 里是对的;能,说明它是一个附带动作,应当变成一个显式的目标或者一条外部命令。</li>
-</ol>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 判断一段脚本该不该留在 CMake 里,只看输出会不会在两次构建之间变化</span><p>会变的一律属于构建期:代码生成、版本信息、资源打包,全都应当写成 add_custom_command 的规则,并把变化的输入列进 DEPENDS,由构建系统按时间戳决定跑不跑。不会变的才留在配置期:目标声明、依赖关系、平台分流。这一条判据不需要理解 CMake 的执行模型,拿一段代码对着问一次就有答案。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 配置期能做的事太多,于是 CMakeLists 逐渐变成一门内嵌的脚本语言</span><p>execute_process、file、string 加起来足以在配置期完成相当复杂的工作,而这些代码没有单元测试、没有调试器、出错信息只能靠 message 打印,并且每次重新配置都要跑一遍。一份 CMakeLists 里出现二十行以上连续的字符串与文件操作,通常意味着这段逻辑应当变成一个独立的 cmake -P 脚本或者别的语言的脚本,由 CMake 只负责调用它。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 配置期的副作用不会出现在任何构建日志里,排查时最先被忽略</span><p>构建期的每一条命令都在构建日志里,配置期的 file(REMOVE)、file(WRITE)、execute_process 却只在配置那一次执行,日志早已滚过。表现出来是「昨天还好好的,今天重新配置之后某个文件没了」。凡是在配置期改动文件系统的代码,都应当在旁边加一行 message(STATUS ...) 说明它做了什么,并且只写构建目录之内的路径。</p></div>
-<h3>与后面几章的接口</h3>
-<p>第 4 章的 <code>find_package</code> 把结果全部写进缓存:<code>Foo_DIR</code>、<code>Foo_FOUND</code>、以及各种 <code>_LIBRARY</code> 与 <code>_INCLUDE_DIR</code>。那一章讲的「找不到库」与「找到了旧版本」两类问题,排查的第一步都落在这一章的缓存规则上。</p>
-<p>第 5 章要写的 <code>XxxConfig.cmake</code> 与导出的目标文件里,包含目录一律写成 <code>$&lt;BUILD_INTERFACE:...&gt;</code> 与 <code>$&lt;INSTALL_INTERFACE:...&gt;</code> 的组合。这两个表达式为什么必须成对出现,答案就是这一章讲的求值时机:构建树与安装树是生成期才能分辨的两种上下文。</p>
-<p>第 6 章给三大编译器分别配选项,靠的是 <code>$&lt;COMPILE_LANG_AND_ID:...&gt;</code>;第 7 章讲多配置生成器与 <code>CMakePresets.json</code>,那里会把「配置在什么时候确定」这条线索接完。预设文件的价值正是把命令行上那一串 <code>-D</code> 固化进版本库,让缓存的初值有据可查。</p>
-<p>第 8 章的自定义命令与代码生成大量依赖 <code>$&lt;TARGET_FILE:...&gt;</code> 与 <code>$&lt;CONFIG&gt;</code>,因为生成出来的文件要落在正确的配置目录下;第 9 章的安装规则里,<code>$&lt;BUILD_INTERFACE&gt;</code> 与 <code>$&lt;INSTALL_INTERFACE&gt;</code> 的分工会再出现一次,并且要与 <code>install()</code> 的路径设定对齐。</p>
-<p>换句话说,后面每一章都在用这一章的两条规则,只是场景不同。遇到「配置期看起来对、构建出来不对」的问题时,回到这两条规则上找答案的命中率最高。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 63056px;--thin-h:63056px">
+<section class="chapter" style="contain-intrinsic-size:auto 59310px;--thin-h:59310px">
 <h1 id="k4"><span class="part">第 4 章</span>引入第三方库</h1>
+<p>自己的目标图搭好之后,真实工程的第一道坎是把别人的库接进来。这一章从消费侧看第三方库:引入一个库要同时解决编译、链接、运行与再传播四件事,几条引入路线的失败形态互不相同,因此本章机制部分全书最厚。六节机制依次讲四件事清单、<code>find_package</code> 的两种模式、配置文件里有什么、FetchContent 与包管理器、三平台的事实差异、找不到库时的固定排查顺序;随后两节条目逐条收录 <code>find_*</code> 一族与三套源码引入设施。</p>
 <h2 id="k4-need">4.1 引一个库进来要解决的四件事</h2>
 <p>「用一下这个库」在 CMake 里不是一件事,是四件。前三件按时间排:编译时要找到头文件,链接时要找到库文件,运行时要找到动态库。第四件与时间无关:上面三件事必须能随着目标一起传给下一层使用者。</p>
 <p>四件事各自独立失败,失败的位置、报错的形态、排查的手段都不同。把它们分开看,是这一章全部内容的骨架——后面每一节都会回到这张清单上。</p>
@@ -5201,7 +4800,7 @@ cmake -B build -DFOO_LIBRARY=/opt/foo-2.0/lib/libfoo.so</code></pre>
 <h2 id="r2-fetch">4.8 FetchContent、ExternalProject 与 add_subdirectory</h2>
 <p>三套设施把外部源码接进工程,分界只有一句话:<code>add_subdirectory</code> 处理<strong>同一个工程树</strong>里已经存在的源码,<code>FetchContent</code> 把外部源码取来参与<strong>同一次构建</strong>,<code>ExternalProject_Add</code> 让外部源码走一次<strong>独立构建</strong>。</p>
 <p>这条分界决定了能不能在配置期看见对方的目标。前两者可以,因为外部源码的 CMakeLists.txt 被并进本次配置;后者不可以,它的配置与构建全部发生在本工程的构建期。</p>
-<p>依赖获取的完整取舍见 4.4 节,五条引入路线的同场对比见 4.9 节。</p>
+<p>依赖获取的完整取舍见 4.4 节。</p>
 <h3>add_subdirectory</h3>
 <p>把一个含 CMakeLists.txt 的目录并进本次配置。子目录里创建的目标在全工程可见,变量则不会流回父目录。</p>
 <p><strong>命令形式</strong></p><pre style="contain-intrinsic-size:auto 114px"><code>add_subdirectory(&lt;source_dir&gt; [&lt;binary_dir&gt;]
@@ -5398,92 +4997,11 @@ ExternalProject_Add(foo_ext
 </table>
 <p>选择顺序有一条实用的排法:系统上已经装好、或包管理器能提供的,优先 <code>find_package</code>;需要与本工程同一套设定一起编译的,用 <code>FetchContent</code>;需要另一套工具链或另一种构建系统的,才用 <code>ExternalProject_Add</code>。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 把 FetchContent 取来的目标写进自己的导出集,包在别人机器上装不起来</span><p><code>install(TARGETS mylib fmt EXPORT MylibTargets)</code> 会把第三方目标一并导出,而使用者拿到的包里并没有第三方的安装规则,配置时报「install(EXPORT) includes target which requires target that is not in any export set」。根因是依赖的引入方式与发布方式不匹配:靠 FetchContent 并进来的源码属于本次构建,不属于本工程要发布的东西。发布形态的库应当用 <code>find_package</code> 引入依赖,并在自己的 Config 文件里用 <code>find_dependency</code> 把它找回来,写法见 5.2 节与 5.4 节。</p></div>
-<h2 id="k4-sum">4.9 小结:五条路线的同场对比</h2>
-<p>这一章从「引一个库要解决四件事」出发,走过了 <code>find_package</code> 的两种模式、Config 文件的内部构造、<code>FetchContent</code> 与包管理器、三平台的差异,最后落到排查顺序上。把这些串起来的是一个判断:<strong>依赖怎么进来,决定了后面所有问题的形态。</strong></p>
-<p>4.7 与 4.8 两节是本章的条目部分:前者逐条列出 <code>find_package</code> 与四个 <code>find_*</code> 的参数、搜索顺序与缓存行为,后者逐条列出 <code>add_subdirectory</code>、<code>FetchContent</code> 一族与 <code>ExternalProject_Add</code>。写脚本时查参数翻那两节,读机制回 4.2 与 4.4 节。</p>
-<h3>五条路线的六维对比</h3>
-<table style="contain-intrinsic-size:auto 438px">
-<thead><tr><th>维度</th><th>系统包管理器</th><th>find_package 配置模式(手工装)</th><th>FetchContent</th><th>vcpkg</th><th>Conan</th></tr></thead>
-<tbody>
-<tr><td class="nw">离线构建</td><td>好,装一次即可</td><td>好</td><td>差,配置期要联网</td><td>中,可用二进制缓存与私有源</td><td>中,可用私有仓库</td></tr>
-<tr><td class="nw">版本锁定</td><td>弱,跟随发行版</td><td>中,靠自己的安装脚本</td><td>强,精确到提交号</td><td>强,清单文件锁版本</td><td>强,锁文件可提交</td></tr>
-<tr><td class="nw">构建时间</td><td>最短,直接用二进制</td><td>短</td><td>最长,依赖每次从源码编</td><td>短,有预编译二进制</td><td>短,有预编译二进制</td></tr>
-<tr><td class="nw">升级成本</td><td>低,但升级时机不由自己定</td><td>高,要自己重装</td><td>低,改一行 <code>GIT_TAG</code></td><td>低,改清单文件</td><td>低,改 <code>conanfile</code></td></tr>
-<tr><td class="nw">跨平台一致性</td><td>差,各发行版版本不同</td><td>中</td><td>强,三平台同一份源码</td><td>强</td><td>强</td></tr>
-<tr><td class="nw">团队上手成本</td><td>最低,不引入新工具</td><td>低</td><td>低,CMake 自带</td><td>中,要装工具与理解三元组</td><td>高,要理解配方与配置模型</td></tr>
-</tbody>
-</table>
-<p>六个维度里没有全胜的选项。选型的实际做法是先确定<strong>硬约束</strong>——必须离线构建、必须精确锁版本、必须在三个平台上完全一致——再在满足硬约束的路线里挑上手成本最低的。</p>
-<p>三条经验值得单独列出。其一,工程只在 Linux 上跑且依赖都在发行版仓库里时,系统包管理器加 <code>find_package</code> 是最优解,不必引入任何工具。其二,需要在 Windows 上构建时,包管理器几乎是必选项,因为 Windows 没有系统库目录。其三,头文件库与小型依赖用 <code>FetchContent</code> 的代价很低,大型依赖要先算构建时间的账。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 不论走哪条路线,CMakeLists 里都只应当出现 find_package 与 target_link_libraries</span><p>路线的差别应当全部落在工具链文件、预设文件与命令行参数上,不落在工程代码里。做到这一点的直接好处是换路线不用改工程,以及同一份代码能被没有装任何包管理器的人构建。检验方法:把工具链文件参数去掉,依赖手工装进一个前缀,加上 <code>-DCMAKE_PREFIX_PATH=...</code> 应当照样能配置成功。<code>FetchContent</code> 是唯一必须出现在 CMakeLists 里的路线,把它的声明集中在一个文件里,并配上 <code>FIND_PACKAGE_ARGS</code>,可以把这个例外降到最小。</p></div>
-<h3>选型的三条硬约束</h3>
-<table style="contain-intrinsic-size:auto 253px">
-<thead><tr><th>硬约束</th><th>它排除掉什么</th><th>剩下的选择</th></tr></thead>
-<tbody>
-<tr><td class="nw">构建机不能联网</td><td><code>FetchContent</code> 的默认形态</td><td>系统包管理器;包管理器配私有源与二进制缓存;<code>FETCHCONTENT_SOURCE_DIR</code> 指向本地副本</td></tr>
-<tr><td class="nw">必须精确复现某一次构建</td><td class="nw">系统包管理器</td><td><code>FetchContent</code> 锁提交号;vcpkg 或 Conan 加锁文件</td></tr>
-<tr><td class="nw">三个平台必须拿到同一份依赖</td><td class="nw">系统包管理器</td><td><code>FetchContent</code>、vcpkg、Conan</td></tr>
-<tr><td class="nw">依赖需要长期打补丁</td><td class="nw">全部只读路线</td><td>源码进版本库,或用自己的分支加 <code>FetchContent</code></td></tr>
-<tr><td class="nw">不允许引入 CMake 之外的工具</td><td class="nw">vcpkg、Conan</td><td>系统包管理器;<code>FetchContent</code></td></tr>
-</tbody>
-</table>
-<p>硬约束通常不只一条。三个平台加不能联网,答案是包管理器配私有二进制源;三个平台加不引入新工具,答案是 <code>FetchContent</code> 加一份本地镜像。把约束先列全,选项自然收敛到一两个。</p>
-<h3>混合形态怎么写才不打架</h3>
-<p>实际工程里常见的是混合:大部分依赖走系统或包管理器,少数几个走 <code>FetchContent</code>。要让这种混合不出问题,关键是<strong>每个依赖只走一条路线</strong>,并且把声明集中在一处。</p>
-<pre style="contain-intrinsic-size:auto 468px"><code># deps.cmake —— 全部依赖的声明集中在这一个文件里,顶层 CMakeLists 只 include 它
-include(FetchContent)
-
-# 一、走系统或包管理器的依赖
-find_package(OpenSSL 3.0 REQUIRED COMPONENTS SSL Crypto)
-find_package(fmt 9 REQUIRED CONFIG)
-
-# 二、走 FetchContent 的依赖。FIND_PACKAGE_ARGS 让它优先用已装好的那一份
-FetchContent_Declare(Catch2
-  GIT_REPOSITORY https:<span class="cm">//github.com/catchorg/Catch2.git</span>
-  GIT_TAG        v3.5.2
-  FIND_PACKAGE_ARGS 3 CONFIG)          # 需要 CMake 3.24 或更新
-
-set(CATCH_INSTALL_DOCS OFF)
-set(CATCH_INSTALL_EXTRAS OFF)
-FetchContent_MakeAvailable(Catch2)</code></pre>
-<p>这段假设 CMake 3.24 或更新;基线为 3.20 时去掉 <code>FIND_PACKAGE_ARGS</code>,改成先 <code>find_package(Catch2 3 QUIET CONFIG)</code>、失败再 <code>FetchContent_MakeAvailable</code>,效果相同、代码长一些。</p>
-<p>集中声明还有一个收益:排查时只要看一个文件就知道全部依赖的来源与版本。依赖散落在各个子目录的 CMakeLists 里时,「这个库到底从哪来的」经常要找很久。</p>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 563px">
-<thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td class="nw">引一个库要解决四件事</td><td class="nw">4.1</td><td>编译期头文件、链接期库文件、运行期动态库、传给使用者</td></tr>
-<tr><td class="nw">公开头文件里出现了谁,谁就是 <code>PUBLIC</code></td><td class="nw">4.1</td><td>静态库的 <code>PRIVATE</code> 依赖仍然要求使用者能找到</td></tr>
-<tr><td class="nw"><code>find_package</code> 有模块与配置两种模式</td><td class="nw">4.2</td><td>报错文字里的文件名就能判断是哪一种</td></tr>
-<tr><td class="nw"><code>CMAKE_PREFIX_PATH</code> 里放安装前缀</td><td class="nw">4.2</td><td>不放 Config 文件所在目录</td></tr>
-<tr><td class="nw">判断包可用与否看导入目标</td><td class="nw">4.2</td><td>不看 <code>Foo_FOUND</code>,更不看 <code>Foo_LIBRARIES</code></td></tr>
-<tr><td class="nw">Config 文件只做三件事</td><td class="nw">4.3</td><td>声明导入目标、设使用要求、处理自己的依赖</td></tr>
-<tr><td class="nw">带配置后缀的属性会静默回退</td><td class="nw">4.3</td><td>Windows 上 Debug 链 Release 会出事</td></tr>
-<tr><td><code>FetchContent</code> 把依赖变成自己构建的一部分</td><td class="nw">4.4</td><td>确定性最好,构建时间最差,污染是双向的</td></tr>
-<tr><td>包管理器本质上在配 <code>CMAKE_PREFIX_PATH</code></td><td class="nw">4.4</td><td>工程的 CMakeLists 应当保持中立</td></tr>
-<tr><td class="nw">Windows 链接的是导入库不是 dll</td><td class="nw">4.5</td><td><code>IMPORTED_IMPLIB</code> 与 <code>IMPORTED_LOCATION</code> 各管一头</td></tr>
-<tr><td class="nw">PE 默认不导出任何符号</td><td class="nw">4.5</td><td>用 <code>GenerateExportHeader</code>,并把 Unix 也设成默认隐藏</td></tr>
-<tr><td class="nw">运行期查找三平台各一套</td><td class="nw">4.5</td><td>Linux 与 macOS 靠 RPATH,Windows 靠 exe 同目录</td></tr>
-<tr><td class="nw">排查从 <code>--debug-find</code> 开始</td><td class="nw">4.6</td><td>先定位失败落在哪一期,再动手</td></tr>
-<tr><td class="nw">架构与配置不一致会伪装成找不到</td><td class="nw">4.6</td><td>路径全对而链接失败时,查这一类</td></tr>
-</tbody>
-</table>
-<h3>一条引新依赖时的自查流程</h3>
-<ol>
-<li><strong>这个依赖走哪条路线?</strong>按上面的六维表定,并且确认工程里没有同一个依赖的第二条路线。</li>
-<li><strong>它提供 Config 文件吗?</strong>提供就写 <code>find_package(Foo CONFIG REQUIRED)</code>;只提供 <code>.pc</code> 就用 <code>pkg_check_modules</code> 加 <code>IMPORTED_TARGET</code>;都没有才自己写 Find 模块。</li>
-<li><strong>目标名是什么?</strong>读它装出来的 Targets 文件确认,不要靠猜;一律使用带命名空间的名字。</li>
-<li><strong>写 <code>PUBLIC</code> 还是 <code>PRIVATE</code>?</strong>看自己的公开头文件里有没有出现它的类型。</li>
-<li><strong>三个平台都试过吗?</strong>至少在 Windows 上构建一次,那里会暴露导入库与导出符号两类问题。</li>
-<li><strong>装出去之后跑得起来吗?</strong>在一个临时前缀里装一遍,从那里启动程序,做法见 5.3 节。</li>
-</ol>
-<p>第六步不能省。前五步的检验都在自己的构建目录里完成,而构建目录里的路径信息与装出去之后完全不同——RPATH 会被换掉、头文件目录从源码树变成安装前缀、Windows 上的 dll 不再在旁边。跳过这一步,问题会推迟到使用者那里,而使用者拿不到自己的构建环境。</p>
-<p>第 5 章把视角调转过来:自己的库要怎么装出去,才能让别人用这一章的方法顺利引入。两章的内容是同一件事的两侧,读完之后再回看 4.3 节的 Config 文件,会发现里面每一行都对应第 5 章的某一条安装规则。</p>
-<p>中间还有一段值得留意的对称关系。这一章反复出现的四件事,在第 5 章会变成四条安装规则:头文件要 <code>install</code> 出去并配 <code>$&lt;INSTALL_INTERFACE&gt;</code>,库文件要 <code>install(TARGETS)</code> 并 <code>EXPORT</code>,运行期定位要设 <code>INSTALL_RPATH</code> 或把动态库装进 <code>bin</code>,传播关系要写进 Config 文件的 <code>find_dependency</code>。一一对应,没有例外。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 37153px;--thin-h:37153px">
+<section class="chapter" style="contain-intrinsic-size:auto 30716px;--thin-h:30716px">
 <h1 id="k5"><span class="part">第 5 章</span>让自己的库被别人 find_package</h1>
+<p>第 4 章从使用侧看包,这一章把视角调转到提供侧:自己的库要装成什么样,别人才能一行 <code>find_package</code> 用起来。核心分界是构建树里的目标与使用者拿到的导入目标不是同一个东西,属性值必须随位置改写。三节机制讲 <code>install(EXPORT)</code> 与导出目标、Config 文件与版本文件怎么写、装到临时目录再从零用一次的自检法;末节条目收录导出链路上的全部命令。第 4 章怎么找,这一章就怎么被找,两章互为镜像。</p>
 <h2 id="k5-export">5.1 install(EXPORT) 与导出目标</h2>
 <p>第 4 章从使用侧看了 <code>FooConfig.cmake</code> 与 <code>FooTargets.cmake</code>。这一章把视角调转过来:自己的库要装成什么样,才能让别人写一行 <code>find_package(Mylib)</code> 加一行 <code>target_link_libraries(app PRIVATE Mylib::mylib)</code> 就用起来。</p>
 <p>第一件要分清的事是:<strong>构建树里的目标与使用者拿到的目标不是同一个东西。</strong>前者是自己工程里 <code>add_library</code> 出来的真实目标,后者是使用者的配置期由 Targets 文件现场造出来的导入目标。两者的属性值必须不同,因为路径不同。</p>
@@ -6108,160 +5626,11 @@ check_required_components(Engine)</code></pre>
 </table>
 <p>四份要装出去的文件应当落在同一个目录里,惯例是 <code>&lt;前缀&gt;/${CMAKE_INSTALL_LIBDIR}/cmake/&lt;包名&gt;/</code>。<code>find_package</code> 的配置模式按这一类模式去找,分散在不同目录会导致 Config 文件找得到而 Targets 文件 <code>include</code> 不到。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 四份文件的目的地写成同一个变量,不要三处各写一遍</span><p><code>install(EXPORT)</code> 的 <code>DESTINATION</code>、两条 <code>install(FILES)</code> 的 <code>DESTINATION</code>、以及 <code>configure_package_config_file</code> 的 <code>INSTALL_DESTINATION</code>,四处必须一致:前三处决定文件实际落在哪里,第四处决定 Config 文件反推前缀时上溯几层。四处分别手写的话,改目录布局时漏改一处就是包不可用,而且症状各不相同。写成一个变量之后,这一类错误从根上消失。</p></div>
-<h2 id="k5-sum">5.5 小结</h2>
-<p>这一章讲的是把第 4 章的使用侧翻过来看。使用者写的每一行 <code>find_package</code> 与 <code>target_link_libraries</code>,对应的都是库作者这一侧的某一条安装规则。全章可以压成一句话:<strong>把构建树里那个目标的每一项使用要求,翻译成安装树里成立的形式,然后装一遍验证翻译对了。</strong></p>
-<p>5.4 节是本章的条目部分,把导出链路上的命令逐条列出:<code>install(EXPORT)</code> 与 <code>export</code> 一族、两个 helper 与 <code>find_dependency</code>。写脚本时查参数翻那里,本节负责把链路串起来并给出验收清单。</p>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 601px">
-<thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td class="nw">构建树的目标与使用者拿到的目标不是同一个</td><td class="nw">5.1</td><td>后者由 Targets 文件现场造出来</td></tr>
-<tr><td><code>install(TARGETS ... EXPORT)</code> 只登记,<code>install(EXPORT)</code> 才生成文件</td><td class="nw">5.1</td><td>两条都要写</td></tr>
-<tr><td class="nw">四个 <code>DESTINATION</code> 一次写全</td><td class="nw">5.1</td><td>漏 <code>ARCHIVE</code> 时 Windows 的导入库装不出去</td></tr>
-<tr><td class="nw">包含目录用两个生成器表达式分流</td><td class="nw">5.1</td><td><code>INSTALL_INTERFACE</code> 里写相对路径</td></tr>
-<tr><td class="nw">公开接口里出现源码树绝对路径会在生成期报错</td><td class="nw">5.1</td><td>这是 CMake 少数主动拦截的地方</td></tr>
-<tr><td class="nw">自己工程内也用带命名空间的别名</td><td class="nw">5.1</td><td>重构时引用代码不用改</td></tr>
-<tr><td class="nw"><code>export()</code> 只用于本机开发,不能交付</td><td class="nw">5.1</td><td>它验不出安装树的问题</td></tr>
-<tr><td><code>configure_package_config_file</code> 让包可搬动</td><td class="nw">5.2</td><td>普通 <code>configure_file</code> 会写死绝对路径</td></tr>
-<tr><td class="nw">版本兼容有四种策略</td><td class="nw">5.2</td><td>按「在什么粒度上承诺接口不变」选</td></tr>
-<tr><td class="nw">纯头文件库要写 <code>ARCH_INDEPENDENT</code></td><td class="nw">5.2</td><td>否则 32 位使用者被判不兼容</td></tr>
-<tr><td>接口里出现的每个包都要 <code>find_dependency</code></td><td class="nw">5.2</td><td>静态库的私有依赖也算</td></tr>
-<tr><td class="nw">验证只有装到临时前缀才算数</td><td class="nw">5.3</td><td>开发机上三样东西同时存在,试不出问题</td></tr>
-<tr><td class="nw">验证时只给 <code>CMAKE_PREFIX_PATH</code></td><td class="nw">5.3</td><td>多给一条就放过一类问题</td></tr>
-</tbody>
-</table>
-<h3>从引入到发布的完整链路</h3>
-<p>本章与第 4 章的命令连成一条链:把别人的东西找进来,把自己的东西装出去,再把装出去的东西变成别人能找进来的形态。链条两端用的是同一套机制,方向相反。</p>
-<p>链路上任何一步缺失,症状都出现在使用者一侧,而且离根因很远。下表按一份完整的库工程的书写顺序排列,每一步给出命令、机制的展开位置,以及漏掉它之后使用者会看到什么。</p>
-<table style="contain-intrinsic-size:auto 1048px">
-<thead><tr><th>步骤</th><th>命令</th><th>机制展开处</th><th>漏掉它之后的症状</th></tr></thead>
-<tbody>
-<tr><td class="nw">声明策略基线</td><td><code>cmake_minimum_required</code></td><td>0.2 节</td><td>配置期一条警告,行为退回最老版本</td></tr>
-<tr><td class="nw">声明工程与版本</td><td><code>project(... VERSION ...)</code></td><td>0.2 节</td><td>包的版本号无处可取,版本文件生成失败</td></tr>
-<tr><td class="nw">找已装好的依赖</td><td><code>find_package(... REQUIRED)</code></td><td>4.2 节</td><td>后面链接时报目标不存在</td></tr>
-<tr><td class="nw">取源码形态的依赖</td><td><code>FetchContent_Declare</code> 与 <code>FetchContent_MakeAvailable</code></td><td>4.4 节</td><td>依赖需要使用者自己预先装好</td></tr>
-<tr><td class="nw">包装只有裸文件的依赖</td><td><code>find_library</code> 与 <code>find_path</code> 加 <code>IMPORTED</code> 目标</td><td>1.4 节</td><td>使用者要手写路径与宏</td></tr>
-<tr><td class="nw">创建自己的目标</td><td><code>add_library</code> 与 <code>add_executable</code></td><td>1.1 节</td><td>无</td></tr>
-<tr><td class="nw">配一个带命名空间的别名</td><td><code>add_library(... ALIAS ...)</code></td><td>1.1 节</td><td>工程内与工程外的写法不一致</td></tr>
-<tr><td class="nw">声明源文件与公开头</td><td><code>target_sources</code> 与 <code>FILE_SET HEADERS</code></td><td>1.3 节</td><td>头文件要另写一条安装规则,并且目录结构容易被压平</td></tr>
-<tr><td class="nw">声明使用要求</td><td><code>target_link_libraries</code> 等七条</td><td>2.1 节、2.2 节</td><td>使用者拿不到包含路径、宏与依赖</td></tr>
-<tr><td class="nw">分开构建期与安装后的路径</td><td><code>$&lt;BUILD_INTERFACE:&gt;</code> 与 <code>$&lt;INSTALL_INTERFACE:&gt;</code></td><td>2.3 节</td><td>导出的目标带着构建机的绝对路径</td></tr>
-<tr><td class="nw">准备标准目录变量</td><td><code>include(GNUInstallDirs)</code></td><td>9.1 节</td><td>库装错目录,发行版打包被退回</td></tr>
-<tr><td class="nw">装产物并登记导出集</td><td><code>install(TARGETS ... EXPORT ...)</code></td><td>9.1 节</td><td>文件装出去了,使用者拿不到 CMake 目标</td></tr>
-<tr><td class="nw">生成安装树的导入文件</td><td><code>install(EXPORT ... NAMESPACE ...)</code></td><td>5.1 节</td><td><code>find_package</code> 成功但目标不存在</td></tr>
-<tr><td class="nw">生成构建树的导入文件</td><td><code>export(EXPORT ...)</code></td><td>5.1 节</td><td>同机的另一个工程必须先执行一次安装</td></tr>
-<tr><td class="nw">生成 Config 文件</td><td><code>configure_package_config_file</code></td><td>5.2 节</td><td>包不可重定位,换前缀就失效</td></tr>
-<tr><td class="nw">在 Config 里找依赖</td><td><code>find_dependency</code></td><td>5.2 节</td><td>使用者配置期报依赖的目标不存在</td></tr>
-<tr><td class="nw">生成版本文件</td><td><code>write_basic_package_version_file</code></td><td>5.2 节</td><td>带版本号的 <code>find_package</code> 一定失败</td></tr>
-<tr><td class="nw">装 Config 与版本文件</td><td><code>install(FILES ...)</code></td><td>5.2 节</td><td>前两步生成的文件只留在构建目录</td></tr>
-<tr><td class="nw">打包</td><td><code>include(CPack)</code> 与 <code>cpack</code></td><td>9.3 节</td><td>只能交源码,不能交安装包</td></tr>
-<tr><td class="nw">验证</td><td>装到临时前缀再当使用者用一次</td><td>5.3 节</td><td>问题全部由使用者第一个发现</td></tr>
-</tbody>
-</table>
-<p>每一步的条目形态——参数表、效果与陷阱——在 4.7、4.8、5.4 与 9.5 节。链路表回答「有哪些步、什么顺序」,条目节回答「每一步怎么写」。</p>
-<h3>一份可以直接抄的完整骨架</h3>
-<pre style="contain-intrinsic-size:auto 1528px"><code>cmake_minimum_required(VERSION 3.20)
-project(Mylib VERSION 1.2.3 LANGUAGES CXX)
-
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
-include(GenerateExportHeader)
-
-find_package(Threads REQUIRED)
-
-add_library(mylib src/mylib.cpp)
-add_library(Mylib::mylib ALIAS mylib)
-generate_export_header(mylib)
-
-set_target_properties(mylib PROPERTIES
-  VERSION   ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
-  CXX_VISIBILITY_PRESET hidden
-  VISIBILITY_INLINES_HIDDEN ON)
-
-target_compile_features(mylib PUBLIC cxx_std_17)
-target_include_directories(mylib PUBLIC
-  $&lt;BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include&gt;
-  $&lt;BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}&gt;
-  $&lt;INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}&gt;)
-target_link_libraries(mylib PUBLIC Threads::Threads)
-
-set(MYLIB_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Mylib)
-
-install(TARGETS mylib
-        EXPORT  MylibTargets
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mylib_export.h
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-install(EXPORT MylibTargets
-        <span class="kw">FILE</span>      MylibTargets.cmake
-        NAMESPACE Mylib::
-        DESTINATION ${MYLIB_CMAKEDIR})
-
-configure_package_config_file(
-  cmake/MylibConfig.cmake.in <span>"${CMAKE_CURRENT_BINARY_DIR}/MylibConfig.cmake"</span>
-  INSTALL_DESTINATION ${MYLIB_CMAKEDIR})
-write_basic_package_version_file(
-  <span>"${CMAKE_CURRENT_BINARY_DIR}/MylibConfigVersion.cmake"</span>
-  VERSION ${PROJECT_VERSION} COMPATIBILITY SameMajorVersion)
-
-install(FILES <span>"${CMAKE_CURRENT_BINARY_DIR}/MylibConfig.cmake"</span>
-              <span>"${CMAKE_CURRENT_BINARY_DIR}/MylibConfigVersion.cmake"</span>
-        DESTINATION ${MYLIB_CMAKEDIR})</code></pre>
-<p>这份骨架假设目录结构是 <code>include/mylib/</code> 放公开头文件、<code>src/</code> 放实现、<code>cmake/MylibConfig.cmake.in</code> 放模板。<code>add_library(mylib src/mylib.cpp)</code> 没有写 <code>SHARED</code> 或 <code>STATIC</code>,由 <code>BUILD_SHARED_LIBS</code> 决定,这让同一份代码能装出两种形态的包。</p>
-<p>生成的导出头 <code>mylib_export.h</code> 在构建目录里,所以包含目录里多了一条 <code>$&lt;BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}&gt;</code>,并且要单独 <code>install(FILES)</code>。用 <code>FILE_SET HEADERS</code> 时这两处可以合并,写法在 5.1 节。</p>
-<h3>发版前的检查清单</h3>
-<ol>
-<li><strong>装到一个空的临时前缀里,列出全部文件</strong>,对照 5.3 节那张表逐项确认。</li>
-<li><strong>在 Targets 文件里搜构建机的路径片段</strong>,应当零命中。</li>
-<li><strong>把 Targets 文件里的外部目标名列出来</strong>,与 Config 文件里的 <code>find_dependency</code> 一一对应。</li>
-<li><strong>用最小工程验证一次</strong>,只给 <code>CMAKE_PREFIX_PATH</code>,运行前切到无关目录。</li>
-<li><strong>版本号验三次</strong>:低于包的版本、等于包的版本、以及高一个主版本(应当失败)。</li>
-<li><strong>Windows 上单独验一次</strong>,确认导入库装出去了、dll 能被使用者找到。</li>
-<li><strong>Debug 与 Release 各验一次</strong>,MSVC 上两者不能混用。</li>
-<li><strong>静态与动态各装一次</strong>,<code>BUILD_SHARED_LIBS</code> 两个取值都要能装出可用的包。</li>
-</ol>
-<p>八条里前四条是必做的,后四条按库的实际使用范围裁剪。只在 Linux 上使用的内部库可以省掉第六条,纯头文件库可以省掉第七与第八条。</p>
-<p>把这份清单变成脚本比留在文档里有用得多。5.3 节那段验证脚本已经覆盖了第一、二、四条,加几行 <code>grep</code> 与几次带不同版本号的配置,八条可以全部自动化。</p>
-<h3>常见失败与对应的检查点</h3>
-<p>使用者一侧的报错与链路上的缺失是多对一的关系,按下表反查最快。</p>
-<table style="contain-intrinsic-size:auto 621px">
-<thead><tr><th>使用者看到的症状</th><th>最可能的根因</th><th>检查动作</th></tr></thead>
-<tbody>
-<tr><td><code>Could not find a package configuration file</code></td><td>前缀没指对,或包根本没装 Config 文件</td><td>读报错里列出的候选路径,再列一遍安装前缀下的目录</td></tr>
-<tr><td class="nw"><code>find_package</code> 成功但目标不存在</td><td>Config 文件没有 <code>include</code> Targets 文件,或两处 <code>NAMESPACE</code> 不一致</td><td>直接打开装出去的 Config 与 Targets 文件对读</td></tr>
-<tr><td>配置期报「links to target ... but the target was not found」</td><td>公开依赖漏写 <code>find_dependency</code></td><td>列出 Targets 文件里的全部外部目标名,与 Config 文件逐条对照</td></tr>
-<tr><td class="nw">编译期报找不到头文件</td><td>接口包含路径没写 <code>$&lt;INSTALL_INTERFACE:&gt;</code></td><td>读 Targets 文件里的 <code>INTERFACE_INCLUDE_DIRECTORIES</code></td></tr>
-<tr><td class="nw">配置期报导入目标的路径不存在</td><td>接口路径没用 <code>$&lt;BUILD_INTERFACE:&gt;</code> 包住源码树路径</td><td>在装出去的 Targets 文件里搜源码树路径,结果应当为空</td></tr>
-<tr><td class="nw">带版本号的 <code>find_package</code> 报版本不合</td><td>版本文件漏装,或 <code>COMPATIBILITY</code> 与版本规划不符</td><td>确认包目录里有 ConfigVersion 文件,再读它的策略</td></tr>
-<tr><td class="nw">Windows 上程序启动报缺少 DLL</td><td><code>install(TARGETS)</code> 漏写 <code>RUNTIME</code> 一类</td><td>列一遍安装前缀下的 <code>bin</code> 目录</td></tr>
-<tr><td>配置期报 <code>not in any export set</code></td><td>内部目标被 PUBLIC 链接却没有进导出集</td><td>读该目标的 <code>INTERFACE_LINK_LIBRARIES</code></td></tr>
-</tbody>
-</table>
-<h3>三个容易被忽略的细节</h3>
-<ul>
-<li><strong>动态库与静态库装出来的包不一样。</strong>同一份源码,<code>BUILD_SHARED_LIBS</code> 开与不开装出来的 Config 文件内容不同——静态库的私有依赖会进入接口,需要更多的 <code>find_dependency</code>。两种形态都要发布时,两种都要验证。</li>
-<li><strong>Config 文件描述的是这一次构建的结果。</strong>模板里 <code>@选项名@</code> 被替换成构建时的实际取值,所以关掉某个特性装出来的包,Config 里就没有对应的 <code>find_dependency</code>。这是正确行为,但意味着不能拿一份包的 Config 去推断这个库的全部能力。</li>
-<li><strong>版本号只有一个来源。</strong><code>project(Mylib VERSION 1.2.3)</code> 之后,<code>PROJECT_VERSION</code> 与它的三个分量在整个工程里都可用。版本号在 <code>SOVERSION</code>、版本文件、以及可能的头文件宏里各出现一次,三处都从这一个变量取,不要手写第二遍。</li>
-</ul>
-<p>第三条的失效形态很典型:发版时改了 <code>project()</code> 里的版本,忘了改某个头文件里写死的版本宏,于是运行期上报的版本与实际不符。用 <code>configure_file</code> 从 <code>PROJECT_VERSION</code> 生成那个头文件即可根除。</p>
-<p>另有一条与打包相关:装出来的包如果要给系统包管理器打包,安装目录必须严格遵守 <code>GNUInstallDirs</code> 的约定,并且不能在安装时往前缀之外写任何文件。自己拼 <code>lib</code>、<code>bin</code> 这类目录名在 64 位发行版上会出问题——有的发行版用 <code>lib64</code>,<code>GNUInstallDirs</code> 会正确处理这件事。</p>
-<h3>与前后章的接口</h3>
-<p>这一章用到的机制全部来自前面几章:<code>$&lt;BUILD_INTERFACE&gt;</code> 与 <code>$&lt;INSTALL_INTERFACE&gt;</code> 的求值时机在第 3 章,使用要求的传播规则在第 2 章,导入目标与命名空间在第 1 章,Windows 上导入库与导出符号的处理在第 4 章。</p>
-<p>往后看,第 9 章讲 <code>install()</code> 的完整能力与 CPack:这一章只用到了 <code>install()</code> 的一小部分,组件化安装、可选组件、以及打成安装包的做法在那里展开。交叉编译时安装规则要注意的地方也在第 9 章。</p>
-<p>第 10 章讲大型工程的组织方式,其中一条是把每个子模块都写成能独立安装的包。做到这一点之后,子模块可以随时被抽成独立仓库,也可以被上层用 <code>find_package</code> 而不是 <code>add_subdirectory</code> 引入——两种方式的取舍在那一章给判据。</p>
-<p>值得在这里先给一条结论:一个能被正确安装与 <code>find_package</code> 的模块,同时也是一个边界清晰的模块。安装规则要求把公开头文件、公开依赖、公开目标一一列出来,列不清楚说明模块的边界本来就没想好。这一章的规则因此不只是打包用的,也是检验模块划分的一把尺子。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 52076px;--thin-h:52076px">
+<section class="chapter" style="contain-intrinsic-size:auto 46684px;--thin-h:46684px">
 <h1 id="k6"><span class="part">第 6 章</span>编译选项、标准与三大编译器</h1>
+<p>目标图与依赖理顺之后,轮到真正交到编译器手上的东西:标准与选项。这一章的方法是先分层再对照——一个选项该挂在哪一层、传不传给使用者,判据沿用第 2 章;而 GCC、Clang 与 MSVC 的选项拼写不同、语义也不严格对应,不能逐词替换。三节机制讲 C++ 标准的四种写法与可靠开法、选项该加在哪一层、三大编译器的选项对照;随后三节条目覆盖编译器与平台变量、语言与标准相关的目标属性、检测与配置类模块。</p>
 <h2 id="k6-std">6.1 C++ 标准怎么开才可靠</h2>
 <p>「这个工程用 C++17」在 CMakeLists 里有四种写法:设 <code>CMAKE_CXX_STANDARD</code> 变量、设目标属性 <code>CXX_STANDARD</code>、调 <code>target_compile_features</code>、把 <code>-std=c++17</code> 直接塞进编译选项。四者的语义各不相同,选错的代价通常不是编译失败,而是<strong>编译成功但用的不是想要的那一版</strong>。</p>
 <p>标准版本最终由目标属性决定,变量只负责提供默认值,而这份默认值是在<strong>目标创建的那一刻</strong>被抄进属性的。这条链路理清之后,四种写法各自的边界也就清楚了。</p>
@@ -7108,123 +6477,11 @@ endif()
 set(CMAKE_CTEST_ARGUMENTS <span>"--output-on-failure;-j${NPROC}"</span>)
 set_property(GLOBAL PROPERTY JOB_POOLS link_pool=2)</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 核心数只是起点,链接与测试的并行度另有上限</span><p>逻辑核心数决定的是编译能并行到多少,链接受内存限制、测试受端口与临时目录冲突限制,两者的合理并行度通常都低于核心数。链接用 8.4 节的作业池压低,测试用 RUN_SERIAL 与 RESOURCE_LOCK 逐个隔离。容器环境里检测到的核心数可能是宿主机的,与实际可用的配额不符,发现构建被限流时先核对这个数字。</p></div>
-<h2 id="k6-sum">6.7 小结</h2>
-<p>编译选项这件事的全部难点可以归成一句话:<strong>选项写在哪一层,决定了它会到达谁</strong>。标准版本、警告、优化、字符集,四类选项各自的正确落点不同,而落错的代价都是静默的——不报错,只是行为与预期不符。</p>
-<p>六个字概括这一章的做法:标准用特性,选项挂目标,分流用表达式。剩下的都是这三条的具体形态。</p>
-<p>6.4 至 6.6 节是本章的条目部分:6.4 节逐条列出编译器、平台与架构变量,6.5 节列出语言、标准与平台相关的目标属性,6.6 节列出检测与配置类模块。分流判据与选项写法拿不准时先查那三节的表。</p>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 716px">
-<thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>CMAKE_CXX_STANDARD</code> 只是请求</td><td class="nw">6.1</td><td>不配 <code>CMAKE_CXX_STANDARD_REQUIRED ON</code> 就会静默降级</td></tr>
-<tr><td class="nw">三个标准变量必须成组出现</td><td class="nw">6.1</td><td>少写 <code>CMAKE_CXX_EXTENSIONS OFF</code>,拿到的是 <code>gnu++NN</code></td></tr>
-<tr><td class="nw">变量在目标创建时被抄进属性</td><td class="nw">6.1</td><td><code>set()</code> 必须在 <code>add_library</code> 与 <code>add_executable</code> 之前</td></tr>
-<tr><td class="nw"><code>cxx_std_NN</code> 的语义是「不低于」</td><td class="nw">6.1</td><td>多个来源的要求取最大值,并随依赖传播</td></tr>
-<tr><td class="nw"><code>CXX_STANDARD</code> 一点也传不出去</td><td class="nw">6.1</td><td>库对外的标准要求只能用 <code>target_compile_features</code> 表达</td></tr>
-<tr><td>MSVC 的 <code>__cplusplus</code> 默认停在 199711L</td><td class="nw">6.1</td><td>条件编译要看 <code>_MSVC_LANG</code>,或加 <code>/Zc:__cplusplus</code></td></tr>
-<tr><td class="nw">三层选项的作用范围逐层收窄</td><td class="nw">6.2</td><td>全局层含第三方,目录层含子目录,目标层只含一个目标</td></tr>
-<tr><td class="nw">命令行上目标级排在全局级后面</td><td class="nw">6.2</td><td>后面的覆盖前面的,既是能力也是陷阱</td></tr>
-<tr><td class="nw">全局 <code>-Werror</code> 会漏进第三方目标</td><td class="nw">6.2</td><td>升一次依赖版本就构建失败,报错文件全在 <code>_deps/</code> 下</td></tr>
-<tr><td>警告选项装进 INTERFACE 库并 PRIVATE 链接</td><td class="nw">6.2</td><td>范围精确,且不会写进导出的 Config 文件</td></tr>
-<tr><td class="nw">分流用生成器表达式而不是 <code>if()</code></td><td class="nw">6.2</td><td><code>if()</code> 在配置期一次定死,分不开语言也分不开配置</td></tr>
-<tr><td class="nw"><code>PUBLIC</code> 的编译选项会被导出</td><td class="nw">6.2</td><td>用 <code>$&lt;BUILD_INTERFACE:...&gt;</code> 包住,或干脆只写 <code>PRIVATE</code></td></tr>
-<tr><td><code>-Wall</code> 不是全部,<code>/Wall</code> 才是全部且不可用</td><td class="nw">6.3</td><td>GCC/Clang 用 <code>-Wall -Wextra</code>,MSVC 用 <code>/W4</code></td></tr>
-<tr><td>MSVC 不加 <code>/utf-8</code> 就按活动代码页读源文件</td><td class="nw">6.3</td><td>中文注释可能把源码切错,报错位置与真实问题无关</td></tr>
-<tr><td class="nw"><code>/permissive-</code> 打开两阶段名字查找</td><td class="nw">6.3</td><td>不加它,依赖基类成员漏写 <code>this-&gt;</code> 也能编过</td></tr>
-<tr><td class="nw">sanitizer 编译与链接两处都要加</td><td class="nw">6.3</td><td>只加编译选项,链接期报一批 <code>__asan_</code> 未定义符号</td></tr>
-<tr><td>sanitizer 跑在 RelWithDebInfo 上</td><td class="nw">6.3</td><td><code>Release</code> 的行号对不上,<code>Debug</code> 太慢</td></tr>
-<tr><td class="nw">MSVC 的 <code>/Zi</code> 让编译缓存失效</td><td class="nw">6.3</td><td>换成 <code>/Z7</code>,调试信息塞进 obj,目标文件自足</td></tr>
-</tbody>
-</table>
-<h3>易错清单</h3>
-<ol>
-<li>只写了 <code>set(CMAKE_CXX_STANDARD 20)</code>,编译器不支持时静默降级,报错是「<code>'optional' in namespace 'std' does not name a template type</code>」,排查方向一开始就落在源码上。</li>
-<li><code>set(CMAKE_CXX_STANDARD 17)</code> 写在 <code>add_subdirectory</code> 之后,子目录里的目标全部用编译器默认标准编译,链接期才在符号上露出破绽。</li>
-<li>没有关掉扩展,代码里用了变长数组,在 GCC 上一直正常,移植到 MSVC 时几十处一起报错。</li>
-<li>用 <code>#if __cplusplus &gt;= 201703L</code> 做特性检测,MSVC 上恒为假,整片 C++17 代码路径被跳过而没有任何提示。</li>
-<li>把 <code>-Werror</code> 加进 <code>CMAKE_CXX_FLAGS</code>,升级一个 <code>FetchContent</code> 依赖之后构建失败,报错文件全在 <code>_deps/</code> 下。</li>
-<li><code>add_compile_options</code> 写在 <code>add_executable</code> 之后,选项一个目标也没加上,而且不报任何错。</li>
-<li>警告选项用 <code>PUBLIC</code> 加在库上,库被 <code>install(EXPORT)</code> 导出,使用者换了编译器之后收到一批不认识的选项。</li>
-<li>用 <code>if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")</code> 分流,目标里的 <code>.c</code> 源文件也拿到了 C++ 专用选项。</li>
-<li>MSVC 上没加 <code>/utf-8</code>,报「缺少分号」,而出问题的那一行代码完全正常,真正的原因在上一行中文注释里。</li>
-<li>sanitizer 只加在 <code>target_compile_options</code> 上,链接期报一批 <code>__asan_</code> 开头的未定义符号。</li>
-<li>在 <code>Release</code> 配置下跑 ASan,报告里的行号与源码对不上,因为内联把调用栈压平了。</li>
-<li>Windows 上开了编译缓存却几乎不命中,原因是调试信息用的是 <code>/Zi</code> 而不是 <code>/Z7</code>。</li>
-</ol>
-<h3>从老工程迁过来的顺序</h3>
-<p>一份典型的老 CMakeLists 长成这样:开头一大段 <code>set(CMAKE_CXX_FLAGS ...)</code>,中间几条 <code>add_definitions</code> 与 <code>include_directories</code>,底下是一串 <code>add_executable</code>。全部改成目标级是终点,但一次改完必然改坏。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 359px"><code># 迁移前:选项全在全局层,范围内谁都躲不开
-cmake_minimum_required(VERSION 3.20)
-project(legacy LANGUAGES CXX)
-
-set(CMAKE_CXX_FLAGS <span>"${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Werror -DLEGACY_BUILD=1"</span>)
-add_definitions(-DUSE_OLD_API)
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
-add_subdirectory(third_party/fmt)
-add_library(core src/core.cpp)
-add_executable(app src/main.cpp)
-target_link_libraries(app core fmt)</code></pre>
-<p>迁移按下面的顺序做,每一步都能单独构建通过,随时可以停下来。顺序的依据是<strong>漏改会不会立刻暴露</strong>:立刻暴露的先搬,搬起来安全;不暴露的放最后,慢慢补。</p>
-<ol>
-<li><strong>先冻结现状。</strong>用 <code>cmake -S . -B build -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON</code> 导出一份完整命令行存档,后面每改一步重新导出一次并与存档比对。这一步不改任何代码,却决定了后面能不能验证。</li>
-<li><strong>把标准从 flags 里拆出来。</strong>删掉 <code>-std=c++14</code>,换成三个标准变量,或者直接给每个目标写 <code>target_compile_features</code>。验证点是命令行上只剩一个标准开关。</li>
-<li><strong>把宏定义搬到目标上。</strong><code>add_definitions(-DUSE_OLD_API)</code> 与 flags 里的 <code>-DLEGACY_BUILD=1</code>,逐个变成 <code>target_compile_definitions(t PRIVATE ...)</code>。宏比警告好搬,因为漏搬会立刻编译失败。</li>
-<li><strong>把头文件目录搬到目标上。</strong><code>include_directories</code> 换成 <code>target_include_directories</code>,对外要用的写 <code>PUBLIC</code>,内部用的写 <code>PRIVATE</code>。漏搬同样会立刻失败。</li>
-<li><strong>确认第三方引入的位置。</strong>把 <code>add_subdirectory(third_party/...)</code> 挪到自己的选项都已经离开全局层之后,并核对第三方源文件的命令行上不再有自己的警告选项。</li>
-<li><strong>最后搬警告。</strong>建一个 <code>proj_warnings</code> 的 <code>INTERFACE</code> 库,把 <code>-Wall -Werror</code> 挪进去,给自己的每个目标 <code>PRIVATE</code> 链上。它放在最后,因为这是唯一一类「漏搬不会失败、只会少几条诊断」的选项。</li>
-<li><strong>删掉对 CMAKE_CXX_FLAGS 的赋值。</strong>这个变量留给使用者从命令行传入,工程脚本里一行都不该写。删掉之后再比对一次命令行,确认没有意外丢失的选项。</li>
-</ol>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 576px"><code># 迁移后:全部挂在目标上,分流交给生成器表达式
-cmake_minimum_required(VERSION 3.20)
-project(legacy LANGUAGES CXX)
-
-add_library(proj_warnings INTERFACE)
-target_compile_options(proj_warnings INTERFACE
-    $&lt;$&lt;COMPILE_LANG_AND_ID:CXX,GNU,Clang&gt;:-Wall;-Wextra;-Werror&gt;
-    $&lt;$&lt;COMPILE_LANG_AND_ID:CXX,MSVC&gt;:/W4;/WX;/utf-8;/permissive-&gt;
-)
-
-add_subdirectory(third_party/fmt)
-
-add_library(core src/core.cpp)
-target_compile_features(core PUBLIC cxx_std_14)
-target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_compile_definitions(core PRIVATE LEGACY_BUILD=1 USE_OLD_API)
-target_link_libraries(core PRIVATE proj_warnings)
-
-add_executable(app src/main.cpp)
-target_link_libraries(app PRIVATE core fmt::fmt proj_warnings)</code></pre>
-<p>两份脚本的行数差不多,差别在信息量:迁移后的版本能回答「这条选项是给谁的」「使用者会拿到什么」「第三方会不会被波及」三个问题,迁移前的版本一个也答不了。</p>
-<p>迁移过程中最容易被跳过的是第一步。没有命令行存档,后面每一步都只能靠「能编过」来判断,而编译选项的问题恰恰大多不影响编译成败。</p>
-<h3>写完编译选项之后的检查清单</h3>
-<ol>
-<li><strong>三个标准变量写全了吗。</strong><code>CMAKE_CXX_STANDARD</code>、<code>CMAKE_CXX_STANDARD_REQUIRED ON</code>、<code>CMAKE_CXX_EXTENSIONS OFF</code>,而且都在第一个目标创建之前。</li>
-<li><strong>库对外的标准要求用 target_compile_features 表达了吗。</strong>只设 <code>CXX_STANDARD</code> 的库,使用者拿不到任何信息。</li>
-<li><strong>还有选项留在 CMAKE_CXX_FLAGS 或 add_compile_options 里吗。</strong>顶层搜一遍这两个名字,理想结果是零。</li>
-<li><strong>警告选项是 PRIVATE 的吗。</strong><code>PUBLIC</code> 与 <code>INTERFACE</code> 的会被写进导出的 Config 文件。</li>
-<li><strong>按编译器分流用的是生成器表达式吗。</strong>搜一遍 <code>CMAKE_CXX_COMPILER_ID STREQUAL</code>,能换的都换成 <code>$&lt;COMPILE_LANG_AND_ID:...&gt;</code>。</li>
-<li><strong>MSVC 上 /utf-8 与 /permissive- 加了吗。</strong>这两条与代码正确性直接相关,不属于风格选择,而且 C 与 C++ 两条分支都要加。</li>
-<li><strong>sanitizer 的编译与链接两处都加了吗。</strong><code>target_link_options</code> 里也出现同一组选项,才算加对。</li>
-<li><strong>核对过最终命令行吗。</strong>用 <code>ninja -C build -t commands</code> 或 <code>compile_commands.json</code> 看一眼:脚本怎么写不算数,编译器收到什么才算数。</li>
-</ol>
-<pre style="contain-intrinsic-size:auto 169px"><code># 一次性把三件事查完:标准开关、警告选项、第三方有没有被波及
-cmake -S . -B build -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-ninja -C build -t commands | grep -- -std=
-ninja -C build -t commands | grep -- -Werror
-ninja -C build -t commands | grep _deps/ | grep -- -W</code></pre>
-<p>最后一条最有价值:第三方源文件的命令行上出现任何自己的警告选项,都说明还有选项留在全局层或目录层没有搬走。这一条查出来的问题,通常比前两条加起来还多。</p>
-<h3>跨章指路</h3>
-<p>标准要求与编译选项在导出时的传播规则,<code>$&lt;BUILD_INTERFACE:...&gt;</code> 与 <code>$&lt;INSTALL_INTERFACE:...&gt;</code> 的完整用法,以及导出的 Config 文件里到底写了什么,见第 5 章。</p>
-<p>按配置分流的另一半——多配置生成器、<code>CMAKE_BUILD_TYPE</code> 与自定义配置、以及把一整组选项固化进 Presets——在第 7 章。本章里凡是用 <code>$&lt;CONFIG:Debug&gt;</code> 的地方,前提都是那一章讲的配置模型。</p>
-<p>编译缓存与 Unity 构建对编译选项的额外要求在第 10 章,<code>/Z7</code> 那条伏笔在那里收口;生成的源文件怎么单独放宽警告等级,与第 8 章的自定义命令一起看。</p>
-<p>编译器优化的能力边界——哪些优化必然发生、哪些永远不会发生、开高一档能换来多少——不属于构建系统的范围。结论按需引用,展开见《C++ 性能优化》。</p>
-<p>链接期优化的机制、符号解析与可见性怎么影响它的效果,展开见《编译与链接》;本章只给出选项名与「编译和链接两处都要加」这一条工程结论。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 编译选项改完之后,唯一的验收标准是生成出来的命令行</span><p>CMakeLists 是意图,命令行是事实,两者之间隔着变量作用域、目标属性、使用要求传播、生成器表达式求值四层机制,任何一层出偏差都不会报错。养成改完就用 <code>ninja -t commands</code> 或 <code>compile_commands.json</code> 复核一次的习惯,成本是几秒钟,能挡掉本章列出的绝大多数问题:标准开关有没有两个、警告有没有漏进第三方、按编译器分流的表达式有没有按预期展开、sanitizer 的链接选项在不在。这份输出还可以存档,作为下一次修改的比对基线。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 39733px;--thin-h:39733px">
+<section class="chapter" style="contain-intrinsic-size:auto 35593px;--thin-h:35593px">
 <h1 id="k7"><span class="part">第 7 章</span>生成器、配置与 Presets</h1>
+<p>前面各章默认「配置完就构建」,这一章补上被略过的那次选择:生成器决定生成期写出哪种构建文件,也决定「用哪种配置构建」这个问题在哪一步得到回答。单配置与多配置的分界把 CMake 的用法劈成两套,换生成器后「原来的判断突然失效」多半源于此。三节机制讲两类生成器、<code>CMAKE_BUILD_TYPE</code> 与四种默认配置、把整套配置固化成 CMakePresets.json 并接进 IDE;末节条目收录构建配置与选项相关的变量。</p>
 <h2 id="k7-gen">7.1 单配置与多配置生成器</h2>
 <p>CMake 不编译任何东西,它<strong>生成另一个构建系统的输入文件</strong>。生成器是这一步的后端选择:选定生成器,才确定生成期写出的是 <code>Makefile</code>、<code>build.ninja</code>、<code>.sln</code> 加 <code>.vcxproj</code>,还是 <code>.xcodeproj</code>。</p>
 <p>生成器还决定另一件更要紧的事:<strong>「用哪一种配置构建」这个问题在哪一步得到回答</strong>。这条分界把 CMake 的用法劈成两套,写脚本时撞见的多数怪现象都能追回到它。</p>
@@ -7920,96 +7177,11 @@ list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(STATUS <span>"子模块处理完毕"</span>)</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 工程自己的诊断写在 VERBOSE 级别,默认安静,需要时一行命令打开</span><p>把探测结果、路径、开关状态一律用 message(VERBOSE ...) 打印,默认配置输出里看不到,排查时加 --log-level=VERBOSE 就全部出来。写成 STATUS 的后果是每次配置都刷几十行,真正重要的警告淹没在里面。这个级别与 CMAKE_MESSAGE_LOG_LEVEL 的引入版本以官方文档的 Added in 标注为准。</p></div>
 <div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 CMAKE_MESSAGE_INDENT 只追加不弹出,后面所有输出的缩进一路累加</span><p>list(APPEND CMAKE_MESSAGE_INDENT "  ") 之后忘了 list(POP_BACK),缩进不会自动恢复。这个变量与普通变量一样受作用域规则约束,在 add_subdirectory 进入的子目录里追加不影响父目录,但在同一个文件里追加而不弹出,这个文件后面的全部输出都会带上多余的缩进,层次越深越离谱。追加与弹出应当成对出现在同一层。</p></div>
-<h2 id="k7-sum">7.5 小结</h2>
-<p><strong>「用哪一种配置构建」这个问题在什么时候得到回答、答案由谁给出</strong>,是贯穿第 7 章的一条线。生成器决定它在哪一步定下来,配置变量决定它取什么值,Presets 决定它写在哪里、由谁维护。三者合起来才构成一次可复现的构建。</p>
-<p>7.4 节是本章的条目部分,把构建配置与选项变量逐条列出:构建类型、全局选项、库类型与可见性、优化与诊断开关,每一条给出谁设、何时设与设错的后果。查某个变量翻那里,本节负责给判据与排查顺序。</p>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 638px">
-<thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td class="nw">CMake 生成的是别的构建系统的输入文件</td><td class="nw">7.1</td><td>生成器决定生成出哪一种</td></tr>
-<tr><td class="nw">生成器分单配置与多配置两类</td><td class="nw">7.1</td><td>分界是配置在配置期定还是构建期定</td></tr>
-<tr><td>多配置下 <code>CMAKE_BUILD_TYPE</code> 恒为空</td><td class="nw">7.1</td><td>读它的分支永远走不到,且不报错</td></tr>
-<tr><td>判断多配置读 <code>GENERATOR_IS_MULTI_CONFIG</code></td><td class="nw">7.1</td><td>不要匹配生成器名字</td></tr>
-<tr><td class="nw">多配置会给输出目录追加一层配置名</td><td class="nw">7.1</td><td>写死产物路径的脚本必然落空</td></tr>
-<tr><td class="nw"><code>-G</code>、<code>-A</code>、<code>-T</code> 只在首次配置时读取</td><td class="nw">7.1</td><td>要换就换一个空的构建目录</td></tr>
-<tr><td class="nw">四种默认配置各对应一整套变量</td><td class="nw">7.2</td><td>后缀是配置名的全大写形式</td></tr>
-<tr><td class="nw"><code>NDEBUG</code> 一定义 <code>assert</code> 整个消失</td><td class="nw">7.2</td><td>断言里不能有副作用</td></tr>
-<tr><td><code>CMAKE_BUILD_TYPE</code> 为空不等于 Debug</td><td class="nw">7.2</td><td>既不优化也不带符号</td></tr>
-<tr><td><code>RelWithDebInfo</code> 是发布构建的合理默认</td><td class="nw">7.2</td><td>符号不影响速度,却决定崩溃能否定位</td></tr>
-<tr><td class="nw">默认配置只在三个条件同时成立时才设</td><td class="nw">7.2</td><td>单配置、顶层工程、调用方没给</td></tr>
-<tr><td class="nw">自定义配置要补齐编译、链接与映射三组变量</td><td class="nw">7.2</td><td>漏掉 <code>CMAKE_MAP_IMPORTED_CONFIG</code> 会挑错库</td></tr>
-<tr><td class="nw">Presets 把命令行搬进版本控制</td><td class="nw">7.3</td><td>本地、CI、IDE 读同一份</td></tr>
-<tr><td>公共部分放 <code>hidden</code> 基座,各平台 <code>inherits</code> 它</td><td class="nw">7.3</td><td><code>cacheVariables</code> 按键合并,不整块替换</td></tr>
-<tr><td>个人定制进 <code>CMakeUserPresets.json</code></td><td class="nw">7.3</td><td>它要写进 <code>.gitignore</code></td></tr>
-<tr><td class="nw">改了 preset 没反应先看构建目录的旧缓存</td><td class="nw">7.3</td><td>删目录或 <code>--fresh</code></td></tr>
-</tbody>
-</table>
-<h3>易错清单</h3>
-<p>下列每一条都是一个能对上号的现场,而不是抽象的规则。前六条属于生成器与配置,后四条属于 Presets。</p>
-<ol>
-<li>在 Visual Studio 生成器上加 <code>-DCMAKE_BUILD_TYPE=Release</code>,不报错也不起作用,构建出来还是 Debug。</li>
-<li><code>if(CMAKE_BUILD_TYPE STREQUAL "Debug")</code> 包着的一批宏,在 Windows 的 IDE 里一个都没定义,而 Linux 上一切正常。</li>
-<li>部署脚本按 <code>build/bin/app</code> 找产物,在 Visual Studio 上报文件不存在,而产物在 <code>build/bin/Debug/app.exe</code>。</li>
-<li>对已经配置过的目录改 <code>-A x64</code>,报「does not match the platform used previously」。</li>
-<li>不给 <code>CMAKE_BUILD_TYPE</code> 直接构建,拿去测性能,得出「这个库慢十倍」的结论。</li>
-<li><code>assert(init() == 0)</code> 在 Release 下整行消失,子系统没有初始化,现象是运行到后面某处才崩。</li>
-<li>Windows 上把 Debug 构建的静态库链进 Release 程序,链接期报 <code>_ITERATOR_DEBUG_LEVEL</code> 不匹配,或者跨模块释放内存时崩在堆里。</li>
-<li>自定义了 <code>Profile</code> 配置,第三方导入目标解析不到产物,或者静默链上了 Debug 版本的库。</li>
-<li>把编译器从 GCC 换成 Clang 写进 preset,重新配置之后 <code>compile_commands.json</code> 里还是 <code>g++</code>。</li>
-<li>两个 preset 共用一个 <code>binaryDir</code>,来回切换时报「does not match the generator used previously」。</li>
-</ol>
-<h3>要做什么就用哪个生成器、哪个配置</h3>
-<table style="contain-intrinsic-size:auto 514px">
-<thead><tr><th>要做的事</th><th>生成器</th><th>配置</th><th>理由</th></tr></thead>
-<tbody>
-<tr><td class="nw">日常改代码、跑单元测试</td><td>Ninja</td><td><code>Debug</code></td><td>增量最快,断言全开,能下断点</td></tr>
-<tr><td class="nw">在 Windows 上用 IDE 调试</td><td>Visual Studio,或 Ninja Multi-Config 配 Presets</td><td><code>Debug</code></td><td>前者有原生工程树,后者构建更快</td></tr>
-<tr><td class="nw">测性能、跑基准</td><td>Ninja</td><td><code>RelWithDebInfo</code></td><td>优化开着,同时留着符号可以做剖析</td></tr>
-<tr><td class="nw">对外发布</td><td>与 CI 一致的生成器</td><td><code>RelWithDebInfo</code></td><td>崩溃时拿得到调用栈,交付前再剥离符号</td></tr>
-<tr><td class="nw">体积受限的交付物</td><td>Ninja</td><td><code>MinSizeRel</code></td><td>唯一以体积为目标的配置</td></tr>
-<tr><td class="nw">Windows 上既要多配置又要速度</td><td>Ninja Multi-Config</td><td>构建时给 <code>--config</code></td><td>不产出 <code>.sln</code>,靠 Presets 接 IDE</td></tr>
-<tr><td class="nw">交叉编译</td><td>Ninja</td><td>由工具链文件与 preset 给定</td><td>见第 9 章</td></tr>
-<tr><td class="nw">持续集成</td><td>单配置与多配置各留一个作业</td><td>两条线各自的发布配置</td><td>两类生成器的差别只有真跑才暴露</td></tr>
-</tbody>
-</table>
-<p>这张表里只有一处需要权衡:Windows 上究竟用 Visual Studio 生成器还是 Ninja Multi-Config。判据是团队日常在哪里工作——大部分时间待在 IDE 里就选前者,大部分时间在命令行与 CI 上就选后者,两者的脚本写法没有区别。</p>
-<h3>新工程从零起手的四步</h3>
-<p>四步的顺序不能颠倒:先把命令行调通,再把调通的命令行搬进 preset。反过来做会在两处同时排错。</p>
-<ol>
-<li><strong>选生成器。</strong>默认 Ninja;Windows 上要 IDE 工程树就加一条 Visual Studio 生成器的线;要在一个目录里放多种配置就用 Ninja Multi-Config。</li>
-<li><strong>定默认配置。</strong>在顶层 CMakeLists 里按「单配置 + 顶层工程 + 调用方没给」三个条件设一个 <code>RelWithDebInfo</code> 默认值,并给出 <code>STRINGS</code> 下拉项。</li>
-<li><strong>写 preset。</strong>先一个 <code>hidden</code> 基座放生成器与目录布局,再按平台加条件,最后每种配置一条;<code>binaryDir</code> 一律写成 <code>${sourceDir}/out/build/${presetName}</code>。</li>
-<li><strong>把命令行搬进版本控制。</strong>提交 <code>CMakePresets.json</code>,把 <code>CMakeUserPresets.json</code> 与构建目录写进 <code>.gitignore</code>,再把 CI 里抄着参数的那几行换成 <code>cmake --preset</code>。</li>
-</ol>
-<pre style="contain-intrinsic-size:auto 304px"><code># 第一步与第二步验收:三类生成器各配一次,都要能通过
-cmake -S . -B /tmp/v1 -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo
-cmake -S . -B /tmp/v2 -G <span>"Ninja Multi-Config"</span>
-cmake -S . -B /tmp/v3 -G <span>"Unix Makefiles"</span>        # Windows 上换成 Visual Studio 生成器
-
-# 第三步与第四步验收:preset 列得出来、配得起来、构建与测试都通
-cmake --list-presets
-cmake --preset linux-release
-cmake --build --preset linux-release
-ctest --preset linux-release</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 231px"><span class="t">🟢 新工程先把裸命令行在两类生成器上都跑通,再写 preset</span><p>顺序反过来的代价是排错面积翻倍:preset 配不通时分不清是 preset 写错了还是 CMakeLists 本身在多配置下有问题。先用 <code>-G Ninja</code> 与 <code>-G "Ninja Multi-Config"</code> 各配一次、各构建一次,把 7.1 节那四条写法约束全部验过,再把这两条命令行原样翻译成两条 preset。翻译过程是机械的:<code>-G</code> 进 <code>generator</code>,<code>-B</code> 进 <code>binaryDir</code>,每个 <code>-D</code> 进 <code>cacheVariables</code> 的一个键。验收标准是删掉构建目录、只用 preset 重来一遍,结果与裸命令行一致。</p></div>
-<h3>排查顺序与跨章指路</h3>
-<p>与配置有关的问题,按下面三步查,多数在第一步就有答案。三步的共同点是不猜,只看 CMake 自己报出来的值。</p>
-<pre style="contain-intrinsic-size:auto 250px"><code># 第一步:当前是哪类生成器,配置变量到底是什么值
-cmake -LAH build | grep -E <span>"CMAKE_BUILD_TYPE|CMAKE_CONFIGURATION_TYPES|CMAKE_GENERATOR"</span>
-
-# 第二步:配置期打印一次,方括号是为了让空值看得见
-#   message(STATUS <span>"type=[${CMAKE_BUILD_TYPE}] cfgs=[${CMAKE_CONFIGURATION_TYPES}]"</span>)
-
-# 第三步:看真实下发给编译器的命令行,选项到底有没有进去
-cmake --build build --config RelWithDebInfo -v</code></pre>
-<p>第一步分辨的是「生成器类别搞错了」还是「变量值不对」;第二步分辨的是「变量为空」还是「变量有值但没人读」;第三步分辨的是「CMake 侧没配上」还是「配上了但编译器行为不符预期」。</p>
-<p>三步都通过之后问题仍在,方向就转到别的章:生成器表达式的完整求值规则见第 3 章;按配置分流的编译选项与三大编译器的差异见第 6 章;<code>ctest --preset</code> 与测试的组织方式见第 8 章;<code>cpack</code> 的打包 preset 与交叉编译用的工具链文件见第 9 章;大型工程里怎么把 preset 按子系统拆开见第 10 章。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 233px"><span class="t">🔴 多配置生成器上的排查,一定要带上 --config 再看</span><p>不带 <code>--config</code> 时,多配置生成器构建的是默认配置,而默认配置未必是正在排查的那一种:Visual Studio 生成器默认取 <code>CMAKE_CONFIGURATION_TYPES</code> 的第一项,通常是 <code>Debug</code>,Ninja Multi-Config 则看 <code>CMAKE_DEFAULT_BUILD_TYPE</code>。于是出现一类假象:改了 Release 配置下的选项,构建一次没有任何变化,因为构建的根本不是 Release。同一条规矩适用于 <code>cmake --install</code> 与 <code>ctest</code>,两者在多配置生成器上同样需要 <code>--config</code> 或 <code>-C</code> 指明配置,否则装出来或跑起来的是另一种配置的产物。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 47311px;--thin-h:47311px">
+<section class="chapter" style="contain-intrinsic-size:auto 41082px;--thin-h:41082px">
 <h1 id="k8"><span class="part">第 8 章</span>自定义命令、代码生成与测试</h1>
+<p>构建不只是编译源文件:代码生成、构建后处理与测试同样要挂进那张构建图,这一章讲怎么挂对位置。主线是 <code>add_custom_command</code> 的两种形态——带 OUTPUT 的声明生产规则,带 TARGET 的只附加动作,混淆两者是自定义步骤失效的总根源。三节机制讲两种形态与依赖关系、一个完整的代码生成例子、CTest 与接 GoogleTest;末节条目收录目录、源文件、测试与全局这几类目标之外的属性。</p>
 <h2 id="k8-cmd">8.1 add_custom_command 的两种形态与依赖关系</h2>
 <p><code>add_custom_command</code> 这一个命令名下面是两条规则完全不同的命令。带 <code>OUTPUT</code> 的那一条往构建图里添节点,带 <code>TARGET</code> 的那一条只是往某个目标的构建脚本里塞几行命令。两者的参数表不同,触发条件不同,能不能被增量构建跳过也不同。</p>
 <p>把两者当成一件事,是自定义命令出问题的总根源。代码生成挂成 <code>POST_BUILD</code>,生成出来的源文件不会有任何目标去编译;每次构建后想拷一份产物却写成 <code>OUTPUT</code>,那条命令一次都不会执行。两种误用都不报错,只是结果不对。</p>
@@ -8826,152 +7998,12 @@ set_property(TARGET core APPEND PROPERTY COMPILE_DEFINITIONS SECOND=2)
 get_property(defs TARGET core PROPERTY COMPILE_DEFINITIONS)
 message(STATUS <span>"两条都在: ${defs}"</span>)</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 set_property 默认覆盖,target_ 一族默认追加</span><p>同一段脚本里混用这两套命令时,后写的 set_property(TARGET ... PROPERTY COMPILE_OPTIONS ...) 会把前面 target_compile_options() 攒下的内容整段冲掉,而且不报任何警告。规避办法只有两条:统一用 target_ 一族,或者在 set_property 上一律带 APPEND。排查这类问题时把属性读回来打印一次,比逐行读脚本快。</p></div>
-<h2 id="k8-sum">8.5 小结</h2>
-<p><strong>把构建期实际发生的事完整地告诉构建工具</strong>,是代码生成与测试这两件事的共同要求。代码生成要告诉它「这个文件由什么造、依赖什么」,测试要告诉它「有哪些命令要跑、彼此有什么约束」。凡是没告诉的部分,工具一律当作不存在,而后果是静默的。</p>
-<p>三节各自的失效形态放在一起看有一个共同结构:<strong>信息在写脚本的人脑子里是完整的,在构建工具的图里是残缺的。</strong>生成器读了哪个文件、测试要独占哪个端口,这些知识只有显式写进 <code>DEPENDS</code> 与测试属性,工具才拿得到。这一章列出的静默出错,全是这个落差的产物。</p>
-<p>8.4 节是本章的条目部分,把目标之外六种作用域的属性逐条列出:目录、源文件、测试、全局、缓存条目与安装文件。<code>GENERATED</code>、测试夹具、作业池这些散在前三节的属性,在那里能按表查到。</p>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 629px">
-<thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td>add_custom_command 有 OUTPUT 与 TARGET 两种形态</td><td class="nw">8.1</td><td>前者进依赖图能增量,后者不进图每次都跑</td></tr>
-<tr><td class="nw">OUTPUT 形态必须有消费者</td><td class="nw">8.1</td><td>没有目标引用产物,命令一次都不执行且不报错</td></tr>
-<tr><td class="nw">DEPENDS 要收齐三类输入</td><td class="nw">8.1</td><td>数据文件、生成器脚本、生成器可执行文件</td></tr>
-<tr><td class="nw">DEPENDS 收目标名与收文件路径不是一回事</td><td class="nw">8.1</td><td>前者只保证先构建,后者才是文件依赖,两者都要写</td></tr>
-<tr><td>PRE_BUILD 只有 Visual Studio 真正支持</td><td class="nw">8.1</td><td>其余生成器退化成 PRE_LINK,顺序悄悄变了</td></tr>
-<tr><td class="nw">自定义命令一律加 VERBATIM</td><td class="nw">8.1</td><td>不加则参数被二次解析,路径带空格时静默出错</td></tr>
-<tr><td class="nw">COMMAND 不是 shell</td><td class="nw">8.1</td><td>管道与重定向要换成 <code>cmake -E</code> 子命令</td></tr>
-<tr><td class="nw">路径用生成器表达式取</td><td class="nw">8.1</td><td>多配置生成器下手拼的路径少一层配置名</td></tr>
-<tr><td class="nw">生成物一律输出到构建目录</td><td class="nw">8.2</td><td>源码树干净、可开多个构建目录、并发不互相覆盖</td></tr>
-<tr><td class="nw">生成的头要建立目标级依赖</td><td class="nw">8.2</td><td>否则首次并行构建随机报找不到头文件</td></tr>
-<tr><td>configure_file 在配置期,file(GENERATE) 在生成期</td><td class="nw">8.2</td><td>按配置不同的内容只能用后者</td></tr>
-<tr><td class="nw">生成的头要单独 install</td><td class="nw">8.2</td><td>它不在源码目录里,按目录整体安装漏得掉</td></tr>
-<tr><td class="nw">CTest 只是驱动器</td><td class="nw">8.3</td><td>断言与用例语义归测试框架,它只看退出码</td></tr>
-<tr><td class="nw">enable_testing 必须写在顶层</td><td class="nw">8.3</td><td>写在子目录里,从构建根目录跑 ctest 找不到测试</td></tr>
-<tr><td class="nw">多配置生成器下 ctest 必须给 -C</td><td class="nw">8.3</td><td>不给就一个测试都不跑,而且退出码是 0</td></tr>
-<tr><td>用 gtest_discover_tests 拿用例级粒度</td><td class="nw">8.3</td><td>老的 gtest_add_tests 靠扫源码,宏套宏就漏</td></tr>
-</tbody>
-</table>
-<p>表里有两行是其余各行的根:「OUTPUT 形态必须有消费者」与「CTest 只是驱动器」。前者说明构建期的动作是被需求拉动的,没有人要就不发生;后者说明测试的语义不在 CMake 这一侧,CMake 只负责把命令登记进去。其余各条都是这两条在具体命令上的展开。</p>
-<p>另有三行是跨平台差异的集中点:PRE_BUILD 的退化、多配置生成器下的 <code>-C</code>、Windows 上的运行库与 DLL。三者的共同特征是「在一个平台上验证通过的脚本换个平台就不对」,而且症状都不指向真正的原因。要跨平台交付的工程,这三条须单独验一遍。</p>
-<h3>易错清单</h3>
-<p>症状本身就是索引。这份清单按「现场看到什么」排列,而不是按知识点排列——排查时手上能对上号的是症状,不是原理。</p>
-<ol>
-<li>写完 <code>add_custom_command(OUTPUT ...)</code> 就以为完事,没有任何目标消费产物,构建时 <code>no work to do</code>。</li>
-<li>改了 <code>.csv</code> 数据表重新构建,生成的代码没变,删掉整个构建目录才对。</li>
-<li>改了 <code>gen.cmake</code> 的生成逻辑,输出还是上一版,代码与脚本对不上。</li>
-<li>生成器工具 <code>mygen</code> 重编了,生成出来的代码却还是旧工具的产物。</li>
-<li>补完 <code>DEPENDS</code> 直接重新构建,忘了先重新配置,边还没进构建文件。</li>
-<li>把代码生成挂成 <code>POST_BUILD</code>,生成的 <code>.cpp</code> 没有任何目标去编译。</li>
-<li>自定义命令没加 <code>VERBATIM</code>,构建目录路径里有空格,命令被拆成两条。</li>
-<li>首次构建报找不到生成的头文件,再构建一次就好了,CI 上偶发。</li>
-<li>生成的头写回了源码目录,两个构建目录同时构建时互相覆盖出半截内容。</li>
-<li>库装出去之后使用者报找不到生成的头——只 <code>install(TARGETS)</code>,忘了单独装那个头。</li>
-<li><code>enable_testing()</code> 写在了 <code>tests/CMakeLists.txt</code> 里,<code>ctest</code> 报「找不到任何测试」。</li>
-<li>在 Visual Studio 上跑 <code>ctest</code> 没给 <code>-C</code>,一个测试都没跑,退出码却是 0,CI 全绿。</li>
-<li><code>ctest -j1</code> 全过、<code>-j8</code> 随机失败,几个测试抢同一个端口或者同一个临时目录。</li>
-<li>设了 <code>PASS_REGULAR_EXPRESSION</code>,被测程序崩溃了照样判通过。</li>
-<li>Windows 上 <code>gtest_discover_tests</code> 在构建期弹窗或者报 <code>0xc0000135</code>,缺 DLL。</li>
-</ol>
-<p>十五条里有十一条的共同特征是<strong>当场不报错</strong>:构建通过、配置通过、<code>ctest</code> 退出码为 0,问题在几天之后以「结果不对」的形式浮出来。这个特征决定了应对方式——靠写完之后的机械核对,而不是靠出问题之后的调试。</p>
-<h3>「改了东西却没重新生成」的排查表</h3>
-<p>这一类症状的共同点是<strong>没有报错</strong>,只有结果不对,所以必须按边去查,不能靠读脚本。四步走:先对上症状,再定位缺的是哪条边,用命令确认,最后补。</p>
-<table style="contain-intrinsic-size:auto 668px">
-<thead><tr><th>症状</th><th>最可能缺的那条边</th><th>用哪条命令确认</th><th>怎么补</th></tr></thead>
-<tbody>
-<tr><td class="nw">构建秒退,产物根本没生成</td><td>产物没有消费者,⑤ 缺</td><td><code>ninja -t query 产物</code> 看 outputs 是否为空</td><td>列进目标源文件,或 add_custom_target ... DEPENDS</td></tr>
-<tr><td class="nw">改了数据表,输出不变</td><td>数据文件不在 DEPENDS 里,① 缺</td><td><code>ninja -d explain 目标</code> 看有没有 older than 的解释</td><td>DEPENDS 补上数据文件路径</td></tr>
-<tr><td class="nw">改了生成器脚本,输出不变</td><td>脚本不在 DEPENDS 里,② 缺</td><td><code>ninja -t query 产物</code> 看 input 一栏</td><td>DEPENDS 补上脚本</td></tr>
-<tr><td class="nw">工具重编了,输出不变</td><td>只写了目标名,没写 TARGET_FILE,③ 缺一半</td><td><code>ninja -t query 产物</code> 看 input 里有没有工具的可执行文件</td><td>再补一条 <code>$&lt;TARGET_FILE:mygen&gt;</code></td></tr>
-<tr><td class="nw">首次构建报找不到生成的头</td><td>消费目标与生成目标之间没有目标级依赖</td><td><code>ninja -t commands 目标</code> 看编译命令的先后</td><td>生成的头列进目标源文件,或 add_dependencies</td></tr>
-<tr><td class="nw">别的目录里报「不知道怎么生成」</td><td>OUTPUT 的跨目录可见性</td><td>把两处的 CMakeLists 对照着看</td><td>命令与消费目标放同一目录,或 add_custom_target 加 add_dependencies</td></tr>
-<tr><td class="nw">补了 DEPENDS 还是不重新生成</td><td>改的是脚本,构建文件还是旧的</td><td><code>ninja -t query 产物</code> 看 input 变了没有</td><td>先跑 <code>cmake -S . -B build</code> 重新配置</td></tr>
-<tr><td class="nw">清理之后再构建才对</td><td>BYPRODUCTS 没声明</td><td><code>ninja -t targets all</code> 看那个文件在不在图上</td><td>把顺带写出的文件写进 BYPRODUCTS</td></tr>
-</tbody>
-</table>
-<p>表里的「用哪条命令确认」一栏是关键。跳过确认直接改脚本,常见结果是补了一条本来就在的边,而真正缺的那条仍然缺着:症状一点没变,线索却更乱了。</p>
-<p>上面全部用 Ninja 的工具,原因是它是唯一能直接回答「为什么」的构建工具。Makefile 生成器下没有等价的解释开关,排查依赖问题时可以另开一个用 Ninja 的构建目录——生成器是构建目录的属性,同一份源码开几个互不影响。</p>
-<pre style="contain-intrinsic-size:auto 196px"><code># 排查依赖问题时的固定动作:另开一个 Ninja 构建目录,不动原来的
-cmake -G Ninja -S . -B build-diag
-cmake --build build-diag
-touch errors.csv
-ninja -C build-diag -d explain app_codes
-ninja -C build-diag -t query errors.h        # 路径相对于构建目录</code></pre>
-<h3>写完自定义命令之后的检查清单</h3>
-<p>这份排查表与正文的顺序是反的。正文按「命令怎么写」组织,排查按「看到什么症状」组织——出问题的时候手上只有症状。清单只有八条,写完一条自定义命令之后逐条核一遍用不了一分钟。</p>
-<ol>
-<li><strong>加 <code>VERBATIM</code> 了吗?</strong>没有例外,一律加。</li>
-<li><strong><code>DEPENDS</code> 三类输入都写了吗?</strong>数据文件、生成器脚本(以及它 include 的脚本)、生成器可执行文件的目标名与 <code>$&lt;TARGET_FILE:&gt;</code>。</li>
-<li><strong>输出在构建目录里吗?</strong>凡是出现 <code>${CMAKE_CURRENT_SOURCE_DIR}</code> 的输出路径都要改。</li>
-<li><strong>有消费者吗?</strong>产物列进了某个目标的源文件,或者被 <code>add_custom_target ... DEPENDS</code> 拉住。</li>
-<li><strong>路径用生成器表达式取了吗?</strong>可执行文件用 <code>$&lt;TARGET_FILE:&gt;</code>,目录用 <code>$&lt;TARGET_FILE_DIR:&gt;</code>。</li>
-<li><strong>生成的头有目标级依赖护着吗?</strong>把它列进产出它的目标的源文件列表是最省事的写法。</li>
-<li><strong>顺带写出的文件写进 <code>BYPRODUCTS</code> 了吗?</strong>Ninja 需要知道它们的存在。</li>
-<li><strong>写了 <code>COMMENT</code> 吗?</strong>构建日志里能看出这一步在做什么,排查时省一半时间。</li>
-</ol>
-<h3>一份把生成与测试都接好的骨架</h3>
-<p>把这一章的结论压成一份可以直接照抄的顶层脚本。四个环节各占一段:生成、库、可执行文件、测试。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1011px"><code>cmake_minimum_required(VERSION 3.20)
-project(demo VERSION 1.0.0 LANGUAGES CXX)
-
-# ① 代码生成:输出进构建目录,DEPENDS 收齐输入
-set(GEN_H   ${CMAKE_CURRENT_BINARY_DIR}/errors.h)
-set(GEN_CPP ${CMAKE_CURRENT_BINARY_DIR}/errors.cpp)
-add_custom_command(
-  OUTPUT  ${GEN_H} ${GEN_CPP}
-  COMMAND ${CMAKE_COMMAND} -DTABLE=${CMAKE_CURRENT_SOURCE_DIR}/errors.csv
-                           -DOUT_H=${GEN_H} -DOUT_CPP=${GEN_CPP}
-                           -P ${CMAKE_CURRENT_SOURCE_DIR}/gen.cmake
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/errors.csv
-          ${CMAKE_CURRENT_SOURCE_DIR}/gen.cmake
-  COMMENT <span>"从 errors.csv 生成错误码表"</span>
-  VERBATIM)
-
-# ② 消费目标:生成的头也列进源文件,建立目标级依赖
-add_library(app_codes STATIC ${GEN_CPP} ${GEN_H})
-target_include_directories(app_codes PUBLIC
-  $&lt;BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}&gt;
-  $&lt;INSTALL_INTERFACE:include&gt;)
-target_compile_features(app_codes PUBLIC cxx_std_17)
-
-# ③ 可执行文件
-add_executable(app main.cpp)
-target_link_libraries(app PRIVATE app_codes)
-
-# ④ 测试:顶层打开,被嵌进别人工程时默认关掉
-option(DEMO_BUILD_TESTS <span>"构建 demo 的测试"</span> ${PROJECT_IS_TOP_LEVEL})
-<span class="kw">if</span>(DEMO_BUILD_TESTS)
-  enable_testing()
-  add_executable(codes_test codes_test.cpp)
-  target_link_libraries(codes_test PRIVATE app_codes)
-  add_test(NAME codes.text COMMAND codes_test)
-  set_tests_properties(codes.text PROPERTIES LABELS <span>"unit"</span> TIMEOUT 30)
-endif()</code></pre>
-<p>骨架里刻意没有出现的东西同样值得注意:没有 <code>execute_process</code>,没有写回源码目录的输出路径,没有 <code>include_directories</code> 这类目录级命令,没有手拼的可执行文件路径。这些缺席不是省略,而是这一章与前几章的结论叠加之后剩下的形态。</p>
-<p>这份骨架里每一行都对应前面的一条结论:输出路径在构建目录、<code>DEPENDS</code> 收齐、<code>VERBATIM</code> 在、生成的头进了源文件列表、包含目录用 <code>$&lt;BUILD_INTERFACE:&gt;</code> 与 <code>$&lt;INSTALL_INTERFACE:&gt;</code> 分开、测试用选项护住。照抄之后按上一节的清单核一遍即可。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 自定义命令与测试都写完之后,按清单核一遍比事后排查省时间</span><p>这一章列出的失效形态有一个共同点:<strong>它们都不在写下去的那一刻报错</strong>。少写一条 <code>DEPENDS</code>、忘了 <code>VERBATIM</code>、把 <code>enable_testing()</code> 放进子目录,当时全都通过,代价在几天后以「构建结果不对」或者「CI 全绿但测试没跑」的形式出现,而那时已经没人记得改过什么。检查清单的价值就在这里——它把「事后靠症状反推」换成了「当场按条目核对」,而条目只有八条,核一遍不到一分钟。</p></div>
-<h3>跨章指路</h3>
-<p>自定义命令与测试的每一条规则,前提都在前面几章。遇到卡住的地方,按下面的对应关系回到相应章节。</p>
-<table style="contain-intrinsic-size:auto 370px">
-<thead><tr><th>话题</th><th>去哪一章</th></tr></thead>
-<tbody>
-<tr><td class="nw">配置期、生成期、构建期的分界</td><td class="nw">第 0 章</td></tr>
-<tr><td class="nw">生成器表达式的完整语法与求值时机</td><td class="nw">第 3 章</td></tr>
-<tr><td>用 FetchContent 引入 GoogleTest 的机制</td><td class="nw">第 4 章</td></tr>
-<tr><td class="nw">生成的头怎么随包装出去、导出目标怎么写</td><td class="nw">第 5 章</td></tr>
-<tr><td class="nw">多配置生成器与测试预设</td><td class="nw">7.1 节与 7.3 节</td></tr>
-<tr><td>Windows 上 DLL 搜索顺序与 RPATH</td><td class="nw">9.2 节</td></tr>
-<tr><td class="nw">交叉编译时生成器工具不能用交叉编译器编</td><td class="nw">9.4 节</td></tr>
-<tr><td class="nw">CI 流水线怎么搭、测试结果怎么收</td><td class="nw">《Git 与工程协作手册》</td></tr>
-<tr><td>Qt 的 moc / uic / rcc 与部署工具</td><td class="nw">《Qt 组件与生态》</td></tr>
-</tbody>
-</table>
-<p>有两条跨章的线值得单独串一下。第一条是<strong>「配置期还是构建期」这个问题在全书反复出现</strong>:第 0 章给分界,第 3 章给生成器表达式这个跨越分界的工具,8.2 节给 <code>configure_file</code> 与 <code>file(GENERATE)</code> 与自定义命令的三分,9.4 节给交叉编译下这条分界带来的额外约束。</p>
-<p>第二条是<strong>「产物怎么被别人拿到」</strong>:8.2 节把生成的头放进 <code>$&lt;BUILD_INTERFACE:&gt;</code>,第 5 章把它写进导出的目标,第 9 章把它装进包。三处写的是同一件事在三个阶段的形态,任何一处漏掉,使用者拿到的包就少一个头文件。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 69591px;--thin-h:69591px">
+<section class="chapter" style="contain-intrinsic-size:auto 64560px;--thin-h:64560px">
 <h1 id="k9"><span class="part">第 9 章</span>安装、打包与交叉编译</h1>
+<p>构建通过只是半程,这一章解决产物离开构建树之后的事:装到别人机器上、打成包、以及为另一个平台构建。主线仍是时机——<code>install()</code> 在配置期只登记规则,复制发生在安装期;RPATH 在安装时改写;工具链文件在 <code>project()</code> 之前就被读入。</p>
+<p>四节机制讲 <code>install()</code> 的各种形态、RPATH 与 RUNPATH、CPack 与把依赖带走、工具链文件与交叉编译;随后四节条目覆盖 <code>install()</code> 逐条、输出与安装相关属性、查找安装打包变量、安装打包类模块。</p>
 <h2 id="k9-install">9.1 install() 的各种形态</h2>
 <p><code>install()</code> 声明的是<strong>装完之后的那棵树长什么样</strong>:哪些文件出现在哪个目录、权限是什么、属于哪一个组件。它自己不复制任何文件,配置期执行到它时只做一件事,把这条规则登记下来。</p>
 <p>真正的复制发生在 <code>cmake --install build</code> 或 <code>make install</code> 的时刻。把「登记」与「执行」分成两个时刻,是理解安装期全部行为的前提。</p>
@@ -10210,123 +9242,11 @@ set(CPACK_GENERATOR       <span>"ZIP;TGZ"</span>)
 include(CPack)</code></pre>
 <div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 CPACK_ 变量写在 include(CPack) 之后一律不起作用</span><p>模块在被 include 的那一行就把当时的变量值写进 CPackConfig.cmake,之后的赋值语句改的是内存里的变量,配置文件已经落盘。症状是打出来的包名、版本号全是默认值,而脚本里明明写了。顺序颠倒的排查办法是直接打开构建目录里的 CPackConfig.cmake,看里面的值与脚本是否一致。</p></div>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 打包前先用 --prefix 装到临时目录验一遍安装规则</span><p>CPack 的内容完全来自 install() 声明,安装规则漏了什么,包里就少什么。cmake --install build --prefix /tmp/stage 可以在不打包的前提下把结果摊开检查,速度快得多,也更容易看清目录结构。这一步同时能暴露 5.3 节讲的导出文件问题。</p></div>
-<h2 id="k9-sum">9.9 小结</h2>
-<p>安装、打包与交叉编译这三件事有一条共同的主线:<strong>把「在这台机器上能构建」变成「在别的机器上能运行」</strong>。每一节讲的都是这条线上的一段,而每一种典型故障都是某一段没接上。</p>
-<p>三节之间是层层依赖的关系。<code>install()</code> 定义那棵树,RPATH 决定树装好之后能不能自己找到库,CPack 把这棵树打成一个文件。工具链文件则决定这棵树里的二进制是给谁跑的。</p>
-<p>9.5 至 9.8 节是本章的条目部分:9.5 节逐条列出 <code>install()</code> 六种形态的参数,9.6 节列出输出位置与安装相关的目标属性,9.7 节列出查找、安装与打包变量,9.8 节列出 <code>GNUInstallDirs</code> 与 <code>CPack</code> 两个模块。写安装规则时查那四节,本章前四节负责机制与判据。</p>
-<h3>要点回顾</h3>
-<p>表里的「出处」一列指向具体的节。这些结论多数要连着它所在的机制一起读才有用,单看一句话记不住,而且容易在边界情形上用错。</p>
-<table style="contain-intrinsic-size:auto 752px">
-<thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>install()</code> 只登记规则,复制发生在安装期</td><td class="nw">9.1</td><td><code>install(CODE)</code> 的位置决定它看到什么</td></tr>
-<tr><td class="nw">产物按角色分类,不按后缀</td><td class="nw">9.1</td><td>Windows 的 dll 归 RUNTIME,导入库归 ARCHIVE</td></tr>
-<tr><td class="nw">目的地一律取自 GNUInstallDirs</td><td class="nw">9.1</td><td>写死 lib 在 Debian 与 Fedora 上都错</td></tr>
-<tr><td class="nw">只有相对 DESTINATION 受前缀管</td><td class="nw">9.1</td><td>绝对路径绕开 <code>--prefix</code>,还会原样写进包里</td></tr>
-<tr><td><code>--prefix</code> 换位置,<code>DESTDIR</code> 只换暂存点</td><td class="nw">9.1</td><td>两者是叠加关系,不是替换关系</td></tr>
-<tr><td class="nw">多配置生成器下安装必须带 <code>--config</code></td><td class="nw">9.1</td><td>否则装出来的可能是 Debug 产物</td></tr>
-<tr><td class="nw"><code>COMPONENT</code> 把运行时与开发文件分开</td><td class="nw">9.1</td><td>它是打成两个包的前提</td></tr>
-<tr><td class="nw">构建树 RPATH 在安装时被剥掉</td><td class="nw">9.2</td><td>换成 <code>INSTALL_RPATH</code>,而它默认为空</td></tr>
-<tr><td class="nw">安装 RPATH 写相对记号</td><td class="nw">9.2</td><td><code>$ORIGIN/../lib</code>,macOS 上是 <code>@loader_path/../lib</code></td></tr>
-<tr><td><code>INSTALL_RPATH_USE_LINK_PATH</code> 写构建机路径</td><td class="nw">9.2</td><td>本机自用可以,对外分发不行</td></tr>
-<tr><td class="nw"><code>DT_RUNPATH</code> 不作用于间接依赖</td><td class="nw">9.2</td><td>每个共享库都要自己带 RPATH</td></tr>
-<tr><td class="nw">Windows 没有 RPATH</td><td class="nw">9.2</td><td>把 DLL 与可执行文件装进同一个目录</td></tr>
-<tr><td>CPack 复用 <code>install()</code> 声明的那棵树</td><td class="nw">9.3</td><td><code>install()</code> 错了,包里就是同样的错</td></tr>
-<tr><td>CPACK 变量必须在 <code>include(CPack)</code> 之前</td><td class="nw">9.3</td><td>顺序反了不报错,只是全用默认值</td></tr>
-<tr><td class="nw">扫描依赖只看二进制里静态记录的那些</td><td class="nw">9.3</td><td><code>dlopen</code> 的插件要自己列进安装规则</td></tr>
-<tr><td class="nw">工具链文件在 <code>project()</code> 之前被读</td><td class="nw">9.4</td><td>改了它必须重建构建目录</td></tr>
-<tr><td><code>CMAKE_SYSTEM_NAME</code> 触发交叉编译模式</td><td class="nw">9.4</td><td>配套设 <code>CMAKE_SYSTEM_PROCESSOR</code></td></tr>
-<tr><td>PROGRAM 设 NEVER,LIBRARY 与 INCLUDE 设 ONLY</td><td class="nw">9.4</td><td>前者找主机工具,后者只认 sysroot</td></tr>
-<tr><td class="nw">构建期要执行的工具必须用主机编译器编</td><td class="nw">9.4</td><td>超级构建,或者把生成器换成脚本</td></tr>
-</tbody>
-</table>
-<p>十九条里有一半以上的形态是「没有报错,但结果不对」。安装与打包这一段的共同特点是失败暴露得很晚:构建通过、安装通过、打包通过,问题出现在使用者第一次运行的时候。</p>
-<p>因此每一条的确认手段都比结论本身更值钱。<code>find</code> 看树、<code>readelf -d</code> 看 RPATH、<code>dpkg -c</code> 看包、干净容器看运行,四个动作覆盖了表里绝大多数条目的验证需求。</p>
-<h3>易错清单</h3>
-<p>每一条都是一个能对上号的现场,括号里是去看哪一节。</p>
-<ol>
-<li>构建目录里跑得好好的,装完运行报 <code>cannot open shared object file</code>。(9.2)</li>
-<li>macOS 上装完报 <code>dyld: Library not loaded: @rpath/libfoo.dylib</code>。(9.2)</li>
-<li>Windows 上 DLL 装进了 lib 目录,可执行文件旁边没有它,双击没有任何反应。(9.1)</li>
-<li>头文件装完全部平铺在 include 根下,源码里写的包含路径对不上。(9.1)</li>
-<li>在 Fedora 上装出来的库落在 lib 而不是 lib64,<code>ldconfig</code> 找不到。(9.1)</li>
-<li>用 <code>--prefix</code> 换了前缀,仍有一部分文件去了原来那个绝对路径。(9.1)</li>
-<li>Visual Studio 下装出来的是 Debug 产物,因为安装命令没带 <code>--config Release</code>。(9.1)</li>
-<li>按组件分两次安装,两次的并集少了几个文件,有规则漏贴 <code>COMPONENT</code>。(9.1)</li>
-<li>打出来的包名带着 <code>0.1.1</code>,厂商是默认值,CPACK 变量设在了 <code>include(CPack)</code> 之后。(9.3)</li>
-<li>包在开发机上解开就能跑,在干净容器里启动即失败。(9.3)</li>
-<li>改了工具链文件重新配置完全没反应,构建出来的还是上一次那个编译器。(9.4)</li>
-<li>交叉编译链接期报 <code>skipping incompatible ...</code>,最后一句是 <code>cannot find -lz</code>。(9.4)</li>
-<li>交叉编译构建到一半报 <code>Exec format error</code>,卡在某个自定义命令上。(9.4)</li>
-<li>交叉编译配置期第一步就报 <code>is not able to compile a simple test program</code>。(9.4)</li>
-</ol>
-<p>这十四条按暴露时机分成三段。第一到第八条在安装完成之后立刻能查出来,靠的是装到临时前缀再逐个文件看一遍;第九与第十条要等包打出来才显形;最后四条出现在交叉编译的配置期与构建期,而且都在第一次配置或第一次构建时就暴露。</p>
-<p>排查入口也各不相同:装完跑不起来先看 <code>readelf -d</code> 与 <code>ldd</code>,包不对先解开包看清单,交叉编译出问题先看 <code>CMakeFiles/CMakeError.log</code>。三个入口对应三段症状,选错入口会在错误的地方找很久。</p>
-<h3>从能构建到能交付的次序</h3>
-<p>上面四节的知识点,落到实际操作上是一条固定的四步流程。<strong>次序不能调换</strong>:每一步的通过标准都建立在前一步已经成立的基础上,跳过前面的步骤,后面那一步的失败原因会指向错误的方向。</p>
-<table style="contain-intrinsic-size:auto 315px">
-<thead><tr><th>次序</th><th>做什么</th><th>通过标准</th><th>跳过它会怎样</th></tr></thead>
-<tbody>
-<tr><td class="nw">一</td><td>装到临时前缀</td><td><code>find</code> 出来的树与预期一致,分组件装的并集等于全量</td><td>包里的结构本身就是错的,后面每一步都在验证一棵错树</td></tr>
-<tr><td class="nw">二</td><td>配安装 RPATH</td><td><code>readelf -d</code> 里是 <code>$ORIGIN</code> 一类相对记号</td><td>装完启动即失败,而这一步的症状会被误当成打包问题</td></tr>
-<tr><td class="nw">三</td><td>打包并解开检查</td><td><code>tar tzf</code> 或 <code>dpkg -c</code> 看到的树与第一步一致</td><td>包与安装树不一致,例如绝对路径 DESTINATION 把文件放到了包外</td></tr>
-<tr><td class="nw">四</td><td>干净环境里装一遍跑一遍</td><td>无编译器、无依赖开发包的容器里能启动并输出版本号</td><td>缺依赖、缺插件、缺数据文件全部要等使用者反馈</td></tr>
-</tbody>
-</table>
-<pre style="contain-intrinsic-size:auto 413px"><code># 一、装到临时前缀,把树看一遍
-cmake --install build --prefix /tmp/<span class="kw">try</span> --config Release -v
-find /tmp/<span class="kw">try</span> -type f | sort
-
-# 二、确认 RPATH 是相对记号
-readelf -d /tmp/<span class="kw">try</span>/bin/app | grep -E <span>'RPATH|RUNPATH'</span>
-
-# 三、打包,再把包解开对一遍
-cmake --build build --target package --config Release
-tar tzf build/pkgdemo-1.2.0-x86_64.tar.gz | sort
-
-# 四、干净容器里装一遍跑一遍
-docker run --rm -v <span>"$PWD/build:/pkg"</span> ubuntu:22.04 \
-  bash -c <span>"tar xzf /pkg/pkgdemo-1.2.0-x86_64.tar.gz -C /opt &amp;&amp; /opt/pkgdemo/bin/app --version"</span></code></pre>
-<p>第二步与第三步之间常被合并,合并之后代价是排查变难:包解不出来、解出来跑不了,两种失败混在一起,要多花一轮才能分清是安装规则的问题还是 RPATH 的问题。分开做只多一条命令。</p>
-<p>四步里只有第四步需要额外的基础设施。前三步都在开发机上执行,总耗时不超过一分钟,准备发版时手工跑一遍即可;第四步要一个干净的容器镜像或虚拟机,适合固定在持续集成里。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 228px"><span class="t">🟢 从能构建到能交付,这四步的顺序不能调换</span><p>每一步都在把「可能出错的范围」缩小一半。第一步只验证文件的位置,不涉及运行;第二步只验证二进制里记的路径,不涉及打包;第三步只验证包与树一致,不涉及别的机器;第四步才把全部因素放进来。<strong>顺序颠倒的代价是每次失败都要重新划定范围</strong>——直接在干净容器里跑一个包,失败了也无从判断是目的地写错、RPATH 没配、打包漏了组件,还是确实缺了依赖。这四步都能写进持续集成,前三步的通过标准可以机器判定,第四步需要一个干净的容器镜像。</p></div>
-<h3>发布前的检查清单</h3>
-<ol>
-<li><code>install(TARGETS)</code> 里 RUNTIME、LIBRARY、ARCHIVE 三类都写出来了吗?</li>
-<li>目的地全部来自 GNUInstallDirs 吗?有没有绝对路径的 <code>DESTINATION</code>?</li>
-<li>头文件用的是 <code>FILE_SET HEADERS</code> 吗?装完的目录结构与源码里的包含路径一致吗?</li>
-<li>每一条安装规则都贴了 <code>COMPONENT</code> 吗?分组件装两次的并集等于全量安装吗?</li>
-<li>每个要安装的可执行文件与共享库都设了 <code>INSTALL_RPATH</code> 吗?库自己也设了吗?</li>
-<li>Windows 上 DLL 与可执行文件装在同一个目录吗?构建期拷贝 DLL 那条命令加了吗?</li>
-<li>全部 <code>CPACK_*</code> 变量都在 <code>include(CPack)</code> 之前吗?打开 <code>build/CPackConfig.cmake</code> 核对过吗?</li>
-<li>要带走的依赖是声明式列出的还是扫描出来的?运行期 <code>dlopen</code> 的插件补进安装规则了吗?</li>
-<li>多配置生成器下,安装与打包命令都带了 <code>--config</code> 吗?</li>
-<li>在一台什么都没装的机器或容器里,装过一遍并且运行过一次吗?</li>
-</ol>
-<p>前九条能在提交前用几条命令核对完,而且核对过程可以固定下来:把预期的文件清单存进版本库,每次装到临时前缀之后与它做一次 <code>diff</code>,清单变了就说明安装规则动了,该在评审里看一眼。</p>
-<pre style="contain-intrinsic-size:auto 386px"><code># 前九条里能机器判定的部分,可以直接放进持续集成
-rm -rf /tmp/<span class="kw">try</span>
-cmake --install build --prefix /tmp/<span class="kw">try</span> --config Release
-find /tmp/<span class="kw">try</span> -type f | sort &gt; /tmp/<span class="kw">try</span>.list
-diff -u ci/expected-install.list /tmp/<span class="kw">try</span>.list
-
-# 每个可执行文件与共享库都要带相对记号的 RPATH
-<span class="kw">for</span> f in /tmp/<span class="kw">try</span>/bin/* /tmp/<span class="kw">try</span>/lib/*.so*; <span class="kw">do</span>
-  readelf -d <span>"$f"</span> | grep -q ORIGIN || echo <span>"缺相对 RPATH: $f"</span>
-done
-
-# CPack 变量有没有漏进快照,直接看生成出来的配置文件
-grep -E <span>'CPACK_PACKAGE_(NAME|VENDOR|VERSION)'</span> build/CPackConfig.cmake</code></pre>
-<p>剩下的最后一条没有捷径。容器镜像要选与目标环境同族的基础镜像,而且<strong>不能在里面装任何开发包</strong>——一旦装了 <code>build-essential</code> 或者某个库的 <code>-dev</code> 包,这次验证就失去了意义,因为它恰好补上了包里缺的那些文件。</p>
-<h3>跨章指路</h3>
-<p>导出目标与写 Config 文件在第 5 章,<code>install(EXPORT)</code> 的完整写法与版本兼容策略都在那里;按配置安装、多配置生成器的行为差异在第 7 章;构建期生成的文件怎么装、自定义命令的依赖怎么写在第 8 章;大型工程里这些规则怎么在子目录之间拆分,以及超级构建的完整形态在第 10 章。</p>
-<p>两处越界的主题给出去向。运行期查找共享库的完整规则——<code>DT_RPATH</code> 与 <code>DT_RUNPATH</code> 在查找顺序里排第几、Windows 的 DLL 搜索顺序有哪些例外、<code>dlopen</code> 的解析过程——见《编译与链接》。</p>
-<p>包的签名与公证、自动更新、以及 <code>windeployqt</code> 一类把框架插件一并收拢的部署工具,见《Qt 组件与生态》。它们都发生在包已经产出之后,不属于构建系统的职责,但对能不能交付到使用者手里是决定性的。</p>
-<p>第 10 章会把这一章的规则放回大型工程的语境:多个子项目各自带安装规则时怎么保证前缀与组件划分一致、导出集之间怎么互相引用、超级构建里主机工具与目标产物怎么组织成一棵可重复构建的树。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 43868px;--thin-h:43868px">
-<h1 id="k10"><span class="part">第 10 章</span>大型工程、速查索引与小结</h1>
+<section class="chapter" style="contain-intrinsic-size:auto 27587px;--thin-h:27587px">
+<h1 id="k10"><span class="part">第 10 章</span>大型工程、反模式与参照表</h1>
+<p>前九章的机制在几个目标的小工程里就能用起来,这一章处理规模与存量:工程长到几十个目标之后怎么拆、构建慢了怎么先量再改,以及接手老工程时十种常见反模式怎么逐条迁走。本章不引入新命令,给的是判据与对照。两节机制讲拆分与编译缓存、反模式与迁移路径;其后三节参照表把全书用过的东西横向收拢:一份 CMakeLists 的命令出场顺序、变量三表、属性变量与命令的对应。</p>
 <h2 id="k10-split">10.1 拆分、构建时间与编译缓存</h2>
 <p>工程从几个目标长到几十个目标之后,两件事会同时变坏:CMakeLists 读不懂了,构建一次要等十分钟。这两件事的成因不同,解法也不同——前者是结构问题,靠拆分;后者是数量问题,靠先量再改。混在一起处理,通常两件都解决不了。</p>
 <p>规模问题不需要新命令。前面九章讲过的东西已经够用,缺的是<strong>在什么规模上用哪一种</strong>的判据。</p>
@@ -10837,389 +9757,6 @@ message(STATUS <span>"已登记: ${all}"</span>)</code></pre>
 </ol>
 <p>属性名的命名规律本身也是线索:按语言分的一律带 <code>&lt;LANG&gt;</code> 占位,按配置分的一律带 <code>_&lt;CONFIG&gt;</code> 后缀,给使用者的一律带 <code>INTERFACE_</code> 前缀,平台专用的一律带平台前缀,如 <code>MACOSX_</code>、<code>WIN32_</code>、<code>VS_</code>、<code>XCODE_</code>、<code>ANDROID_</code>。</p>
 <div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 属性的引入版本以官方文档的 Added in 标注为准</span><p>CMake 每个版本都在增加属性,手册与教程里出现的名字未必在目标环境的版本上存在。设置一个当前版本不认识的属性,CMake 通常不报错,只是默默不起作用,问题要到构建甚至运行时才暴露。确认办法是跑一次 cmake --help-property 名字:有输出说明当前版本认识它,没有就说明需要提高 cmake_minimum_required 或改用别的表达。</p></div>
-<h2 id="k10-index">10.6 判据索引与速查</h2>
-<p>前面十章的结论散在各节里。真正在改 CMakeLists 时需要的往往不是一整节,而是一句话:这件事该写在哪一层、该用哪个关键字、该查哪条命令。两张表把这些抽出来。</p>
-<p>索引表按「一句话结论 + 出处」组织,用于确认某个做法对不对;速查表按「想做什么 → 用哪条命令」组织,用于快速找到入口。第 0 到 5 章的出处写到章,第 6 到 10 章写到节。按需求组织的逐条索引另见 10.7 节。</p>
-<h3>判据索引</h3>
-<table style="contain-intrinsic-size:auto 2103px">
-<thead><tr><th>一句话结论</th><th>出处</th></tr></thead>
-<tbody>
-<tr><td>CMake 分配置、生成、构建三个阶段,弄清一件事发生在哪个阶段是排错的第一步</td><td class="nw">第 0 章</td></tr>
-<tr><td class="nw">CMake 自己不构建,它生成别的构建系统的输入</td><td class="nw">第 0 章</td></tr>
-<tr><td>一个目标需要的东西写在这个目标的属性上,不写在目录或全局变量上</td><td class="nw">第 1 章</td></tr>
-<tr><td class="nw">目标名是唯一的标识,不要用路径去指代一个目标</td><td class="nw">第 1 章</td></tr>
-<tr><td>变量在目标创建那一刻被读进属性,之后再改变量对已创建的目标无效</td><td class="nw">第 1 章</td></tr>
-<tr><td>使用者也需要的用 PUBLIC,只有自己需要的用 PRIVATE,自己不需要只有使用者需要的用 INTERFACE</td><td class="nw">第 2 章</td></tr>
-<tr><td>只在头文件里出现的依赖一律 PUBLIC,只在 .cpp 里出现的一律 PRIVATE</td><td class="nw">第 2 章</td></tr>
-<tr><td>链接一个目标不只是链库文件,还继承了它的全部使用要求</td><td class="nw">第 2 章</td></tr>
-<tr><td>配置期能确定的用 if(),生成期才确定的用生成器表达式</td><td class="nw">第 3 章</td></tr>
-<tr><td>缓存变量是留给调用方的接口,工程里不要 FORCE 覆盖调用方给的值</td><td class="nw">第 3 章</td></tr>
-<tr><td>第三方库优先 find_package 的 Config 模式,其次 Module 模式,最后才考虑 FetchContent</td><td class="nw">第 4 章</td></tr>
-<tr><td>FetchContent 适合可控的小依赖,系统级依赖仍然走 find_package</td><td class="nw">第 4 章</td></tr>
-<tr><td>引进来的第三方一律通过导入目标使用,不要拿它的路径变量拼命令行</td><td class="nw">第 4 章</td></tr>
-<tr><td>让自己的库被 find_package 找到,靠 install(EXPORT) 加一份手写的 Config 文件</td><td class="nw">第 5 章</td></tr>
-<tr><td>导出的目标里不能出现构建机的绝对路径,用 BUILD_INTERFACE 与 INSTALL_INTERFACE 分开</td><td class="nw">第 5 章</td></tr>
-<tr><td>Config 文件里要把自己的依赖也 find_dependency 一遍,否则使用者链接期缺符号</td><td class="nw">第 5 章</td></tr>
-<tr><td>开 C++ 标准必须配 CMAKE_CXX_STANDARD_REQUIRED ON,否则编译器会静默降级</td><td class="nw">6.1</td></tr>
-<tr><td>CXX_EXTENSIONS OFF,否则 GNU 扩展被静默接受,换编译器才暴露</td><td class="nw">6.1</td></tr>
-<tr><td>需要传播的标准要求用 target_compile_features,语义是「不低于」</td><td class="nw">6.1</td></tr>
-<tr><td>编译选项加在目标上;全局 CMAKE_CXX_FLAGS 会漏进第三方代码</td><td class="nw">6.2</td></tr>
-<tr><td>区分编译器用 $&lt;COMPILE_LANG_AND_ID:...&gt;,不用 if(CMAKE_CXX_COMPILER_ID)</td><td class="nw">6.2</td></tr>
-<tr><td>导出的目标上不要带编译器专属选项,要带就用 BUILD_INTERFACE 圈住</td><td class="nw">6.2</td></tr>
-<tr><td class="nw">MSVC 上带中文的源码必须加 /utf-8</td><td class="nw">6.3</td></tr>
-<tr><td>跨平台工程在 MSVC 上必须加 /permissive-,否则模板代码只有换编译器才报错</td><td class="nw">6.3</td></tr>
-<tr><td class="nw">sanitizer 在编译与链接两处都要加</td><td class="nw">6.3</td></tr>
-<tr><td>多配置生成器下 CMAKE_BUILD_TYPE 不起作用,按配置分流一律用 $&lt;CONFIG:...&gt;</td><td class="nw">7.1</td></tr>
-<tr><td>判断是不是多配置生成器看全局属性 GENERATOR_IS_MULTI_CONFIG,不要匹配生成器名字</td><td class="nw">7.1</td></tr>
-<tr><td>产物路径用 $&lt;TARGET_FILE:...&gt; 取,不要手拼,多配置下会多一层配置名</td><td class="nw">7.1</td></tr>
-<tr><td>发布构建的合理默认是 RelWithDebInfo,不是 Release</td><td class="nw">7.2</td></tr>
-<tr><td>CMAKE_BUILD_TYPE 为空不等于 Debug,而是一个优化选项都不加</td><td class="nw">7.2</td></tr>
-<tr><td>自定义配置要补齐四组 FLAGS 变量与 CMAKE_MAP_IMPORTED_CONFIG_,否则导入目标解析不到库</td><td class="nw">7.2</td></tr>
-<tr><td>把一长串命令行搬进 CMakePresets.json,个人定制放 CMakeUserPresets.json 且不进版本控制</td><td class="nw">7.3</td></tr>
-<tr><td>add_custom_command 的 OUTPUT 形态没有消费者就永远不执行</td><td class="nw">8.1</td></tr>
-<tr><td>DEPENDS 要同时写数据输入、生成脚本与生成器可执行文件,漏一个就漏一种「改了不重生成」</td><td class="nw">8.1</td></tr>
-<tr><td>新写的 add_custom_command 一律加 VERBATIM</td><td class="nw">8.1</td></tr>
-<tr><td>生成的文件放构建目录,不写回源码树,更不提交进仓库</td><td class="nw">8.2</td></tr>
-<tr><td>配置期定死的用 configure_file,要按配置变的用 file(GENERATE)</td><td class="nw">8.2</td></tr>
-<tr><td>CTest 是测试驱动器不是测试框架,断言与夹具语义由测试框架提供</td><td class="nw">8.3</td></tr>
-<tr><td>多配置生成器下 ctest 必须带 -C,否则一个测试也跑不到</td><td class="nw">8.3</td></tr>
-<tr><td>gtest_discover_tests 需要运行测试二进制,交叉编译时改用手写 add_test</td><td class="nw">8.3</td></tr>
-<tr><td>安装路径用 GNUInstallDirs 提供的变量,不要写死 lib</td><td class="nw">9.1</td></tr>
-<tr><td>DESTINATION 用相对路径,绝对路径会绕开前缀并破坏分级安装与打包</td><td class="nw">9.1</td></tr>
-<tr><td class="nw">发布前先装到一个临时前缀里,把整棵树看一遍</td><td class="nw">9.1</td></tr>
-<tr><td>构建树 RPATH 与安装树 RPATH 是两回事,装完跑不了先查 INSTALL_RPATH</td><td class="nw">9.2</td></tr>
-<tr><td>要让整棵安装树可以整体搬走,INSTALL_RPATH 写 $ORIGIN,macOS 写 @loader_path</td><td class="nw">9.2</td></tr>
-<tr><td>Windows 没有 RPATH,靠把依赖 DLL 放到可执行文件旁边</td><td class="nw">9.2</td></tr>
-<tr><td>CPack 复用的是 install() 声明的那棵树,install 写错包里就是错的</td><td class="nw">9.3</td></tr>
-<tr><td>全部 CPACK_ 变量必须写在 include(CPack) 之前</td><td class="nw">9.3</td></tr>
-<tr><td>依赖扫描看不到运行期动态加载的插件,包必须在干净环境里验证</td><td class="nw">9.3</td></tr>
-<tr><td>工具链文件在第一次配置时被读,改了它必须重建构建目录</td><td class="nw">9.4</td></tr>
-<tr><td>交叉编译时 PROGRAM 用 NEVER,LIBRARY 与 INCLUDE 与 PACKAGE 用 ONLY</td><td class="nw">9.4</td></tr>
-<tr><td class="nw">构建期要执行的代码生成器不能用交叉编译器编</td><td class="nw">9.4</td></tr>
-<tr><td>拆分的分界是「配置一次还是配置多次」,不是文件多少</td><td class="nw">10.1</td></tr>
-<tr><td class="nw">构建慢先量再改,三类瓶颈的对策互不通用</td><td class="nw">10.1</td></tr>
-<tr><td>MSVC 上要让编译缓存命中,调试信息格式必须换成 /Z7</td><td class="nw">10.1</td></tr>
-<tr><td class="nw">迁移老工程时目录级与目标级可以并存,一条一条删</td><td class="nw">10.2</td></tr>
-</tbody>
-</table>
-<h3>想做什么,用哪条</h3>
-<table style="contain-intrinsic-size:auto 2376px">
-<thead><tr><th>想做什么</th><th>用哪条</th><th>要点</th></tr></thead>
-<tbody>
-<tr><td class="nw">给目标加头文件搜索路径</td><td><code>target_include_directories</code></td><td>使用者也要的写 PUBLIC,配 BUILD_INTERFACE 与 INSTALL_INTERFACE</td></tr>
-<tr><td class="nw">给目标加预处理宏</td><td><code>target_compile_definitions</code></td><td>不写 <code>-D</code> 前缀,CMake 自己加</td></tr>
-<tr><td class="nw">给目标加编译选项</td><td><code>target_compile_options</code></td><td>配 $&lt;COMPILE_LANG_AND_ID:...&gt; 分流编译器</td></tr>
-<tr><td class="nw">给目标加链接选项</td><td><code>target_link_options</code></td><td>sanitizer 这类选项编译与链接两处都要给</td></tr>
-<tr><td class="nw">链接另一个目标</td><td><code>target_link_libraries</code></td><td>只写目标名,路径由导入目标自己带</td></tr>
-<tr><td class="nw">声明最低语言标准</td><td><code>target_compile_features</code></td><td><code>cxx_std_17</code> 的语义是「不低于」,会取各方的最大值</td></tr>
-<tr><td class="nw">给目标添加源文件</td><td class="nw"><code>target_sources</code></td><td>生成的文件也从这里进去</td></tr>
-<tr><td class="nw">读写目标属性</td><td><code>set_target_properties</code> / <code>get_target_property</code></td><td>属性名的完整清单查 <code>cmake --help-properties</code></td></tr>
-<tr><td class="nw">找系统上装好的库</td><td class="nw"><code>find_package</code></td><td>优先 CONFIG 模式,加 REQUIRED 让失败发生在配置期</td></tr>
-<tr><td class="nw">把第三方源码拉下来一起构建</td><td><code>FetchContent_Declare</code> 加 <code>FetchContent_MakeAvailable</code></td><td>固定到具体的 tag 或 commit</td></tr>
-<tr><td class="nw">找一个可执行程序</td><td class="nw"><code>find_program</code></td><td>交叉编译时受 CMAKE_FIND_ROOT_PATH_MODE_PROGRAM 管</td></tr>
-<tr><td class="nw">找一个头文件或库文件</td><td><code>find_path</code> / <code>find_library</code></td><td>结果要包成导入目标再用</td></tr>
-<tr><td class="nw">在构建期生成文件</td><td><code>add_custom_command(OUTPUT ...)</code></td><td>要有消费者,DEPENDS 写全,加 VERBATIM</td></tr>
-<tr><td class="nw">在目标构建前后顺带做点事</td><td><code>add_custom_command(TARGET ...)</code></td><td>产物不进依赖图;PRE_BUILD 只有 VS 生成器真支持</td></tr>
-<tr><td class="nw">造一个总是执行的目标</td><td><code>add_custom_target</code></td><td>加 ALL 才进默认构建</td></tr>
-<tr><td class="nw">表达目标之间的先后顺序</td><td><code>add_dependencies</code></td><td>只保证顺序,不建立文件级依赖</td></tr>
-<tr><td class="nw">配置期替换模板文件</td><td class="nw"><code>configure_file</code></td><td>加 @ONLY 只替换 @VAR@;输入变了会自动重新配置</td></tr>
-<tr><td class="nw">生成期按配置写文件</td><td class="nw"><code>file(GENERATE)</code></td><td>能用生成器表达式,能按配置写出不同内容</td></tr>
-<tr><td class="nw">跨平台执行文件操作</td><td class="nw"><code>cmake -E</code></td><td>子命令清单查 <code>cmake -E help</code></td></tr>
-<tr><td class="nw">打开测试并注册用例</td><td><code>enable_testing</code> / <code>add_test</code></td><td>enable_testing 必须在顶层调用</td></tr>
-<tr><td class="nw">注册 GoogleTest 的每个用例</td><td><code>gtest_discover_tests</code></td><td>先 <code>include(GoogleTest)</code></td></tr>
-<tr><td class="nw">跑测试</td><td><code>ctest --test-dir build -j8 --output-on-failure</code></td><td>多配置生成器要加 <code>-C Release</code></td></tr>
-<tr><td class="nw">安装目标产物</td><td><code>install(TARGETS ...)</code></td><td>按 RUNTIME 与 LIBRARY 与 ARCHIVE 分类给 DESTINATION</td></tr>
-<tr><td class="nw">安装头文件</td><td><code>install(FILES ...)</code> 或 FILE_SET HEADERS</td><td>路径用 <code>${CMAKE_INSTALL_INCLUDEDIR}</code></td></tr>
-<tr><td class="nw">导出目标给别人 find_package</td><td><code>install(EXPORT ...)</code> 加手写 Config 文件</td><td>配 <code>write_basic_package_version_file</code></td></tr>
-<tr><td class="nw">执行安装</td><td><code>cmake --install build --prefix P --config Release</code></td><td>prefix 可以在安装时才给,不必重新配置</td></tr>
-<tr><td class="nw">打包</td><td><code>include(CPack)</code> 加 <code>cpack -G TGZ</code></td><td>CPACK_ 变量全部写在 include 之前</td></tr>
-<tr><td class="nw">把运行时依赖一起带走</td><td><code>install(IMPORTED_RUNTIME_ARTIFACTS)</code> 或 <code>file(GET_RUNTIME_DEPENDENCIES)</code></td><td>扫不到运行期动态加载的插件</td></tr>
-<tr><td class="nw">交叉编译</td><td><code>cmake --toolchain tc.cmake -S . -B build</code></td><td>改了工具链文件要重建构建目录</td></tr>
-<tr><td class="nw">看本机有哪些生成器可用</td><td class="nw"><code>cmake --help</code></td><td>清单随平台与已装工具而变</td></tr>
-<tr><td class="nw">查一条命令的完整语义</td><td><code>cmake --help-command 名字</code></td><td>版本相关的行为一律以它的输出为准</td></tr>
-<tr><td class="nw">查一个属性或变量</td><td><code>cmake --help-property 名字</code> / <code>--help-variable 名字</code></td><td>同上</td></tr>
-<tr><td class="nw">查生成器表达式</td><td><code>cmake --help-manual cmake-generator-expressions</code></td><td>支持的表达式随版本增加</td></tr>
-<tr><td class="nw">查 Presets 的字段与 schema 版本</td><td><code>cmake --help-manual cmake-presets</code></td><td>字段属于哪个版本以它为准</td></tr>
-<tr><td class="nw">列出并使用 preset</td><td><code>cmake --list-presets</code> / <code>cmake --preset 名字</code></td><td>用了 preset 就不要再重复给 -S 与 -B 与 -G</td></tr>
-<tr><td class="nw">量配置期耗时</td><td><code>cmake --profiling-output=p.json --profiling-format=google-trace</code></td><td>输出用支持 trace 格式的查看器打开</td></tr>
-<tr><td class="nw">查某个文件为什么重建</td><td><code>ninja -d explain 路径</code></td><td>排查依赖缺边最快的一条</td></tr>
-<tr><td class="nw">导出依赖图</td><td><code>cmake --graphviz=g.dot</code></td><td>目标多时先按目录裁剪</td></tr>
-<tr><td class="nw">打开编译缓存</td><td><code>CMAKE_CXX_COMPILER_LAUNCHER</code></td><td>只有 Makefile 与 Ninja 系生成器认</td></tr>
-<tr><td class="nw">打开 Unity 构建</td><td><code>CMAKE_UNITY_BUILD</code></td><td>配 SKIP_UNITY_BUILD_INCLUSION 排除会打架的文件</td></tr>
-<tr><td class="nw">加预编译头</td><td><code>target_precompile_headers</code></td><td>多个目标共用写 REUSE_FROM</td></tr>
-</tbody>
-</table>
-<h3>两张表之外的三条总判据</h3>
-<p>具体条目背后是三条重复出现的判断方式,记住它们比记住条目有用。</p>
-<ol>
-<li><strong>这件事属于哪个目标?</strong>凡是答得上来的,就写成那个目标的属性;答不上来的,多半说明目标划分本身有问题。</li>
-<li><strong>这件事在哪个阶段确定?</strong>配置期确定的用变量与 <code>if()</code>,生成期确定的用生成器表达式,构建期确定的用自定义命令。三者放错位置的症状各不相同,但根因是同一个。</li>
-<li><strong>这个决定该由谁来做?</strong>构建类型、安装前缀、工具链、是否开测试,都是调用方的决定,工程只提供默认值。反过来,语言标准、依赖关系、使用要求是工程自己的事,不该要求调用方补。</li>
-</ol>
-<p>查文档的四条命令值得单独记住。CMake 的行为随版本变化,任何一条「从哪一版起支持」的记忆都可能过期,而本机装的这一版会如实回答。</p>
-<pre style="contain-intrinsic-size:auto 141px"><code>cmake --help-command target_link_libraries
-cmake --help-property INTERFACE_INCLUDE_DIRECTORIES
-cmake --help-variable CMAKE_INSTALL_PREFIX
-cmake --help-manual cmake-generator-expressions</code></pre>
-<p>排查一份陌生的 CMakeLists 时,下面几条能在不读完全文的情况下先摸清它的形态:全局命令用了多少、目标级命令用了多少、有没有把状态挂在目录上。</p>
-<pre style="contain-intrinsic-size:auto 292px"><code># 数一数目录级老命令还剩多少条
-grep -rnE <span>'^[[:space:]]*(include_directories|link_libraries|link_directories|add_definitions|add_compile_options)\('</span> \
-     --include=CMakeLists.txt --include=<span>'*.cmake'</span> .
-
-# 找出所有直接改全局编译选项的地方
-grep -rnE <span>'set\([[:space:]]*CMAKE_(C|CXX)_FLAGS'</span> --include=CMakeLists.txt --include=<span>'*.cmake'</span> .
-
-# 找出没有用 BUILD_INTERFACE 包住的源码树路径,它们会被原样写进导出的 Targets 文件
-grep -rn <span>'SOURCE_DIR}'</span> --include=CMakeLists.txt . | grep -v <span>'BUILD_INTERFACE'</span></code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 版本相关的问题一律问本机的 cmake,不要靠记忆</span><p>CMake 每半年一个版本,命令的新参数、新的生成器表达式、Presets 的新字段都在增加,而工程的最低版本要求又常常落后好几年。判断一个写法能不能用,最可靠的办法是在目标环境上跑一次 cmake --help-command 或 cmake --help-manual:它回答的是本机这一版的真实能力,而不是某篇文章写作时的状态。</p></div>
-<h2 id="r6-index">10.7 索引:想做什么查哪一条</h2>
-<p>全书的条目节按对象组织:命令归命令,变量归变量,属性归属性。实际查阅时的起点往往不是对象而是需求——「想让别人 find_package 到我」并不知道该翻哪一节。</p>
-<p>索引按需求组织,第三列同时给出条目节的位置与机制小节的位置。条目节回答「写哪一条」,机制小节回答「为什么是这一条」,两者配合使用;判断某个做法该不该用,查 10.6 节的判据索引。</p>
-<p>一条需求可能牵涉多节。第三列里用分号隔开的几个位置,一般是「先看前一个,不够再看后一个」的顺序。</p>
-<h3>定义目标、源文件与使用要求</h3>
-<table style="contain-intrinsic-size:auto 542px">
-<thead><tr><th>想做什么</th><th>用哪一条</th><th>在第几章第几节</th></tr></thead>
-<tbody>
-<tr><td class="nw">建一个可执行文件或库</td><td><code>add_executable()</code>、<code>add_library()</code></td><td>1.5 节;机制见 1.1 节</td></tr>
-<tr><td class="nw">建一个只有头文件的库</td><td><code>add_library(名字 INTERFACE)</code></td><td>1.5 节;机制见 1.1 节</td></tr>
-<tr><td class="nw">把一批目标文件复用到多个目标</td><td><code>add_library(名字 OBJECT)</code> 与 <code>$&lt;TARGET_OBJECTS:&gt;</code></td><td>1.5 节;3.9 节</td></tr>
-<tr><td class="nw">给一个库起带命名空间的名字</td><td><code>add_library(名字 ALIAS 目标)</code></td><td>1.5 节;机制见 1.1 节</td></tr>
-<tr><td class="nw">描述一个已经存在的二进制库</td><td><code>add_library(名字 IMPORTED)</code> 与 <code>IMPORTED_LOCATION</code></td><td>1.5 节;9.6 节;机制见 1.4 节</td></tr>
-<tr><td class="nw">往目标上追加源文件</td><td><code>target_sources()</code></td><td>2.5 节;机制见 1.3 节</td></tr>
-<tr><td class="nw">把头文件路径传给使用者</td><td><code>target_include_directories(... PUBLIC)</code></td><td>2.5 节;机制见 2.3 节</td></tr>
-<tr><td class="nw">判断该写 PRIVATE 还是 PUBLIC</td><td>看这条要求出现在头文件里还是只在实现里</td><td>机制见 2.2 节</td></tr>
-<tr><td class="nw">让依赖者自动被抬到某个 C++ 标准</td><td><code>target_compile_features(... PUBLIC cxx_std_17)</code></td><td>2.5 节;6.5 节;机制见 6.1 节</td></tr>
-<tr><td class="nw">只把链接要求传出去,不传头文件</td><td class="nw"><code>$&lt;LINK_ONLY:&gt;</code></td><td>3.9 节;机制见 2.4 节</td></tr>
-<tr><td class="nw">给某一个源文件单独加选项</td><td><code>set_source_files_properties()</code></td><td>8.4 节</td></tr>
-<tr><td class="nw">查一条使用要求最终传成了什么</td><td><code>$&lt;TARGET_PROPERTY:&gt;</code> 配 <code>file(GENERATE)</code></td><td>3.9 节;10.5 节</td></tr>
-</tbody>
-</table>
-<h3>引第三方库与发布自己的库</h3>
-<table style="contain-intrinsic-size:auto 571px">
-<thead><tr><th>想做什么</th><th>用哪一条</th><th>在第几章第几节</th></tr></thead>
-<tbody>
-<tr><td class="nw">找一个已经装好的库</td><td class="nw"><code>find_package()</code></td><td>4.7 节;两种模式见 4.2 节</td></tr>
-<tr><td class="nw">判断某个包走模块模式还是配置模式</td><td>看它提供的是 <code>FindXxx.cmake</code> 还是 <code>XxxConfig.cmake</code></td><td>4.2 节;4.3 节</td></tr>
-<tr><td class="nw">找不到库时按顺序排查</td><td><code>CMAKE_PREFIX_PATH</code> 与 <code>cmake --debug-find</code></td><td>4.6 节;4.7 节;9.7 节</td></tr>
-<tr><td class="nw">依赖没装,直接拉源码一起构建</td><td class="nw"><code>FetchContent</code></td><td>4.8 节;机制见 4.4 节</td></tr>
-<tr><td class="nw">让同一份脚本既能用系统包也能拉源码</td><td><code>FetchContent</code> 的 <code>FIND_PACKAGE_ARGS</code></td><td>4.8 节</td></tr>
-<tr><td class="nw">找单独的一个库文件、头文件或程序</td><td><code>find_library()</code>、<code>find_path()</code>、<code>find_program()</code></td><td>4.7 节;机制见 4.2 节</td></tr>
-<tr><td class="nw">用 pkg-config 提供的信息</td><td><code>FindPkgConfig</code> 模块的 <code>pkg_check_modules()</code></td><td>机制见 4.2 节</td></tr>
-<tr><td class="nw">把自己的目标装出去</td><td><code>install(TARGETS ...)</code></td><td>9.5 节;机制见 9.1 节</td></tr>
-<tr><td class="nw">让别人能 <code>find_package</code> 到自己</td><td><code>install(EXPORT)</code> 与 <code>CMakePackageConfigHelpers</code></td><td>5.4 节;机制见 5.1 节、5.2 节</td></tr>
-<tr><td class="nw">安装目录不要写死</td><td><code>GNUInstallDirs</code> 提供的一组变量</td><td>9.8 节;9.7 节</td></tr>
-<tr><td class="nw">验证自己的包装出去能不能用</td><td>装到一个临时前缀,再从那里 <code>find_package</code> 一次</td><td>5.3 节</td></tr>
-<tr><td class="nw">装完之后运行报找不到共享库</td><td><code>INSTALL_RPATH</code> 一族属性</td><td>9.6 节;机制见 9.2 节</td></tr>
-</tbody>
-</table>
-<h3>编译选项、标准、平台与配置</h3>
-<table style="contain-intrinsic-size:auto 607px">
-<thead><tr><th>想做什么</th><th>用哪一条</th><th>在第几章第几节</th></tr></thead>
-<tbody>
-<tr><td class="nw">给一个目标加编译选项</td><td><code>target_compile_options()</code></td><td>2.5 节;机制见 6.2 节</td></tr>
-<tr><td class="nw">定义一个预处理宏</td><td><code>target_compile_definitions()</code></td><td>2.5 节;2.6 节</td></tr>
-<tr><td class="nw">指定 C++ 标准</td><td><code>CXX_STANDARD</code> 三件套,或 <code>cxx_std_NN</code> 特性</td><td>6.5 节;机制见 6.1 节</td></tr>
-<tr><td class="nw">按编译器分支加选项</td><td><code>$&lt;CXX_COMPILER_ID:&gt;</code></td><td>3.9 节;对照表见 6.3 节</td></tr>
-<tr><td class="nw">按配置分支加选项</td><td><code>$&lt;CONFIG:Debug&gt;</code></td><td>3.9 节;机制见 7.2 节</td></tr>
-<tr><td class="nw">按平台分支</td><td><code>$&lt;PLATFORM_ID:&gt;</code>,配置期用 <code>WIN32</code>、<code>APPLE</code>、<code>UNIX</code></td><td>3.9 节;6.4 节</td></tr>
-<tr><td class="nw">同一目标里给 C 与 C++ 加不同选项</td><td><code>$&lt;COMPILE_LANGUAGE:&gt;</code></td><td>3.9 节</td></tr>
-<tr><td class="nw">探测编译器认不认某个选项</td><td><code>check_cxx_compiler_flag()</code></td><td>6.6 节</td></tr>
-<tr><td class="nw">探测某个头文件、符号或类型在不在</td><td><code>CheckXxxExists</code> 一族</td><td>6.6 节</td></tr>
-<tr><td class="nw">打开链接期优化</td><td><code>INTERPROCEDURAL_OPTIMIZATION</code> 配 <code>check_ipo_supported()</code></td><td>2.6 节;6.6 节</td></tr>
-<tr><td class="nw">静态库要被链进共享库</td><td><code>POSITION_INDEPENDENT_CODE</code></td><td>2.6 节</td></tr>
-<tr><td class="nw">选生成器与配置</td><td><code>cmake -G</code>、<code>CMAKE_BUILD_TYPE</code></td><td>7.4 节;机制见 7.1 节、7.2 节</td></tr>
-<tr><td class="nw">把常用的配置组合固化下来</td><td><code>CMakePresets.json</code></td><td>机制见 7.3 节</td></tr>
-</tbody>
-</table>
-<h3>生成代码、自定义步骤与测试</h3>
-<table style="contain-intrinsic-size:auto 491px">
-<thead><tr><th>想做什么</th><th>用哪一条</th><th>在第几章第几节</th></tr></thead>
-<tbody>
-<tr><td class="nw">构建期生成一个文件</td><td><code>add_custom_command(OUTPUT ...)</code></td><td>1.5 节;机制见 8.1 节</td></tr>
-<tr><td class="nw">构建完成之后再做一步</td><td><code>add_custom_command(TARGET ... POST_BUILD)</code></td><td>1.5 节;机制见 8.1 节</td></tr>
-<tr><td class="nw">定义一个不产出文件的任务</td><td><code>add_custom_target()</code></td><td>1.5 节;机制见 8.1 节</td></tr>
-<tr><td class="nw">配置期把模板填成一个真文件</td><td><code>configure_file()</code></td><td>3.7 节;机制见 8.2 节</td></tr>
-<tr><td class="nw">生成期按配置各写出一份文件</td><td class="nw"><code>file(GENERATE)</code></td><td>3.7 节;3.9 节</td></tr>
-<tr><td class="nw">自定义命令里引用某个目标的产物</td><td><code>$&lt;TARGET_FILE:&gt;</code>、<code>$&lt;TARGET_FILE_DIR:&gt;</code></td><td>3.9 节</td></tr>
-<tr><td class="nw">声明生成的文件让别处能引用</td><td>源文件属性 <code>GENERATED</code></td><td>8.4 节;机制见 8.1 节</td></tr>
-<tr><td class="nw">注册一个测试</td><td class="nw"><code>add_test()</code></td><td>8.3 节</td></tr>
-<tr><td class="nw">控制测试的超时、标签、顺序与并行</td><td class="nw">测试属性</td><td>8.4 节;机制见 8.3 节</td></tr>
-<tr><td class="nw">把一个可执行文件里的用例分别注册</td><td><code>gtest_discover_tests()</code></td><td>8.3 节</td></tr>
-<tr><td class="nw">统一开关测试构建</td><td><code>include(CTest)</code> 与 <code>BUILD_TESTING</code></td><td>8.3 节</td></tr>
-<tr><td class="nw">汇总配置结果里开了哪些功能</td><td class="nw"><code>FeatureSummary</code></td><td>6.6 节</td></tr>
-</tbody>
-</table>
-<h3>安装、打包与交叉编译</h3>
-<table style="contain-intrinsic-size:auto 530px">
-<thead><tr><th>想做什么</th><th>用哪一条</th><th>在第几章第几节</th></tr></thead>
-<tbody>
-<tr><td class="nw">安装文件、目录或一段脚本</td><td><code>install(FILES)</code>、<code>install(DIRECTORY)</code>、<code>install(SCRIPT)</code></td><td>9.5 节;机制见 9.1 节</td></tr>
-<tr><td class="nw">安装时按组件分开</td><td><code>install(... COMPONENT ...)</code></td><td>9.5 节;机制见 9.1 节</td></tr>
-<tr><td class="nw">打成一个可分发的包</td><td><code>include(CPack)</code> 与 <code>CPACK_</code> 一族变量</td><td>9.8 节;机制见 9.3 节</td></tr>
-<tr><td class="nw">把依赖的动态库一起带走</td><td>运行期依赖收集,配合相对 RPATH</td><td>9.6 节;机制见 9.3 节、9.2 节</td></tr>
-<tr><td class="nw">让包可以被移动到任意安装前缀</td><td>相对形式的 RPATH 与相对安装路径</td><td>9.6 节;9.8 节</td></tr>
-<tr><td class="nw">交叉编译</td><td>工具链文件与 <code>CMAKE_TOOLCHAIN_FILE</code></td><td>9.7 节;机制见 9.4 节</td></tr>
-<tr><td class="nw">控制交叉编译时的查找根目录</td><td><code>CMAKE_FIND_ROOT_PATH</code> 一族变量</td><td>9.7 节;机制见 9.4 节</td></tr>
-<tr><td class="nw">交叉编译时主机侧工具怎么构建</td><td>超级构建,或预先构建一份主机版本</td><td>机制见 9.4 节、10.1 节</td></tr>
-<tr><td class="nw">交叉编译时测试跑不起来</td><td><code>DISCOVERY_MODE PRE_TEST</code> 与 <code>CMAKE_CROSSCOMPILING_EMULATOR</code></td><td>8.3 节;9.7 节</td></tr>
-<tr><td class="nw">控制产物落到哪个目录</td><td>三类 <code>OUTPUT_DIRECTORY</code> 属性</td><td>9.6 节</td></tr>
-<tr><td class="nw">控制产物的文件名与版本号</td><td><code>OUTPUT_NAME</code>、<code>VERSION</code>、<code>SOVERSION</code></td><td>9.6 节</td></tr>
-</tbody>
-</table>
-<h3>排查:配置期、生成期与构建期</h3>
-<p>排查的第一步永远是确定问题出在哪个时期。配置期的问题用打印与查找日志,生成期的问题用 <code>file(GENERATE)</code>,构建期的问题问构建工具本身。</p>
-<table style="contain-intrinsic-size:auto 604px">
-<thead><tr><th>想做什么</th><th>用哪一条</th><th>在第几章第几节</th></tr></thead>
-<tbody>
-<tr><td class="nw">打印一个变量的值</td><td><code>message(STATUS ...)</code></td><td>机制见 3.1 节</td></tr>
-<tr><td class="nw">打印一个属性的值</td><td><code>get_target_property()</code> 之后 <code>message()</code></td><td>10.5 节</td></tr>
-<tr><td class="nw">看一条使用要求传播后的完整值</td><td><code>$&lt;TARGET_PROPERTY:&gt;</code> 配 <code>file(GENERATE)</code></td><td>3.9 节;10.5 节</td></tr>
-<tr><td class="nw">看 <code>find_package</code> 到底找了哪些路径</td><td><code>cmake --debug-find</code></td><td>4.6 节;4.7 节</td></tr>
-<tr><td class="nw">看缓存里现在存的是什么</td><td><code>cmake -LAH</code>,或直接读 <code>CMakeCache.txt</code></td><td>机制见 3.2 节</td></tr>
-<tr><td class="nw">改了变量却不见生效</td><td>属性初值在创建目标那一刻就抄走了</td><td>10.5 节;机制见 1.2 节</td></tr>
-<tr><td class="nw">彻底清掉粘住的缓存</td><td class="nw">删掉整个构建目录重新配置</td><td>机制见 3.2 节</td></tr>
-<tr><td class="nw">看某个文件为什么被重建</td><td><code>ninja -d explain</code></td><td>机制见 10.1 节</td></tr>
-<tr><td class="nw">看配置期的时间花在哪</td><td><code>cmake --profiling-output</code></td><td>机制见 10.1 节</td></tr>
-<tr><td class="nw">看目标之间的依赖图</td><td><code>cmake --graphviz</code></td><td>机制见 10.1 节</td></tr>
-<tr><td class="nw">看最终真正传给编译器的命令行</td><td><code>compile_commands.json</code>,或构建工具的详细输出</td><td>7.4 节;机制见 6.2 节</td></tr>
-<tr><td class="nw">查一条命令的完整语法</td><td><code>cmake --help-command 名字</code></td><td>10.8 节</td></tr>
-<tr><td class="nw">查一条属性或变量</td><td><code>cmake --help-property</code>、<code>cmake --help-variable</code></td><td>10.5 节;10.8 节</td></tr>
-<tr><td class="nw">查一个模块提供什么</td><td><code>cmake --help-module 名字</code></td><td>9.8 节;6.6 节</td></tr>
-<tr><td class="nw">文档里查不到时</td><td>读安装目录下 <code>Modules/</code> 里的模块源码</td><td>10.8 节</td></tr>
-</tbody>
-</table>
-<p>三条最常用的命令行开关值得单独记住,它们把三类最难查的问题各解决了一类。</p>
-<pre style="contain-intrinsic-size:auto 114px"><code>cmake --debug-find -S . -B build
-cmake --profiling-output=p.json --profiling-format=google-trace -S . -B build
-cmake --build build --target help</code></pre>
-<p>生成期的排查手段只有一个,但它足够通用:把想看的表达式写进一个生成文件,配置完成后直接打开。属性传播、条件分支、路径拼接的结果都能这样看到。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 319px"><code>add_library(core src/core.cpp)
-target_include_directories(core PUBLIC
-    $&lt;BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include&gt;)
-
-add_executable(app src/main.cpp)
-target_link_libraries(app PRIVATE core)
-
-file(GENERATE
-    OUTPUT  <span>"${CMAKE_BINARY_DIR}/diag-$&lt;CONFIG&gt;.txt"</span>
-    CONTENT <span>"配置: $&lt;CONFIG&gt;\n编译器: $&lt;CXX_COMPILER_ID&gt;\n头文件路径:\n$&lt;JOIN:$&lt;TARGET_PROPERTY:app,INCLUDE_DIRECTORIES&gt;,\n&gt;\n"</span>)</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 排查之前先确定问题属于哪个时期</span><p>同一条错误信息,在配置期、生成期与构建期的成因完全不同。配置期的问题在 cmake -B 的输出里,手段是 message 与各种 --debug 开关;生成期的问题只能用 file(GENERATE) 看展开结果;构建期的问题要问构建工具,ninja -d explain 与详细输出模式是入口。搞错时期,再多的打印语句也落不到点上。</p></div>
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 索引查到章节之后,先读机制小节再抄条目节的写法</span><p>索引第三列里「机制见 N.M 节」的位置,回答的是「为什么这条命令长这样」。只照抄条目节的写法,遇到与例子不完全一致的场景就无从改起。两处配合的读法是:先在机制小节确认判据,再回条目节核对参数与取值。</p></div>
-<h2 id="k10-sum">10.8 小结</h2>
-<p>全书从「CMake 分三个阶段」开始,到这里收束成一句话:<strong>现代 CMake 只有一个主角,就是目标</strong>。状态放在目标的属性上,依赖关系靠使用要求在目标之间传播,其余的命令与变量都是围绕这两件事的配套设施。</p>
-<p>判断一份 CMakeLists 写得好不好,只看一条:<strong>把其中任意一个目标单独拿出来给别人链,他需不需要额外补东西</strong>。不需要,说明使用要求写完整了;需要补路径、补宏、补依赖,那些缺口就是全书各章在讲的问题。</p>
-<h3>十一章各自解决什么问题</h3>
-<table style="contain-intrinsic-size:auto 444px">
-<thead><tr><th>章</th><th>它回答的问题</th><th>一句话结论</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 0 章</td><td class="nw">CMake 到底在做什么</td><td>它生成别的构建系统的输入,分配置、生成、构建三个阶段</td></tr>
-<tr><td class="nw">第 1 章</td><td class="nw">状态放在哪里</td><td>放在目标的属性上;变量只是配置期的临时值</td></tr>
-<tr><td class="nw">第 2 章</td><td class="nw">依赖怎么表达</td><td>靠使用要求传播,PUBLIC 与 PRIVATE 与 INTERFACE 分别对应三种可见性</td></tr>
-<tr><td class="nw">第 3 章</td><td class="nw">配置期与生成期怎么分</td><td>配置期用变量与 if(),生成期用生成器表达式</td></tr>
-<tr><td class="nw">第 4 章</td><td class="nw">第三方库怎么进来</td><td>优先 find_package 的 Config 模式,其次 Module,再次 FetchContent</td></tr>
-<tr><td class="nw">第 5 章</td><td class="nw">自己的库怎么被别人用</td><td>install(EXPORT) 加一份手写的 Config 文件</td></tr>
-<tr><td class="nw">第 6 章</td><td class="nw">编译选项加在哪一层</td><td>加在目标上,用生成器表达式区分编译器</td></tr>
-<tr><td class="nw">第 7 章</td><td class="nw">配置与生成器怎么选</td><td>分清单配置与多配置,把命令行搬进 Presets</td></tr>
-<tr><td class="nw">第 8 章</td><td class="nw">构建期要跑自己的工具怎么办</td><td>add_custom_command 的两种形态,依赖写全才会重新生成</td></tr>
-<tr><td class="nw">第 9 章</td><td class="nw">怎么交付出去</td><td>install 定义安装树,RPATH 决定装完跑不跑得起来,CPack 复用这棵树</td></tr>
-<tr><td class="nw">第 10 章</td><td class="nw">规模大了怎么办</td><td>拆分看配置次数,提速先量再改,老写法逐条迁</td></tr>
-</tbody>
-</table>
-<h3>一份可以照抄的工程骨架</h3>
-<p>把前面十章的结论合起来,一个中等规模工程的顶层 CMakeLists 大致是下面这个形状。每一行都对应某一章的一条判据。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 685px"><code>cmake_minimum_required(VERSION 3.20)
-project(demo VERSION 1.2.0 LANGUAGES CXX)
-
-include(GNUInstallDirs)
-include(CTest)
-
-# 构建类型是调用方的决定,工程只在用户没给时补一个默认值(7.2)
-get_property(_multi GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-<span class="kw">if</span>(NOT _multi AND NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING <span>""</span> FORCE)
-endif()
-
-# 警告选项集中一处,只给自己人链(6.2)
-add_library(demo_warnings INTERFACE)
-target_compile_options(demo_warnings INTERFACE
-    $&lt;$&lt;COMPILE_LANG_AND_ID:CXX,GNU,Clang&gt;:-Wall;-Wextra&gt;
-    $&lt;$&lt;COMPILE_LANG_AND_ID:CXX,MSVC&gt;:/W4;/utf-8;/permissive-&gt;)
-
-add_subdirectory(libs/core)
-add_subdirectory(apps/tool)
-
-<span class="kw">if</span>(PROJECT_IS_TOP_LEVEL AND BUILD_TESTING)
-    add_subdirectory(tests)
-endif()</code></pre>
-<p>库那一层的形状同样固定:目标、别名、使用要求、安装规则、导出。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 440px"><code># libs/core/CMakeLists.txt
-add_library(core src/core.cpp src/parser.cpp)
-add_library(demo::core ALIAS core)
-
-target_compile_features(core PUBLIC cxx_std_17)          # 传播的标准要求(6.1)
-target_include_directories(core PUBLIC
-    $&lt;BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include&gt;
-    $&lt;INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}&gt;)     # 构建树与安装树分开(第 5 章)
-target_link_libraries(core PRIVATE demo_warnings)
-
-install(TARGETS core EXPORT demoTargets
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})      # 分类给路径(9.1)
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})</code></pre>
-<h3>易错清单</h3>
-<p>全书出现过的失效形态,按「看到什么症状」排列。每一条都能在索引表里找到对应的判据。</p>
-<ol>
-<li>新增的 <code>.cpp</code> 没被编进去,链接期报符号未定义——<code>file(GLOB)</code> 在配置期就把文件列表定死了。</li>
-<li>删掉一个目标的依赖之后它照样编得过——全局 <code>include_directories</code> 把路径给了所有目标。</li>
-<li>第三方库的一条警告让整个构建失败——<code>-Werror</code> 写进了 <code>CMAKE_CXX_FLAGS</code>。</li>
-<li>命令行给了 <code>-DCMAKE_BUILD_TYPE=Debug</code> 却拿到优化过的二进制——工程里写死了构建类型,或者用的是多配置生成器。</li>
-<li>性能测出来慢十倍,或者调试时没有符号——<code>CMAKE_BUILD_TYPE</code> 是空的,一个优化选项都没加。</li>
-<li>同一份模板代码 MSVC 编得过、GCC 编不过——MSVC 缺 <code>/permissive-</code>。</li>
-<li>Windows 上中文字符串乱码或报 C4819——缺 <code>/utf-8</code>。</li>
-<li>改了数据表但生成的代码没变——<code>add_custom_command</code> 的 <code>DEPENDS</code> 漏了输入文件。</li>
-<li>首次构建报找不到生成的头文件,第二次就好了——消费目标与生成规则之间少一条边。</li>
-<li>在 Visual Studio 里 <code>ctest</code> 一个测试也没跑——多配置生成器没给 <code>-C</code>。</li>
-<li>构建目录里跑得起来,装完报 <code>cannot open shared object file</code>——安装树 RPATH 没配。</li>
-<li>Windows 上 DLL 装进了 lib 目录——<code>install(TARGETS)</code> 没按 RUNTIME 与 LIBRARY 分类。</li>
-<li>包在干净机器上启动即失败——依赖扫描漏了运行期动态加载的插件。</li>
-<li>改了工具链文件却没有任何变化——它只在第一次配置时被读。</li>
-<li>交叉编译到一半报 <code>Exec format error</code>——构建期要跑的代码生成器被交叉编译器编了。</li>
-<li>别人 <code>find_package</code> 之后编译报找不到头,路径指向作者机器——导出目标里带了绝对路径。</li>
-</ol>
-<h3>这本书怎么当手册用</h3>
-<p>全书每一章都是同一种形态:机制小节回答为什么,条目节逐条给出命令、变量与属性的写法,章末小结把判据收成表。长期查阅的两个入口都在本章:10.6 节的判据索引回答「该不该这么写」,10.7 节的需求索引回答「想做的事去哪查」。两张索引分工不同,拿不准做法时查前者,找不到入口时查后者。</p>
-<p>使用路径只有三条,按处境挑一条即可。</p>
-<table style="contain-intrinsic-size:auto 225px">
-<thead><tr><th>处境</th><th>路径</th></tr></thead>
-<tbody>
-<tr><td class="nw">从零起一个新工程</td><td>照 10.3 节的出场顺序表定骨架,抄本节的两段工程骨架起步,参数与取值再到各章的条目节核对</td></tr>
-<tr><td class="nw">知道要做什么,记不清怎么写</td><td>知道确切名字,直接翻该章的条目节;只知道需求,从 10.7 节进;拿不准该不该这么做,从 10.6 节进</td></tr>
-<tr><td class="nw">手上有一个报错</td><td>先分清配置期、生成期还是构建期,再按 10.7 节末尾排查一组的表挑手段,拿到现象后回机制小节确认判据</td></tr>
-</tbody>
-</table>
-<p>手册与文档都有边界。查不到时按下面四步推进,每一步都比上一步更接近事实来源。</p>
-<ol>
-<li><code>cmake --help-command</code>、<code>--help-property</code>、<code>--help-variable</code>、<code>--help-module</code>。这是本机安装的这一版 CMake 自己的说法,与实际行为最一致;只记得半个名字时,用对应的 <code>--help-*-list</code> 变体列全表再筛。</li>
-<li>官方文档。它比本机帮助多两样东西:每条设施的 Added in 标注,以及策略与版本变迁的说明。判断某个写法能不能在目标环境上用时看这里。</li>
-<li>CMake 安装目录下的 <code>Modules/</code>。模块本身就是 <code>.cmake</code> 源码,行为有歧义时读源码是唯一确定的答案,查找逻辑与变量名都直接写在里面。</li>
-<li>最小复现。把问题剥到十几行的 CMakeLists.txt,配一次看结果。这一步经常在做的过程中就把原因暴露出来。</li>
-</ol>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 错误信息指向的位置往往不是出错的位置</span><p>一个 PUBLIC 写错,报错的是几层之外某个目标的编译失败;一条 RPATH 设错,报错的是运行时找不到库;一个变量设晚了,根本不报错只是不生效。CMake 的错误信息忠实反映的是「哪一步执行不下去」,而不是「哪一行写错了」。这正是先定位时期、再回机制小节查判据的原因:从现象倒推成因,靠的是判据而不是错误文本。</p></div>
-<h3>接下来往哪走</h3>
-<p>本书刻意留在「工程里怎么配」这一层。三类问题超出这个边界,各有专门的去处。</p>
-<table style="contain-intrinsic-size:auto 349px">
-<thead><tr><th>遇到什么</th><th>去哪本</th><th>因为</th></tr></thead>
-<tbody>
-<tr><td class="nw">链接期符号找不到、重复定义、库的顺序影响结果</td><td class="nw">《编译与链接》</td><td>这些事换个构建系统照样发生,属于链接器的规则</td></tr>
-<tr><td>运行期动态库找不到、RPATH 与 RUNPATH 排第几、加载顺序</td><td class="nw">《编译与链接》</td><td>9.2 节只给了 CMake 侧的配置方法,查找规则本身在那本</td></tr>
-<tr><td class="nw">打包之后的签名、公证、自动更新、插件部署</td><td class="nw">《Qt 组件与生态》</td><td>CPack 只负责把文件收进一个包,之后的分发链路是另一件事</td></tr>
-<tr><td class="nw">编译器优化到底能做到什么、某个选项值不值得开</td><td class="nw">《C++ 性能优化》</td><td>第 6 章只给选项的语义,不给性能细账</td></tr>
-<tr><td class="nw">CI 上怎么组织构建矩阵与缓存</td><td class="nw">《Git 与工程协作手册》</td><td>第 7 章的 Presets 是 CI 的输入,流水线本身是协作的事</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 判断一份 CMakeLists 好坏只需要一个问题</span><p>把其中任意一个目标单独拿出来交给另一个工程链接,对方需不需要额外补头文件路径、补宏、补依赖。不需要补,说明使用要求写完整了,这份 CMakeLists 就是合格的。需要补什么,缺口就在哪里——补路径对应第 2 章的传播,补宏对应第 6 章的选项分层,补依赖对应第 5 章的导出。这个问题不需要读完整份文件就能回答,拿一个新建的空工程试一次即可。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 把命令行搬进 Presets 之后,本地与 CI 才可能真正一致</span><p>第 7 章的 CMakePresets.json 不只是省打字。它把生成器、构建类型、工具链、功能开关这些原本散在各人 shell 历史与 CI 配置文件里的东西收进版本控制的同一份文件,于是「本地能过 CI 过不了」这类问题第一次有了可对照的依据。个人的差异放进不进版本控制的 CMakeUserPresets.json,两者靠 inherits 衔接。</p></div>
 </section>
 
 </div></main>

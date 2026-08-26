@@ -205,7 +205,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l1-errno">1.2 errno:一切失败的入口</a>
 <a class="sec" href="#l1-eintr">1.3 EINTR:不重试就是 bug</a>
 <a class="sec" href="#l1-sysconf">1.4 运行期限制:sysconf、pathconf 与不要写死的常量</a>
-<a class="sec" href="#l1-sum">1.5 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l2">文件 I/O</a></summary>
 <a class="sec" href="#l2-open">2.1 open:五个基本调用的入口</a>
@@ -214,7 +213,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l2-lseek">2.4 lseek:偏移量、空洞与大文件</a>
 <a class="sec" href="#l2-buffer">2.5 缓冲与落盘</a>
 <a class="sec" href="#l2-stdio">2.6 标准 I/O 与文件描述符:FILE 流、三种缓冲与 fork/exec 下的坑</a>
-<a class="sec" href="#l2-sum">2.7 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l3">文件系统与元数据</a></summary>
 <a class="sec" href="#l3-inode">3.1 inode 与目录项:名字和内容是分开的</a>
@@ -223,7 +221,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l3-fsinfo">3.4 文件系统信息:statvfs、mount 与 /proc/mounts</a>
 <a class="sec" href="#l3-xattr">3.5 扩展属性:挂在文件上的键值对</a>
 <a class="sec" href="#l3-link">3.6 链接、重命名与原子替换</a>
-<a class="sec" href="#l3-sum">3.7 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l4">进程</a></summary>
 <a class="sec" href="#l4-fork">4.1 fork:写时复制与两个返回值</a>
@@ -231,7 +228,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l4-wait">4.3 wait:回收子进程与僵尸</a>
 <a class="sec" href="#l4-attr">4.4 进程属性、资源限制与 /proc</a>
 <a class="sec" href="#l4-jmp">4.5 非局部跳转:setjmp/longjmp/sigsetjmp 与它们的限制</a>
-<a class="sec" href="#l4-sum">4.6 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l5">信号</a></summary>
 <a class="sec" href="#l5-overview">5.1 信号是什么:异步的代价</a>
@@ -239,7 +235,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l5-mask">5.3 信号屏蔽与同步等待</a>
 <a class="sec" href="#l5-sigset">5.4 信号集操作与 sigsuspend</a>
 <a class="sec" href="#l5-signalfd">5.5 signalfd:把信号变成文件描述符</a>
-<a class="sec" href="#l5-sum">5.6 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l6">进程间通信</a></summary>
 <a class="sec" href="#l6-overview">6.1 速览:七种机制怎么选</a>
@@ -249,7 +244,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l6-posixsem">6.5 POSIX 信号量:命名的与匿名的</a>
 <a class="sec" href="#l6-posixmq">6.6 POSIX 消息队列:带边界、带优先级的进程间信箱</a>
 <a class="sec" href="#l6-unixsock">6.7 Unix 域套接字</a>
-<a class="sec" href="#l6-sum">6.8 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l7">线程</a></summary>
 <a class="sec" href="#l7-basic">7.1 创建、回收与线程属性</a>
@@ -257,7 +251,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l7-futex">7.3 futex:锁的底层与性能</a>
 <a class="sec" href="#l7-tls">7.4 线程局部存储与 fork 的冲突</a>
 <a class="sec" href="#l7-cancel">7.5 线程取消:为什么它比看起来危险得多</a>
-<a class="sec" href="#l7-sum">7.6 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l8">套接字网络编程</a></summary>
 <a class="sec" href="#l8-tcp">8.1 TCP 服务端与客户端骨架</a>
@@ -267,26 +260,22 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l8-byteorder">8.5 字节序与地址转换</a>
 <a class="sec" href="#l8-ipv6">8.6 IPv6 与双栈服务端</a>
 <a class="sec" href="#l8-server">8.7 服务器设计:迭代、并发、预派生、事件驱动与 socket 激活</a>
-<a class="sec" href="#l8-sum">8.8 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l9">I/O 多路复用与事件驱动</a></summary>
 <a class="sec" href="#l9-compare">9.1 select / poll / epoll 的演进</a>
 <a class="sec" href="#l9-epoll">9.2 epoll 的标准用法</a>
 <a class="sec" href="#l9-modern">9.3 一切皆 fd:事件驱动的现代拼图</a>
-<a class="sec" href="#l9-sum">9.4 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l10">内存管理</a></summary>
 <a class="sec" href="#l10-vm">10.1 虚拟内存:分配不等于占用</a>
 <a class="sec" href="#l10-mmap">10.2 mmap:比 malloc 更底层的一层</a>
 <a class="sec" href="#l10-vmops">10.3 虚拟内存操作:mprotect、mlock、madvise</a>
 <a class="sec" href="#l10-alloc">10.4 分配器、泄漏与调试工具</a>
-<a class="sec" href="#l10-sum">10.5 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l11">时间与定时器</a></summary>
 <a class="sec" href="#l11-clock">11.1 时钟类型:选错就会出负数</a>
 <a class="sec" href="#l11-timer">11.2 定时器:从 alarm 到 timerfd</a>
 <a class="sec" href="#l11-format">11.3 时间的表示、换算与格式化</a>
-<a class="sec" href="#l11-sum">11.4 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l12">权限、用户与容器基础</a></summary>
 <a class="sec" href="#l12-cred">12.1 用户、组与权限位</a>
@@ -295,7 +284,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l12-acl">12.4 ACL:当「属主/组/其他」三档不够用时</a>
 <a class="sec" href="#l12-cap">12.5 capabilities:把 root 切碎</a>
 <a class="sec" href="#l12-ns">12.6 命名空间与 cgroup:容器的两根支柱</a>
-<a class="sec" href="#l12-sum">12.7 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l13">文件锁与并发访问</a></summary>
 <a class="sec" href="#l13-why">13.1 为什么 write 的原子性不够用</a>
@@ -303,49 +291,42 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l13-fcntl">13.3 fcntl 记录锁与 OFD 锁</a>
 <a class="sec" href="#l13-tmp">13.4 临时文件的安全创建</a>
 <a class="sec" href="#l13-ioctl">13.5 ioctl:所有设备的万能后门</a>
-<a class="sec" href="#l13-sum">13.6 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l14">终端、tty 与伪终端</a></summary>
 <a class="sec" href="#l14-termios">14.1 行规程:回车才返回的原因</a>
 <a class="sec" href="#l14-job">14.2 进程组、会话与作业控制</a>
 <a class="sec" href="#l14-pty">14.3 伪终端:ssh 和 tmux 靠什么工作</a>
-<a class="sec" href="#l14-sum">14.4 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l15">动态链接与库</a></summary>
 <a class="sec" href="#l15-link">15.1 静态库与动态库:两次完全不同的解析</a>
 <a class="sec" href="#l15-dlopen">15.2 dlopen:运行期加载</a>
 <a class="sec" href="#l15-preload">15.3 LD_PRELOAD 与符号插桩</a>
-<a class="sec" href="#l15-sum">15.4 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l16">守护进程、日志与服务化</a></summary>
 <a class="sec" href="#l16-daemon">16.1 守护进程:每一步的理由</a>
 <a class="sec" href="#l16-log">16.2 日志:syslog、journald 与自己写</a>
 <a class="sec" href="#l16-signal">16.3 优雅退出与配置热重载</a>
-<a class="sec" href="#l16-sum">16.4 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l17">零拷贝与高级 I/O</a></summary>
 <a class="sec" href="#l17-copy">17.1 数据到底拷贝了几次</a>
 <a class="sec" href="#l17-sendfile">17.2 sendfile、splice 与 copy_file_range</a>
 <a class="sec" href="#l17-hint">17.3 页缓存控制:fadvise、O_DIRECT 与 sync</a>
-<a class="sec" href="#l17-sum">17.4 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l18">调度、资源与观测</a></summary>
 <a class="sec" href="#l18-sched">18.1 调度策略与 CPU 亲和</a>
 <a class="sec" href="#l18-rlimit">18.2 资源限制与 cgroup</a>
 <a class="sec" href="#l18-rusage">18.3 资源统计:getrusage 与「这段代码到底花了多少」</a>
 <a class="sec" href="#l18-observe">18.4 观测:从 strace 到 eBPF</a>
-<a class="sec" href="#l18-sum">18.5 小结:本章要点与易错清单</a>
 </details>
 <details><summary><a class="ch" href="#l19">构建、静态链接与交叉编译</a></summary>
 <a class="sec" href="#l19-pipeline">19.1 从源码到可执行文件的四步</a>
 <a class="sec" href="#l19-static">19.2 静态链接:什么时候值得</a>
 <a class="sec" href="#l19-cross">19.3 交叉编译与工具链</a>
-<a class="sec" href="#l19-sum">19.4 小结:本章要点与易错清单</a>
 </details>
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 39435px;--thin-h:23494px">
+<section class="chapter" style="contain-intrinsic-size:auto 37646px;--thin-h:21705px">
 <h1 id="l1"><span class="part">分类 1</span>系统调用与错误处理</h1>
 <h2 id="l1-open">1.0 导读</h2>
 <p>系统编程与应用编程的分界线是<strong>系统调用</strong>:程序主动从用户态陷入内核,请内核代办一件自己没有权限做的事。每一次 <code>read</code>、每一次 <code>fork</code> 都是一次跨越。<strong>本书站在这条线上讲 Linux:每个接口做什么、代价在哪、失败了怎么办。</strong>凡属较新的接口逐处标出最低内核版本,凡属 Linux 扩展而非 POSIX 保证的行为也逐处标出。</p>
@@ -366,21 +347,21 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td>内核邮件列表与提交记录</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>新接口的设计意图与取舍讨论只有这里有,io_uring 与 OFD 锁的来龙去脉都在其中。局限:碎片化,要先知道找什么才查得动</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 TLPI 用来查接口,本书用来查失败形态与取舍</span><p>两者不是替代关系。要「这个调用一共有哪些标志、每个标志什么含义」,翻 TLPI 或 man-pages 最快;要「这个标志在什么条件下不成立、错了会看到什么现象、该换成哪一个」,本书把它写在返回值与批注里。手上有报错时先查本书对应章的小结,再回到一手来源核对参数。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 TLPI 用来查接口,本书用来查失败形态与取舍</span><p>两者不是替代关系。要「这个调用一共有哪些标志、每个标志什么含义」,翻 TLPI 或 man-pages 最快;要「这个标志在什么条件下不成立、错了会看到什么现象、该换成哪一个」,本书把它写在返回值与批注里。手上有报错时先查 1.2 的错误码表与对应章的正文,再回到一手来源核对参数。</p></div>
 <h3>锚定的五样各借鉴了什么</h3>
 <p>借鉴的都是具体手法,不是笼统的风格。</p>
 <table style="contain-intrinsic-size:auto 351px">
 <thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">Kerrisk(TLPI)</td><td><strong>每个调用的「失败了怎么办」那一段的写法</strong>,这是本书借鉴的核心手法:返回值不写成「失败返回 -1」了事,而是逐条列出这个调用实际会出现的错误码与对应场景。全书 <code>errno</code> 出现 511 处,第 1.2 节把这套约定单独立成一节,后面每个接口的返回值段都照它写</td></tr>
+<tr><td class="nw">Kerrisk(TLPI)</td><td><strong>每个调用的「失败了怎么办」那一段的写法</strong>,这是本书借鉴的核心手法:返回值不写成「失败返回 -1」了事,而是逐条列出这个调用实际会出现的错误码与对应场景。全书 <code>errno</code> 出现 489 处,第 1.2 节把这套约定单独立成一节,后面每个接口的返回值段都照它写</td></tr>
 <tr><td class="nw">Stevens 与 Rago(APUE)</td><td>「标准保证了什么、实现多给了什么」的分栏方式;以及把 <code>fork</code>、<code>exec</code>、<code>wait</code> 当作一组机制连着讲,而不是三节各讲各的</td></tr>
 <tr><td class="nw">Stevens《UNIX 网络编程》</td><td>第 8 章的编排:先给一份能跑通的服务端与客户端骨架,再逐条拆陷阱;8.7 服务器设计那一节的模型分类(迭代、并发、预派生、事件驱动)也沿用它的划分</td></tr>
 <tr><td class="nw">man-pages</td><td>参数表的字段划分:参数、类型、说明三列;每个接口标注标准归属与引入版本的做法</td></tr>
-<tr><td class="nw">POSIX.1</td><td>「哪些行为是标准保证的、哪些是 Linux 特有」这条分界线。POSIX 在全书出现 410 处,凡 Linux 扩展逐处点名,并说明在别的 UNIX 上该换成什么</td></tr>
+<tr><td class="nw">POSIX.1</td><td>「哪些行为是标准保证的、哪些是 Linux 特有」这条分界线。POSIX 在全书出现 402 处,凡 Linux 扩展逐处点名,并说明在别的 UNIX 上该换成什么</td></tr>
 </tbody>
 </table>
 <h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>用户态程序与内核打交道所需要的全部接口</strong>,19 章 105 节,按五组排开。</p>
+<p>本书覆盖<strong>用户态程序与内核打交道所需要的全部接口</strong>,19 章 86 节,按五组排开。</p>
 <table style="contain-intrinsic-size:auto 324px">
 <thead><tr><th class="nw">章</th><th>主题</th><th>它回答的问题</th></tr></thead>
 <tbody>
@@ -422,10 +403,10 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <h3>与那些资料相比,本书多给了什么</h3>
 <ul>
 <li><strong>每个接口都写清失败了怎么办。</strong>返回值段逐条列出这个调用会出现的错误码与对应场景,而不是一句「失败返回 -1」。<code>EINTR</code> 单独占了第 1.3 节,因为不重试就是 bug。</li>
-<li><strong>294 个批注里 160 个是红色的。</strong>红色写事故:未定义行为、静默出错、数据损坏,每条给症状与排查手段。剩下 121 个绿色写判据,写成一句能直接执行的规矩。</li>
-<li><strong>541 张表把参数、标志与错误码摆开。</strong>每个接口给参数表与标志表,标注标准归属与最低内核版本;31 张图覆盖结构(文件描述符的三张表、inode 与目录项)、流程(信号分发、epoll 的两种触发)与时序三类。</li>
-<li><strong>标准边界逐处标出。</strong>POSIX 在全书出现 410 处,凡 Linux 扩展都点名,写清「换一个 UNIX 就没有」。</li>
-<li><strong>补上了经典成书之后出现的那部分。</strong>io_uring 出现 65 处,epoll 252 处,命名空间与 cgroup 单独成节(12.6),OFD 锁在 13.3、eBPF 观测在 18.4。</li>
+<li><strong>278 个批注里 161 个是红色的。</strong>红色写事故:未定义行为、静默出错、数据损坏,每条给症状与排查手段。另有 103 个绿色写判据,写成一句能直接执行的规矩。</li>
+<li><strong>508 张表把参数、标志与错误码摆开。</strong>每个接口给参数表与标志表,标注标准归属与最低内核版本;31 张图覆盖结构(文件描述符的三张表、inode 与目录项)、流程(信号分发、epoll 的两种触发)与时序三类。</li>
+<li><strong>标准边界逐处标出。</strong>POSIX 在全书出现 402 处,凡 Linux 扩展都点名,写清「换一个 UNIX 就没有」。</li>
+<li><strong>补上了经典成书之后出现的那部分。</strong>io_uring 出现 57 处,epoll 235 处,命名空间与 cgroup 单独成节(12.6),OFD 锁在 13.3、eBPF 观测在 18.4。</li>
 </ul>
 <div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 接口行为以本机 man-pages 与内核版本为准,不要照抄博客</span><p>系统调用的标志、默认值与错误码会随内核演进,中文博客里的写法常常停在若干年前的发行版上。照抄的后果不是编译不过,而是在旧内核上悄悄退化成另一种行为——标志被忽略、错误码变成 <code>EINVAL</code>、原本承诺的原子性不再成立。做法是:先用 <code>man 2 调用名</code> 看本机这一版怎么写,再用 <code>uname -r</code> 确认内核版本是否满足书里标注的最低版本。</p></div>
 <h3>两条读法:顺读与按需查</h3>
@@ -437,11 +418,11 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw">写服务端程序</td><td>第 1、2 章打底,直接进第 8、9 章,再补第 7 章</td><td class="nw">第 2、8、9 章</td><td class="nw">第 3、11、14 章</td></tr>
 <tr><td class="nw">排查线上问题</td><td>从 18.4 观测那一节起,按现象反查对应的机制章</td><td class="nw">第 1.2、18 章</td><td>—</td></tr>
 <tr><td class="nw">做权限与容器相关的事</td><td>第 12 章,前置是第 4 章的进程属性</td><td class="nw">第 4、12 章</td><td class="nw">第 8 到 11 章</td></tr>
-<tr><td class="nw">手上有一个具体报错</td><td>先查 1.2 的错误码表,再进对应章的小结</td><td>—</td><td>—</td></tr>
+<tr><td class="nw">手上有一个具体报错</td><td>先查 1.2 的错误码表,再进对应章的相关小节</td><td>—</td><td>—</td></tr>
 </tbody>
 </table>
 <p><strong>第 1、2、4、5 章要按顺序读完</strong>,后面每一章都在用它们的结论:第 1 章的错误约定、第 2 章的文件描述符三张表、第 4 章的进程与写时复制、第 5 章的信号与异步打断。这四章是主干,跳着读的表现是每章字面都看得懂,遇到没见过的报错却推不出原因。</p>
-<p>按需查走每章末尾的<strong>小结:本章要点与易错清单</strong>,全书 19 节。它们按「要点 + 易错」两栏组织,适合先定位到大致范围,再回到正文对应小节读细节。</p>
+<p>按需查时,小节标题都写成了问题或结论,先按目录定位到大致范围,再进对应小节读细节。</p>
 <p>读完第 1 到 4 章,能改对一段用 <code>fork</code> 与 <code>exec</code> 写的进程管理代码,能解释一次 <code>read</code> 返回 0 与返回 -1 各意味着什么;读完第 8、9 章,能写出一个扛得住上万连接的事件驱动服务端骨架;读完第 12、16 章,能把程序做成权限收敛、能优雅退出、能热重载配置的守护进程;读完第 17、18 章,能说出一次文件传输拷贝了几次,并用工具把它测出来。</p>
 <div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 三本经典成书都较早,新接口与容器部分要从本书或一手来源补</span><p>TLPI、APUE 与《UNIX 网络编程》至今仍是这个领域最完整的三本,但它们定稿的时间早于 io_uring、OFD 锁、cgroup v2 与命名空间的普及。用它们打底没有问题,涉及这几块时以本书的对应章节与 man-pages、内核文档为准,不要用书里的旧结论去推新接口的行为。</p></div>
 <h2 id="l1-syscall">1.1 系统调用是怎么发生的</h2>
@@ -1120,45 +1101,9 @@ $ ulimit -n 4096; ./limits_demo | grep OPEN_MAX
 _SC_OPEN_MAX           4096                  ← 同一个二进制,答案随运行环境变</code></pre>
 <p>解读:<code>_SC_ARG_MAX</code> 与 <code>ARG_MAX</code> 那两行差了 16 倍,说明头文件里的宏只是历史快照,<code>exec</code> 报不报 <code>E2BIG</code> 看的是运行期值;最后一次运行改了 <code>ulimit -n</code> 之后 <code>_SC_OPEN_MAX</code> 跟着变,正是「不能写死」的理由。</p>
 <p>把同一份源码改用 <code>-m32 -D_FILE_OFFSET_BITS=64</code> 编译,<code>sizeof(off_t)</code> 仍是 8 而 <code>size_t</code> 变成 4;再去掉那个宏,<code>off_t</code> 变成 4,编译器会对 <code>(off_t)1 &lt;&lt; 40</code> 报移位超宽的警告——真实代码里这种状况不报警告,只在碰到 2 GB 以上的文件时让 <code>open</code>/<code>stat</code> 以 <code>EOVERFLOW</code> 失败。</p></div>
-<h2 id="l1-sum">1.5 小结:本章要点与易错清单</h2>
-<p>这一章讲的是所有系统调用共用的「地基」:调用怎么进内核、失败怎么报、信号打断怎么处理、机器常量怎么查。后面每一章的每一个调用都默认你已经把这四件事做对了。</p>
-<table style="contain-intrinsic-size:auto 870px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">系统调用的成本</td><td>一次模式切换百余纳秒加缓存污染,比函数调用贵两个数量级</td><td>逐字节 read/write;性能优化前不先 <code>strace -c</code> 数一数调用次数</td></tr>
-<tr><td class="nw"><code>vDSO</code></td><td>内核把时间类只读调用映射进用户态,<code>clock_gettime</code> 不陷内核</td><td>以为打时间戳很贵而自己缓存时间,结果用了过期值</td></tr>
-<tr><td class="nw"><code>syscall()</code></td><td>glibc 的薄包装,也做 errno 归位;只在 glibc 没封装时用</td><td>用它直接发 <code>clone</code>/<code>fork</code>,绕过了 TLS 与 atfork 簿记</td></tr>
-<tr><td class="nw">返回约定</td><td>失败返回 -1 并设 <code>errno</code>;成功时 errno 不清零</td><td>先看 errno 再判成败;清理代码(close/free)冲掉了 errno 才返回</td></tr>
-<tr><td class="nw"><code>errno</code> 的归属</td><td>每线程一份的 TLS 变量,<code>&lt;errno.h&gt;</code> 里的宏</td><td>信号处理函数里调用了会失败的函数却不保存/恢复 errno</td></tr>
-<tr><td class="nw">错误码的三个流派</td><td>errno 流派 / 返回错误码(pthread、getaddrinfo)/ 负返回值(io_uring)</td><td>对 pthread 函数去读 errno,永远读到无关的值</td></tr>
-<tr><td class="nw"><code>strerror_r</code></td><td>XSI 版填缓冲返回 int,GNU 版返回指针且可能不碰缓冲</td><td>定义了 <code>_GNU_SOURCE</code> 还拿 buf 去打日志,得到空串</td></tr>
-<tr><td class="nw"><code>EINTR</code></td><td>阻塞调用被已捕获的信号打断,返回 -1 且什么都没做</td><td>不重试;或 <code>close</code> 收到 EINTR 去重试,关掉了别人刚复用的 fd</td></tr>
-<tr><td class="nw"><code>SA_RESTART</code></td><td>让内核重启慢速 read/write/accept/wait;对带超时的 poll/epoll/nanosleep/sem_timedwait 无效,对 connect 无效</td><td>注册了 SA_RESTART 就不再检查 epoll_wait 的 EINTR</td></tr>
-<tr><td class="nw"><code>sysconf</code>/<code>pathconf</code></td><td>运行期查限制;返回 -1 且 errno 不变表示「不确定」</td><td>调用前没 <code>errno = 0</code>;把 OPEN_MAX 写死成 1024 按 fd 号索引数组</td></tr>
-<tr><td class="nw">容器里的 CPU 数</td><td><code>_SC_NPROCESSORS_ONLN</code> 是宿主的核数,不看 cgroup 配额</td><td>按它开线程池,2 核配额上跑 64 线程</td></tr>
-<tr><td class="nw">系统数据类型</td><td><code>off_t</code>/<code>pid_t</code>/<code>time_t</code> 宽度不定,打印前强转 <code>intmax_t</code> 用 <code>%jd</code></td><td>32 位平台漏 <code>-D_FILE_OFFSET_BITS=64</code>,大文件 <code>EOVERFLOW</code></td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>这个调用失败时我是先判返回值再读 errno 的吗;失败路径上的清理代码会不会改写 errno;这个阻塞调用被信号打断时会怎样,我套了重试壳或确认了 SA_RESTART 覆盖它吗;我有没有把页大小、fd 上限、CPU 数这类值写成常量;打印 off_t/pid_t 的格式串在 32 位上也对吗。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 416px">
-<thead><tr><th>调用</th><th>作用</th><th>所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>syscall</code></td><td class="nw">按调用号直接发系统调用</td><td>1.1</td></tr>
-<tr><td class="nw"><code>clock_gettime</code></td><td class="nw">取时间,走 vDSO</td><td>1.1</td></tr>
-<tr><td><code>strerror</code> / <code>strerror_r</code> / <code>perror</code></td><td class="nw">把 errno 翻译成文字</td><td>1.2</td></tr>
-<tr><td><code>strerrorname_np</code> / <code>strerrordesc_np</code></td><td>取错误号的符号名/描述(glibc 2.32)</td><td>1.2</td></tr>
-<tr><td class="nw"><code>sigaction</code></td><td>注册信号处理函数,SA_RESTART 在这里设</td><td>1.3</td></tr>
-<tr><td class="nw"><code>alarm</code> / <code>nanosleep</code></td><td class="nw">示例里制造与承受 EINTR</td><td>1.3</td></tr>
-<tr><td class="nw"><code>signalfd</code></td><td>把信号变成 fd,绕开 EINTR</td><td>1.3</td></tr>
-<tr><td><code>sysconf</code> / <code>pathconf</code> / <code>fpathconf</code> / <code>confstr</code></td><td class="nw">运行期查系统与路径相关限制</td><td>1.4</td></tr>
-<tr><td class="nw"><code>getrlimit</code></td><td class="nw">查资源限制(fd 上限等)</td><td>1.4</td></tr>
-<tr><td class="nw"><code>sched_getaffinity</code></td><td class="nw">容器里数真正可用的 CPU</td><td>1.4</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 60226px;--thin-h:33558px">
+<section class="chapter" style="contain-intrinsic-size:auto 57498px;--thin-h:30830px">
 <h1 id="l2"><span class="part">分类 2</span>文件 I/O</h1>
 <p>Unix 的核心抽象是「一切皆文件」:普通文件、目录、管道、套接字、终端、块设备、甚至内核对象(<code>eventfd</code>、<code>timerfd</code>、<code>signalfd</code>),全部通过<strong>文件描述符</strong>操作。掌握了这一组调用,后面的网络和 IPC 就都是它的变体。</p>
 <h2 id="l2-open">2.1 open:五个基本调用的入口</h2>
@@ -2346,64 +2291,9 @@ fork 之前写的一行
 父进程 12349 的一行</code></pre>
 <p>解读:第二次运行的六行里,前两行出现了两遍——不是 <code>printf</code> 被调了两次,而是同一份 4 KB 缓冲区在 fork 时被复制、随后被两个进程各刷一次;子进程先退出所以它那份在前。第三次运行里 <code>fflush(NULL)</code> 让 fork 时缓冲区是空的,问题消失。</p>
 <p>把第三次运行里子进程的 <code>_exit</code> 改回 <code>exit</code> 也不会出错(缓冲区已空),但习惯上子进程仍用 <code>_exit</code>:它还跳过了 <code>atexit</code> 处理函数——那些函数是父进程注册的,子进程跑一遍往往会删临时文件、关连接,破坏父进程的状态。用 <code>strace -f -e write ./fork_stdio &gt; out.txt</code> 能直接看到两次 write 各自带着重复的内容。</p></div>
-<h2 id="l2-sum">2.7 小结:本章要点与易错清单</h2>
-<p>这一章是「一切皆文件」的操作面:open 拿 fd,read/write 搬数据,三张表解释共享,lseek 解释位置,缓冲与 stdio 解释「写了」和「到了」之间的距离。第 3 章往下讲的文件系统、管道、套接字、epoll,全部在这组调用之上。</p>
-<table style="contain-intrinsic-size:auto 1330px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>open</code> 的 mode</td><td>带 <code>O_CREAT</code> 就必须给第三个参数,实际权限 = <code>mode &amp; ~umask</code></td><td>漏 mode 得到栈上垃圾权限;传 0666 却以为别人能写</td></tr>
-<tr><td class="nw"><code>O_CLOEXEC</code></td><td>在 open 那一刻原子设置,多线程下事后 <code>fcntl</code> 有竞态</td><td>fd 泄漏进子进程:端口占不掉、文件删不掉</td></tr>
-<tr><td class="nw"><code>O_CREAT&#124;O_EXCL</code></td><td class="nw">唯一原子的「不存在才创建」</td><td>先 <code>access</code>/<code>stat</code> 再 open,中间被人抢先</td></tr>
-<tr><td class="nw"><code>creat</code></td><td>等价 <code>open(O_WRONLY&#124;O_CREAT&#124;O_TRUNC)</code>,没法加 CLOEXEC</td><td>新代码还用它</td></tr>
-<tr><td class="nw">短读短写</td><td><code>read</code>/<code>write</code> 返回实际字节数,管道/socket 上少于请求是常态</td><td>一次 write 当作全写了;read 没循环到 0</td></tr>
-<tr><td class="nw"><code>read</code> 返回 0</td><td class="nw">文件末尾 / 写端全部关闭</td><td>父进程漏关管道写端,read 永远不返回 0</td></tr>
-<tr><td class="nw"><code>pread</code>/<code>pwrite</code></td><td>定位+读写一次完成,不动也不用 OFD 偏移量</td><td>多线程共享 fd 用 <code>lseek</code>+<code>read</code>,互相插队</td></tr>
-<tr><td class="nw"><code>readv</code>/<code>writev</code></td><td>一次调用多块缓冲,省系统调用;原子性只在管道小消息上可靠</td><td>把 socket 上的 writev 当成不会被拆的消息</td></tr>
-<tr><td class="nw">三张表</td><td>fd 表(进程)→ 打开文件描述(偏移量、状态标志)→ inode</td><td>以为 dup/fork 出的 fd 有独立偏移量;以为两次 open 共享偏移量</td></tr>
-<tr><td class="nw"><code>dup2</code></td><td>原子地关掉目标再复制;<code>old==new</code> 时无操作,<code>dup3</code> 则 EINVAL</td><td>先 close 再 open 靠「最小可用号」,多线程下被抢</td></tr>
-<tr><td class="nw"><code>F_SETFL</code></td><td>只能改 <code>O_APPEND</code>/<code>O_NONBLOCK</code>/<code>O_ASYNC</code>/<code>O_DIRECT</code>/<code>O_NOATIME</code>,改访问模式静默忽略,影响所有副本</td><td>直接赋值冲掉 O_APPEND;给 stdin 设非阻塞忘了改回去</td></tr>
-<tr><td class="nw">fd 号复用</td><td class="nw">close 后号立刻可被复用</td><td>悬着的旧 fd 变量写进了别人的文件;EINTR 时重试 close</td></tr>
-<tr><td class="nw"><code>lseek</code></td><td>只改 OFD 里的数字;越过末尾再写造空洞;管道上 ESPIPE</td><td>用 <code>ls -l</code> 的大小估算磁盘占用(看 <code>du</code>/<code>st_blocks</code>)</td></tr>
-<tr><td class="nw"><code>O_APPEND</code></td><td>每次 write 原子地定位到末尾,lseek 对写无效</td><td>多进程 <code>lseek(SEEK_END)</code>+<code>write</code> 互相覆盖</td></tr>
-<tr><td class="nw"><code>fsync</code> 链</td><td>fflush 只到内核;fsync 才到盘;新文件/rename 还要 fsync 父目录;fsync 失败当数据已丢</td><td>写完 close 就以为安全;原子替换漏 fsync 目录</td></tr>
-<tr><td class="nw"><code>fdatasync</code>/<code>O_DSYNC</code></td><td>不刷非必要元数据,比 fsync/O_SYNC 少一次日志写</td><td>高频提交用 O_SYNC 打开</td></tr>
-<tr><td class="nw"><code>sync_file_range</code></td><td class="nw">控制回写节奏,不是持久化</td><td>用它代替 fsync</td></tr>
-<tr><td class="nw">stdio 缓冲</td><td>终端行缓冲、文件/管道全缓冲、stderr 无缓冲,第一次 I/O 时决定</td><td>管道里看不到日志;崩溃丢最后几 KB;setvbuf 调晚了</td></tr>
-<tr><td class="nw">fork 与缓冲区</td><td>fork 复制未刷出的缓冲区,重定向时输出两次;exec 丢弃缓冲区</td><td>fork 前不 fflush(NULL);子进程用 exit 而不是 _exit</td></tr>
-<tr><td class="nw"><code>fclose</code> 返回值</td><td>最后一块缓冲在这里写出,ENOSPC/EIO 可能只在这里报</td><td>不检查,文件截断了还「成功」退出</td></tr>
-<tr><td class="nw">stdio 与 fd 混用</td><td>FILE 的位置与 fd 偏移量不一致,交接前先 fflush</td><td>fprintf 后直接 write,顺序颠倒</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>这个产 fd 的调用带 CLOEXEC 了吗;这个 read/write 套了循环吗,对 0 的处理对吗;这个 fd 有没有第二个使用者(dup/fork/线程),偏移量和状态标志谁在改;写完之后我需要的是「进程崩了不丢」(fflush)还是「断电不丢」(fsync + 目录);stdout 在生产里是全缓冲,我的日志与 fork 考虑到了吗;fclose 的返回值看了吗。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 896px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>open</code> / <code>openat</code> / <code>creat</code></td><td>路径变 fd;创建、截断、独占、CLOEXEC</td><td class="nw">2.1</td></tr>
-<tr><td class="nw"><code>umask</code> / <code>fchmod</code></td><td class="nw">影响/修正新建文件权限</td><td class="nw">2.1</td></tr>
-<tr><td class="nw"><code>read</code> / <code>write</code></td><td class="nw">基本读写,可能短读短写</td><td class="nw">2.2</td></tr>
-<tr><td class="nw"><code>pread</code> / <code>pwrite</code></td><td class="nw">带偏移读写,不动偏移量</td><td class="nw">2.2</td></tr>
-<tr><td><code>readv</code> / <code>writev</code> / <code>preadv</code> / <code>pwritev</code></td><td class="nw">分散读聚集写</td><td class="nw">2.2</td></tr>
-<tr><td class="nw"><code>dup</code> / <code>dup2</code> / <code>dup3</code></td><td class="nw">复制 fd,共享打开文件描述</td><td class="nw">2.3</td></tr>
-<tr><td><code>fcntl</code>(F_DUPFD / F_DUPFD_CLOEXEC / F_GETFD / F_SETFD / F_GETFL / F_SETFL)</td><td>复制 fd;读改 fd 标志与文件状态标志</td><td class="nw">2.3</td></tr>
-<tr><td><code>readlink</code>(/proc/self/fd/N)</td><td class="nw">看 fd 指向什么</td><td class="nw">2.3</td></tr>
-<tr><td class="nw"><code>lseek</code></td><td>改偏移量;SEEK_DATA/SEEK_HOLE 找空洞</td><td class="nw">2.4</td></tr>
-<tr><td><code>fallocate</code> / <code>posix_fallocate</code></td><td class="nw">预分配、打洞</td><td class="nw">2.4</td></tr>
-<tr><td class="nw"><code>fstat</code></td><td>读大小、权限、st_blocks</td><td class="nw">2.1, 2.4</td></tr>
-<tr><td><code>fsync</code> / <code>fdatasync</code> / <code>sync</code> / <code>syncfs</code></td><td class="nw">页缓存落盘</td><td class="nw">2.5</td></tr>
-<tr><td><code>sync_file_range</code> / <code>posix_fadvise</code></td><td class="nw">回写节奏与缓存提示</td><td class="nw">2.5</td></tr>
-<tr><td class="nw"><code>rename</code></td><td class="nw">同一文件系统内原子替换</td><td class="nw">2.5</td></tr>
-<tr><td><code>fopen</code> / <code>fdopen</code> / <code>freopen</code> / <code>fileno</code> / <code>fclose</code></td><td class="nw">FILE 与 fd 的互转</td><td class="nw">2.6</td></tr>
-<tr><td class="nw"><code>setvbuf</code> / <code>fflush</code></td><td class="nw">缓冲模式与刷新</td><td class="nw">2.5, 2.6</td></tr>
-<tr><td><code>fgets</code> / <code>getline</code> / <code>getdelim</code> / <code>fread</code> / <code>fwrite</code></td><td class="nw">行与块读写</td><td class="nw">2.6</td></tr>
-<tr><td><code>fseek</code> / <code>ftell</code> / <code>fseeko</code> / <code>ftello</code> / <code>ungetc</code> / <code>feof</code> / <code>ferror</code> / <code>clearerr</code></td><td class="nw">流定位与状态</td><td class="nw">2.6</td></tr>
-<tr><td><code>fmemopen</code> / <code>open_memstream</code> / <code>tmpfile</code></td><td class="nw">内存流与匿名临时文件</td><td class="nw">2.6</td></tr>
-<tr><td class="nw"><code>fork</code> / <code>_exit</code> / <code>exec</code></td><td class="nw">示例里制造与规避缓冲区复制</td><td class="nw">2.6</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 64337px;--thin-h:36599px">
+<section class="chapter" style="contain-intrinsic-size:auto 61714px;--thin-h:33976px">
 <h1 id="l3"><span class="part">分类 3</span>文件系统与元数据</h1>
 <p>上一章讲的是「打开的文件」,这一章讲「文件系统里的文件」:它的元数据在哪、名字与内容是什么关系、怎么安全地遍历和修改。理解 <strong>inode 与目录项分离</strong>这一条,硬链接、符号链接、<code>unlink</code> 的语义、以及为什么 <code>rename</code> 能原子替换,全都能推出来。</p>
 <figure style="contain-intrinsic-size:auto 259px">
@@ -3699,61 +3589,9 @@ open(O_PATH|O_NOFOLLOW) = 3                 ← 不解析目标,拿到「链接�
 readlinkat(pfd, <span>""</span>) = <span>"missing.txt"</span></code></pre>
 <p>解读:第 2-4 行是 <code>RENAME_EXCHANGE</code> 的全部价值——两个版本瞬间互换,而且换完手里还留着旧版本的名字可以回滚;用 <code>rename</code> 做不到,必须经过一个「只有一个文件」的中间态。</p>
 <p>最后三行说明 <code>O_PATH</code> fd 是引用符号链接本身的唯一办法:普通 <code>open</code> 跟着链接走向不存在的目标直接失败。在不支持 <code>renameat2</code> 标志的文件系统上(某些 NFS、老内核),第 1 行会变成 <code>Invalid argument</code>,调用者要准备回退路径。</p></div>
-<h2 id="l3-sum">3.7 小结:本章要点与易错清单</h2>
-<p>这一章把「打开的文件」背后的东西摊开:名字在目录里、属性在 inode 里、两者用 inode 号连接。后面所有章节里凡是涉及路径的调用——<code>open</code>、<code>exec</code>、<code>mkstemp</code>、守护进程的 <code>chdir("/")</code>——都建立在这个模型之上;第 12 章的权限与 capability、第 13 章的文件锁与临时文件,则是这一章权限算法与 <code>rename</code> 原子性的延伸。</p>
-<table style="contain-intrinsic-size:auto 1259px">
-<thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">inode 与目录项</td><td>名字在目录里、属性和数据在 inode 里;<code>unlink</code> 删名字,链接数与打开数都归零才释放</td><td>删了大日志却不释放空间——还有进程开着它,<code>lsof +L1</code></td></tr>
-<tr><td class="nw">文件身份</td><td><code>st_dev</code> + <code>st_ino</code> 合起来才唯一</td><td>只比 <code>st_ino</code>,跨文件系统撞号</td></tr>
-<tr><td class="nw">七种类型</td><td><code>S_ISxxx(st_mode)</code>,或 <code>(st_mode &amp; S_IFMT) == S_IFxxx</code></td><td>不加掩码直接比较 <code>st_mode</code></td></tr>
-<tr><td class="nw"><code>stat</code> 四兄弟 + <code>statx</code></td><td>有 fd 用 <code>fstat</code>;遍历用 <code>lstat</code>;创建时间用 <code>statx</code> 并检查 <code>stx_mask</code></td><td>先 <code>stat</code> 再 <code>open</code> 的 TOCTOU;不看 <code>stx_mask</code> 就用 <code>stx_btime</code></td></tr>
-<tr><td class="nw">三个时间戳</td><td>ctime 是 change 不是 create;<code>utimensat</code> 只能改 atime/mtime,ctime 总被推到现在</td><td>以为 <code>touch -d</code> 伪造后无痕</td></tr>
-<tr><td class="nw">权限算法</td><td>特权 → 属主档 → 组档 → 其他档,<strong>命中一档不回退</strong>;目录 x 才能穿、w+x 才能增删条目</td><td><code>chmod 077</code> 后属主读不了以为是 bug;拿 <code>access</code> 做安全判定</td></tr>
-<tr><td class="nw">chown / chmod 规则</td><td>非 root 不能送文件;chown 可执行文件清 setuid/setgid;非属主写入也清</td><td>部署脚本先 chmod 4755 再 chown,特权位丢失</td></tr>
-<tr><td class="nw">sticky / setgid 目录</td><td>/tmp 里删不了别人的;setgid 目录让新文件继承组;<code>fs.protected_*</code> 让 root 在 /tmp 也可能被拒</td><td>「root 写 /tmp 报 EACCES」查 <code>sysctl fs.protected_regular</code></td></tr>
-<tr><td class="nw">chattr 属性位</td><td><code>i</code>/<code>a</code> 在权限之上,root 也 <code>EPERM</code></td><td>不查 <code>lsattr</code> 就开始怀疑文件系统坏了</td></tr>
-<tr><td class="nw"><code>readdir</code></td><td>顺序无保证;<code>d_type</code> 可能 <code>DT_UNKNOWN</code>;返回的指针下次调用即失效;边遍历边改目录未指定</td><td>依赖返回顺序;只看 <code>d_type</code> 不回退 <code>fstatat</code></td></tr>
-<tr><td class="nw"><code>nftw</code></td><td><code>FTW_PHYS</code> 防环、<code>FTW_DEPTH</code> 后序删树、<code>nopenfd</code> 限 fd</td><td>忘 <code>FTW_PHYS</code>,被指向祖先的链接绕进环</td></tr>
-<tr><td class="nw">cwd 与 chroot</td><td>cwd 是进程级的(线程共享);<code>chroot</code> 只改解析起点,不是安全边界</td><td>库代码里 <code>chdir</code>;<code>chroot</code> 后不 <code>chdir("/")</code></td></tr>
-<tr><td class="nw"><code>statvfs</code></td><td>可用空间用 <code>f_bavail</code>(不是 <code>f_bfree</code>);空间和 inode 要同时看</td><td>用 <code>f_bfree</code> 算使用率和 df 对不上;inode 用尽时只盯空间</td></tr>
-<tr><td class="nw"><code>mount</code></td><td>bind 第一次忽略其他标志,只读 bind 要再 <code>MS_REMOUNT&#124;MS_BIND&#124;MS_RDONLY</code>;看 <code>/proc/self/mountinfo</code></td><td>一次 bind 就以为只读生效</td></tr>
-<tr><td class="nw">xattr</td><td>两段式(先问长度);<code>ERANGE</code> 要重试;<code>ENOTSUP</code> 是文件系统不支持</td><td>拷贝/备份不带 xattr,ACL、capability、SELinux 标签集体丢失</td></tr>
-<tr><td class="nw"><code>rename</code></td><td>同文件系统内原子;不影响已打开的 fd;临时文件与目标同目录;文件与目录各 fsync 一次</td><td>临时文件放 /tmp → <code>EXDEV</code>;只 fsync 文件不 fsync 目录</td></tr>
-<tr><td class="nw"><code>renameat2</code></td><td><code>RENAME_NOREPLACE</code> 不覆盖、<code>RENAME_EXCHANGE</code> 原子交换</td><td>不处理老文件系统的 <code>EINVAL</code></td></tr>
-<tr><td><code>readlink</code> / <code>O_PATH</code> / <code>basename</code></td><td><code>readlink</code> 不补 NUL;<code>O_PATH&#124;O_NOFOLLOW</code> 是引用链接本身的 fd;<code>basename</code> 有改参数的 POSIX 版和不改的 GNU 版</td><td>忘补 NUL;给 POSIX <code>basename</code> 传字符串字面量</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 回看清单</span><p>我比较的是 <code>st_dev</code>+<code>st_ino</code> 还是路径字符串;对同一文件的多次操作是不是拿 fd 做的(<code>fstat</code>/<code>fchmod</code>/<code>openat</code>);遍历有没有处理 <code>DT_UNKNOWN</code>、符号链接环、遍历中的修改;替换文件是不是「同目录临时文件 + fsync + rename + fsync 目录」;权限判断是直接尝试看 errno,还是先 <code>access</code>/<code>stat</code> 预检。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 821px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td><code>stat</code> / <code>lstat</code> / <code>fstat</code> / <code>fstatat</code> / <code>statx</code></td><td class="nw">读 inode 元数据</td><td class="nw">3.2</td></tr>
-<tr><td class="nw"><code>utimensat</code> / <code>futimens</code></td><td class="nw">改 atime/mtime</td><td class="nw">3.2</td></tr>
-<tr><td><code>chown</code> / <code>fchown</code> / <code>lchown</code> / <code>fchownat</code></td><td class="nw">改属主属组</td><td class="nw">3.2</td></tr>
-<tr><td><code>chmod</code> / <code>fchmod</code> / <code>fchmodat</code></td><td class="nw">改权限位</td><td class="nw">3.2</td></tr>
-<tr><td class="nw"><code>access</code> / <code>faccessat</code></td><td>按真实(或有效)id 检查权限</td><td class="nw">3.2</td></tr>
-<tr><td><code>ioctl(FS_IOC_GETFLAGS/SETFLAGS)</code></td><td>inode 属性位(chattr)</td><td class="nw">3.2</td></tr>
-<tr><td class="nw"><code>mknod</code> / <code>mknodat</code></td><td class="nw">建设备节点/FIFO</td><td class="nw">3.1</td></tr>
-<tr><td><code>opendir</code> / <code>fdopendir</code> / <code>readdir</code> / <code>rewinddir</code> / <code>telldir</code> / <code>seekdir</code> / <code>dirfd</code> / <code>closedir</code> / <code>scandir</code></td><td class="nw">目录流</td><td class="nw">3.3</td></tr>
-<tr><td class="nw"><code>getdents64</code></td><td class="nw">目录流的底层批量读</td><td class="nw">3.3</td></tr>
-<tr><td class="nw"><code>nftw</code></td><td class="nw">递归遍历</td><td class="nw">3.3</td></tr>
-<tr><td><code>getcwd</code> / <code>chdir</code> / <code>fchdir</code> / <code>chroot</code> / <code>realpath</code></td><td class="nw">工作目录、根目录、规范路径</td><td class="nw">3.3</td></tr>
-<tr><td><code>statvfs</code> / <code>fstatvfs</code> / <code>statfs</code></td><td class="nw">文件系统容量与类型</td><td class="nw">3.4</td></tr>
-<tr><td class="nw"><code>mount</code> / <code>umount</code> / <code>umount2</code></td><td class="nw">挂载</td><td class="nw">3.4</td></tr>
-<tr><td class="nw"><code>getmntent</code> 系列</td><td class="nw">解析挂载表</td><td class="nw">3.4</td></tr>
-<tr><td><code>getxattr</code> / <code>setxattr</code> / <code>listxattr</code> / <code>removexattr</code>(及 l*/f* 变体)</td><td class="nw">扩展属性</td><td class="nw">3.5</td></tr>
-<tr><td><code>link</code> / <code>linkat</code> / <code>unlink</code> / <code>unlinkat</code></td><td class="nw">硬链接、删名字</td><td class="nw">3.6</td></tr>
-<tr><td><code>symlink</code> / <code>symlinkat</code> / <code>readlink</code> / <code>readlinkat</code></td><td class="nw">符号链接</td><td class="nw">3.6</td></tr>
-<tr><td><code>rename</code> / <code>renameat</code> / <code>renameat2</code></td><td class="nw">改名、原子替换、原子交换</td><td class="nw">3.6</td></tr>
-<tr><td><code>mkdir</code> / <code>mkdirat</code> / <code>rmdir</code> / <code>remove</code></td><td class="nw">目录的增删</td><td class="nw">3.6</td></tr>
-<tr><td class="nw"><code>open(O_PATH)</code></td><td class="nw">只取位置的 fd</td><td class="nw">3.6</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 61996px;--thin-h:33453px">
+<section class="chapter" style="contain-intrinsic-size:auto 59325px;--thin-h:30782px">
 <h1 id="l4"><span class="part">分类 4</span>进程</h1>
 <p>Unix 创建进程的模型很特别:<strong>先复制自己(<code>fork</code>),再把自己换成目标程序(<code>exec</code>)</strong>。这个「先分裂再变身」的两步走看起来绕,却让父进程有机会在中间那一瞬间调整子进程的环境——重定向、改权限、设置信号、改工作目录。shell 的全部魔法都发生在这一步。</p>
 <h2 id="l4-fork">4.1 fork:写时复制与两个返回值</h2>
@@ -4965,59 +4803,9 @@ $ echo $?
 1</code></pre>
 <p>解读:第二次运行里 SIGALRM 到来时进程正阻塞在 <code>read</code> 上——一个系统调用,没有持任何用户态锁,所以从处理函数里跳走是安全的。把 <code>sigsetjmp(env, 1)</code> 改成 <code>setjmp</code>、<code>siglongjmp</code> 改成 <code>longjmp</code>,程序看起来照常工作,但 SIGALRM 从此留在屏蔽字里:在 <code>timeout</code> 分支后面再加一次 <code>alarm(3)</code> + <code>pause()</code>,第二次超时永远不会来。</p>
 <p>把 <code>alarm(0)</code> 那行删掉再输入得足够快,3 秒后进程会在你已经退出主逻辑、可能正在别的函数里时被 SIGALRM 打断并跳回——这就是 <code>alarm</code> 「全进程只有一个、必须及时取消」的含义。同样的需求,<code>struct pollfd p = {0, POLLIN}; poll(&amp;p, 1, 3000);</code> 一行就能做到,而且没有上述任何一条限制。</p></div>
-<h2 id="l4-sum">4.6 小结:本章要点与易错清单</h2>
-<p>这一章讲的是进程的一生:<code>fork</code> 分裂、<code>exec</code> 换身、<code>wait</code> 收尸,以及进程身上挂着的那些属性从哪里来、怎么传下去。第 5 章的信号、第 14 章的会话与作业控制、第 16 章的守护进程,都是在这些机制上叠加规则;多线程程序里的 <code>fork</code> 限制则在第 7 章再被碰到一次。</p>
-<table style="contain-intrinsic-size:auto 1435px">
-<thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>fork</code> 的两次返回</td><td>父得子 pid、子得 0、失败 -1;写时复制只拷页表</td><td>漏掉失败分支;在子进程里用 <code>exit</code> 而不是 <code>_exit</code></td></tr>
-<tr><td class="nw">fork 后父子谁先跑</td><td>不确定;要顺序就同步(先屏蔽信号再 <code>sigsuspend</code>,或管道)</td><td>测试时「碰巧」有序,上线后偶发</td></tr>
-<tr><td class="nw">fork 继承清单</td><td>fd 表复制但打开文件描述(偏移)共享;信号屏蔽字继承且穿过 exec;未决信号、定时器、其他线程、fcntl 锁不继承</td><td>父进程屏蔽的信号,子程序莫名收不到</td></tr>
-<tr><td class="nw">多线程里 fork</td><td>只带走调用线程,其他线程的锁保持锁定;子进程只能做 async-signal-safe 的事然后 exec</td><td>fork 后在子进程里 <code>malloc</code>/<code>printf</code> 死锁</td></tr>
-<tr><td><code>vfork</code> / <code>posix_spawn</code> / <code>clone</code></td><td>起外部程序首选 <code>posix_spawn</code>;<code>clone</code> 的标志决定「线程」还是「进程」</td><td>新代码用 <code>vfork</code></td></tr>
-<tr><td class="nw">exec 家族</td><td>l/v 参数形式、p 查 PATH、e 显式环境;只有 <code>execve</code> 是系统调用;成功不返回,失败 <code>_exit(127)</code></td><td><code>argv[0]</code> 漏掉;数组不以 NULL 结尾;<code>execlp</code> 在 setuid 程序里用调用者的 PATH</td></tr>
-<tr><td class="nw"><code>#!</code> 脚本</td><td>内核解析;解释器路径不查 PATH;参数只有一个;setuid 位对脚本无效</td><td><code>#!/usr/bin/env python3 -u</code> 在 Linux 上找不到命令</td></tr>
-<tr><td class="nw">exec 保留/重置</td><td>保留 pid、非 CLOEXEC 的 fd、cwd、umask、屏蔽字、rlimit、SIG_IGN;重置地址空间、已捕获的处理函数、线程、atexit 表</td><td>忽略了 SIGPIPE 的 shell 起的子程序死循环</td></tr>
-<tr><td class="nw"><code>system</code></td><td>fork + <code>sh -c</code> + wait;父进程忽略 SIGINT/SIGQUIT、屏蔽 SIGCHLD;127 二义</td><td>setuid 程序里用它;自己写的版本漏掉信号处理</td></tr>
-<tr><td class="nw">僵尸与回收</td><td>退出状态保存在进程表项里直到父进程 wait;状态用 <code>WIF*</code> 宏拆,退出码只有低 8 位</td><td>对僵尸 <code>kill -9</code>;<code>exit(256)</code> 当成 0</td></tr>
-<tr><td class="nw">SIGCHLD 收割</td><td>处理函数里 <code>while (waitpid(-1, &amp;st, WNOHANG) &gt; 0)</code>,信号不排队</td><td>只 <code>waitpid</code> 一次;漏 <code>WNOHANG</code> 把进程挂住</td></tr>
-<tr><td class="nw">自动回收</td><td><code>SIG_IGN</code> SIGCHLD 或 <code>SA_NOCLDWAIT</code>:内核直接收,拿不到状态</td><td>设了之后又去 <code>waitpid</code>,得到 <code>ECHILD</code></td></tr>
-<tr><td class="nw"><code>waitid</code></td><td><code>WEXITED</code> 等必须给一个;<code>WNOHANG</code> 无事时返回 0 且 <code>si_pid</code>=0</td><td>不清零 <code>siginfo_t</code> 就判断</td></tr>
-<tr><td class="nw">孤儿、subreaper、容器 init</td><td>过继给最近的 subreaper 或 pid namespace 的 1 号;1 号不收尸就全是僵尸</td><td>容器里用不处理 SIGCHLD 的程序当 PID 1</td></tr>
-<tr><td class="nw">pidfd</td><td>用 fd 指代进程,可 poll、可 <code>waitid(P_PIDFD)</code>、可 <code>pidfd_send_signal</code>,没有 pid 复用竞态</td><td>记下 pid 过一会儿再 <code>kill</code></td></tr>
-<tr><td class="nw">环境变量</td><td><code>setenv</code> 拷贝、<code>putenv</code> 存指针;多线程下只在 <code>main</code> 开头改</td><td><code>putenv</code> 传局部数组;线程跑起来以后 <code>setenv</code></td></tr>
-<tr><td class="nw">退出方式</td><td><code>exit</code> 跑 atexit(逆序)+ 刷 stdio;<code>_exit</code> 什么都不跑;fork 继承 atexit 表,exec 清空</td><td>子进程 <code>exit</code> 把父进程的缓冲再刷一遍、把父进程的清理跑一遍</td></tr>
-<tr><td class="nw">内存布局</td><td>text/rodata/data/bss/heap/mmap/stack;<code>size</code> 看静态、<code>/proc/PID/maps</code> 看运行时、PSS 看真实占用</td><td>用 RSS 给 fork 出来的进程算内存</td></tr>
-<tr><td class="nw">rlimit</td><td>软限制自己可调到硬限制;经 fork/exec 继承;看 <code>/proc/PID/limits</code></td><td>改 limits.conf 指望 systemd 服务生效</td></tr>
-<tr><td class="nw"><code>setjmp</code> / <code>longjmp</code></td><td>只能跳向仍活着的外层帧;跨跳转修改的局部变量要 <code>volatile</code>;从信号处理函数跳出只能 <code>siglongjmp</code> 且被打断处必须 async-signal-safe</td><td><code>-O2</code> 下变量退回旧值;<code>longjmp</code> 出处理函数后信号一直被屏蔽</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 200px"><span class="t">🟢 回看清单</span><p>fork 的三个分支都处理了吗,子进程用的是 <code>_exit</code> 吗;exec 前清了屏蔽字、恢复了处理函数、关了不该继承的 fd 吗;每个子进程都有人 <code>wait</code> 吗,SIGCHLD 处理函数是循环吗;起外部程序是不是该用 <code>posix_spawn</code> 而不是 <code>fork</code> 或 <code>system</code>;要等的进程能不能用 pidfd 放进事件循环;<code>setjmp</code> 所在函数里跨跳转的局部变量加 <code>volatile</code> 了吗。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 694px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td><code>fork</code> / <code>vfork</code> / <code>clone</code> / <code>clone3</code></td><td class="nw">创建进程或线程</td><td class="nw">4.1</td></tr>
-<tr><td><code>posix_spawn</code> / <code>posix_spawnp</code></td><td class="nw">fork+exec 的封装</td><td class="nw">4.1</td></tr>
-<tr><td><code>execl</code> / <code>execlp</code> / <code>execle</code> / <code>execv</code> / <code>execvp</code> / <code>execvpe</code> / <code>execve</code> / <code>fexecve</code> / <code>execveat</code></td><td class="nw">换成另一个程序</td><td class="nw">4.2</td></tr>
-<tr><td class="nw"><code>system</code></td><td class="nw">经 sh 执行命令串</td><td class="nw">4.2</td></tr>
-<tr><td class="nw"><code>acct</code></td><td class="nw">进程记账</td><td class="nw">4.2</td></tr>
-<tr><td><code>wait</code> / <code>waitpid</code> / <code>waitid</code> / <code>wait3</code> / <code>wait4</code></td><td class="nw">回收子进程</td><td class="nw">4.3</td></tr>
-<tr><td><code>pidfd_open</code> / <code>pidfd_send_signal</code> / <code>pidfd_getfd</code></td><td class="nw">用 fd 指代进程</td><td class="nw">4.3</td></tr>
-<tr><td><code>prctl(PR_SET_CHILD_SUBREAPER)</code></td><td class="nw">收养后代孤儿</td><td class="nw">4.3</td></tr>
-<tr><td class="nw"><code>getpid</code> / <code>getppid</code></td><td class="nw">进程号</td><td class="nw">4.4</td></tr>
-<tr><td><code>prctl</code>(PR_SET_NAME / PDEATHSIG / NO_NEW_PRIVS / DUMPABLE …)</td><td class="nw">杂项进程控制</td><td class="nw">4.4</td></tr>
-<tr><td><code>getrlimit</code> / <code>setrlimit</code> / <code>prlimit</code></td><td class="nw">资源限制</td><td class="nw">4.4</td></tr>
-<tr><td><code>getenv</code> / <code>setenv</code> / <code>putenv</code> / <code>unsetenv</code> / <code>clearenv</code></td><td class="nw">环境变量</td><td class="nw">4.2、4.4</td></tr>
-<tr><td class="nw"><code>getauxval</code></td><td class="nw">读辅助向量</td><td class="nw">4.4</td></tr>
-<tr><td><code>exit</code> / <code>_exit</code> / <code>_Exit</code> / <code>atexit</code> / <code>on_exit</code></td><td class="nw">退出与清理</td><td class="nw">4.4</td></tr>
-<tr><td><code>setjmp</code> / <code>longjmp</code> / <code>sigsetjmp</code> / <code>siglongjmp</code></td><td class="nw">非局部跳转</td><td class="nw">4.5</td></tr>
-<tr><td class="nw"><code>alarm</code></td><td>定一次 SIGALRM(详见第 11 章)</td><td class="nw">4.5</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 55628px;--thin-h:31768px">
+<section class="chapter" style="contain-intrinsic-size:auto 53617px;--thin-h:29757px">
 <h1 id="l5"><span class="part">分类 5</span>信号</h1>
 <p>信号是内核给进程的<strong>异步通知</strong>:它会在任意一条指令之间打断进程正在做的事,跳去执行处理函数,然后回来。正因为「任意一条指令之间」这几个字,处理函数里能干的事极其有限——这是信号最反直觉、也最容易写出隐蔽 bug 的地方。这一章先讲清这个限制的来源,再给出现代 Linux 上绕开它的标准做法。</p>
 <h2 id="l5-overview">5.1 信号是什么:异步的代价</h2>
@@ -6182,50 +5970,9 @@ read 1 record(s)                                   ← 三个 SIGCHLD 合并成�
 <p>最后一条记录的 <code>ssi_pid</code>/<code>ssi_uid</code> 是发 <code>kill</code> 的 shell 的身份,由内核填写。把 <code>sleep(2)</code> 去掉,三条记录可能分两三次读到(取决于 <code>poll</code> 醒来的时机),但任何一次 <code>read</code> 之后仍必须循环 <code>waitpid</code>。把开头的 <code>sigprocmask</code> 注释掉,程序在 <code>kill -TERM</code> 时直接死,signalfd 上什么也读不到。</p>
 <p><strong>其他说明</strong></p><p>两条容易踩的边界:①<code>signalfd</code> 读到的是<strong>调用线程的私有未决集 + 进程共享未决集</strong>,别的线程私有的(如它自己触发的 SIGSEGV、别人 <code>pthread_kill</code> 给它的)读不到;②fork 后子进程继承了 sfd,但读到的是<strong>子进程自己</strong>的未决信号——用 sfd 的进程 fork 出的子进程应当立刻关掉它并恢复屏蔽字。</p>
 <p>标准:Linux 特有,2.6.22 起;<code>signalfd4</code>(带 flags)2.6.27 起,glibc 的 <code>signalfd()</code> 包装用的是后者。</p></div>
-<h2 id="l5-sum">5.6 小结:本章要点与易错清单</h2>
-<p>信号是内核通知进程的唯一异步通道,也是本书里唯一要求「在任意指令之间正确」的代码路径。这一章把它拆成三段(产生、未决、投递),给出两条路:处理函数只置标志,或者干脆屏蔽后同步收(<code>sigwaitinfo</code>/<code>signalfd</code>)。后面的进程管理、事件循环、守护进程章节都默认读者按第二条路写。</p>
-<table style="contain-intrinsic-size:auto 888px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">处理函数里能做什么</td><td>只调 async-signal-safe 函数、只改 <code>volatile sig_atomic_t</code>、保存恢复 errno</td><td>在处理函数里 <code>printf</code>/<code>malloc</code>/加锁,偶发死锁或堆损坏</td></tr>
-<tr><td class="nw">标准信号不排队</td><td>未决集是位图,同号多次只投一次</td><td>SIGCHLD 处理函数只 <code>waitpid</code> 一次,留下僵尸</td></tr>
-<tr><td class="nw"><code>kill</code> 的 pid 与权限</td><td>&gt;0 单进程、0 本组、-1 全部、&lt;-1 指定组;uid 规则看目标的实际/保存 uid</td><td>用 <code>kill(pid,0)</code> 判断存活却没考虑 pid 复用</td></tr>
-<tr><td class="nw"><code>sigaction</code> 而非 <code>signal</code></td><td>行为全由 <code>sa_flags</code> 显式指定;<code>SA_RESTART</code> 只对部分调用生效</td><td>以为设了 SA_RESTART 就不用处理 EINTR,<code>poll</code>/<code>nanosleep</code> 照样返回</td></tr>
-<tr><td class="nw">硬件异常类信号</td><td>SEGV/BUS/FPE/ILL 处理完必须 <code>_exit</code> 或重抛,不能返回</td><td>返回后同一条指令再触发,进程在死循环里打转</td></tr>
-<tr><td class="nw">栈溢出与 <code>sigaltstack</code></td><td>没有备用栈的 SIGSEGV 处理函数一行都跑不了</td><td>崩溃处理器装了但从不输出;新 glibc 下 <code>char buf[SIGSTKSZ]</code> 编译失败</td></tr>
-<tr><td class="nw">屏蔽字是「推迟」不是「丢弃」</td><td>每线程一份,fork/exec 都继承;解除时未决信号立即投递</td><td>子进程 exec 前没恢复屏蔽字,外部命令对 SIGTERM 无反应</td></tr>
-<tr><td class="nw">检查与等待之间的窗口</td><td>用 <code>sigsuspend</code>/<code>ppoll</code>/<code>epoll_pwait</code> 把「换屏蔽字 + 等待」做成原子</td><td>「检查标志再 pause」,信号恰好在中间到达,永远睡着</td></tr>
-<tr><td class="nw">多线程收信号的标准架构</td><td>创建线程前屏蔽全部,专职线程 <code>sigwaitinfo</code>;用 <code>pthread_sigmask</code></td><td>在某个工作线程里才屏蔽,信号从别的线程漏进去走默认动作</td></tr>
-<tr><td class="nw">同步接收三件套</td><td><code>sigwait</code> 返回错误码、<code>sigwaitinfo</code>/<code>sigtimedwait</code> 返回 -1 设 errno;前提都是先屏蔽</td><td>忘了屏蔽,SIGTERM 直接把进程杀了,<code>sigwait</code> 永远等不到</td></tr>
-<tr><td class="nw">实时信号</td><td>排队、带一个字、低编号先投;上限 <code>RLIMIT_SIGPENDING</code>,超限 <code>EAGAIN</code></td><td>把它当可靠消息队列用;<code>SIGRTMIN</code> 写进 <code>case</code> 标签</td></tr>
-<tr><td class="nw"><code>signalfd</code></td><td>信号变 fd 进 epoll;不改投递规则,只消费未决集</td><td>没先屏蔽;收到 SIGCHLD 记录却不 <code>waitpid</code> 循环</td></tr>
-<tr><td class="nw">core dump</td><td><code>ulimit -c</code>、<code>core_pattern</code>、dumpable 标志三处任一不满足就没有 core</td><td>服务没设 <code>LimitCORE=</code>;core 进了 systemd-coredump 却去 cwd 找</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>这个信号我是打算异步处理还是屏蔽后同步收;处理函数里有没有任何不在白名单上的调用;我的阻塞调用都包了 EINTR 重试吗;fork 出的子进程 exec 前恢复屏蔽字和处置了吗;SIGCHLD 的回收是 while 循环吗;崩溃处理器有没有备用栈、最后是 _exit 还是重抛。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 620px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>kill</code> / <code>raise</code> / <code>killpg</code></td><td>向进程/进程组发信号;信号 0 做探测</td><td class="nw">5.1</td></tr>
-<tr><td class="nw"><code>signal</code></td><td class="nw">老式注册接口,语义随平台变</td><td class="nw">5.1 / 5.2</td></tr>
-<tr><td class="nw"><code>sigaction</code></td><td>注册处理函数,<code>sa_flags</code> 显式控制行为</td><td class="nw">5.2</td></tr>
-<tr><td class="nw"><code>sigaltstack</code></td><td class="nw">设置处理函数的备用栈</td><td class="nw">5.2</td></tr>
-<tr><td><code>sigprocmask</code> / <code>pthread_sigmask</code></td><td class="nw">改当前线程的屏蔽字</td><td class="nw">5.3</td></tr>
-<tr><td class="nw"><code>sigpending</code></td><td class="nw">查未决集</td><td class="nw">5.3</td></tr>
-<tr><td><code>sigemptyset</code> / <code>sigfillset</code> / <code>sigaddset</code> / <code>sigdelset</code> / <code>sigismember</code></td><td class="nw">操作 <code>sigset_t</code></td><td class="nw">5.4</td></tr>
-<tr><td class="nw"><code>sigsuspend</code></td><td class="nw">原子地换屏蔽字并等待</td><td class="nw">5.4</td></tr>
-<tr><td><code>sigwait</code> / <code>sigwaitinfo</code> / <code>sigtimedwait</code></td><td class="nw">同步取信号</td><td class="nw">5.4</td></tr>
-<tr><td><code>sigqueue</code> / <code>pthread_sigqueue</code></td><td class="nw">发带数据的(实时)信号</td><td class="nw">5.4</td></tr>
-<tr><td class="nw"><code>pthread_kill</code> / <code>tgkill</code></td><td class="nw">向指定线程发信号</td><td class="nw">5.4</td></tr>
-<tr><td class="nw"><code>signalfd</code></td><td class="nw">把未决信号变成可读 fd</td><td class="nw">5.5</td></tr>
-<tr><td><code>pidfd_open</code> / <code>pidfd_send_signal</code></td><td>不受 pid 复用影响地引用/通知进程</td><td class="nw">5.5</td></tr>
-<tr><td><code>prctl(PR_SET_DUMPABLE)</code> / <code>setrlimit(RLIMIT_CORE)</code></td><td class="nw">控制 core dump</td><td class="nw">5.1</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 67020px;--thin-h:37451px">
+<section class="chapter" style="contain-intrinsic-size:auto 64924px;--thin-h:35355px">
 <h1 id="l6"><span class="part">分类 6</span>进程间通信</h1>
 <p>进程有各自独立的地址空间,想交换数据就得借助内核。Linux 提供了七八种 IPC 机制,它们的差别集中在三个维度:<strong>是否需要亲缘关系</strong>、<strong>数据有没有边界</strong>、<strong>要不要经过内核拷贝</strong>。这一章按这三条来组织,而不是逐个罗列 API。</p>
 <h2 id="l6-overview">6.1 速览:七种机制怎么选</h2>
@@ -7714,52 +7461,9 @@ $ ls -l /tmp/passfd.sock
 ls: cannot access <span>'/tmp/passfd.sock'</span>: No such file or directory       ← 程序自己 unlink 了</code></pre>
 <p>解读:子进程里是 fd 4,父进程里是 fd 5——号码不同,但 <code>ino</code> 相同,而且父进程从第 8 个字节开始读到 "fd passing":两边指向<strong>同一个打开文件描述</strong>(共享偏移和状态标志),不是重新 <code>open</code> 了一次;这和 <code>dup</code> 的关系一模一样,只是跨了进程。</p>
 <p><code>peer pid=8102</code> 是子进程的 pid,由内核在 <code>connect</code> 时记录;<code>cloexec=1</code> 来自 <code>MSG_CMSG_CLOEXEC</code>。把 <code>recvmsg</code> 的标志改成 0,<code>cloexec</code> 变 0;把 <code>iov_len</code> 改成 0 只发控制消息,<code>sendmsg</code> 在流式套接字上会返回 0 字节而对端收不到任何东西——所以样板里永远陪送至少 1 字节。</p></div>
-<h2 id="l6-sum">6.8 小结:本章要点与易错清单</h2>
-<p>这一章从「关系、边界、拷贝、生命周期」四个维度把七种 IPC 排了座次,并给每一种补了原型、边界和可运行的例子。结论是固定的:亲缘进程用管道/<code>socketpair</code>,无亲缘本机通信默认 Unix 域套接字,吞吐真到瓶颈才上共享内存并连带设计同步与崩溃恢复;System V 三样只在维护遗留系统时打交道。第 7 章的线程同步原语和第 9 章的事件循环都会反复用到这里的 fd 型对象。</p>
-<table style="contain-intrinsic-size:auto 800px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">选型四维度</td><td>关系(亲缘/无关)、边界(流/报文)、拷贝(两次/零)、生命周期(进程/内核/文件系统)</td><td>一上来就上共享内存;忽略「崩溃后要不要清现场」</td></tr>
-<tr><td class="nw">管道的关端规矩</td><td>每个进程 fork 后立刻关掉自己不用的那一端</td><td>父进程留着写端,子进程永远读不到 EOF</td></tr>
-<tr><td class="nw">管道的两个数</td><td><code>PIPE_BUF</code>(4096,原子写上限)≠ 容量(64 KB,<code>F_SETPIPE_SZ</code> 可调)</td><td>多写者写长行互相穿插;写超过 64 KB 才开始读,双向管道互相死锁</td></tr>
-<tr><td class="nw">FIFO 的 open 规则</td><td>只读阻塞等写者、只写阻塞等读者、只写非阻塞无读者 <code>ENXIO</code>、<code>O_RDWR</code> 不阻塞</td><td>读者循环「读到 0 就退出」,写者一重启读者就没了</td></tr>
-<tr><td class="nw"><code>popen</code>/<code>pclose</code></td><td>经 <code>sh -c</code>,只接一端,<code>pclose</code> 返回 wait 状态字</td><td>拼用户输入进命令串;SIGCHLD 处理函数抢先收尸导致 <code>pclose</code> 返回 -1</td></tr>
-<tr><td class="nw">协同进程</td><td>两条管道 + 对端 stdio 在管道上是全缓冲</td><td>对端 <code>printf</code> 不 <code>fflush</code>,双方互等</td></tr>
-<tr><td class="nw">共享内存三纪律</td><td>不存指针存偏移;锁本体在共享区且 <code>PTHREAD_PROCESS_SHARED</code> + robust;对象持久要 <code>shm_unlink</code></td><td>默认属性的 mutex 放进共享内存「能编译但不互斥」;持锁进程崩溃后全员永久卡死</td></tr>
-<tr><td class="nw"><code>ftruncate</code> 与 SIGBUS</td><td>新建 shm 对象大小为 0,映射后访问 → <code>SIGBUS</code></td><td>忘了 <code>ftruncate</code>;<code>mmap</code> 失败判 NULL 而非 <code>MAP_FAILED</code></td></tr>
-<tr><td class="nw">System V 的怪脾气</td><td>key+id 不是 fd;内核持久;创建与初始化分两步;<code>SEM_UNDO</code> 是唯一独门功能</td><td>不 <code>IPC_RMID</code>,<code>ipcs</code> 里越积越多;两进程同启时用到未初始化的信号量</td></tr>
-<tr><td class="nw">POSIX 信号量</td><td>无所有权;<code>sem_post</code> 是 async-signal-safe;<code>/dev/shm/sem.NAME</code>;<code>sem_wait</code> 要重试 EINTR</td><td><code>sem_open</code> 返回值判 NULL 而非 <code>SEM_FAILED</code>;<code>sem_timedwait</code> 传相对时长</td></tr>
-<tr><td class="nw">POSIX 消息队列</td><td>有边界 + 优先级;Linux 上是 fd;接收缓冲 ≥ <code>mq_msgsize</code>;<code>mq_notify</code> 一次性</td><td>缓冲按消息长度开得 <code>EMSGSIZE</code>;通知处理里先读空再注册,漏消息</td></tr>
-<tr><td class="nw">Unix 域套接字</td><td>本机 IPC 默认;传 fd(<code>SCM_RIGHTS</code>)与可信身份(<code>SO_PEERCRED</code>);三种类型</td><td>忘 <code>MSG_CMSG_CLOEXEC</code> 泄漏 fd;bind 前不处理残留文件;抽象名长度没算准</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>通信双方有没有亲缘关系、我选的机制需不需要名字;数据是流还是消息、谁负责分帧;这个对象进程死了会不会残留、启动时要不要清;所有 fork 之后不用的 fd 都关了吗;跨进程的锁有没有 PROCESS_SHARED 和 robust;收 fd 的地方有没有 MSG_CMSG_CLOEXEC。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 759px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>pipe</code> / <code>pipe2</code></td><td class="nw">创建匿名管道</td><td class="nw">6.2</td></tr>
-<tr><td class="nw"><code>mkfifo</code> / <code>mkfifoat</code></td><td class="nw">创建命名管道</td><td class="nw">6.2</td></tr>
-<tr><td><code>fcntl(F_GETPIPE_SZ / F_SETPIPE_SZ)</code></td><td class="nw">查/改管道容量</td><td class="nw">6.2</td></tr>
-<tr><td class="nw"><code>popen</code> / <code>pclose</code></td><td>经 shell 起子进程并接一条管道</td><td class="nw">6.2</td></tr>
-<tr><td class="nw"><code>splice</code> / <code>tee</code> / <code>vmsplice</code></td><td class="nw">管道与 fd 之间零拷贝搬运</td><td class="nw">6.2</td></tr>
-<tr><td><code>shm_open</code> / <code>shm_unlink</code> / <code>ftruncate</code> / <code>mmap</code> / <code>munmap</code></td><td class="nw">POSIX 共享内存</td><td class="nw">6.3</td></tr>
-<tr><td class="nw"><code>memfd_create</code></td><td>匿名内存文件,配 SCM_RIGHTS 传递</td><td class="nw">6.3</td></tr>
-<tr><td><code>pthread_mutexattr_setpshared</code> / <code>setrobust</code> / <code>pthread_mutex_consistent</code></td><td class="nw">跨进程互斥量</td><td class="nw">6.3</td></tr>
-<tr><td><code>ftok</code> / <code>msgget</code> / <code>msgsnd</code> / <code>msgrcv</code> / <code>msgctl</code></td><td class="nw">System V 消息队列</td><td class="nw">6.4</td></tr>
-<tr><td><code>semget</code> / <code>semop</code> / <code>semtimedop</code> / <code>semctl</code></td><td class="nw">System V 信号量</td><td class="nw">6.4</td></tr>
-<tr><td><code>shmget</code> / <code>shmat</code> / <code>shmdt</code> / <code>shmctl</code></td><td class="nw">System V 共享内存</td><td class="nw">6.4</td></tr>
-<tr><td><code>sem_open</code> / <code>sem_close</code> / <code>sem_unlink</code> / <code>sem_init</code> / <code>sem_destroy</code></td><td>POSIX 信号量的创建与销毁</td><td class="nw">6.5</td></tr>
-<tr><td><code>sem_wait</code> / <code>sem_trywait</code> / <code>sem_timedwait</code> / <code>sem_post</code> / <code>sem_getvalue</code></td><td class="nw">POSIX 信号量操作</td><td class="nw">6.5</td></tr>
-<tr><td><code>mq_open</code> / <code>mq_close</code> / <code>mq_unlink</code> / <code>mq_send</code> / <code>mq_receive</code> / <code>mq_getattr</code> / <code>mq_setattr</code> / <code>mq_notify</code></td><td class="nw">POSIX 消息队列</td><td class="nw">6.6</td></tr>
-<tr><td><code>socket(AF_UNIX)</code> / <code>bind</code> / <code>listen</code> / <code>accept4</code> / <code>connect</code> / <code>socketpair</code></td><td class="nw">Unix 域套接字</td><td class="nw">6.7</td></tr>
-<tr><td><code>sendmsg</code> / <code>recvmsg</code>(<code>SCM_RIGHTS</code> / <code>SCM_CREDENTIALS</code>)</td><td class="nw">传 fd 与凭据</td><td class="nw">6.7</td></tr>
-<tr><td><code>getsockopt(SO_PEERCRED / SO_PEERPIDFD)</code></td><td class="nw">取对端身份</td><td class="nw">6.7</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 63269px;--thin-h:31570px">
+<section class="chapter" style="contain-intrinsic-size:auto 61326px;--thin-h:29627px">
 <h1 id="l7"><span class="part">分类 7</span>线程</h1>
 <p>线程与进程的根本差别只有一条:<strong>线程共享地址空间</strong>。这既是它的全部优势(通信零成本、切换更轻),也是它的全部麻烦(数据竞争、锁、以及那些只在特定时序下发作的 bug)。这一章讲清 Linux 上 pthread 的接口与底层实现,以及三类由浅入深的错误。</p>
 <h2 id="l7-basic">7.1 创建、回收与线程属性</h2>
@@ -9054,50 +8758,9 @@ busy   : done; re-enable cancel, then pthread_testcancel()   ← 计算完整跑
 main   : busy joined, ret=PTHREAD_CANCELED                    ← 在 testcancel 处生效,<span>"not reached"</span> 没打印</code></pre>
 <p>解读:sleeper 在 <code>sleep</code> 里被取消,cleanup 跑了、锁是空闲的——把 <code>pthread_cleanup_push</code>/<code>pop</code> 两行删掉再跑,第四行会变成 STILL HELD,之后任何想拿这把锁的线程永远挂住,这就是取消机制的真实风险形态。</p>
 <p>busy 线程展示了 DISABLE 的效果:取消请求不会丢,只是推迟到下一个取消点;把 <code>pthread_testcancel()</code> 删掉,busy 会正常返回,join 得到 2 而不是 PTHREAD_CANCELED——因为 <code>return</code> 之后线程已经结束,挂起的取消请求作废。</p></div>
-<h2 id="l7-sum">7.6 小结:本章要点与易错清单</h2>
-<p>线程是第 4 章进程模型的「共享地址空间」变体,第 5 章的信号、第 6 章的 IPC 规则在线程语境下都要重新核对一遍;下一章的套接字服务器,正是这些同步原语最常落地的地方。</p>
-<table style="contain-intrinsic-size:auto 930px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>pthread_create</code> 返回错误码</td><td>0 成功,否则返回值就是 errno 值,不设 errno</td><td>用 <code>perror</code> 打印,看到的是无关信息</td></tr>
-<tr><td class="nw">线程 = 带 <code>CLONE_VM</code> 的 task</td><td><code>gettid</code> 是内核 id,<code>pthread_t</code> 是 TCB 地址,主线程 tid = pid</td><td>拿 <code>pthread_t</code> 去 <code>/proc</code> 里找、或用 <code>==</code> 比较</td></tr>
-<tr><td class="nw">join / detach 二选一</td><td>不 join 不 detach 的线程退出后资源不释放</td><td>长期服务里反复建线程不 join,内存持续涨</td></tr>
-<tr><td class="nw">栈是虚拟预留</td><td>默认 8 MB 只是地址空间;musl 只有 128 KB</td><td>栈上放大数组,换 Alpine 镜像随机段错误</td></tr>
-<tr><td class="nw">互斥量默认类型</td><td>NORMAL:重复加锁死锁、不报错;调试期换 ERRORCHECK</td><td>递归锁掩盖设计问题,还破坏条件变量</td></tr>
-<tr><td class="nw">条件变量不存状态</td><td>通知只是「去重查共享变量」,wait 必须在 while 里</td><td>写成 <code>if</code>,虚假唤醒/被抢走时取出垃圾</td></tr>
-<tr><td class="nw">解锁+入睡原子</td><td class="nw">否则通知落在缝里,丢失唤醒</td><td>手写 unlock + sleep 轮询</td></tr>
-<tr><td class="nw"><code>timedwait</code> 用单调时钟</td><td><code>pthread_condattr_setclock(CLOCK_MONOTONIC)</code> 或 <code>clockwait</code></td><td>NTP 校时后一批线程同时超时或永不超时</td></tr>
-<tr><td class="nw">futex 两级结构</td><td>无竞争全在用户态;竞争才进内核</td><td>为「避免系统调用」手写自旋锁</td></tr>
-<tr><td class="nw">读写锁默认偏读</td><td>写者可能饿死;读临界区短于 1 µs 别用</td><td>读写锁比 mutex 慢还不知道为什么</td></tr>
-<tr><td class="nw">锁顺序</td><td>全局定序或层级断言;顺序定不了用 trylock 退让</td><td>持锁调外部回调,把顺序交给了别人</td></tr>
-<tr><td class="nw">TLS 两种写法</td><td><code>__thread</code> 零开销无析构;<code>pthread_key</code> 有析构、key 是全局资源</td><td>每个对象一个 key,1024 个用完 <code>EAGAIN</code></td></tr>
-<tr><td class="nw">多线程 + fork</td><td>子进程里只有调用线程,别人的锁永远锁着:只准 exec</td><td>fork 后在子进程里 <code>printf</code>/<code>malloc</code> 随机卡死</td></tr>
-<tr><td class="nw">信号:掩码每线程、处置每进程</td><td>先屏蔽再建线程,专用线程 <code>sigwait</code></td><td>handler 里加锁;哪条线程收到信号靠运气</td></tr>
-<tr><td class="nw">取消</td><td>只在取消点响应;清理靠 cleanup handler;异步取消不可用</td><td>用 <code>pthread_cancel</code> 停工作线程,锁/内存随机泄漏</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>每把锁保护的数据边界写清楚了吗;每个 cond_wait 都在 while 里、谓词是共享变量吗;timedwait 的时钟是 MONOTONIC 吗;进程里有多条线程之后还有没有 fork 不接 exec 的路径;停线程用的是标志位 + 唤醒,还是 pthread_cancel;跨线程共享的变量要么在锁内、要么是 atomic,有没有裸的 volatile。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 545px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td><code>pthread_create</code> / <code>pthread_join</code> / <code>pthread_detach</code> / <code>pthread_exit</code></td><td class="nw">创建、回收、结束</td><td class="nw">7.1</td></tr>
-<tr><td><code>pthread_self</code> / <code>pthread_equal</code> / <code>gettid</code> / <code>pthread_setname_np</code></td><td class="nw">标识与命名</td><td class="nw">7.1</td></tr>
-<tr><td class="nw"><code>pthread_attr_*</code></td><td class="nw">栈大小、守卫页、分离状态</td><td class="nw">7.1</td></tr>
-<tr><td><code>pthread_sigmask</code> / <code>pthread_kill</code> / <code>sigwait</code></td><td class="nw">线程与信号</td><td class="nw">7.1</td></tr>
-<tr><td><code>pthread_mutex_*</code> / <code>pthread_mutexattr_*</code></td><td>互斥量及类型、robust、PI</td><td class="nw">7.2</td></tr>
-<tr><td><code>pthread_cond_*</code> / <code>pthread_condattr_setclock</code></td><td class="nw">条件变量</td><td class="nw">7.2</td></tr>
-<tr><td><code>pthread_rwlock_*</code> / <code>pthread_rwlockattr_setkind_np</code></td><td class="nw">读写锁</td><td class="nw">7.2</td></tr>
-<tr><td><code>pthread_spin_*</code> / <code>pthread_barrier_*</code></td><td class="nw">自旋锁、屏障</td><td class="nw">7.2</td></tr>
-<tr><td class="nw"><code>futex</code></td><td class="nw">锁的内核原语</td><td class="nw">7.3</td></tr>
-<tr><td><code>pthread_once</code> / <code>pthread_key_*</code> / <code>pthread_getspecific</code> / <code>pthread_setspecific</code></td><td class="nw">一次性初始化、线程特定数据</td><td class="nw">7.4</td></tr>
-<tr><td><code>pthread_atfork</code> / <code>posix_spawn</code></td><td class="nw">fork 与线程</td><td class="nw">7.4</td></tr>
-<tr><td><code>pthread_cancel</code> / <code>pthread_setcancelstate</code> / <code>pthread_setcanceltype</code> / <code>pthread_testcancel</code> / <code>pthread_cleanup_push</code>/<code>pop</code></td><td class="nw">取消</td><td class="nw">7.5</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 70338px;--thin-h:34959px">
+<section class="chapter" style="contain-intrinsic-size:auto 68366px;--thin-h:32987px">
 <h1 id="l8"><span class="part">分类 8</span>套接字网络编程</h1>
 <p>套接字把网络通信也纳入了「一切皆文件」:<code>socket</code> 返回一个 fd,之后 <code>read</code>/<code>write</code> 照常可用。这一章讲清 TCP 服务端和客户端的骨架,以及四个必知的陷阱——它们每一个都能让程序在本机测试正常、上线后出问题。</p>
 <h2 id="l8-tcp">8.1 TCP 服务端与客户端骨架</h2>
@@ -10593,51 +10256,9 @@ $ systemctl is-active sdecho.service
 active                                              ← 第一条连接把它拉起来了</code></pre>
 <p>解读:<code>systemd-socket-activate</code> 先打印它在 fd 3 上监听,直到 nc 连上才 exec 服务——这正是「按需启动」;服务程序第一行确认自己拿到的是 fd 3。真正部署时 socket 单元 enable 在 <code>sockets.target</code> 下,系统一启动端口就开着,而服务进程在第一条连接前根本不存在;服务崩了再连一次又会被拉起,中间到达的连接在内核队列里排队而不是被拒绝。</p>
 <p>把 <code>listen_fd_from_env</code> 里的 <code>LISTEN_PID</code> 核对删掉,当这个服务再 fork 一个子进程时,子进程会把继承来的 fd 3 也当成监听 socket——这就是那一行存在的理由。</p></div>
-<h2 id="l8-sum">8.8 小结:本章要点与易错清单</h2>
-<p>套接字是「一切皆 fd」在网络上的延伸:第 2 章的 read/write、第 5 章的 SIGPIPE、第 6 章的 UNIX 域 socket 都在这里汇合,而第 9 章的多路复用是在这些 fd 之上组织并发的方式。</p>
-<table style="contain-intrinsic-size:auto 1023px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">服务端五步</td><td>socket → bind → listen → accept;accept 返回<strong>新 fd</strong>,监听 fd 继续用</td><td>把 accept 出的 fd 和监听 fd 搞混;忘了父进程 close 子进程那份 cfd</td></tr>
-<tr><td class="nw">backlog</td><td>只管全连接队列,被 somaxconn 截断;满了静默丢 ACK</td><td>压测偶发 1 秒/3 秒延迟,找不到原因</td></tr>
-<tr><td class="nw">字节流无边界</td><td>自己分帧;长度字段必须校验上限</td><td>「粘包」当 bug 修;不校验长度被打爆内存</td></tr>
-<tr><td class="nw">TIME_WAIT</td><td>主动关闭方 2MSL;SO_REUSEADDR 只放宽 bind</td><td>用 SO_LINGER=0 硬断消灭 TIME_WAIT</td></tr>
-<tr><td class="nw">半关闭</td><td><code>shutdown(SHUT_WR)</code> 发 FIN 仍可读;close 只是放引用</td><td>想「发完等回复」却直接 close</td></tr>
-<tr><td class="nw">SIGPIPE</td><td>向写方向已关的 socket 写触发;<code>SIG_IGN</code> 或 <code>MSG_NOSIGNAL</code></td><td>客户端一断服务端整个进程死</td></tr>
-<tr><td class="nw">RST 与 ECONNRESET</td><td>对端 close 后再写:第 1 次成功,第 2 次 ECONNRESET,第 3 次 EPIPE</td><td>以为 write 成功 = 对方收到</td></tr>
-<tr><td class="nw">CLOSE_WAIT 堆积</td><td>本端 read 到 0 后没 close</td><td>fd 泄漏直到 EMFILE</td></tr>
-<tr><td class="nw">UDP 无边界保护</td><td>一次 recvfrom 一个报文,缓冲小了静默截断;收缓冲满了静默丢</td><td>收缓冲开 1500 以下;不看 UdpRcvbufErrors</td></tr>
-<tr><td class="nw">UDP connect</td><td>固定对端、可用 send/recv、能收 ICMP 错误</td><td>没 connect 的 UDP 永远不知道对端不可达</td></tr>
-<tr><td class="nw">选项时机</td><td>SO_REUSEADDR/REUSEPORT 在 bind 前;窗口缩放在握手时定;监听 socket 的选项被继承</td><td>连接建立后设 SO_RCVBUF 以为生效了</td></tr>
-<tr><td class="nw">SO_RCVBUF</td><td>设 n 得 2n,被 rmem_max 截断,关掉自动调优</td><td>读回来翻倍以为设错;手动设反而更慢</td></tr>
-<tr><td class="nw">keepalive</td><td>默认 2 小时;要用就配 IDLE/INTVL/CNT;TCP_USER_TIMEOUT 管「发不出去」</td><td>只开 SO_KEEPALIVE 不调参数</td></tr>
-<tr><td class="nw">getaddrinfo</td><td>返回 EAI_ 错误码,用 gai_strerror;遍历候选逐个 connect,失败的 fd 要 close</td><td>只试第一条;perror 打印 gai 错误;漏 close 泄漏 fd</td></tr>
-<tr><td class="nw">字节序</td><td>抓包能看到的字段都要转;结构体不直接上网线</td><td>漏一个 htons 端口变 36895</td></tr>
-<tr><td class="nw">双栈</td><td>一个 AF_INET6 socket + IPV6_V6ONLY=0;v4 客户端是 ::ffff: 映射地址</td><td>白名单按 "127.0.0.1" 匹配失败;赌默认值</td></tr>
-<tr><td class="nw">服务器结构</td><td>迭代/每连接进程线程/预派生/事件驱动;SO_REUSEPORT 分流;socket 激活把监听交给 systemd</td><td>一万条连接一万条线程;多个 epoll 监视同一监听 fd 不加 EXCLUSIVE</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>服务端开头有没有忽略 SIGPIPE、设 SO_REUSEADDR;每个 read 返回 0 的分支都 close 了吗;协议分帧写了没、长度校验了没;getaddrinfo 的结果是遍历的吗、失败的 socket 关了吗;连接超时用的是非阻塞 connect + poll 还是误以为 SO_RCVTIMEO 管用;双栈地址做过去映射归一化了吗。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 481px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td><code>socket</code> / <code>bind</code> / <code>listen</code> / <code>accept</code> / <code>accept4</code> / <code>connect</code></td><td class="nw">建连五步</td><td class="nw">8.1</td></tr>
-<tr><td><code>getsockname</code> / <code>getpeername</code></td><td class="nw">查两端地址</td><td class="nw">8.1</td></tr>
-<tr><td class="nw"><code>shutdown</code> / <code>close</code></td><td class="nw">半关闭、释放</td><td class="nw">8.2</td></tr>
-<tr><td><code>send</code> / <code>recv</code> / <code>sendto</code> / <code>recvfrom</code></td><td class="nw">收发</td><td class="nw">8.2 / 8.3</td></tr>
-<tr><td><code>sendmsg</code> / <code>recvmsg</code> / <code>sendmmsg</code> / <code>recvmmsg</code></td><td class="nw">分散缓冲、控制信息、批量</td><td class="nw">8.4</td></tr>
-<tr><td class="nw"><code>setsockopt</code> / <code>getsockopt</code></td><td class="nw">选项</td><td class="nw">8.4</td></tr>
-<tr><td><code>htons</code> / <code>htonl</code> / <code>ntohs</code> / <code>ntohl</code> / <code>htobe64</code></td><td class="nw">字节序</td><td class="nw">8.5</td></tr>
-<tr><td class="nw"><code>inet_pton</code> / <code>inet_ntop</code></td><td class="nw">地址文本与二进制</td><td class="nw">8.5</td></tr>
-<tr><td><code>getaddrinfo</code> / <code>freeaddrinfo</code> / <code>gai_strerror</code> / <code>getnameinfo</code> / <code>getservbyname</code></td><td class="nw">名字解析</td><td class="nw">8.5</td></tr>
-<tr><td class="nw"><code>if_nametoindex</code></td><td>链路本地地址的 scope_id</td><td class="nw">8.6</td></tr>
-<tr><td><code>sd_listen_fds</code> / <code>sd_notify</code></td><td class="nw">socket 激活</td><td class="nw">8.7</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41105px;--thin-h:21139px">
+<section class="chapter" style="contain-intrinsic-size:auto 39108px;--thin-h:19143px">
 <h1 id="l9"><span class="part">分类 9</span>I/O 多路复用与事件驱动</h1>
 <p>一条线程同时看住成千上万个连接,靠的就是多路复用:<strong>把「等数据」这件事集中到一次调用里</strong>,哪个 fd 就绪了内核告诉你哪个。这是所有高性能网络服务的地基,也是 Linux 事件驱动架构的核心。</p>
 <h2 id="l9-compare">9.1 select / poll / epoll 的演进</h2>
@@ -11514,51 +11135,9 @@ sigaction(SIGTERM, &amp;sa, <span class="kw">NULL</span>);
 <p><code>dnotify</code>(Linux 2.4)用 <code>fcntl(dirfd, F_NOTIFY, DN_MODIFY &#124; DN_CREATE …)</code> 监视<strong>整个目录</strong>,事件通过 <code>SIGIO</code>(或 <code>F_SETSIG</code> 指定的实时信号)通知,<code>si_fd</code> 告诉你是哪个目录:只能按目录、只能靠信号、要给每个目录开一个 fd、拿不到文件名——inotify 就是为解决这四条设计的,dnotify 只在维护旧代码时才会碰到。</p>
 <p>再往后,<code>fanotify</code>(2.6.36,5.1 起非特权可用部分功能)面向防病毒和审计:能监视<strong>整个挂载点</strong>(<code>FAN_MARK_MOUNT</code>)或整个文件系统(<code>FAN_MARK_FILESYSTEM</code>,4.20),事件里直接带一个指向被访问文件的 fd,而且支持<strong>权限事件</strong>(<code>FAN_OPEN_PERM</code>/<code>FAN_ACCESS_PERM</code>:内核挂起那次 open,等你回复允许或拒绝)——这是 inotify 做不到的两件事。</p>
 <p>代价是需要 <code>CAP_SYS_ADMIN</code> 才能用全部功能,事件 fd 要及时关掉否则文件删不干净。选择:应用级「文件变了就重载」用 inotify;系统级「谁动了什么」或「拦截访问」才用 fanotify。</p></div>
-<h2 id="l9-sum">9.4 小结:本章要点与易错清单</h2>
-<p>这一章把第 2 章的 fd、第 5 章的信号、第 8 章的套接字和第 11 章的定时器统一成一个事件循环;它也是第 17 章零拷贝与 io_uring 的入口。</p>
-<table style="contain-intrinsic-size:auto 961px">
-<thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">select 的硬伤</td><td>FD_SETSIZE=1024 是编译期位图大小,fd ≥ 1024 就是越界写;每次重建集合、timeout 被改写</td><td>高并发服务里还在用 select,fd 一多就栈被写坏</td></tr>
-<tr><td class="nw">poll 的定位</td><td>O(n) 但无上限、可移植、负 fd 可跳过;fd 少或要可移植时首选</td><td>「必须上 epoll」的过度设计</td></tr>
-<tr><td class="nw">epoll 为什么快</td><td>注册与等待分离,内核回调把就绪 fd 挂链表,wait 只取链表</td><td>以为是「算法更好」,在几十个 fd 的场景期待收益</td></tr>
-<tr><td class="nw">就绪的含义</td><td>「调 read/write 不阻塞」,EOF 也是可读,可写不保证写完;普通文件永远就绪</td><td>只看 POLLIN 不处理 POLLHUP;把普通文件加进 epoll 得 EPERM</td></tr>
-<tr><td class="nw">LT vs ET</td><td>LT 报状态、ET 报变化;ET 必须非阻塞 + 读写到 EAGAIN + accept 也循环</td><td>ET 下读一次就返回,连接「卡死但其他都正常」</td></tr>
-<tr><td class="nw">EPOLLOUT 按需注册</td><td>平时只 IN,write 返回 EAGAIN 才加 OUT,写完立刻去掉</td><td>常驻 EPOLLOUT 让 epoll_wait 空转 100% CPU</td></tr>
-<tr><td class="nw">epoll 注册的是打开文件描述</td><td>close 不一定注销(dup/fork 持有副本);close 前先 DEL</td><td>关了 fd 还收到它的事件,data.ptr 悬垂</td></tr>
-<tr><td class="nw">回调里不能释放自己</td><td class="nw">标记关闭,本轮结束统一释放</td><td>同一轮的后续事件踩到已 free 的连接</td></tr>
-<tr><td>EPOLLEXCLUSIVE / SO_REUSEPORT</td><td>多 worker 监视同一监听 fd 的惊群两种解法</td><td>多个 epoll 加同一个 lfd 不带 EXCLUSIVE</td></tr>
-<tr><td class="nw">一切皆 fd</td><td>signalfd/timerfd/eventfd/inotify/pidfd 全进一个循环</td><td>事件循环旁边还挂着信号 handler 和定时器线程</td></tr>
-<tr><td class="nw">inotify 边界</td><td>不递归;监视 inode;编辑器 rename 顶替让旧 watch 成孤儿;IN_Q_OVERFLOW 要全量重扫</td><td>监视单个文件 + 只认 IN_MODIFY,热重载时灵时不灵</td></tr>
-<tr><td class="nw">信号驱动 I/O</td><td>边缘触发、走 handler、队列会溢出——被 epoll 取代</td><td>新代码里用 O_ASYNC</td></tr>
-<tr><td class="nw">异步 I/O 三代</td><td>POSIX AIO 线程模拟;libaio 只 O_DIRECT 真异步;io_uring 全面真异步</td><td>用 libaio 做 buffered I/O 以为是异步的</td></tr>
-<tr><td class="nw">io_uring 的模型</td><td>完成通知而非就绪通知;提交/完成两个共享环</td><td>常规 Web 服务为个位数百分比收益引入新模型</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>每个非阻塞 fd 的 EAGAIN 都当正常路径处理了吗;ET 模式下每个 read/write/accept 都循环到 EAGAIN 了吗;EPOLLOUT 是按需加的吗;close 前 DEL 了吗、释放推迟到本轮末尾了吗;信号进了 signalfd 还是还在 handler 里;监视文件变化监视的是目录吗、IN_Q_OVERFLOW 处理了吗。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 568px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>select</code> / <code>pselect</code> / <code>FD_*</code></td><td class="nw">位图多路复用</td><td class="nw">9.1</td></tr>
-<tr><td class="nw"><code>poll</code> / <code>ppoll</code></td><td class="nw">数组多路复用</td><td class="nw">9.1</td></tr>
-<tr><td><code>fcntl(F_SETOWN / F_SETSIG)</code> + <code>O_ASYNC</code></td><td class="nw">信号驱动 I/O</td><td class="nw">9.1</td></tr>
-<tr><td><code>epoll_create1</code> / <code>epoll_ctl</code> / <code>epoll_wait</code> / <code>epoll_pwait</code> / <code>epoll_pwait2</code></td><td class="nw">epoll</td><td class="nw">9.2</td></tr>
-<tr><td class="nw"><code>accept4</code> + <code>SOCK_NONBLOCK</code></td><td>ET 下的非阻塞 accept</td><td class="nw">9.2</td></tr>
-<tr><td class="nw"><code>eventfd</code></td><td class="nw">跨线程唤醒</td><td class="nw">9.3</td></tr>
-<tr><td><code>timerfd_create</code> / <code>timerfd_settime</code> / <code>timerfd_gettime</code></td><td class="nw">定时器 fd</td><td class="nw">9.3</td></tr>
-<tr><td class="nw"><code>signalfd</code></td><td class="nw">信号 fd</td><td class="nw">9.3</td></tr>
-<tr><td><code>inotify_init1</code> / <code>inotify_add_watch</code> / <code>inotify_rm_watch</code></td><td class="nw">文件系统事件</td><td class="nw">9.3</td></tr>
-<tr><td class="nw"><code>pidfd_open</code></td><td class="nw">子进程退出事件</td><td class="nw">9.3</td></tr>
-<tr><td><code>aio_read</code> / <code>aio_write</code> / <code>aio_error</code> / <code>aio_return</code> / <code>aio_suspend</code> / <code>lio_listio</code></td><td class="nw">POSIX AIO</td><td class="nw">9.3</td></tr>
-<tr><td><code>io_setup</code> / <code>io_submit</code> / <code>io_getevents</code></td><td class="nw">libaio</td><td class="nw">9.3</td></tr>
-<tr><td><code>io_uring_setup</code> / <code>io_uring_enter</code> / <code>io_uring_register</code>(经 liburing)</td><td class="nw">io_uring</td><td class="nw">9.3</td></tr>
-<tr><td class="nw"><code>pipe2</code></td><td class="nw">self-pipe</td><td class="nw">9.3</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 37252px;--thin-h:19424px">
+<section class="chapter" style="contain-intrinsic-size:auto 35302px;--thin-h:17474px">
 <h1 id="l10"><span class="part">分类 10</span>内存管理</h1>
 <p>应用程序看到的每一个地址都是<strong>虚拟地址</strong>,内核通过页表把它映射到物理页。理解这层间接,才能解释「为什么 <code>free</code> 之后进程内存不下降」「为什么 <code>fork</code> 之后内存统计翻倍」「为什么 <code>mmap</code> 有时比 <code>read</code> 慢」这些日常困惑。</p>
 <h2 id="l10-vm">10.1 虚拟内存:分配不等于占用</h2>
@@ -12300,49 +11879,9 @@ RSS before/after freeing 49999    : 5692 / 5692 kB                          ← 
 RSS after freeing last + trim     : 1788 kB                                 ← 堆顶空了,trim 才收回</code></pre>
 <p>解读:第四、五行是两条供货线的直接证据——大块的地址在 <code>0x7f...</code> 的 mmap 区间,free 后 RSS 掉了 1 MB;小块全在 brk 堆里,释放 49999 个之后 RSS 纹丝不动,这就是「free 了内存不见下降」的完整现场。</p>
 <p>把 <code>free(arr[n - 1])</code> 那行挪到循环里一起释放,倒数第二行就会看到 RSS 下降(glibc 在堆顶连续空闲超过 <code>M_TRIM_THRESHOLD</code> 时自动收缩);把 <code>malloc(64)</code> 改成 <code>malloc(200 * 1024)</code>,每一块都走 mmap,free 一个还一个。<code>strace -e brk,mmap,munmap ./alloc_path</code> 能看到与每一行对应的系统调用。</p></div>
-<h2 id="l10-sum">10.5 小结:本章要点与易错清单</h2>
-<p>这一章把「地址」和「内存」拆开:虚拟地址由 <code>mmap</code>/<code>brk</code> 划定,物理页在第一次访问时才分配,用户态分配器再在两者之间囤货。后面的第 11 章与它无关,但第 17 章的零拷贝、第 18 章的 <code>RLIMIT_AS</code>/<code>RLIMIT_MEMLOCK</code> 与 cgroup 内存限额,都要回到这里的三层模型来解释。</p>
-<table style="contain-intrinsic-size:auto 922px">
-<thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">分配 ≠ 占用</td><td><code>mmap</code>/<code>brk</code> 只涨 VmSize,写入时缺页才涨 RSS</td><td>用 VSZ 判断「进程占了多少内存」</td></tr>
-<tr><td class="nw">overcommit 与 OOM</td><td>承诺不收费,兑现不了时内核杀进程</td><td>以为检查 <code>malloc</code> 返回值就防住了内存不足</td></tr>
-<tr><td class="nw">PSS 才是分摊后的真实占用</td><td class="nw">共享页按映射进程数均摊</td><td>把一堆 fork 出来的子进程的 RSS 直接相加</td></tr>
-<tr><td class="nw"><code>mmap</code> 失败返回 <code>MAP_FAILED</code></td><td>值是 <code>(void *)-1</code>,不是 NULL</td><td><code>if (!p)</code> 永远不成立</td></tr>
-<tr><td class="nw"><code>MAP_SHARED</code> 写回没有时限</td><td>要落盘必须 <code>msync(MS_SYNC)</code> 或 <code>fsync</code></td><td>「已经写进映射了」就当作已经写进磁盘</td></tr>
-<tr><td class="nw">越过文件末尾访问是 <code>SIGBUS</code></td><td class="nw">地址合法、后备页不存在</td><td>当成 <code>SIGSEGV</code> 排查,或者完全没防御别的进程 <code>ftruncate</code></td></tr>
-<tr><td class="nw"><code>MAP_FIXED</code> 会覆盖</td><td class="nw">已有映射被悄悄换掉</td><td>该用 <code>MAP_FIXED_NOREPLACE</code> 并核对返回地址</td></tr>
-<tr><td class="nw"><code>MADV_DONTNEED</code> 对匿名页是丢数据</td><td>下次读到零;要「暂时不用但保留」用 <code>MADV_FREE</code></td><td>把它当「退还缓存」用,静默丢数据</td></tr>
-<tr><td class="nw"><code>mlock</code> 立刻调入整段</td><td>没有 <code>ONFAULT</code> 时锁多大吃多大</td><td><code>mlockall(MCL_FUTURE)</code> 配失控分配把整机锁死</td></tr>
-<tr><td class="nw">小块走 brk、大块走 mmap</td><td>128 KB 阈值且动态上调;只有堆顶空闲才能收缩</td><td>把分配器囤货当泄漏查,或反过来</td></tr>
-<tr><td class="nw"><code>realloc</code> 会搬家、失败不动原块</td><td>旧指针失效;用临时变量接返回值</td><td><code>p = realloc(p, n)</code> 失败后泄漏原块</td></tr>
-<tr><td><code>calloc</code> 有溢出检查、<code>malloc(n*s)</code> 没有</td><td>外部输入的 n 要用 <code>reallocarray</code> 或先判</td><td>乘法溢出成小块,随后堆越界</td></tr>
-<tr><td class="nw">多线程 arena 囤货</td><td>每个 arena 各有库存,默认 8 × 核数</td><td>容器里不设 <code>MALLOC_ARENA_MAX</code>,RSS 比单线程版高几倍</td></tr>
-<tr><td class="nw">先分清泄漏与「不还」</td><td><code>malloc_trim(0)</code> 后 RSS 掉 → 库存;不掉 → ASan 找引用</td><td>对着 valgrind「无泄漏」的报告继续找泄漏</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 回看清单</span><p>这块内存谁在什么时候真正分配物理页,我预期 RSS 什么时候涨;如果别的进程改了文件长度,我的映射会不会 SIGBUS,装了处理函数吗;这段要「丢」还是「暂存」,选的是 DONTNEED 还是 FREE;realloc 的返回值接到临时变量了吗、乘法溢出检查了吗;容器里的 MALLOC_ARENA_MAX 和 overcommit 策略是什么、OOM 时 dmesg 会怎么写。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 492px">
-<thead><tr><th>调用</th><th>作用</th><th>所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>brk</code> / <code>sbrk</code></td><td>移动 program break,堆的底层</td><td>10.1</td></tr>
-<tr><td class="nw"><code>mmap</code> / <code>munmap</code></td><td class="nw">建立 / 解除映射</td><td>10.2</td></tr>
-<tr><td class="nw"><code>mremap</code></td><td class="nw">原地或搬家地改映射大小</td><td>10.2</td></tr>
-<tr><td class="nw"><code>msync</code></td><td class="nw">把共享文件映射的脏页写回</td><td>10.2</td></tr>
-<tr><td><code>memfd_create</code> + <code>fcntl(F_ADD_SEALS)</code></td><td class="nw">匿名文件与 sealing</td><td>10.2</td></tr>
-<tr><td class="nw"><code>mprotect</code></td><td class="nw">改页保护属性</td><td>10.2 / 10.3</td></tr>
-<tr><td class="nw"><code>madvise</code> / <code>posix_madvise</code></td><td class="nw">访问模式提示、退还、大页</td><td>10.2 / 10.3</td></tr>
-<tr><td><code>mlock</code> / <code>mlock2</code> / <code>mlockall</code> / <code>munlock(all)</code></td><td class="nw">锁定页不换出</td><td>10.3</td></tr>
-<tr><td class="nw"><code>mincore</code></td><td class="nw">查询页是否常驻</td><td>10.3</td></tr>
-<tr><td class="nw"><code>userfaultfd</code></td><td class="nw">用户态处理缺页</td><td>10.3</td></tr>
-<tr><td><code>malloc</code> / <code>calloc</code> / <code>realloc</code> / <code>free</code> / <code>posix_memalign</code></td><td class="nw">用户态分配器</td><td>10.4</td></tr>
-<tr><td><code>mallopt</code> / <code>malloc_trim</code> / <code>malloc_info</code> / <code>mallinfo2</code></td><td class="nw">分配器调参与观测</td><td>10.4</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 36838px;--thin-h:20977px">
+<section class="chapter" style="contain-intrinsic-size:auto 34788px;--thin-h:18928px">
 <h1 id="l11"><span class="part">分类 11</span>时间与定时器</h1>
 <p>时间在系统编程里有两个完全不同的用途:<strong>「现在几点」</strong>和<strong>「过了多久」</strong>。用错时钟是这一章最常见、也最难复现的 bug——因为它只在系统时间被调整的那一刻才发作。</p>
 <h2 id="l11-clock">11.1 时钟类型:选错就会出负数</h2>
@@ -13018,7 +12557,7 @@ tmv.tm_isdst = -1;                                <span class="cm">// 让 mktime
 <tr><td class="nw">mktime 只认本地时区</td><td>「UTC 的 tm → time_t」标准 C 没有对应函数</td><td>glibc 用 <code>timegm</code>;可移植方案是临时设 TZ=UTC 调 mktime(丑但标准)</td></tr>
 </tbody>
 </table>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// 日志时间戳的规范形态:ISO 8601 + 明确时区,毫秒自己拼</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// 日志时间戳的规范形态:ISO 8601 + 明确时区,毫秒自己拼</span>
 <span class="kw">struct</span> timespec ts;
 clock_gettime(CLOCK_REALTIME, &amp;ts);
 <span class="kw">struct</span> tm tm;
@@ -13089,49 +12628,9 @@ strptime   : stopped at <span>" trailing"</span>, tm_wday=5 tm_isdst=0          
 timegm     : 1787322612                                               ← 把 14:30:12 当 UTC 解释 = 上海时间 + 8h</code></pre>
 <p>解读:第二行把 <code>struct tm</code> 三个最易错的字段摆在一起;第四、五行是 <code>tm_isdst</code> 的全部意义——<code>-1</code> 让 <code>mktime</code> 查时区规则,<code>0</code> 是你替它做了一个错误的断言;第六行说明 <code>strptime</code> 不校验「是否吃完整串」,要判断格式完全匹配必须检查 <code>*end == '\0'</code>,同时 glibc 作为扩展算出了 <code>tm_wday</code>(POSIX 没有承诺,别依赖)、但没碰 <code>tm_isdst</code>。</p>
 <p>把最后的 <code>timegm</code> 换成 <code>mktime</code>,结果会按当前 <code>TZ</code>(此刻是纽约)解释,得到 1787322612 + 14400。</p></div>
-<h2 id="l11-sum">11.4 小结:本章要点与易错清单</h2>
-<p>这一章的主线是「先选对时钟,再选对送达方式」:挂钟、单调钟、CPU 时间各答一个问题;定时事件从信号一路演进到 fd。它为第 9 章的事件循环补上了超时与周期任务这一块,也是第 18 章看 CPU 时间、第 16 章打日志时间戳的依据。</p>
-<table style="contain-intrinsic-size:auto 1041px">
-<thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">相减只用 <code>CLOCK_MONOTONIC</code></td><td>挂钟会被 NTP、管理员、闰秒改动</td><td>用 <code>gettimeofday</code> 算耗时,p99 图上偶尔出现负数或 8 小时</td></tr>
-<tr><td>存储/传输用 <code>CLOCK_REALTIME</code> + UTC</td><td>单调钟的零点是本机开机,跨机跨重启无意义</td><td>把 <code>CLOCK_MONOTONIC</code> 的值写进数据库</td></tr>
-<tr><td class="nw">休眠要不要算</td><td><code>BOOTTIME</code> 算、<code>MONOTONIC</code> 不算</td><td>笔记本合盖后定时器整段漂掉</td></tr>
-<tr><td class="nw"><code>clock_gettime</code> 走 vDSO</td><td>几十纳秒,不进内核;<code>_COARSE</code> 更快但只有 jiffy 精度</td><td>为了「省系统调用」自己缓存时间,反而引入陈旧读数</td></tr>
-<tr><td class="nw">进程时间 ≠ 墙钟</td><td><code>times</code>/<code>clock</code>/<code>getrusage</code>/<code>CPUTIME_ID</code> 读同一份 CPU 账,不含睡眠</td><td>用 <code>clock()</code> 测多线程程序「耗时」,得到线程数倍</td></tr>
-<tr><td class="nw">改时间分步进与渐变</td><td>绝对式 REALTIME 定时器会被步进重算,相对式不受影响</td><td><code>pthread_cond_timedwait</code> 用默认 REALTIME 时钟,时间回拨后超时变成永远</td></tr>
-<tr><td class="nw">HZ 不决定睡眠精度</td><td>hrtimer 纳秒级;精度由调度延迟和 timer slack 决定</td><td>以为换 <code>CONFIG_HZ=1000</code> 就能让 1 ms 睡眠准</td></tr>
-<tr><td class="nw"><code>alarm</code> 与 <code>ITIMER_REAL</code> 共用</td><td>每进程一个,库和主程序互相覆盖</td><td>库里用 <code>alarm</code> 做超时,把主程序的定时器吃掉</td></tr>
-<tr><td><code>nanosleep</code> 与 <code>clock_nanosleep</code> 返回约定不同</td><td>前者 -1 + errno,后者直接返回错误码</td><td><code>if (clock_nanosleep(...) &lt; 0)</code> 永远不成立</td></tr>
-<tr><td class="nw">周期任务用绝对时刻</td><td><code>TIMER_ABSTIME</code> 或 <code>it_interval</code>,不用「睡 → 干活 → 睡」</td><td>每轮漂移一个处理时长,一小时后差几秒</td></tr>
-<tr><td class="nw">POSIX 定时器的信号不排队</td><td>同一定时器未投递时只加 overrun;<code>SIGEV_THREAD</code> 每次新线程、回调并发</td><td>在 <code>SIGEV_THREAD</code> 回调里用非线程安全的状态</td></tr>
-<tr><td class="nw">timerfd 是现代答案</td><td>到期变成 fd 可读,读出 <code>uint64_t</code> 计数;一个 timerfd + 最小堆管理海量超时</td><td>每个连接建一个 timerfd 耗尽 fd;报可读后忘了 <code>read</code>,epoll 一直报</td></tr>
-<tr><td class="nw"><code>struct tm</code> 的三个偏移</td><td><code>tm_mon</code> 从 0、<code>tm_year</code> 从 1900、<code>tm_isdst</code> 给 -1</td><td>手填 <code>tm_mon = 8</code> 想要八月</td></tr>
-<tr><td><code>localtime</code>/<code>ctime</code>/<code>asctime</code> 别用</td><td>静态缓冲、全局时区状态;用 <code>_r</code> + <code>strftime</code></td><td>多线程日志里时间偶尔错乱</td></tr>
-<tr><td class="nw"><code>strptime</code> 不清零、不校验吃完</td><td><code>struct tm tmv = {0}</code>;检查 <code>*end == '\0'</code></td><td>残留的 <code>tm_isdst</code> 让 <code>mktime</code> 随机差一小时</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 回看清单</span><p>这个时间值是要相减、要存储、还是要显示,对应用了哪个时钟;系统时间被回拨一小时,我的超时和定时器会怎样;这个定时通知走信号、线程还是 fd,处理代码满足相应的约束吗;周期任务用的是绝对时刻吗;所有和人/外部系统交换的时间都是 ISO 8601 + UTC 吗,<code>tm_isdst</code> 填了 -1 吗。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 505px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td><code>time</code> / <code>gettimeofday</code> / <code>clock_gettime</code> / <code>clock_getres</code></td><td class="nw">读时钟与分辨率</td><td class="nw">11.1</td></tr>
-<tr><td><code>times</code> / <code>clock</code> / <code>getrusage</code></td><td class="nw">进程 CPU 时间</td><td class="nw">11.1</td></tr>
-<tr><td><code>clock_settime</code> / <code>settimeofday</code> / <code>adjtime</code> / <code>adjtimex</code></td><td class="nw">步进 / 渐变改系统时间</td><td class="nw">11.1</td></tr>
-<tr><td><code>alarm</code> / <code>setitimer</code> / <code>getitimer</code></td><td class="nw">第一代定时器</td><td class="nw">11.2</td></tr>
-<tr><td><code>sleep</code> / <code>usleep</code> / <code>nanosleep</code> / <code>clock_nanosleep</code></td><td class="nw">睡眠</td><td class="nw">11.2</td></tr>
-<tr><td><code>timer_create</code> / <code>timer_settime</code> / <code>timer_gettime</code> / <code>timer_getoverrun</code> / <code>timer_delete</code></td><td class="nw">POSIX 定时器</td><td class="nw">11.2</td></tr>
-<tr><td><code>timerfd_create</code> / <code>timerfd_settime</code> / <code>timerfd_gettime</code></td><td class="nw">fd 形态的定时器</td><td class="nw">11.2</td></tr>
-<tr><td class="nw"><code>prctl(PR_SET_TIMERSLACK)</code></td><td class="nw">调线程的唤醒容差</td><td class="nw">11.2</td></tr>
-<tr><td><code>localtime_r</code> / <code>gmtime_r</code> / <code>mktime</code> / <code>timegm</code></td><td>time_t 与 struct tm 互转</td><td class="nw">11.3</td></tr>
-<tr><td class="nw"><code>strftime</code> / <code>strptime</code></td><td class="nw">格式化与解析</td><td class="nw">11.3</td></tr>
-<tr><td class="nw"><code>tzset</code> / <code>setlocale</code></td><td class="nw">时区与 locale</td><td class="nw">11.3</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 51209px;--thin-h:27899px">
+<section class="chapter" style="contain-intrinsic-size:auto 48893px;--thin-h:25584px">
 <h1 id="l12"><span class="part">分类 12</span>权限、用户与容器基础</h1>
 <p>最后一章讲「谁能做什么」:传统的 uid/gid 权限模型、把 root 切碎的 capabilities,以及容器背后那套命名空间与 cgroup。理解了它们,「容器」就不再是黑魔法,而是几个系统调用的组合。</p>
 <h2 id="l12-cred">12.1 用户、组与权限位</h2>
@@ -13558,7 +13057,7 @@ uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)   ← exec 出去的 
 </tbody>
 </table>
 <h3>用户库、组库与 shadow 的原型</h3>
-<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 755px"><code><span class="kw">#include</span> &lt;pwd.h&gt;
+<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 754px"><code><span class="kw">#include</span> &lt;pwd.h&gt;
 <span class="kw">struct</span> passwd *getpwnam(<span class="kw">const</span> <span class="kw">char</span> *name);          <span class="cm">// 静态缓冲,线程不安全</span>
 <span class="kw">struct</span> passwd *getpwuid(<span class="kw">uid_t</span> uid);
 <span class="kw">int</span> getpwnam_r(<span class="kw">const</span> <span class="kw">char</span> *name, <span class="kw">struct</span> passwd *pwd, <span class="kw">char</span> *buf, <span class="kw">size_t</span> buflen, <span class="kw">struct</span> passwd **result);
@@ -13604,7 +13103,7 @@ uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)   ← exec 出去的 
 </table>
 <div class="deep"><h3 class="deep">登录记账:utmp、wtmp、lastlog 与 utmpx API</h3>
 <p>「谁登录了、从哪来、什么时候走的」由三个文件记:<code>/run/utmp</code>(<strong>当前</strong>登录会话,<code>who</code>/<code>w</code> 读它)、<code>/var/log/wtmp</code>(<strong>历史</strong>登录登出与重启,<code>last</code> 读它,只追加)、<code>/var/log/lastlog</code>(每个 uid 最近一次登录,按 uid 索引的稀疏文件,<code>lastlog</code> 读它)。记录的写入者是 login、sshd、getty、终端模拟器这类「开会话的程序」,普通程序只需要读。</p>
-<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">#include</span> &lt;utmpx.h&gt;
+<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">#include</span> &lt;utmpx.h&gt;
 <span class="kw">struct</span> utmpx *getutxent(<span class="kw">void</span>);       <span class="cm">// 顺序读下一条</span>
 <span class="kw">void</span> setutxent(<span class="kw">void</span>);                <span class="cm">// 回到开头</span>
 <span class="kw">void</span> endutxent(<span class="kw">void</span>);                <span class="cm">// 关文件</span>
@@ -14080,7 +13579,7 @@ $ echo <span>"512M"</span>           &gt; /sys/fs/cgroup/myapp/memory.max   # �
 $ echo $PID             &gt; /sys/fs/cgroup/myapp/cgroup.procs # 把进程放进去</code></pre>
 <p>命名空间还有一个容易被忽略的性质:<strong>它们彼此独立,可以任意组合</strong>。你完全可以只用 <code>CLONE_NEWNET</code> 给进程一个独立的网络栈,而文件系统、进程号、主机名全部与宿主共用——这正是很多网络测试工具的做法(<code>ip netns</code> 就是纯网络命名空间)。「容器」只是把常用的几个打包在一起的<strong>约定</strong>,不是内核强制的组合。</p>
 <h3>命名空间三个系统调用的原型</h3>
-<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 320px"><code><span class="kw">#define</span> _GNU_SOURCE
+<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 319px"><code><span class="kw">#define</span> _GNU_SOURCE
 <span class="kw">#include</span> &lt;sched.h&gt;
 <span class="kw">int</span> unshare(<span class="kw">int</span> flags);                       <span class="cm">// 当前进程脱离并新建 flags 指定的命名空间;2.6.16</span>
 <span class="kw">int</span> setns(<span class="kw">int</span> fd, <span class="kw">int</span> nstype);                <span class="cm">// 加入 fd 指向的已有命名空间;3.0</span>
@@ -14257,56 +13756,9 @@ $ hostname
 devbox                                                 ← 外面的主机名没变</code></pre>
 <p>解读:第二行是 user ns 翻转特权模型的现场——进程在 ns 内拥有全部 capabilities(所以 <code>sethostname</code> 成功),但内核检查文件权限时要把文件属主 uid 0 映射进这个 ns,映射表里没有它,于是按「无主文件」(显示为 65534/nobody)处理,<code>CAP_DAC_OVERRIDE</code> 也只对<strong>本 ns 拥有的对象</strong>生效,<code>/etc/shadow</code> 照样读不了。</p>
 <p><code>ppid=0</code> 和 <code>pid=1</code> 说明 pid ns 的边界:父进程在外面,子进程看不到它的号码。去掉 <code>CLONE_NEWUSER</code> 再运行,<code>unshare</code> 立刻 <code>EPERM</code>;在禁用了非特权 user ns 的发行版上也是同样的错误——<code>sysctl kernel.unprivileged_userns_clone</code>(Debian)或 <code>user.max_user_namespaces</code>(所有内核)是要看的开关。</p></div>
-<h2 id="l12-sum">12.7 小结:本章要点与易错清单</h2>
-<p>这一章从 uid/gid 出发,经过 capabilities 把 root 切碎,最后用命名空间与 cgroup 解释容器;三层加在一起回答的都是同一个问题——「这个进程能碰什么」。它与第 3 章的文件权限、第 4 章的 exec、第 18 章的资源限制互为表里。</p>
-<table style="contain-intrinsic-size:auto 1090px">
-<thead><tr><th>要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">三套 uid 各答一问</td><td>ruid 是谁、euid 以谁的权限做事、suid 还能变回谁</td><td>用 <code>seteuid</code> 做「永久」降权,suid 里的 0 还在</td></tr>
-<tr><td class="nw">四个 set 函数的规则</td><td>非特权只能在三套之间挪;特权 <code>setuid</code> 三套全改;<code>setresuid</code> 最明确</td><td><code>setreuid</code> 的 suid 副作用算不清</td></tr>
-<tr><td class="nw">降权顺序</td><td>附属组 → 组 → 用户,每步检查,最后 <code>setuid(0)</code> 必须失败</td><td>先改 uid 再改 gid,失败不检查,gid 仍是 0</td></tr>
-<tr><td class="nw"><code>setuid</code> 会失败</td><td><code>EAGAIN</code>(RLIMIT_NPROC)是真实的攻击面</td><td>不检查返回值就当作已降权</td></tr>
-<tr><td class="nw">特权程序的继承物</td><td>环境、fd、umask、cwd、信号处置全来自调用者;<code>AT_SECURE</code> 下 glibc 自保一部分</td><td>相对路径、<code>system()</code>、信任 <code>HOME</code>/<code>PATH</code></td></tr>
-<tr><td class="nw">TOCTOU</td><td>检查和使用作用于同一 fd,不是同一路径</td><td><code>access</code> 后 <code>open</code></td></tr>
-<tr><td class="nw">兜底三件套</td><td><code>PR_SET_NO_NEW_PRIVS</code>、<code>PR_SET_DUMPABLE</code>/<code>suid_dumpable</code>、seccomp</td><td>chroot 后忘了 chdir,或以为 chroot 是安全边界</td></tr>
-<tr><td class="nw">NSS 与 <code>_r</code> 版本</td><td>passwd 只是后端之一;<code>getpwnam_r</code> 找不到返回 0 + NULL</td><td>用返回值判「没找到」;静态链接下 NSS 失灵</td></tr>
-<tr><td class="nw">密码与登录记账</td><td>认证走 PAM,shadow 哈希格式 <code>$6$</code>/<code>$y$</code>;utmp/wtmp/lastlog 正被 logind/journald 取代</td><td>自己读 shadow 比对,<code>getpass</code> 截断长密码</td></tr>
-<tr><td class="nw">ACL 的 mask</td><td>命名条目的上限;<code>chmod</code> 改组位实际改 mask;<code>ls</code> 末尾 <code>+</code></td><td>只看 <code>rwx</code> 九位判断谁能访问</td></tr>
-<tr><td class="nw">五个能力集合</td><td>P 上限、E 生效、I 要与文件 I 相与、Ambient 无条件传、Bounding 只减不增</td><td>文件能力漏写 <code>e</code>;容器里 setcap 但 Bounding 早删光</td></tr>
-<tr><td class="nw">exec 变换公式</td><td>P' = (P(inh)&amp;F(inh)) &#124; (F(perm)&amp;P(bnd)) &#124; P'(amb);E' = F(eff) ? P' : P'(amb)</td><td>想靠 Inheritable 传能力给没 setcap 的程序</td></tr>
-<tr><td class="nw"><code>CAP_SYS_ADMIN</code> ≈ root</td><td>还有 <code>DAC_OVERRIDE</code>、<code>SYS_PTRACE</code>、<code>SYS_MODULE</code></td><td>给容器 <code>--cap-add=SYS_ADMIN</code> 还以为有隔离</td></tr>
-<tr><td class="nw">文件能力是 xattr</td><td><code>security.capability</code>;<code>cp</code>/<code>tar</code> 默认不带;nosuid 挂载忽略</td><td>部署后能力静默消失</td></tr>
-<tr><td class="nw">命名空间 = 多开的全局表</td><td>unshare/setns/clone 带 <code>CLONE_NEW*</code>;pid ns 只对子进程生效;user ns 非特权可建</td><td>在 user ns 里是 root 就以为能读宿主文件</td></tr>
-<tr><td class="nw">uid_map 的规矩</td><td>先写 <code>setgroups</code> deny,再写 gid_map;非特权只能映射自己;一次性</td><td>写 gid_map 报 EPERM 不知为何</td></tr>
-<tr><td>容器 = namespace + cgroup + 换根</td><td>隔离靠前者、限量靠后者,没有第三样</td><td>把 docker 当内核对象排查</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>这段代码此刻的 euid 是谁、还需要特权吗、降权了怎么验证;攻击者控制了这个进程能拿到什么,能不能再小;环境变量、fd、路径里有哪一样来自调用者;这项特权到底需要哪个 capability,答案是 SYS_ADMIN 时换思路了吗;这个进程挂在哪些命名空间上,哪张宿主的表被递进去了。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 721px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td><code>getuid</code> / <code>geteuid</code> / <code>getresuid</code> 及 gid 版</td><td class="nw">读三套身份</td><td class="nw">12.1</td></tr>
-<tr><td><code>setuid</code> / <code>seteuid</code> / <code>setreuid</code> / <code>setresuid</code> / <code>setfsuid</code> 及 gid 版</td><td class="nw">改身份</td><td class="nw">12.1</td></tr>
-<tr><td><code>getgroups</code> / <code>setgroups</code> / <code>initgroups</code> / <code>getgrouplist</code></td><td class="nw">附属组</td><td class="nw">12.1 / 12.3</td></tr>
-<tr><td class="nw"><code>access</code> / <code>faccessat</code></td><td>以 ruid 检查(有 TOCTOU)</td><td class="nw">12.1 / 12.2</td></tr>
-<tr><td><code>prctl(PR_SET_NO_NEW_PRIVS / PR_SET_DUMPABLE / PR_SET_KEEPCAPS / PR_SET_SECUREBITS / PR_CAPBSET_DROP / PR_CAP_AMBIENT)</code></td><td class="nw">进程安全属性与能力集合</td><td class="nw">12.2 / 12.5</td></tr>
-<tr><td><code>secure_getenv</code> / <code>getauxval(AT_SECURE)</code> / <code>clearenv</code></td><td class="nw">辅助安全模式下的环境</td><td class="nw">12.2</td></tr>
-<tr><td class="nw"><code>chroot</code> / <code>pivot_root</code></td><td class="nw">换根</td><td class="nw">12.2 / 12.6</td></tr>
-<tr><td class="nw"><code>seccomp</code></td><td class="nw">系统调用过滤</td><td class="nw">12.2</td></tr>
-<tr><td><code>getpwnam(_r)</code> / <code>getpwuid(_r)</code> / <code>getpwent</code></td><td class="nw">用户库</td><td class="nw">12.3</td></tr>
-<tr><td><code>getgrnam(_r)</code> / <code>getgrgid(_r)</code> / <code>getgrent</code></td><td class="nw">组库</td><td class="nw">12.3</td></tr>
-<tr><td class="nw"><code>getspnam</code> / <code>crypt(_r)</code></td><td class="nw">shadow 与密码哈希</td><td class="nw">12.3</td></tr>
-<tr><td><code>getutxent</code> / <code>pututxline</code> / <code>updwtmpx</code></td><td class="nw">登录记账</td><td class="nw">12.3</td></tr>
-<tr><td><code>acl_get_file</code> / <code>acl_set_file</code> / <code>acl_get_entry</code> / <code>acl_to_text</code></td><td class="nw">POSIX ACL</td><td class="nw">12.4</td></tr>
-<tr><td><code>capget</code> / <code>capset</code>;<code>cap_get_proc</code> / <code>cap_set_proc</code> / <code>cap_set_flag</code> / <code>cap_to_text</code></td><td class="nw">capabilities</td><td class="nw">12.5</td></tr>
-<tr><td class="nw"><code>unshare</code> / <code>setns</code> / <code>clone</code></td><td class="nw">命名空间</td><td class="nw">12.6</td></tr>
-<tr><td><code>sethostname</code> / <code>mount</code> / <code>pivot_root</code></td><td class="nw">容器内的换名、换根</td><td class="nw">12.6</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45887px;--thin-h:23985px">
+<section class="chapter" style="contain-intrinsic-size:auto 44112px;--thin-h:22210px">
 <h1 id="l13"><span class="part">分类 13</span>文件锁与并发访问</h1>
 <p>多个进程同时读写一个文件,内核<strong>不会替你加任何锁</strong>。<code>write</code> 的原子性只覆盖到「单次调用不会与别人的单次调用穿插」,而「读出来、改一改、写回去」这种序列毫无保护。Linux 上有三套互不兼容的文件锁,选错一套就等于没锁。</p>
 <h2 id="l13-why">13.1 为什么 write 的原子性不够用</h2>
@@ -15232,48 +14684,9 @@ TIOCGWINSZ stdout 失败: Inappropriate ioctl <span class="kw">for</span> device
 TIOCGWINSZ 普通文件失败: Inappropriate ioctl <span class="kw">for</span> device</code></pre>
 <p>解读:第一次运行的第 2 行说明请求码是由 fd 背后的驱动解释的——终端驱动认识 <code>TIOCGWINSZ</code>;第 3 行和第二次运行的第 2 行则是 <code>ENOTTY</code>(<code>strerror</code> 文本「Inappropriate ioctl for device」)的两个来源:普通文件的文件系统不实现这个请求,管道也不实现。</p>
 <p><code>FIONREAD</code> 两次都成功,因为它是管道、套接字、终端都支持的少数通用请求之一。把 <code>int avail</code> 改成 <code>long avail</code> 程序照样编译通过,64 位机器上内核只写入低 4 字节,高 4 字节是栈上的残值——这就是正文里「第三个参数没有类型检查」的具体形状。</p></div>
-<h2 id="l13-sum">13.6 小结:本章要点与易错清单</h2>
-<p>这一章承接第 2 章的「打开文件描述」概念和第 3 章的原子替换,把多进程共享同一个文件时「内核保证了什么、哪些要自己加锁、锁挂在哪个对象上」讲完;第 14 章的终端和伪终端会再次用到 <code>ioctl</code>。</p>
-<table style="contain-intrinsic-size:auto 887px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">内核免费的原子性</td><td>单次 <code>write</code>、<code>O_APPEND</code>、<code>rename</code>、<code>O_CREAT&#124;O_EXCL</code>、<code>PIPE_BUF</code> 内的管道写;其余一律不保证</td><td>以为 <code>O_APPEND</code> 能保护「读—改—写」</td></tr>
-<tr><td class="nw">丢失更新</td><td>两个进程都读到旧值再各自写回,后写的吞掉先写的</td><td>只在单核上测过就上线</td></tr>
-<tr><td class="nw"><code>flock</code></td><td>整文件锁,属主是打开文件描述;<code>dup</code>/<code>fork</code> 共享,进程退出自动释放</td><td>同一进程 <code>open</code> 两次加两次锁,自己锁死自己</td></tr>
-<tr><td class="nw">传统 <code>fcntl</code> 记录锁</td><td>字节区间锁,属主是「进程 × inode」</td><td>别处 <code>close</code> 同一文件,全部锁悄悄丢失</td></tr>
-<tr><td class="nw">OFD 锁</td><td><code>F_OFD_SETLK*</code>,区间锁 + 属主改为打开文件描述;<code>l_pid</code> 填 0</td><td>以为它有死锁检测;与传统锁混用时忘了两者会互相冲突</td></tr>
-<tr><td class="nw"><code>lockf</code></td><td><code>fcntl</code> 传统锁的壳,从当前偏移起算,只有排他锁</td><td>fd 以只读打开,<code>EBADF</code></td></tr>
-<tr><td class="nw">劝告锁</td><td>只约束主动加锁的人;强制锁 5.15 已移除</td><td>指望锁拦住不加锁的进程</td></tr>
-<tr><td class="nw"><code>EDEADLK</code></td><td>只检测传统记录锁之间的直接环,多线程下可能假报</td><td>把它当作死锁的唯一防线</td></tr>
-<tr><td class="nw">锁的等待</td><td>不公平、可被信号打断(<code>EINTR</code> 不自动重启)、无超时接口</td><td>不判 <code>EINTR</code>;用 <code>F_GETLK</code> 探测后再加锁(TOCTOU)</td></tr>
-<tr><td class="nw"><code>/proc/locks</code> / <code>lslocks</code></td><td>三套锁一张表,<code>-&gt;</code> 行是等待者,OFD 锁 pid 显示 -1</td><td>不知道去哪看「谁占着锁」</td></tr>
-<tr><td class="nw">NFS</td><td><code>flock</code> 被模拟成整文件记录锁,与 <code>fcntl</code> 互斥;<code>local_lock</code> 选项会把锁变成本地的</td><td>本地测好的并发假设原样搬到共享存储</td></tr>
-<tr><td class="nw">临时文件</td><td><code>mkstemp</code>(随机名 + <code>O_EXCL</code> + 0600)或 <code>O_TMPFILE</code>(无名);优先读 <code>TMPDIR</code></td><td><code>tmpnam</code>/<code>mktemp</code>;模板写成字符串字面量;往 tmpfs 的 <code>/tmp</code> 写大文件</td></tr>
-<tr><td class="nw"><code>O_TMPFILE</code> + <code>linkat</code></td><td>写完再发布,失败零残留;带 <code>O_EXCL</code> 则不可具名化</td><td>目标目录与发布位置不在同一文件系统</td></tr>
-<tr><td class="nw"><code>memfd_create</code> + 封印</td><td>匿名内存文件,<code>F_SEAL_*</code> 让接收方安全映射</td><td>忘了 <code>F_SEAL_SHRINK</code>,对端截断导致自己 <code>SIGBUS</code></td></tr>
-<tr><td class="nw"><code>ioctl</code></td><td>万能后门,请求码决定第三个参数类型,不匹配返回 <code>ENOTTY</code></td><td>第三个参数类型传错,栈被内核踩坏</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 回看清单</span><p>这个操作能否改写成单次系统调用或「追加 / 整体替换」;选的是哪一套锁、项目里是否统一;锁 fd 带没带 <code>O_CLOEXEC</code>、有没有人会在别处打开并关闭同一文件;拿锁失败时 <code>EAGAIN</code>/<code>EACCES</code>/<code>EINTR</code> 都判了没有;临时文件是不是 <code>mkstemp</code>/<code>O_TMPFILE</code> 建的、大小适不适合放 <code>/tmp</code>。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 417px">
-<thead><tr><th>调用</th><th>作用</th><th>所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>flock</code></td><td>整文件劝告锁,属主为打开文件描述</td><td>13.2</td></tr>
-<tr><td><code>fcntl(F_SETLK/F_SETLKW/F_GETLK)</code></td><td class="nw">传统字节区间记录锁</td><td>13.3</td></tr>
-<tr><td><code>fcntl(F_OFD_SETLK/F_OFD_SETLKW/F_OFD_GETLK)</code></td><td>OFD 区间锁(Linux 3.15)</td><td>13.3</td></tr>
-<tr><td class="nw"><code>lockf</code></td><td class="nw">记录锁的简化封装</td><td>13.3</td></tr>
-<tr><td><code>mkstemp</code> / <code>mkostemp</code> / <code>mkdtemp</code></td><td class="nw">安全创建临时文件/目录</td><td>13.4</td></tr>
-<tr><td class="nw"><code>tmpfile</code></td><td class="nw">匿名 FILE* 临时文件</td><td>13.4</td></tr>
-<tr><td class="nw"><code>open(O_TMPFILE)</code> + <code>linkat</code></td><td class="nw">无名文件与原子发布</td><td>13.4</td></tr>
-<tr><td><code>memfd_create</code> / <code>fcntl(F_ADD_SEALS)</code></td><td class="nw">匿名内存文件与封印</td><td>13.4</td></tr>
-<tr><td class="nw"><code>ioctl</code></td><td class="nw">设备专用控制</td><td>13.5</td></tr>
-<tr><td class="nw"><code>getifaddrs</code></td><td>列网卡地址(替代 <code>SIOCGIFCONF</code>)</td><td>13.5</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41260px;--thin-h:22463px">
+<section class="chapter" style="contain-intrinsic-size:auto 39216px;--thin-h:20419px">
 <h1 id="l14"><span class="part">分类 14</span>终端、tty 与伪终端</h1>
 <p>终端是 Unix 里最古老也最反直觉的一层抽象。「为什么 <code>getchar</code> 要按回车才返回」「为什么 Ctrl+C 能杀进程」「为什么程序被管道接走之后输出就不刷新了」——答案全在<strong>行规程</strong>这一层。</p>
 <h2 id="l14-termios">14.1 行规程:回车才返回的原因</h2>
@@ -16113,50 +15526,9 @@ $ echo $$; ps -o pid,pgid,sid,tty,comm -p $$^M$</code></pre>
 <p>解读:里层 <code>tty</code> 打出 <code>/dev/pts/7</code>、外层打出 <code>/dev/pts/3</code>,两者是两对不同的伪终端——外层那对由终端模拟器握着主端,里层那对由 miniscript 握着主端。<code>ps</code> 的一行里 pid、pgid、sid 三者相等且 TT 列是 pts/7,印证 <code>forkpty</code> 内部做了 <code>setsid</code> 并把从端设成了控制终端。</p>
 <p>日志里每行末尾的 <code>^M</code> 说明日志记录的是<strong>从端行规程加工之后</strong>的输出流(ONLCR 生效),而且用户敲的命令也在里面——那是从端回显的结果,不是 miniscript 自己写的;外层进程处于原始模式,所以不会回显第二遍。<code>exit</code> 之后 shell 退出、从端全部关闭,主端 <code>read</code> 得到 <code>EIO</code>,循环退出,<code>waitpid</code> 收回退出码,<code>restore</code> 恢复外层终端。</p>
 <p>把 <code>signal(SIGWINCH, on_winch)</code> 那行删掉,在里层跑 <code>vim</code> 再拖动窗口,画面就不会重排了;把父进程的 <code>cfmakeraw</code> 去掉,每个字符会回显两次,且 Ctrl+C 会被外层行规程变成 <code>SIGINT</code> 杀掉 miniscript 本身而不是传给里层。</p></div>
-<h2 id="l14-sum">14.4 小结:本章要点与易错清单</h2>
-<p>这一章讲的是进程与终端之间那层内核代码:行规程决定字节怎么进出,会话/进程组决定信号投给谁,伪终端让任何程序都能扮演「终端硬件」。第 16 章守护进程要做的脱离终端、第 5 章里 <code>SIGHUP</code>/<code>SIGINT</code>/<code>SIGTSTP</code> 的来源,都在这里有了机制层面的解释。</p>
-<table style="contain-intrinsic-size:auto 1047px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">规范模式</td><td>行规程攒整行、处理退格、翻译 Ctrl+C/Z/D;<code>read</code> 按回车才返回</td><td>以为「按一个键就能读到」,于是去轮询</td></tr>
-<tr><td class="nw">原始模式</td><td><code>cfmakeraw</code> 清掉 <code>ICANON/ECHO/ISIG/IEXTEN/OPOST/ICRNL/IXON</code> 等;输出要写 <code>\r\n</code>,回车读到 0x0d</td><td>退出时不恢复,用户的 shell 停在无回显状态;忘了 Ctrl+C 已不再杀进程</td></tr>
-<tr><td class="nw"><code>VMIN</code>/<code>VTIME</code></td><td>非规范模式下 <code>read</code> 的凑齐策略,四种组合;单位 0.1 秒</td><td>在 <code>cfmakeraw</code> 之前设,被它覆盖回 1/0</td></tr>
-<tr><td class="nw"><code>c_cc</code> 与四个标志字</td><td>每个特殊字符只在对应标志(<code>ISIG</code>/<code>ICANON</code>/<code>IEXTEN</code>/<code>IXON</code>)打开时才有效</td><td>改 <code>c_cflag</code> 时整体赋值,把波特率位冲掉</td></tr>
-<tr><td class="nw"><code>tcsetattr</code></td><td>有任何一项设成功就返回 0;<code>TCSAFLUSH</code> 读密码,<code>TCSADRAIN</code> 改输出设置</td><td>不回读比对,串口波特率没设上也不知道</td></tr>
-<tr><td class="nw"><code>isatty</code>/<code>/dev/tty</code></td><td>程序据此切换交互与非交互面孔;<code>/dev/tty</code> 永远是控制终端</td><td>进度条和颜色不判 <code>isatty</code>,日志里全是转义序列</td></tr>
-<tr><td class="nw"><code>stty</code></td><td>命令行版 <code>tcgetattr</code>/<code>tcsetattr</code>,<code>-a</code> 六行对应 termios 各字段;<code>stty sane</code>/<code>reset</code> 救终端</td><td>不知道去哪看当前终端状态</td></tr>
-<tr><td class="nw">进程组</td><td>信号按作业投递的单位;管道里的命令同一组,组长是第一个;<code>kill -- -pgid</code> 杀整组</td><td>父子只有一边调 <code>setpgid</code>,留下竞态</td></tr>
-<tr><td class="nw">会话与控制终端</td><td>会话首进程不带 <code>O_NOCTTY</code> 打开的第一个终端成为控制终端;<code>setsid</code> 后没有控制终端</td><td>组长直接调 <code>setsid</code> 得 <code>EPERM</code>;串口程序忘了 <code>O_NOCTTY</code></td></tr>
-<tr><td class="nw">前台进程组</td><td>只有它能读终端;<code>tcsetpgrp</code> 切换,后台调用先收 <code>SIGTTOU</code></td><td>shell 类程序忘了忽略 <code>SIGTTOU</code>,把自己停住</td></tr>
-<tr><td class="nw"><code>SIGTTIN</code>/<code>SIGTTOU</code></td><td>后台读终端停止;写终端看 <code>TOSTOP</code>;改属性一律 <code>SIGTTOU</code>;信号被忽略或孤儿组则 <code>EIO</code></td><td>后台任务偷偷读 stdin,<code>jobs</code> 显示 Stopped (tty input)</td></tr>
-<tr><td class="nw">孤儿进程组</td><td>每个成员的父进程都在组内或不在本会话;刚变孤儿且有停止成员时收 <code>SIGHUP</code>+<code>SIGCONT</code></td><td>以为 nohup 后的程序还能读键盘</td></tr>
-<tr><td class="nw"><code>SIGHUP</code> 链</td><td>终端挂断 → 会话首进程(shell)→ shell 转发给作业;<code>nohup</code>/<code>disown</code>/<code>setsid</code> 各断一环</td><td>ssh 里手工起服务,退出登录服务就死</td></tr>
-<tr><td class="nw">伪终端</td><td>主端是普通 fd,从端是完整终端;<code>posix_openpt</code>/<code>grantpt</code>/<code>unlockpt</code>/<code>ptsname</code> 四步或 <code>forkpty</code> 一步</td><td>主端读到 <code>EIO</code> 当错误处理;不转发 <code>SIGWINCH</code>;父进程不进原始模式导致双重回显</td></tr>
-<tr><td class="nw">主从生命周期</td><td>从端全关 → 主端 <code>EIO</code>/<code>POLLHUP</code>;主端关 → 从端会话收 <code>SIGHUP</code>、读到 0、写 <code>EIO</code></td><td>子进程继承了主端 fd,从端永远关不干净</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 回看清单</span><p>这个程序改了 termios 吗,崩溃路径和信号路径都恢复了吗;它读终端前判过自己在前台吗;写的是终端程序还是守护进程——前者要会话和控制终端,后者要 <code>setsid</code> 脱离;起子进程时打算让它和自己同一进程组还是自成一组;用伪终端时主端 fd 有没有 <code>O_CLOEXEC</code>、<code>EIO</code> 有没有当成正常结束、窗口尺寸有没有转发。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 492px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>tcgetattr</code> / <code>tcsetattr</code></td><td class="nw">读/写终端属性</td><td class="nw">14.1</td></tr>
-<tr><td class="nw"><code>cfmakeraw</code></td><td class="nw">一步切到原始模式</td><td class="nw">14.1</td></tr>
-<tr><td><code>cfgetispeed</code> / <code>cfsetispeed</code> / <code>cfsetospeed</code> / <code>cfsetspeed</code></td><td class="nw">波特率</td><td class="nw">14.1</td></tr>
-<tr><td><code>tcflush</code> / <code>tcdrain</code> / <code>tcflow</code> / <code>tcsendbreak</code></td><td>丢弃队列 / 等输出发完 / 流控 / 发 break</td><td class="nw">14.1</td></tr>
-<tr><td><code>isatty</code> / <code>ttyname</code> / <code>ttyname_r</code> / <code>ctermid</code></td><td class="nw">终端身份</td><td class="nw">14.1</td></tr>
-<tr><td><code>ioctl(TIOCGWINSZ/TIOCSWINSZ)</code></td><td>窗口尺寸(配 <code>SIGWINCH</code>)</td><td class="nw">14.1</td></tr>
-<tr><td><code>setsid</code> / <code>setpgid</code> / <code>getpgrp</code> / <code>getpgid</code> / <code>getsid</code></td><td class="nw">会话与进程组</td><td class="nw">14.2</td></tr>
-<tr><td><code>tcgetpgrp</code> / <code>tcsetpgrp</code> / <code>tcgetsid</code></td><td class="nw">终端的前台进程组与会话</td><td class="nw">14.2</td></tr>
-<tr><td><code>ioctl(TIOCSCTTY/TIOCNOTTY)</code></td><td class="nw">获取/放弃控制终端</td><td class="nw">14.2</td></tr>
-<tr><td><code>posix_openpt</code> / <code>grantpt</code> / <code>unlockpt</code> / <code>ptsname</code> / <code>ptsname_r</code></td><td class="nw">打开伪终端主端、取从端名</td><td class="nw">14.3</td></tr>
-<tr><td><code>openpty</code> / <code>forkpty</code> / <code>login_tty</code></td><td class="nw">BSD 式伪终端封装</td><td class="nw">14.3</td></tr>
-<tr><td><code>ioctl(TIOCPKT/TIOCGPTPEER)</code></td><td>分组模式 / 按主端 fd 拿从端</td><td class="nw">14.3</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41938px;--thin-h:20734px">
+<section class="chapter" style="contain-intrinsic-size:auto 40097px;--thin-h:18892px">
 <h1 id="l15"><span class="part">分类 15</span>动态链接与库</h1>
 <p>「找不到 .so」「明明装了库还是链接不上」「换台机器就跑不起来」——这些日常问题的根都在链接器和动态加载器。这一章讲清楚编译期链接与运行期加载各自负责什么。</p>
 <h2 id="l15-link">15.1 静态库与动态库:两次完全不同的解析</h2>
@@ -16960,46 +16332,9 @@ $ LD_DEBUG=bindings LD_PRELOAD=./hookopen.so ./opentest 2&gt;&amp;1 | grep <span
      28104:     binding file ./hookopen.so [0] to /lib/x86_64-linux-gnu/libc.so.6 [0]: normal symbol `open<span>' [GLIBC_2.2.5]</span></code></pre>
 <p>解读:第二次运行多出的 <code>[hook]</code> 行证明 <code>opentest</code> 对 <code>open</code> 的调用已被截走;第三次运行的两行合起来是重定向的全部效果——路径参数照旧、内容却来自另一个文件,被测程序无从察觉。</p>
 <p>最后的 <code>LD_DEBUG</code> 输出给出了机制层面的证据:<code>opentest</code> 的 <code>open</code> 绑到 <code>hookopen.so</code>,而 <code>hookopen.so</code> 里 <code>dlsym(RTLD_NEXT)</code> 拿到的 <code>open</code> 绑到 libc。把 <code>opentest.c</code> 里的 <code>open</code> 换成 <code>fopen</code> 再跑一遍,<code>[hook]</code> 行多半不会出现——那就是上面「libc 内部调用不经 PLT」那条边界的现场。</p></div>
-<h2 id="l15-sum">15.4 小结:本章要点与易错清单</h2>
-<p>这一章把「编译通过」和「能跑起来」彻底拆开:前者是 <code>ld</code> 按 <code>-L</code>/<code>-l</code> 做的一次性符号检查,后者是 <code>ld.so</code> 在每次启动时按另一套顺序重新找库、重新绑符号。后面守护进程、构建与交叉编译两章里的「换台机器就起不来」全部回到这里的三个名字、六道搜索关卡和全局符号表。</p>
-<table style="contain-intrinsic-size:auto 942px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>-L</code> 与运行期无关</td><td>链接期找库靠 <code>-L</code>,运行期靠 <code>RPATH</code>/<code>LD_LIBRARY_PATH</code>/<code>RUNPATH</code>/cache/默认目录</td><td>编译能过、运行 <code>cannot open shared object file</code></td></tr>
-<tr><td class="nw">三个名字</td><td>链接名给 <code>ld</code>,SONAME 写进 <code>DT_NEEDED</code> 给 <code>ld.so</code>,真实名是文件</td><td>不写 <code>-soname</code>,程序从此依赖开发用链接名</td></tr>
-<tr><td class="nw">主版本号 = ABI 代号</td><td>改 ABI 必换 SONAME,两代库并存互不影响</td><td>改了结构体布局却只升小版本,旧程序静默读错偏移</td></tr>
-<tr><td class="nw"><code>RPATH</code> vs <code>RUNPATH</code></td><td><code>RPATH</code> 早于 <code>LD_LIBRARY_PATH</code> 且沿加载链继承;<code>RUNPATH</code> 晚于它且只管直接依赖</td><td>以为写死了路径,用户一设环境变量就被绕过</td></tr>
-<tr><td class="nw"><code>$ORIGIN</code></td><td>运行时展开成可执行文件所在目录</td><td>shell 里没用单引号,被提前展开成空串</td></tr>
-<tr><td class="nw"><code>-fPIC</code> / RELRO</td><td><code>.so</code> 必须位置无关;<code>-z relro -z now</code> 让 GOT 只读</td><td>把非 PIC 的 <code>.a</code> 链进 <code>.so</code>,<code>recompile with -fPIC</code></td></tr>
-<tr><td class="nw">静态库顺序</td><td>链接器单遍从左到右,只抽当前缺的符号</td><td>库放在目标文件前面,<code>undefined reference</code></td></tr>
-<tr><td class="nw">全局符号表先来先赢</td><td>同名导出符号只有第一个生效,库内部调用也被劫走</td><td>不加 <code>-fvisibility=hidden</code>/版本脚本,内部函数与别的库撞名</td></tr>
-<tr><td class="nw"><code>dlopen</code> 模式</td><td><code>RTLD_NOW</code> 加载时暴露缺符号;<code>RTLD_LAZY</code> 拖到首次调用时由 <code>ld.so</code> 杀进程</td><td>生产用 <code>RTLD_LAZY</code>,跑半小时后 <code>symbol lookup error</code></td></tr>
-<tr><td class="nw"><code>dlsym</code> 判错</td><td>先 <code>dlerror()</code> 清空,调用后再查 <code>dlerror()</code></td><td>只看返回值是否 NULL</td></tr>
-<tr><td class="nw"><code>dlclose</code> 语义</td><td>只减引用计数;构造/析构只在真正加载/卸载时跑一次</td><td>卸载后仍持有函数指针、回调;指望 <code>dlclose</code> 后重新 <code>dlopen</code> 拿到新代码</td></tr>
-<tr><td class="nw">版本脚本</td><td><code>global</code> 白名单 + <code>local: *</code>;版本节点让新旧 ABI 同名并存</td><td>默认全导出,ABI 无法收敛</td></tr>
-<tr><td class="nw">静态 TLS</td><td>initial-exec 模型的库占启动时定死的块,<code>dlopen</code> 可能 <code>cannot load any more object with static TLS</code></td><td>解释器里 <code>import</code> 时加载 jemalloc/CUDA 失败</td></tr>
-<tr><td class="nw"><code>LD_PRELOAD</code> 边界</td><td>只拦经 PLT 的跨模块调用;静态程序、libc 内部调用、setuid 程序无效</td><td>钩了 <code>open</code> 却没钩 <code>open64</code>/<code>openat</code>/<code>fopen</code>,以为「没生效」</td></tr>
-<tr><td class="nw">钩子自举</td><td><code>dlsym</code> 自己要 <code>malloc</code>;钩子里不能 <code>printf</code></td><td>无限递归爆栈</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 回看清单</span><p>这个库有没有 <code>-Wl,-soname</code>,NEEDED 里记的是 SONAME 还是链接名;运行机上 <code>ldd</code> 每一行解析到的路径是不是我预期的那个;<code>.so</code> 是否 <code>-fvisibility=hidden</code> 或带版本脚本,<code>nm -D</code> 里有没有不该出现的名字;<code>dlopen</code> 是否 <code>RTLD_NOW</code>,<code>dlsym</code> 是否用 <code>dlerror</code> 判错;要钩的函数族是否钩全,被钩程序是不是 setuid 或静态链接。</p></div>
-<h3>本章用到的系统调用与库函数速查</h3>
-<table style="contain-intrinsic-size:auto 393px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>dlopen</code> / <code>dlclose</code></td><td>运行期加载/卸载共享对象(引用计数)</td><td class="nw">15.2</td></tr>
-<tr><td class="nw"><code>dlsym</code> / <code>dlvsym</code></td><td>按名字(与版本)查符号;<code>RTLD_DEFAULT</code>/<code>RTLD_NEXT</code> 伪句柄</td><td class="nw">15.2 / 15.3</td></tr>
-<tr><td class="nw"><code>dlerror</code></td><td>取最近一次 dl* 错误文本并清除</td><td class="nw">15.2</td></tr>
-<tr><td class="nw"><code>dladdr</code> / <code>dladdr1</code></td><td>地址 → 所属文件与最近导出符号</td><td class="nw">15.2</td></tr>
-<tr><td class="nw"><code>dlinfo</code></td><td>查句柄的 link_map、ORIGIN、搜索路径、命名空间</td><td class="nw">15.2</td></tr>
-<tr><td class="nw"><code>dlmopen</code></td><td class="nw">装进独立的链接映射命名空间</td><td class="nw">15.2</td></tr>
-<tr><td class="nw"><code>getauxval(AT_SECURE)</code></td><td>判断是否处于 secure-execution 模式</td><td class="nw">15.3</td></tr>
-<tr><td><code>ldd</code> / <code>readelf -d</code> / <code>nm -D</code> / <code>ldconfig</code> / <code>LD_DEBUG</code></td><td class="nw">排查链接与加载问题的命令</td><td class="nw">15.1 / 15.3</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 38823px;--thin-h:23189px">
+<section class="chapter" style="contain-intrinsic-size:auto 36762px;--thin-h:21129px">
 <h1 id="l16"><span class="part">分类 16</span>守护进程、日志与服务化</h1>
 <p>让程序在后台长期稳定运行,需要处理一串琐碎但每一条都有原因的细节。这一章讲传统的双 fork 写法为什么那样写,以及 systemd 时代哪些步骤已经可以省掉。</p>
 <h2 id="l16-daemon">16.1 守护进程:每一步的理由</h2>
@@ -17051,7 +16386,7 @@ $ LD_DEBUG=bindings LD_PRELOAD=./hookopen.so ./opentest 2&gt;&amp;1 | grep <span
 </tbody>
 </table>
 <p><strong>返回值</strong></p><p>成功时<strong>在子进程里</strong>返回 0(父进程已 <code>_exit(0)</code> 不再返回);失败返回 -1 并设 <code>errno</code>,常见 <code>EAGAIN</code>/<code>ENOMEM</code>(<code>fork</code> 失败)、<code>EPERM</code>(<code>setsid</code> 失败)、<code>ENODEV</code>(glibc 特有:打开的 <code>/dev/null</code> 不是真正的字符设备 1:3——最小化 chroot/容器里 <code>/dev/null</code> 是个普通文件时就会这样)。标准:4.4BSD,不在 POSIX 中;glibc、musl 都有。</p>
-<table style="contain-intrinsic-size:auto 407px">
+<table style="contain-intrinsic-size:auto 408px">
 <thead><tr><th class="nw">传统七步</th><th class="nw">glibc 的 <code>daemon()</code></th><th>后果与补救</th></tr></thead>
 <tbody>
 <tr><td class="nw">① <code>fork</code> + 父退出</td><td class="nw">做</td><td>父进程用 <code>_exit</code>,不跑 <code>atexit</code> 处理函数</td></tr>
@@ -17156,7 +16491,7 @@ WantedBy=multi-user.target</code></pre>
 <tr><td class="nw"><code>WatchdogSec=</code></td><td class="nw">看门狗,超时没喂就重启</td><td>配 <code>Type=notify</code></td></tr>
 </tbody>
 </table>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code># 加固相关的字段：几乎零成本，值得默认开
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code># 加固相关的字段：几乎零成本，值得默认开
 [Service]
 NoNewPrivileges=yes            # 之后 exec 无法提权
 ProtectSystem=strict           # /usr /boot /etc 只读
@@ -17793,50 +17128,9 @@ draining, 1 in flight
 drained, flushing and exiting</code></pre>
 <p>解读:第一段里「解析失败保留旧配置」对应 <code>load_config</code> 把结果写到临时变量、校验通过才赋给 <code>config_version</code>;<code>SIGTERM</code> 之后的三行是「限时排空」的骨架——真实服务把 <code>inflight</code> 换成活动连接数、把定时器换成排空上限即可。</p>
 <p>第二段先 <code>SIGSTOP</code> 再连发两次 <code>SIGHUP</code>,只得到一条 <code>reload failed</code>:同一个标准信号在被读取之前只保留一份(也顺带看到 <code>signalfd</code> 按信号编号从小到大取出 HUP、TERM),这就是用信号传「事件」而不是传「计数」的原因。把 <code>sigprocmask</code> 那行删掉再跑,<code>kill -TERM</code> 会直接按默认动作终止进程——<code>signalfd</code> 只有在信号被阻塞时才能收到它。</p></div>
-<h2 id="l16-sum">16.4 小结:本章要点与易错清单</h2>
-<p>这一章把前面的进程、会话、信号、文件描述符知识拼成一个能在后台长期运行的服务:怎么脱离终端、日志往哪发、收到信号后按什么协议退出或重载。systemd 与容器改变的是「谁来做这些事」,没有改变每一步背后的机制。</p>
-<table style="contain-intrinsic-size:auto 1056px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">双 fork</td><td>第一次 fork 脱离前台,<code>setsid</code> 脱离终端,第二次 fork 放弃会话首身份</td><td>漏第二次 fork,后来 open tty 又绑上控制终端</td></tr>
-<tr><td class="nw"><code>daemon(3)</code></td><td>做 fork/setsid/chdir/重定向,不做第二次 fork、umask、关 fd、fflush</td><td>在多线程程序里调用,其他线程消失</td></tr>
-<tr><td class="nw">fork 前 <code>fflush(NULL)</code></td><td>stdio 缓冲随 fork 复制</td><td>重定向到文件后输出重复或丢失</td></tr>
-<tr><td class="nw">关多余 fd</td><td><code>close_range</code> 或从源头 <code>O_CLOEXEC</code></td><td>守护进程攥着继承来的 socket,端口释放不了</td></tr>
-<tr><td class="nw">systemd 下前台运行</td><td><code>Type=simple</code>/<code>notify</code> 由 init 接管守护化、重启、日志、降权</td><td>自己双 fork 让 systemd 跟丢主进程</td></tr>
-<tr><td class="nw"><code>Type=</code> 选择</td><td><code>notify</code> 最准(<code>READY=1</code>),<code>simple</code> 启动即算就绪,<code>forking</code> 需 <code>PIDFile</code></td><td>依赖服务在端口还没监听时就启动</td></tr>
-<tr><td class="nw">单实例</td><td>pid 文件 + <code>fcntl</code> 写锁,进程死锁自动释放</td><td>只看 pid 文件存不存在</td></tr>
-<tr><td class="nw"><code>ps -axj</code> 特征</td><td>PPID=1、TTY=?、TPGID=-1、PGID=SID</td><td>在 ps 里看到 TTY 有值还以为守护成功</td></tr>
-<tr><td class="nw"><code>syslog</code></td><td>写 <code>/dev/log</code>(Unix dgram,阻塞),PRI=facility*8+level,<code>%m</code> 取 errno</td><td><code>openlog</code> 的 ident 传了局部数组;把 syslog 当可靠审计通道</td></tr>
-<tr><td class="nw">级别掩码</td><td><code>setlogmask(LOG_UPTO(...))</code> 在发送前过滤</td><td>debug 日志在生产全量发出</td></tr>
-<tr><td class="nw">journald</td><td>stderr 行首 <code>&lt;N&gt;</code> 标级别;<code>sd_journal_send</code> 带结构化字段;下划线字段由内核背书</td><td>自己造 <code>_PID</code> 字段(被忽略)</td></tr>
-<tr><td class="nw">写文件的日志</td><td>必须自己轮转;<code>rename</code> 后 fd 仍指旧 inode,收 SIGHUP 重开</td><td>不重开,新文件永远空、磁盘不释放</td></tr>
-<tr><td class="nw">日志成为故障源</td><td class="nw">配额、异步、限流三件事先定</td><td>错误风暴把根分区写满,全机服务一起挂</td></tr>
-<tr><td class="nw"><code>SIGPIPE</code></td><td>服务启动即忽略,<code>write</code> 改返回 <code>EPIPE</code></td><td>一个客户端断开把服务打死,日志无痕</td></tr>
-<tr><td class="nw">优雅退出协议</td><td>信号只置事件;主循环:停止接客 → 限时排空 → 落盘 → <code>exit(0)</code>,总时长小于编排系统宽限期</td><td>收到 TERM 直接 <code>exit</code>,或无限期等排空被 SIGKILL</td></tr>
-<tr><td class="nw">热重载</td><td>解析到新对象、校验通过再原子替换;失败保留旧配置</td><td>先清空再解析,坏配置让服务带空配置跑</td></tr>
-<tr><td class="nw">PID 1</td><td>容器里没注册处理函数的信号被丢弃,且要收养孤儿</td><td><code>docker stop</code> 干等 10 秒后 SIGKILL;僵尸堆积</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 回看清单</span><p>这个程序在 systemd/容器下跑,是否还自己 fork 守护化;fork 之前有没有 <code>fflush(NULL)</code>,多线程创建之前有没有完成守护化;日志走哪条管道,轮转和配额由谁负责,崩溃前最后几行能不能看到;<code>SIGTERM</code>/<code>SIGHUP</code>/<code>SIGPIPE</code> 各自有没有处理,排空上限是否小于 <code>TimeoutStopSec</code>/<code>terminationGracePeriodSeconds</code>;重载失败时旧配置还在不在。</p></div>
-<h3>本章用到的系统调用与库函数速查</h3>
-<table style="contain-intrinsic-size:auto 467px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td><code>fork</code> / <code>setsid</code> / <code>chdir</code> / <code>umask</code> / <code>dup2</code></td><td class="nw">守护化七步的原料</td><td class="nw">16.1</td></tr>
-<tr><td class="nw"><code>daemon</code></td><td>一步完成 fork+setsid+chdir+重定向</td><td class="nw">16.1</td></tr>
-<tr><td class="nw"><code>close_range</code></td><td class="nw">批量关闭 fd 区间</td><td class="nw">16.1</td></tr>
-<tr><td class="nw"><code>fcntl(F_SETLK)</code></td><td class="nw">pid 文件写锁做单实例</td><td class="nw">16.1</td></tr>
-<tr><td><code>sd_notify</code> / <code>sd_listen_fds</code></td><td>向 systemd 报就绪/看门狗;接管 socket 激活传入的 fd</td><td class="nw">16.1</td></tr>
-<tr><td><code>openlog</code> / <code>syslog</code> / <code>vsyslog</code> / <code>closelog</code> / <code>setlogmask</code></td><td>经 <code>/dev/log</code> 发日志;按级别过滤</td><td class="nw">16.2</td></tr>
-<tr><td><code>sd_journal_send</code> / <code>sd_journal_print</code> / <code>sd_journal_stream_fd</code></td><td>journald 原生结构化日志;把 stderr 接进 journal</td><td class="nw">16.2</td></tr>
-<tr><td><code>signalfd</code> / <code>timerfd_create</code> / <code>epoll_wait</code></td><td>把信号与超时变成事件循环里的 fd</td><td class="nw">16.3</td></tr>
-<tr><td class="nw"><code>sigprocmask</code></td><td>阻塞信号,<code>signalfd</code> 才能接到</td><td class="nw">16.3</td></tr>
-<tr><td class="nw"><code>signal(SIGPIPE, SIG_IGN)</code></td><td>让断开的对端变成 <code>EPIPE</code> 而不是进程终止</td><td class="nw">16.3</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 30169px;--thin-h:12702px">
+<section class="chapter" style="contain-intrinsic-size:auto 28647px;--thin-h:11180px">
 <h1 id="l17"><span class="part">分类 17</span>零拷贝与高级 I/O</h1>
 <p>「拷贝」是 I/O 密集型程序最大的隐性开销。一次普通的「读文件再发到网络」要经历<strong>四次拷贝和四次上下文切换</strong>。Linux 提供了一整套削减它的手段,理解每一个省掉了哪一次拷贝,才知道该用哪个。</p>
 <h2 id="l17-copy">17.1 数据到底拷贝了几次</h2>
@@ -18486,41 +17780,9 @@ $ fincore ./f64                                 # util-linux 自带的工具,看
    0B     0   64M ./f64</code></pre>
 <p>解读:第二行印证 DONTNEED 对干净页的效果是立竿见影的全量退还,这就是备份程序「用完就还」能保护别人热数据的依据;第三行说明退还之后再读,页缓存照常重建,没有任何副作用。把命令里的 <code>&amp;&amp; sync</code> 去掉再跑,第二行会变成接近 16384——脏页只会被发起回写,不会被丢,这是「先 fdatasync 再 DONTNEED」规矩的来源。</p>
 <p>把文件放到 tmpfs 上,四行全是 16384:那里的页缓存就是文件本身,退无可退。<code>mincore</code> 的页驻留信息从 5.2 起只对文件属主或有写权限的调用者如实报告,对别人的文件会显示成全部驻留,用它探测别人文件的缓存状态已经不可行。</p></div>
-<h2 id="l17-sum">17.4 小结:本章要点与易错清单</h2>
-<p>第 2 章讲的是 read/write 这条基本路径,本章讲的是怎样绕开它的拷贝、系统调用和缓存策略;第 18 章接着讲程序跑起来之后怎样量这些优化到底有没有用。</p>
-<table style="contain-intrinsic-size:auto 663px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">传统路径的四次拷贝</td><td>磁盘→页缓存→用户缓冲区→socket 缓冲区→网卡,中间两次是 CPU 拷贝</td><td>在几 KB 的响应上纠结零拷贝,收益被别的开销淹没</td></tr>
-<tr><td class="nw"><code>sendfile</code></td><td>文件→任意 fd,内核内直通;offset 非 NULL 时不动文件偏移</td><td>调一次就当传完;把管道或 socket 当 in_fd(EINVAL)</td></tr>
-<tr><td class="nw"><code>splice</code> / <code>tee</code> / <code>vmsplice</code></td><td>以管道为中转站移动页引用;tee 复制不消耗;vmsplice 把用户内存挂进管道</td><td>两端都不是管道;中转管道容量 64 KB 没调大导致往返次数暴涨</td></tr>
-<tr><td class="nw"><code>copy_file_range</code></td><td>文件→文件,reflink 文件系统上只改元数据</td><td>不准备 EXDEV/ENOSYS 回退;以为跨文件系统永远可行</td></tr>
-<tr><td class="nw">短传输</td><td>所有传输类调用都可能只传一部分,结束依据是返回 0 或自己记账</td><td>用「返回值小于请求」判断结束</td></tr>
-<tr><td class="nw">io_uring</td><td>把系统调用也摊薄,普通文件真异步;错误在 <code>cqe-&gt;res</code> 的负值里</td><td>对 cqe 用 perror</td></tr>
-<tr><td class="nw"><code>posix_fadvise</code></td><td>告诉内核访问模式;DONTNEED 退还干净页;返回错误号不设 errno</td><td>写完立刻 DONTNEED(脏页退不掉);在 tmpfs 上指望它</td></tr>
-<tr><td class="nw"><code>fsync</code> 三层</td><td>fdatasync &lt; fsync &lt; fsync 目录;sync_file_range 不是持久化</td><td>rename 后不 fsync 目录;fsync 失败后重试当没事</td></tr>
-<tr><td class="nw"><code>O_DIRECT</code></td><td>绕过页缓存,地址/偏移/长度三对齐,不等于落盘</td><td>当加速开关用;与页缓存访问同一文件混用</td></tr>
-<tr><td class="nw">页缓存干预</td><td>大扫描用 SEQUENTIAL+DONTNEED,点查用 RANDOM,自带缓存才用 O_DIRECT</td><td>半夜备份把线上热数据全挤出去</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>数据在用户态要不要被加工(要就别想零拷贝);传输循环处理了短传输、EINTR、EAGAIN 了吗;落盘要求到哪一级(write / fdatasync / fsync / fsync 目录);这个文件是一遍过还是反复访问(决定 fadvise 建议);O_DIRECT 的三项对齐与「不等于持久化」想清楚了吗。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 392px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>sendfile</code></td><td class="nw">文件到 fd 的内核内传输</td><td class="nw">17.2</td></tr>
-<tr><td class="nw"><code>splice</code> / <code>tee</code> / <code>vmsplice</code></td><td>经管道移动页引用 / 复制管道内容 / 用户内存与管道互通</td><td class="nw">17.2</td></tr>
-<tr><td class="nw"><code>copy_file_range</code></td><td>文件到文件的内核内复制,支持 reflink</td><td class="nw">17.2</td></tr>
-<tr><td><code>io_uring_setup</code> / <code>io_uring_enter</code>(liburing)</td><td class="nw">共享环提交与完成</td><td class="nw">17.1</td></tr>
-<tr><td><code>posix_fadvise</code> / <code>readahead</code></td><td class="nw">访问模式建议 / 主动预读</td><td class="nw">17.3</td></tr>
-<tr><td><code>fsync</code> / <code>fdatasync</code> / <code>sync</code> / <code>syncfs</code> / <code>sync_file_range</code></td><td class="nw">各层次回写与落盘</td><td class="nw">17.3</td></tr>
-<tr><td class="nw"><code>mincore</code></td><td class="nw">查页是否在页缓存</td><td class="nw">17.3</td></tr>
-<tr><td class="nw"><code>fcntl(F_SETPIPE_SZ)</code></td><td class="nw">调大中转管道</td><td class="nw">17.2</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 45226px;--thin-h:22389px">
+<section class="chapter" style="contain-intrinsic-size:auto 43305px;--thin-h:20468px">
 <h1 id="l18"><span class="part">分类 18</span>调度、资源与观测</h1>
 <p>最后一章讲「程序跑起来之后怎么看它、怎么控制它」:CPU 调度与亲和性、资源上限、以及一整套观测工具。这些是把程序从「能跑」推到「跑得可预期」的手段。</p>
 <h2 id="l18-sched">18.1 调度策略与 CPU 亲和</h2>
@@ -19440,48 +18702,9 @@ $ strace -c /bin/<span class="kw">true</span> 2&gt;&amp;1 | tail -3
 <p>/bin/true 自己什么都不做,这 33 次全是动态加载器在找、开、映射 libc(openat/newfstatat/mmap/pread64 那几行)和 glibc 初始化(set_tid_address/set_robust_list/rseq/prlimit64/getrandom)。</p>
 <p>最后一行 <code>strace -c</code> 的 33 与程序数出来的一致,那个 errors=1 是 <code>access("/etc/ld.so.preload")</code> 的 ENOENT。</p>
 <p>把目标换成 <code>ls /</code>,调用数会翻几倍;换成一个 I/O 密集的程序,用 <code>time</code> 各跑一遍裸的和带 mini_strace 的,就能直接量出「慢几十倍」。具体调用清单随 glibc 版本变(rseq 是 2.35 起,getrandom 是 2.36 起的 malloc 初始化用),但数量级和两次停止的机制不变。</p></div>
-<h2 id="l18-sum">18.5 小结:本章要点与易错清单</h2>
-<p>第 17 章讲的是怎样把 I/O 路径做短,本章讲的是程序跑起来之后怎样给它定位置(调度、亲和)、划边界(rlimit、cgroup)和看账本(rusage、/proc、strace/perf/eBPF);第 19 章回到构建,讲怎样把这些程序正确地编出来、搬到别的机器上。</p>
-<table style="contain-intrinsic-size:auto 861px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>SCHED_OTHER</code> 与 nice</td><td>CFS 按 vruntime 挑账面最少的跑,nice 改记账汇率,每级约 10%;Linux 上 nice 是线程属性</td><td>以为 nice 19 能「完全让出」;对实时线程调 nice</td></tr>
-<tr><td class="nw"><code>SCHED_FIFO</code>/<code>RR</code></td><td>有实时任务可跑普通任务一律靠边;只靠 <code>sched_rt_runtime_us</code> 留 5%</td><td>实时线程里自旋不阻塞,单核机器整机失联;不 mlockall</td></tr>
-<tr><td class="nw"><code>SCHED_DEADLINE</code></td><td>runtime/deadline/period 三参数,内核准入控制,超带宽 EBUSY</td><td>不知道 deadline 线程 fork 失败、不能设亲和</td></tr>
-<tr><td class="nw">权限闸门</td><td>实时策略要 CAP_SYS_NICE 或 RLIMIT_RTPRIO;调低 nice 要 CAP_SYS_NICE 或 RLIMIT_NICE</td><td>服务以普通用户跑却指望 SCHED_FIFO 生效,EPERM 被忽略</td></tr>
-<tr><td class="nw">CPU 亲和</td><td>线程属性,fork 继承;收益来自缓存局部性,代价是失去负载均衡;受 cpuset 约束</td><td>没量过 cpu-migrations 就绑;把两条计算线程绑到同一物理核的两个超线程</td></tr>
-<tr><td class="nw">优先级反转</td><td>低优先级持锁被中优先级抢占,高优先级陪等;PI 互斥量让持锁者临时继承</td><td>实时路径上用普通互斥量、读写锁、自旋锁</td></tr>
-<tr><td class="nw">rlimit 软硬限</td><td>软限生效、硬限封顶;非特权只能降硬限且不可逆;fork 继承 exec 保留</td><td>rlim_cur &gt; rlim_max 得 EINVAL;对 systemd 服务改 limits.conf 不生效</td></tr>
-<tr><td class="nw"><code>RLIMIT_NOFILE</code></td><td>限的是最大 fd 号 + 1;硬限受 fs.nr_open 封顶</td><td>accept 得 EMFILE 后 continue 空转</td></tr>
-<tr><td class="nw">rlimit vs cgroup</td><td>进程自己的保险丝 vs 房东的电表;限服务总内存用 memory.max,不用 RLIMIT_AS</td><td>用 RLIMIT_AS 限内存,多线程程序的栈就把它吃光</td></tr>
-<tr><td class="nw">cgroup v2 CPU 配额</td><td>cpu.max 每周期给预算,用完硬停;平均利用率低 p99 高</td><td>看 top 很空闲就加机器,不看 cpu.stat 的 nr_throttled</td></tr>
-<tr><td class="nw"><code>getrusage</code></td><td>utime/stime/maxrss/minflt/majflt/nvcsw/nivcsw 可靠,其余恒 0;CHILDREN 只算 wait 过的</td><td>把 0 当「没发生」;fork 后不 wait 就读 CHILDREN</td></tr>
-<tr><td class="nw">观测工具选型</td><td>先分 on-CPU 还是 off-CPU:烧 CPU 用 perf,在等用 strace/off-CPU/内核栈,生产低开销用 eBPF</td><td>对着 99% 在睡的进程采 perf;对生产热点进程裸开 strace</td></tr>
-<tr><td class="nw">ptrace</td><td>strace 每个系统调用停两次、多次上下文切换,慢几十倍;perf trace 走 tracepoint 不停进程</td><td>用 strace 复现竞态;Yama ptrace_scope 下 strace -p 忘了 sudo</td></tr>
-<tr><td class="nw">D 状态</td><td>不可中断睡眠,kill -9 无效;查 I/O 子系统</td><td>反复 kill -9</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>这条线程的延迟要求到底需要实时策略,还是 nice/cgroup weight 就够;实时线程每一轮都会阻塞吗,mlockall 了吗,用的锁是 PI 的吗;绑核之前量过 cpu-migrations 和 cache-misses 吗,看过 lscpu -e 的拓扑吗;这个限制该落在 rlimit 还是 cgroup,服务由谁拉起、限制从哪里来;「慢」是在跑还是在等,选的工具对得上吗。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<table style="contain-intrinsic-size:auto 558px">
-<thead><tr><th>调用</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td><code>nice</code> / <code>getpriority</code> / <code>setpriority</code></td><td class="nw">读写 nice 值</td><td class="nw">18.1</td></tr>
-<tr><td><code>sched_setscheduler</code> / <code>sched_getscheduler</code> / <code>sched_setparam</code> / <code>sched_getparam</code></td><td class="nw">读写调度策略与实时优先级</td><td class="nw">18.1</td></tr>
-<tr><td><code>sched_get_priority_min</code> / <code>sched_get_priority_max</code> / <code>sched_yield</code> / <code>sched_rr_get_interval</code></td><td>查范围、让出、查 RR 时间片</td><td class="nw">18.1</td></tr>
-<tr><td><code>sched_setattr</code> / <code>sched_getattr</code></td><td>含 SCHED_DEADLINE 的统一接口</td><td class="nw">18.1</td></tr>
-<tr><td><code>sched_setaffinity</code> / <code>sched_getaffinity</code> / <code>sched_getcpu</code></td><td class="nw">CPU 亲和与当前 CPU</td><td class="nw">18.1</td></tr>
-<tr><td><code>pthread_setschedparam</code> / <code>pthread_setaffinity_np</code> / <code>pthread_mutexattr_setprotocol</code></td><td>线程版调度、亲和、PI 互斥量</td><td class="nw">18.1</td></tr>
-<tr><td class="nw"><code>mlockall</code></td><td class="nw">实时线程锁内存</td><td class="nw">18.1(详见 10.3)</td></tr>
-<tr><td><code>getrlimit</code> / <code>setrlimit</code> / <code>prlimit</code></td><td class="nw">资源限制</td><td class="nw">18.2</td></tr>
-<tr><td class="nw"><code>getrusage</code> / <code>wait4</code></td><td class="nw">资源用量账单</td><td class="nw">18.3</td></tr>
-<tr><td class="nw"><code>ptrace</code></td><td class="nw">strace/gdb 的底层</td><td class="nw">18.4</td></tr>
-<tr><td><code>perf_event_open</code>(perf)/ <code>bpf</code>(bpftrace)</td><td class="nw">采样与内核插桩的底层</td><td class="nw">18.4</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 28336px;--thin-h:11094px">
+<section class="chapter" style="contain-intrinsic-size:auto 26429px;--thin-h:9188px">
 <h1 id="l19"><span class="part">分类 19</span>构建、静态链接与交叉编译</h1>
 <p>前面讲的是程序<strong>运行时</strong>怎么找到库。这一章讲另一半:代码怎么变成可执行文件、什么时候该静态链接、以及为什么「在我机器上能跑」的镜像换台机器就崩。</p>
 <h2 id="l19-pipeline">19.1 从源码到可执行文件的四步</h2>
@@ -19922,7 +19145,7 @@ $ docker buildx build --platform linux/arm64 .      # QEMU 模拟，慢但简单
 <tr><td class="nw">随机化</td><td class="nw">某些优化用随机种子</td><td><code>-frandom-seed=</code></td></tr>
 </tbody>
 </table>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code># 可复现构建的基本配置
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code># 可复现构建的基本配置
 export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
 gcc -O2 -g \
     -ffile-prefix-map=$(pwd)=. \
@@ -19958,7 +19181,7 @@ $ aarch64-linux-gnu-gcc --sysroot=/opt/sysroot ...        # ③ 传统工具链�
 <tr><td class="nw"><strong>目标机的</strong></td><td><code>libc</code> 头文件、内核头文件、要链接的所有 <code>.so</code>/<code>.a</code></td></tr>
 </tbody>
 </table>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code># sysroot 的典型目录结构
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code># sysroot 的典型目录结构
 /opt/sysroot-aarch64/
 ├── usr/include/           # 目标平台的头文件（stdio.h、sys/*.h、linux/*.h）
 ├── usr/lib/               # 目标平台的库
@@ -20052,44 +19275,6 @@ $ qemu-aarch64 ./archinfo-arm64-<span class="kw">static</span>                  
 <p>解读:<code>Exec format error</code> 是内核在说「ELF 头里的 Machine 字段不是本机」——这一行就是交叉编译最朴素的验收手段;<code>qemu-aarch64 -L</code> 的 <code>-L</code> 指向的目录就是 sysroot:动态版要在那里找 <code>ld-linux-aarch64.so.1</code> 和 <code>libc.so.6</code>,指错了会报「No such file or directory」,而且报的是解释器找不到,看起来像程序本身不存在。</p>
 <p>最后的 <code>release</code> 仍是宿主内核,说明 qemu-user 只翻译指令、系统调用直接转给宿主内核——所以它能跑通大多数程序,但依赖内核版本特性(新系统调用、/proc 细节)的测试要上真机或 qemu-system。</p>
 <p>把 <code>binfmt_misc</code> 注册上 qemu-aarch64 之后,<code>./archinfo-arm64</code> 可以直接执行,<code>docker buildx --platform linux/arm64</code> 就是靠这个在 x86 上「原生」跑 ARM 容器。</p></div>
-<h2 id="l19-sum">19.4 小结:本章要点与易错清单</h2>
-<p>第 15 章讲的是运行时怎么找到库,本章讲的是编译期与链接期怎么把程序造出来、造成什么形态(动态/静态)、以及给哪台机器造(交叉、可复现)。这也是全书的收尾:前面每一章的系统调用,都要经过这条流水线才能变成跑在某台机器上的二进制。</p>
-<table style="contain-intrinsic-size:auto 857px">
-<thead><tr><th class="nw">要点</th><th>一句话说清</th><th>最常见的错</th></tr></thead>
-<tbody>
-<tr><td class="nw">四步流水线</td><td>cpp → cc1 → as → ld,各自的输入输出和报错指纹不同;<code>-E</code>/<code>-S</code>/<code>-c</code> 能拆开看</td><td>对着链接错误改编译选项</td></tr>
-<tr><td class="nw">undefined reference</td><td>声明是承诺,定义是兑现;没实现 / 没链库 / 顺序错 / C++ 少 extern "C"</td><td>把 <code>-lfoo</code> 放在 .o 前面</td></tr>
-<tr><td class="nw">链接顺序</td><td>单遍扫描,静态库只抽取能满足当前未决符号的成员;互相依赖用 <code>--start-group</code></td><td>自注册插件在静态库里「失踪」(没被抽取)</td></tr>
-<tr><td class="nw">特性测试宏</td><td>必须在第一个 include 前定义;默认是 <code>_DEFAULT_SOURCE</code>;<code>-std=cXX</code> 关掉默认;<code>_GNU_SOURCE</code> 是全集</td><td>宏写在 include 之后;加了 -std=c11 后函数「隐式声明」</td></tr>
-<tr><td class="nw"><code>-g</code> 与 <code>-O2</code></td><td>调试信息不改指令,可以同时用;发布时 <code>objcopy --only-keep-debug</code> 拆出符号</td><td>为「性能」不加 -g,core 出来只有十六进制地址</td></tr>
-<tr><td class="nw">警告与 sanitizer</td><td><code>-Wall -Wextra</code> 常开,<code>-Werror</code> 放 CI;ASan/UBSan 与 TSan 分开跑</td><td>本地开 -Werror 打断开发;ASan 和 TSan 一起开</td></tr>
-<tr><td class="nw">静态链接</td><td>复制库代码进可执行文件;没有 PT_INTERP,启动不开任何文件;体积大、升级要重编</td><td>以为静态二进制零依赖——glibc 的 NSS 仍要 dlopen libnss_*.so</td></tr>
-<tr><td class="nw">glibc vs musl</td><td>musl 把 NSS 内建,适合全静态;但线程默认栈 128 KB、malloc 弱、locale 少</td><td>Alpine 上偶发栈溢出不知道是 musl 栈小</td></tr>
-<tr><td class="nw">容器镜像</td><td>静态二进制可以 <code>FROM scratch</code>;要带根证书和时区数据</td><td>镜像里没有 ca-certificates 导致 HTTPS 全失败</td></tr>
-<tr><td class="nw">交叉编译三概念</td><td>三元组选工具链;sysroot 提供目标平台头文件与库;build/host 区分两个世界</td><td>头文件用了宿主的,结构体布局错;configure 跑不了探测程序就猜默认值</td></tr>
-<tr><td class="nw">符号版本</td><td>新系统编的二进制绑定新 GLIBC_x.y,老系统跑不了;反之可以</td><td>在最新发行版上编发行包;不知道 zig cc -target ...gnu.2.17 能指定最低版本</td></tr>
-<tr><td class="nw">可复现构建</td><td>时间戳、绝对路径、通配顺序、随机种子是四大来源;<code>SOURCE_DATE_EPOCH</code>、<code>-ffile-prefix-map</code></td><td>两次构建哈希不同却不知道差在哪</td></tr>
-<tr><td class="nw">验收产物</td><td><code>file</code>/<code>readelf -h</code> 看 Machine,<code>qemu-user</code> 先跑通</td><td>交叉编完直接发板子,启动才发现架构错</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 回看清单</span><p>这个报错是哪一步报的(头文件 / 类型 / 符号);特性测试宏放在 include 之前了吗,-std 有没有关掉默认;这个二进制要在哪些机器上跑,它们的 glibc 多老;选静态还是动态,NSS、dlopen、LD_PRELOAD、时区、证书各怎么办;交叉编译的头文件和库来自目标平台吗,configure 有没有「cannot run test program」。</p></div>
-<h3>本章用到的系统调用速查</h3>
-<p>本章没有新的系统调用,工具链命令就是这一章的「调用」。</p>
-<table style="contain-intrinsic-size:auto 494px">
-<thead><tr><th>命令</th><th>作用</th><th class="nw">所在节</th></tr></thead>
-<tbody>
-<tr><td><code>gcc -E</code> / <code>-S</code> / <code>-c</code> / <code>-M</code> / <code>-v</code></td><td>分步产出、依赖列表、看真实的 ld 命令行</td><td class="nw">19.1</td></tr>
-<tr><td class="nw"><code>gcc -E -dM</code></td><td class="nw">查某个宏到底定义了没有</td><td class="nw">19.1</td></tr>
-<tr><td class="nw"><code>nm</code> / <code>nm -D</code> / <code>objdump -T</code></td><td>符号表 / 动态符号与 GLIBC 版本依赖</td><td class="nw">19.1、19.2</td></tr>
-<tr><td class="nw"><code>readelf -h</code> / <code>-l</code> / <code>-d</code></td><td>ELF 头(Machine)/ 程序头(PT_INTERP)/ 动态段</td><td class="nw">19.2、19.3</td></tr>
-<tr><td class="nw"><code>ldd</code> / <code>file</code></td><td class="nw">动态依赖 / 文件类型与架构</td><td class="nw">19.2、19.3</td></tr>
-<tr><td><code>-Wl,--trace-symbol</code> / <code>-Wl,-Map</code> / <code>-Wl,--verbose</code></td><td>跟踪符号解析 / 链接映射 / 搜索路径</td><td class="nw">19.1、19.2、19.3</td></tr>
-<tr><td><code>objcopy --only-keep-debug</code> / <code>strip</code></td><td class="nw">拆分调试信息 / 剥离</td><td class="nw">19.1</td></tr>
-<tr><td class="nw"><code>musl-gcc</code> / <code>zig cc</code></td><td class="nw">全静态 / 一体化交叉编译</td><td class="nw">19.2、19.3</td></tr>
-<tr><td><code>aarch64-linux-gnu-gcc --sysroot</code> / <code>qemu-aarch64 -L</code></td><td>传统交叉工具链 / 用户态模拟</td><td class="nw">19.3</td></tr>
-<tr><td><code>SOURCE_DATE_EPOCH</code> / <code>-ffile-prefix-map</code> / <code>-frandom-seed</code></td><td class="nw">可复现构建</td><td class="nw">19.3</td></tr>
-</tbody>
-</table>
 </section>
 
 </div></main>

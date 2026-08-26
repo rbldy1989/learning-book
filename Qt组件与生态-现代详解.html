@@ -205,7 +205,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c0-integrate">0.3 四种集成方式:包管理、子模块、源码内嵌与预编译</a>
 <a class="sec" href="#c0-cmake">0.4 CMake 里怎么引:find_package 与 FetchContent</a>
 <a class="sec" href="#c0-exit">0.5 退路:它停止维护了怎么办</a>
-<a class="sec" href="#c0-sum">0.6 小结:引入前的检查清单</a>
 </details>
 <details><summary><a class="ch" href="#c1">画图表(一):静态图与交互</a></summary>
 <a class="sec" href="#c1-need">1.1 画图表的需求分几类</a>
@@ -214,7 +213,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c1-qcp">1.4 QCustomPlot:单文件接入与它的优势</a>
 <a class="sec" href="#c1-qwt">1.5 Qwt 与自绘:什么时候还值得考虑</a>
 <a class="sec" href="#c1-interact">1.6 交互:缩放、拖动、游标与图例</a>
-<a class="sec" href="#c1-sum">1.7 小结:选型速查</a>
 </details>
 <details><summary><a class="ch" href="#c2">画图表(二):实时刷新与十万点以上</a></summary>
 <a class="sec" href="#c2-scale">2.1 数据量到多大会垮:四个方案的实测分界</a>
@@ -222,7 +220,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c2-gl">2.3 OpenGL 后端与它的代价</a>
 <a class="sec" href="#c2-stream">2.4 实时刷新:增量更新而不是重绘</a>
 <a class="sec" href="#c2-layer">2.5 分层缓存:静态背景与动态前景分开</a>
-<a class="sec" href="#c2-sum">2.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c3">三维与空间数据</a></summary>
 <a class="sec" href="#c3-need">3.1 三维展示的需求与它的真实成本</a>
@@ -230,14 +227,12 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c3-qt3d">3.3 Qt 3D 的现状与它为什么不该用于新项目</a>
 <a class="sec" href="#c3-dataviz">3.4 Qt Data Visualization:三种图表</a>
 <a class="sec" href="#c3-raw">3.5 直接用 OpenGL 或 Vulkan 的边界</a>
-<a class="sec" href="#c3-sum">3.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c4">表格与电子表格</a></summary>
 <a class="sec" href="#c4-view">4.1 QTableView 深度定制:超出第一本的部分</a>
 <a class="sec" href="#c4-xlsx">4.2 QXlsx:读写 Excel 文件</a>
 <a class="sec" href="#c4-csv">4.3 CSV 与分隔文本:编码、转义与大文件</a>
 <a class="sec" href="#c4-export">4.4 导出:格式、样式与公式的边界</a>
-<a class="sec" href="#c4-sum">4.5 小结</a>
 </details>
 <details><summary><a class="ch" href="#c5">富文本、Markdown 与代码编辑</a></summary>
 <a class="sec" href="#c5-rich">5.1 QTextDocument:自己做富文本编辑</a>
@@ -246,7 +241,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c5-highlight">5.4 语法高亮:三种实现路线</a>
 <a class="sec" href="#c5-lsp">5.5 接语言服务器:能力与成本</a>
 <a class="sec" href="#c5-web">5.6 嵌一个浏览器:QtWebEngine 的代价与替代</a>
-<a class="sec" href="#c5-sum">5.7 小结</a>
 </details>
 <details><summary><a class="ch" href="#c6">停靠布局、属性编辑与界面骨架</a></summary>
 <a class="sec" href="#c6-dock">6.1 QDockWidget 的能力边界</a>
@@ -254,7 +248,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c6-prop">6.3 属性编辑器:Qt Property Browser 与自己实现</a>
 <a class="sec" href="#c6-icon">6.4 图标与主题库:QtAwesome、QDarkStyleSheet 与自建</a>
 <a class="sec" href="#c6-perspective">6.5 透视图:多套布局的保存与切换</a>
-<a class="sec" href="#c6-sum">6.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c7">报表、打印与 PDF</a></summary>
 <a class="sec" href="#c7-print">7.1 QPrinter:打印的完整流程</a>
@@ -262,7 +255,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c7-pdfview">7.3 查看 PDF:QtPdf 模块与 Poppler</a>
 <a class="sec" href="#c7-template">7.4 模板引擎:用 HTML 还是自己排版</a>
 <a class="sec" href="#c7-report">7.5 第三方报表方案</a>
-<a class="sec" href="#c7-sum">7.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c8">网络:协议、服务端与异步</a></summary>
 <a class="sec" href="#c8-http">8.1 QNetworkAccessManager 之上该封装什么</a>
@@ -271,7 +263,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c8-mqtt">8.4 MQTT:QtMqtt 与第三方客户端</a>
 <a class="sec" href="#c8-grpc">8.5 gRPC 与 Protobuf:Qt 的支持现状</a>
 <a class="sec" href="#c8-coro">8.6 QCoro:用协程写异步,取代回调地狱</a>
-<a class="sec" href="#c8-sum">8.7 小结</a>
 </details>
 <details><summary><a class="ch" href="#c9">数据库与本地存储</a></summary>
 <a class="sec" href="#c9-sql">9.1 QtSql:驱动、连接与线程规矩</a>
@@ -279,14 +270,12 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c9-pool">9.3 连接池:为什么要自己写</a>
 <a class="sec" href="#c9-orm">9.4 第三方 ORM 与「要不要 ORM」</a>
 <a class="sec" href="#c9-kv">9.5 键值存储与本地缓存</a>
-<a class="sec" href="#c9-sum">9.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c10">音视频与图像处理</a></summary>
 <a class="sec" href="#c10-mm">10.1 Qt Multimedia:播放、采集与它的后端</a>
 <a class="sec" href="#c10-ffmpeg">10.2 FFmpeg:什么时候不得不用它</a>
 <a class="sec" href="#c10-cv">10.3 OpenCV 集成:数据结构互转与线程</a>
 <a class="sec" href="#c10-img">10.4 图像格式插件与大图处理</a>
-<a class="sec" href="#c10-sum">10.5 小结</a>
 </details>
 <details><summary><a class="ch" href="#c11">设备通信:串口、总线与蓝牙</a></summary>
 <a class="sec" href="#c11-serial">11.1 QtSerialPort:串口通信与它的坑</a>
@@ -294,7 +283,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c11-can">11.3 QtSerialBus 与 CAN 总线</a>
 <a class="sec" href="#c11-bt">11.4 蓝牙与 BLE:QtBluetooth 的能力与平台差异</a>
 <a class="sec" href="#c11-hid">11.5 USB、HID 与厂商 SDK 的接入形态</a>
-<a class="sec" href="#c11-sum">11.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c12">安全:加密、凭据与压缩归档</a></summary>
 <a class="sec" href="#c12-tls">12.1 TLS 与证书:QSslSocket 背后的 OpenSSL</a>
@@ -302,7 +290,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c12-cred">12.3 凭据存储:三平台的密钥链与不要自己发明</a>
 <a class="sec" href="#c12-zip">12.4 压缩与归档:QuaZIP、zlib 与大文件</a>
 <a class="sec" href="#c12-harden">12.5 常见的安全疏漏与体检清单</a>
-<a class="sec" href="#c12-sum">12.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c13">嵌入脚本与插件化扩展</a></summary>
 <a class="sec" href="#c13-why">13.1 什么时候值得把脚本嵌进程序</a>
@@ -310,7 +297,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c13-lua">13.3 Lua:轻量嵌入与 sol2 绑定</a>
 <a class="sec" href="#c13-py">13.4 Python 嵌入:pybind11 与它的代价</a>
 <a class="sec" href="#c13-sandbox">13.5 沙箱、超时与不可信脚本</a>
-<a class="sec" href="#c13-sum">13.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c14">系统集成</a></summary>
 <a class="sec" href="#c14-tray">14.1 托盘图标与通知</a>
@@ -319,7 +305,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c14-clip">14.4 剪贴板与拖放</a>
 <a class="sec" href="#c14-ipc">14.5 进程间通信:本地套接字、共享内存与 QtDBus</a>
 <a class="sec" href="#c14-power">14.6 电源、休眠与会话事件</a>
-<a class="sec" href="#c14-sum">14.7 小结</a>
 </details>
 <details><summary><a class="ch" href="#c15">测试与质量保障</a></summary>
 <a class="sec" href="#c15-qtest">15.1 Qt Test:它比通用框架多给了什么</a>
@@ -327,7 +312,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c15-gui">15.3 测界面:模拟输入、等待条件与不稳定用例</a>
 <a class="sec" href="#c15-model">15.4 测模型与信号:QAbstractItemModelTester 与 QSignalSpy</a>
 <a class="sec" href="#c15-ci">15.5 持续集成:无显示环境怎么跑 GUI 测试</a>
-<a class="sec" href="#c15-sum">15.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c16">日志、崩溃上报与线上诊断</a></summary>
 <a class="sec" href="#c16-log">16.1 日志落地:分级、轮转与结构化</a>
@@ -335,7 +319,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c16-symbol">16.3 符号归档:没有它上报等于没有</a>
 <a class="sec" href="#c16-metric">16.4 运行指标与远程诊断</a>
 <a class="sec" href="#c16-privacy">16.5 上报里不能带什么</a>
-<a class="sec" href="#c16-sum">16.6 小结</a>
 </details>
 <details><summary><a class="ch" href="#c17">打包、签名与自动更新</a></summary>
 <a class="sec" href="#c17-deploy">17.1 windeployqt 与 linuxdeployqt:它们做了什么、漏了什么</a>
@@ -343,18 +326,15 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#c17-sign">17.3 代码签名:为什么绕不过去</a>
 <a class="sec" href="#c17-update">17.4 自动更新:四种形态与各自的风险</a>
 <a class="sec" href="#c17-rollback">17.5 回滚:更新失败之后</a>
-<a class="sec" href="#c17-sum">17.6 小结</a>
 </details>
-<details><summary><a class="ch" href="#c18">小结:选型速查与什么时候自己写</a></summary>
-<a class="sec" href="#c18-index">18.1 选型速查:按需求查方案</a>
-<a class="sec" href="#c18-self">18.2 什么时候自己写:五条判据</a>
-<a class="sec" href="#c18-health">18.3 依赖健康度:怎么定期体检</a>
-<a class="sec" href="#c18-sum">18.4 小结</a>
+<details><summary><a class="ch" href="#c18">自研判据与依赖体检</a></summary>
+<a class="sec" href="#c18-self">18.1 什么时候自己写:五条判据</a>
+<a class="sec" href="#c18-health">18.2 依赖健康度:怎么定期体检</a>
 </details>
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 46235px;--thin-h:46235px">
+<section class="chapter" style="contain-intrinsic-size:auto 42193px;--thin-h:42193px">
 <h1 id="c0"><span class="part">第 0 章</span>引一个第三方库之前:评估、集成与退路</h1>
 <h2 id="c0-open">0.0 导读</h2>
 <p>一个桌面产品要用到的能力,远多于 Qt 自身提供的那一部分。图表、三维、电子表格、报表、设备通信、崩溃上报——每一项都有现成的第三方方案,也都可以自己写。选哪一条,决定的不是这个月的排期,而是此后几年里这一块由谁维护、出了问题找谁、上游停下来之后退到哪里。</p>
@@ -394,16 +374,16 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <p>读法上也随之要分两层:<strong>判据可以记住,结论要当场重查。</strong>判据来自机制与工程约束,不随时间变;结论绑在某个库某个版本上,书出版之后就开始老化。全书的表格刻意把这两层分开写,凡是「怎么查」那一列,都是能在半小时内跑完并贴进评审记录的动作。</p>
 <h3>锚定的八样各借鉴了什么</h3>
 <p>借鉴要写成具体手法才可核对:某一节的编排顺序、某张表的列划分、某条判据的来源。凡是能写成「参考了它的思路」的,都说明没有真正借到东西。</p>
-<table style="contain-intrinsic-size:auto 714px">
+<table style="contain-intrinsic-size:auto 739px">
 <thead><tr><th>锚定的资料</th><th>借鉴了什么</th></tr></thead>
 <tbody>
-<tr><td>Summerfield《Advanced Qt Programming》</td><td>「自己写还是用现成的」这条分界的参照物:书里手写富文本编辑与图形视图形态各要处理哪几件事、代码规模是什么量级。第 18.2 节五条判据里的「表面积」一条就按这个量估出来,第 5.1 节与第 6.3 节的自写路线也以它为底</td></tr>
+<tr><td>Summerfield《Advanced Qt Programming》</td><td>「自己写还是用现成的」这条分界的参照物:书里手写富文本编辑与图形视图形态各要处理哪几件事、代码规模是什么量级。第 18.1 节五条判据里的「表面积」一条就按这个量估出来,第 5.1 节与第 6.3 节的自写路线也以它为底</td></tr>
 <tr><td class="nw">各库的官方文档与示例仓库</td><td>事实层的准绳:接口签名、接入步骤与示例一律以它为准,二手教程与它冲突时不采信。各章「接入步骤」按官方示例的最短路径重排,再补上它省略的三样——错误处理、构建配置、以及在干净机器上的部署验证</td></tr>
-<tr><td class="nw">各库的源码与问题追踪页</td><td>第 0.1 节「做一次真实修复」这条判据直接来自它:从问题列表里挑一个已确认未修复的问题,自己定位并写补丁,这是唯一能量出接手成本的动作。各章末退路表里「停更之后退到哪里」的答案也从源码规模与提交者人数推出来</td></tr>
+<tr><td class="nw">各库的源码与问题追踪页</td><td>第 0.1 节「做一次真实修复」这条判据直接来自它:从问题列表里挑一个已确认未修复的问题,自己定位并写补丁,这是唯一能量出接手成本的动作。各章「维护状态与退路」表里「停更之后退到哪里」的答案也从源码规模与提交者人数推出来</td></tr>
 <tr><td class="nw">Qt 官方模块文档与授权页</td><td>第 0.2 节四类许可证的划分方式,以及每一章第一步「Qt 自带的够不够用」的判断依据。Essentials 与附加模块在授权上的差别按它写,不按二手转述写</td></tr>
 <tr><td class="nw">CMake 官方文档</td><td>第 0.4 节的编排顺序:先分清配置模式与模块模式,再讲查找路径与变量优先级,最后讲版本锁定。第 0.3 节四种集成方式的对比表里,「可修改性」与「离线构建」两列是按它的选项划出来的</td></tr>
-<tr><td class="nw">KDAB 与 ICS 的组件实践文章</td><td>每章末「与 Qt 机制的四个接口点」这张表的四个维度就是从它们记录的事故里归出来的:对象树归属、信号槽桥接、样式与主题、高分屏与国际化。红色批注里的症状描述也以这类现场记录为底本</td></tr>
-<tr><td class="nw">vcpkg 与 Conan 的 Qt 生态包清单</td><td>第 0.1 节维护状态的四个量,与第 18.3 节季度体检脚本的数据入口:端口最近一次更新、还有没有人在打包、锁定的版本是哪一个。判据写成可复核的查询动作,而不是活跃度印象</td></tr>
+<tr><td class="nw">KDAB 与 ICS 的组件实践文章</td><td>各章「与 Qt 机制的四个接口点」这张表的四个维度就是从它们记录的事故里归出来的:对象树归属、信号槽桥接、样式与主题、高分屏与国际化。红色批注里的症状描述也以这类现场记录为底本</td></tr>
+<tr><td class="nw">vcpkg 与 Conan 的 Qt 生态包清单</td><td>第 0.1 节维护状态的四个量,与第 18.2 节季度体检脚本的数据入口:端口最近一次更新、还有没有人在打包、锁定的版本是哪一个。判据写成可复核的查询动作,而不是活跃度印象</td></tr>
 <tr><td class="nw">《Qt 核心与 Widget》</td><td>机制不重复讲这条分界:对象树、信号槽、样式表、模型/视图一律引它。接口表的列划分也照它——签名、参数含义、引入版本、线程安全性各占一列,各章的方案接口表按同一组列写</td></tr>
 </tbody>
 </table>
@@ -414,15 +394,15 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <table style="contain-intrinsic-size:auto 287px">
 <thead><tr><th>组</th><th>章与节</th><th>它回答的问题</th></tr></thead>
 <tbody>
-<tr><td class="nw">引入与评估</td><td class="nw">第 0 章,6 节</td><td>要不要引这个库、按什么判据评、用哪种方式集成、怎么锁版本、上游停更之后退到哪里</td></tr>
-<tr><td class="nw">显示与呈现</td><td class="nw">第 1 到 7 章,43 节</td><td>图表、实时曲线、三维、表格与电子表格、富文本与代码编辑、界面骨架、打印与 PDF,各有哪些现成方案,边界落在什么地方</td></tr>
-<tr><td class="nw">数据与设备</td><td>第 8 到 11 章,24 节</td><td>数据怎么进出程序与外部:网络协议与异步、数据库与本地存储、音视频与图像处理、串口总线与蓝牙</td></tr>
-<tr><td class="nw">工程与交付</td><td>第 12 到 18 章,41 节</td><td>加密与凭据、脚本与插件、系统集成、测试、日志与崩溃上报、打包签名与自动更新,以及全书的选型速查</td></tr>
+<tr><td class="nw">引入与评估</td><td>第 0 章,6 节(含 0.0 导读)</td><td>要不要引这个库、按什么判据评、用哪种方式集成、怎么锁版本、上游停更之后退到哪里</td></tr>
+<tr><td class="nw">显示与呈现</td><td class="nw">第 1 到 7 章,36 节</td><td>图表、实时曲线、三维、表格与电子表格、富文本与代码编辑、界面骨架、打印与 PDF,各有哪些现成方案,边界落在什么地方</td></tr>
+<tr><td class="nw">数据与设备</td><td>第 8 到 11 章,20 节</td><td>数据怎么进出程序与外部:网络协议与异步、数据库与本地存储、音视频与图像处理、串口总线与蓝牙</td></tr>
+<tr><td class="nw">工程与交付</td><td>第 12 到 18 章,33 节</td><td>加密与凭据、脚本与插件、系统集成、测试、日志与崩溃上报、打包签名与自动更新,以及自研判据与依赖体检</td></tr>
 </tbody>
 </table>
-<p>合计 19 章 114 节。四组之间是单向依赖:后三组的每一章都在用第 0 章的判据——评估的七个维度、许可证的四类划分、集成方式的四种取舍、退路的四种停更形态。第 0 章不用后面任何一章的内容。</p>
-<p>有两章的位置与其余十七章不同。第 0 章不针对任何一类具体需求,它交付的是一套判据与一份检查清单,后面每一章的对比表都在用;第 18 章不引入新方案,只把前面的结论按需求与按「什么时候自己写」各重排一遍。这两章任何时候单独读都成立,不受前后依赖约束。</p>
-<p>组织原则只有一条:<strong>按需求分章,不按组件名分章。</strong>理由是选型的起点永远是需求而不是库名——同一个库可能在两章里出现,同一个需求下的三到四个方案只有放进同一张表才比得出来。手上已经有库名时走第 18.1 节的速查表反查,它按需求列出候选方案与所在章。</p>
+<p>合计 19 章 95 节(含 0.0 导读)。四组之间是单向依赖:后三组的每一章都在用第 0 章的判据——评估的七个维度、许可证的四类划分、集成方式的四种取舍、退路的四种停更形态。第 0 章不用后面任何一章的内容。</p>
+<p>有两章的位置与其余十七章不同。第 0 章不针对任何一类具体需求,它交付的是一套判据与一份检查清单,后面每一章的对比表都在用;第 18 章不引入新方案,只回答「什么时候自己写」这个贯穿全书的问题,并给出依赖引入之后的定期体检办法。这两章任何时候单独读都成立,不受前后依赖约束。</p>
+<p>组织原则只有一条:<strong>按需求分章,不按组件名分章。</strong>理由是选型的起点永远是需求而不是库名——同一个库可能在两章里出现,同一个需求下的三到四个方案只有放进同一张表才比得出来。手上已经有库名时,先想清它对应的是哪类需求,再走本节末尾按需求找章的反查表定位到章,在该章的对比表里找到它。</p>
 <p>从第 1 章起,每一章走同一套七段结构,读者可以按这个顺序预期每一章的内容落在哪里。</p>
 <ol>
 <li><strong>需求与判据。</strong>这一类需求分几种,各自的分界变量是什么——数据点数、交互深度、分页复杂度、脚本要不要碰系统。</li>
@@ -439,7 +419,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tbody>
 <tr><td>Qt 自身的机制:对象树、信号槽、样式表、模型/视图框架</td><td>《Qt 核心与 Widget》</td><td>本书讲一个第三方部件怎么接进这套机制,那本讲这套机制自身怎么运作</td></tr>
 <tr><td class="nw">QML 语言与 Qt Quick 的渲染</td><td>《Qt Quick 与 QML》</td><td>本书只在某个方案的界面层落在 QML 上时说明接口形态,声明式语言与场景图不讲</td></tr>
-<tr><td class="nw">性能剖析与调优的细账</td><td>《Qt 性能优化》</td><td>本书给「这个方案在多大数据量上开始退化」,那本给一次绘制花掉多少毫秒以及怎么量出来</td></tr>
+<tr><td class="nw">性能剖析与调优的细账</td><td class="nw">《Qt 性能优化》</td><td>本书给「这个方案在多大数据量上开始退化」,那本给一次绘制花掉多少毫秒以及怎么量出来</td></tr>
 <tr><td class="nw">各第三方库的内部实现</td><td class="nw">不讲</td><td>凡是不改变「用不用它、怎么接它、什么时候退出去」这三个判断的实现细节,一律不写</td></tr>
 <tr><td class="nw">具体的版本号、价格、收藏数与厂商的平台策略</td><td class="nw">不写死</td><td>凡是会随时间变的取值,书里给的是查证方法;需要当下的数字时按方法自己取一次</td></tr>
 <tr><td class="nw">法律意见与合规判断</td><td class="nw">归法务</td><td>本书只讲哪些技术选择会牵动授权义务,条款解释与风险判断不在书里</td></tr>
@@ -448,7 +428,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </tbody>
 </table>
 <p>有一类边界值得单独说明:<strong>本书与性能那本在同一个话题上分的是不同的问题,不是把内容切成两半。</strong>第 2 章讲十万点以上时哪几个方案会垮、抽稀与分层缓存各解决哪一段,性能那本讲同一份数据在不同写法下的帧时间分布;两本都读过之后,判据与数字才对得上。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 跳过第 0 章直接照抄某一章的接入步骤,授权与退路会被漏在评估之外</span><p>症状出现在项目中后期:功能早就做完,发版前法务提出授权问题,或者上游停更之后发现这个库的类型已经散进几十个文件。成因是接入步骤这一段最像教程,最容易被单独抽出来用,而它前面的评估与后面的退路才是决定长期成本的部分。第 0.6 节的检查清单与一票否决表就是为这件事准备的:否决项要在写第一行代码之前查完,退路要在引入当天写下来。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 跳过第 0 章直接照抄某一章的接入步骤,授权与退路会被漏在评估之外</span><p>症状出现在项目中后期:功能早就做完,发版前法务提出授权问题,或者上游停更之后发现这个库的类型已经散进几十个文件。成因是接入步骤这一段最像教程,最容易被单独抽出来用,而它前面的评估与后面的退路才是决定长期成本的部分。第 0.1 节评估表里的否决条件一列就是为这件事准备的:否决项要在写第一行代码之前查完,退路要在引入当天写下来。</p></div>
 <h3>读之前要会什么</h3>
 <p>前置分两档,每一条都给出可执行的自测动作。「熟悉 CMake」这样的说法无法自测,也就无法用来判断该不该现在读;能不能在十分钟内做出下表右列那件事,才是判据。</p>
 <table style="contain-intrinsic-size:auto 714px">
@@ -468,19 +448,19 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </table>
 <p>两样明确不在前置里。<strong>不需要用过书里的任何一个第三方库</strong>,每一章的接入步骤都从空工程开始,第一个示例只确认构建配置正确。<strong>不需要有法律背景</strong>,第 0.2 节把许可证按「对发布方式的影响」归成四类,读者要做的是识别与提问,不是解释条款。</p>
 <p>前置里没有「读过某个第三方库的源码」这一条,但它会在第 0.1 节以另一种形式回来:评估一个骨架依赖时,要从它的问题列表里挑一个已确认未修复的问题,自己定位并写出补丁。那不是读之前的门槛,是评估动作本身,做不下去正说明这个库的接手成本超出了团队。</p>
-<p>前置缺了某一条时不必先补全再开始。缺 CMake 的从第 0.4 节读起,那一节把引一个依赖用得到的部分讲全;缺对象树与信号槽的先读《Qt 核心与 Widget》的对应章节,再回到各章末的接口点那一段;缺跨平台构建经验的可以先在单平台上跟着做,到第 17 章之前补上第二个平台即可。</p>
-<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 许可证核实改用 SPDX 标识符与物料清单,不再靠人工维护的表格</span><p>人工维护的依赖清单有两个固有缺陷:传递依赖漏登记,以及源码树里内嵌的第三方代码不在清单上。现代做法是让构建产出一份软件物料清单,清单里每一项带一个 SPDX 标识符,再拿这份清单去对授权策略与公开漏洞库。第 0.2 节讲三处都要查的理由,第 18.3 节把它做成一步可以进持续集成的检查,产出物作为构建产物保留,便于比较两次发布之间新增了什么。</p></div>
+<p>前置缺了某一条时不必先补全再开始。缺 CMake 的从第 0.4 节读起,那一节把引一个依赖用得到的部分讲全;缺对象树与信号槽的先读《Qt 核心与 Widget》的对应章节,再回到各章「与 Qt 机制的四个接口点」那一段;缺跨平台构建经验的可以先在单平台上跟着做,到第 17 章之前补上第二个平台即可。</p>
+<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 许可证核实改用 SPDX 标识符与物料清单,不再靠人工维护的表格</span><p>人工维护的依赖清单有两个固有缺陷:传递依赖漏登记,以及源码树里内嵌的第三方代码不在清单上。现代做法是让构建产出一份软件物料清单,清单里每一项带一个 SPDX 标识符,再拿这份清单去对授权策略与公开漏洞库。第 0.2 节讲三处都要查的理由,第 18.2 节把它做成一步可以进持续集成的检查,产出物作为构建产物保留,便于比较两次发布之间新增了什么。</p></div>
 <h3>与那些资料相比,本书多给了什么</h3>
 <p>每一条特点都配了可以当场翻到的位置。指不到具体节的特点无法核对,也就不必写。</p>
-<table style="contain-intrinsic-size:auto 626px">
+<table style="contain-intrinsic-size:auto 652px">
 <thead><tr><th>本书的做法</th><th>到哪里去看</th></tr></thead>
 <tbody>
 <tr><td>按需求分章,同一需求下三到四个方案放进同一张对比表</td><td>第 1.2 节按六个维度对比四个图表方案;第 5.6 节把嵌浏览器与三条替代路线并排;第 11.5 节比较四条 USB 与 HID 路线;第 13.1 节按六列比较五条脚本化路线</td></tr>
 <tr><td>每个方案给「最小形态」与「接近真实需求的形态」两级完整示例</td><td>第 1.3 节从一条折线走到时间轴、双 Y 轴、图例交互与导出;第 4.2 节从五行写出一个电子表格文件走到多表带样式;第 3.4 节的三维曲面从最小形态直接嵌进 Widget 界面</td></tr>
-<tr><td>每章末固定给「与 Qt 机制的四个接口点」与「维护状态与退路」两张表</td><td>四个接口点是对象树归属、信号槽桥接、样式与主题、高分屏与国际化,每一项写明漏掉之后的典型症状;退路那张表逐个方案回答停更时退到哪里、退了损失什么</td></tr>
-<tr><td>版本号、授权结论与维护状态一律不写死,只给查证方法</td><td>第 0.6 节的工具状态表与各章末的查证表都只写「怎么查」;第 18.3 节把这些动作汇成一份按季度跑的依赖体检清单与一份依赖台账的字段定义</td></tr>
-<tr><td class="nw">一票否决项单独成表,排在打分之前</td><td>第 0.6 节列出五条否决项与各自的查法,命中任意一条这个方案就不参与后续比较;顺序上先查授权与构建自足性,这两项花时间最短、排除力最强</td></tr>
-<tr><td class="nw">第 18 章把全书压成一张按需求反查的速查表</td><td>第 18.1 节共 53 行,左列是要做的事,右列是从哪一章读起,中间一列点出这个选择真正取决于哪个变量</td></tr>
+<tr><td>每个方案固定给「与 Qt 机制的四个接口点」与「维护状态与退路」两张表</td><td>四个接口点是对象树归属、信号槽桥接、样式与主题、高分屏与国际化,每一项写明漏掉之后的典型症状;退路那张表逐个方案回答停更时退到哪里、退了损失什么</td></tr>
+<tr><td>版本号、授权结论与维护状态一律不写死,只给查证方法</td><td>第 0.1 节的四个维护状态量与各章的查证表都只写「怎么查」;第 18.2 节把这些动作汇成一份按季度跑的依赖体检清单与一份依赖台账的字段定义</td></tr>
+<tr><td class="nw">一票否决项单独成列,排在打分之前</td><td>第 0.1 节的评估表把否决条件与打分分开,命中任意一条这个方案就不参与后续比较;顺序上先查授权冲突与「出了问题有没有人能改」,这两项花时间最短、排除力最强</td></tr>
+<tr><td>「自己写还是引现成」有一套可逐条核对的判据,依赖引入之后有固定的体检周期</td><td>第 18.1 节给出表面积、失败代价、错配比例、维护力量、许可证五条判据;第 18.2 节给出六项体检指标、检查周期与可执行的台账形态</td></tr>
 <tr><td class="nw">34 张原创插图,结构、流程与取舍分开画</td><td>例如第 0 章的四种集成方式依赖流向、隔离层改变的是波及范围;第 13 章的脚本引擎隔离边界;第 16 章从崩溃发生到堆栈可读的五个环节</td></tr>
 </tbody>
 </table>
@@ -494,7 +474,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw">要给现有产品加一块功能</td><td>0 →(需求对应的那一章)→ 18</td><td>第 0 章与需求所在那一章</td><td>其余各章,以及所选方案之外的方案</td></tr>
 <tr><td class="nw">在做技术选型、要写评估报告</td><td>0 → 18 →(候选方案所在章)</td><td>第 0 章、第 18 章、候选方案所在章的前两节</td><td>各章的接入步骤与完整示例</td></tr>
 <tr><td class="nw">要把一个原型做成能发布的产品</td><td>15 → 16 → 17 → 12</td><td>第 15、16、17、12 章</td><td>第 1 到 11 章里没有用到的部分</td></tr>
-<tr><td class="nw">手上已经有具体问题</td><td>直接查 18.1 节的速查表与所在章末的症状反查表</td><td>—</td><td>—</td></tr>
+<tr><td class="nw">手上已经有具体问题</td><td>直接走下文按需求找章的表定位到章,再按症状查该章的红色批注</td><td>—</td><td>—</td></tr>
 </tbody>
 </table>
 <p>三条路线各有一处容易走错。要加一块功能的人最常见的是<strong>直接跳到那一章的接入步骤</strong>,把评估与退路当成铺垫;这两段决定的恰好是三年后的成本。做选型的人容易反过来,<strong>在对比表上停留过久而不动手</strong>,而对比表里的数据量与交互深度两列必须用自己的真实数据实测一次才作数。</p>
@@ -515,7 +495,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <ul>
 <li><strong>可以先放过第 3 章。</strong>不做三维展示就用不上;真要做时先读 3.1 节的成本估算,再看方案,顺序不能颠倒——三维的真实成本多数落在建模资产与美术流程上,不在代码。</li>
 <li><strong>可以先放过第 13 章。</strong>产品不开放扩展能力时它没有落点;它与第 12 章有依赖,不可信脚本的隔离要与凭据、文件访问一起考虑。</li>
-<li><strong>不能放过第 0 章与第 18 章。</strong>前者是全书判据的来源,后者是判据的索引;中间十七章都可以按需取,这两章是框。</li>
+<li><strong>不能放过第 0 章与第 18 章。</strong>前者是全书判据的来源,后者把「自己写还是引现成」与依赖体检收口;中间十七章都可以按需取,这两章是框。</li>
 </ul>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 三条路线都要先读完第 0 章,它是其余十七章共用的判据来源</span><p>后面每一章的对比表都在用它的结论:授权一列用的是第 0.2 节的四类划分,依赖成本一列用的是第 0.3 节的四种集成方式,维护状态一列用的是第 0.1 节的四个量,退路那张表用的是第 0.5 节的四种停更形态。跳过之后读到的是一张张结论表,而不是判据;表里的方案换了一个,或者需求偏离了书里的设定,就推不下去。</p></div>
 <h2 id="c0-eval">0.1 评估一个第三方库:七个维度</h2>
@@ -1359,99 +1339,11 @@ ChartView::~ChartView() = <span class="kw">default</span>;            <span clas
 <li><strong>提前具备导出中间格式的能力。</strong>能把当前数据导成通用的文本或表格格式,迁移时就有了逐项比对的手段,这也是双跑对比的前提。</li>
 </ul>
 <p>这三条与隔离层是两件事:隔离层管的是代码的波及范围,这三条管的是数据的可移植性。<strong>可以不做隔离层,但数据的出口一定要留。</strong></p>
-<h2 id="c0-sum">0.6 小结:引入前的检查清单</h2>
-<p>这一章讲的是引入一个第三方库之前要做完的事:评估、许可证核实、选择集成方式、写好构建配置、留下退路。从第 1 章开始,每一章都会按同一套结构讨论一类具体需求。</p>
-<p>本章的结论压缩成三样东西:一份检查清单、一张否决表、一张按症状反查的定位表。</p>
-<p>贯穿全章的判断只有一条:<strong>引入一个第三方库,买到的是一段时间的开发速度,付出的是一份长期的维护责任</strong>。前者在引入当天兑现,后者分摊在此后的每一次工具链升级、每一次授权核实、每一次上游停滞里。这一章的全部方法都是为了把后者从一个未知量变成一个能写进记录的数。</p>
-<h3>引入前的检查清单</h3>
-<p>逐项走完,每一项都要有可以贴进记录的证据,而不是一个判断。清单不长,走完一遍通常在半天之内;真正花时间的是其中的第七项与第十项,它们各需要一个人独立做完一件完整的事。</p>
-<ol>
-<li><strong>确定这次引入的性质。</strong>叶子依赖还是骨架依赖,产物会不会随程序发布,出问题时谁负责读它的源码。</li>
-<li><strong>量维护状态。</strong>近 12 个月的提交数与提交者数、发布间隔中位数、最近一次发布距今时长、有没有适配性提交。</li>
-<li><strong>核实许可证。</strong>库自身、全部传递依赖、源码树里内嵌的第三方代码,三处都要查。</li>
-<li><strong>量依赖成本。</strong>新增的动态库、二进制体积增量、编译时间增量、是否引入第二套构建系统。</li>
-<li><strong>看接口稳定性。</strong>版本号规则、废弃期、头文件公开了多少实现细节。</li>
-<li><strong>看社区规模。</strong>独立贡献者数、发行版收录情况、问答站点近一年提问量。</li>
-<li><strong>做一次真实修复。</strong>从它的 issue 里挑一个已确认未修复的问题,自己定位并写补丁。</li>
-<li><strong>量替换成本的基准。</strong>你的头文件里会出现它的类型的处数,以及它会不会产生需要长期读回的数据。</li>
-<li><strong>选定集成方式。</strong>按升级成本、构建复杂度、可修改性、离线构建四维决定。</li>
-<li><strong>写好构建配置并验证离线构建。</strong>在一台断网的干净机器上从零构建一次。</li>
-<li><strong>接四个接口点。</strong>对象树归属、信号槽桥接、样式与主题、高分屏与国际化,逐条验。</li>
-<li><strong>写下退路。</strong>四种停更形态各自的处理、评估时的第二名、要不要抽隔离层、数据出口在哪。</li>
-</ol>
-<h3>一票否决项</h3>
-<p>命中任意一条,这个方案不参与后续比较。<strong>否决项要在评估的最前面查,不要等到写完接入示例才发现。</strong>顺序上先查授权与构建自足性,这两项花的时间最短,排除力最强。</p>
-<table style="contain-intrinsic-size:auto 324px">
-<thead><tr><th>否决项</th><th>怎么查</th><th>为什么不能让步</th></tr></thead>
-<tbody>
-<tr><td class="nw">授权与发布方式冲突且买不到商业授权</td><td class="nw">授权文件加发布方式</td><td>发布之后无法补救</td></tr>
-<tr><td class="nw">构建依赖作者私有的基础设施</td><td class="nw">在干净机器上从零构建一次</td><td>上游停更当天你就失去构建能力</td></tr>
-<tr><td class="nw">要求你更换编译器或降低 C++ 标准版本</td><td class="nw">读它的构建要求</td><td>波及整个工程,不是一个依赖的事</td></tr>
-<tr><td class="nw">它的文件格式已经成为你的对外格式,且没有导出手段</td><td class="nw">看用户文件是谁写出来的</td><td>替换时用户手里的数据无法迁移</td></tr>
-<tr><td>除作者外无人提交过代码,且核心代码规模超出你能接手的量级</td><td class="nw">贡献者列表加代码行数统计</td><td>既无外部支持,也无法自救</td></tr>
-</tbody>
-</table>
-<h3>本章提到的工具:怎么查它今天的状态</h3>
-<p>时效性对策在这里落地:表里不写版本号与日期,写<strong>查证方法</strong>。API 会变,判据不会。</p>
-<table style="contain-intrinsic-size:auto 288px">
-<thead><tr><th>工具</th><th>授权怎么查</th><th>状态怎么查</th><th>它不可用时的退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">CMake 的 FetchContent</td><td>随 CMake 本体,查 CMake 的授权</td><td>查 CMake 发布说明里该模块的变更</td><td>退回手工下载加 <code>add_subdirectory</code></td></tr>
-<tr><td class="nw">vcpkg</td><td>查仓库根目录的授权文件</td><td>查端口目录的提交记录,单个端口可能长期无人维护</td><td>该端口失效时改用 FetchContent 或内嵌</td></tr>
-<tr><td class="nw">Conan</td><td>查仓库根目录的授权文件</td><td>查中心仓库里该配方的最近更新</td><td>同上,或自己写配方放进内部仓库</td></tr>
-<tr><td class="nw">Qt 官方安装器与模块</td><td>查每个模块文档页底部的授权段</td><td>查该模块在近几个版本发布说明里的条目</td><td>模块被移除时按官方迁移指南转到替代模块</td></tr>
-</tbody>
-</table>
-<p>后面每一章的小结都有一张同样结构的表,覆盖那一章讨论过的具体方案。表里刻意不写版本号、发布日期与收藏数,因为这三样在书出版之后立刻开始失效,而查它们的方法不会失效。</p>
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 方案表里写查证方法,不写版本号与日期,这样它才不会过期</span><p>一本讲选型的书最容易失效的部分是具体数字。做法是把「最近一次发布是哪一年」换成「怎么查最近一次发布」,把「有多少人在用」换成「怎么量下游使用情况」。读者拿到的是可以在任何时间点重新执行一遍的动作。</p></div>
-<h3>症状反查:构建与发布阶段的常见现象</h3>
-<p>下面这张表按现象排列,适合已经出了问题、但不确定该看哪一节的情形。</p>
-<table style="contain-intrinsic-size:auto 370px">
-<thead><tr><th>症状</th><th>可能的根因</th><th>去看哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">新人克隆之后编译报找不到头文件,目录是空的</td><td>用了 Git 子模块但克隆时没有递归拉取</td><td>0.3 节</td></tr>
-<tr><td class="nw">CMake 报找不到配置文件</td><td>走的是配置模式而前缀路径没有指向安装目录</td><td>0.4 节</td></tr>
-<tr><td class="nw">CMake 报找不到查找模块</td><td>这个库没有提供 CMake 配置文件</td><td>0.4 节</td></tr>
-<tr><td class="nw">链接期报缺少符号,符号名与 Qt 模块相关</td><td>少链接了一个 Qt 模块,例如打印支持</td><td>0.4 节</td></tr>
-<tr><td class="nw">不同机器构建出的产物行为不同</td><td>版本没有固定:标签被移动,或包管理器缺少基线</td><td>0.4 节</td></tr>
-<tr><td class="nw">打包机构建失败,开发机正常</td><td>依赖需要联网获取,而打包机不能访问外网</td><td>0.4 节</td></tr>
-<tr><td class="nw">链接通过但运行期在跨库边界处崩溃</td><td>预编译二进制与你的编译器或标准库版本不匹配</td><td>0.3 节</td></tr>
-<tr><td class="nw">法务在发布前提出授权问题</td><td>传递依赖或内嵌的第三方代码没有纳入核实</td><td>0.2 节</td></tr>
-<tr><td class="nw">升级第三方库之后本地修改全部丢失</td><td>本地修改直接改在源码里,没有做成补丁</td><td>0.3 节</td></tr>
-</tbody>
-</table>
-<h3>依赖健康度:把重跑评估变成一条命令</h3>
-<p>评估表的价值取决于它有没有被重跑。让它变成一条能进持续集成的命令,重跑的成本才足够低。下面这段脚本把每个依赖的两个关键指标打出来,输出可以直接贴进评审记录。</p>
-<pre style="contain-intrinsic-size:auto 374px"><code>#!/usr/bin/env bash
-# 用法:deps-health.sh &lt;依赖清单文件&gt;,每行一个 OWNER/REPO
-set -euo pipefail
-
-printf <span>'%-34s %8s %8s %s\n'</span> 仓库 近年提交 贡献者 最近发布
-<span class="kw">while</span> read -r repo; <span class="kw">do</span>
-  [ -z <span>"$repo"</span> ] &amp;&amp; <span class="kw">continue</span>
-  commits=$(gh api <span>"repos/$repo/commits?since=$(date -u -d '12 months ago' +%FT%TZ)&amp;per_page=100"</span> --jq <span>'length'</span>)
-  authors=$(gh api <span>"repos/$repo/contributors?per_page=100"</span> --jq <span>'length'</span>)
-  latest=$(gh api <span>"repos/$repo/releases/latest"</span> --jq <span>'.published_at'</span> 2&gt;/dev/null || echo 无发布)
-  printf <span>'%-34s %8s %8s %s\n'</span> <span>"$repo"</span> <span>"$commits"</span> <span>"$authors"</span> <span>"$latest"</span>
-done &lt; <span>"$1"</span></code></pre>
-<p>输出里要盯的是变化量,不是绝对值。<strong>近年提交数比上一次统计明显下降、最近发布距今超过一年,这两条同时出现时,就到了启动退路文件里那条触发条件的时候。</strong>把这条命令放进版本发布前的固定检查项,依赖健康度的完整体检流程在第 18 章。</p>
-<h3>与后面各章的连接</h3>
-<p>这一章给的是通用框架,后面每一章都是它在一类具体需求上的实例。</p>
-<table style="contain-intrinsic-size:auto 149px">
-<thead><tr><th>接下来</th><th>它把本章的哪一部分具体化</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 1 章 画图表:静态图与交互</td><td>四个图表方案的七维评估与授权对比,以及各自的完整接入示例</td></tr>
-<tr><td class="nw">第 2 章 画图表:实时刷新与大数据量</td><td>同样四个方案在规模上的边界,也就是评估表里「什么规模下垮掉」那一格</td></tr>
-<tr><td class="nw">第 3 章 三维与空间数据</td><td>一个方案处于维护状态时,判据与迁移路径怎么给</td></tr>
-</tbody>
-</table>
-<p>后面每一章都按同一套七段结构展开:先讲清这一类需求分几种、判据是什么,再把三到四个方案放进同一张对比表,然后逐个给接入步骤与两种形态的完整示例,接着按四个接口点逐条对照,最后是边界与坑、维护状态与退路。<strong>读的时候可以只看对比表与小结,需要动手时再回到接入步骤与示例。</strong></p>
-<p>与姊妹书的分工也在这里说明:Qt 自身的机制,包括对象树、信号槽、事件系统与样式表,主场在《Qt 核心与 Widget》,本书只在接口点处引用结论;声明式界面与 QML 的部分,主场在《Qt Quick 与 QML》;性能测量的方法与工具,主场在《Qt 性能优化》,本书给的是各方案的规模边界而不是调优流程。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 评估记录与依赖清单一起进版本库,和代码同等对待</span><p>包括三样:评估表、否决项核对结果、退路方案。它们的价值在两年后:有人问「当时为什么选它」「现在能不能换」,答案在文件里而不在某个人的记忆里。这份记录随依赖升级一起更新,与第三方声明清单放在同一个目录下。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 50823px;--thin-h:50823px">
+<section class="chapter" style="contain-intrinsic-size:auto 47135px;--thin-h:47135px">
 <h1 id="c1"><span class="part">第 1 章</span>画图表(一):静态图与交互</h1>
+<p>把数据画成图表几乎是每个桌面产品都会遇到的需求,跨度却极大:从随报告导出的静态折线,到带缩放、游标与框选的分析界面。本章先把需求拆成能量出来的七个量,再把 Qt Charts、QCustomPlot、Qwt 与 <code>QPainter</code> 自绘四个方案放进同一张对比表,取舍集中在数据量、交互深度与授权三条线上;随后逐个给出接入步骤与两级示例,最后把缩放、游标、图例这些交互还原成四方案共用的坐标变换。</p>
 <h2 id="c1-need">1.1 画图表的需求分几类</h2>
 <p>「要画个图表」是产品需求里最容易被低估的一句话。它可能是一张随报告导出的静态折线图,也可能是一个要在十万点数据上做缩放、游标读数与框选标注的分析界面。<strong>这两种需求对应的方案不同、工作量差十倍以上,而且选错之后很难回头。</strong></p>
 <p>「画个图表」可以拆成七个能量出来的量,与具体用哪个库无关。量完之后,下一节的四个方案里通常已经有一半被排除掉了。</p>
@@ -2693,99 +2585,11 @@ QRectF MiniPlot::plotRect() <span class="kw">const</span>
 <p>这张表把 1.2 节那句「交互完成度」变成了具体条目。<strong>需要全部六种交互时,自绘的工作量大约是两到三周</strong>,而 QCustomPlot 与 Qwt 分别只需要打开若干开关或挂上若干对象。这个差距是选型时最实在的一项。</p>
 <p>表里还有一条隐含信息:<strong>Qt Charts 在交互这一列的空格最多</strong>。它的定位偏向展示,交互能力止步于框选与图例信号。需求里有游标读数与逐级回退时,选它意味着这两项要自己在图表上叠图形项实现,而图形项的坐标要自己在场景坐标与数据坐标之间换算。这份工作量在选型阶段要算进去。</p>
 <div class="note old" style="contain-intrinsic-size:auto 131px"><span class="t">🟡 把交互一项项自己实现,只在图种特殊或授权受限时才划算</span><p>自绘的六种交互加起来是两到三周的工作量,而且第一版通常在边界条件上不完整:缩放到极限、拖动越界、游标在数据空隙处的行为。只有当现成方案因为图种或授权无法使用时,这份成本才是必要的。</p></div>
-<h2 id="c1-sum">1.7 小结:选型速查</h2>
-<p>这一章把画图表这件事拆成了需求、方案、接入、交互四层。<strong>结论是:授权先筛一遍,数据量与交互深度定档次,图种决定有没有例外。</strong></p>
-<p>这一节把全章压成四张表:按需求查方案、四个方案的接入清单、按症状反查、以及授权与维护状态的查证表。</p>
-<h3>选型速查:按需求查方案</h3>
-<p>这张表的用法是从左列找到与你最接近的一行,再回到对应小节确认前提是否成立。<strong>表里的首选不是绝对结论,它假定你的需求只有左列那一条</strong>;需求跨了两行时,取限制更严的那一个。</p>
-<table style="contain-intrinsic-size:auto 372px">
-<thead><tr><th>你的情形</th><th>首选</th><th>理由与前提</th></tr></thead>
-<tbody>
-<tr><td class="nw">有 Qt 商业授权,数据量在万点以内,图种常规</td><td class="nw">Qt Charts</td><td>与 Qt 其余部分一致,团队上手最快,发布时多带一个模块</td></tr>
-<tr><td class="nw">需要深度交互,或数据量在十万点级别</td><td class="nw">QCustomPlot</td><td>内置抽稀与完整交互。前提是购买商业授权,或产品本身按 GPL 发布</td></tr>
-<tr><td class="nw">闭源发布且不购买任何商业授权</td><td class="nw">Qwt</td><td>授权是它最实在的优势。接入成本最高,大数据量要自己抽稀</td></tr>
-<tr><td class="nw">需要仪表控件或频谱图</td><td class="nw">Qwt</td><td>另外三个方案都没有现成的仪表控件</td></tr>
-<tr><td class="nw">只要一个迷你趋势图</td><td class="nw">自绘</td><td>不需要坐标轴与交互时,几十行代码优于任何库</td></tr>
-<tr><td class="nw">图种特殊,例如甘特、瀑布、状态带</td><td class="nw">自绘</td><td>现成方案的坐标系统在这类图上帮不上忙</td></tr>
-<tr><td class="nw">界面走 Qt Quick</td><td class="nw">见姊妹书</td><td>Quick 侧的图表方案与本章不同,详见《Qt Quick 与 QML》</td></tr>
-</tbody>
-</table>
-<h3>四个方案的接入清单</h3>
-<table style="contain-intrinsic-size:auto 212px">
-<thead><tr><th>方案</th><th>构建配置</th><th>最容易漏的一步</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt Charts</td><td><code>find_package</code> 加 <code>Charts</code> 组件,链接对应目标</td><td>安装器里勾选这个组件;第三方声明清单里单独列出它的授权</td></tr>
-<tr><td class="nw">QCustomPlot</td><td>两个源文件加进目标,链接打印支持模块</td><td>链接打印支持模块;为这个源文件单独放宽警告</td></tr>
-<tr><td class="nw">Qwt</td><td>先用 qmake 构建成库,再包装成导入目标</td><td>构建 Qwt 与构建工程要用同一套编译器与 Qt 版本</td></tr>
-<tr><td class="nw">自绘</td><td class="nw">无</td><td>坐标变换的四个函数要先写出来,交互建立在它们之上</td></tr>
-</tbody>
-</table>
-<h3>交互与图种的对照回顾</h3>
-<p>1.6 节那张交互对照表与 1.1 节的图种表合起来,可以快速判断一个方案够不够用。判断顺序是:先看图种有没有内置,再看交互要自己写几种。</p>
-<ul>
-<li><strong>图种缺失比交互缺失更难补。</strong>缺一种交互是几天的工作,缺一种图种往往意味着要与库的坐标系统对抗,反而不如另选方案。</li>
-<li><strong>交互要按六项逐条核对,不要按印象。</strong>「支持缩放」这句话在三个库里指的不是同一件事:有的只有框选,有的有滚轮与拖动,有的还带视图栈。</li>
-<li><strong>游标是最容易被低估的一项。</strong>它要处理最近点查找、读数格式化、边缘避让三件事,自己实现时的实际工作量比预期大。</li>
-</ul>
-<p>还有一条不在表里的判据:<strong>团队里有几个人能改它</strong>。四个方案的学习曲线不同,但更重要的是文档形态:Qt Charts 与 QCustomPlot 有成体系的教程,Qwt 以接口参考为主,自绘没有文档但也没有概念。项目要维护五年以上时,这一项的权重比接入便利高。</p>
-<h3>症状反查</h3>
-<p>下面这张表按现象排列,适合已经写出代码、但行为与预期不符的情形。</p>
-<table style="contain-intrinsic-size:auto 444px">
-<thead><tr><th>症状</th><th>可能的根因</th><th>去看哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">构建报找不到 Charts 组件</td><td>安装 Qt 时没有勾选这个组件</td><td>1.3 节</td></tr>
-<tr><td class="nw">链接期报一批与打印相关的缺符号</td><td>接入 QCustomPlot 时漏了打印支持模块</td><td>1.4 节</td></tr>
-<tr><td class="nw">深色主题下图表底色仍是白的</td><td>图表内部不认样式表,配色要用代码设置</td><td>1.3 与 1.4 节</td></tr>
-<tr><td class="nw">导出的图打印出来模糊</td><td>走了截屏式导出,没有在矢量设备上重画</td><td>1.1 与 1.3 节</td></tr>
-<tr><td class="nw">滚轮放大时目标跑出屏幕</td><td class="nw">缩放没有以光标位置为不动点</td><td>1.6 节</td></tr>
-<tr><td class="nw">放大到很深之后整张图消失</td><td>量程宽度收缩到零,后续换算产生非法值</td><td>1.6 节</td></tr>
-<tr><td class="nw">拖动速度与缩放级别不匹配</td><td>位移在像素坐标里累加,没有换算成数据坐标</td><td>1.6 节</td></tr>
-<tr><td class="nw">关掉一条曲线后其余曲线挤在底部</td><td>自动量程仍然统计了不可见的系列</td><td>1.6 节</td></tr>
-<tr><td class="nw">鼠标移动时界面发滞</td><td class="nw">游标用线性扫描查找最近点</td><td>1.6 节</td></tr>
-<tr><td class="nw">数据更新时界面持续重绘</td><td class="nw">图表的动画选项没有关掉</td><td>1.3 节</td></tr>
-<tr><td class="nw">切换主题后自定义颜色丢失</td><td>主题切换会重设画笔与画刷,要重新应用</td><td>1.3 节</td></tr>
-</tbody>
-</table>
-<h3>本章方案:授权与维护状态查证表</h3>
-<table style="contain-intrinsic-size:auto 262px">
-<thead><tr><th>方案</th><th>授权怎么查</th><th>维护状态怎么查</th><th>停更或不可用时怎么办</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt Charts</td><td>模块文档页底部的授权段;Qt 的许可证汇总页</td><td>版本发布说明里该模块的条目;官方新图表模块的文档页</td><td>按官方迁移指南转到替代模块,或转向本表其余方案</td></tr>
-<tr><td class="nw">QCustomPlot</td><td>发布包内的授权文件与源文件头</td><td>下载页的变更日志;新 Qt 主版本适配出现的时间</td><td>源码已在仓库里,按第 0 章的补丁流程自行维护</td></tr>
-<tr><td class="nw">Qwt</td><td>发布包内的授权文件,注意其中的例外条款</td><td>代码托管平台的提交与发布记录</td><td>同上,但代码规模更大,接手前先按实测方法评估</td></tr>
-<tr><td class="nw">QPainter 自绘</td><td>只涉及 Qt 基础模块的授权</td><td>不适用</td><td>不适用</td></tr>
-</tbody>
-</table>
-<p>这张表不写版本号与日期,写的是查证方法,原因见第 0 章的小结。<strong>引入任何一个方案之前,自己把这三列走一遍</strong>,不要照抄任何二手资料,包括本书。走一遍的成本是半小时,而结论的有效期是这个项目的整个生命周期。</p>
-<p>授权那一列还有一处要单独确认:<strong>你的产品是否确实会发生分发</strong>。做成公司内部使用的工具、只在自己的机器上运行时,GPL 的源码提供义务不触发,这时四个方案的授权维度是等价的。判据与例外见第 0 章。</p>
-<h3>从选型到跑通:七步顺序</h3>
-<p>选定方案之后,按下面的顺序做,每一步都能独立验证,出问题时容易定位。</p>
-<ol>
-<li><strong>先跑通最小形态。</strong>一个空工程加一条固定数据的曲线,确认构建配置正确、窗口里有图。这一步不要接真实数据。</li>
-<li><strong>接真实数据,但用固定的一批。</strong>从文件或内存里读一批真实数据画出来,确认量程、刻度与标签的形态符合预期。</li>
-<li><strong>把图表包进自己的部件类。</strong>头文件里不出现第三方类型,对外只暴露你用到的操作。这一步做得越早越省事。</li>
-<li><strong>按四个接口点逐条对照。</strong>对象树归属、信号槽桥接、样式与主题、高分屏与国际化,每一项写一段验证代码。</li>
-<li><strong>加交互,一项一项加。</strong>按 1.6 节那六项的顺序,每加一项就在真实数据上试一遍边界条件。</li>
-<li><strong>做导出。</strong>矢量与位图各出一份,打印一次确认清晰度与字体。</li>
-<li><strong>换环境验一遍。</strong>切到 150% 缩放、切到深色主题、切到另一种区域设置各跑一次,再在一台没有独立显卡的机器上跑一次。</li>
-</ol>
-<p>第三步与第七步最容易被跳过,而它们是后期返工的两个主要来源。<strong>第三步跳过的代价在换方案时出现,第七步跳过的代价在用户机器上出现。</strong></p>
-<h3>与后面各章的连接</h3>
-<p>本章讨论的是静态图与交互,两个话题留给了后面。</p>
-<table style="contain-intrinsic-size:auto 149px">
-<thead><tr><th>接下来</th><th>它解决本章留下的什么问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 2 章 实时刷新与十万点以上</td><td>四个方案在不同数据量下的分界、抽稀算法、GPU 后端、增量更新与分层缓存</td></tr>
-<tr><td class="nw">第 3 章 三维与空间数据</td><td>需要三维展示时的方案与它的真实成本,以及为什么多数需求用二维图更合适</td></tr>
-<tr><td class="nw">第 4 章 表格与电子表格</td><td>读数需求用表格承载时的定制手段,以及图表与表格并列的形态</td></tr>
-</tbody>
-</table>
-<p>与姊妹书的分工:<code>QPainter</code> 的绘制机制、绘图设备与坐标变换,主场在《Qt 核心与 Widget》,本章只用它的结论;图表在大数据量下的性能测量方法与剖析工具,主场在《Qt 性能优化》,本书第 2 章给的是规模分界与做法,不展开测量流程。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 把图表调用集中在一个自己的部件类里,是本章最值得先做的一件事</span><p>四个方案的接口差别很大,而选型结论会随需求变化。第 0 章那个隔离层的例子在这里就是可以直接照抄的形态:头文件里不出现任何第三方类型,替换方案时只改一个实现文件。这件事在接入当天做,成本几乎为零。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 33822px;--thin-h:33822px">
+<section class="chapter" style="contain-intrinsic-size:auto 29852px;--thin-h:29852px">
 <h1 id="c2"><span class="part">第 2 章</span>画图表(二):实时刷新与十万点以上</h1>
+<p>第 1 章的选型结论都有一个前提:数据量落在方案的可行区间内。数据以每秒上千点持续到达、累计到十万点以上时,任何方案的默认用法都会垮,本章解决的就是这一段。取舍的角度从「选哪个库」转为「怎么用有限的绘制预算撑住数据」:先实测四个方案各自的退化分界,再依次给出抽稀、OpenGL 后端、增量更新与分层缓存四个手段,每个手段都写明收益来自哪里、代价落在哪里、什么时候不该用。</p>
 <h2 id="c2-scale">2.1 数据量到多大会垮:四个方案的实测分界</h2>
 <p>第 1 章的选型结论有一个前提:数据量在方案的可行区间内。这一节回答的是那个区间的右边界在哪。<strong>问题不是「能不能画出来」——四个方案都能把一百万个点画成一张图;问题是画完之后还能不能拖动它。</strong></p>
 <p><strong>下面给的分界是量级,不是精确数字</strong>:它随机器、窗口尺寸与绘制选项变化,差别可以到几倍。所以先写清测量条件,再拆开每个点的成本,最后给一段能在自己机器上跑的基准代码——换台机器重新量一遍,比引用任何一个数字都可靠。</p>
@@ -3514,100 +3318,11 @@ LiveChart::LiveChart(QWidget *parent) : QCustomPlot(parent)
 <p>这三条合起来的效果是:<strong>除了分配与设置那两行,其余绘制代码不需要知道设备像素比的存在</strong>。这是高分屏适配里最省事的写法,也是唯一不容易出错的写法。</p>
 <p>线宽是一个例外:一像素的细线在高分屏上按逻辑坐标画出来会是物理上的两像素或更多。需要「永远一个物理像素」的分隔线时,把线宽设为设备像素比的倒数。</p>
 <p>还有一处与缓存无关但同属高分屏范畴:<strong>缓存图片的内存占用按物理像素算</strong>。一块 3840 乘 2160 的屏幕上全屏显示的图表,一张四通道的缓存图片就是三十几兆字节。一个界面里放四五个这样的图表时,这份开销要计入预算,必要时只给最大的那一个做分层。</p>
-<h2 id="c2-sum">2.6 小结</h2>
-<p>这一章讲的是数据量与刷新频率变大之后要做的事。<strong>四个手段有固定的先后顺序,顺序错了会付出不必要的代价。</strong></p>
-<p>这一节把全章压成四样:一个优化顺序、一张按需求查手段的表、一张症状反查表,以及本章方案的维护状态与退路。</p>
-<h3>优化顺序:五步,不要跳步</h3>
-<ol>
-<li><strong>先量,确定瓶颈在哪一段。</strong>载入、绘制、交互三段分别计时。三个数出来之前不要动任何代码,2.1 节给了可以直接用的基准代码。</li>
-<li><strong>减少点数。</strong>抽稀是收益最大、风险最小的一步,可以把点数降两个数量级,而且没有任何部署风险。见 2.2 节。</li>
-<li><strong>减少重绘次数。</strong>批量提交、定时驱动、合并重绘请求。实时场景下这一步的收益与抽稀相当。见 2.4 节。</li>
-<li><strong>减少重复绘制。</strong>分层缓存,把每帧不变的内容画一次存起来。见 2.5 节。</li>
-<li><strong>最后才考虑 GPU。</strong>它的收益最大,但代价在部署与功能上,而且前四步做完之后往往已经不需要它。见 2.3 节。</li>
-</ol>
-<p>顺序的理由是<strong>风险与收益的比值</strong>:前四步都是纯软件手段,在任何机器上表现一致;GPU 路径的收益取决于目标机器的驱动,而这一项你无法在开发机上验证。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 优化顺序是先量、再减点数、再减重绘次数、再减重复绘制,最后才是 GPU</span><p>前四步没有部署风险,GPU 有。而且前四步的收益是叠加的:抽稀降两个数量级,批量提交降一个,分层缓存再降一半到八成。多数项目做完前四步就已经达标,不必承担 GPU 路径带来的驱动与导出问题。</p></div>
-<h3>四个手段各自能降多少</h3>
-<p>把四个手段的收益放在一起,便于判断做到哪一步就可以停下。下面给的是量级,前提是本章开头那组测量条件。</p>
-<table style="contain-intrinsic-size:auto 287px">
-<thead><tr><th>手段</th><th>降的是什么</th><th>量级</th><th>代价</th></tr></thead>
-<tbody>
-<tr><td class="nw">抽稀</td><td>提交给绘制的点数</td><td>十万点降到几千点,两个数量级</td><td>算法要正确,尤其是边界;抽稀结果要随范围重算</td></tr>
-<tr><td class="nw">批量提交与定时驱动</td><td>每秒的重绘次数</td><td>每秒上千次降到三十次,一到两个数量级</td><td>要引入缓冲与定时器,结构变复杂</td></tr>
-<tr><td class="nw">分层缓存</td><td>每帧重复绘制的内容</td><td>带网格与历史曲线时省下大部分绘制成本</td><td>多占一份图片内存;缓存失效要处理正确</td></tr>
-<tr><td class="nw">GPU 路径</td><td>每个点的绘制成本</td><td>一个数量级左右,取决于驱动</td><td>矢量导出、层叠、部署环境三处都要重新验</td></tr>
-</tbody>
-</table>
-<p>从这张表能读出一条实用的结论:<strong>前三个手段的收益是相乘的,而它们互不冲突</strong>。点数降两个数量级、重绘次数降一个数量级、每次重绘再省掉大部分静态内容,三者叠加之后,原本完全不可用的场景通常已经进入流畅区间。</p>
-<p>反过来,如果前三个手段都做完仍然达不到目标,那么问题多半不在绘制:去查载入、格式转换、或者数据准备的那一段。2.1 节的三段计时就是为这个判断准备的。</p>
-<h3>按需求查手段</h3>
-<table style="contain-intrinsic-size:auto 296px">
-<thead><tr><th>你的情形</th><th>首选手段</th><th>去看哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">一万点以内,不需要实时刷新</td><td class="nw">不需要任何优化</td><td>第 1 章直接选方案</td></tr>
-<tr><td class="nw">十万点,静态显示与交互</td><td class="nw">抽稀,首选极值保留</td><td>2.2 节</td></tr>
-<tr><td class="nw">一百万点,静态显示与交互</td><td class="nw">抽稀加分层缓存</td><td>2.2 与 2.5 节</td></tr>
-<tr><td class="nw">每秒上千个点持续到达</td><td>批量提交加定时驱动,配合滚动窗口</td><td>2.4 节</td></tr>
-<tr><td class="nw">带游标的分析界面,交互要跟手</td><td class="nw">分层缓存,把游标放前景层</td><td>2.5 节</td></tr>
-<tr><td class="nw">一百万点以上的实时波形,部署环境可控</td><td class="nw">前四步做完之后再上 GPU</td><td>2.3 节</td></tr>
-<tr><td class="nw">数据在远端或超过内存容量</td><td>抽稀下沉到数据源侧,按区间聚合后返回</td><td>2.2 节</td></tr>
-</tbody>
-</table>
-<h3>症状反查</h3>
-<table style="contain-intrinsic-size:auto 480px">
-<thead><tr><th>症状</th><th>可能的根因</th><th>去看哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">放大之后曲线变成几条直线段</td><td class="nw">抽稀结果没有随可见范围重算</td><td>2.2 节</td></tr>
-<tr><td class="nw">图看起来正常,但已知的尖峰不见了</td><td class="nw">用了等距抽稀</td><td>2.2 节</td></tr>
-<tr><td class="nw">运行几十分钟后界面逐渐变卡,重启恢复</td><td>逐点追加加逐点重绘,代价随点数平方增长</td><td>2.4 节</td></tr>
-<tr><td class="nw">打开文件时长时间无反应,而绘制很快</td><td>瓶颈在载入与格式转换,不在绘制</td><td>2.1 节</td></tr>
-<tr><td class="nw">内存占用是数据本身的几倍</td><td class="nw">载入链条上有多次完整拷贝</td><td>2.1 节</td></tr>
-<tr><td class="nw">拖动时图像跟不上鼠标</td><td class="nw">单次重绘超过帧预算</td><td>2.2 与 2.5 节</td></tr>
-<tr><td class="nw">开了加速开关但没有变化</td><td class="nw">编译期的宏或模块没有补上</td><td>2.3 节</td></tr>
-<tr><td class="nw">在客户机器上比不开加速还慢</td><td>远程桌面或虚拟机里回退到软件实现</td><td>2.3 节</td></tr>
-<tr><td class="nw">开加速后导出的 PDF 变成一张图片</td><td class="nw">GPU 路径的输出是位图</td><td>2.3 节</td></tr>
-<tr><td class="nw">网格与坐标轴发虚,游标清晰</td><td class="nw">缓存没有随设备像素比变化重建</td><td>2.5 节</td></tr>
-<tr><td class="nw">数据中断处被画成一条平直的连线</td><td>断点没有插入无效值,折线把两侧连起来了</td><td>2.4 节</td></tr>
-<tr><td class="nw">采集负载高时出现随机崩溃</td><td>在采集线程里直接调用了图表对象</td><td>2.4 节</td></tr>
-</tbody>
-</table>
-<h3>本章方案的维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 262px">
-<thead><tr><th>手段</th><th>它依赖什么</th><th>风险</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">抽稀</td><td>你自己的代码,或方案内置的开关</td><td>自己写的算法要有单元测试,尤其是边界与空列</td><td>算法只有几十行,任何时候都能换一种</td></tr>
-<tr><td class="nw">批量提交与定时驱动</td><td>Qt 的定时器与线程机制</td><td>无外部依赖</td><td>不适用</td></tr>
-<tr><td class="nw">分层缓存</td><td>方案的图层能力,或自己管理的图片缓存</td><td>方案内置的图层接口随版本可能变化</td><td>退回自己管理缓存,代码在 2.5 节</td></tr>
-<tr><td class="nw">GPU 路径</td><td>图形驱动与方案的加速实现</td><td>驱动差异不可控,加速实现的限制清单随版本变化</td><td>做成可回退的配置项,默认关闭</td></tr>
-</tbody>
-</table>
-<p>表里最后一行值得单独强调:GPU 路径是本章唯一一个<strong>把风险转移到运行环境上</strong>的手段。前三个手段的行为在任何机器上都一致,而它的收益取决于目标机器的驱动实现,这一点在开发机上无法验证。因此它不仅要可回退,还要能从日志里看出当时走了哪条路径。</p>
-<p>这张表与前两章的同类表不同:<strong>本章的手段多数不引入新的第三方依赖</strong>,风险集中在自己写的算法与目标机器的驱动上。前者靠测试覆盖,后者靠可回退的配置项。</p>
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 抽稀算法要写单元测试,重点是空列、单点列与全部相等三种边界</span><p>这三种情况在真实数据里都会出现:传感器停止上报形成空列,采样稀疏时一列只有一个点,信号平稳时一列里的值全部相等。三种情况分别对应「跳过还是补点」「输出一个还是两个」「最小与最大是同一个点」三个判断。测试写十几行,能挡住抽稀里最常见的三类缺陷。</p></div>
-<h3>一条贯穿本章的判断</h3>
-<p>本章的每一个手段都在回答同一个问题:<strong>这一次绘制里,有多少工作最终没有出现在屏幕上</strong>。</p>
-<ul>
-<li><strong>抽稀回答的是「有多少个点画在了同一列像素上」。</strong>答案是绝大多数,所以只保留每列的极值。</li>
-<li><strong>批量提交回答的是「有多少次重绘在下一次重绘之前就被覆盖了」。</strong>答案是数据频率与刷新频率之比,所以按固定频率驱动。</li>
-<li><strong>分层缓存回答的是「有多少内容与上一帧完全相同」。</strong>答案是网格、坐标轴与历史曲线,所以把它们画一次存起来。</li>
-<li><strong>GPU 路径回答的是另一个问题:「这些工作能不能换个地方做」。</strong>它不减少工作量,只换执行者,所以它排在最后。</li>
-</ul>
-<p>遇到本章没有覆盖的新场景时,按这个问题去分析通常能找到方向。<strong>先问哪些工作是白做的,再问怎么不做</strong>,而不是先问怎么让它快一点。</p>
-<h3>与后面各章的连接</h3>
-<table style="contain-intrinsic-size:auto 149px">
-<thead><tr><th>接下来</th><th>它解决什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 3 章 三维与空间数据</td><td>需要三维展示时的方案与真实成本,以及为什么多数需求二维图更合适</td></tr>
-<tr><td class="nw">第 4 章 表格与电子表格</td><td>大数据量以表格形式呈现时的定制与导出</td></tr>
-<tr><td class="nw">第 16 章 日志与线上诊断</td><td>把本章的渲染耗时与帧率记进日志,用于判断线上机器实际走的是哪条路径</td></tr>
-</tbody>
-</table>
-<p>与姊妹书的分工:性能测量的方法、剖析工具的用法与结果判读,主场在《Qt 性能优化》,本章只给了一段最小的基准代码与量级参考;渲染管线、重绘区域与双缓冲的机制,主场在《Qt 核心与 Widget》,本章用的是它的结论。</p>
-<p>本章还有一条贯穿全书的结论值得单独记下:<strong>图表的性能问题几乎全部可以归结为「画了看不见的东西」</strong>。看不见的点、看不见的重复绘制、看不见的重绘次数。每一处优化都是在回答同一个问题:这一次绘制里,有多少工作最终没有出现在屏幕上。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 28232px;--thin-h:28232px">
+<section class="chapter" style="contain-intrinsic-size:auto 25016px;--thin-h:25016px">
 <h1 id="c3"><span class="part">第 3 章</span>三维与空间数据</h1>
+<p>「加个三维视图」是最容易被轻率提出、也最被低估的需求:背后是一整条资源管线与一套相机交互设计。本章先给「二维能不能替代」的判据与真实成本清单,再按投入从低到高排开:主线 Qt Quick 3D、不该用于新项目的 Qt 3D、Qt Data Visualization 的三种现成图表、直接写 OpenGL 或 Vulkan 的边界。取舍角度不是画面效果,而是资源管线的长期成本与模块自身的维护状态。</p>
 <h2 id="c3-need">3.1 三维展示的需求与它的真实成本</h2>
 <p>三维展示是产品需求里最容易被轻易提出、也最容易被低估的一项。<strong>「加个三维视图」这句话背后是一整条资源管线、一套相机与拾取的交互设计,以及一个你无法在开发机上验证的部署前提。</strong></p>
 <p>三维需求可以分类,「二维能不能替代」有判据,成本也能一项项列出来。四个方案的接入与示例在后面几节。</p>
@@ -4228,91 +3943,11 @@ target_link_libraries(pointcloud PRIVATE Qt6::Gui)</code></pre>
 <p>退路很直接,也很有限:<strong>把渲染部件的对外接口设计成与具体图形接口无关</strong>,业务代码只调用「设置数据」「设置视角」「导出图片」这类操作。这样将来在三条路径之间切换、或者退回到现成方案时,改动集中在一个类里。</p>
 <p>这条隔离与第 0 章那个图表隔离层有一处不同:三维渲染部件的对外接口天然比图表窄,因为业务代码关心的只有数据、视角与导出三件事。<strong>接口窄意味着隔离的成本低</strong>,所以这一层几乎总是值得做,不必再按替换概率去权衡。</p>
 <p>还有一条准备工作值得做:<strong>保留一条不依赖图形硬件的降级显示</strong>。三维不可用时显示一张二维投影图或者一份数据摘要,比显示一块空白好得多,而这条降级路径在部署到受限环境时几乎必然用得上。</p>
-<h2 id="c3-sum">3.6 小结</h2>
-<p>这一章的结论比前两章更简单,因为三维方案之间不是同场竞争关系:<strong>需求类别基本决定了方案</strong>。真正需要判断的是要不要进入三维,以及进入之后准备承担什么。</p>
-<p>这一节给四样:选型速查、接入清单、症状反查,以及维护状态与退路的查证表。</p>
-<h3>选型速查</h3>
-<table style="contain-intrinsic-size:auto 285px">
-<thead><tr><th>你的情形</th><th>首选</th><th>前提与说明</th></tr></thead>
-<tbody>
-<tr><td class="nw">需要展示模型、做数字孪生或三维配置</td><td class="nw">Qt Quick 3D</td><td>新项目的三维场景默认选它;要接受引入 QML 的成本</td></tr>
-<tr><td class="nw">只要三维柱状、散点或曲面之一</td><td class="nw">三维数据可视化模块</td><td>接入成本最低;先查它与新图表模块的关系</td></tr>
-<tr><td class="nw">渲染方式本身是需求,或数据规模远超统计图表</td><td class="nw">自己写图形接口</td><td>前提是团队里长期有人能维护它</td></tr>
-<tr><td class="nw">已有 Qt 3D 代码且能力够用</td><td class="nw">保持不动</td><td>记录退路,每次升级 Qt 时重查状态</td></tr>
-<tr><td class="nw">需求本质上是读数值</td><td class="nw">回到第 1 章的二维方案</td><td>这是本章唯一的否决线</td></tr>
-<tr><td class="nw">界面主体是 Quick</td><td class="nw">Qt Quick 3D</td><td>三维与二维元素在同一棵树里,集成成本最低</td></tr>
-</tbody>
-</table>
-<h3>接入清单</h3>
-<table style="contain-intrinsic-size:auto 236px">
-<thead><tr><th>方案</th><th>构建配置</th><th>最容易漏的一步</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt Quick 3D</td><td>引入 Quick 与 Quick3D 组件,并声明 QML 模块</td><td>场景没有相机或光源时表现为空白或全黑</td></tr>
-<tr><td class="nw">三维数据可视化模块</td><td class="nw">引入对应组件,安装时勾选它</td><td>图表是窗口不是部件,要用容器包装;要显式检查图形环境</td></tr>
-<tr><td class="nw">Qt 3D</td><td class="nw">引入对应的若干组件</td><td>新项目不要选它;已有项目按 3.3 节处理</td></tr>
-<tr><td class="nw">自己写图形接口</td><td>引入图形与着色器工具组件,声明着色器文件</td><td>显存资源的创建与释放要绑定上下文生命周期</td></tr>
-</tbody>
-</table>
-<h3>症状反查</h3>
-<table style="contain-intrinsic-size:auto 370px">
-<thead><tr><th>症状</th><th>可能的根因</th><th>去看哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">三维视图一片空白</td><td>相机位置或朝向不对,模型不在视锥体内</td><td>3.2 节</td></tr>
-<tr><td class="nw">模型能看到轮廓但一片漆黑</td><td class="nw">场景里没有光源,或亮度为零</td><td>3.2 节</td></tr>
-<tr><td class="nw">模型大得看不见边界,或小成一个点</td><td class="nw">资源的单位与场景不一致</td><td>3.2 节</td></tr>
-<tr><td class="nw">模型躺着或者背对相机</td><td>资源的坐标系朝向与场景约定不一致</td><td>3.2 节</td></tr>
-<tr><td class="nw">三维图表位置留下一块空白,没有报错</td><td>图形环境不可用,而没有显式检查</td><td>3.4 节</td></tr>
-<tr><td class="nw">三维视图上的浮层被遮挡或不显示</td><td class="nw">图表是原生窗口,层叠受限</td><td>3.4 节</td></tr>
-<tr><td class="nw">在客户机器上完全显示不出来,开发机正常</td><td>远程桌面或虚拟机的图形能力不足</td><td>3.1 节</td></tr>
-<tr><td class="nw">退出程序时崩溃,或切换界面后画面空白</td><td class="nw">显存资源在错误的时机释放</td><td>3.5 节</td></tr>
-<tr><td class="nw">用户说在三维里找不到方向</td><td>缺少重置视角的入口与合理的初始视角</td><td>3.4 节</td></tr>
-</tbody>
-</table>
-<h3>维护状态与退路查证表</h3>
-<table style="contain-intrinsic-size:auto 287px">
-<thead><tr><th>方案</th><th>授权怎么查</th><th>状态怎么查</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt Quick 3D</td><td>模块文档页底部的授权段</td><td>它是 Qt 三维方向的主线,查版本发布说明里的条目</td><td>资源可带走,场景描述要重写</td></tr>
-<tr><td class="nw">Qt 3D</td><td>同左</td><td>按 3.3 节那五条方法查</td><td>按 3.3 节那张迁移分项表估工作量</td></tr>
-<tr><td class="nw">三维数据可视化模块</td><td>同左,注意附加模块与基础模块不在一档</td><td>查它与官方新图表模块的关系</td><td>接口面积小,包一层隔离即可替换</td></tr>
-<tr><td class="nw">自己写图形接口</td><td>只涉及 Qt 基础模块</td><td>不适用,取决于你自己的维护</td><td>保留一条不依赖图形硬件的降级显示</td></tr>
-</tbody>
-</table>
-<p>表里第一列的四个方案,授权那一列的查法完全一致:打开模块文档首页,读底部的授权段,再对照第 0 章那张 Qt 组成部分的表确认它属于哪一档。<strong>Qt 的附加模块之间授权并不统一,逐个查是唯一可靠的做法。</strong></p>
-<p>这张表里三维方案的退路都比二维图表弱,原因在 3.3 节说过:<strong>资源与框架无关,场景描述与框架强绑定</strong>。所以三维项目的准备工作重点不在抽象接口,而在把资源管线独立出来。</p>
-<h3>本章的三条判据回顾</h3>
-<p>这一章可以压成三条判据,它们比任何具体的接口都更持久。</p>
-<ol>
-<li><strong>先问二维能不能满足。</strong>用户要读出数值用二维,要看空间关系才用三维。这是本章唯一的否决线,也是省下成本最多的一条。</li>
-<li><strong>新项目的通用三维场景选 Qt Quick 3D。</strong>依据不是性能,而是新能力的来源;判定一个模块状态的五条查证方法在 3.3 节,它们适用于任何 Qt 模块。</li>
-<li><strong>自己写图形接口的门槛是人,不是技术。</strong>渲染代码写得出来不等于维护得下去,持续负担落在跨平台适配、驱动差异与排查能力上。</li>
-</ol>
-<p>三条判据之外,还有一条贯穿全章的准备工作:<strong>在真实的部署环境里实测一次</strong>。三维是本书里对运行环境要求最高的一章,而这项要求在开发机上永远是满足的。</p>
-<p>把四个方案各压成一句话,便于在表之外记住它们的位置。</p>
-<ul>
-<li><strong>Qt Quick 3D 是通用三维场景的默认答案。</strong>与 Quick 界面同一套体系,新能力也集中在这里;代价是要引入 QML,并接受资源管线的工作量。</li>
-<li><strong>三维数据可视化模块是三种统计图表的捷径。</strong>数据直接给,坐标轴与交互由它负责;代价是只有三种图表,并且它是窗口而不是部件。</li>
-<li><strong>Qt 3D 不用于新项目。</strong>它仍然可用,但新能力不在这里;已有项目按 3.3 节的方法定期重查状态。</li>
-<li><strong>自己写图形接口是最后一条路。</strong>判据是需求与现成抽象正交,门槛是团队里长期有人能维护它。</li>
-</ul>
-<h3>与后面各章的连接</h3>
-<table style="contain-intrinsic-size:auto 149px">
-<thead><tr><th>接下来</th><th>它解决什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 4 章 表格与电子表格</td><td>三维图表读不出精确数值时,数值由表格承担</td></tr>
-<tr><td class="nw">第 7 章 报表、打印与 PDF</td><td>三维视图导出成报告里的一张图,分辨率与配色怎么处理</td></tr>
-<tr><td class="nw">第 16 章 日志与线上诊断</td><td>把图形环境探测的结果记进日志,用于判断现场机器的实际能力</td></tr>
-</tbody>
-</table>
-<p>本章与前两章还有一处结构上的差别值得点出:<strong>二维图表的四个方案是同一件事的四种做法,三维的四个方案是四件不同的事</strong>。所以前两章的选型是权衡,本章的选型更接近分类。真正需要权衡的只有一处,就是要不要进入三维。</p>
-<p>与姊妹书的分工:QML 语言、Quick 的元素树与场景图机制,主场在《Qt Quick 与 QML》,本章只讲三维部分怎么用;三维渲染的性能测量与调优,主场在《Qt 性能优化》。</p>
-<p>症状反查表里前四行都指向同一类原因:场景搭起来了,但某个必要条件没满足。<strong>三维出问题时的排查顺序固定为相机、光源、资源、环境四步</strong>,按这个顺序走一遍,绝大多数「什么都看不见」的情形能在几分钟内定位。</p>
-<p>最后重复本章开头那条判据,因为它比本章任何具体方案都更常用到:<strong>用户要读出数值就用二维,要看空间关系才用三维</strong>。这一条挡住的成本,多于本章其余全部内容能省下的成本。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 三维项目最值得先做的准备是把资源管线独立出来,而不是抽象一层接口</span><p>三维场景的描述方式与具体框架深度绑定,抽象接口的收益远低于二维图表那边。真正能带走的是网格、贴图与材质参数,而它们只与转换流程有关。把转换流程、资源规范与命名约定固定下来,换框架时这部分工作可以完整复用。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 57588px;--thin-h:57588px">
+<section class="chapter" style="contain-intrinsic-size:auto 51946px;--thin-h:51946px">
 <h1 id="c4"><span class="part">第 4 章</span>表格与电子表格</h1>
+<p>表格是企业类桌面产品的主体界面,需求分两头:界面上要一个撑得住真实数据规模的表格视图,文件上要与 Excel 世界交换数据。本章在《Qt 核心与 Widget》讲完的模型/视图机制之上处理 <code>QTableView</code> 的深度定制,再解决文件侧的三件事:用 QXlsx 读写 xlsx、处理 CSV 的编码与转义陷阱、以及把「导出」拆成面向人与面向程序的多条出口。取舍角度是格式与样式的保真程度对成本的牵动。</p>
 <h2 id="c4-view">4.1 QTableView 深度定制:超出第一本的部分</h2>
 <p>模型与视图的索引语义、角色约定、代理模型的过滤与排序、委托的绘制入口,这四件事在《Qt 核心与 Widget》里已经交代完整,本节不重复其中任何一条。这里处理的是另一类问题:机制本身没有疑问,而需求清单上写着冻结首列、表头合并、行内校验与十万行滚动不掉帧,这些在 Qt 的公开接口里没有一一对应的开关。</p>
 <p>这类需求有一个共同形状。<strong>QTableView 提供的是零件,不是成品。</strong>零件怎么组合由使用者决定,官方示例给出过其中几种,但示例的数据规模与真实业务的数据规模差着两三个数量级,示例里合理的写法换到十万行上会变成肉眼可见的停顿。组合方式按需求逐条给出,每一种的代价与失效条件写在同一处。</p>
@@ -5565,125 +5200,11 @@ signals:
 </tbody>
 </table>
 <p>表里第二第三行是同一条规矩的两面:<strong>给人看的走本地化,给程序读的走不变格式。</strong>混淆的典型后果是导出的 CSV 在中文环境里数字带千分位逗号,而千分位逗号恰好又是字段分隔符,于是每个数字被切成两个字段。这一条与 4.3 节的分隔符方言问题会叠加,是导出功能里最容易出现却最难在开发环境复现的一类错误。</p>
-<h2 id="c4-sum">4.5 小结</h2>
-<p>这一章围绕「表格数据从屏幕到文件」这条链路,处理了四个位置的问题:视图层的展示定制、xlsx 的读写、CSV 的编码与转义、以及导出这一步的格式与线程。四个位置各有各的失效方式,而它们在真实项目里往往同时出现——一个能冻结首列、能行内编辑、能导出带格式的 Excel、还能正确处理用户上传的 GBK 文件的表格界面,需要把本章四节的结论全部用上。</p>
-<p>收尾部分给出五张表:按需求选方案的判据、按症状反查根因的对照、四个 Qt 接口点在本章的落点、所涉库的维护状态与退路,以及一份要点回顾。</p>
-<h3>需求到方案的判据表</h3>
-<p>第一张表按需求出发,给出直接可用的选择。使用方式是从最左列找到与当前需求最接近的一条,按第二列的判据确认规模与约束,再照第三列去做。</p>
-<table style="contain-intrinsic-size:auto 587px">
-<thead><tr><th>需求</th><th>判据</th><th>做法</th><th>去哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">表格要冻结首列或首行</td><td>冻结的列数是否超过两三列</td><td>叠放第二个视图,共享 model 与 selectionModel</td><td>4.1</td></tr>
-<tr><td class="nw">要合并单元格</td><td>合并规则是否随排序变化</td><td><code>setSpan</code> 加一个可重入的重建函数</td><td>4.1</td></tr>
-<tr><td class="nw">表格要能行内编辑并校验</td><td>校验是否需要访问其他字段</td><td><code>QStyledItemDelegate</code>,校验放在写回那一步</td><td>4.1</td></tr>
-<tr><td class="nw">字段多、校验复杂</td><td>一屏能不能放下</td><td><code>QDataWidgetMapper</code> 做右侧表单</td><td>4.1</td></tr>
-<tr><td class="nw">十万行要秒开</td><td>数据是否已经在内存</td><td>固定行高加增量装载;数据在数据库就下推分页</td><td>4.1</td></tr>
-<tr><td class="nw">产出要给人看、要带格式</td><td>接收方是否继续编辑</td><td>QXlsx 写 xlsx,样式按去向决定给多少</td><td>4.2</td></tr>
-<tr><td class="nw">产出要给程序读</td><td>对方能否处理 xlsx</td><td>优先 CSV,注意编码与转义</td><td>4.3</td></tr>
-<tr><td class="nw">要读用户上传的表格</td><td>文件是 xlsx 还是文本</td><td>xlsx 走 QXlsx 并逐格判空;文本走状态机解析</td><td>4.2 与 4.3</td></tr>
-<tr><td class="nw">文件可能是 GBK</td><td>是否必须跨平台一致</td><td>引 <code>Qt6::Core5Compat</code> 用 <code>QTextCodec</code></td><td>4.3</td></tr>
-<tr><td class="nw">一千万行的文本文件</td><td>用户要浏览还是要统计</td><td>先导入 SQLite,视图只面对查询结果</td><td>4.3</td></tr>
-<tr><td class="nw">用户要复制粘贴到 Excel</td><td>是否需要保住格式</td><td><code>QMimeData</code> 同时挂纯文本与 HTML</td><td>4.4</td></tr>
-<tr><td class="nw">导出会卡住界面</td><td>单次导出耗时是否超过一秒</td><td><code>QtConcurrent::run</code> 加三个信号,Document 不跨线程</td><td>4.4</td></tr>
-</tbody>
-</table>
-<p>表里有两条判据值得强调。<strong>「接收方是人还是程序」</strong>决定了格式、样式与公式三个选择,它比数据规模更靠前,因为选错了格式后面全部要返工。<strong>「数据是否已经在内存」</strong>决定了大表格策略:数据在内存里时增量装载只是控制暴露量,数据在数据库里时增量装载与分页查询才是两条真正不同的路。</p>
-<h3>症状到根因的反查表</h3>
-<p>第二张表按现场症状出发,适合在收到用户反馈时按图索骥。每一条给出最可能的根因与对应小节。</p>
-<table style="contain-intrinsic-size:auto 598px">
-<thead><tr><th>症状</th><th>根因</th><th>去哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">导出的文件在 Excel 里全是乱码</td><td>UTF-8 没有写 BOM,Excel 按系统 ANSI 代码页解释</td><td>4.3</td></tr>
-<tr><td class="nw">导入用户文件时某几行列数变多</td><td>按行读加 split 切分,字段里的逗号被当成分隔符</td><td>4.3</td></tr>
-<tr><td class="nw">记录数比文件行数少或多,内容像是被截断</td><td>引号内的换行被 <code>readLine</code> 当成了记录结束</td><td>4.3</td></tr>
-<tr><td class="nw">排序之后合并框里的文字换成了别的记录</td><td><code>setSpan</code> 存在视图层,不随数据重排</td><td>4.1</td></tr>
-<tr><td class="nw">点了刷新之后所有合并消失</td><td>模型 reset 时视图清空了 span 信息</td><td>4.1</td></tr>
-<tr><td class="nw">打开窗口后界面冻结几秒</td><td>表头用了 <code>ResizeToContents</code>,列宽计算遍历全部行</td><td>4.1</td></tr>
-<tr><td class="nw">点冻结列不高亮,两侧选中不同步</td><td>两个视图各自持有独立的 selectionModel</td><td>4.1</td></tr>
-<tr><td class="nw">读用户上传的 xlsx 时崩溃,换个文件位置就变</td><td><code>cellAt</code> 对空单元格返回空指针,未判空就解引用</td><td>4.2</td></tr>
-<tr><td class="nw">合计行在 Excel 里对,对方程序读出来是空</td><td class="nw">只写了公式串,没有写缓存值</td><td>4.2 与 4.4</td></tr>
-<tr><td class="nw">导出十万行时界面完全无响应</td><td class="nw">导出在主线程执行</td><td>4.4</td></tr>
-<tr><td class="nw">导出偶发崩溃,栈顶与写入点无关</td><td><code>QXlsx::Document</code> 被两个线程使用</td><td>4.4</td></tr>
-<tr><td class="nw">深色主题下导出的 Excel 打开一片白</td><td class="nw">导出颜色取自界面主题</td><td>4.4</td></tr>
-<tr><td class="nw">粘贴到 Excel 只有纯文本没有表格</td><td>剪贴板只挂了 <code>text/plain</code></td><td>4.4</td></tr>
-<tr><td class="nw">导出的数字在 CSV 里被切成两个字段</td><td>数值做了本地化格式化,千分位逗号与分隔符冲突</td><td>4.4</td></tr>
-<tr><td class="nw">读 GBK 文件得到问号与方块</td><td>Qt 6 的 <code>QStringConverter</code> 不含 GBK</td><td>4.3</td></tr>
-</tbody>
-</table>
-<p>这张表里出现频率最高的两类,一类是编码,一类是「视图层的设置不随数据走」。前者的共同特征是在开发环境不复现,后者的共同特征是首次显示正常、操作一次之后失效。遇到「第一次对、第二次错」的现象时,优先怀疑视图层装饰与模型信号的配合。</p>
-<h3>四个 Qt 接口点在本章的落点</h3>
-<p>第三张表把四个接口点在本章的具体落点集中列出,便于在做新功能时逐项对照。</p>
-<table style="contain-intrinsic-size:auto 316px">
-<thead><tr><th>接口点</th><th>本章的落点</th><th>要点</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>委托的 parent、编辑器的 parent、<code>QXlsx::Document</code> 的生命周期</td><td>委托挂在拥有它的页面上;编辑器用视图传进来的 parent;Document 的生存期限制在写出所在的函数体内,用栈对象或 <code>std::unique_ptr</code></td></tr>
-<tr><td class="nw">信号槽桥接</td><td>模型的 <code>modelReset</code> 触发重建 span;加载与导出的三个信号</td><td>长任务对外固定 <code>progress</code>、<code>finished</code>、<code>failed</code> 三个信号;取消走原子标志不走槽</td></tr>
-<tr><td class="nw">样式与主题</td><td class="nw">委托的绘制、导出文件的配色</td><td>界面颜色与导出颜色分开定义,导出不读调色板与 QSS</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td><code>updateEditorGeometry</code> 的 <code>option.rect</code>、表头 <code>tr()</code>、数值的不变格式</td><td>几何用设备无关像素直接用;给人看的文字本地化,给程序读的数据不本地化</td></tr>
-</tbody>
-</table>
-<p>第四行的两半经常被同时做错。一种做法是全部本地化,导出的文件在开发者机器上完美、发到另一个区域设置的机器上无法解析;另一种做法是全部不本地化,表头是英文键名,用户看不懂。正确形态是按「这段文字的读者是谁」逐字段决定。</p>
-<h3>维护状态与退路</h3>
-<p>第四张表覆盖本章提到的外部依赖。<strong>凡是许可证与维护状态,一律以所用版本仓库根目录的 LICENSE 文件与最近一次提交为准</strong>,本表只给查证方法与停更后的退路。</p>
-<table style="contain-intrinsic-size:auto 338px">
-<thead><tr><th>依赖</th><th>许可证</th><th>维护状态怎么查</th><th>停更或不可用时的退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">QXlsx</td><td>MIT,以仓库 LICENSE 为准</td><td>看仓库最近提交日期、releases 页最新 tag、开放 issue 的响应间隔</td><td>退到自己写最小 xlsx;或退到 CSV 加模板;只写不读时可换 libxlsxwriter</td></tr>
-<tr><td class="nw">Qt5Compat 的 QTextCodec</td><td>与 Qt 同许可,以所用 Qt 发行版为准</td><td>随 Qt 版本走,看该版本的模块列表里还有没有它</td><td>自己封一层 ICU;或在导入界面上要求用户先另存为 UTF-8</td></tr>
-<tr><td class="nw">libxlsxwriter</td><td>BSD 两句版,以仓库 LICENSE 为准</td><td>同 QXlsx,看提交与 release 频率</td><td>它只写不读,退路与 QXlsx 相同</td></tr>
-<tr><td class="nw">SQLite,大文件导入用</td><td>公有领域,以其官网声明为准</td><td>随 Qt 的 SQL 驱动一起分发,长期稳定</td><td>无需退路;确需替换时可换成自定义的二进制索引文件</td></tr>
-</tbody>
-</table>
-<p>「自己写最小 xlsx」这条退路值得展开,因为它决定了对 QXlsx 的依赖有多深。xlsx 本质上是一个 zip 包,里面装着几份固定结构的 XML。只写数据不写样式时,需要产出的构件不多。</p>
-<pre style="contain-intrinsic-size:auto 250px"><code># 把任何一个 xlsx 当 zip 解开,就能看到一份最小写出需要哪些构件
-unzip -l report.xlsx
-#   [Content_Types].xml          声明各部件的类型
-#   _rels/.rels                  根关系表,指向 workbook
-#   xl/workbook.xml              工作表清单与名称
-#   xl/_rels/workbook.xml.rels   workbook 到各 sheet 的关系
-#   xl/worksheets/sheet1.xml     单元格数据本身
-#   xl/sharedStrings.xml         共享字符串表,可选</code></pre>
-<p>这条退路的工作量集中在两件事:把上面这几份 XML 按固定模板拼出来,以及找一个能写 zip 的方式。后者在 Qt 项目里通常引 <code>QuaZip</code>,或者在部署环境里调用系统的压缩命令。产出的文件不带样式、不带公式,但能被 Excel 正常打开,足以顶住「依赖突然不可用」这种情况。评估依赖时把这条退路的成本先估出来,后续的决策会踏实很多。</p>
-<p>维护状态的查证有几条固定动作,不需要读代码。</p>
-<pre style="contain-intrinsic-size:auto 292px"><code># 一、最近一次提交与最近几个 tag
-git -C third_party/QXlsx log -1 --date=<span class="kw">short</span> --format=<span>'%h %ad %s'</span>
-git -C third_party/QXlsx tag --sort=-creatordate
-
-# 二、仓库的归档状态与许可证标识(需要装 gh 并已登录)
-gh api repos/QtExcel/QXlsx --jq <span>'{pushed: .pushed_at, archived: .archived, license: .license.spdx_id}'</span>
-
-# 三、许可证正文以本地文件为准,不要只看仓库页面上的标签
-cat third_party/QXlsx/LICENSE</code></pre>
-<p>三条动作对应三个判断。最近提交的日期回答「还有人在维护吗」;tag 的间隔回答「发布节奏稳不稳」;仓库的归档标志是一个明确信号,一旦被标记为归档就应当立即启动退路评估。许可证一定要看本地文件正文,仓库页面上的标签是自动识别的结果,与实际条款可能有出入,尤其是同一个仓库里不同目录采用不同许可证的情况。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 评估依赖时先把退路的成本估出来,再决定要不要引它</span><p>判据是一个具体问题:这个库明天归档,项目要付出多少工作量才能继续交付?本章的两个依赖答案不同。QXlsx 的退路是「自己拼几份 XML 加一个 zip 库」,工作量可估、上限明确,因此引它的风险可控。<code>QTextCodec</code> 的退路是「自己接 ICU」,那是一个体量大得多的依赖,因此对 GBK 的需求本身就值得先确认——如果能在导入界面上要求用户另存为 UTF-8,这个依赖可以完全不引。这个评估只需要在引入时做一次,结论写进项目文档,后续换人也不必重来。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 229px"><span class="t">🔵 把导出与导入做成一层薄接口,换库时改动只落在一个文件里</span><p>做法是定义一组只描述业务语义的函数,例如「把这份表格写成文件」与「把这个文件读成表格」,具体用哪个库藏在实现文件里,调用方只见到 <code>QList</code> 与 <code>QString</code>。这样做的收益在换库时兑现:从 QXlsx 换到别的实现,或者临时退到 CSV,改动范围是一个文件而不是散落在几十个界面类里。代价是多一层转换,数据规模很大时这层转换的拷贝开销要单独量一次。判断是否值得的依据是导出入口的数量——只有一个导出按钮时这层抽象是多余的,五个以上的导出入口时它一定值得。</p></div>
-<h3>要点回顾</h3>
-<p>最后一张表把本章的结论压缩成可以直接检索的形态。</p>
-<table style="contain-intrinsic-size:auto 587px">
-<thead><tr><th>主题</th><th>结论</th></tr></thead>
-<tbody>
-<tr><td class="nw">视图层装饰</td><td><code>setSpan</code>、冻结列、手工行高都按视觉位置存放,不随数据走;凡与数据绑定的展示效果都应当通过模型角色返回</td></tr>
-<tr><td class="nw">冻结列</td><td>两个视图叠放,共享 model 与 selectionModel;代价是两套绘制与两遍配置</td></tr>
-<tr><td class="nw">行内编辑</td><td>四个虚函数分工固定,校验放在写回那一步;写回原始类型,格式化交给 <code>displayText</code></td></tr>
-<tr><td class="nw">大表格首屏</td><td>固定行高是影响最大的一条;避开 <code>ResizeToContents</code></td></tr>
-<tr><td class="nw">装载策略</td><td>全量、增量、数据库分页、代理过滤各有适用面;代理模型解决显示哪些行,不解决装载多少行</td></tr>
-<tr><td class="nw">QXlsx 定位</td><td>读写 xlsx 的子集,依赖 Qt6::Core 与 Qt6::Gui;不做公式求值、不做条件格式与数据透视</td></tr>
-<tr><td class="nw">读 xlsx</td><td><code>cellAt</code> 可能返回空指针;日期是序列号,靠 <code>isDateTime</code> 判断</td></tr>
-<tr><td class="nw">CSV 编码</td><td>写 UTF-8 一定带 BOM;读要跳过 BOM;GBK 需要 <code>Qt6::Core5Compat</code></td></tr>
-<tr><td class="nw">CSV 转义</td><td>按行读加 split 一定会错;正确形态是四状态的流式解析器</td></tr>
-<tr><td class="nw">CSV 大文件</td><td>按块读喂状态机,进度用字节偏移;一千万行先入 SQLite</td></tr>
-<tr><td class="nw">剪贴板</td><td>同时挂 <code>text/plain</code> 与 <code>text/html</code>,由接收方挑</td></tr>
-<tr><td class="nw">公式</td><td>只写串时非 Excel 的读取方看到空;接收方是程序就写算好的数值;复杂场景走模板加数据填充</td></tr>
-<tr><td class="nw">导出线程</td><td><code>QXlsx::Document</code> 不能跨线程;数据以快照传入;三个信号加一个原子取消标志</td></tr>
-<tr><td class="nw">本地化</td><td>给人看的走 <code>tr()</code> 与 <code>QLocale()</code>,给程序读的走不变格式</td></tr>
-</tbody>
-</table>
-<p>本章与相邻章节的分工也在此明确。表格数据的可视化呈现属于图表两章,数据表与图表共用同一个模型时,过滤条件应当由代理模型统一承担,两边各写一份筛选逻辑会在条件变复杂后失去一致性。导出为 PDF 与打印排版属于第 7 章,本章只在格式对比表里给出适用面。性能的逐项拆解与实测数字属于《Qt 性能优化》,本章给的是结论与判据。模型/视图机制本身属于《Qt 核心与 Widget》,本章不重复。</p>
-<p>最后留一条实践上的建议。本章涉及的失效方式里,超过一半只在真实用户数据上出现——带逗号的备注、GBK 的上传文件、含换行的地址、十万行的历史记录。开发阶段的测试数据应当刻意包含这些形态,而不是等到线上收到反馈才补。做法是准备一份「畸形数据样本」放进测试资源目录,内容涵盖引号内的逗号与换行、连续两个引号、空字段、超长字段、GBK 编码的中文,以及一个只有表头没有数据的文件,每次改动导入导出代码都跑一遍。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 67289px;--thin-h:67289px">
+<section class="chapter" style="contain-intrinsic-size:auto 60575px;--thin-h:60575px">
 <h1 id="c5"><span class="part">第 5 章</span>富文本、Markdown 与代码编辑</h1>
+<p>「界面上要一块带格式的文字区域」有五种形态:只读说明页、富文本编辑、Markdown、源代码与 Web 页面,判断错形态,投入差一个量级。本章按能力与代价排开谱系:<code>QTextDocument</code> 自写富文本、Qt 自带的 Markdown 支持、QScintilla 代码编辑器、语法高亮三条路线、接语言服务器的成本,以及嵌 QtWebEngine 的代价与替代。取舍角度是需求的真实形态与扩张方向。</p>
 <h2 id="c5-rich">5.1 QTextDocument:自己做富文本编辑</h2>
 <p>「界面上要出现一块能显示带格式文字的区域」是同一族需求,至少有五种形态 —— 只读的说明页、可编辑的富文本、Markdown 文档、源代码、以及一整个 Web 页面。五者在截图上几乎分不出来,实现路线却在很早的地方就分岔了,选错之后的修正成本是重写而不是打补丁。</p>
 <p>挑路线的判据有六条。前三条决定能不能用,后三条决定用起来要付出多少。</p>
@@ -7173,136 +6694,11 @@ signals:
 </ol>
 <p>反过来,三种情形属于过度选择。其一,只是想要一个样式好看的静态展示页,用原生部件加样式表就能做,而且省掉一整套部署风险。其二,只是要显示一段格式化文本或者一份帮助文档,<code>QTextBrowser</code> 足够。其三,只是要一个图表,本书前面几章讲过的图表方案比嵌一个页面轻得多,并且能直接拿到数据点做交互。</p>
 <p>判断方法可以落到一个具体的问题上:<strong>这个页面里有没有一段 JavaScript 是产品逻辑的一部分,而不只是为了让页面动起来</strong>。答案是「有」的时候,通常绕不开;答案是「没有」的时候,基本都能用原生方案替掉。选定之后要做的第一件事不是写页面,而是把干净机器上的部署验证跑通 —— 这一步越早做,后面越省事。</p>
-<h2 id="c5-sum">5.7 小结</h2>
-<p>这一章从一块「能显示彩色文字的区域」出发,拆出六条路线。回头看,六条路线的分界线只有三条:内容是不是可编辑、原文要不要保真、以及能力上限值不值得那份部署代价与许可证代价。把这三条问清楚,选型基本不会走偏;问不清楚就先做原型,原型的成本远低于换路线的成本。</p>
-<h3>需求到路线的判据</h3>
-<p>下表把需求写成产品经理能听懂的句子,再给出首选与备选。判据一栏写的是「什么条件出现时应当换到备选」,这一条比方案本身更重要。</p>
-<table style="contain-intrinsic-size:auto 674px">
-<thead><tr><th>需求</th><th>首选</th><th>备选</th><th>什么条件下换到备选</th><th>不要用什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">显示一段静态说明、帮助页、更新日志</td><td><code>QTextBrowser</code> 加 <code>setMarkdown</code> 或 <code>setHtml</code></td><td>把内容预先转成 PDF 用 QtPdf 显示</td><td>排版要求超出 HTML 子集,例如要多栏、要精确分页</td><td>不要为一页说明引入 QtWebEngine</td></tr>
-<tr><td class="nw">让用户编辑一段带格式的说明并存进数据库</td><td><code>QTextEdit</code> 加自定义工具栏</td><td>嵌一个 Web 富文本编辑器</td><td>要协同编辑、要与浏览器一致的粘贴行为</td><td>不要把 <code>toHtml()</code> 的输出当交换格式</td></tr>
-<tr><td class="nw">编辑磁盘上的 Markdown 文件</td><td><code>QPlainTextEdit</code> 编原文加只读预览</td><td>md4c 生成 HTML 再交给预览侧</td><td>需要自定义扩展、脚注、公式</td><td>不要用 <code>setMarkdown</code> 加 <code>toMarkdown</code> 直接回写原文件</td></tr>
-<tr><td class="nw">代码编辑,规模中等,自己控制语言范围</td><td><code>QPlainTextEdit</code> 加 KSyntaxHighlighting</td><td>QScintilla</td><td>折叠、补全弹窗、多光标是产品卖点</td><td>闭源产品在没有商业授权时不要用 QScintilla</td></tr>
-<tr><td class="nw">代码编辑,要与语言服务器联动</td><td>上一行的方案加一个薄 LSP 客户端</td><td>嵌 Monaco 之类的 Web 编辑器</td><td>已有一整套 Web 端编辑体验要复用</td><td>不要每敲一个字符就发一次补全请求</td></tr>
-<tr><td class="nw">要跑一套已有的 Web 应用或 Web 组件</td><td>QtWebEngine 加 <code>QWebChannel</code></td><td>无</td><td>—</td><td>不要在目标平台没有这个模块时才发现</td></tr>
-</tbody>
-</table>
-<p>表里反复出现的一个模式值得点出来:首选几乎都是 Qt 自带的东西,备选才是第三方。这不是保守,而是因为本章涉及的第三方选项各自带着一项硬成本 —— QScintilla 是许可证,QtWebEngine 是部署,KSyntaxHighlighting 与 md4c 是多一个要跟着升级的依赖。自带方案的能力边界虽然低,但它没有这些成本,而且边界是可以事先量清楚的。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 229px"><span class="t">🟢 选型先定许可证与部署形态,再谈能力</span><p>本章六条路线里,有两条的否决项与技术能力完全无关:QScintilla 的 GPL v3 与商业双轨会否决掉没有预算的闭源产品,QtWebEngine 的体积与独立进程会否决掉受限的部署环境。这两条要在写第一行代码之前问清楚,而不是在功能做完之后由法务或者运维退回来。可操作的做法是在选型文档里为每个候选填三格:发行包里 <code>LICENSE</code> 文件的实际内容、干净机器上部署一次量到的目录大小、以及目标平台上 <code>find_package</code> 能不能成功。三格都填完再比较能力,顺序反过来的返工成本要高一个量级。</p></div>
-<h3>症状反查表</h3>
-<p>出问题时从症状倒查根因,比从头读一遍章节快。下表按症状排列,最后一列写回本章的节号。</p>
-<table style="contain-intrinsic-size:auto 829px">
-<thead><tr><th>症状</th><th>根因</th><th>回到哪一节</th></tr></thead>
-<tbody>
-<tr><td>点一次撤销只退回一个字符,或者程序插入的一段模板要按几十次撤销</td><td>多次修改没有包在 <code>beginEditBlock</code> 与 <code>endEditBlock</code> 之间</td><td>5.1</td></tr>
-<tr><td class="nw">只改了一个字,版本控制显示全文都变了</td><td>走了 <code>setMarkdown</code> 加 <code>toMarkdown</code> 的往返,原文被规范化重写</td><td>5.2</td></tr>
-<tr><td class="nw">文档里的图片显示成空白占位框</td><td>相对路径没有基准目录,或者资源键在换机器后失效</td><td>5.1 与 5.2</td></tr>
-<tr><td><code>toHtml()</code> 的结果贴到别处样式全丢、类名全没</td><td>输出是按文档模型重新序列化的内联样式 HTML</td><td>5.1</td></tr>
-<tr><td class="nw">打开几十兆的文件之后界面长时间没有响应</td><td>用了 <code>QTextEdit</code> 而不是 <code>QPlainTextEdit</code></td><td>5.1</td></tr>
-<tr><td class="nw">切换深色主题之后只有代码编辑区还是白底黑字</td><td><code>QsciScintilla</code> 自绘,QSS 不生效,颜色要逐项设</td><td>5.3</td></tr>
-<tr><td class="nw">中文一个字占两个光标位,退格删掉半个字</td><td><code>setUtf8(true)</code> 没开</td><td>5.3</td></tr>
-<tr><td class="nw">跨多行的注释只有第一行变色</td><td><code>highlightBlock</code> 没有用块状态传递跨块结构</td><td>5.4</td></tr>
-<tr><td class="nw">文件很大时连续输入有明显延迟</td><td>块状态一路变化导致整篇重新走规则表</td><td>5.4</td></tr>
-<tr><td class="nw">补全偶尔不弹、诊断偶尔不来,重启就好</td><td>读帧没有处理粘包与半包,消息被整条丢掉</td><td>5.5</td></tr>
-<tr><td>Linux 正常而 Windows 上服务器对每个请求都回空</td><td>URI 是手工拼出来的,盘符与反斜杠不合法</td><td>5.5</td></tr>
-<tr><td class="nw">格式化之后代码被打乱,越靠后越离谱</td><td>返回的编辑列表没有按位置逆序应用</td><td>5.5</td></tr>
-<tr><td class="nw">程序关掉之后任务管理器里还有语言服务器进程</td><td>退出时没有发 <code>shutdown</code> 与 <code>exit</code></td><td>5.5</td></tr>
-<tr><td class="nw">网页区域一片空白,没有任何报错</td><td>部署时缺 resources 或 locales 目录,渲染进程起不来</td><td>5.6</td></tr>
-<tr><td class="nw">程序一启动就崩,或者网页永远不显示</td><td>WebEngine 的初始化调用位置与 <code>QApplication</code> 的构造顺序不对</td><td>5.6</td></tr>
-</tbody>
-</table>
-<p>这张表里有一个共同点:十五条里有九条属于「静默失效」—— 不崩溃、不报错、只是行为不对。这类问题的排查手段是相同的三步:先确认数据有没有到达(打日志看收到了什么)、再确认状态对不对(打印状态量与缓冲区长度)、最后才怀疑接口用法。跳过前两步直接改代码,通常会在原有问题上再叠一层。</p>
-<h3>维护状态与退路</h3>
-<p>本章提到的每一个第三方组件都要回答同一组问题:许可证是什么、维护状态怎么查、停更或者谈不拢时退到哪里、退了之后损失什么。下表逐个作答。表里所有许可证结论都以所用版本发行包里的许可证文件为准,这里写的是查证入口而不是结论本身。</p>
-<table style="contain-intrinsic-size:auto 719px">
-<thead><tr><th>组件</th><th>许可证与查证入口</th><th>维护状态怎么查</th><th>退路</th><th>退了损失什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">QScintilla</td><td>GPL v3 与商业双轨,查发行包根目录的 <code>LICENSE</code> 与 Riverbank 的授权说明页</td><td>看发行包的版本号与更新日期,以及它对新 Qt 大版本的跟进速度</td><td><code>QPlainTextEdit</code> 加 KSyntaxHighlighting</td><td>折叠、补全弹窗、多光标、矩形选择、指示器要自己实现或者放弃</td></tr>
-<tr><td class="nw">KSyntaxHighlighting</td><td>MIT,查仓库里的许可证文件</td><td>它随 KDE Frameworks 按固定节奏发布,看仓库的提交与发布记录</td><td>自写 <code>QSyntaxHighlighter</code> 规则表</td><td>语言覆盖从三百多套降到自己写的几套,原始字符串与嵌套注释重新变成失效点</td></tr>
-<tr><td class="nw">md4c</td><td>查仓库根目录的许可证文件</td><td>看最近提交与 issue 响应,它体量小、接口稳定</td><td>Qt 自带的 <code>setMarkdown</code></td><td>自定义扩展、脚注、公式的预处理空间,以及对渲染细节的控制</td></tr>
-<tr><td class="nw">QtWebEngine</td><td>随 Qt 以 LGPL &#124; GPL 与商业双轨提供,另含 Chromium 第三方许可证清单</td><td>随 Qt 版本走,看所用 Qt 版本的发布说明里这个模块的状态</td><td><code>QTextBrowser</code>、QtPdf、或者用原生部件重画</td><td>现代 CSS 与 JavaScript,以及整个 Web 组件生态</td></tr>
-<tr><td class="nw">第三方 LSP 客户端库</td><td>各不相同,以仓库许可证文件为准</td><td>以最近提交时间、issue 响应速度、对 3.17 的支持为准</td><td>自己写薄客户端,按 5.5 节的骨架</td><td>只损失两百来行代码,这是本章退路成本最低的一条</td></tr>
-<tr><td class="nw">Qt 自带的 <code>QTextDocument</code> 一族</td><td>随 Qt 本身</td><td>随 Qt 版本走</td><td>无需退路,它是其余方案的底座</td><td>—</td></tr>
-</tbody>
-</table>
-<p>退路要在选型阶段就落到代码结构上,而不是等到真要换的时候再动。具体做法是把编辑器部件藏在一个窄接口后面,产品代码只认这个接口,不认具体类型。接口窄到什么程度合适,可以按「产品实际用到的操作」来定 —— 通常不超过十个方法。</p>
-<pre style="contain-intrinsic-size:auto 576px"><code><span class="cm">// 把编辑器部件藏在一个窄接口后面,退路才换得动</span>
-<span class="kw">struct</span> Diagnostic { <span class="kw">int</span> line; <span class="kw">int</span> startColumn; <span class="kw">int</span> endColumn; QString message; };
-
-<span class="kw">class</span> ICodeEditor
-{
-<span class="kw">public</span>:
-    <span class="kw">virtual</span> ~ICodeEditor() = <span class="kw">default</span>;
-
-    <span class="kw">virtual</span> QWidget *widget() = 0;                    <span class="cm">// 放进布局用这个</span>
-    <span class="kw">virtual</span> QString  text() <span class="kw">const</span> = 0;
-    <span class="kw">virtual</span> <span class="kw">void</span> setText(<span class="kw">const</span> QString &amp;t) = 0;
-    <span class="kw">virtual</span> <span class="kw">void</span> setLanguage(<span class="kw">const</span> QString &amp;fileName) = 0;
-    <span class="kw">virtual</span> <span class="kw">void</span> setDiagnostics(<span class="kw">const</span> QList&lt;Diagnostic&gt; &amp;list) = 0;
-    <span class="kw">virtual</span> <span class="kw">void</span> setDarkTheme(<span class="kw">bool</span> on) = 0;
-    <span class="kw">virtual</span> <span class="kw">bool</span> isModified() <span class="kw">const</span> = 0;
-};
-
-<span class="cm">// 两个实现:ScintillaEditor 与 PlainTextEditor(QPlainTextEdit 加 KSyntaxHighlighting)。</span>
-<span class="cm">// 构建期按 CMake 判定的结果选一个,产品代码一行都不用改。</span>
-std::unique_ptr&lt;ICodeEditor&gt; makeCodeEditor(QWidget *parent);</code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 228px"><span class="t">🔴 第三方编辑器部件的类型散进整个代码库,退路就换不动了</span><p>症状出现在项目中后期:决定换掉某个编辑器部件时,一搜发现它的类型名出现在几十个文件里 —— 信号连接、类型转换、直接调用它特有的方法。换一次的工作量与重写一遍相当,于是只能继续用下去,许可证或者维护状态的问题被拖到发版前。根因是产品代码直接依赖了具体类型而不是一个窄接口。排查方法很直接:在整个代码库里搜那个部件的类名,出现次数超过十处就说明已经绑死了。改法是上面那段的结构,把具体类型限制在一个实现文件里,产品代码只见接口;这一步在项目早期做只要半天,拖到后期就是一次重构。</p></div>
-<h3>四个接口点在本章的落点</h3>
-<p>对象树归属这一条在本章有三处需要特别对待。</p>
-<ul>
-<li><code>QTextEdit::setDocument</code> 传进去的 <code>QTextDocument</code> 不转移所有权,部件析构时不删它,换文档时旧的也不删,自己 <code>new</code> 出来的要指定父对象。</li>
-<li><code>QsciScintilla::setLexer</code> 换词法器时,旧的同样不被删。</li>
-<li><code>QWebChannel</code> 注册进去的对象由注册方管生命期,页面还在用而对象已经析构时,调用会静默失败。</li>
-</ul>
-<p>除这三处之外,本章所有部件都是标准的 <code>QWidget</code> 或 <code>QObject</code> 子类,交给对象树即可。</p>
-<p>信号槽桥接这一条贯穿全章,形态有三种。</p>
-<ol>
-<li><strong>回填</strong>:<code>cursorPositionChanged</code> 与 <code>currentCharFormatChanged</code> 驱动工具栏状态,界面状态每次从文档重新读出来而不是缓存在变量里。</li>
-<li><strong>转发</strong>:<code>QsciScintilla</code> 的 <code>modificationChanged</code> 与 <code>marginClicked</code> 转成产品自己的信号,把第三方类型挡在接口之外。</li>
-<li><strong>异步回调</strong>:LSP 的请求响应与 <code>QWebChannel</code> 的跨界调用都没有同步返回值,逻辑必须按回调组织。</li>
-</ol>
-<p>样式与主题这一条上,本章的部件分成两类。<code>QTextEdit</code> 一族走 Qt 的调色板与样式表,深色主题跟随应用自动生效;字符格式里显式写死的颜色是例外,它们会盖过主题,所以生成文档时颜色应当从调色板取而不是写常量。</p>
-<p><code>QsciScintilla</code> 与 QtWebEngine 是另一类:前者自绘、QSS 不生效,要自己写一套配色映射逐项设;后者的样式在页面里,主题切换要通过通道通知页面改类名。KSyntaxHighlighting 的主题只管语法着色,编辑器的底色与选区色要自己从 <code>Theme</code> 里取出来写进调色板。</p>
-<p>高分屏与国际化这一条在本章有四个具体落点,逐个说清楚。</p>
-<ol>
-<li>字体一律用点值。<code>QFont(family, pointSize)</code> 交给系统按缩放比例换算;写 <code>setPixelSize</code> 的代码在高分屏上会小到看不清,而在开发机上看不出问题。</li>
-<li>中文输入法的候选框定位。原生编辑部件通过输入法查询上报光标矩形,候选框跟随光标;<code>QsciScintilla</code> 这类自绘部件的实现与平台、输入法的组合有关,要在目标环境上实测。验证方法是把光标移到窗口右下角与文档末尾各打一段中文,看候选框有没有跟随、预编辑串有没有重复插入。</li>
-<li>中日韩文本的换行。<code>QTextDocument</code> 默认按词边界断行,中日韩文本没有词间空格,实际按字符断。行首不应出现句读、行尾不应出现左引号这类禁则处理,Qt 的支持程度要以实际渲染结果为准,排版要求严格时需要自己在插入内容时做预处理。</li>
-<li>Markdown 表格的对齐。原文里用管道符手工对齐的表格,只有在等宽字体下看起来才是齐的;而多数等宽字体里一个汉字占两个西文字宽,混排时仍然会错位。编辑原文的那一侧必须显式设等宽字体,预览侧则不必 —— 预览里表格已经变成 <code>QTextTable</code>,对齐由排版负责。</li>
-</ol>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 440px"><code><span class="cm">// 高分屏与国际化:本章涉及的三处设置</span>
-<span class="cm">// 一、中日韩文本的换行:没有词间空格时退回按字符断</span>
-QTextOption opt = view-&gt;document()-&gt;defaultTextOption();
-opt.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-view-&gt;document()-&gt;setDefaultTextOption(opt);
-
-<span class="cm">// 二、编辑原文的一侧用等宽字体,管道符对齐的表格才不歪;字号用点值</span>
-QFont mono(QStringLiteral(<span>"Consolas"</span>), 11);
-mono.setStyleHint(QFont::Monospace);
-mono.setFixedPitch(<span class="kw">true</span>);
-src-&gt;setFont(mono);
-
-<span class="cm">// 三、自绘编辑部件的输入法行为要实测,没有通用结论:</span>
-<span class="cm">//     把光标移到窗口右下角与文档末尾各打一段中文,</span>
-<span class="cm">//     看候选框跟不跟随、预编辑串会不会重复插入、按确认键后光标位置对不对</span></code></pre>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 415px">
-<thead><tr><th>节</th><th>一句话结论</th></tr></thead>
-<tbody>
-<tr><td class="nw">5.1 <code>QTextDocument</code></td><td>文档是帧套块、块套片段、片段带字符格式的四层树,写入只经过 <code>QTextCursor</code>;它适合程序完全掌控内容的富文本,不适合保真读写外部格式</td></tr>
-<tr><td class="nw">5.2 Markdown</td><td>Qt 5.14 起自带 <code>setMarkdown</code>,只读展示与简单编辑够用;但往返不保原文,编辑磁盘文件必须原文与预览分离</td></tr>
-<tr><td class="nw">5.3 QScintilla</td><td>能力最全的现成代码编辑部件,选型第一条是 GPL v3 与商业双轨的许可证;它自绘,深色主题要自己写配色映射</td></tr>
-<tr><td class="nw">5.4 语法高亮</td><td>三条路线的差别在跨行结构记在哪里:块状态整数、XML 上下文栈、还是词法器内部;语义高亮是叠在上面的第四层</td></tr>
-<tr><td class="nw">5.5 语言服务器</td><td>传输层是 JSON-RPC 加长度头,读帧必须处理半包;URI 用 <code>QUrl::fromLocalFile</code>,位置按 UTF-16 码元;薄客户端两百来行</td></tr>
-<tr><td class="nw">5.6 QtWebEngine</td><td>能力上限最高,代价是体积、独立进程、部署完整性与全异步的通信形态;判据是页面里的 JavaScript 是不是产品逻辑的一部分</td></tr>
-</tbody>
-</table>
-<p>最后留一条跨章的线索。本章处理的是「文字怎么显示与编辑」,与它相邻的两件事分别在别处:把富文本或者页面输出成 PDF、以及显示 PDF,在第 7 章;模型与视图那一套索引与角色语义,见《Qt 核心与 Widget》,本章不重复。这两条合在一起,才构成一个完整产品的文档处理链路。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 57111px;--thin-h:57111px">
+<section class="chapter" style="contain-intrinsic-size:auto 51893px;--thin-h:51893px">
 <h1 id="c6"><span class="part">第 6 章</span>停靠布局、属性编辑与界面骨架</h1>
+<p>开发环境、建模工具、监控台这类产品的主界面高度一致:中央工作区加四周可拖动的面板。本章解决这副骨架的四个部分:<code>QDockWidget</code> 的能力边界与 Advanced Docking System 多出的能力、属性编辑器引 Qt Property Browser 还是自己实现、图标与深浅色主题的四条路、多套布局的保存与切换。取舍集中在 Qt 自带方案够不够用,与布局状态这份很脆的数据怎么跨版本存活。</p>
 <h2 id="c6-dock">6.1 QDockWidget 的能力边界</h2>
 <p>集成开发环境、建模工具、监控台这一类产品的主界面形态高度一致:中央一块工作区,四周围着工程树、大纲、属性表、输出与问题列表几个面板。面板要能换位置、拖出成独立窗口、与另一个面板合并成标签页、关掉之后再从菜单里调回来。用户摆好的一套布局,下次启动时要原样还在。</p>
 <p>这套骨架有四个部分:面板怎么摆、布局怎么存与怎么切、被选中的对象怎么出一张属性表、图标与深色主题从哪里来。挑方案的判据有四条,后面每一节的取舍都落在它们上面。</p>
@@ -8643,126 +8039,11 @@ QStringList PerspectiveManager::names() <span class="kw">const</span>
 <p>第三种的判据很清楚:<strong>布局要不要跟着文档走</strong>。如果同一个程序打开不同文件时要有不同的面板组合,而且这份组合要随文件一起传给别人,那么二进制状态串不合适 —— 它跨版本不兼容,也无法在版本控制里比对。</p>
 <p>国际化在这一节收口。布局状态里存的是像素尺寸,与文字内容无关,所以换语言不会让面板尺寸变化;受影响的是最小宽度 —— 面板标题与内部按钮的文字变长之后,那一格的最小尺寸变大,原本刚好的分栏比例会被挤开。做法是在切换语言、重设界面文字之后触发一次布局重算,而不是依赖下一次窗口尺寸变化。</p>
 <p>高分屏在这一节同样收口。跨不同缩放的屏幕迁移窗口时,逻辑坐标不变而物理像素变化,浮动面板的位置校验要基于屏幕的可用区而不是像素尺寸的绝对值。这两项与前面几节的四个接口点一起,在下一节做一次整体归位。</p>
-<h2 id="c6-sum">6.6 小结</h2>
-<p>这一章的五节围绕同一件事:把一个工具型产品的界面骨架搭起来并让它稳定下来。骨架由停靠布局、属性编辑、图标与主题三块构成,稳定下来靠的是布局状态的保存、校验与回落。</p>
-<p>三块里每一块都有「用 Qt 自带的」与「引一个第三方库」两条路,判据不是哪条路更省事,而是产品的交互要求有没有越过 Qt 原生模型的边界。越过了,第三方库省下的是几个人月;没越过,引进来的是一份长期维护义务。</p>
-<h3>需求到方案的判据表</h3>
-<p>把全章的选型判据合成一张表。左列是产品需求的特征,中列是对应的方案,右列是这样选的依据。</p>
-<table style="contain-intrinsic-size:auto 607px">
-<thead><tr><th>需求特征</th><th>选什么</th><th>依据</th></tr></thead>
-<tbody>
-<tr><td class="nw">面板不超过十个,两层分栏,单套布局</td><td class="nw">QDockWidget 原生</td><td>零额外依赖,状态保存与恢复现成</td></tr>
-<tr><td class="nw">需要自动隐藏侧边栏</td><td>Advanced Docking System</td><td>原生没有这个状态,自己实现要处理动画、命中与焦点三件事</td></tr>
-<tr><td class="nw">浮动窗口里还要继续分栏与标签化</td><td>Advanced Docking System</td><td>原生的浮动窗口不是停靠宿主</td></tr>
-<tr><td class="nw">需要「没有固定中央区」的全面板界面</td><td>Advanced Docking System</td><td>原生的中央部件地位特殊,置空的行为随版本变化</td></tr>
-<tr><td class="nw">需要多套命名透视图,停靠用原生</td><td class="nw">自己拼 QSettings</td><td>三五百行可控,校验与回落本来也要自己写</td></tr>
-<tr><td class="nw">需要多套命名透视图,停靠已用 ADS</td><td class="nw">它内建的透视图接口</td><td>接口现成,但校验与回落仍要自己写</td></tr>
-<tr><td class="nw">布局要随文档保存与传输</td><td class="nw">自己用 JSON 描述布局</td><td>二进制状态串跨版本不兼容,也无法在版本控制里比对</td></tr>
-<tr><td class="nw">发布形态不接受 LGPL 的替换义务</td><td class="nw">原生停靠加自建组件</td><td>许可证是否决线,不参与后续比较</td></tr>
-<tr><td class="nw">属性表要跟着类上的属性自动变</td><td>QTreeView 加 QMetaObject 反射</td><td>新增一个属性不用改界面代码</td></tr>
-<tr><td class="nw">属性字段固定且只有十来个</td><td>QFormLayout 手写一屏</td><td>半天完成,不需要模型与委托</td></tr>
-<tr><td class="nw">要一套能跟随系统的深浅色外观</td><td>Fusion 加自定义 QPalette</td><td>从 Qt 6.5 起可读系统方案并在切换时收到通知</td></tr>
-<tr><td class="nw">图标要在任意缩放下清晰</td><td class="nw">字体图标或自建 SVG</td><td>两者都是矢量,不需要为高分屏另备两倍图</td></tr>
-</tbody>
-</table>
-<p>表里有两行是否决性质的:许可证与发布形态那一行,以及「布局要随文档走」那一行。前者命中就排除掉一批方案,后者命中就排除掉全部二进制状态串的做法。其余各行是权衡,可以按团队情况调整。</p>
-<h3>症状到根因的反查表</h3>
-<p>这一章涉及的问题有一个共同特征:<strong>它们在开发机上不出现</strong>。开发机是单屏幕、单一缩放、默认语言、浅色主题、面板集合与上一版一致。下面这张表按症状排,用于现场反查。</p>
-<table style="contain-intrinsic-size:auto 607px">
-<thead><tr><th>症状</th><th>根因</th><th>回哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">升级一版之后某个面板不见了,重置布局又回来</td><td>这个面板漏设 objectName,或者名字被改过</td><td>停靠能力边界一节</td></tr>
-<tr><td>restoreState 返回 true,新版本加的面板却没出现</td><td>新面板不在旧状态串里,恢复流程不为它报错</td><td>停靠能力边界一节</td></tr>
-<tr><td class="nw">面板打不开,菜单里那一项却是勾选状态</td><td>浮动面板被恢复到已经拔掉的显示器上</td><td>透视图一节</td></tr>
-<tr><td class="nw">切换到另一套停靠实现后,所有用户的布局全部丢失</td><td>两套实现的状态串格式不通,互相读不了</td><td>Advanced Docking System 一节</td></tr>
-<tr><td class="nw">停靠标题栏的 QSS 规则完全没有效果</td><td>第三方停靠库自带样式表,QDockWidget 的选择器对它无效</td><td>Advanced Docking System 一节</td></tr>
-<tr><td class="nw">深色主题下某几个控件仍然是白底</td><td>自绘部件与第三方部件不吃样式表的选择器</td><td>图标与主题一节</td></tr>
-<tr><td class="nw">Qt 升级后滚动条变宽、下拉箭头消失</td><td>成品样式表针对旧版本的控件内部结构写成</td><td>图标与主题一节</td></tr>
-<tr><td class="nw">切换主题后图标颜色没变,深色底上看不清</td><td>图标颜色在生成位图那一刻烧进去了</td><td>图标与主题一节</td></tr>
-<tr><td class="nw">打包发布后图标全部空白,开发机上正常</td><td>svg 图像插件没有随发布物部署</td><td>图标与主题一节</td></tr>
-<tr><td class="nw">属性表到几百行开始滚动发涩、切换对象停顿</td><td>逐行 setIndexWidget 塞了长期驻留的真部件</td><td>属性编辑器一节</td></tr>
-<tr><td class="nw">对象被别处改了,属性表一直显示旧值</td><td class="nw">该属性没有声明变更信号</td><td>属性编辑器一节</td></tr>
-<tr><td class="nw">换一种界面语言之后分栏比例被挤开</td><td>文字变长抬高了最小尺寸,布局没有重新计算</td><td>透视图一节</td></tr>
-</tbody>
-</table>
-<p>这张表的用法是先定位到节,再按那一节里对应批注框给的排查手段走。批注框里写的是「症状长什么样、现场怎么查、怎么改」三件事,比重读正文更快。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 604px"><code><span class="cm">// 启动时跑一次的自检:名字为空或重名的面板,一定会在恢复布局时出问题</span>
-<span class="kw">void</span> auditDockNames(QMainWindow *win)
-{
-    QSet&lt;QString&gt; seen;
-    <span class="kw">const</span> <span class="kw">auto</span> docks = win-&gt;findChildren&lt;QDockWidget *&gt;();
-    <span class="kw">for</span> (QDockWidget *d : docks) {
-        <span class="kw">const</span> QString n = d-&gt;objectName();
-        <span class="kw">if</span> (n.isEmpty())
-            qWarning(<span>"面板「%s」没有 objectName,布局恢复时会丢失"</span>,
-                     qPrintable(d-&gt;windowTitle()));
-        <span class="kw">else</span> <span class="kw">if</span> (seen.contains(n))
-            qWarning(<span>"面板名重复:%s"</span>, qPrintable(n));
-        <span class="kw">else</span>
-            seen.insert(n);
-    }
-<span class="cm">    // 工具栏走同一套机制,同样要查</span>
-    <span class="kw">const</span> <span class="kw">auto</span> bars = win-&gt;findChildren&lt;QToolBar *&gt;();
-    <span class="kw">for</span> (QToolBar *b : bars)
-        <span class="kw">if</span> (b-&gt;objectName().isEmpty())
-            qWarning(<span>"工具栏「%s」没有 objectName"</span>, qPrintable(b-&gt;windowTitle()));
-}</code></pre>
-<h3>维护状态与退路</h3>
-<p>本章提到的四个第三方组件,许可证与维护状态都要现场查而不是照抄结论。下面这张表给的是查什么、去哪里查、以及停更之后退到哪里。</p>
-<table style="contain-intrinsic-size:auto 439px">
-<thead><tr><th>组件</th><th>许可证怎么查</th><th>维护状态怎么查</th><th>停更了退到哪里</th></tr></thead>
-<tbody>
-<tr><td>Qt Advanced Docking System</td><td>仓库根目录 LICENSE,再搜整棵源码树里的其余授权文件</td><td>近 12 个月的提交数与提交者数、发布间隔中位数、有没有适配新 Qt 版本的提交</td><td>退回 QDockWidget,损失浮动宿主、自动隐藏、内建透视图、无中央部件四项能力;状态串作废,要让用户重摆一次布局</td></tr>
-<tr><td class="nw">QtAwesome</td><td>仓库 LICENSE,外加它所打包的图标字体自身的授权</td><td>同上</td><td>退回自建 SVG 图标集;若已经把调用收拢进一个提供者,对外接口不变,只换内部实现</td></tr>
-<tr><td class="nw">QDarkStyleSheet</td><td>仓库 LICENSE,并单独确认样式表与图片资源是不是同一份授权</td><td>同上;它主要以 Python 包发布,C++ 侧本来就是取源文件自建资源</td><td>退回 Fusion 加自定义 QPalette,损失部分控件的精细外观,换来零依赖与升级免疫</td></tr>
-<tr><td class="nw">Qt Property Browser</td><td>所拿到的那个分支的 LICENSE 与源文件头部声明</td><td>该分支最近两年的提交量,以及最后一次适配的 Qt 版本</td><td>它本来就是源码内嵌,停更等于自己接手;新工程直接走 QTreeView 加自定义模型与委托</td></tr>
-</tbody>
-</table>
-<p>四行里有三行的退路都指向「用 Qt 本体重做一遍」,这不是巧合:这一层的第三方库解决的是交互丰富度与开发速度,而不是 Qt 做不到的能力。<strong>把每个库的调用收拢到一个门面文件里</strong>,退路的成本就从「改遍全工程」降到「改一个文件」。</p>
-<pre style="contain-intrinsic-size:auto 265px"><code># 引入前与每半年一次的例行查证,四个组件用同一组命令
-git -C &lt;repo&gt; log --since=<span>"12 months ago"</span> --oneline | wc -l
-git -C &lt;repo&gt; shortlog -sn --since=<span>"12 months ago"</span> | head -20
-git -C &lt;repo&gt; <span class="kw">for</span>-each-ref --sort=creatordate --format=<span>'%(creatordate:short) %(refname:short)'</span> refs/tags | tail -8
-find &lt;repo&gt; -iname <span>"LICENSE*"</span> -o -iname <span>"COPYING*"</span>
-
-# 自己这边的替换成本:类型有没有进到自己的头文件里
-grep -rEn <span>"ads::|QtAwesome|QtVariantProperty"</span> src/ --include=*.h | wc -l</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 每个第三方界面库都收进一个门面文件,退路成本就只剩一个文件</span><p>停靠库、图标库、属性表库的类型一旦散落在几十个文件里,换掉它就是一次全工程改动。做法是给每一个库配一个自己的门面:对外只暴露自己的类型与逻辑名,内部才出现第三方类名。判断是否做到了的方法是一条 grep:第三方类型名在自己的头文件里出现的次数应当是零,在源文件里应当只集中在一两个文件中。</p></div>
-<h3>四个 Qt 接口点在本章的落点</h3>
-<p>第 0 章提出的四个接口点,在这一章各有具体落点。下面这张表把它们与验收动作对应起来。</p>
-<table style="contain-intrinsic-size:auto 338px">
-<thead><tr><th>接口点</th><th>本章的落点</th><th>验收动作</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>停靠面板包住内容部件后接管其所有权;属性模型只持有目标对象的弱引用;图标提供者挂在应用对象下</td><td>在内容部件的析构里打日志,跑一次完整退出流程,确认每个对象只析构一次</td></tr>
-<tr><td class="nw">信号槽桥接</td><td>面板显隐用 toggleViewAction 双向同步;属性变更用 NOTIFY 信号反向刷新表格;停靠库的面板增删与焦点变化信号</td><td>关掉一个面板看菜单勾选状态,从代码里改一次对象属性看表格是否跟着变</td></tr>
-<tr><td class="nw">样式与主题</td><td>应用级样式表、停靠库自带样式表、单个控件样式表三层的覆盖顺序;调色板与样式表的分工</td><td>把程序切到深色主题跑一遍,逐个面板目检,重点看自绘部件与第三方部件</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td>图标走矢量按设备像素比渲染;布局状态存逻辑坐标;换语言后要重算布局;右到左方向下停靠方位常量不随视觉位置变</td><td>在 100% 与 150% 两块屏幕之间拖一次主窗口,再切一次界面语言,各跑一遍恢复布局</td></tr>
-</tbody>
-</table>
-<p>四项里最容易漏的是第三项与第四项的交叉处:图标。图标同时受主题(颜色)与缩放(尺寸)影响,而且它的结果被缓存,所以两个维度上的变化都要能触发重建。把这一件事做对,深色主题下的图标问题与高分屏下的模糊问题一起解决。</p>
-<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 从 Qt 6.5 起,跟随系统深浅色不再需要第三方样式表</span><p>读取系统当前颜色方案与订阅其变化的接口在 QStyleHints 上,配合 Fusion 样式与一份自定义 QPalette 就能得到完整的深浅两套外观,自绘部件从调色板取色即自动跟随。这条路的最大优势是不随 Qt 升级失效,因为它不依赖任何控件的内部结构。具体接口名与可用版本以所用版本文档为准,验证只需十行程序:打印一次颜色方案,再去系统设置里切换一次看有没有收到通知。</p></div>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 444px">
-<thead><tr><th>主题</th><th>结论</th></tr></thead>
-<tbody>
-<tr><td class="nw">停靠模型</td><td>QMainWindow 只有一个停靠宿主,五个固定位置,一棵布局树。浮动出去的面板不是第二个宿主</td></tr>
-<tr><td class="nw">objectName</td><td>它是布局保存与恢复的唯一键。漏设或改动都会让面板静默消失,而且不能用 tr() 的结果</td></tr>
-<tr><td class="nw">布局版本号</td><td>结构一变就递增,老状态整套作废。不递增的代价是恢复出错位而没有任何报错</td></tr>
-<tr><td class="nw">恢复之后</td><td>restoreState 返回 true 不代表每个面板都摆好了,要逐个补位,并把跑到屏幕外的浮动面板拉回来</td></tr>
-<tr><td class="nw">换停靠实现</td><td>两套实现的状态串互不相通,迁移当天用户布局全部作废,要换存储键并主动提示</td></tr>
-<tr><td class="nw">属性表</td><td>QMetaObject 反射加委托按类型分派是主推做法,新增属性不用改界面;编辑器按需创建,不要逐行驻留</td></tr>
-<tr><td class="nw">属性反向同步</td><td>靠 Q_PROPERTY 的 NOTIFY 信号。没有声明的属性,表格无从得知值变了</td></tr>
-<tr><td class="nw">图标</td><td>走矢量,并把生成收进一个提供者。颜色烧在位图里,主题变化时必须清缓存并通知重取</td></tr>
-<tr><td class="nw">深色主题</td><td>成品样式表见效快但随 Qt 升级失效;调色板方案作用于样式层,自绘部件自动跟随</td></tr>
-<tr><td class="nw">透视图</td><td>存 version、state、geometry 与一份可读清单。切换前暂存当前布局,失败时退回而不是回出厂默认</td></tr>
-<tr><td class="nw">第三方库</td><td>每个都收进一个门面文件,退路成本从全工程改动降到一个文件</td></tr>
-</tbody>
-</table>
-<p>最后一条是这一章与第 0 章的接点。界面骨架这一层的第三方库,收益集中在交互丰富度上,风险集中在长期维护与状态格式绑定上。<strong>门面文件是把这两者分开的最小成本手段</strong>,它不减少收益,只把风险限定在一个可以随时重写的边界之内。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41737px;--thin-h:41737px">
+<section class="chapter" style="contain-intrinsic-size:auto 36132px;--thin-h:36132px">
 <h1 id="c7"><span class="part">第 7 章</span>报表、打印与 PDF</h1>
+<p>面向企业用户的产品迟早要回答三个问题:能不能打印、能不能导出 PDF、能不能按固定版式出一份单据。本章沿这条输出链展开:QPrinter 的完整打印流程、导出 PDF 时的分页与字体嵌入、用 QtPdf 在程序里查看 PDF、版式的上游——模板引擎用 HTML 还是自己排版,以及「业务人员自己改版式」才需要的第三方报表引擎。取舍的角度有两条:输出对象是打印机还是文件,版式要不要交给非开发人员维护。</p>
 <h2 id="c7-print">7.1 QPrinter:打印的完整流程</h2>
 <p>一个面向企业用户的桌面程序迟早要回答三个问题:能不能打印、能不能导出 PDF、能不能按固定版式出一份带页眉页码的单据。这三件事在 Qt 里由不同的对象承担,却共用同一个绘制模型——<strong>把纸当成一块画布,用 <code>QPainter</code> 往上画</strong>。本章其余各节都在回答同一个问题的两半:谁决定画什么,谁决定画到哪一页。</p>
 <p>选路径的判据有四条:输出对象是打印机还是文件;版式要不要交给非开发人员改;内容是流式的长文档还是格子固定的单据;目标机器上有没有可用的打印子系统。这四条的组合决定了下面这张表里选哪一行,后面五节分别把每一行展开。</p>
@@ -9557,141 +8838,11 @@ target_link_libraries(app PRIVATE limereport)</code></pre>
 <p>是 XML 或 JSON 这类文本格式时,引擎停更之后仍有出路:模板里的字段位置、字体、边框都能被解析出来,写一个转换器把它们变成 7.4 路线二的那张版式表,几十张单据可以批量转过去,人工只需要校对。是私有二进制格式时,这条路走不通,只能打开设计器一张一张重画。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 选报表引擎时把模板格式是不是文本列为硬指标</span><p>模板是 XML 或 JSON 时,即使引擎停止维护,也能写一个解析器把版式抽出来迁移到自建方案;模板是私有二进制格式时,唯一的退路是逐张重画。这条判据的权重应当高于设计器的美观程度与功能条数,因为它决定的是最坏情况下的成本上限。核对方法很简单:用文本编辑器打开一份模板文件看得懂看不懂。</p></div>
 <p>另一条退路是把报表这一层与程序其余部分隔开:定义一个自己的接口(传入数据、传出 PDF 路径),引擎的调用全部封在实现里。这样换引擎时受影响的只有一个文件,而不是散落在各处的调用点。</p>
-<h2 id="c7-sum">7.6 小结</h2>
-<p>这一章的三件事——打印、生成 PDF、查看 PDF——共用同一个绘制模型,区别只在于谁决定分页,以及输出落到哪里。把这句话展开,本章的每一条结论都能从中推出来。</p>
-<p>绘制模型是 <code>QPainter</code> 加一个分页设备。分页的决定权有三个可能的归属:全部归你(按毫米画格子)、归文档布局引擎(<code>QTextDocument</code>)、归一个外部排版器(浏览器引擎或报表引擎)。归属越靠后,你写的代码越少,能控制的细节也越少,依赖越重。选型实际上就是在这条线上定一个位置。</p>
-<h3>判据速查:从需求到方案</h3>
-<table style="contain-intrinsic-size:auto 339px">
-<thead><tr><th>需求</th><th>选什么</th><th>去哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">把界面上的一屏打到纸上</td><td><code>QWidget::render</code> 到 <code>QPrinter</code></td><td>7.1</td></tr>
-<tr><td class="nw">长文档、富文本打印或导出</td><td><code>QTextDocument</code> + 逐页绘制循环</td><td>7.1、7.2</td></tr>
-<tr><td class="nw">票据套打、固定格子</td><td class="nw"><code>QPainter</code> 按毫米排版</td><td>7.4 路线二</td></tr>
-<tr><td class="nw">服务端或容器里出 PDF</td><td><code>QPdfWriter</code>,不引 QtPrintSupport</td><td>7.2</td></tr>
-<tr><td class="nw">程序里看 PDF</td><td>QtPdf 的 <code>QPdfDocument</code> 与 <code>QPdfView</code></td><td>7.3</td></tr>
-<tr><td class="nw">需要编辑 PDF(批注、表单)</td><td>Poppler,并先确认许可证</td><td>7.3</td></tr>
-<tr><td class="nw">版式要用现代 CSS</td><td><code>QWebEnginePage::printToPdf</code></td><td>7.4 路线三</td></tr>
-<tr><td class="nw">版式要交给业务人员改</td><td>报表引擎,优先选模板为文本格式的</td><td>7.5</td></tr>
-</tbody>
-</table>
-<p>表里有两条容易选错。其一,「服务端出 PDF」经常被写成 <code>QPrinter</code> + <code>PdfFormat</code>,于是把 QtPrintSupport 与 CUPS 拖进了容器镜像;<code>QPdfWriter</code> 在 QtGui 里,是更干净的选择。其二,「看 PDF」经常被写成引 Poppler,而 QtPdf 是随 Qt 发行的官方模块,不需要任何外部依赖。</p>
-<p>还有一条选择在表里没有直接体现:同一个产品里的不同单据可以走不同路线。长文档类的报告走 HTML 模板,套打的票据走按毫米排版,两者共用同一个对外接口。把路线当成每张单据的属性而不是整个产品的属性,可以避免为了一张票据把整套方案往精确排版上拗。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 路线是每张单据的属性,不是整个产品的属性</span><p>长文档与套打票据对排版的要求完全不同,用同一条路线做完两者,必然有一头被迁就。正确的做法是让报表层的接口保持统一,内部按 <code>templateId</code> 分派到不同实现:报告走文档流,票据走毫米坐标。调用方看到的仍然是同一个方法,维护成本不会因此上升。</p></div>
-<h3>症状反查表</h3>
-<table style="contain-intrinsic-size:auto 559px">
-<thead><tr><th>症状</th><th>最可能的根因</th><th>去看</th></tr></thead>
-<tbody>
-<tr><td class="nw">内容全部挤在纸张左上角一小块</td><td class="nw">用了屏幕像素坐标</td><td>7.1</td></tr>
-<tr><td class="nw">第一张纸是空白的</td><td>首页之前调了 <code>newPage()</code></td><td>7.1</td></tr>
-<tr><td class="nw">导出的 PDF 打开是空白,全选才看到文字</td><td><code>PaintContext</code> 的文本色取自深色主题</td><td>7.2</td></tr>
-<tr><td class="nw">表格第二页起没有表头</td><td>没设 <code>setHeaderRowCount()</code></td><td>7.2</td></tr>
-<tr><td class="nw">换一台机器生成的排版不同</td><td class="nw">字体缺失被静默替换</td><td>7.2</td></tr>
-<tr><td class="nw">PDF 里的图糊,文字清楚</td><td>位图按屏幕尺寸准备,分辨率不足</td><td>7.2</td></tr>
-<tr><td class="nw">缩略图在高分屏上发虚</td><td>渲染时没乘 <code>devicePixelRatio</code></td><td>7.3</td></tr>
-<tr><td class="nw">用本程序打印 PDF 比系统阅读器模糊</td><td class="nw">经过了一次栅格化</td><td>7.3</td></tr>
-<tr><td class="nw">个别客户的单据版式错乱</td><td class="nw">模板数据没有转义</td><td>7.4</td></tr>
-<tr><td class="nw"><code>printToPdf</code> 出白页或缺图</td><td class="nw">页面资源没就绪就导出</td><td>7.4</td></tr>
-<tr><td class="nw">持续集成里打印相关用例全部失败</td><td class="nw">环境里没有打印机</td><td>7.1</td></tr>
-<tr><td class="nw">导出大报表时界面冻结</td><td class="nw">生成在主线程</td><td>7.2</td></tr>
-<tr><td class="nw">导出偶发崩溃,栈在文本布局里</td><td class="nw">文档被两个线程同时访问</td><td>7.2</td></tr>
-<tr><td class="nw">报表合计与界面对不上</td><td class="nw">计算写在了模板脚本里</td><td>7.5</td></tr>
-</tbody>
-</table>
-<h3>与 Qt 机制的四个接口点</h3>
-<p>把本章各节的落点收拢成一张表,便于在设计阶段逐条核对。</p>
-<table style="contain-intrinsic-size:auto 292px">
-<thead><tr><th>接口点</th><th>本章的具体结论</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td><code>QPdfDocument</code> 给父对象即可随父销毁;绘制设备与画笔必须同线程创建与销毁;<code>QWebEnginePage</code> 异步导出完成后 <code>deleteLater()</code></td></tr>
-<tr><td class="nw">信号槽桥接</td><td>加载看 <code>statusChanged</code>,页码看 <code>currentPageChanged</code>,口令看 <code>passwordRequired</code>;导出对外只暴露进度、完成、失败三个信号</td></tr>
-<tr><td class="nw">样式与主题</td><td>打印对话框是原生窗口,QSS 不作用于它;报表颜色一律写死,不从调色板取;PDF 视图的纸面保持白色是正确的</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td>自己渲染页面要乘 <code>devicePixelRatioF()</code> 并回设;报表语言与区域设置当作参数传入,不读全局值;界面文案走 <code>tr()</code></td></tr>
-</tbody>
-</table>
-<h3>把报表这一层隔离出去</h3>
-<p>本章讨论的每一条路线都可能在产品的生命周期里被换掉:模板方案换成引擎,引擎换成另一个引擎,打印改成先出 PDF。让这些更换的影响面收敛到一个文件,需要在一开始就定义一个不依赖任何具体实现的接口。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 604px"><code><span class="cm">// 报表层对外的全部约定:传数据进去,拿文件或打印结果出来</span>
-<span class="kw">class</span> ReportService : <span class="kw">public</span> QObject
-{
-    Q_OBJECT
-<span class="kw">public</span>:
-    <span class="kw">struct</span> Request {
-        QString templateId;      <span class="cm">// 逻辑名,不是文件路径</span>
-        QVariantMap header;      <span class="cm">// 抬头字段</span>
-        QVector&lt;QVariantMap&gt; rows;
-        QLocale locale;          <span class="cm">// 报表自己的区域设置</span>
-    };
-
-    <span class="kw">virtual</span> ~ReportService() = <span class="kw">default</span>;
-    <span class="kw">virtual</span> <span class="kw">void</span> exportPdf(<span class="kw">const</span> Request &amp;req, <span class="kw">const</span> QString &amp;outPath) = 0;
-    <span class="kw">virtual</span> <span class="kw">void</span> print(<span class="kw">const</span> Request &amp;req, QWidget *dialogParent) = 0;
-
-signals:
-    <span class="kw">void</span> progress(<span class="kw">int</span> done, <span class="kw">int</span> total);
-    <span class="kw">void</span> finished(<span class="kw">const</span> QString &amp;path);
-    <span class="kw">void</span> failed(<span class="kw">const</span> QString &amp;reason);
-};</code></pre>
-<p>三个细节让这个接口经得住更换。<code>templateId</code> 是逻辑名而不是文件路径,换实现时路径规则可以完全不同;数据是值语义的容器,不含任何指向界面对象的指针,因此可以送进工作线程;<code>locale</code> 是请求的一部分,不从全局取。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 报表层只暴露数据进、文件出的接口,实现细节一律不外泄</span><p>接口里不要出现 <code>QTextDocument</code>、<code>QPrinter</code> 或任何引擎的类型。一旦这些类型出现在头文件里,调用方就与某一条路线绑定了,更换实现要改的就不止一个文件。判断接口是不是干净,看它的头文件包含了哪些东西:只包含 Qt 的基础类型与自己的结构体,就是干净的。</p></div>
-<p>具体实现按本章的四条路线各写一个,由一个工厂按配置选。切换路线不需要动任何调用点,也让「同一份数据两种实现出的结果是否一致」变成可以自动比对的事。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code>std::unique_ptr&lt;ReportService&gt; makeReportService(<span class="kw">const</span> QString &amp;backend, QObject *parent)
-{
-    <span class="kw">if</span> (backend == QLatin1String(<span>"html"</span>))
-        <span class="kw">return</span> std::make_unique&lt;HtmlReportService&gt;(parent);      <span class="cm">// 7.4 路线一</span>
-    <span class="kw">if</span> (backend == QLatin1String(<span>"painter"</span>))
-        <span class="kw">return</span> std::make_unique&lt;PainterReportService&gt;(parent);   <span class="cm">// 7.4 路线二</span>
-    <span class="kw">if</span> (backend == QLatin1String(<span>"engine"</span>))
-        <span class="kw">return</span> std::make_unique&lt;EngineReportService&gt;(parent);    <span class="cm">// 7.5</span>
-    <span class="kw">return</span> std::make_unique&lt;HtmlReportService&gt;(parent);          <span class="cm">// 默认退路</span>
-}</code></pre>
-<p>最后一行是这个工厂的关键:默认分支落在不引入任何第三方依赖的那条路线上。引擎缺失、许可证到期、模板损坏时,程序仍能出一份朴素但正确的单据,而不是整个功能不可用。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 把 QPrinter 指针传进业务层,后续无法改成后台批量导出</span><p>症状是需求变成「夜间批量生成上千份 PDF」时发现整条链路改不动:业务代码里到处是打印对话框与部件父指针。根因是打印设备与界面对象出现在了业务接口上。排查手段是搜业务层头文件里有没有 <code>QPrinter</code>、<code>QWidget</code> 这些类型。改法是把接口收敛成上面这种形状,界面相关的参数只出现在实现里。</p></div>
-<h3>本章提到的库:许可证、维护状态与退路</h3>
-<p>本书的时效性对策是不写死任何许可证与版本结论,只给查证方法与退路。</p>
-<table style="contain-intrinsic-size:auto 363px">
-<thead><tr><th>名称</th><th>归属与许可</th><th>怎么查维护状态</th><th>停更或不可用时的退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">QtPrintSupport</td><td>Qt 官方模块,随 Qt 发行版授权</td><td>Qt 的版本发布说明</td><td>改走 <code>QPdfWriter</code> 出 PDF,再交系统打印</td></tr>
-<tr><td class="nw">QtPdf</td><td>Qt 官方模块,随 Qt 发行版授权</td><td>同上</td><td>退到系统阅读器或 Poppler,后者要先过许可证</td></tr>
-<tr><td class="nw">Poppler 的 Qt 绑定</td><td>GPL,以发行包 LICENSE 为准</td><td>仓库发布页与提交记录</td><td>退到 QtPdf,放弃编辑类能力</td></tr>
-<tr><td class="nw">QtWebEngine</td><td>随 Qt 发行版授权,内含第三方许可清单</td><td>Qt 的版本发布说明与平台支持表</td><td>退到 HTML 子集加 <code>QTextDocument</code>,放弃现代 CSS</td></tr>
-<tr><td class="nw">LimeReport</td><td>LGPL 与商业双轨,以仓库 LICENSE 为准</td><td>仓库最近提交与问题响应</td><td>模板是 XML,可解析后迁到自建版式表</td></tr>
-<tr><td class="nw">QtRPT</td><td>以仓库 LICENSE 为准</td><td>同上</td><td>同上</td></tr>
-</tbody>
-</table>
-<p>退路一栏里出现两次「模板是文本格式所以能迁」,这不是巧合。第 0 章给出的七个评估维度里,「数据与配置是不是可读格式」这一条在报表领域的权重高于其他任何一条,因为报表方案沉淀下来的资产不是代码,是模板。</p>
-<p>这张表要随产品一起维护。每次升级 Qt 或升级第三方库时,把「怎么查维护状态」那一列的方法执行一遍,把结论记进版本说明。这项工作的成本是每次几分钟,回报是在库真的停更时,决策所需的信息已经在手边。</p>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 823px">
-<thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td class="nw">纸是画布,链路的差别只在谁决定分页</td><td class="nw">7.1</td><td>三条路径共用 <code>QPainter</code></td></tr>
-<tr><td>页边距用毫米,几何从 <code>paintRectPixels</code> 取</td><td class="nw">7.1</td><td>换设备不改数字</td></tr>
-<tr><td class="nw">预览与真打印必须共用同一个绘制函数</td><td class="nw">7.1</td><td>接 <code>paintRequested</code></td></tr>
-<tr><td class="nw">自动化环境走 <code>PdfFormat</code></td><td class="nw">7.1</td><td>不依赖任何打印机</td></tr>
-<tr><td class="nw"><code>QPdfWriter</code> 在 QtGui 里</td><td class="nw">7.2</td><td>服务端出 PDF 不必引打印支持</td></tr>
-<tr><td class="nw">文档的页面尺寸给正文带</td><td class="nw">7.2</td><td>页眉页脚画在它之外</td></tr>
-<tr><td class="nw"><code>PaintContext</code> 的文本色要显式设成黑</td><td class="nw">7.2</td><td>否则深色主题下导出白字</td></tr>
-<tr><td>跨页表格靠 <code>setHeaderRowCount</code> 重复表头</td><td class="nw">7.2</td><td>不要自己切数据</td></tr>
-<tr><td class="nw">字体缺失会被静默替换</td><td class="nw">7.2</td><td>用 <code>QFontInfo</code> 比对族名</td></tr>
-<tr><td class="nw">成品是否嵌字体用 <code>pdffonts</code> 查</td><td class="nw">7.2</td><td>不能靠肉眼看阅读器</td></tr>
-<tr><td class="nw">图表直接画到 PDF 的画笔上</td><td class="nw">7.2</td><td>不要先截成位图</td></tr>
-<tr><td class="nw">导出放工作线程,文档不跨线程共享</td><td class="nw">7.2</td><td>数据用值语义传</td></tr>
-<tr><td class="nw">QtPdf 是 Qt 6 的官方模块</td><td class="nw">7.3</td><td>查看 PDF 不必引 Poppler</td></tr>
-<tr><td class="nw">QtPdf 只看不改</td><td class="nw">7.3</td><td>批注、表单、插页都不在范围内</td></tr>
-<tr><td class="nw">自己渲染要乘 <code>devicePixelRatio</code></td><td class="nw">7.3</td><td>否则高分屏发虚</td></tr>
-<tr><td class="nw">模板数据一律转义</td><td class="nw">7.4</td><td>一个尖括号能冲掉整份版式</td></tr>
-<tr><td class="nw">模板里用表格排版</td><td class="nw">7.4</td><td>浮动与弹性盒不生效</td></tr>
-<tr><td class="nw"><code>printToPdf</code> 要等资源就绪</td><td class="nw">7.4</td><td>全异步,批量导出要排队</td></tr>
-<tr><td class="nw">报表语言当参数传</td><td class="nw">7.4</td><td>不读全局区域设置</td></tr>
-<tr><td class="nw">计算收回 C++,模板只做格式</td><td class="nw">7.5</td><td>脚本里的逻辑没有测试</td></tr>
-<tr><td class="nw">模板是不是文本格式决定退路</td><td class="nw">7.5</td><td>选型时列为硬指标</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 47098px;--thin-h:47098px">
+<section class="chapter" style="contain-intrinsic-size:auto 42153px;--thin-h:42153px">
 <h1 id="c8"><span class="part">第 8 章</span>网络:协议、服务端与异步</h1>
+<p>桌面产品的网络需求远不止「能发请求」。本章从 <code>QNetworkAccessManager</code> 之上该封装的七件事讲起,再覆盖四类场景:Qt HTTP Server 让程序当服务端、WebSocket 承载服务端主动推送、MQTT 做设备遥测与弱网投递、QtGrpc 对接有接口描述的后端,最后以 QCoro 协程收尾,解决多步异步的回调地狱。取舍角度是消息模型对上哪类需求,与各附加模块不一致的授权档次。</p>
 <h2 id="c8-http">8.1 QNetworkAccessManager 之上该封装什么</h2>
 <p><code>QNetworkAccessManager</code> 的用法在姊妹书《Qt 核心与 Widget》里已经讲过:建请求、发出去、在 <code>finished</code> 里读回复。这一节不重复那部分,要回答的是紧接着的下一个问题——<strong>一个产品级的网络层,在这个类之上还要补什么</strong>。</p>
 <p>判据来自需求本身。一个真实产品的网络层要交付的不是「能发请求」,而是七件事:连接复用、超时、重试、取消、鉴权、统一的错误模型、以及可测试性。裸用 <code>QNetworkAccessManager</code> 时这七件事全部散落在各个调用点上,每个页面各写一遍,写法还不一致。</p>
@@ -10624,135 +9775,11 @@ client-&gt;get(<span class="kw">this</span>, url, [<span class="kw">this</span>]
 <p>协程版的实现通常就是回调版加一层适配:内部仍然调回调版,把结果交给协程的恢复机制。这样两套接口共享同一份重试、超时与鉴权逻辑,不会出现两条各自演化的路径。</p>
 <p>两个接口可以并存:界面里的单次请求用回调版更直接,多步流程用协程版。这也意味着引入协程不需要一次性重写整个网络层,可以从最长的那条流程开始逐步替换,这一点决定了它在既有工程里的引入成本是可控的。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 引入协程从最长的那条流程开始,不必一次性重写网络层</span><p>回调版与协程版的接口可以并存,底层实现共用同一套。先把嵌套最深、状态变量最多的那一条流程改成协程,收益立刻可见,风险局限在一个函数里。全面替换应当是这些局部改造积累之后的自然结果,而不是一次性的重构决定。</p></div>
-<h2 id="c8-sum">8.7 小结</h2>
-<p>这一章覆盖了五种网络形态与一种写法。把它们串起来的是同一条线索:<strong>Qt 的网络组件都跑在事件循环上,交付结果的方式都是信号</strong>。这条线索决定了本章几乎所有结论——封装该封装什么、第三方库该怎么桥接、协程解决的是哪一类问题。</p>
-<h3>判据速查:需求到协议与库</h3>
-<table style="contain-intrinsic-size:auto 297px">
-<thead><tr><th>需求</th><th>选什么</th><th>去哪一节</th></tr></thead>
-<tbody>
-<tr><td class="nw">请求响应,拉数据、提交表单</td><td><code>QNetworkAccessManager</code> 加一层封装</td><td>8.1</td></tr>
-<tr><td class="nw">程序自带巡检接口、局域网协作、授权回调</td><td class="nw">Qt HTTP Server</td><td>8.2</td></tr>
-<tr><td class="nw">服务端主动推,需要双向</td><td class="nw">QtWebSockets</td><td>8.3</td></tr>
-<tr><td class="nw">只需要服务端到客户端且消息稀疏</td><td>推送事件流,用现有 HTTP 通道</td><td>8.3</td></tr>
-<tr><td class="nw">设备遥测、一对多分发、弱网</td><td class="nw">MQTT,先确认许可证</td><td>8.4</td></tr>
-<tr><td class="nw">后端已有接口描述文件,需要强类型</td><td>QtGrpc 或只用 Protobuf</td><td>8.5</td></tr>
-<tr><td class="nw">多步依赖的异步流程</td><td class="nw">QCoro 协程</td><td>8.6</td></tr>
-</tbody>
-</table>
-<p>最后一行与前面几行不同层次:协程是写法的选择,与选哪种协议无关,可以叠加在任何一行之上。</p>
-<p>表里有两条最容易走弯路。其一,MQTT 的许可证要在写第一行代码之前确认,而不是在准备发布时;其二,「需要服务端推送」不必然等于 WebSocket,单向且稀疏的推送用现有的 HTTP 通道就够,少一条长连接就少一套重连逻辑。</p>
-<h3>症状反查表</h3>
-<table style="contain-intrinsic-size:auto 702px">
-<thead><tr><th>症状</th><th>最可能的根因</th><th>去看</th></tr></thead>
-<tbody>
-<tr><td class="nw">请求延迟高,抓包全是重新握手</td><td class="nw">每次请求都新建管理器</td><td>8.1</td></tr>
-<tr><td class="nw">界面显示成功但内容为空</td><td class="nw">只看传输层错误,没看状态码</td><td>8.1</td></tr>
-<tr><td class="nw">并发操作时偶发登录失效</td><td class="nw">多个请求各自刷新令牌</td><td>8.1</td></tr>
-<tr><td class="nw">批量上传时进度长时间不动然后跳几格</td><td class="nw">请求全压进管理器的内部队列</td><td>8.1</td></tr>
-<tr><td class="nw">本机端口被安全扫描发现</td><td class="nw">服务端绑了任意地址或收工不关</td><td>8.2</td></tr>
-<tr><td class="nw">按教程写的服务端编译不过</td><td class="nw">监听接口在版本之间改过</td><td>8.2</td></tr>
-<tr><td class="nw">点一次接口界面卡住</td><td class="nw">路由处理函数里做了耗时工作</td><td>8.2</td></tr>
-<tr><td class="nw">界面显示已连接但再无数据</td><td>半开连接,只靠断开信号驱动重连</td><td>8.3</td></tr>
-<tr><td class="nw">服务端日志里同一客户端每秒连断</td><td>连上就清零退避,鉴权失败反复重试</td><td>8.3</td></tr>
-<tr><td class="nw">重连之后收不到任何推送</td><td class="nw">没有重放订阅</td><td>8.3</td></tr>
-<tr><td class="nw">开发机 wss 正常,客户机连不上</td><td class="nw">TLS 后端不可用</td><td>8.3</td></tr>
-<tr><td class="nw">运行一段时间后不再收到消息</td><td class="nw">MQTT 断线不自动重连</td><td>8.4</td></tr>
-<tr><td class="nw">同一条指令被执行两次</td><td class="nw">按至少一次投递却没做幂等</td><td>8.4</td></tr>
-<tr><td class="nw">客户端内存与带宽持续上升</td><td class="nw">用多层通配符订阅了根主题</td><td>8.4</td></tr>
-<tr><td class="nw">新客户端一连上就重放历史动作</td><td class="nw">事件类消息用了保留标志</td><td>8.4</td></tr>
-<tr><td class="nw">持续集成上配置阶段失败</td><td class="nw">构建机缺 protoc</td><td>8.5</td></tr>
-<tr><td class="nw">关闭页面后随机崩溃,栈在协程恢复处</td><td class="nw">挂起点之后对象已析构</td><td>8.6</td></tr>
-<tr><td class="nw">连点两次刷新,列表与详情对不上</td><td class="nw">回调之间靠成员变量传值</td><td>8.6</td></tr>
-</tbody>
-</table>
-<h3>四个 Qt 接口点在本章的落点</h3>
-<table style="contain-intrinsic-size:auto 240px">
-<thead><tr><th>接口点</th><th>本章的具体结论</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td><code>QNetworkReply</code> 用 <code>deleteLater()</code> 回收,不要 <code>delete</code>;订阅对象由客户端持有;协程要用 <code>QPointer</code> 检查承载对象是否还在;<code>QWebSocket</code> 与定时器作为包装类的成员持有</td></tr>
-<tr><td class="nw">信号槽桥接</td><td>自带线程的第三方库,回调里只做搬运,用 <code>QMetaObject::invokeMethod</code> 配队列连接回到 Qt 线程;长连接组件对外只暴露状态与消息两个信号</td></tr>
-<tr><td class="nw">样式与主题</td><td>网络层与样式无关,但连接状态、重试倒计时、错误提示由一个状态枚举驱动,颜色只在一处定义</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td>面向用户的文案走 <code>tr()</code>;服务端的原始错误只进日志;时间戳按 <code>QLocale</code> 与本地时区格式化后再显示</td></tr>
-</tbody>
-</table>
-<p>这四条里,信号槽桥接那一条是本章最通用的一项,也是唯一一条与具体协议无关的规则。凡是引入自带线程模型的第三方网络库,都要在它与 Qt 之间加一层只做搬运的适配,这条模式在第 8.4 节给出了完整代码,在 gRPC 的官方实现、各类消息队列客户端上同样适用。</p>
-<h3>一条贯穿全章的形状:窄接口加适配层</h3>
-<p>五节里反复出现同一个建议:把具体的库藏在一个窄接口后面。把它写成代码就是下面这两个类型,本章的每一种传输都能塞进去。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 495px"><code><span class="cm">// 与协议无关的连接状态,界面只认这个枚举</span>
-<span class="kw">enum</span> <span class="kw">class</span> LinkState { Offline, Connecting, Online, Failed };
-
-<span class="cm">// 与协议无关的消息通道:上层只发送与接收,不关心底下是什么</span>
-<span class="kw">class</span> MessageLink : <span class="kw">public</span> QObject
-{
-    Q_OBJECT
-<span class="kw">public</span>:
-    <span class="kw">virtual</span> ~MessageLink() = <span class="kw">default</span>;
-    <span class="kw">virtual</span> <span class="kw">void</span> start() = 0;
-    <span class="kw">virtual</span> <span class="kw">void</span> stop()  = 0;
-    <span class="kw">virtual</span> <span class="kw">void</span> send(<span class="kw">const</span> QString &amp;topic, <span class="kw">const</span> QByteArray &amp;payload) = 0;
-
-signals:
-    <span class="kw">void</span> stateChanged(LinkState state);
-    <span class="kw">void</span> received(<span class="kw">const</span> QString &amp;topic, <span class="kw">const</span> QByteArray &amp;payload);
-};</code></pre>
-<p>WebSocket 实现、MQTT 实现、以及测试用的假实现都继承它。界面代码只订阅两个信号,重连策略、心跳、订阅重放全部封在实现里。换协议时受影响的是一个文件,而不是散布在各页面的连接管理代码。</p>
-<pre style="contain-intrinsic-size:auto 169px"><code># 三种实现可以同时编进程序,由配置决定用哪一个
-target_sources(app PRIVATE
-    link/WebSocketLink.cpp
-    link/MqttLink.cpp
-    link/FakeLink.cpp)        # 界面测试用:按脚本发出状态与消息</code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 界面只认统一的连接状态枚举,不认具体协议的状态</span><p>每种客户端都有自己的状态定义,直接暴露给界面意味着换协议要改界面。把它们统一映射成四个状态之后,连接指示、重试提示、离线遮罩这些界面元素只需要写一遍。这条约定同时让「用假实现驱动界面测试」成为可能:测试里不需要真实服务端,按脚本发出状态序列即可覆盖断线与恢复的全部界面分支。</p></div>
-<h3>本章提到的库:许可证、维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 424px">
-<thead><tr><th>名称</th><th>归属与许可</th><th>怎么查维护状态</th><th>停更或不可用时的退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">QtNetwork</td><td>Qt 官方模块</td><td>Qt 版本发布说明</td><td>无需退路</td></tr>
-<tr><td class="nw">Qt HTTP Server</td><td>Qt 官方模块,注意技术预览状态</td><td>模块文档页与发布说明</td><td>退回 <code>QTcpServer</code> 自己解析请求行</td></tr>
-<tr><td class="nw">QtWebSockets</td><td>Qt 官方模块</td><td>同上</td><td>退到推送事件流或长轮询,失去双向</td></tr>
-<tr><td class="nw">QtMqtt</td><td>GPL 或商业,以模块许可文件为准</td><td>同上</td><td>换第三方客户端加桥接层,要自己补重连、重放、幂等</td></tr>
-<tr><td class="nw">QtGrpc 与 QtProtobuf</td><td>Qt 官方模块,注意技术预览状态</td><td>模块文档页</td><td>换官方 C++ 实现加桥接,或退到 Protobuf 加 HTTP</td></tr>
-<tr><td class="nw">QCoro</td><td>宽松开源许可,以仓库 LICENSE 为准</td><td>仓库发布页与提交记录</td><td>退回信号槽或 <code>QFuture</code>,状态变量与错误处理要重新展开</td></tr>
-<tr><td class="nw">第三方 HTTP 与 MQTT 客户端</td><td>以各自仓库 LICENSE 为准</td><td>发布页、最近提交、问题响应</td><td>视具体库而定,选型时先想清楚</td></tr>
-</tbody>
-</table>
-<p>退路一栏里,QCoro 的那一条最需要提前想清楚:它改变的是代码形状,退出时要把每一个协程展开回回调,工作量与当初改造时相当。降低这个风险的办法是保持回调版接口存在,协程版只是它之上的一层薄封装——8.6 末尾给出的并存形状正是为此。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 引第三方库时同时记下退路,并把它写进版本说明</span><p>退路不是出事之后再想的东西。立项时对每个库回答三个问题:许可证在哪个文件里、维护状态怎么查、不能用时改成什么。把答案写进工程文档,升级大版本时复核一次。这项工作的成本是每次几分钟,回报是在库真的停更或授权条件变化时,决策所需的信息已经在手边,而不是从头调研。</p></div>
-<h3>要点回顾</h3>
-<table style="contain-intrinsic-size:auto 997px">
-<thead><tr><th>要点</th><th>出处</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td class="nw">一个程序一个网络访问管理器</td><td class="nw">8.1</td><td>连接池与会话状态挂在实例上</td></tr>
-<tr><td class="nw">停滞超时不等于总时长上限</td><td class="nw">8.1</td><td>两个超时互补,都要设</td></tr>
-<tr><td class="nw">只有幂等请求可以自动重试</td><td class="nw">8.1</td><td>退避要带抖动</td></tr>
-<tr><td class="nw">传输层、状态码、业务码是三层</td><td class="nw">8.1</td><td>收敛成一个结果类型</td></tr>
-<tr><td class="nw">令牌刷新要单飞</td><td class="nw">8.1</td><td>标志位加等待队列</td></tr>
-<tr><td class="nw">限流队列放在封装层</td><td class="nw">8.1</td><td>管理器的内部队列不可观察</td></tr>
-<tr><td class="nw">Qt 6.4 起有官方 HTTP 服务端模块</td><td class="nw">8.2</td><td>本地接口不必手写解析</td></tr>
-<tr><td class="nw">监听接口在版本之间改过</td><td class="nw">8.2</td><td>以头文件为准</td></tr>
-<tr><td class="nw">本机服务端默认绑回环并校验令牌</td><td class="nw">8.2</td><td>端口交给系统分配</td></tr>
-<tr><td class="nw">路由处理函数只做取值与组装</td><td class="nw">8.2</td><td>耗时工作转成任务</td></tr>
-<tr><td class="nw">半开连接靠断开信号等不到</td><td class="nw">8.3</td><td>必须主动心跳</td></tr>
-<tr><td class="nw">重连后先重放订阅再冲队列</td><td class="nw">8.3</td><td>服务端不记得你订阅过</td></tr>
-<tr><td class="nw">退避计数在订阅重放成功后才清零</td><td class="nw">8.3</td><td>否则鉴权失败会高频重连</td></tr>
-<tr><td class="nw">wss 的 TLS 后端要在干净机器上实测</td><td class="nw">8.3</td><td>开发机结论不作数</td></tr>
-<tr><td class="nw">QtMqtt 没有宽松开源许可这一档</td><td class="nw">8.4</td><td>闭源产品先确认授权</td></tr>
-<tr><td class="nw">QtMqtt 不自动重连</td><td class="nw">8.4</td><td>退避与重放要自己写</td></tr>
-<tr><td class="nw">至少一次投递必须配幂等</td><td class="nw">8.4</td><td>不要靠升级服务质量等级回避</td></tr>
-<tr><td class="nw">状态类消息用保留标志,事件类不用</td><td class="nw">8.4</td><td>新订阅者会重放</td></tr>
-<tr><td class="nw">第三方库回调里只做搬运</td><td class="nw">8.4</td><td>用队列调用回到 Qt 线程</td></tr>
-<tr><td>Qt 6.5 起有 Protobuf 与 gRPC 模块</td><td class="nw">8.5</td><td>只生成客户端</td></tr>
-<tr><td class="nw">构建机要有 protoc</td><td class="nw">8.5</td><td>写进构建环境依赖清单</td></tr>
-<tr><td class="nw">演进期模块以生成物与头文件为准</td><td class="nw">8.5</td><td>不照抄文章里的拼写</td></tr>
-<tr><td class="nw">协程减少的是状态变量与重复的错误处理</td><td class="nw">8.6</td><td>不是行数</td></tr>
-<tr><td class="nw">每个挂起点之后先做有效性检查</td><td class="nw">8.6</td><td>对象还在吗,流程被取消了吗</td></tr>
-<tr><td class="nw">协程的优势在线性流程</td><td class="nw">8.6</td><td>复杂分支写状态机更清楚</td></tr>
-<tr><td class="nw">引入协程从最长的那条流程开始</td><td class="nw">8.6</td><td>两套接口可以并存</td></tr>
-</tbody>
-</table>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41125px;--thin-h:41125px">
+<section class="chapter" style="contain-intrinsic-size:auto 36946px;--thin-h:36946px">
 <h1 id="c9"><span class="part">第 9 章</span>数据库与本地存储</h1>
+<p>产品做到能装机运行,第一件绕不开的事是把数据放到硬盘上并且下次还能读出来。本章先按数据量、查询方式与写入者数量把「放哪里」选完,再进入 QtSql 的驱动、连接与线程规矩,讲清 SQLite 直连适合什么、为什么连接池要自己写,随后把「要不要 ORM」当成可判定的问题处理,最后给键值存储的分档方案。取舍角度是需求的真实形状:只按键取的数据不该进 SQL,单写入者的本地库不该按服务端的做法配。</p>
 <h2 id="c9-sql">9.1 QtSql:驱动、连接与线程规矩</h2>
 <p>一个产品做到能装机运行,第一件绕不开的事是把数据放到硬盘上并且下次还能读出来。这一节先把「放哪里」这个选择做完,再进入 QtSql 的三层结构、驱动安装与连接管理,最后落到一条不能违反的硬规矩:<strong>一个数据库连接只能在创建它的那个线程里使用</strong>。</p>
 <h3>先确定需求:程序要存的是哪一类数据</h3>
@@ -11517,7 +10544,7 @@ QList&lt;T&gt; fetchAll(QSqlQuery &amp;q)
 <tr><td class="nw">有没有可行的退路</td><td class="nw">自己评估</td><td><strong>这一条权重最高</strong>:能退回去的选择,选错的代价有限</td></tr>
 </tbody>
 </table>
-<p>最后一条是这张表的落脚点。第三方库的维护状态无法预测,能做的是让每一处依赖都有退路,并在引入时就把退路写下来。本章末尾的维护状态表就是按这个格式记录的。</p>
+<p>最后一条是这张表的落脚点。第三方库的维护状态无法预测,能做的是让每一处依赖都有退路,并在引入时就把退路写下来。退路的记录格式沿用第 0.5 节的退路文件,台账的字段定义见第 18.2 节。</p>
 <h2 id="c9-kv">9.5 键值存储与本地缓存</h2>
 <p>不是所有本地数据都值得建表。配置、界面状态、下载缓存、临时结果这几类数据的共同点是<strong>只按键取、不按内容查</strong>,用 SQL 存它们是杀鸡用牛刀,而用错工具的代价通常在数据量长起来之后才显现。这一节给出这类数据的分档与各自的接入形态。</p>
 <h3>判据:什么样的数据不需要 SQL</h3>
@@ -11707,114 +10734,11 @@ QList&lt;T&gt; fetchAll(QSqlQuery &amp;q)
 <p>三处设计值得说明。<strong>过期时刻存成绝对秒数而不是「剩余秒数」</strong>,这样不需要定时任务去递减;<strong><code>trim()</code> 在每次写入后调用</strong>,把清理成本摊到写入路径上,避免缓存无声增长;<strong>清理时的删除放在一个循环里,应当套一个事务</strong>——这份代码为了聚焦逻辑没有加,放进工程时按 9.1 节的规则补上。</p>
 <p>内存侧的缓存用 Qt 自带的 <code>QCache</code>,它按「代价」而不是按条数限容,适合放解码后的图片这类大小差异很大的对象。<code>QPixmapCache</code> 是它的一个特化,<strong>只能在 GUI 线程使用</strong>,因为 <code>QPixmap</code> 本身有这个限制。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 缓存目录用 QStandardPaths 的缓存位置,不要放在程序目录或用户文档里</span><p><code>QStandardPaths::writableLocation(QStandardPaths::CacheLocation)</code> 给出的目录在各平台上都是「系统可以在磁盘紧张时清理」的位置,这正是缓存该有的语义。放在程序安装目录会遇到权限问题,放在文档目录会被用户看见并且进入备份。要验证自己有没有放错,启动时把这个路径打印一次,确认它落在系统的缓存目录下。</p></div>
-<h2 id="c9-sum">9.6 小结</h2>
-<p>这一章的主线是一条从「数据放哪」到「谁来访问」的链:<strong>先按数据的形态选存储方式,再按访问者的线程数决定连接怎么管,最后决定业务代码用什么形式和表打交道</strong>。三个环节里,中间那一环是 Qt 特有的,也是最容易出事的。</p>
-<h3>本章要点</h3>
-<table style="contain-intrinsic-size:auto 635px">
-<thead><tr><th>节</th><th>结论</th><th>机制</th></tr></thead>
-<tbody>
-<tr><td class="nw">9.1 选型</td><td>按内容查询的需求一出现就用 SQL</td><td>自己遍历 JSON 是把数据库的活搬进应用层</td></tr>
-<tr><td class="nw">9.1 驱动</td><td><strong>可用驱动以运行时 <code>drivers()</code> 为准</strong></td><td>驱动是插件,取决于这份 Qt 怎么构建的</td></tr>
-<tr><td class="nw">9.1 连接</td><td><code>QSqlDatabase</code> 是句柄,连接在全局注册表里</td><td>连接名唯一;同名 <code>addDatabase</code> 会静默替换</td></tr>
-<tr><td class="nw">9.1 回收</td><td><code>removeDatabase</code> 前要先销毁全部句柄与查询</td><td>否则连接静默失效,只有一句警告</td></tr>
-<tr><td class="nw">9.1 线程</td><td><strong>一个连接只能在创建它的线程里用</strong></td><td><code>QSqlDatabase</code> 不是 <code>QObject</code>,搬不了</td></tr>
-<tr><td class="nw">9.2 SQLite</td><td class="nw">无服务进程、单文件、写入互斥</td><td>不要放在网络共享或同步盘上</td></tr>
-<tr><td class="nw">9.2 配置</td><td class="nw"><code>WAL</code> 让读不再被写阻塞</td><td><code>foreign_keys</code> 默认是关的,要每个连接执行一次</td></tr>
-<tr><td class="nw">9.2 事务</td><td class="nw"><strong>循环里的写入一律套事务</strong></td><td>逐条提交的落盘次数是瓶颈</td></tr>
-<tr><td class="nw">9.3 池</td><td>Qt 没有内建连接池,原因是连接不跨线程</td><td>经典的借还形态在这里不成立</td></tr>
-<tr><td class="nw">9.3 结构</td><td>线程局部连接;或固定线程数的执行池</td><td>后者让连接数等于线程数</td></tr>
-<tr><td class="nw">9.3 传递</td><td>跨线程传的是任务与结果,不是连接</td><td>结果先转成可拷贝的类型</td></tr>
-<tr><td class="nw">9.4 ORM</td><td class="nw"><strong>表少于十张时不引 ORM</strong></td><td>映射模板加 SQL 常量成本更低</td></tr>
-<tr><td class="nw">9.4 隔离</td><td class="nw">数据访问收在一层里</td><td>决定了将来换实现的成本</td></tr>
-<tr><td class="nw">9.5 键值</td><td>需要键值存储时先用 SQLite 的两列表</td><td>自带事务与崩溃一致性</td></tr>
-<tr><td class="nw">9.5 文件</td><td>整份保存必须用 <code>QSaveFile</code></td><td>直接写会在失败时留下半份文件</td></tr>
-<tr><td class="nw">9.5 凭据</td><td><strong>凭据不能进 <code>QSettings</code></strong></td><td>三平台上都是明文,见第 12 章</td></tr>
-</tbody>
-</table>
-<h3>与 Qt 机制的四个接口点</h3>
-<table style="contain-intrinsic-size:auto 293px">
-<thead><tr><th>接口点</th><th>这一章的表现</th><th>要注意什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td><code>QSqlDatabase</code>、<code>QSqlQuery</code> <strong>不是 <code>QObject</code></strong></td><td>它们不进对象树、不能 <code>moveToThread</code>,生命周期完全靠作用域;模型层的类是 <code>QObject</code>,照常给 parent</td></tr>
-<tr><td class="nw">信号槽桥接</td><td class="nw">数据库调用本身不发信号</td><td>要异步就自己包一层 worker;跨线程回传的类型必须可拷贝,自定义类型要 <code>qRegisterMetaType</code></td></tr>
-<tr><td class="nw">样式与主题</td><td class="nw">接口点在视图侧</td><td>委托里按字段值上色时不能只靠颜色区分状态;<code>NULL</code> 与空串的显示要统一,否则读者无法分辨</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td class="nw">排序、日期与数字格式</td><td>中文排序要用 <code>QCollator</code>,不能用 <code>QString</code> 的默认比较;时间统一存 UTC 秒、显示时转本地;金额与小数点用 <code>QLocale</code> 格式化</td></tr>
-</tbody>
-</table>
-<p>第四行值得单独说明。SQL 的 <code>ORDER BY</code> 用的是数据库的排序规则,SQLite 的默认规则对非 ASCII 字符只按码位比较,<strong>中文按拼音排序的需求在数据库层是做不到的</strong>。可行的做法有两条:把结果取到内存后用 <code>QCollator</code> 排序,或者在表里额外存一列排序键(例如拼音首字母)并对它建索引。前者简单但受结果集大小限制,后者要在写入时维护。</p>
-<div class="note new" style="contain-intrinsic-size:auto 167px"><span class="t">🔵 中文按拼音排序要在应用层用 QCollator 做,或者额外存一列排序键</span><p>验证方法很直接:插入几条中文标题,用 <code>ORDER BY title</code> 查一次,看顺序是不是拼音序。不是的话,按数据量选方案:一屏之内的结果直接取到内存用 <code>QCollator</code> 排;需要分页取前 N 条时必须在表里存排序键,否则分页结果不正确。<code>QCollator</code> 要设置 <code>setLocale(QLocale(QLocale::Chinese))</code> 并按需要打开忽略大小写。</p></div>
-<h3>维护状态与退路</h3>
-<p>这张表按 9.4 节给的信号格式记录本章涉及的每一项依赖。<strong>退路一列是选型评审时真正要看的一列。</strong></p>
-<table style="contain-intrinsic-size:auto 324px">
-<thead><tr><th>依赖</th><th>状态怎么判断</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">QtSql 模块</td><td>随 Qt 一起发布,跟着 Qt 的支持周期走</td><td>退到数据库的 C 客户端库,自己封装连接与类型转换</td></tr>
-<tr><td class="nw">SQLite</td><td>上游长期维护,Qt 源码里带一份</td><td>换 SQLCipher 这类分支(需要加密时);或迁到服务端数据库</td></tr>
-<tr><td class="nw"><code>QPSQL</code> / <code>QMYSQL</code> 驱动</td><td>看这份 Qt 构建里有没有;客户端库版本是主要风险</td><td>改走 <code>QODBC</code>;或直接用客户端库</td></tr>
-<tr><td class="nw">第三方 ORM</td><td>按 9.4 节的五个信号逐项查</td><td><strong>前提是数据访问已经收在一层里</strong>,否则没有退路</td></tr>
-<tr><td class="nw">嵌入式键值库</td><td>同上;另看它的文件格式有没有跨版本兼容承诺</td><td>退回 SQLite 的两列表,数据可以逐条导过去</td></tr>
-</tbody>
-</table>
-<h3>库结构版本:第一版就要定下来的东西</h3>
-<p>产品发布之后,表结构一定会改。改的时候要面对的是<strong>用户机器上那份已经存在数据的旧库</strong>,不能删了重建。处理方式在所有 SQL 数据库上都一样:给库存一个结构版本号,启动时按版本号依次执行升级脚本。SQLite 为此提供了一个现成的位置。</p>
-<pre style="contain-intrinsic-size:auto 1202px"><code><span class="cm">// 启动时执行一次:把库结构从当前版本逐级升到目标版本</span>
-<span class="kw">static</span> <span class="kw">bool</span> migrate(QSqlDatabase db, QString *error)
-{
-    <span class="kw">static</span> <span class="kw">const</span> <span class="kw">char</span> *kSteps[] = {
-<span class="cm">        // 从版本 0 升到 1</span>
-        <span>"CREATE TABLE note(id INTEGER PRIMARY KEY, title TEXT NOT NULL,"</span>
-        <span>" updated INTEGER NOT NULL)"</span>,
-<span class="cm">        // 从版本 1 升到 2:加一列,旧行取默认值</span>
-        <span>"ALTER TABLE note ADD COLUMN starred INTEGER NOT NULL DEFAULT 0"</span>,
-    };
-    <span class="kw">const</span> <span class="kw">int</span> target = <span class="kw">int</span>(<span class="kw">sizeof</span>(kSteps) / <span class="kw">sizeof</span>(kSteps[0]));
-
-    QSqlQuery q(db);
-    <span class="kw">if</span> (!q.exec(QStringLiteral(<span>"PRAGMA user_version"</span>)) || !q.next()) {
-        <span class="kw">if</span> (error)
-            *error = q.lastError().text();
-        <span class="kw">return</span> <span class="kw">false</span>;
-    }
-    <span class="kw">int</span> version = q.value(0).toInt();
-    <span class="kw">if</span> (version &gt; target) {                  <span class="cm">// 库比程序新,拒绝启动比乱改安全</span>
-        <span class="kw">if</span> (error)
-            *error = QStringLiteral(<span>"数据库版本高于本程序支持的版本"</span>);
-        <span class="kw">return</span> <span class="kw">false</span>;
-    }
-    <span class="kw">while</span> (version &lt; target) {
-        <span class="kw">if</span> (!db.transaction()) {
-            <span class="kw">if</span> (error)
-                *error = db.lastError().text();
-            <span class="kw">return</span> <span class="kw">false</span>;
-        }
-        <span class="kw">if</span> (!q.exec(QString::fromLatin1(kSteps[version]))
-            || !q.exec(QStringLiteral(<span>"PRAGMA user_version = %1"</span>).arg(version + 1))) {
-            <span class="kw">if</span> (error)
-                *error = q.lastError().text();
-            db.rollback();
-            <span class="kw">return</span> <span class="kw">false</span>;
-        }
-        <span class="kw">if</span> (!db.commit())
-            <span class="kw">return</span> <span class="kw">false</span>;
-        ++version;
-    }
-    <span class="kw">return</span> <span class="kw">true</span>;
-}</code></pre>
-<p>三处细节。<code>PRAGMA user_version</code> 是 SQLite 在文件头里预留给应用的一个整数,读写代价接近于零;服务端数据库上没有这个位置,改用一张单行的版本表。每一步升级都套在事务里,失败时整步回滚,不会留下改到一半的表结构。<strong>库版本高于程序时应当拒绝启动</strong>,因为新版本程序写进去的数据,旧版本程序读出来的语义不一定正确。</p>
-<p><code>PRAGMA</code> 语句不支持绑定参数,所以上面用了字符串拼接。这是本书里少数几处可以拼 SQL 的地方,前提是<strong>拼进去的值来自程序内部的整数,不来自任何外部输入</strong>。凡是拼接了外部输入的地方都是注入点,判据与验证方法见第 12 章。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 升级脚本必须逐级执行,不能只写「从上一版升到当前版」</span><p>症状是跨版本升级的用户打开程序后报表结构错误,而连续升级的用户一切正常。原因是升级逻辑假设了用户每一版都装过。验证方法:准备几份不同版本的旧库文件放进测试资源,每次发版前用最新程序各打开一遍。这份测试用例的维护成本很低,而它拦下的是数据损坏类问题。</p></div>
-<h3>起步时的执行顺序</h3>
-<ol>
-<li><strong>定存储位置。</strong>用 <code>QStandardPaths</code> 取目录,数据用应用数据目录、缓存用缓存目录,不要写死路径。</li>
-<li><strong>建连接管理。</strong>桌面产品直接上 9.3 节的线程局部连接,连服务端数据库时上执行池。这一步在写第一条业务 SQL 之前完成。</li>
-<li><strong>打开必要的开关。</strong><code>WAL</code>、<code>busy_timeout</code>、<code>foreign_keys</code> 三项写进连接初始化。</li>
-<li><strong>定数据访问层的形态。</strong>结构体加映射模板加 SQL 常量,界面代码里不出现 <code>QSqlQuery</code>。</li>
-<li><strong>定版本升级路径。</strong>用一个 <code>PRAGMA user_version</code> 记录库结构版本,启动时按版本号依次执行升级脚本。这一步漏掉,第一次改表结构时就要补。</li>
-</ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 30278px;--thin-h:30278px">
+<section class="chapter" style="contain-intrinsic-size:auto 27311px;--thin-h:27311px">
 <h1 id="c10"><span class="part">第 10 章</span>音视频与图像处理</h1>
+<p>音视频与图像的需求通常落在四档:放提示音、播视频、开摄像头抓图、对每一帧做处理。档位判断错了,引入的依赖会重一个量级。本章先用 Qt Multimedia 覆盖前几档并讲清它的后端决定能力上限,再回答什么时候不得不引 FFmpeg、OpenCV 集成必须做对的三个点,最后讲图像格式插件与大图处理的内存防线。取舍角度是「要不要碰到每一帧」与「格式是否可控」,以及每引入一层依赖要多付的构建与维护成本。</p>
 <h2 id="c10-mm">10.1 Qt Multimedia:播放、采集与它的后端</h2>
 <p>一个产品需要音视频能力时,需求通常落在四档上:放一段提示音、播一个视频文件、开摄像头预览并抓图、对每一帧做处理。这四档对应的技术选择差别很大,而 Qt Multimedia 只覆盖前三档的常见情况。这一节先把分档做完,再讲清 Qt Multimedia 的分层与后端——<strong>它能放什么格式,取决于运行的机器上有什么,不取决于代码</strong>。</p>
 <h3>需求分档与方案同场对比</h3>
@@ -12304,7 +11228,7 @@ signals:
 <tr><td class="nw">硬件加速是否可用</td><td>在目标机器上实测;不可用时要能退回软件解码</td><td>硬件加速依赖显卡驱动,不能假设一定存在</td></tr>
 </tbody>
 </table>
-<p>三条的共同做法是:<strong>把结论写进工程的依赖清单文件,并记下核对日期与查证方式</strong>。第三方依赖的授权与能力都会变,而没有记录的核对等于没有核对。本章末尾的维护状态表就是这份清单的格式。</p>
+<p>三条的共同做法是:<strong>把结论写进工程的依赖清单文件,并记下核对日期与查证方式</strong>。第三方依赖的授权与能力都会变,而没有记录的核对等于没有核对。清单的字段定义可以直接沿用第 18.2 节的依赖台账。</p>
 <p>分发上还有一条实践建议:<strong>把 FFmpeg 的版本固定下来,不要跟随系统</strong>。链接系统提供的 FFmpeg 会让程序在不同发行版上遇到不同的接口版本;随产品分发一份自己构建的库,行为才是确定的。代价是产品体积增加,以及安全更新要自己跟。</p>
 <div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 依赖系统里的 FFmpeg 能省下分发体积,但换来的是每个发行版一套行为</span><p>发行版提供的版本、启用的组件、甚至默认的解码器都不一样,同一份代码在两台机器上放同一个文件可能得到不同结果。判据是产品对一致性的要求:内部工具可以用系统的,面向外部用户的产品应当自带。要验证差异有多大,在两个目标发行版上各跑一次本节开头的能力打印,把两份输出比一比。</p></div>
 <h2 id="c10-cv">10.3 OpenCV 集成:数据结构互转与线程</h2>
@@ -12473,7 +11397,7 @@ signals:
 <tr><td class="nw">SVG</td><td class="nw">图标与需要任意缩放的图形</td><td>走 <code>QtSvg</code> 模块,与位图插件是两条路径</td></tr>
 </tbody>
 </table>
-<p>界面素材的推荐做法是:<strong>图标一律用 SVG,位图素材用 PNG 并按倍率提供多份</strong>。前者的理由是高分屏下不会糊,后者见本章小结里的高分屏一段。缓存类图片(例如网络图片的本地副本)用 JPEG 或 WebP,因为它们只用于显示,不会被再次编辑。</p>
+<p>界面素材的推荐做法是:<strong>图标一律用 SVG,位图素材用 PNG 并按倍率提供多份</strong>。前者的理由是高分屏下不会糊,后者是为了让不同缩放倍率的屏幕各取最接近的一份,避免运行时插值放大导致发虚。缓存类图片(例如网络图片的本地副本)用 JPEG 或 WebP,因为它们只用于显示,不会被再次编辑。</p>
 <p>保存 JPEG 时要显式设置质量:<code>QImageWriter::setQuality()</code>。默认值不做承诺,不同版本可能不同,而这个值直接决定了文件大小与画质。</p>
 <div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 把用户上传的图片统一转存成 JPEG 会在多次编辑后累积可见的损失</span><p>每一次解码再编码都会引入新的损失,编辑三五次之后边缘会出现明显的块状痕迹。判据是这张图会不会被再次编辑:只用于显示的缩略图可以转 JPEG;作为工程数据保存的图片应当保持原格式,或者统一转成 PNG 这类无损格式。要验证损失有多大,把同一张图反复解码编码十次再与原图对比。</p></div>
 <h3>大图:三条省内存的路</h3>
@@ -12532,77 +11456,11 @@ QImage loadThumbnail(<span class="kw">const</span> QString &amp;path, <span clas
 </table>
 <p>第三行是最有效的一条,代价也最高。判据是<strong>图片来源的可控程度</strong>:处理用户本机文件的桌面工具通常不需要;处理网络上传内容的服务端程序应当做。更完整的判据与相邻的攻击面见第 12 章。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 把解码内存上限调到很高来支持大图,同时也放开了对畸形文件的防护</span><p><code>setAllocationLimit()</code> 是一道全局保险,把它调到很大或者关掉之后,一个声称自己有极大尺寸的畸形文件就能让程序申请巨量内存。正确形态是保持默认上限,只在明确知道来源可信的那条代码路径上临时调高,处理完立刻恢复。验证方法:搜工程里所有 <code>setAllocationLimit</code> 的调用,每一处都应当能说清它保护的是哪一批文件。</p></div>
-<h2 id="c10-sum">10.5 小结</h2>
-<p>这一章的主线是一条能力边界:<strong>Qt Multimedia 给的是统一接口,真实能力由后端决定;要突破这条边界,代价是自己带一份解码器</strong>。图像侧是同一个结构——插件决定能读什么,而大图处理的关键在于「解码之前就把规模定下来」。</p>
-<h3>本章要点</h3>
-<table style="contain-intrinsic-size:auto 597px">
-<thead><tr><th>节</th><th>结论</th><th>机制</th></tr></thead>
-<tbody>
-<tr><td class="nw">10.1 分档</td><td>短音效、放自控文件、逐帧处理、批量转码,四档四种选择</td><td>需求决定方案,不按库的知名度选</td></tr>
-<tr><td class="nw">10.1 后端</td><td><strong>能放什么格式取决于后端,不取决于代码</strong></td><td>抽象层不含解码能力</td></tr>
-<tr><td class="nw">10.1 播放</td><td><strong>Qt 6 必须显式设 <code>QAudioOutput</code></strong></td><td>少了它有画面无声音,且不报错</td></tr>
-<tr><td class="nw">10.1 状态</td><td>能不能播放看 <code>mediaStatus</code> 与错误信号</td><td><code>playbackState</code> 会先变成播放中</td></tr>
-<tr><td class="nw">10.1 采集</td><td><code>QMediaCaptureSession</code> 是接线板</td><td>逐帧处理挂 <code>QVideoSink</code></td></tr>
-<tr><td class="nw">10.2 判据</td><td>要精确控制或逐帧介入时才上 FFmpeg</td><td>它的接口面与维护成本都很大</td></tr>
-<tr><td class="nw">10.2 形态</td><td class="nw"><strong>不需要中间介入就用进程调用</strong></td><td>隔离崩溃、升级只换一个文件</td></tr>
-<tr><td class="nw">10.2 进度</td><td>用机器可读的进度通道,不解析日志</td><td>日志格式没有承诺</td></tr>
-<tr><td class="nw">10.2 解码</td><td>送包取帧的循环;帧缓冲会被复用</td><td>不拷贝就发出去会读到后面的帧</td></tr>
-<tr><td class="nw">10.3 判据</td><td>只做缩放与格式转换时不引 OpenCV</td><td><code>QImage</code> 自带的接口够用</td></tr>
-<tr><td class="nw">10.3 互转</td><td>通道顺序、行距、所有权,三处都要处理</td><td>进 OpenCV 不拷贝,出 OpenCV 拷贝</td></tr>
-<tr><td class="nw">10.3 线程</td><td><code>QImage</code> 能跨线程,<code>QPixmap</code> 不能</td><td>结果用排队连接回界面线程</td></tr>
-<tr><td class="nw">10.4 插件</td><td class="nw"><strong>能读什么由插件决定</strong></td><td>运行时查 <code>supportedImageFormats()</code></td></tr>
-<tr><td class="nw">10.4 大图</td><td class="nw"><strong>先读尺寸,再决定读不读</strong></td><td>内存占用与文件大小无关</td></tr>
-<tr><td class="nw">10.4 缩略图</td><td>让插件在解码阶段缩小,并补一次兜底缩放</td><td>插件是否支持缩放解码不做承诺</td></tr>
-</tbody>
-</table>
-<h3>与 Qt 机制的四个接口点</h3>
-<table style="contain-intrinsic-size:auto 317px">
-<thead><tr><th>接口点</th><th>这一章的表现</th><th>要注意什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>播放与采集的类都是 <code>QObject</code></td><td><code>QAudioOutput</code>、<code>QCamera</code> 这些被挂进会话或播放器的对象,所有权不随挂接转移;统一做法是给它们同一个 parent,让生命周期一起结束</td></tr>
-<tr><td class="nw">信号槽桥接</td><td class="nw">位置、状态、错误都是信号</td><td><code>errorOccurred</code> 必须连,否则失败时界面没有任何反馈;高频信号要在槽里自行降频;<strong>不要假设帧回调在哪条线程上</strong>,回调里只做搬运</td></tr>
-<tr><td class="nw">样式与主题</td><td class="nw"><strong>视频画面不受样式表影响</strong></td><td><code>QVideoWidget</code> 承载的是一块由后端绘制的表面,给它设背景或圆角不生效;字幕与控制条要放在上层部件里,并注意原生表面的堆叠顺序问题(见姊妹书《Qt 核心与 Widget》第 9 章)</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td class="nw">图像要按物理像素准备</td><td>缩略图按 <code>devicePixelRatio</code> 放大后解码,再给 <code>QImage</code> 设同样的比值,显示才清晰;时长与时间码用 <code>QLocale</code> 或固定格式,不要手工拼字符串</td></tr>
-</tbody>
-</table>
-<p>第四行的做法值得写成代码。<strong>关键是解码尺寸按物理像素算,而 <code>devicePixelRatio</code> 设回图像对象</strong>,两步缺一不可:只放大不设比值,图会显示成两倍大;只设比值不放大,图仍然是糊的。</p>
-<pre style="contain-intrinsic-size:auto 250px"><code><span class="cm">// 在高分屏上正确显示一张缩略图</span>
-<span class="kw">const</span> qreal dpr = label-&gt;devicePixelRatioF();
-<span class="kw">const</span> QSize logical(160, 120);                       <span class="cm">// 界面上要占的逻辑尺寸</span>
-QImage image = loadThumbnail(path, logical * dpr, 40<span>'000'</span>000);
-<span class="kw">if</span> (!image.isNull()) {
-    image.setDevicePixelRatio(dpr);                  <span class="cm">// 这一步不能省</span>
-    label-&gt;setPixmap(QPixmap::fromImage(image));
-}</code></pre>
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 高分屏上图片发糊,多半是按逻辑尺寸解码没乘 devicePixelRatio</span><p>验证方法:把系统缩放设成 150% 或 200%,打开一张图片列表,与 100% 下截图放大对比。图标类素材用 SVG 可以一次性绕开这个问题;照片与缩略图必须按物理像素解码。要注意 <code>devicePixelRatioF()</code> 的取值在多屏环境下会随窗口所在的屏幕变化,窗口跨屏拖动后需要重新生成。</p></div>
-<p>第三行的「视频画面不受样式表影响」需要一句补充,因为它常被误读成「视频窗口不能装饰」。可以装饰,但装饰要放在另一个部件上:把 <code>QVideoWidget</code> 放进一个容器部件里,控制条与字幕作为容器的另一批子部件浮在上面。<strong>不要试图给视频部件本身设圆角或半透明</strong>,那属于原生表面的裁剪范围,跨平台表现不一致。</p>
-<p>国际化侧还有一处与本章相关的坑:<strong>媒体文件的路径要用 <code>QUrl::fromLocalFile()</code> 转,不要自己拼字符串</strong>。路径里含非 ASCII 字符、空格或井号时,手工拼出来的地址在某些后端上解析失败,表现为「文件明明存在却报无效媒体」。同样地,取回路径时用 <code>QUrl::toLocalFile()</code>。</p>
-<h3>维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 274px">
-<thead><tr><th>依赖</th><th>状态怎么判断</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt Multimedia</td><td>随 Qt 发布;它在 Qt 6 里经历过一次重写,接口相对新</td><td>退到 libVLC 或 libmpv;或自己用 FFmpeg 搭播放路径</td></tr>
-<tr><td class="nw">FFmpeg</td><td>上游活跃;主版本之间有接口改动</td><td>换用进程调用形态,把接口变动隔在进程边界外</td></tr>
-<tr><td class="nw">OpenCV</td><td>上游活跃;版本之间接口相对稳定</td><td>常用算法可以逐个替换成其他实现,前提是转换层已经收在一处</td></tr>
-<tr><td class="nw">图像格式插件模块</td><td class="nw">随 Qt 发布</td><td>对缺失的格式改用专用库自己解码,再转成 <code>QImage</code></td></tr>
-<tr><td class="nw">libVLC / libmpv</td><td class="nw">各自的上游发布节奏</td><td>两者可以互换,前提是播放能力的调用收在一层里</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 媒体路径一律用 QUrl::fromLocalFile 转,手工拼字符串会失败</span><p>症状是文件浏览器里明明能看到那个文件,程序打开却报无效媒体,而把文件改成英文名之后就正常。原因是本地路径与地址的转义规则不同,手工拼接漏掉了转义。验证方法:准备一个路径里带空格、中文和井号的测试文件,放进自动化测试里跑一遍,这三种字符覆盖了绝大多数出问题的情况。</p></div>
-<p>这张表里所有的退路都指向同一条前提:<strong>与第三方库交界的代码要收在一层</strong>。播放能力收在一个播放器接口后面,图像转换收在一组转换函数里,进程调用收在一个任务类里。做到这一点,换实现的成本是重写一层;做不到,成本是重写整个功能。</p>
-<h3>起步时的执行顺序</h3>
-<ol>
-<li><strong>先确定媒体来源是否可控。</strong>可控就规定一种保守的格式,用 Qt Multimedia;不可控就从一开始按自带解码器规划。</li>
-<li><strong>启动时打印一次能力清单。</strong>容器、编码、图像格式、摄像头与音频设备各打一遍,写进日志。</li>
-<li><strong>定好帧的流向。</strong>哪条线程收帧、哪条线程处理、结果怎么回界面,在写第一行处理代码之前定下来。</li>
-<li><strong>定好丢帧策略。</strong>处理跟不上时保留最新一帧、丢掉排队的旧帧,这是默认策略,不要等到卡顿之后再补。</li>
-<li><strong>把大图防护写进图片加载入口。</strong>尺寸检查与解码上限只需要写一次,放在统一的加载函数里。</li>
-<li><strong>记下依赖清单。</strong>每一项第三方依赖的版本、构建选项、授权核对日期与查证方式,写进工程里的一个文件。</li>
-</ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 37845px;--thin-h:37845px">
+<section class="chapter" style="contain-intrinsic-size:auto 34082px;--thin-h:34082px">
 <h1 id="c11"><span class="part">第 11 章</span>设备通信:串口、总线与蓝牙</h1>
+<p>工业、医疗、检测与嵌入式调试领域的桌面程序,核心工作就是与设备通信。本章按协议层次排开五类通道:QtSerialPort 串口与它的坑、工业设备最常见的 Modbus、QtSerialBus 与 CAN 总线、平台差异最大的蓝牙与 BLE、以及 Qt 没有覆盖的 USB 与 HID。取舍角度不在库本身,而在设备走的是哪一层协议、两个平台的驱动与权限门槛、以及厂商 SDK 与通用库的接入形态之争。</p>
 <h2 id="c11-serial">11.1 QtSerialPort:串口通信与它的坑</h2>
 <p>串口在消费类产品上已经很少见,在工业、医疗、检测、嵌入式调试这些领域仍然是主力通道。它的接口简单到只有「打开、读、写、关」,而工程上出问题的比例却不低,原因集中在一处:<strong>串口给的是字节流,不是消息</strong>。这一节把参数、分帧、热插拔、平台差异四件事讲完。</p>
 <h3>需求与判据:什么时候还会用到串口</h3>
@@ -13524,98 +12382,11 @@ SUBSYSTEM==<span>"hidraw"</span>, ATTRS{idVendor}==<span>"1234"</span>, ATTRS{id
 </table>
 <p>推荐的做法是<strong>整个工程统一关闭小写关键字</strong>,信号槽一律写大写形式的宏。改动是一次性的,而且能一劳永逸地避免这类冲突。代价是代码里的关键字看起来不如小写形式简洁。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 与第三方 SDK 混编的工程,统一关闭 Qt 的小写关键字并改用大写宏</span><p>判据是工程里有没有引入自己不能修改的第三方头文件。有就统一改,不要等到冲突出现再逐个打补丁。改法是在构建配置里加上关闭关键字的定义,然后把源码里的信号槽关键字替换成对应的大写宏。要验证是否改干净,构建一次即可——遗漏的地方都会在编译期报错,不存在运行期才暴露的风险。</p></div>
-<h2 id="c11-sum">11.6 小结</h2>
-<p>这一章的三条主线可以归成同一条:<strong>设备给的是字节或帧的流,程序要把它变成有边界、有超时、有重连的消息通道</strong>。串口把这个问题暴露得最彻底,Modbus 把它包了一层但留下了地址与字序两个坑,CAN 与蓝牙则各自加上了平台与总线的约束。</p>
-<h3>本章要点</h3>
-<table style="contain-intrinsic-size:auto 704px">
-<thead><tr><th>节</th><th>结论</th><th>机制</th></tr></thead>
-<tbody>
-<tr><td class="nw">11.1 参数</td><td class="nw">参数不匹配不会导致打开失败</td><td>波特率错是乱码,流控错是发送卡住</td></tr>
-<tr><td class="nw">11.1 分帧</td><td><strong><code>readyRead</code> 不保证一帧</strong></td><td>累积缓冲加解析循环是唯一正确形态</td></tr>
-<tr><td class="nw">11.1 缓冲</td><td class="nw">缓冲要有上限与超时</td><td>半帧滞留和垃圾堆积都要能自愈</td></tr>
-<tr><td class="nw">11.1 设备名</td><td class="nw"><strong>按厂商标识与序列号匹配设备</strong></td><td>端口号会随插拔与端口变化</td></tr>
-<tr><td class="nw">11.1 拔出</td><td class="nw">错误信号里必须主动关闭端口</td><td>不关掉重连时打不开</td></tr>
-<tr><td class="nw">11.2 数据模型</td><td>线圈、离散输入、保持寄存器、输入寄存器</td><td>读写与位宽两个维度</td></tr>
-<tr><td class="nw">11.2 地址</td><td><strong>文档的 40001 对应协议地址 0</strong></td><td>厂商写法不统一,必须实测确认</td></tr>
-<tr><td class="nw">11.2 承载</td><td>RTU 靠静默定界并且必须串行;TCP 靠报文头</td><td>异常响应与无响应要分开处理</td></tr>
-<tr><td class="nw">11.2 字序</td><td><strong>32 位值跨两个寄存器,字序因厂商而异</strong></td><td>用已知值实测确定</td></tr>
-<tr><td class="nw">11.3 层次</td><td class="nw">Qt 覆盖到帧的收发</td><td>上层协议要自己实现或引第三方库</td></tr>
-<tr><td class="nw">11.3 过滤</td><td class="nw"><strong>高负载总线上必须设过滤器</strong></td><td>让驱动层丢弃不相关的帧</td></tr>
-<tr><td class="nw">11.3 读取</td><td class="nw">一次信号可能对应多帧</td><td>循环读到可用帧数为零</td></tr>
-<tr><td class="nw">11.3 连带</td><td class="nw">一个节点配错比特率会影响全线</td><td>接生产总线前先在隔离环境验证</td></tr>
-<tr><td class="nw">11.4 分类</td><td>经典蓝牙与低功耗蓝牙是两套东西</td><td>看文档给的是服务标识还是串口配置文件</td></tr>
-<tr><td class="nw">11.4 平台</td><td class="nw"><strong>能力集差异不通过编译错误暴露</strong></td><td>每个目标平台跑一遍最小验证程序</td></tr>
-<tr><td class="nw">11.4 通知</td><td class="nw">订阅通知要写客户端配置描述符</td><td>漏了这一步永远收不到主动上报</td></tr>
-<tr><td class="nw">11.5 路线</td><td>人机接口类设备优先用 HID 专用库</td><td>不需要换驱动,权限门槛最低</td></tr>
-<tr><td class="nw">11.5 SDK</td><td><strong>SDK 的线程上不能碰 <code>QObject</code></strong></td><td>回调里只做拷贝与一次跨线程投递</td></tr>
-</tbody>
-</table>
-<h3>与 Qt 机制的四个接口点</h3>
-<table style="contain-intrinsic-size:auto 394px">
-<thead><tr><th>接口点</th><th>这一章的表现</th><th>要注意什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>设备类都是 <code>QObject</code>,但<strong>有几处所有权归调用者</strong></td><td><code>QCanBus::createDevice()</code> 与 <code>QLowEnergyController::createServiceObject()</code> 返回的对象要自己设 parent;<code>QModbusReply</code> 必须在处理完之后 <code>deleteLater()</code></td></tr>
-<tr><td class="nw">信号槽桥接</td><td>数据到达、错误、状态变化都是信号</td><td><strong>设备对象要在使用它的那条线程里打开</strong>;把设备搬到工作线程时,<code>moveToThread</code> 之后再 <code>open</code>;阻塞式第三方接口用原子标志停止,不要用排队信号</td></tr>
-<tr><td class="nw">样式与主题</td><td class="nw">设备状态需要在界面上表达</td><td>状态指示<strong>不能只靠颜色</strong>,要同时给文字或形状,颜色区分对部分用户无效;十六进制日志用等宽字体显示,否则列对不齐</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td>设备返回的字符串与协议里的数值</td><td>设备描述与厂商名来自系统,可能是任意语言,<strong>只用于显示,不参与逻辑判断</strong>;协议里的数值一律用不带区域设置的转换函数生成,界面上的数值才用带区域设置的</td></tr>
-</tbody>
-</table>
-<p>最后一行是本章唯一一处必须写进编码规范的国际化要求。<strong>用带区域设置的转换函数生成协议内容,会在小数点是逗号的区域产出错误报文</strong>,而这种问题只在特定语言环境下出现,开发机上永远复现不了。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 用带区域设置的数值转换生成协议内容,在小数点为逗号的系统上会产出错误报文</span><p>症状是同一份程序在一部分用户机器上通信正常,在另一部分上设备拒绝命令或解析出错误的值。原因是把界面用的格式化函数用在了协议内容上,而这类函数会按系统的区域设置决定小数点与千位分隔符。验证方法:把系统区域设置临时改成使用逗号作小数点的语言,跑一遍通信流程。规则是协议内容一律用不带区域设置的转换,界面显示才用带区域设置的。</p></div>
-<h3>维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 386px">
-<thead><tr><th>依赖</th><th>状态怎么判断</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">QtSerialPort</td><td class="nw">随 Qt 发布,接口长期稳定</td><td>退到平台原生的串口接口,自己封装参数设置与异步读写</td></tr>
-<tr><td class="nw">QtSerialBus 的 Modbus 部分</td><td>随 Qt 发布;Qt 6 里有过类名调整</td><td>换第三方 Modbus 库,或按规范自己实现——协议本身足够简单</td></tr>
-<tr><td class="nw">QtSerialBus 的 CAN 插件</td><td><strong>Windows 上依赖厂商库</strong>,可用性随厂商驱动变化</td><td>直接调用厂商 SDK,把收发接口收在一层里</td></tr>
-<tr><td class="nw">QtBluetooth</td><td>随 Qt 发布;平台支持矩阵随版本变化</td><td>退到平台原生接口,代价是每个平台写一遍</td></tr>
-<tr><td class="nw">HID 专用库与通用 USB 库</td><td>上游活跃度用第 9 章给的五个信号判断</td><td>两者之间可以互换,前提是设备访问收在一层里</td></tr>
-<tr><td class="nw">厂商 SDK</td><td class="nw"><strong>随厂商产品线走,风险最高</strong></td><td>把 SDK 调用全部收在一个包装类后面,换设备时只重写这个类</td></tr>
-</tbody>
-</table>
-<h3>设备访问层的一个通用形状</h3>
-<p>上面每一张退路表都指向同一条前提:设备访问要收在一层里。这一层的接口在四种设备上是一致的,因为它们的需求本来就一样——<strong>连上、断开、发一条消息、收到一条消息、知道链路状态</strong>。把它写成一个抽象基类,四种实现各自继承。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 685px"><code><span class="cm">// devicechannel.h —— 四种设备共用的访问层接口</span>
-<span class="kw">#pragma</span> once
-<span class="kw">#include</span> &lt;QByteArray&gt;
-<span class="kw">#include</span> &lt;QObject&gt;
-<span class="kw">#include</span> &lt;QVariantMap&gt;
-
-<span class="kw">class</span> DeviceChannel : <span class="kw">public</span> QObject
-{
-    Q_OBJECT
-<span class="kw">public</span>:
-    <span class="kw">using</span> QObject::QObject;
-    <span class="kw">virtual</span> ~DeviceChannel() = <span class="kw">default</span>;
-
-<span class="cm">    // config 里放端口名、比特率、从站地址、服务标识这些各实现自己的参数</span>
-    <span class="kw">virtual</span> <span class="kw">bool</span> open(<span class="kw">const</span> QVariantMap &amp;config) = 0;
-    <span class="kw">virtual</span> <span class="kw">void</span> close() = 0;
-    <span class="kw">virtual</span> <span class="kw">bool</span> isOpen() <span class="kw">const</span> = 0;
-    <span class="kw">virtual</span> <span class="kw">void</span> send(<span class="kw">const</span> QByteArray &amp;message) = 0;
-
-signals:
-    <span class="kw">void</span> messageReceived(<span class="kw">const</span> QByteArray &amp;message);   <span class="cm">// 已经分好帧的一条消息</span>
-    <span class="kw">void</span> linkChanged(<span class="kw">bool</span> up);                         <span class="cm">// 连上或断开</span>
-    <span class="kw">void</span> diagnostic(<span class="kw">const</span> QString &amp;text);              <span class="cm">// 给现场排查用的一行文字</span>
-};</code></pre>
-<p>有了这一层,业务代码从头到尾只依赖这五个成员,换设备、换协议、换库都只需要写一个新实现。<strong>接口里刻意不暴露超时、重试、缓冲这些概念</strong>,它们属于实现细节:通道层对外的承诺是「发出去的会尽力送到,收到的一定是完整的一条」,做不到时通过链路状态信号告知。</p>
-<p>参数用一个键值集合而不是固定的形参列表,是为了让四种实现共用同一个签名:串口需要端口名与波特率,Modbus 还需要从站地址,蓝牙需要服务标识,把它们塞进同一组形参会让接口很快变形。</p>
-<p>第三个信号是现场排查用的,不要省。它把原始字节、错误计数、重连次数这类信息以统一的形式送出来,界面上给一个可以打开的诊断窗口。<strong>没有这个通道时,现场问题只能靠改代码加日志再重新部署来定位</strong>,而现场往往不具备这个条件。</p>
-<h3>接入一台新设备的执行顺序</h3>
-<ol>
-<li><strong>先确定协议层次。</strong>是裸字节协议、标准协议,还是厂商 SDK。选错这一步后面全部返工。</li>
-<li><strong>先用通用工具跑通一次。</strong>串口用终端工具,Modbus 用通用主站工具,CAN 用总线分析工具,蓝牙用手机上的调试应用。<strong>在自己的程序能通之前,先证明设备本身是通的。</strong></li>
-<li><strong>把参数和地址实测确认一遍。</strong>串口的五项参数、Modbus 的地址偏移与字序、CAN 的比特率,全部用已知值验证,不要只看文档。</li>
-<li><strong>写分帧与超时,再写业务。</strong>通道层要先能自愈:半帧丢弃、校验失败继续、设备拔出重连。</li>
-<li><strong>把设备访问收在一层。</strong>业务代码只调这一层,不出现具体的设备类。这是换设备、换路线时唯一的退路。</li>
-<li><strong>补上现场诊断手段。</strong>原始字节日志、每秒帧数、错误计数、连接状态,这四样在现场排查时能省下大量往返。</li>
-</ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 35083px;--thin-h:35083px">
+<section class="chapter" style="contain-intrinsic-size:auto 31291px;--thin-h:31291px">
 <h1 id="c12"><span class="part">第 12 章</span>安全:加密、凭据与压缩归档</h1>
+<p>安全问题的特点是不会自己暴露:功能一切正常,错误要到被利用时才可见,所以本章每一节都以「怎么验证」为落点。覆盖四块:TLS 与证书校验背后的 OpenSSL、Qt 自带密码学能力的边界与超出之后引什么、凭据该放进三平台的系统密钥链而不是自己发明存法、解压这个把外部数据变成本地文件的动作要防什么,最后合成一份症状、验证、修复三段式的体检清单。取舍只有一条铁律:凡涉及密码学,一律用经过审计的现成实现。</p>
 <h2 id="c12-tls">12.1 TLS 与证书:QSslSocket 背后的 OpenSSL</h2>
 <p>安全问题的特点是不会自己暴露——没有崩溃、没有错误日志、功能一切正常,所以「怎么验证」比「怎么修」更重要。本章每一节都按同一条写法组织:<strong>先说清一个机制保证了什么、不保证什么,再给「怎么验证自己的程序有没有这个问题」</strong>。</p>
 <p>传输层安全要保证三件事:<strong>连到的是正确的对端、传输内容不被中途读取、传输内容不被中途篡改</strong>。三件事里第一件最容易被无意中关掉,而关掉之后另外两件也一起失效。</p>
@@ -14131,7 +12902,7 @@ signals:
 </table>
 <div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 不要用 Qt 自带的解压函数处理来自外部的数据,输入里的长度字段直接决定分配多少内存</span><p>这个函数的输入前面带一个长度前缀,实现会按这个值预先分配缓冲。一段构造过的输入可以声明一个极大的长度,让程序当场申请巨量内存。Qt 的文档对此有明确提醒。验证方法:搜代码里这个解压函数的调用,确认每一处的输入都来自程序自己写出去的数据;凡是输入来自网络、来自用户选择的文件、来自剪贴板的,都要换成带上限的解压路径。</p></div>
 <h3>四条路线的同场对比</h3>
-<table style="contain-intrinsic-size:auto 299px">
+<table style="contain-intrinsic-size:auto 298px">
 <thead><tr><th>路线</th><th>覆盖什么</th><th>适合什么</th><th>代价</th></tr></thead>
 <tbody>
 <tr><td class="nw">zlib 直接调用</td><td>deflate 与 gzip 的压缩解压</td><td>自己实现流式压缩;与其他系统交换 gzip 数据</td><td>接口偏底层,状态机要自己管</td></tr>
@@ -14385,98 +13156,11 @@ signals:
 <li><strong>最后走一遍日志与转储。</strong>用测试凭据跑一遍主要流程,在日志与转储里搜它。</li>
 <li><strong>把结论写下来。</strong>每一项的结论与日期,连同下次复查的时间。<strong>没有记录的体检等于没做</strong>,因为半年后没人记得当时是「不适用」还是「忘了」。</li>
 </ol>
-<h2 id="c12-sum">12.6 小结</h2>
-<p>这一章的主线是一条判断链:<strong>先问一个机制保证了什么、不保证什么,再问自己的程序有没有把它关掉,最后问怎么验证</strong>。三个问题里第三个最重要——安全问题的特征就是不会自己暴露,只能靠主动检查发现。</p>
-<h3>本章要点</h3>
-<table style="contain-intrinsic-size:auto 628px">
-<thead><tr><th>节</th><th>结论</th><th>机制</th></tr></thead>
-<tbody>
-<tr><td class="nw">12.1 后端</td><td>Qt 的传输层安全是可替换的后端</td><td>启动时打印能力与库版本</td></tr>
-<tr><td class="nw">12.1 检查点</td><td class="nw">握手里有四个独立的检查点</td><td><strong>无参数地忽略错误会一起关掉四个</strong></td></tr>
-<tr><td class="nw">12.1 私有证书</td><td>自签名证书要「加信任」不是「关校验」</td><td>设置信任列表是覆盖语义,要先取出再追加</td></tr>
-<tr><td class="nw">12.1 固定</td><td class="nw"><strong>固定公钥摘要,并放备用值</strong></td><td>证书续期不影响,换密钥有退路</td></tr>
-<tr><td class="nw">12.2 能力</td><td><strong>Qt 只有哈希、消息认证码与安全随机数</strong></td><td>对称与非对称加密都要引库</td></tr>
-<tr><td class="nw">12.2 密码</td><td class="nw"><strong>存密码要用慢的密码哈希函数</strong></td><td>通用哈希的设计目标是快</td></tr>
-<tr><td class="nw">12.2 加密</td><td class="nw">一律用带认证的加密</td><td>随机数不可重复;认证标签必须验证</td></tr>
-<tr><td class="nw">12.2 细节</td><td>随机数用系统源;摘要比较用常量时间</td><td>两处都是一行改动</td></tr>
-<tr><td class="nw">12.2 密钥</td><td>用完立即清理,不要放进隐式共享的类型</td><td>副本会让清理落空</td></tr>
-<tr><td class="nw">12.3 凭据</td><td class="nw"><strong>不要自己发明密码存储</strong></td><td>交给系统密钥链</td></tr>
-<tr><td class="nw">12.3 边界</td><td class="nw">密钥链防的是静态存储与跨用户</td><td>同一用户的其他程序基本读得到</td></tr>
-<tr><td class="nw">12.3 退路</td><td>无桌面会话时的退路必须显式选择</td><td>不能存不进去就悄悄落盘</td></tr>
-<tr><td class="nw">12.4 分层</td><td class="nw">压缩、归档、传输编码是三件事</td><td>选型互不影响</td></tr>
-<tr><td class="nw">12.4 自带</td><td>Qt 自带的解压不能用于外部数据</td><td>长度字段直接决定分配</td></tr>
-<tr><td class="nw">12.4 解压</td><td><strong>路径校验、总量上限、条目数上限,三项都要有</strong></td><td>收进一个函数,所有解压走它</td></tr>
-<tr><td class="nw">12.5 清单</td><td class="nw">每一项给症状、验证方法与修法</td><td>可自动化的接进持续集成</td></tr>
-</tbody>
-</table>
-<p>这张表里有一条贯穿全章的规律值得单独提出:<strong>本章讲到的每一个安全机制,默认状态都是安全的,出问题的都是主动把它关掉的那一步</strong>。证书校验默认开着,解压上限默认存在,密钥链默认加密。之所以会被关掉,通常是因为开发阶段遇到了阻碍——自签证书连不上、测试数据超过上限、持续集成环境没有密钥链。这些阻碍都有正确的解决方式,而「先关掉」是成本最低也最容易留下的那一种。</p>
-<p>因此这一章给出的检查方法几乎都是「搜关掉它的那行代码」,而不是「搜有没有加上防护」。这个视角能让检查变得可执行:关闭动作是有形状的,可以被搜索到;而「没做防护」是没有形状的,只能靠实测。</p>
-<h3>这一章与其他章的关系</h3>
-<table style="contain-intrinsic-size:auto 299px">
-<thead><tr><th>关联章节</th><th>接口在哪</th><th>结论</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 8 章 网络</td><td class="nw">证书校验、更新通道、传输编码</td><td><strong>网络请求的安全默认值由这一章的配置决定</strong>;那一章讲怎么发请求,这一章讲怎么保证发对了地方</td></tr>
-<tr><td class="nw">第 9 章 数据库</td><td>SQL 拼接、凭据存放、数据文件权限</td><td>绑定参数与密钥链是两条硬规矩,那一章的示例已经按这里的要求写</td></tr>
-<tr><td class="nw">第 10 章 图像与媒体</td><td class="nw">解码不受信任的内容</td><td>解码上限与进程隔离,与本章的解压限制是同一套配方</td></tr>
-<tr><td class="nw">第 11 章 设备</td><td class="nw">设备固件升级包、现场诊断日志</td><td>升级包要验签;诊断日志要走本章的脱敏封装</td></tr>
-<tr><td class="nw">第 13 章 脚本</td><td class="nw">脚本能碰到什么</td><td><strong>脚本引擎是本章「输入与执行」一节的延伸</strong>,限制手段在那一章展开</td></tr>
-</tbody>
-</table>
-<p>最后一行是接下来一章的入口。把可执行的逻辑交给外部提供的脚本,等于把「输入」的范围扩大到了「代码」,本章的输入校验思路在那里要换一套做法——不是校验内容,而是限制能力。</p>
-<h3>与 Qt 机制的四个接口点</h3>
-<table style="contain-intrinsic-size:auto 339px">
-<thead><tr><th>接口点</th><th>这一章的表现</th><th>要注意什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>加密套接字与凭据任务都是 <code>QObject</code></td><td>密钥不要作为长期存活对象的成员;凭据任务是异步的,发起者可能先于回调销毁,要用能安全断开的连接形态</td></tr>
-<tr><td class="nw">信号槽桥接</td><td class="nw">证书错误与凭据结果都是信号</td><td><strong>证书错误信号不连也有默认行为</strong>——连接会失败,这是安全的默认;要改变它必须显式处理,不要为了「让它先跑起来」而在信号里无条件忽略</td></tr>
-<tr><td class="nw">样式与主题</td><td class="nw">口令输入与敏感信息的展示</td><td>口令框用隐藏回显,不要用样式表模拟遮挡;不要把敏感值放进工具提示或状态栏,这些位置会被截图工具带走</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td class="nw">口令里的非 ASCII 字符</td><td><strong>不同平台与输入法对同一个字符可能给出不同的编码形式</strong>,导致同一个口令在一台机器上能登录、换台机器不行;做法是在计算哈希之前对口令做一次统一的规范化,并在两端用同一种规范化形式</td></tr>
-</tbody>
-</table>
-<p>第四行是国际化与安全的交界处,而且很少被提到。<strong>口令里包含带重音的字母、组合字符或者全角字符时,不同来源的输入可能产生不同的字节序列</strong>,而哈希对字节序列敏感。规范化要在客户端与服务端约定同一种形式,并且写进协议文档。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 口令含非 ASCII 字符时不做规范化,同一个口令在不同平台上可能算出不同的哈希</span><p>症状是用户在一台机器上设的口令,换一台机器或换一种输入法之后登录失败,而肉眼看两次输入完全一样。原因是同一个字符可以有多种编码形式,哈希对字节敏感。验证方法:用带重音的字母或全角字符做口令,在两个平台上分别设置与登录一次。修法是在计算之前统一做一次规范化,并且新旧口令要设计迁移路径。</p></div>
-<h3>维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 273px">
-<thead><tr><th>依赖</th><th>状态怎么判断</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt 的传输层安全模块</td><td>随 Qt 发布;后端插件机制在 Qt 6 里较新</td><td>换用平台原生后端;或直接调用加密库自己实现通道</td></tr>
-<tr><td class="nw">OpenSSL</td><td>上游活跃;<strong>主版本迁移有成本</strong>,旧版本会停止维护</td><td>换到平台原生后端,或换用接口更小的加密库</td></tr>
-<tr><td class="nw">libsodium</td><td class="nw">上游稳定,接口变动少</td><td>换 OpenSSL,前提是加密调用收在一层里</td></tr>
-<tr><td class="nw">凭据存储封装库</td><td class="nw">按第 9 章给的五个信号判断</td><td>退到各平台原生接口,每个平台写一份实现</td></tr>
-<tr><td class="nw">归档库</td><td class="nw">同上</td><td>zip 格式本身稳定,换库的成本主要在接口适配</td></tr>
-</tbody>
-</table>
-<p>这张表里的每一条退路都要求同一件事:<strong>加密、凭据、归档三类调用各自收在一层里</strong>。这比其他章的同类要求更重要,因为密码学库的接口差异远大于普通库,散落在业务代码里之后几乎无法更换。</p>
-<p>除了退路,这一类依赖还多一项常规工作:<strong>跟进它们的安全公告</strong>。做法是把依赖清单里的每一项对应到一个可订阅的来源(项目的发布页或公开的问题库),并且固定一个复查周期。周期不必短,与发布节奏对齐即可,关键是它要按期发生。<strong>依赖清单里没有记录来源的项,等于没人在跟</strong>。</p>
-<h3>一次代码检索能覆盖的部分</h3>
-<p>12.5 节清单里「搜某某写法」的项可以合成一次检索。下面这段把它们列在一起,<strong>命中不等于有问题,但每一处都要给出结论</strong>。</p>
-<pre style="contain-intrinsic-size:auto 304px"><code># 发布前的代码检索,一次跑完。逐条给结论:不适用 / 已处理 / 待处理
-grep -rn <span>"ignoreSslErrors *( *)"</span>          src/   # 无参数忽略证书错误
-grep -rn <span>"setPeerVerifyMode"</span>              src/   # 有没有被设成不校验
-grep -rn <span>"QRandomGenerator::global"</span>       src/   # 用作密钥或令牌时要换成 system
-grep -rn <span>"qUncompress"</span>                    src/   # 输入是不是来自外部
-grep -rn <span>"startCommand\|setNativeArguments"</span> src/ # 把整条命令行拼成字符串
-grep -rn <span>"QDir::tempPath"</span>                 src/   # 临时文件是不是用了固定名字
-grep -rn <span>"setAllocationLimit"</span>             src/   # 图片解码上限有没有被调高
-grep -rn <span>"QSettings"</span>                      src/   # 有没有往里写凭据
-grep -rniE <span>"password|token|secret|apikey"</span>  src/   # 硬编码的凭据与日志字段</code></pre>
-<p>最后一条的命中量最大,但它同时覆盖了硬编码凭据、日志字段与变量命名三类问题,值得逐条看完一次。<strong>把这段检索连同结论一起提交到工程里</strong>,下次复查时先看上次的结论,只需要处理新增的命中。</p>
-<p>需要补充的是这份检索的局限:<strong>它只能发现「写成了某种形状」的问题,发现不了「该做而没做」的问题</strong>。没有做解压路径校验、没有做更新验签、没有设反序列化上限,这三类都搜不出来,只能靠实测。因此检索与实测是互补的,不能只做前者。</p>
-<h3>发布前的检查清单</h3>
-<ol>
-<li><strong>字符串扫描。</strong>对产物与配置搜一组已知的测试凭据,应当零命中。</li>
-<li><strong>证书校验实测。</strong>用自签证书搭一个假服务,程序应当拒绝连接。</li>
-<li><strong>解压实测。</strong>用一份含越界条目的测试归档,程序应当拒绝并提示。</li>
-<li><strong>反序列化实测。</strong>用一段声明了极大长度的输入,程序应当报错而不是中止。</li>
-<li><strong>更新验签实测。</strong>替换更新服务器返回的内容,程序应当拒绝安装。</li>
-<li><strong>日志与转储检查。</strong>用测试凭据跑一遍主流程,在日志与转储里搜它,应当零命中。</li>
-<li><strong>依赖清单核对。</strong>每个依赖的版本、来源、授权与核对日期都是最新的。</li>
-<li><strong>把结论与日期记下来。</strong>连同下一次复查的时间。</li>
-</ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 40182px;--thin-h:40182px">
+<section class="chapter" style="contain-intrinsic-size:auto 36027px;--thin-h:36027px">
 <h1 id="c13"><span class="part">第 13 章</span>嵌入脚本与插件化扩展</h1>
+<p>「让用户自己写点逻辑」的实现有三条路线:配置、二进制插件、脚本,能力上限与隔离难度依次上升。本章先给「什么时候值得嵌脚本」的判据,再按代价排开三个引擎:零依赖的 QJSEngine、资源限制可控的 Lua 与 sol2、生态最强而代价也最大的 Python 与 pybind11,最后讲沙箱、超时与不可信脚本的处置。取舍角度是脚本来源的可信程度——它决定隔离强度,隔离强度反过来决定哪个引擎可选。</p>
 <h2 id="c13-why">13.1 什么时候值得把脚本嵌进程序</h2>
 <p>「让用户自己写点逻辑」这个需求出现得很频繁,而它的实现方式有三条路线:把逻辑做成配置、做成二进制插件、做成脚本。三条路线的能力上限、隔离难度与长期成本差别很大。这一节把选择做完,后面几节再讲各自怎么实现。</p>
 <h3>需求分档:哪几类需求会指向脚本</h3>
@@ -14641,7 +13325,7 @@ qt_standard_project_setup()
 
 qt_add_executable(scriptdemo main.cpp)
 target_link_libraries(scriptdemo PRIVATE Qt6::Core Qt6::Qml)</code></pre>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 740px"><code><span class="cm">// main.cpp —— 最小形态:求值一段脚本,取回结果</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 739px"><code><span class="cm">// main.cpp —— 最小形态:求值一段脚本,取回结果</span>
 <span class="kw">#include</span> &lt;QCoreApplication&gt;
 <span class="kw">#include</span> &lt;QJSEngine&gt;
 <span class="kw">#include</span> &lt;QJSValue&gt;
@@ -14837,7 +13521,7 @@ target_link_libraries(luademo PRIVATE Qt6::Core ${LUA_LIBRARIES})</code></pre>
 <li><strong>下标从 1 开始。</strong>把 <code>QVariantList</code> 转成 Lua 表时,第一个元素放在下标 1 上;反向转换时同理。这是最容易写错的一处。</li>
 <li><strong>字符串是字节串。</strong>Lua 的字符串不带编码信息,与 <code>QString</code> 互转时统一走 UTF-8 编码。</li>
 </ul>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1610px"><code><span class="cm">// luabridge.h —— QVariant 与 Lua 值的双向转换</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1609px"><code><span class="cm">// luabridge.h —— QVariant 与 Lua 值的双向转换</span>
 <span class="kw">#pragma</span> once
 <span class="kw">#include</span> &lt;QString&gt;
 <span class="kw">#include</span> &lt;QVariant&gt;
@@ -15394,113 +14078,11 @@ QJSValue evalWithTimeout(QJSEngine &amp;engine, EngineGuard *guard, <span class=
 </tbody>
 </table>
 <p>这八项都可以做成自动化测试,每一项对应一段固定的测试脚本。<strong>做成测试之后,后续任何一次对门面或引擎配置的改动都会被它们检验</strong>,这比一次性的人工检查有价值得多。</p>
-<h2 id="c13-sum">13.6 小结</h2>
-<p>这一章的主线是一条从需求到边界的链:<strong>先确认需求是否需要一门语言,再按脚本的来源确定信任级别,最后按信任级别选引擎并配上对应的限制</strong>。三步里第二步最容易被跳过,而它决定了后面两步的全部内容。</p>
-<h3>本章要点</h3>
-<table style="contain-intrinsic-size:auto 665px">
-<thead><tr><th>节</th><th>结论</th><th>机制</th></tr></thead>
-<tbody>
-<tr><td class="nw">13.1 分档</td><td><strong>没有循环与函数的需求用表达式求值</strong></td><td>攻击面、开销、维护成本都低一个数量级</td></tr>
-<tr><td class="nw">13.1 路线</td><td>配置、脚本、二进制插件是一个梯度</td><td>大部分需求压在成本最低的那一层</td></tr>
-<tr><td class="nw">13.1 插件</td><td class="nw"><strong>二进制插件的代价在编译期</strong></td><td>工具链必须与宿主一致;崩溃带走宿主</td></tr>
-<tr><td class="nw">13.1 成本</td><td>接口是对外承诺,文档与兼容要一起做</td><td>嵌入脚本是产品决策</td></tr>
-<tr><td class="nw">13.2 引擎</td><td>Qt 自带的引擎<strong>默认没有系统接口</strong></td><td>这是安全上的起点优势</td></tr>
-<tr><td class="nw">13.2 类型</td><td class="nw">传容器是拷贝,传对象是引用</td><td>大整数要用字符串传</td></tr>
-<tr><td class="nw">13.2 暴露</td><td><strong>暴露一个对象等于暴露它的全部成员</strong></td><td>包括基类的;要写专门的门面</td></tr>
-<tr><td class="nw">13.2 线程</td><td class="nw">一个引擎一条线程</td><td>注入的对象要与引擎同线程</td></tr>
-<tr><td class="nw">13.3 判据</td><td class="nw">不可信或资源受限时选 Lua</td><td>限制手段最完备</td></tr>
-<tr><td class="nw">13.3 内存</td><td class="nw"><strong>换掉分配器就能设内存上限</strong></td><td>拒绝分配变成可捕获的错误</td></tr>
-<tr><td class="nw">13.3 沙箱</td><td>标准库按需打开,还要删掉基础库里加载代码的函数</td><td>调试库任何情况下都不开</td></tr>
-<tr><td class="nw">13.4 判据</td><td class="nw">Python 的价值在库生态</td><td><strong>只适合可信脚本,或独立进程</strong></td></tr>
-<tr><td class="nw">13.4 形态</td><td class="nw">默认选独立进程形态</td><td>隔离、可杀、升级简单</td></tr>
-<tr><td class="nw">13.5 模型</td><td class="nw"><strong>先定脚本从哪来</strong></td><td>信任级别决定限制强度</td></tr>
-<tr><td class="nw">13.5 边界</td><td>语言级挡能力,进程级挡资源与缺陷</td><td>两层都要有</td></tr>
-<tr><td class="nw">13.5 中断</td><td class="nw"><strong>打断之后必须复位中断标志</strong></td><td>否则后续求值全部失败</td></tr>
-<tr><td class="nw">13.5 设计</td><td>白名单;门面不返回对象;逐个校验参数</td><td>返回对象就是一条通路</td></tr>
-</tbody>
-</table>
-<h3>三个引擎的一页速查</h3>
-<p>前面几节的结论合成一张表,用于选型时快速对照。<strong>表里没有「最好」的一列,只有「什么条件下选哪个」。</strong></p>
-<table style="contain-intrinsic-size:auto 296px">
-<thead><tr><th>条件</th><th>选它</th><th>理由</th></tr></thead>
-<tbody>
-<tr><td class="nw">脚本由产品团队写,随产品发布</td><td class="nw">Qt 自带的引擎</td><td>零依赖;用户不需要装任何东西</td></tr>
-<tr><td class="nw">脚本由产品的用户写,内容可信</td><td class="nw">Qt 自带的引擎</td><td>用户对这门语言更熟悉;错误信息容易做好</td></tr>
-<tr><td class="nw">脚本可能来自不可控来源</td><td class="nw"><strong>Lua,并配进程隔离</strong></td><td>内存与时间两项限制都能精确设定</td></tr>
-<tr><td class="nw">产品跑在资源受限的设备上</td><td class="nw">Lua</td><td>运行时体积最小</td></tr>
-<tr><td class="nw">脚本要用数值或数据处理库</td><td class="nw"><strong>Python,独立进程</strong></td><td>生态是它不可替代的部分</td></tr>
-<tr><td class="nw">产品要嵌进已有的 Lua 扩展生态</td><td class="nw">Lua</td><td>由生态决定,不由技术优劣决定</td></tr>
-<tr><td class="nw">需要暴露的宿主接口很多</td><td class="nw">Qt 自带的引擎</td><td>通过元对象系统暴露,几乎不写绑定代码</td></tr>
-</tbody>
-</table>
-<p>表里出现两次的「配进程隔离」不是可选项。<strong>只要脚本来源不可控,不管选哪个引擎,进程隔离都要做</strong>——语言级限制挡不住资源耗尽,也挡不住引擎本身的缺陷,这一点在 13.5 节的图里已经画清楚了。</p>
-<p>还有一条跨引擎的工程建议,在 13.3 节末尾提过,这里再强调一次:<strong>宿主接口要按同一套语义设计,与具体引擎无关</strong>。先写一份与语言无关的接口说明——有哪些函数、各自收什么给什么、错误怎么表示——再分别实现。这份说明同时就是给用户的文档,而且让「换引擎」从重写变成了适配。</p>
-<p>这份说明可以就是一个结构化文件,由它同时驱动三件事:生成给用户看的文档、生成各引擎的注册代码、以及生成参数校验的骨架。下面是它的形状。</p>
-<pre style="contain-intrinsic-size:auto 468px"><code># scriptapi.yaml —— 与语言无关的宿主接口说明
-version: 1
-functions:
-  - name: readSample
-    summary: 读一个通道的最新采样
-    params:
-      - { name: channel, type: <span class="kw">int</span>, min: 0, max: 63 }
-    returns: { type: map, fields: [value: number, timestamp: number, valid: <span class="kw">bool</span>] }
-    errors: [channelOutOfRange, deviceOffline]
-
-  - name: log
-    summary: 往运行日志里写一行
-    params:
-      - { name: messageId, type: string, maxLength: 64 }
-      - { name: args, type: list, maxLength: 8 }
-    returns: { type: none }</code></pre>
-<p>三处约定值得注意。<strong>每个参数都带取值范围或长度上限</strong>,这些约束直接生成校验代码,不依赖实现者自觉。<strong>返回值里不出现对象</strong>,与 13.5 节的暴露面规则一致。<strong>错误用标识而不是文本</strong>,这样翻译与脚本侧的判断都有稳定依据。顶部的版本号对应 13.1 节讲的兼容策略,升级接口时它跟着走。</p>
-<h3>与 Qt 机制的四个接口点</h3>
-<table style="contain-intrinsic-size:auto 338px">
-<thead><tr><th>接口点</th><th>这一章的表现</th><th>要注意什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>注入给脚本的对象所有权容易含糊</td><td>把对象所有权显式设成宿主侧,并给它一个 parent;<strong>脚本侧持有的引用不构成所有权</strong>,宿主先销毁对象就会留下悬垂访问</td></tr>
-<tr><td class="nw">信号槽桥接</td><td class="nw">脚本函数可以当成回调用</td><td>把脚本函数存成引擎里的值再调用,不要把它当成普通的槽注册;<strong>跨线程调用引擎是错的</strong>,门面对象要与引擎同线程,内部再用排队方式与其他线程交互</td></tr>
-<tr><td class="nw">样式与主题</td><td class="nw">脚本改界面的边界</td><td>不要把界面部件交给脚本;需要让脚本影响外观时,提供有限的几个语义化开关,由宿主决定怎么落到样式上</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td class="nw">脚本里的文本与数值</td><td>脚本产生的用户可见文本要能被翻译,做法是让脚本给出标识与参数、由宿主查翻译表;<strong>脚本里的数值格式化要用不带区域设置的形式</strong>,显示时再由宿主本地化</td></tr>
-</tbody>
-</table>
-<p>第四行的做法值得展开一句:<strong>不要让脚本直接拼出最终显示的字符串</strong>。脚本给出一个消息标识加一组参数,宿主按当前语言查表并格式化,这样同一份脚本在不同语言下都能正确显示。这与第 11 章讲的「协议内容用不带区域设置的转换」是同一条原则的两个应用。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 脚本产生的用户可见文本,让脚本给标识与参数,由宿主查翻译表格式化</span><p>判据是这段文本会不会显示给用户。会,就不能由脚本拼成最终字符串,否则它无法被翻译,数值与日期的格式也会跟着脚本作者的习惯走。做法是门面提供一个接受标识与参数的输出方法,标识对应宿主翻译表里的一条。要验证有没有做到,把程序切到另一种语言跑一遍脚本,输出应当跟着变。</p></div>
-<h3>维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 236px">
-<thead><tr><th>依赖</th><th>状态怎么判断</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt 的 JavaScript 引擎</td><td>随 Qt 发布,与 QML 共用同一套实现</td><td>换 Lua;前提是宿主接口按统一语义设计过</td></tr>
-<tr><td class="nw">Lua 与绑定库</td><td>Lua 上游长期稳定;绑定库按第 9 章的五个信号判断</td><td>绑定库可以换,甚至可以退回手写栈操作</td></tr>
-<tr><td class="nw">Python 与嵌入绑定</td><td class="nw">上游活跃;<strong>版本绑定是主要风险</strong></td><td>换成独立进程形态,风险随之下降一个量级</td></tr>
-<tr><td class="nw">二进制插件机制</td><td class="nw">随 Qt 发布</td><td>改成进程外插件,接口重新设计成可序列化的</td></tr>
-</tbody>
-</table>
-<p>这张表里第三行的退路值得重复一次:<strong>把嵌入换成独立进程,能同时解决隔离、版本绑定与升级三个问题</strong>,代价只是接口要改成消息形式。这个改动在功能实现之前做很便宜,在功能上线之后做很贵,所以要在选型阶段就决定。</p>
-<p>表里没有列 Qt 的插件机制的退路细节,补一句:<strong>进程外插件与独立进程形态的脚本,在结构上是同一件事</strong>——宿主与扩展之间只交换消息,扩展崩溃不影响宿主。因此如果产品同时要支持脚本与二进制插件,把两者统一到同一套进程外协议上,能省掉一半的工作量,也让两种扩展的限制手段可以共用。</p>
-<h3>这一章与前面几章的关系</h3>
-<table style="contain-intrinsic-size:auto 262px">
-<thead><tr><th>关联章节</th><th>接口在哪</th><th>结论</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 9 章 数据库</td><td class="nw">脚本要读写业务数据</td><td><strong>不要把数据库连接交给脚本</strong>,门面提供具体的查询方法,SQL 由宿主写</td></tr>
-<tr><td class="nw">第 10 章 图像与媒体</td><td class="nw">脚本要处理图像</td><td>图像以标识传递,处理由宿主的方法执行;不要把大块像素数据在语言边界上来回搬</td></tr>
-<tr><td class="nw">第 11 章 设备</td><td class="nw">脚本要控制设备</td><td><strong>设备操作要有速率与范围限制</strong>,脚本写错一个循环就可能给设备发出上千条命令</td></tr>
-<tr><td class="nw">第 12 章 安全</td><td class="nw">脚本是「输入与执行」的延伸</td><td>下载来的脚本要验签;门面方法的参数按外部输入对待</td></tr>
-</tbody>
-</table>
-<p>第三行是本书里少数几处后果会超出软件范围的地方。<strong>脚本能控制物理设备时,限制必须做在宿主侧,不能指望脚本作者克制</strong>:命令速率设上限、参数范围逐项校验、危险操作要求宿主侧的二次确认。这几项与 13.5 节的资源限制是并列的,不能互相替代。</p>
-<h3>引入脚本能力的执行顺序</h3>
-<ol>
-<li><strong>先写暴露面清单。</strong>逐个列出要给脚本的函数,包括参数与返回。列不出来就先不选引擎。</li>
-<li><strong>再定信任级别。</strong>按 13.5 节的表确定脚本来源,得出要做哪几项限制。</li>
-<li><strong>再选引擎。</strong>按 13.1 节的对比表,结合前两步的结论。</li>
-<li><strong>先搭限制,再接功能。</strong>超时、资源上限、暴露面控制在第一版就要有,补做的成本高得多。</li>
-<li><strong>把体检清单做成自动化测试。</strong>13.5 节的八项,每项一段固定脚本。</li>
-<li><strong>写文档与示例。</strong>没有文档的扩展能力等于不存在,这一步不能省。</li>
-</ol>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 58241px;--thin-h:58241px">
+<section class="chapter" style="contain-intrinsic-size:auto 53652px;--thin-h:53652px">
 <h1 id="c14"><span class="part">第 14 章</span>系统集成</h1>
+<p>程序做到一定阶段会集中出现一批「像个正经桌面程序」的需求:驻留托盘、单实例、开机自启、全局热键、与其他程序交换数据、休眠前落盘。它们的共同点是 Qt 只提供部分封装,剩下的要按平台分别接,取舍不在选哪个库,而在每个平台各自的机制与限制。本章逐项讲清 Qt 给了什么、平台之间差到什么程度、哪个平台上根本没有对应能力,覆盖托盘与通知、单实例与自启动、全局热键、剪贴板与拖放、进程间通信与电源会话事件。</p>
 <h2 id="c14-tray">14.1 托盘图标与通知</h2>
 <p>程序做到一定阶段会集中出现一批需求:关闭主窗口后继续驻留、没有窗口时也要提示状态、被别的程序唤起、开机自动运行、休眠前把没写完的数据落盘。这些需求的共同点是<strong>干活的不是 Qt,而是操作系统的通知区、会话管理器、注册表或 D-Bus</strong>。Qt 在其中一部分上给了跨平台封装,另一部分必须按平台分别实现,还有一部分在某些平台上没有对应机制。</p>
 <p>这些集成点按需求排列,每一个都要写清三件事:Qt 给了什么、平台之间差到什么程度、以及在哪个平台上根本没有对应能力。最常见的是托盘图标。<code>QSystemTrayIcon</code> 是封装得最像跨平台的一个,但它在三个平台落到三套互不相同的系统机制上,能力差异大到不能按同一套假设写代码。</p>
@@ -16916,126 +15498,11 @@ KeepAwake::~KeepAwake()
 <li><strong>抑制器会被系统管理员统一查看与限制。</strong>长期持有阻止型抑制器的程序会出现在系统的诊断输出里。只在确有长任务时申请,并写清理由字符串。</li>
 <li><strong>关机阻止理由字符串要及时清除。</strong>Windows 上设置了阻止理由却在数据保存后不清除,下一次关机仍会被挡住,用户看到的是一条过时的提示。</li>
 </ul>
-<h2 id="c14-sum">14.7 小结</h2>
-<p>本章的六个集成点有一个共同结构:<strong>Qt 提供的封装覆盖了最常见的一半,另一半必须按平台写,还有一部分在某个平台上不存在</strong>。这决定了系统集成代码的组织方式——接口按能力划分,实现按平台划分,并且每个能力都要有「当前环境不支持」这个明确状态。</p>
-<h3>六个集成点的能力矩阵</h3>
-<p>下面这张表把本章六节的结论压缩成一页。使用方式是:先按行确认某个能力在目标平台上是否存在,再回到对应小节看它的接入方式与失效形态。表里凡是写着「不可用」或「通常不会」的格子,都意味着产品设计阶段就要准备另一条路径,而不是等到实现阶段再补。</p>
-<table style="contain-intrinsic-size:auto 409px">
-<thead><tr><th>集成点</th><th>Qt 的封装程度</th><th>Windows</th><th>Linux X11</th><th>Linux Wayland</th></tr></thead>
-<tbody>
-<tr><td class="nw">托盘图标</td><td>完整封装</td><td>可用,默认折叠进溢出区</td><td>可用,菜单可能由桌面渲染</td><td>依赖桌面提供 StatusNotifierItem</td></tr>
-<tr><td class="nw">通知</td><td>最小公倍数</td><td>可用,无按钮</td><td>可用;要按钮走 D-Bus</td><td>同 X11</td></tr>
-<tr><td class="nw">单实例与参数转交</td><td>有原语,需自己组装</td><td>可用</td><td>可用</td><td>可用</td></tr>
-<tr><td class="nw">自启动</td><td>无封装</td><td>注册表用户级键</td><td>XDG 自启动目录</td><td>同 X11;沙箱内要走门户</td></tr>
-<tr><td class="nw">全局热键</td><td><strong>无封装</strong></td><td>可用</td><td>可用</td><td>普通客户端不可用</td></tr>
-<tr><td class="nw">剪贴板与拖放</td><td>完整封装</td><td>可用</td><td>可用;数据由所有者持有</td><td>同 X11,写入受输入序号限制</td></tr>
-<tr><td class="nw">电源与休眠</td><td><strong>无封装</strong></td><td>窗口消息</td><td>logind</td><td>同 X11</td></tr>
-<tr><td class="nw">会话结束</td><td>部分封装</td><td>可用</td><td>多数桌面可用</td><td>通常不发出</td></tr>
-</tbody>
-</table>
-<h3>与 Qt 机制的四个接口点</h3>
-<table style="contain-intrinsic-size:auto 290px">
-<thead><tr><th>接口点</th><th>本章各方案的落点</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>托盘图标、本地服务、原生事件过滤器都要挂在生命周期覆盖全程的对象下。<code>QDrag</code> 的 <code>QMimeData</code> 所有权转移给 <code>QDrag</code>,<code>QClipboard::setMimeData</code> 的所有权转移给剪贴板,两者都不能再自己删除</td></tr>
-<tr><td class="nw">信号槽桥接</td><td>原生事件过滤器与 D-Bus 回调都在主线程执行,可以直接发信号。<code>QDBusInterface</code> 的同步调用会阻塞事件循环,界面线程一律用异步调用配观察者</td></tr>
-<tr><td class="nw">样式与主题</td><td>走 D-Bus 的托盘菜单由桌面环境渲染,样式表不生效;托盘图标要提供随主题反转的两套或使用系统图标名。通知的外观完全由通知服务决定</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td>托盘图标用 SVG 或多尺寸图标集,单张位图会被拉伸;通知与菜单的文本要走翻译系统,长度在不同语言下差异大,托盘提示文字要留余量</td></tr>
-</tbody>
-</table>
-<h3>维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 537px">
-<thead><tr><th>方案</th><th>来源</th><th>维护状态</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw"><code>QSystemTrayIcon</code></td><td>Qt Widgets</td><td>随 Qt 维护</td><td>桌面不支持时整体关闭托盘功能,入口回到主窗口</td></tr>
-<tr><td class="nw">桌面通知 D-Bus 接口</td><td>freedesktop 规范</td><td>规范稳定,由各通知服务实现</td><td>退回 <code>showMessage()</code>,放弃按钮与替换能力</td></tr>
-<tr><td class="nw"><code>QLockFile</code> 与 <code>QLocalServer</code></td><td>Qt Core 与 Qt Network</td><td>随 Qt 维护</td><td>无需退路,这是最稳的一层</td></tr>
-<tr><td class="nw"><code>QSharedMemory</code></td><td>Qt Core</td><td>随 Qt 维护,Qt 6.6 起接口有扩充</td><td>数据量不大时换成本地套接字,消除残留问题</td></tr>
-<tr><td class="nw">QtDBus</td><td>Qt</td><td>随 Qt 维护</td><td>Windows 侧一律不用;Linux 上总线不可用时降级为纯本地实现</td></tr>
-<tr><td class="nw">全局热键的平台代码</td><td>自己写</td><td>自己维护,约两百行</td><td>抽象成接口,Wayland 上换成门户或用户绑定命令行</td></tr>
-<tr><td class="nw">第三方全局热键封装库</td><td>社区</td><td>按第 0 章的流程逐项核实</td><td>接口已抽象,替换成本低</td></tr>
-<tr><td class="nw">logind 与桌面门户接口</td><td>systemd 与 freedesktop</td><td>规范演进中,新接口以官方文档为准</td><td>接口无效时安静降级,不影响主流程</td></tr>
-</tbody>
-</table>
-<h3>能力探测:把「不支持」写成显式状态</h3>
-<p>上面那张矩阵在代码里的对应物是一个能力表:程序启动时探测一遍,界面按结果显示,业务代码按结果选路径。把它集中在一处的好处是探测逻辑只写一份,并且能整体打进诊断日志(见第 16 章)。</p>
-<pre style="contain-intrinsic-size:auto 440px"><code><span class="cm">// SystemCapabilities.h —— 集中探测,启动时算一次</span>
-<span class="kw">#pragma</span> once
-<span class="kw">#include</span> &lt;QString&gt;
-
-<span class="kw">struct</span> SystemCapabilities
-{
-    <span class="kw">bool</span> trayAvailable      = <span class="kw">false</span>;   <span class="cm">// 通知区可用</span>
-    <span class="kw">bool</span> richNotifications  = <span class="kw">false</span>;   <span class="cm">// 通知支持按钮与原地替换</span>
-    <span class="kw">bool</span> globalHotkeys      = <span class="kw">false</span>;   <span class="cm">// 能登记全局热键</span>
-    <span class="kw">bool</span> sessionSignals     = <span class="kw">false</span>;   <span class="cm">// 会话结束会有信号</span>
-    <span class="kw">bool</span> sleepNotifications = <span class="kw">false</span>;   <span class="cm">// 能收到休眠通知</span>
-    QString platformNote;              <span class="cm">// 给诊断日志与「关于」界面用的一句话</span>
-
-    <span class="kw">static</span> SystemCapabilities probe();
-};</code></pre>
-<pre style="contain-intrinsic-size:auto 1147px"><code><span class="cm">// SystemCapabilities.cpp</span>
-<span class="kw">#include</span> <span>"SystemCapabilities.h"</span>
-<span class="kw">#include</span> &lt;QGuiApplication&gt;
-<span class="kw">#include</span> &lt;QSystemTrayIcon&gt;
-<span class="kw">#include</span> &lt;QtDBus/QDBusConnection&gt;
-<span class="kw">#include</span> &lt;QtDBus/QDBusInterface&gt;
-
-<span class="kw">static</span> <span class="kw">bool</span> dbusServicePresent(QDBusConnection bus, <span class="kw">const</span> QString &amp;service)
-{
-    <span class="kw">if</span> (!bus.isConnected())
-        <span class="kw">return</span> <span class="kw">false</span>;
-    <span class="kw">return</span> bus.interface()
-        &amp;&amp; bus.interface()-&gt;isServiceRegistered(service).value();
-}
-
-SystemCapabilities SystemCapabilities::probe()
-{
-    SystemCapabilities c;
-    c.trayAvailable = QSystemTrayIcon::isSystemTrayAvailable();
-
-<span class="kw">#ifdef</span> Q_OS_WIN
-    c.globalHotkeys      = <span class="kw">true</span>;
-    c.sessionSignals     = <span class="kw">true</span>;
-    c.sleepNotifications = <span class="kw">true</span>;
-    c.richNotifications  = <span class="kw">false</span>;      <span class="cm">// 需要 WinRT 通道,当前版本未启用</span>
-    c.platformNote = QStringLiteral(<span>"Windows"</span>);
-<span class="kw">#else</span>
-    <span class="kw">const</span> QString session = QString::fromLocal8Bit(qgetenv(<span>"XDG_SESSION_TYPE"</span>)).toLower();
-    <span class="kw">const</span> <span class="kw">bool</span> wayland = (session == QLatin1String(<span>"wayland"</span>))
-                      || QGuiApplication::platformName().contains(QLatin1String(<span>"wayland"</span>));
-    c.globalHotkeys  = !wayland;       <span class="cm">// X11 才能抓键;Wayland 走门户或用户绑定</span>
-    c.sessionSignals = !wayland;
-    c.richNotifications = dbusServicePresent(QDBusConnection::sessionBus(),
-                              QStringLiteral(<span>"org.freedesktop.Notifications"</span>));
-    c.sleepNotifications = dbusServicePresent(QDBusConnection::systemBus(),
-                              QStringLiteral(<span>"org.freedesktop.login1"</span>));
-    c.platformNote = wayland ? QStringLiteral(<span>"Linux/Wayland"</span>)
-                             : QStringLiteral(<span>"Linux/X11"</span>);
-<span class="kw">#endif</span>
-    <span class="kw">return</span> c;
-}</code></pre>
-<p>探测结果有三个用途:界面上把不可用的开关置灰并写明原因;业务代码按能力选路径而不是按平台宏选路径;诊断日志与崩溃上报里带上这张表,排查线上问题时不必再追问用户的桌面环境。</p>
-<h3>判据速查</h3>
-<table style="contain-intrinsic-size:auto 259px">
-<thead><tr><th>问题</th><th>判据</th></tr></thead>
-<tbody>
-<tr><td class="nw">要不要放托盘图标</td><td>程序是否需要长期驻留。只为发一条通知不值得</td></tr>
-<tr><td class="nw">单实例用哪套</td><td>只要互斥用锁文件;要转交参数加本地套接字;只做 Linux 可以用 D-Bus 服务名</td></tr>
-<tr><td class="nw">全局热键值不值得做</td><td>触发时刻程序是否可能不在前台。不可能就用普通快捷键</td></tr>
-<tr><td class="nw">进程间通信选哪个</td><td>数据量小且要跨平台选本地套接字;数据大且格式固定选共享内存;与桌面集成选 QtDBus</td></tr>
-<tr><td class="nw">要不要处理休眠事件</td><td>程序是否持有未落盘的数据、网络连接或文件锁</td></tr>
-<tr><td class="nw">自启动写在哪里</td><td>一律用户级位置。沙箱打包走门户</td></tr>
-</tbody>
-</table>
-<p>这张表里没有一行的答案是「都行」。系统集成的每一个选择都会在某个平台上留下后果:选错单实例机制会在崩溃后无法启动,选错自启动位置会在沙箱里静默失效,把跨平台通信押在 QtDBus 上会在 Windows 侧推倒重来。这些后果都不在开发机上出现,只在用户的环境里出现。</p>
-<p>本章与后面三章是连着的:第 15 章讲这些集成代码怎么测——它们大量依赖运行环境,恰恰是最难在持续集成里覆盖的部分;第 16 章讲程序在用户机器上出问题时怎么把现场取回来,本节的能力探测表是诊断信息的一部分;第 17 章讲把程序装到用户机器上并保持更新,其中的更新器与被更新程序之间的配合正是本章第 5 节的进程间通信。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 系统集成的每一项能力都要有「当前环境不支持」这个显式状态</span><p>这是本章六节反复出现的同一条结论。托盘可能不显示、热键可能登记失败、D-Bus 可能连不上、会话信号可能不发出——这些都不是异常,是正常运行环境的一部分。把它们当异常处理会写出一堆无法验证的错误分支;把它们当状态处理,界面上就能如实告诉用户「当前桌面环境不支持全局热键」,而不是留一个点了没反应的开关。配套的规矩是每个集成点都要有一条不依赖该能力的替代路径。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 新写的系统集成代码优先走桌面门户接口,它同时覆盖沙箱与非沙箱</span><p>桌面门户是 freedesktop 定义的一层统一接口,通过 D-Bus 提供文件选择、截屏、后台运行、全局快捷键、开机自启等能力。它最初为沙箱应用设计,但非沙箱程序同样可以调用,并且在 Wayland 下往往是唯一可行的通道。代价是接口较新、不同桌面环境的实现进度不一致,程序必须在运行时探测接口是否存在并准备降级路径。具体有哪些接口、各自的版本与可用性,以桌面门户的官方文档为准。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 52049px;--thin-h:52049px">
+<section class="chapter" style="contain-intrinsic-size:auto 47921px;--thin-h:47921px">
 <h1 id="c15"><span class="part">第 15 章</span>测试与质量保障</h1>
+<p>桌面程序的测试与服务端根本不同:被测对象活在事件循环里,状态要过几轮事件分发才落定。本章围绕这一点展开:Qt Test 多给的等待与模拟输入、GoogleTest 与 Catch2 怎么接进 Qt 工程、界面测试为何时灵时不灵、用模型测试器与 <code>QSignalSpy</code> 测最难在界面上看出错的自定义模型,最后解决持续集成没有显示环境怎么跑 GUI 测试。取舍角度不是断言宏的强弱,而是谁能正确地等。</p>
 <h2 id="c15-qtest">15.1 Qt Test:它比通用框架多给了什么</h2>
 <p>桌面程序的自动化测试有一处与服务端不同:<strong>被测对象活在事件循环里</strong>。一个按钮点下去之后,状态变化可能要经过几轮事件分发才落定;一个网络请求完成的信号可能在几十毫秒后到达;一个模型的行插入会引发视图的重新布局。断言写在调用之后的下一行,读到的往往是中间状态。</p>
 <p>Qt Test 与通用测试框架的差别几乎全部集中在这一点上。断言宏、测试发现、用例组织这些方面它并不比 GoogleTest 或 Catch2 强,<strong>它多给的是等待与模拟输入</strong>:等信号的 <code>QSignalSpy</code>、把等待写进断言的 <code>QTRY_*</code> 宏族、以及能合成鼠标键盘事件的 <code>QTest</code> 命名空间。本节讲清这三样各自解决什么,以及 Qt Test 在别的方面欠了什么。</p>
@@ -18265,96 +16732,11 @@ set_tests_properties(models PROPERTIES TIMEOUT 120)   # 不带标签,走 offscre
 <li><strong>缓存要包含 Qt 与依赖,但不要缓存构建目录。</strong>缓存构建目录会让陈旧的产物混进来,表现为改了代码但行为不变。</li>
 </ul>
 <div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 把测试结果输出成 JUnit 结构,失败定位从翻日志变成看列表</span><p>CTest 从 3.21 起支持直接生成 JUnit 结构的汇总文件,Qt Test 自己也能按用例输出同样的结构。两者可以同时使用:CTest 的汇总回答「哪个测试目标失败了」,Qt Test 的输出回答「目标里的哪个测试函数、哪一行数据失败了」。持续集成平台读到这类文件后会在作业页面上直接列出失败用例、耗时与历史趋势,不必再从几千行日志里搜索。代价只是多两个命令行参数与一个产物收集步骤。</p></div>
-<h2 id="c15-sum">15.6 小结</h2>
-<p>本章五节回答的是同一个问题的五个侧面:<strong>桌面程序的哪些部分能被自动验证,用什么手段,以及在没有显示器的机器上怎么跑起来</strong>。</p>
-<h3>五节的结论压缩</h3>
-<table style="contain-intrinsic-size:auto 250px">
-<thead><tr><th>问题</th><th>结论</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt Test 比通用框架多给了什么</td><td>等待与模拟输入:间谍对象、<code>QTRY_*</code> 宏族、合成事件。别的方面它不占优</td></tr>
-<tr><td>什么时候引入 GoogleTest 或 Catch2</td><td>需要测试替身、参数化夹具,或者用例数量大到链接时间成为瓶颈时。两套可以共存</td></tr>
-<tr><td class="nw">界面测试为什么不稳定</td><td>等待方式不对是主因,其次是窗口未就绪、用例间共享状态、环境不固定</td></tr>
-<tr><td class="nw">模型怎么测</td><td>结构契约交给 <code>QAbstractItemModelTester</code>,语义与信号参数自己断言</td></tr>
-<tr><td class="nw">无显示环境怎么跑</td><td>多数用例走 offscreen,需要激活与焦点的少数用例走虚拟显示加窗口管理器</td></tr>
-</tbody>
-</table>
-<h3>与 Qt 机制的四个接口点</h3>
-<table style="contain-intrinsic-size:auto 238px">
-<thead><tr><th>接口点</th><th>测试侧的落点</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>测试里创建的部件要么用栈对象、要么显式删除。模拟对象不设父对象,生命周期归用例。<code>QSignalSpy</code> 是栈对象,不要设父</td></tr>
-<tr><td class="nw">信号槽桥接</td><td>间谍对象在触发之前构造;跨线程信号必须用等待让事件循环派发;<code>QTRY_*</code> 与间谍对象的等待都会跑事件循环,断言写在等待之后</td></tr>
-<tr><td class="nw">样式与主题</td><td>测试里固定样式与缩放,否则部件尺寸随机器变化。断言优先落在状态与关系上,不落在像素上</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td>缩放比例固定为一;区域设置固定;涉及文本尺寸的断言要考虑不同语言下的长度差异</td></tr>
-</tbody>
-</table>
-<h3>维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 297px">
-<thead><tr><th>方案</th><th>来源</th><th>维护状态</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt Test</td><td>Qt 自带模块</td><td>随 Qt 维护</td><td>无需退路</td></tr>
-<tr><td class="nw"><code>QAbstractItemModelTester</code></td><td>Qt Test 模块</td><td>随 Qt 维护</td><td>退化为自己写契约断言,成本明显更高</td></tr>
-<tr><td class="nw">GoogleTest 与 GoogleMock</td><td>Google,开源</td><td>活跃</td><td>接口稳定,替换成 Catch2 的改动集中在断言宏</td></tr>
-<tr><td class="nw">Catch2 版本三</td><td>社区,开源</td><td>活跃</td><td>同上</td></tr>
-<tr><td class="nw">offscreen 平台插件</td><td>Qt 自带</td><td>随 Qt 维护</td><td>换 Xvfb</td></tr>
-<tr><td class="nw">Xvfb 与窗口管理器</td><td>发行版软件包</td><td>长期稳定</td><td>换有头的自托管机器</td></tr>
-<tr><td class="nw">CTest</td><td>CMake 自带</td><td>随 CMake 维护</td><td>无需退路</td></tr>
-</tbody>
-</table>
-<h3>一条可执行的落地顺序</h3>
-<p>已有工程补测试时,按下面的顺序做,每一步都能单独产生收益。</p>
-<ol>
-<li>把被测代码从可执行文件里拆成一个库目标。这一步不写任何测试,但它是后面所有步骤的前提,而且越晚做越贵。</li>
-<li>给纯逻辑部分写 Qt Test 用例,用 <code>QTEST_GUILESS_MAIN</code>。这批用例不需要任何显示环境,可以立刻进持续集成。</li>
-<li>给每个自定义模型挂上契约检查器,再补语义断言。模型是回归风险最高、验证成本最低的一类。</li>
-<li>把「询问用户」「访问网络」「读写数据库」抽成窄接口,为引入测试替身做准备。</li>
-<li>写界面流程用例,全部用条件等待,不用固定时长。先覆盖主流程,再补边界。</li>
-<li>在持续集成里分两批跑:不带标签的走 offscreen,带标签的走虚拟显示。收集 JUnit 结构的结果与失败现场。</li>
-<li>最后再考虑消毒器构建与视觉回归,它们放在独立的流水线里,不进主干门禁。</li>
-</ol>
-<h3>判据速查</h3>
-<table style="contain-intrinsic-size:auto 412px">
-<thead><tr><th>问题</th><th>判据</th></tr></thead>
-<tbody>
-<tr><td class="nw">用 Qt Test 还是 GoogleTest</td><td>被测代码需要信号时序或界面交互就用 Qt Test;需要测试替身或参数化夹具就用 GoogleTest。同一工程可以两套并存</td></tr>
-<tr><td class="nw">测试进程用哪个主函数宏</td><td>包含部件头文件用 <code>QTEST_MAIN</code>;需要事件循环但无界面用 <code>QTEST_GUILESS_MAIN</code>;纯算法用 <code>QTEST_APPLESS_MAIN</code></td></tr>
-<tr><td class="nw">一处等待该怎么写</td><td>终点是可观察条件就用 <code>QTRY_*</code> 或间谍对象的等待;写不出条件说明被测接口缺少可观察状态,应当补一个</td></tr>
-<tr><td class="nw">界面用例该断言什么</td><td>优先断言部件状态与发出的信号;窗口位置、像素、字体度量都不进门禁</td></tr>
-<tr><td class="nw">模型要写几组用例</td><td>结构契约一组交给检查器,读取语义、写入信号、边界输入各一组</td></tr>
-<tr><td class="nw">持续集成走哪条路</td><td>需要窗口激活与焦点的用例走虚拟显示加窗口管理器,其余全部走 offscreen</td></tr>
-<tr><td class="nw">一个用例反复不稳定怎么办</td><td>移出门禁、保留在独立流水线、建待办查根因。不要开自动重试</td></tr>
-<tr><td class="nw">覆盖率数字该不该进门禁</td><td>不该。用它定位没有任何用例覆盖的模块,不用它作为通过与否的判据</td></tr>
-</tbody>
-</table>
-<h3>覆盖率:用它找空白,不用它当指标</h3>
-<p>覆盖率工具报告的是哪些代码行被执行过,不是哪些行为被验证过。一个只调用函数不做任何断言的用例照样能把覆盖率推上去。把它当门禁指标会诱导出这类用例。</p>
-<p>它真正有用的地方是<strong>找出完全没有被触及的区域</strong>:某个错误处理分支从来没跑到、某个模块一个用例都没有、新加的文件覆盖率为零。这类信息在按文件与按目录聚合的报告里一眼可见。</p>
-<pre style="contain-intrinsic-size:auto 196px"><code># CMakeLists.txt —— GCC 与 Clang 侧开启覆盖率插桩
-option(ENABLE_COVERAGE <span>"生成覆盖率数据"</span> OFF)
-<span class="kw">if</span>(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES <span>"GNU|Clang"</span>)
-    add_compile_options(--coverage -O0 -g)
-    add_link_options(--coverage)
-endif()</code></pre>
-<pre style="contain-intrinsic-size:auto 277px"><code># 生成报告。只统计自己的源码,排除测试代码与第三方依赖
-cmake -S . -B build-cov -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
-cmake --build build-cov
-ctest --test-dir build-cov --output-on-failure
-
-lcov --capture --directory build-cov --output-file coverage.info
-lcov --remove coverage.info <span>'/usr/*'</span> <span>'*/tests/*'</span> <span>'*_autogen/*'</span> \
-     --output-file coverage.info
-genhtml coverage.info --output-directory coverage-html</code></pre>
-<p>排除列表里的 <code>_autogen</code> 是 CMake 自动生成的 <code>moc</code> 产物目录,把它算进来会让数字失真。测试代码本身也要排除,否则覆盖率里有一大块是测试在测自己。</p>
-<p>界面代码的覆盖率天然偏低,这不代表质量差。绘制函数、事件处理里的少见分支、平台专属代码在持续集成里跑不到,而它们占界面模块的很大一部分。按模块分别看趋势比看全局数字有意义得多:业务逻辑模块的覆盖率下降值得追问,界面模块的绝对值不必强求。</p>
-<p>自动化测试能覆盖的终究只是能在测试机上复现的问题。用户机器上的崩溃、只在特定硬件与驱动组合下出现的异常、发布几周后才积累出的数据规模问题,都要靠线上诊断手段来发现——那是第 16 章的内容。而测试通过之后怎么把程序可靠地送到用户机器上并保持更新,是第 17 章的内容。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 测试的收益顺序与实现难度顺序相反,先做最容易的那批</span><p>模型契约检查一行代码换来一整类结构错误的防护;纯逻辑用例不需要任何环境配置就能进门禁;而界面流程用例要处理等待、窗口就绪、环境固定三重问题,视觉回归还要维护基准图。工程里常见的失误是从最难的那头开始——先搭一套截图对比,消耗掉全部预算与耐心,而模型层一个用例都没有。按上面的顺序做,第二步结束时就已经有一条能拦住多数回归的门禁了。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 测试目标不隔离配置目录,并行执行时用例会互相覆盖配置</span><p>症状是单独跑每个测试都通过,一起跑就随机有几个失败,重跑一次失败的又变成另外几个。根因是 <code>QSettings</code> 与 <code>QStandardPaths</code> 默认指向同一个用户配置位置,多个测试进程同时读写同一个文件。修法有两层:进程内调用 <code>QStandardPaths::setTestModeEnabled(true)</code>;作业级给每个并行槽位设置独立的 <code>HOME</code> 与 <code>XDG_RUNTIME_DIR</code>。两层都做之后并行执行才是安全的。</p></div>
-<div class="note old" style="contain-intrinsic-size:auto 229px"><span class="t">🟡 把测试全部塞进一个大用例的写法,失败时给不出定位信息</span><p>这种写法在早期工程里很常见:一个函数从启动走到退出,中间几十个断言。它能覆盖流程,但第一个断言失败之后后面全部不执行,一次运行只能暴露一个问题;失败信息只有行号,看不出是哪个业务步骤;而且任何一处环境波动都会让整条链失败。拆分的依据是<strong>一个用例只验证一件事,名字就是它验证的那句话</strong>。拆完之后同一次运行能同时暴露多个问题,失败列表本身就是问题清单。已有的大用例不必推倒重写,按业务步骤逐段切出来即可,公共的准备工作放进 <code>init()</code>。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 把不稳定用例当缺陷处理,不要用重试掩盖</span><p>持续集成平台普遍提供失败自动重试。开启它能让红灯变绿,代价是不稳定用例被永久留在代码库里,并且它掩盖的可能是真实的时序缺陷——一个只在慢机器上失败的用例,对应的产品代码可能在用户的慢机器上也有同样问题。可执行的做法是:统计每个用例的失败率,超过阈值的标记为已知不稳定并<strong>移出门禁但保留在独立流水线里</strong>,同时建一条待办去查根因。移出门禁保证主干可用,保留运行保证问题不被遗忘,而重试两者都做不到。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 46868px;--thin-h:46868px">
+<section class="chapter" style="contain-intrinsic-size:auto 42322px;--thin-h:42322px">
 <h1 id="c16"><span class="part">第 16 章</span>日志、崩溃上报与线上诊断</h1>
+<p>程序发布之后,开发者与运行现场之间只剩三条通道:用户描述、日志、崩溃转储,后两条必须在发布前建好。本章按通道建设的顺序展开:日志的分级、轮转与结构化落地,用 Breakpad 或 Crashpad 在进程停止前抓住崩溃现场,符号归档这个缺了就让上报作废的环节,运行指标与远程诊断回答「多少用户遇到」,最后划出上报里不能带什么的隐私红线。取舍角度是每条通道的建设成本,与它能回答哪一类问题。</p>
 <h2 id="c16-log">16.1 日志落地:分级、轮转与结构化</h2>
 <p>程序发布之后,开发者与运行现场之间只剩下三条通道:用户的口头描述、日志文件、崩溃转储。第一条不可靠,后两条要在发布前就建好,发布后再补来不及——没有开启日志的那个版本已经装在用户机器上了。</p>
 <p>Qt 自带一套日志系统,它解决了分级与分类,但<strong>不负责落地</strong>:输出默认去标准错误,没有文件、没有轮转、没有结构化。这三件事要自己接。</p>
@@ -18570,7 +16952,7 @@ FileLogger &amp;FileLogger::instance()
         <span class="kw">return</span>;                          <span class="cm">// 打不开就保持默认处理器,不要静默丢日志</span>
     qInstallMessageHandler(messageHandler);
 }</code></pre>
-<pre style="contain-intrinsic-size:auto 739px"><code><span class="cm">// main.cpp —— 尽早安装,并在启动时打一行环境信息</span>
+<pre style="contain-intrinsic-size:auto 740px"><code><span class="cm">// main.cpp —— 尽早安装,并在启动时打一行环境信息</span>
 <span class="kw">#include</span> <span>"FileLogger.h"</span>
 <span class="kw">#include</span> &lt;QApplication&gt;
 <span class="kw">#include</span> &lt;QStandardPaths&gt;
@@ -19417,7 +17799,7 @@ QString installationId()
 </table>
 <p>询问界面的三条要求:说明收集什么(用具体的字段类别,不用「部分技术信息」这类模糊表述)、说明用途、提供一个随时可以改的开关而不是只在首次运行时问一次。</p>
 <p>关闭开关后的行为要明确:<strong>停止发送,并且删除本地已经排队等待发送的数据</strong>。只停止发送而保留队列,下次用户重新打开时会把关闭期间的数据一并发出,这不符合用户的预期。</p>
-<pre style="contain-intrinsic-size:auto 304px"><code><span class="kw">void</span> Telemetry::setEnabled(<span class="kw">bool</span> on)
+<pre style="contain-intrinsic-size:auto 305px"><code><span class="kw">void</span> Telemetry::setEnabled(<span class="kw">bool</span> on)
 {
     m_enabled = on;
     QSettings().setValue(QStringLiteral(<span>"diagnostics/enabled"</span>), on);
@@ -19449,114 +17831,11 @@ QString installationId()
 <li><strong>日志文件留在用户机器上也是数据。</strong>设置总量上限与保留期,并在卸载时清理。</li>
 </ul>
 <div class="note new" style="contain-intrinsic-size:auto 230px"><span class="t">🔵 把敏感值用专门的包装类型承载,让它在类型层面无法被误打印</span><p>做法是定义一个只能显式取值的小类型,例如 <code>class Secret { public: explicit Secret(QString v); QString reveal() const; };</code>,不提供隐式转换、不提供输出运算符重载。口令、令牌、密钥一律用它承载,传给需要原值的接口时显式调用取值方法。这样任何一处「顺手把它打印出来」的代码都会在编译期失败,而不是在审计时才被发现。它比正则兜底可靠得多,因为它把检查时机从运行期提前到了编译期。代价只是接口稍微啰嗦,而这个啰嗦本身也在提醒读代码的人这里有敏感值。</p></div>
-<h2 id="c16-sum">16.6 小结</h2>
-<p>本章五节建立的是<strong>程序发布之后的可观测性</strong>:三条数据通道,一条约束线。</p>
-<h3>三条通道的分工</h3>
-<table style="contain-intrinsic-size:auto 149px">
-<thead><tr><th>通道</th><th>回答什么问题</th><th>数据量</th><th>时效</th></tr></thead>
-<tbody>
-<tr><td class="nw">日志</td><td>这一台机器上按什么顺序发生了什么</td><td>大,留在本地</td><td>事后取回</td></tr>
-<tr><td class="nw">崩溃上报</td><td>哪些代码路径会终止进程,影响多少用户</td><td>小,自动上传</td><td>接近实时</td></tr>
-<tr><td class="nw">运行指标</td><td>某个现象的分布如何,版本之间的对比如何</td><td>中,聚合后上传</td><td>按批次</td></tr>
-</tbody>
-</table>
-<p>三者的关系是互补而不是替代:崩溃上报告诉你「有问题」,指标告诉你「问题有多大」,日志告诉你「问题怎么产生的」。缺任何一条都会在某类问题上失明。</p>
-<p>而第五节的隐私约束横跨三条通道:它不增加能力,只限定边界,并且是三条通道能否上线的前提。</p>
-<h3>与 Qt 机制的四个接口点</h3>
-<table style="contain-intrinsic-size:auto 288px">
-<thead><tr><th>接口点</th><th>本章各方案的落点</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>日志器与上报器是进程级单例,生命周期要覆盖从 <code>main()</code> 第一行到最后一行,不能挂在窗口下。崩溃处理器进程独立于对象树</td></tr>
-<tr><td class="nw">信号槽桥接</td><td>消息处理器可能在任意线程被调用,内部必须自己加锁,不能假定在主线程;上报的网络回调走事件循环,退出前要显式排空</td></tr>
-<tr><td class="nw">样式与主题</td><td>诊断界面(上报开关、诊断包导出)是普通部件,遵循程序自身的样式;崩溃后的提示对话框可能在异常状态下弹出,应当尽量简单</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td>诊断包与上报内容一律用固定的机器可读格式,不随区域设置变化;面向用户的同意说明要走翻译,而上报的字段名不翻译</td></tr>
-</tbody>
-</table>
-<p>第三行有一个实践含义:崩溃之后如果要弹一个「程序遇到问题」的对话框,它应当由一个独立的小程序显示,而不是在已经不可信的进程里继续调用界面代码。</p>
-<h3>维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 372px">
-<thead><tr><th>方案</th><th>来源</th><th>维护状态</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt 日志系统</td><td>Qt Core</td><td>随 Qt 维护</td><td>无需退路,它是所有方案的入口</td></tr>
-<tr><td class="nw">spdlog</td><td>开源</td><td>活跃</td><td>桥接层很薄,换回自写处理器的改动集中在一个文件</td></tr>
-<tr><td class="nw">Crashpad</td><td>Chromium 项目</td><td>活跃</td><td>换成封装它的托管方案,或退回系统自带的转储机制</td></tr>
-<tr><td class="nw">Breakpad</td><td>Google,开源</td><td>维护期</td><td>新项目不选;已在用的可继续,遇到限制时迁移到 Crashpad</td></tr>
-<tr><td class="nw">Breakpad 的符号工具链</td><td>同上</td><td>维护期</td><td>符号格式稳定,即使工具停更也能继续用;必要时改用平台原生符号格式</td></tr>
-<tr><td class="nw">托管的错误与性能平台</td><td>各家厂商</td><td>按厂商</td><td>上报格式要经过自己的一层封装,便于更换</td></tr>
-<tr><td class="nw">自建上报端点</td><td>自己</td><td>自己</td><td>接口简单,替换成本主要在服务端</td></tr>
-</tbody>
-</table>
-<h3>判据速查</h3>
-<table style="contain-intrinsic-size:auto 333px">
-<thead><tr><th>问题</th><th>判据</th></tr></thead>
-<tbody>
-<tr><td class="nw">日志用自写还是引第三方</td><td>日志量小、不需要异步写盘就自写;需要异步、轮转、多目标输出就用现成的</td></tr>
-<tr><td class="nw">一条日志该不该写</td><td>它能不能回答「程序当时在做什么」「为什么走这条路径」「外部返回了什么」之一</td></tr>
-<tr><td class="nw">崩溃上报选哪个</td><td>新项目选 Crashpad;不想自建服务端就选封装它的托管方案;企业内部可用系统自带机制</td></tr>
-<tr><td class="nw">符号要不要归档</td><td>只要有崩溃上报就必须归档,没有例外</td></tr>
-<tr><td class="nw">指标要不要采集</td><td>问题是否只能靠分布回答。单机能查清的不必上报</td></tr>
-<tr><td class="nw">某个字段能不能上报</td><td>它是否在白名单里。不在就默认不报</td></tr>
-<tr><td class="nw">用户同意默认值怎么定</td><td>按目标市场与产品形态决定,并且首次运行时明确询问、随时可改</td></tr>
-<tr><td class="nw">远程配置能放什么</td><td>只放诊断参数。功能开关走带签名的发布流程</td></tr>
-</tbody>
-</table>
-<h3>三处最常见的静默失效</h3>
-<p>本章的设施有一个共同特点:<strong>失效时程序照常运行</strong>。没有报错、没有异常、没有任何人会注意到,直到需要它们的那一天。下面三处占了绝大多数。</p>
-<table style="contain-intrinsic-size:auto 225px">
-<thead><tr><th>失效形态</th><th>为什么发现不了</th><th>检出手段</th></tr></thead>
-<tbody>
-<tr><td class="nw">崩溃处理器没被打进安装包</td><td>它是一个独立可执行文件,部署工具按依赖关系收集,不会自动带上</td><td>在干净机器上安装后检查文件是否存在,并人为触发一次崩溃</td></tr>
-<tr><td class="nw">符号没有随构建归档</td><td>构建成功、安装包正常、程序运行正常,唯一的差别在几个月后</td><td>发布流程里加一步:用归档的符号解析一次崩溃</td></tr>
-<tr><td class="nw">日志目录不可写</td><td>打开失败的返回值常被忽略,程序继续运行</td><td>启动时把实际使用的日志路径打印出来,并在诊断界面显示</td></tr>
-</tbody>
-</table>
-<p>三者的共同对策是同一个:<strong>把「它在工作」变成可以被观察的事实</strong>,而不是一个假设。启动时打印状态、诊断界面显示状态、发布前跑一次端到端验证,三件事加起来不到一天的工作量。</p>
-<h3>一条可执行的落地顺序</h3>
-<p>从零开始时按下面的顺序做,每一步都能单独产生价值,并且后一步依赖前一步。</p>
-<ol>
-<li>接管消息处理器,把日志落到轮转文件,启动时打一行环境信息。这一步不依赖任何第三方,当天就能完成,并且立刻让「让用户把日志发过来」成为可能。</li>
-<li>定义脱敏函数并接进日志写入路径。必须在有真实用户之前完成,否则已经写出去的日志里就有敏感内容。</li>
-<li>接入崩溃上报并把符号归档做进持续集成。两件事一起做,单做前者没有意义。</li>
-<li>发布前跑一次端到端验证:人为崩溃、上报、符号解析、堆栈可读。把它写进发布检查单。</li>
-<li>加入用户可见的开关与首次运行的询问,以及诊断包导出功能。</li>
-<li>最后接指标采集。它的价值随数据积累而增长,越早开始越好,但它不是前四步的前提。</li>
-</ol>
-<h3>发布前的可观测性自检</h3>
-<p>把上一条清单变成一段可以在干净机器上跑的脚本,发布候选版本安装完成后执行一次。它验证的是接线,不是功能。</p>
-<pre style="contain-intrinsic-size:auto 685px"><code>#!/usr/bin/env bash
-# ci/observability-check.sh —— 在装好发布候选版本的干净机器上运行
-set -euo pipefail
-APP=<span>"${1:?用法: observability-check.sh &lt;程序路径&gt;}"</span>
-LOGDIR=<span>"${2:?用法第二个参数: 日志目录}"</span>
-
-# 一:崩溃处理器是否随包分发
-HANDLER=<span>"$(dirname "</span>${APP}<span>")/crashpad_handler"</span>
-[ -x <span>"${HANDLER}"</span> ] || { echo <span>"缺少崩溃处理器"</span>; exit 1; }
-
-# 二:正常启动后是否产生日志,以及日志里有没有未脱敏的用户目录
-<span>"${APP}"</span> --selftest-exit
-LOG=<span>"$(ls -t "</span>${LOGDIR}<span>"/app.log 2&gt;/dev/null | head -1)"</span>
-[ -s <span>"${LOG}"</span> ] || { echo <span>"没有生成日志"</span>; exit 1; }
-<span class="kw">if</span> grep -qF <span>"${HOME}"</span> <span>"${LOG}"</span>; then
-    echo <span>"日志里出现了未脱敏的个人目录路径"</span>; exit 1
-fi
-
-# 三:人为崩溃后是否产生转储(该参数只在发布候选版本里保留)
-<span>"${APP}"</span> --selftest-crash || <span class="kw">true</span>
-find <span>"${LOGDIR}/../crashdb"</span> -name <span>'*.dmp'</span> -newermt <span>'-2 minutes'</span> | grep -q . \
-    || { echo <span>"没有生成崩溃转储"</span>; exit 1; }
-
-echo <span>"本地环节全部通过。接下来在服务端确认上报到达,并用归档符号解析出堆栈。"</span></code></pre>
-<p>脚本只覆盖客户端一侧,最后两步——上报是否到达服务端、符号能否匹配——需要在服务端确认。把这两步也写进发布检查单,由发布负责人勾选。</p>
-<p>脚本里用到的两个自检参数只应当出现在发布候选版本里,正式版本要用编译期开关去掉,否则等于给使用者留了一个让程序主动崩溃的入口。去掉的方式是在构建配置里区分候选与正式两种目标,而不是靠运行期判断。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 三条通道要按同一个会话标识串起来,排查时才能互相印证</span><p>日志、崩溃转储的标注、指标记录都带上同一个随机会话标识之后,一份崩溃报告可以直接找到对应的日志片段与那次会话的指标,反过来也成立。没有这个关联时,三份数据各自独立,排查要靠时间戳去猜,而客户端时钟不可靠。实现成本极低——进程启动时生成一个随机值,三处上报各带一份。它同时满足隐私要求:不持久化、不与用户或设备关联,每次运行都是新的。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 上线之后再补日志与崩溃上报,已经发出去的版本永远补不上</span><p>症状是线上出现一类难以复现的问题,团队决定「下个版本加上详细日志」,而这类问题恰恰集中在不会升级的那批用户身上。根因是可观测性设施必须随程序一起发布,它不能追溯到已经安装的版本。规矩是把日志落地、崩溃上报、符号归档三项当成<strong>第一个正式版本的必备内容</strong>,与功能同等优先级;指标可以稍后补,因为它回答的是趋势问题,而趋势可以从补上之后开始积累。</p></div>
-<div class="note old" style="contain-intrinsic-size:auto 228px"><span class="t">🟡 靠用户描述与截图定位问题的做法只在装机量很小时成立</span><p>这是许多桌面程序早期的实际状态:出问题时请用户描述现象、发一张截图,开发者据此猜测原因。它在几十个用户、且用户具备一定技术背景时勉强可行。装机量上去之后三个环节同时失效——多数用户不会主动报告,只会卸载;报告的现象描述与真实原因往往对不上;同一现象可能来自完全不同的原因,而没有数据无法区分。更麻烦的是它给人一种「问题不多」的错觉,因为看不见的问题被当成不存在。本章三条通道的意义是把这个判断建立在数据上,而不是建立在有多少人来抱怨上。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 发布前跑一次可观测性自检,五个环节一次验证完</span><p>自检的内容是:启动程序确认日志文件生成在预期路径且内容已脱敏;触发一次人为崩溃确认转储生成;确认转储被上传到服务端;用归档的符号解析出可读堆栈;确认指标记录到达并带有正确的版本标签。五步走完大约十几分钟,能覆盖本章全部内容的接线是否正确。把它写成发布检查单的一项,比任何文档都有效——这类设施的失效都是静默的,不主动验证就发现不了。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 41076px;--thin-h:41076px">
+<section class="chapter" style="contain-intrinsic-size:auto 36822px;--thin-h:36822px">
 <h1 id="c17"><span class="part">第 17 章</span>打包、签名与自动更新</h1>
+<p>在开发机上能跑的程序,拷到干净机器上多半起不来——交付是一条每环都有候选方案的工程链路。本章按发布的先后顺序走完它:windeployqt 与 linuxdeployqt 做了什么又漏了什么、三平台的安装器怎么选、代码签名为什么绕不过去、自动更新的四种形态与各自的风险、以及更新失败之后的回滚。取舍角度有两条:目标用户能不能接受手工步骤,以及更新这个从网络取代码并执行的机制,要用哪些校验把风险压住。</p>
 <h2 id="c17-deploy">17.1 windeployqt 与 linuxdeployqt:它们做了什么、漏了什么</h2>
 <p>在开发机上能跑的程序,拷到一台干净机器上多半起不来。原因是它依赖的动态库、插件、运行库都装在开发环境里,而目标机器上没有。部署工具的职责就是把这些依赖找齐并放到程序旁边。</p>
 <p>Qt 的部署有一处比普通 C++ 程序更麻烦:<strong>插件是运行期按需加载的,不出现在可执行文件的依赖表里</strong>。没有平台插件程序连窗口都创建不出来,而任何静态分析都看不出这个依赖。官方工具用一套内建的规则弥补这一点,但规则覆盖不到的部分要自己补。</p>
@@ -20121,7 +18400,7 @@ Get-AuthenticodeSignature $files.FullName |
         1.4.1\bin\myapp.exe
         1.4.2\bin\myapp.exe
     staging\                # 下载与解包的临时区,与版本目录同卷</code></pre>
-<pre style="contain-intrinsic-size:auto 2044px"><code><span class="cm">// Updater.cpp —— 下载、校验、准备、切换</span>
+<pre style="contain-intrinsic-size:auto 2045px"><code><span class="cm">// Updater.cpp —— 下载、校验、准备、切换</span>
 <span class="kw">#include</span> &lt;QCryptographicHash&gt;
 <span class="kw">#include</span> &lt;QDir&gt;
 <span class="kw">#include</span> &lt;QSaveFile&gt;
@@ -20195,7 +18474,7 @@ Get-AuthenticodeSignature $files.FullName |
 <span class="kw">private</span>:
     QString m_root;
 };</code></pre>
-<pre style="contain-intrinsic-size:auto 740px"><code><span class="cm">// launcher.cpp —— 路径固定的启动器,负责选版本与拉起真正的程序</span>
+<pre style="contain-intrinsic-size:auto 739px"><code><span class="cm">// launcher.cpp —— 路径固定的启动器,负责选版本与拉起真正的程序</span>
 <span class="kw">int</span> main(<span class="kw">int</span> argc, <span class="kw">char</span> *argv[])
 {
     <span class="kw">const</span> QString root = QCoreApplication::applicationDirPath();
@@ -20325,7 +18604,7 @@ Get-AuthenticodeSignature $files.FullName |
 </tbody>
 </table>
 <p>这张表解释了一处平台差异:Linux 上可以直接覆盖正在运行的可执行文件,已经运行的进程不受影响,下次启动时用的是新文件;Windows 上文件被锁,必须先把旧文件改名再放新文件,或者用重启后替换的机制。</p>
-<pre style="contain-intrinsic-size:auto 739px"><code><span class="cm">// 跨平台的原子替换。注意 QFile::rename 在目标已存在时会失败,不能直接用</span>
+<pre style="contain-intrinsic-size:auto 740px"><code><span class="cm">// 跨平台的原子替换。注意 QFile::rename 在目标已存在时会失败,不能直接用</span>
 <span class="kw">bool</span> atomicReplace(<span class="kw">const</span> QString &amp;tempPath, <span class="kw">const</span> QString &amp;targetPath, QString *why)
 {
 <span class="kw">#ifdef</span> Q_OS_WIN
@@ -20479,193 +18758,12 @@ QString pickVersion(<span class="kw">const</span> QString &amp;root)
 <li><strong>并发的更新与启动要互斥。</strong>更新器正在切换指针时程序启动,可能读到不一致的状态。用第 14 章的锁文件保护这一段。</li>
 <li><strong>回退本身要有日志。</strong>用户报告「程序自己变回旧版本了」时,日志是唯一的解释来源。</li>
 </ul>
-<h2 id="c17-sum">17.6 小结</h2>
-<p>本章五节是一条链:<strong>部署决定安装包里有什么,安装器决定它装到哪里,安装位置决定更新怎么做,更新方式决定回滚是否可能,而签名是整条链的信任基础</strong>。任何一环的选择都会约束后面几环。</p>
-<p>这条约束链有一个实践含义:<strong>这五件事要在产品早期一次性想清楚</strong>,而不是等到要发第一个版本时才开始考虑。安装位置定错了,后面的更新架构就要跟着扭曲;第一个版本没有配置版本号与未知字段容错,后面就没有回退空间;第一个版本没做符号归档,那批用户的崩溃永远解析不了。这些都不是可以事后补的。</p>
-<h3>一条发布流水线的完整形态</h3>
-<table style="contain-intrinsic-size:auto 407px">
-<thead><tr><th>阶段</th><th>做什么</th><th>失败时</th></tr></thead>
-<tbody>
-<tr><td class="nw">构建</td><td class="nw">按发布配置编译,生成符号</td><td>中止</td></tr>
-<tr><td class="nw">测试</td><td class="nw">跑第 15 章的全部测试</td><td>中止</td></tr>
-<tr><td class="nw">部署</td><td>收集依赖,补齐部署工具漏掉的部分</td><td>中止</td></tr>
-<tr><td class="nw">符号归档</td><td>按构建标识归档,同时记下提交哈希(第 16 章)</td><td><strong>中止</strong>,不能跳过</td></tr>
-<tr><td class="nw">签名</td><td class="nw">签自有文件并逐一核对签名状态</td><td>中止</td></tr>
-<tr><td class="nw">打包</td><td class="nw">生成安装器与分发格式</td><td>中止</td></tr>
-<tr><td class="nw">签名安装包</td><td class="nw">对安装包再签一次并核对</td><td>中止</td></tr>
-<tr><td class="nw">干净环境验证</td><td>按清单逐项验证,包括可观测性自检</td><td>中止</td></tr>
-<tr><td class="nw">发布</td><td>上传分发地址,更新清单,按比例开灰度</td><td>可回退</td></tr>
-<tr><td class="nw">观察</td><td class="nw">盯崩溃率、更新成功率、回退率</td><td>异常时按暂停开关</td></tr>
-</tbody>
-</table>
-<h3>与 Qt 机制的四个接口点</h3>
-<table style="contain-intrinsic-size:auto 262px">
-<thead><tr><th>接口点</th><th>本章各方案的落点</th></tr></thead>
-<tbody>
-<tr><td class="nw">对象树归属</td><td>更新器与启动器是独立进程,不在主程序的对象树里。主程序内的更新检查对象挂在应用级单例下,不要挂在窗口下——窗口关闭后更新检查应当继续</td></tr>
-<tr><td class="nw">信号槽桥接</td><td>下载与校验放工作线程,进度通过信号回主线程;更新器与主程序之间的通信用第 14 章的本地套接字,不要用共享文件轮询</td></tr>
-<tr><td class="nw">样式与主题</td><td>更新提示界面要与程序主体一致;启动器不显示任何界面,失败信息写日志,由主程序下次启动时呈现</td></tr>
-<tr><td class="nw">高分屏与国际化</td><td>更新说明文本要走翻译并支持按语言取不同内容;安装器的多语言界面要确认脚本编码;版本号与文件名一律用不受区域设置影响的格式</td></tr>
-</tbody>
-</table>
-<h3>维护状态与退路</h3>
-<table style="contain-intrinsic-size:auto 347px">
-<thead><tr><th>方案</th><th>来源</th><th>维护状态</th><th>退路</th></tr></thead>
-<tbody>
-<tr><td class="nw">CMake 部署脚本接口</td><td>Qt</td><td>随 Qt 维护</td><td>退回直接调用命令行部署工具</td></tr>
-<tr><td class="nw">windeployqt</td><td>Qt 自带</td><td>随 Qt 维护</td><td>无需退路</td></tr>
-<tr><td class="nw">Linux 侧的第三方部署工具</td><td>社区</td><td>按项目各自状态核实</td><td>改用 CMake 安装目录树加自己打包</td></tr>
-<tr><td class="nw">Inno Setup 与 NSIS</td><td>第三方</td><td>长期稳定</td><td>互相替换,脚本要重写但结构类似</td></tr>
-<tr><td class="nw">CPack</td><td>CMake 自带</td><td>随 CMake 维护</td><td>直接调用各平台的打包工具</td></tr>
-<tr><td class="nw">签名工具链</td><td>平台厂商与证书机构</td><td>随平台</td><td>云签名服务之间可以替换,接口不同但流程一致</td></tr>
-<tr><td class="nw">自建的更新与回滚机制</td><td>自己</td><td>自己</td><td>结构简单,主要成本在测试而不在实现</td></tr>
-</tbody>
-</table>
-<p>最后一行值得强调:更新与回滚是本章唯一建议自己实现的部分。它的逻辑并不复杂——下载、校验、切指针、检测失败、退回去——但它与产品的安装形态、数据格式、发布流程深度耦合,现成方案很难恰好匹配。真正的成本在于把各种失败路径都测到,而这一部分无论用不用现成方案都省不掉。</p>
-<h3>判据速查</h3>
-<table style="contain-intrinsic-size:auto 296px">
-<thead><tr><th>问题</th><th>判据</th></tr></thead>
-<tbody>
-<tr><td class="nw">部署用什么</td><td>新工程用 CMake 的部署脚本接口。自有插件、资源、附属程序永远要显式安装</td></tr>
-<tr><td class="nw">装到哪里</td><td>面向个人用户装用户级目录,这样自动更新才能静默完成</td></tr>
-<tr><td class="nw">要不要签名</td><td>面向不特定用户分发就必须签。Linux 上系统不拦,但自动更新的安全依赖它</td></tr>
-<tr><td class="nw">更新用哪种形态</td><td>先做全量替换。带宽确实成为问题时,把增量补丁作为可失败的优化叠加上去</td></tr>
-<tr><td class="nw">用原子替换还是双目录切换</td><td>单文件用原子替换,多文件程序一律用双目录切换</td></tr>
-<tr><td class="nw">什么时候需要自动回退</td><td>只要有自动更新就需要。它的实现成本远低于一次「用户程序打不开」的事故</td></tr>
-<tr><td class="nw">不可逆的数据迁移能不能做</td><td>能,但要在升级前提示用户,并把该版本标记为不可回退</td></tr>
-</tbody>
-</table>
-<h3>发布检查单</h3>
-<p>把上面几张表压成一份可以逐条勾选的清单。它的价值不在于内容新颖,而在于每一条都对应本章某个静默失效的形态。清单要由一个人逐条执行并签字,而不是分散在几个人的记忆里——本章列出的问题几乎全部属于「每一步单看都做过,合起来漏了一环」。</p>
-<p>清单的第七条与第八条是最容易被跳过的两条,因为它们要求准备一个旧版本环境并人为制造故障。跳过的代价是升级路径与回退路径从未被验证过,而这两条路径只在真实用户身上第一次执行。把它们做成脚本可以把每次的成本压到几分钟。</p>
-<ol>
-<li>干净环境里安装成功,程序能启动,窗口正常显示。</li>
-<li>运行期加载的能力逐项验证:图像格式、加密连接、数据库驱动、自有插件、界面语言切换。</li>
-<li>崩溃处理器随包分发且能启动,人为触发一次崩溃能产生转储并上报。</li>
-<li>符号已按构建标识归档,并用归档里的符号成功解析出可读堆栈。</li>
-<li>安装包与包内全部自有文件签名有效,签名者是自己的发布身份,并且都带时间戳。</li>
-<li>用户数据与缓存写在标准路径,不在安装目录下。</li>
-<li>从上一个正式版本升级到本版本能成功,升级后配置与数据完好。</li>
-<li>把本版本人为改成无法启动,验证启动器能自动回退到上一个版本。</li>
-<li>更新清单的灰度比例初始为零,暂停下发的开关已确认可用。</li>
-</ol>
-<pre style="contain-intrinsic-size:auto 658px"><code>#!/usr/bin/env bash
-# release.sh —— 一次流水线跑完全部步骤,任何一步失败即中止
-set -euo pipefail                     # 关键:出错立即退出,未定义变量报错
-
-VERSION=<span>"${1:?用法: release.sh &lt;版本号&gt;}"</span>
-DIST=<span>"dist"</span>
-
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=<span>"${DIST}"</span>
-cmake --build build --config Release
-ctest --test-dir build --output-on-failure          # 测试不过就不发
-cmake --install build --config Release              # 含部署脚本
-
-./ci/split-symbols.sh <span>"${DIST}/bin/myapp"</span> symbols   # 见第 16 章
-./ci/archive-symbols.sh symbols/myapp.sym symbol-store
-
-./ci/sign-all.sh <span>"${DIST}"</span>                          # 内部逐个核对签名状态
-./ci/make-installer.sh <span>"${VERSION}"</span> <span>"${DIST}"</span>
-./ci/sign-installer.sh <span>"Sync-Setup-${VERSION}.exe"</span>
-
-./ci/verify-clean-env.sh <span>"Sync-Setup-${VERSION}.exe"</span> # 干净环境验证
-./ci/observability-check.sh <span>"${DIST}/bin/myapp"</span> <span>"${DIST}/logs"</span>
-
-echo <span>"全部步骤通过。上传与开灰度由发布负责人在面板上执行。"</span></code></pre>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 发布流程里每一步的失败都必须中止,不能降级成警告</span><p>本章列出的失败——部署漏文件、符号没归档、签名失败、验证不通过——有一个共同特点:<strong>它们都不影响构建产物的生成</strong>。流水线如果把这些步骤设成「失败也继续」,产物照样会被发布出去,问题在几天到几个月之后才暴露,而那时已经装在用户机器上。规矩是每一步显式检查退出码并在失败时中止,并且在流水线的最后加一道汇总检查,确认前面每一步都确实执行过——步骤被条件跳过而没有报错,是比失败更隐蔽的一种情况。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 228px"><span class="t">🔴 没有回滚能力就开自动更新,一次坏版本会让全部用户失去程序</span><p>症状是发布一个在特定环境下无法启动的版本之后,受影响的用户既打不开程序,也没有任何办法退回旧版本——旧版本的文件已经被覆盖,安装包也已从分发地址撤下。他们唯一的选择是自己找到旧版本安装包重装,而多数人会直接放弃。根因是把自动更新当成一个单向操作来实现:替换文件、结束。<strong>自动更新与自动回滚必须同时上线</strong>,没有回滚能力时宁可让更新停留在「提示用户手动下载」的形态。判断标准很直接:假设下一个版本在百分之一的机器上无法启动,这些用户能不能自己恢复。</p></div>
-<div class="note old" style="contain-intrinsic-size:auto 228px"><span class="t">🟡 把安装包放在网站上让用户自己下载升级的做法,升级率会长期偏低</span><p>这是最早期的分发形态:发布新版本、在网站上换掉链接、在程序里放一个「检查更新」的菜单项打开浏览器。它在今天仍然可用,但有两个后果需要接受。一是版本高度分散,同时在跑的版本可能有十几个,每一个都要在崩溃报告与问题排查中单独考虑,而多数用户长期停留在很旧的版本上。二是安全修复无法及时覆盖,一个已修复的问题会在用户群里持续存在很久。判断是否需要升级到自动更新的依据是:安全修复能不能容忍数月才覆盖大部分用户。不能,就必须做自动更新,并且同时做回滚。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 把整条发布流水线做成可重放的脚本,不要依赖任何手工步骤</span><p>手工步骤有三个问题:发布负责人不在时没人能发;每次执行的细节可能不同,出问题后无法确定当时做了什么;紧急回滚时的操作压力最大而出错率最高。把构建、部署、归档、签名、打包、验证、上传全部写成脚本,由一次流水线运行串起来,并且让它可以用同一份输入重跑。签名因为密钥保管要求可能需要一次人工确认,这是唯一可以接受的例外,而且要把它做成流水线中的一个明确的暂停点,而不是一个写在文档里的步骤。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 16504px;--thin-h:16504px">
-<h1 id="c18"><span class="part">第 18 章</span>小结:选型速查与什么时候自己写</h1>
-<h2 id="c18-index">18.1 选型速查:按需求查方案</h2>
-<p>前面十八章按需求组织,每一章给出候选方案、同场对比、完整接入与失效边界。这一节把它们压成一张可以直接查的表:<strong>左边是要做的事,右边是从哪一章开始读</strong>。</p>
-<p>表里的「判据」一列只有一句话,它不是结论,而是<strong>做出结论所依据的那个变量</strong>。真正的判断要回到对应章节看完整的对比表与边界说明。</p>
-<h3>怎么用这张表</h3>
-<ul>
-<li><strong>从需求出发,不从技术出发。</strong>在左列找与手头任务措辞最接近的一行。找不到完全一致的,找最接近的那个需求类别,对应章节的第一节通常会给出更细的需求分解。</li>
-<li><strong>先看判据那一列。</strong>它点出了这个选择真正取决于什么。如果那个变量在你的场景里还没确定,先把它确定下来,再去看方案。</li>
-<li><strong>方案列的顺序不是推荐顺序。</strong>各章的对比表里才有推荐,并且推荐都带条件。</li>
-<li><strong>跨章节的需求要读两处。</strong>例如导出带图表的 PDF 报表同时涉及第 1 章与第 7 章,两处都要看。</li>
-</ul>
-<h3>按需求查方案</h3>
-<table style="contain-intrinsic-size:auto 3339px">
-<thead><tr><th>我要做的事</th><th>候选方案</th><th>判据一句话</th><th>章</th></tr></thead>
-<tbody>
-<tr><td class="nw">引入一个第三方库</td><td>包管理器 · git 子模块 · 源码内嵌</td><td>按团队的构建方式与离线构建要求选,能锁定版本是底线</td><td>第 0 章</td></tr>
-<tr><td class="nw">评估一个库能不能用</td><td>许可证 · 维护状态 · Qt 版本兼容 · 退路</td><td>四项任何一项不通过就否决,退路要在引入前想好</td><td>第 0 章</td></tr>
-<tr><td class="nw">画静态统计图</td><td>Qt Charts · QCustomPlot · Qwt · 自绘</td><td>需要的图种现成方案覆盖得了就不要自绘</td><td>第 1 章</td></tr>
-<tr><td class="nw">图表要能缩放拖动取值</td><td>各图表库的交互接口 · 自绘加事件处理</td><td>交互种类是现成方案之间最主要的差异点</td><td>第 1 章</td></tr>
-<tr><td class="nw">图表要跟随深色主题换色</td><td>各库的样式与调色接口</td><td>能否整体替换配色决定深色主题的适配成本</td><td>第 1 章</td></tr>
-<tr><td class="nw">曲线要实时刷新</td><td>抽稀 · 分层缓存 · 图形加速后端 · 自绘</td><td>数据点数超过横向像素数时,抽稀是必需的第一步</td><td>第 2 章</td></tr>
-<tr><td class="nw">十万点以上的数据集</td><td>图形加速后端 · 自绘加分块</td><td>通用图表库在这个量级会退化,先实测再选</td><td>第 2 章</td></tr>
-<tr><td class="nw">显示三维模型</td><td>Qt Quick 3D · 直接调用图形接口</td><td>场景复杂度,以及工程是否已经用了 QML</td><td>第 3 章</td></tr>
-<tr><td class="nw">三维数据可视化</td><td>数据可视化模块 · 自己实现</td><td>现成方案覆盖标准图种,超出范围就自己写</td><td>第 3 章</td></tr>
-<tr><td class="nw">显示与编辑大表格</td><td>QTableView 定制 · 第三方表格控件</td><td>行数上万时先优化模型与委托,再考虑换控件</td><td>第 4 章</td></tr>
-<tr><td class="nw">读写电子表格文件</td><td>第三方表格库 · CSV · 导出 PDF</td><td>只要导出就用 CSV,需要保留格式才引表格库</td><td>第 4 章</td></tr>
-<tr><td class="nw">做富文本编辑</td><td>QTextDocument · 第三方编辑器组件</td><td>Qt 自带的富文本模型够用就不要引入新依赖</td><td>第 5 章</td></tr>
-<tr><td class="nw">代码编辑与语法高亮</td><td>QScintilla · 语法高亮库 · 自己实现</td><td>折叠、补全、多光标这三项决定要不要用现成方案</td><td>第 5 章</td></tr>
-<tr><td class="nw">渲染 Markdown</td><td>QTextDocument 内建支持 · 第三方解析器</td><td>只读展示用内建的,需要扩展语法才引解析器</td><td>第 5 章</td></tr>
-<tr><td class="nw">可拖动的停靠面板</td><td>QDockWidget · 高级停靠组件 · 自己实现</td><td>布局保存与浮动窗口行为的边界要先试过再定</td><td>第 6 章</td></tr>
-<tr><td class="nw">属性编辑面板</td><td>属性编辑组件 · 模型视图自己搭</td><td>属性种类固定且不多就自己搭</td><td>第 6 章</td></tr>
-<tr><td class="nw">打印与导出 PDF</td><td>QPrinter · QTextDocument 排版 · 报表工具</td><td>版式固定用文档排版,让用户设计模板才上报表工具</td><td>第 7 章</td></tr>
-<tr><td class="nw">生成多页报表</td><td>QTextDocument 分页 · 报表引擎</td><td>分页规则的复杂度是分界线</td><td>第 7 章</td></tr>
-<tr><td class="nw">调用 HTTP 接口</td><td>QNetworkAccessManager · 第三方客户端</td><td>Qt 自带的够用,重点在生命周期与并发数控制</td><td>第 8 章</td></tr>
-<tr><td class="nw">做长连接推送</td><td>WebSocket · MQTT · 自定义 TCP</td><td>中间是否有代理,以及要不要主题订阅</td><td>第 8 章</td></tr>
-<tr><td class="nw">在程序里嵌一个服务端</td><td>轻量 HTTP 服务库 · QTcpServer 自实现</td><td>只做本机控制入口就自己写,对外服务用现成的</td><td>第 8 章</td></tr>
-<tr><td class="nw">本地存关系数据</td><td>QtSql 加 SQLite · 直接用 SQLite 接口</td><td>要不要与模型视图集成是主要区别</td><td>第 9 章</td></tr>
-<tr><td class="nw">存少量配置</td><td>QSettings · JSON 文件 · 键值存储</td><td>配置要能被用户查看与备份就用文件</td><td>第 9 章</td></tr>
-<tr><td class="nw">多线程访问数据库</td><td>每线程一个连接 · 连接池 · 单线程串行</td><td>连接不能跨线程共享,这是硬约束不是建议</td><td>第 9 章</td></tr>
-<tr><td class="nw">播放音视频</td><td>Qt Multimedia · FFmpeg 后端</td><td>需要覆盖的格式范围与授权要求</td><td>第 10 章</td></tr>
-<tr><td class="nw">摄像头采集</td><td>Qt Multimedia · 平台原生接口</td><td>参数控制需要精细到什么程度</td><td>第 10 章</td></tr>
-<tr><td class="nw">做图像处理</td><td>QImage · OpenCV</td><td>算法超出缩放旋转裁剪这类基本变换就用 OpenCV</td><td>第 10 章</td></tr>
-<tr><td class="nw">串口设备通信</td><td>QtSerialPort · 平台原生接口</td><td>自带模块够用,重点在超时处理与断线重连</td><td>第 11 章</td></tr>
-<tr><td class="nw">USB 或专用总线设备</td><td>厂商库 · 通用 USB 库</td><td>有厂商库优先用,通用库作为退路</td><td>第 11 章</td></tr>
-<tr><td class="nw">保存用户口令</td><td>系统密钥库 · 加密后存文件</td><td>一律用系统密钥库,不要自己保管明文或密钥</td><td>第 12 章</td></tr>
-<tr><td class="nw">加密本地数据</td><td>平台加密接口 · 成熟加密库</td><td>绝不自己实现算法,选择只在用哪个现成实现</td><td>第 12 章</td></tr>
-<tr><td class="nw">校验下载内容</td><td>内容摘要 · 代码签名</td><td>摘要挡损坏,签名挡替换,两者都要</td><td>第 12 章</td></tr>
-<tr><td class="nw">让用户写脚本扩展</td><td>QJSEngine · Lua · 嵌入 Python</td><td>脚本要不要调用系统能力,决定沙箱要求的强度</td><td>第 13 章</td></tr>
-<tr><td class="nw">做插件体系</td><td>QPluginLoader · 自定义接口</td><td>二进制兼容性的约束比预期严,接口要一次定好</td><td>第 13 章</td></tr>
-<tr><td class="nw">托盘图标与通知</td><td>QSystemTrayIcon · 桌面通知接口</td><td>托盘只能是快捷方式,不能是唯一入口</td><td>第 14 章</td></tr>
-<tr><td class="nw">单实例与参数转交</td><td>QLockFile 加 QLocalServer · D-Bus 服务名</td><td>锁的名字里必须带会话标识</td><td>第 14 章</td></tr>
-<tr><td class="nw">做全局热键</td><td>平台各自实现 · 桌面门户接口</td><td>Wayland 下普通客户端做不到,必须准备替代入口</td><td>第 14 章</td></tr>
-<tr><td class="nw">进程间通信</td><td>本地套接字 · 共享内存 · QtDBus</td><td>跨平台默认选本地套接字,数据大才上共享内存</td><td>第 14 章</td></tr>
-<tr><td class="nw">处理休眠与关机事件</td><td>平台原生消息 · logind 接口</td><td>程序是否持有未落盘的数据或长连接</td><td>第 14 章</td></tr>
-<tr><td class="nw">写单元测试</td><td>Qt Test · GoogleTest · Catch2</td><td>涉及信号时序与界面交互的部分用 Qt Test</td><td>第 15 章</td></tr>
-<tr><td class="nw">测界面交互</td><td>QTest 合成输入加条件等待</td><td>不稳定的根因是等待方式不对,不是界面难测</td><td>第 15 章</td></tr>
-<tr><td class="nw">在没有显示器的机器上跑测试</td><td>offscreen 平台插件 · Xvfb</td><td>用例需不需要窗口激活与键盘焦点</td><td>第 15 章</td></tr>
-<tr><td class="nw">测自定义模型</td><td>QAbstractItemModelTester 加自写断言</td><td>检查器覆盖结构契约,语义要自己断言</td><td>第 15 章</td></tr>
-<tr><td class="nw">让日志落到文件</td><td>Qt 日志系统加自写处理器 · spdlog</td><td>日志量,以及是否需要异步写盘</td><td>第 16 章</td></tr>
-<tr><td class="nw">收集用户机器上的崩溃</td><td>Crashpad · 托管平台 · 系统自带机制</td><td>必须同时做符号归档,否则收到的只是地址</td><td>第 16 章</td></tr>
-<tr><td class="nw">判断新版本是否更稳定</td><td>运行指标上报</td><td>只有靠分布才能回答的问题才值得上报</td><td>第 16 章</td></tr>
-<tr><td class="nw">决定哪些信息不能上报</td><td>禁带清单加脱敏</td><td>默认行为就是泄露,要靠明确规则堵住</td><td>第 16 章</td></tr>
-<tr><td class="nw">打包成可分发的安装包</td><td>CMake 部署脚本加安装器</td><td>部署工具漏掉的三类内容必须显式安装</td><td>第 17 章</td></tr>
-<tr><td class="nw">让用户不看到安全警告</td><td>代码签名</td><td>面向不特定用户分发时绕不过去</td><td>第 17 章</td></tr>
-<tr><td class="nw">做自动更新</td><td>全量替换 · 增量补丁 · 商店 · 包管理器</td><td>先做全量替换,增量补丁作为可失败的优化叠加</td><td>第 17 章</td></tr>
-<tr><td class="nw">更新失败要能退回去</td><td>双目录切换加启动失败自动回退</td><td>只要有自动更新就必须同时有自动回滚</td><td>第 17 章</td></tr>
-<tr><td class="nw">判断该不该自己写</td><td>五条判据</td><td>表面积 · 失败代价 · 错配比例 · 维护力量 · 许可证</td><td>第 18 章</td></tr>
-<tr><td class="nw">定期确认依赖还能用</td><td>健康度体检清单</td><td>每季度一次,Qt 大版本升级前必做一次</td><td>第 18 章</td></tr>
-</tbody>
-</table>
-<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 先确定判据那一列里的变量,再去看方案,顺序反了会反复返工</span><p>表里每一行的判据都是一个具体的量:要显示多少数据点、需要哪几种交互、分页规则有多复杂、脚本要不要调用系统能力。这些量在需求阶段确定下来只要几分钟,而在选定方案之后才发现它超出了方案的能力范围,代价是整块重做。常见的返工模式是先按熟悉程度或资料多少选了一个库,写到一半才去测它在真实数据量下的表现。把判据当成选型的前置条件,是本书每一章对比表的共同前提。</p></div>
-<h3>同一个需求跨越几章时怎么分工</h3>
-<table style="contain-intrinsic-size:auto 372px">
-<thead><tr><th>需求</th><th>涉及的章</th><th>各章负责哪一段</th></tr></thead>
-<tbody>
-<tr><td class="nw">导出带图表的 PDF 报表</td><td class="nw">第 1 章与第 7 章</td><td>图表负责生成可绘制的内容,报表负责分页与版式</td></tr>
-<tr><td class="nw">把大数据集显示在表格里并可导出</td><td class="nw">第 4 章与第 2 章</td><td>表格负责模型与视图,超大数据的抽稀思路参考图表那一章</td></tr>
-<tr><td class="nw">带插件的程序要做自动更新</td><td class="nw">第 13 章与第 17 章</td><td>插件的二进制兼容性约束决定了更新能不能只换主程序</td></tr>
-<tr><td class="nw">崩溃上报要带最近的日志</td><td class="nw">第 16 章内部</td><td>日志一节的环形缓冲与崩溃一节的附件机制配合,脱敏在写入时完成</td></tr>
-<tr><td class="nw">测试要覆盖系统集成代码</td><td class="nw">第 14 章与第 15 章</td><td>集成能力做成可探测的状态,测试才能在不具备该能力的环境里跳过</td></tr>
-<tr><td class="nw">更新器与主程序交接</td><td class="nw">第 14 章与第 17 章</td><td>进程间通信用本地套接字,更新流程用双目录切换</td></tr>
-<tr><td class="nw">加密存储的数据要能跨版本读取</td><td class="nw">第 12 章与第 17 章</td><td>加密格式带版本号,回滚时旧版本要能识别并拒绝而不是读出乱码</td></tr>
-</tbody>
-</table>
-<p>这张表说明了一件事:<strong>本书的章节划分是按需求切的,而真实任务经常横跨几章</strong>。遇到跨章需求时,先按主要产出物定位主章,再按依赖关系找到配合的那一章。</p>
-<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 做新功能之前先查这张表,比先搜索资料更省时间</span><p>直接搜索得到的通常是某一个方案的教程,它默认你已经选好了。而选型阶段真正需要的是<strong>有哪些候选、它们的差异在哪、各自在什么规模下失效</strong>——这三样在单个方案的教程里都没有。查表的成本是一分钟,收益是避开那些「按教程做完了才发现方案不合适」的情况。表里给不出答案的需求,回到第 0 章的评估流程:它讲的是通用方法,适用于本书没有覆盖的领域。</p></div>
-<h2 id="c18-self">18.2 什么时候自己写:五条判据</h2>
+<section class="chapter" style="contain-intrinsic-size:auto 8928px;--thin-h:8928px">
+<h1 id="c18"><span class="part">第 18 章</span>自研判据与依赖体检</h1>
+<p>前面十八章在每个具体需求上都遇到同一个问题:引现成的还是自己写;而引进来的每一个依赖,都会在你的仓库之外继续演变。本章把这两件事收口:先给「什么时候自己写」的五条判据——表面积、失败代价、错配比例、维护力量、许可证,任何一条给出否定结论就不要自己写;再给依赖健康度的六项体检指标、固定的检查周期与可执行的台账形态,让停更、改许可证、出安全公告这类变化在造成后果之前被发现。</p>
+<h2 id="c18-self">18.1 什么时候自己写:五条判据</h2>
 <p>「引现成的还是自己写」是本书每一章都会遇到的同一个问题。它没有普适答案,但有五个可以逐条核对的判据。<strong>五条里任何一条给出否定结论,就不要自己写</strong>——它们是与的关系,不是投票。</p>
 <p>每条判据下面各给一组正反例。正例是自己写的做法成立,反例是自己写导致了返工。</p>
 <h3>五条判据一览</h3>
@@ -20737,7 +18835,7 @@ echo <span>"全部步骤通过。上传与开灰度由发布负责人在面板�
 <li><strong>留一条替换路径。</strong>接口按需求描述,不按自己的实现描述。这样将来引入现成方案时,只需要写一个适配层,而不是改所有调用点。</li>
 </ol>
 <div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 自研的部分同样要进依赖台账,接受与第三方一样的定期体检</span><p>自研代码常被排除在依赖管理之外,理由是它是自己的。但下一节的六项体检指标里有四项同样适用:最后一次维护是什么时候、有没有已知问题积压、与新 Qt 版本兼容吗、维护者还在不在团队里。最后一项尤其现实——写它的人离职之后,这段代码的维护状态与一个停更的第三方库没有区别,而且没有社区可以求助。把自研模块与第三方库放进同一张台账、用同一套周期检查,是把这个风险显性化的最简单办法。</p></div>
-<h2 id="c18-health">18.3 依赖健康度:怎么定期体检</h2>
+<h2 id="c18-health">18.2 依赖健康度:怎么定期体检</h2>
 <p>引入依赖时做过一次评估(第 0 章),之后它就进入了无人过问的状态:上游可能停更、可能出安全公告、可能改许可证、可能与新 Qt 版本不兼容。这些变化都发生在你的仓库之外,不会有任何提示。</p>
 <p>体检的目的是把这些变化<strong>在造成后果之前</strong>发现。它不需要很多时间,但需要固定的周期与固定的检查项——不定期的、凭印象的检查等于没有检查。</p>
 <h3>六项体检指标</h3>
@@ -20852,60 +18950,6 @@ osv-scanner --sbom=build/sbom.cdx.json
 <p>台账放在源码仓库里,与代码一起评审。放在文档系统里的台账会与实际依赖脱节,因为改依赖的那次提交不会顺手去改文档;放在仓库里则可以在代码评审时被看到,新增依赖的提交必须同时改台账才算完整。</p>
 <div class="note old" style="contain-intrinsic-size:auto 195px"><span class="t">🟡 靠包管理器的锁文件代替台账,能回答版本却回答不了其余五个问题</span><p>锁文件确实记录了精确版本,并且由工具自动维护,这一点比手工台账可靠。但它只有版本这一个维度:为什么引入、可以换成什么、谁负责、许可证是否变过,这些都不在里面,而它们恰恰是体检时需要判断的部分。两者的关系是互补:锁文件负责「现在用的是哪个版本」这个事实,台账负责围绕它的判断依据。台账里的版本一列可以由脚本从锁文件同步过来,避免两处不一致。</p></div>
 <div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 依赖长期不体检,升级 Qt 大版本时会同时撞上好几个不兼容</span><p>症状是一次原本只打算升级 Qt 小版本的工作,变成持续数周的连锁修复:某个图表库不支持新版本、某个第三方控件用了已移除的接口、某个库的许可证在两年前就改了而无人知晓。根因是这些变化各自发生在过去两年的某个时点,而它们全部积压到升级那一刻才被发现。季度体检的价值不在于每次都能发现什么——多数季度什么都不会发生——而在于把变化<strong>摊到发生的那个季度</strong>去处理,一次处理一个,而不是一次处理七个并且互相牵扯。</p></div>
-<h2 id="c18-sum">18.4 小结</h2>
-<p>全书十九章按需求组织,但贯穿其中的判断方式只有几条。这一节把它们收拢,并说明本书与三本姊妹书之间的分工。</p>
-<h3>全书的三条主线</h3>
-<table style="contain-intrinsic-size:auto 149px">
-<thead><tr><th>主线</th><th>它在各章的形态</th><th>一句话</th></tr></thead>
-<tbody>
-<tr><td class="nw">每个需求都有三到四个候选,没有默认答案</td><td class="nw">各章的同场对比表</td><td>先确定判据里的那个变量,再选方案</td></tr>
-<tr><td class="nw">每个方案都有它垮掉的规模与条件</td><td class="nw">各章的边界与坑</td><td>不知道它什么时候失效,就等于还没选好</td></tr>
-<tr><td class="nw">每个依赖都要有退路</td><td class="nw">各章的维护状态与退路表</td><td>引入的时候就要想清楚怎么换掉</td></tr>
-</tbody>
-</table>
-<p>三条主线可以合并成一句话:<strong>选型不是挑一个最好的,而是弄清每个候选在什么条件下成立,然后确认自己的条件落在哪一个的范围内</strong>。本书每一章的对比表都是按这个思路组织的——它不给排名,只给差异与边界。</p>
-<p>后五章与前面十四章的性质不同。前面回答「这个功能用什么做」,后五章回答「做出来之后怎么保证它在用户机器上还能用」:第 14 章解决与系统的接缝,第 15 章解决改动之后还对不对,第 16 章解决出问题时看不看得见,第 17 章解决怎么送到用户手里并保持更新。这四项没有一项是功能,但缺任何一项都会让功能在真实环境里失去价值。</p>
-<h3>四本书之间怎么配合</h3>
-<table style="contain-intrinsic-size:auto 236px">
-<thead><tr><th>书</th><th>它回答的问题</th><th>什么时候翻它</th></tr></thead>
-<tbody>
-<tr><td class="nw">《Qt 核心与 Widget》</td><td>Qt 的对象系统、信号槽、事件、部件与模型视图怎么运作</td><td>本书假定这些已经掌握。遇到「为什么这个信号没到」一类的问题回去查</td></tr>
-<tr><td class="nw">《Qt Quick 与 QML》</td><td>声明式界面的引擎行为与 C++ 互操作</td><td>本书第 3 章与第 5 章涉及 QML 时的背景知识</td></tr>
-<tr><td class="nw">本书</td><td>每个需求有哪些方案,怎么接,什么时候垮</td><td>做一个完整产品的过程中,遇到「这块用什么做」时</td></tr>
-<tr><td class="nw">《Qt 性能优化》</td><td>渲染、绑定、隐式共享这些开销怎么测、怎么改</td><td>本书各章提到「在什么规模下垮掉」而需要具体量级时</td></tr>
-</tbody>
-</table>
-<p>四本书的边界是按<strong>问题类型</strong>切的,不是按模块切的。同一个类可能在四本书里各出现一次:第一本讲它怎么运作,本书讲什么时候用它、什么时候换掉它,性能那本讲它的开销来自哪里。</p>
-<h3>本书没有覆盖什么</h3>
-<table style="contain-intrinsic-size:auto 259px">
-<thead><tr><th>没有覆盖的</th><th>原因</th><th>去哪里找</th></tr></thead>
-<tbody>
-<tr><td class="nw">Qt 的基础机制</td><td class="nw">属于姊妹书的范围</td><td>《Qt 核心与 Widget》</td></tr>
-<tr><td class="nw">具体某个库的完整接口</td><td class="nw">随版本变化,且官方文档更准确</td><td>各库的官方文档。本书只给接入形态与边界</td></tr>
-<tr><td class="nw">性能数字与调优手段</td><td class="nw">需要配合剖析工具与实测</td><td>《Qt 性能优化》</td></tr>
-<tr><td class="nw">服务端的实现</td><td class="nw">与桌面开发是两个领域</td><td>本书只讲客户端一侧,并为服务端留出接口</td></tr>
-<tr><td class="nw">移动端与嵌入式</td><td class="nw">平台约束差异大,足以另成一本</td><td>本书的判据多数仍适用,但方案要重新评估</td></tr>
-<tr><td class="nw">证书价格、平台政策、库的当前状态</td><td class="nw">随时间变化</td><td>各章给出的是查证方法,不是结论</td></tr>
-</tbody>
-</table>
-<p>最后一行是全书的一个原则:凡是会随时间变化的事实——版本号、价格、平台策略、某个库现在还活不活跃——本书都给查证方法而不给结论。这样书的内容不会因为某一次外部变化而整体失效,而读者拿到的是一套仍然可用的判断方式。</p>
-<p>这个原则也解释了为什么各章的对比表里很少出现「哪个更好」这样的表述。方案之间的排序会随版本、随平台、随需求规模改变,而<strong>差异在哪、边界在哪</strong>这两件事要稳定得多。读者需要的是后者,因为只有它能被套用到书里没写过的新方案上。</p>
-<h3>从本书带走的十条</h3>
-<ol>
-<li>选型先确定判据里的那个变量,再看方案。顺序反了会返工。</li>
-<li>不知道一个方案在什么规模下失效,就等于还没选好它。</li>
-<li>引入依赖时就要写下退路,而不是等它停更时再想。</li>
-<li>自己写与引现成的,按五条判据逐条核对,任何一条否定就不自己写。</li>
-<li>密码学、凭据处理、来源验证这三类,一律不自己实现。</li>
-<li>系统集成的每一项能力都要有「当前环境不支持」这个显式状态,并且都要有替代入口。</li>
-<li>界面测试不稳定的根因是等待方式不对,把固定时长换成条件等待。</li>
-<li>日志、崩溃上报、符号归档必须随第一个正式版本一起发布,它们无法追溯到已装机的版本。</li>
-<li>上报的每一个字段都走白名单,默认不报。</li>
-<li>有自动更新就必须有自动回滚,两者同时上线。</li>
-</ol>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 这十条里有七条的共同点是:代价在前期很小,在后期极大</span><p>接口层、退路、体检台账、可观测性、回滚机制,这几件事在项目开始时各只要一到几天,而在有了大量用户与代码之后,每一件都会变成数周甚至数月的改造。它们的另一个共同点是<strong>不做也不会立刻出事</strong>,因此很容易被推迟。判断是否值得现在做的方法是问一句:这件事六个月后做,成本会是现在的几倍。答案超过三倍的,现在做。</p></div>
-<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 把本书的对比表当成工作中的检查表,而不是一次性读物</span><p>各章的同场对比表、边界与坑、维护状态与退路三张表是为了在做决定的那一刻被翻开而写的,不是为了通读。实际用法是:接到一个新需求时先查第 1 节的速查表定位章节,读那一章的对比表与边界,做决定;引入依赖之后把它加进台账;每季度按第 3 节的清单过一遍。这样这本书的价值会随时间累积,而通读一遍之后放下的话,大部分内容会在需要的时候想不起来。</p></div>
-<div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 把「上线之后再补」当成计划,后五章的内容多数补不回来</span><p>第 16 章与第 17 章的多数设施有一个共同性质:<strong>它们必须随程序一起发布才有效</strong>。已经装在用户机器上的版本不会因为你现在加了日志就开始产生日志,不会因为你现在归档了符号就能解析三个月前的崩溃,也不会因为你现在做了自动更新就能被更新。这与功能不同——功能可以在下个版本补上,而可观测性与更新能力只对补上之后发布的版本生效。这意味着第一个正式版本就要带上它们,哪怕形态很简陋。</p></div>
 </section>
 
 </div></main>

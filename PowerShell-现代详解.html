@@ -266,7 +266,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#p6-debugging">6.7 调试：断点、调试器与 VSCode</a>
 <a class="sec" href="#p6-performance">6.8 性能要点：别再用 += 拼数组</a>
 <a class="sec" href="#p6-snippets">6.9 实战片段集锦</a>
-<a class="sec" href="#p6-summary">6.10 本章小结与自查清单</a>
 </details>
 </nav>
 <div class="sb-resizer"></div>
@@ -305,7 +304,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </tbody>
 </table>
 <h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>用 PowerShell 做日常自动化与系统管理所需要的全部机制</strong>，6 章 60 节，每章回答一个问题。</p>
+<p>本书覆盖<strong>用 PowerShell 做日常自动化与系统管理所需要的全部机制</strong>，6 章 59 节，每章回答一个问题。</p>
 <table style="contain-intrinsic-size:auto 259px">
 <thead><tr><th class="nw">章</th><th>主题</th><th>它回答的问题</th></tr></thead>
 <tbody>
@@ -348,8 +347,8 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <ul>
 <li><strong>整本书从一条结论推开。</strong>1.8 与 3.1 把一条管道逐段拆开，指出每一段流的是什么类型；后面的筛选、排序、统计、导出、格式化，规矩都能从这一条推出来，包括「格式化命令为什么必须放在最后」。</li>
 <li><strong>5.1 与 7 两条线逐处对照。</strong>1.4 把两者定成并行的两条产品线而不是新旧关系，版本差异处两侧写法都给，并给出 <code>$PSVersionTable</code> 的自查方式，避免「我在 7 里试过没问题」的脚本发到只有 5.1 的机器上。</li>
-<li><strong>教材与速查双结构。</strong>60 节里有 5 节是整节速查：自动变量表、管道配方、本章速查与版本差异等，全书 101 张表。顺读时它们是章末总结，查阅时它们是入口。</li>
-<li><strong>122 个批注里 34 个蓝色、31 个黄色。</strong>这两色合起来占一半以上，把「哪些写法是历史遗留、今天该换成什么」逐处点名：别名在脚本里的代价、<code>+=</code> 拼数组的代价、已被取代的 WMI 命令，都写清了替代写法。</li>
+<li><strong>教材与速查双结构。</strong>59 节里有 4 节是整节速查：自动变量表、管道配方、本章速查与版本差异等，全书 105 张表。顺读时它们是章末总结，查阅时它们是入口。</li>
+<li><strong>125 个批注里 35 个蓝色、31 个黄色。</strong>这两色合起来占一半以上，把「哪些写法是历史遗留、今天该换成什么」逐处点名：别名在脚本里的代价、<code>+=</code> 拼数组的代价、已被取代的 WMI 命令，都写清了替代写法。</li>
 <li><strong>17 张图画的是对象在管道里的形态与错误流的分支</strong>，不是界面截图：一条管道每一段的类型变化、执行策略的作用域优先级、两类错误各走哪条路。</li>
 </ul>
 <div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 在只有 5.1 的机器上跑 7 里验证过的脚本会失败</span><p>两条线的差别不止于语法糖。三元与空合并运算符、<code>ForEach-Object -Parallel</code>、链式的与或操作符在 5.1 上都是语法错误；默认文件编码、部分命令的可用性也不一样。脚本要发给别人时，先确认对方那台机器上是哪一版，再决定按哪一套写；书中凡有差异之处都标了适用版本。</p></div>
@@ -362,7 +361,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td class="nw">从 CMD 或 bash 转过来</td><td>先读 1.2、3.1、3.9 三节把观念转过来，再回第 2 章</td><td class="nw">第 1、3 章</td><td class="nw">2.3 自动变量表</td></tr>
 <tr><td class="nw">做系统管理与自动化</td><td>第 1、3 章打底，直接进第 5 章</td><td class="nw">第 3、5 章</td><td class="nw">4.8、4.10</td></tr>
 <tr><td class="nw">脚本报错看不懂</td><td>先看 1.6 执行策略，再整章读第 6 章</td><td class="nw">第 6 章</td><td>—</td></tr>
-<tr><td class="nw">只想查一条写法</td><td>各章末尾的速查节，或 2.3 的自动变量表</td><td>—</td><td>—</td></tr>
+<tr><td class="nw">只想查一条写法</td><td>1.9、3.10、5.10 三个速查节，或 2.3 的自动变量表</td><td>—</td><td>—</td></tr>
 </tbody>
 </table>
 <p><strong>主干是第 1、3 章。</strong>它们是同一件事的两遍讲法：第 1 章立观念，第 3 章把观念落成筛选、排序、统计与导出的具体写法。第 2 章的比较运算与「数组在左边会变成过滤器」这两节也属主干，它们是后面每一条管道的基础。</p>
@@ -4185,7 +4184,7 @@ $s = New-PSSession -HostName 'alice@srv01' -KeyFilePath ~/.ssh/id_ed25519</code>
 
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 29452px;--thin-h:29452px">
+<section class="chapter" style="contain-intrinsic-size:auto 28683px;--thin-h:28683px">
 <h1 id="p6"><span class="part">第 6 章</span>错误处理、调试与实用技巧</h1>
 
 <p>前五章你已经能把命令、管道、函数串成像样的脚本了。但真正把脚本交出去跑，你会遇到另一类问题：某台机器连不上、某个文件被占用、某个字段是空的。脚本崩了不可怕，可怕的是它<strong>不崩、也不干活，还给你一路绿灯</strong>。这一章讲的就是：错误从哪来、怎么接住、怎么定位、以及怎么写得又稳又快。</p>
@@ -5100,29 +5099,6 @@ $ErrorActionPreference = 'Stop'       <span class="cm"># 入口脚本：宁可�
 }</code></pre>
 
 <div class="note ok" style="contain-intrinsic-size:auto 200px"><span class="t">🟢 注意 $ErrorActionPreference 的两副面孔</span><p>本章前面把"脚本顶部一刀切"标成了禁用，这里却在骨架里写 <code>$ErrorActionPreference = 'Stop'</code> —— 不矛盾。被禁的是 <code>SilentlyContinue</code>（把错误藏起来），而 <code>Stop</code> 是把错误放大：宁可当场停在第一个问题上，也不要带着半截错误状态跑完全程、留下一个更难收拾的现场。<strong>入口脚本用 Stop，可复用的函数库则逐条写 <code>-ErrorAction Stop</code>，别去改调用者的环境。</strong></p></div>
-
-<h2 id="p6-summary">6.10 本章小结与自查清单</h2>
-
-<p>把这一章压缩成一张检查表，写完脚本对着过一遍：</p>
-
-<table style="contain-intrinsic-size:auto 494px">
-<thead><tr><th>检查项</th><th>为什么</th></tr></thead>
-<tbody>
-<tr><td>凡是写在 <code>try</code> 里的 cmdlet，都加了 <code>-ErrorAction Stop</code>（或函数内设了 <code>$ErrorActionPreference='Stop'</code>）</td><td>否则非终止型错误会从 <code>try/catch</code> 底下溜走</td></tr>
-<tr><td>没有裸奔的 <code>$ErrorActionPreference = 'SilentlyContinue'</code></td><td>它会连 <code>throw</code> 一起吞掉，是最难查的一类 bug</td></tr>
-<tr><td>用了 <code>-ErrorVariable</code> 收集批量失败项，跑完统一汇报</td><td>比"跑到一半停住"和"啥也不说"都有用</td></tr>
-<tr><td>判断错误类型时用 <code>FullyQualifiedErrorId</code> 或异常类型，而不是匹配消息文本</td><td>消息会随系统语言变化，中文系统上你的 <code>-match 'not found'</code> 会失效</td></tr>
-<tr><td>调外部 exe 之后检查了 <code>$LASTEXITCODE</code></td><td>PowerShell 不会替它报错</td></tr>
-<tr><td>数据走 1 号流，说明文字走 Verbose／Warning／Information</td><td class="nw">函数才能既给人看又给脚本用</td></tr>
-<tr><td>全文搜一遍 <code>Write-Host</code>，确认每一处都是"纯给人看的界面"</td><td class="nw">其余的都该换流</td></tr>
-<tr><td class="nw">没有 <code>+=</code> 拼数组或拼字符串</td><td class="nw">O(n²)，数据一多就卡死</td></tr>
-<tr><td>危险操作实现了 <code>SupportsShouldProcess</code></td><td>让使用者能先 <code>-WhatIf</code> 空跑一次</td></tr>
-<tr><td>正式脚本开头有 <code>Set-StrictMode -Version Latest</code></td><td>拼错的变量名当场暴露，而不是变成 <code>$null</code> 往下传</td></tr>
-</tbody>
-</table>
-
-<p>下一章我们会走出单机，讲远程执行与作业调度：<code>Invoke-Command</code>、PSSession、后台作业与并行处理 —— 到那时你会发现，本章的错误处理功力将被成倍地考验：一台机器出错，是停下来，还是继续跑完剩下的九十九台？</p>
-
 </section>
 </div></main>
 <script>
