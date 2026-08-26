@@ -266,16 +266,23 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#l9-repro">9.4 可复现构建:路径、时间戳与随机化</a>
 <a class="sec" href="#l9-sum">9.5 小结</a>
 </details>
-<details><summary><a class="ch" href="#l10">排错与小结</a></summary>
-<a class="sec" href="#l10-diag">10.1 报错原文到根因:一张对照表</a>
-<a class="sec" href="#l10-plat">10.2 三平台差异汇总</a>
-<a class="sec" href="#l10-index">10.3 判据索引</a>
-<a class="sec" href="#l10-sum">10.4 小结</a>
+<details><summary><a class="ch" href="#l10">标准之外:编译器扩展与平台约定</a></summary>
+<a class="sec" href="#l10-who">10.1 标准、ABI 与编译器扩展:三层各管什么</a>
+<a class="sec" href="#l10-call">10.2 调用约定:参数怎么传、谁清栈、名字怎么变</a>
+<a class="sec" href="#l10-decl">10.3 声明修饰:__declspec 与 __attribute__ 的对照</a>
+<a class="sec" href="#l10-layout">10.4 结构体布局:对齐、填充与 pragma pack</a>
+<a class="sec" href="#l10-sum">10.5 小结:遇到一个不认识的关键字按什么顺序查</a>
+</details>
+<details><summary><a class="ch" href="#l11">排错与小结</a></summary>
+<a class="sec" href="#l11-diag">11.1 报错原文到根因:一张对照表</a>
+<a class="sec" href="#l11-plat">11.2 三平台差异汇总</a>
+<a class="sec" href="#l11-index">11.3 判据索引</a>
+<a class="sec" href="#l11-sum">11.4 小结</a>
 </details>
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 27729px;--thin-h:27729px">
+<section class="chapter" style="contain-intrinsic-size:auto 27766px;--thin-h:27766px">
 <h1 id="l0"><span class="part">第 0 章</span>预备:把工具链拆开看</h1>
 <h2 id="l0-open">0.0 导读</h2>
 <p>一条 <code>gcc a.c b.c -o app</code> 在终端里只占一行,背后有五个程序先后运行,产出四种中间物,最后在磁盘上留下一个文件。这五个程序各有自己的输入、自己的数据结构与自己的报错格式,而绝大多数「编不过」「链不上」「装到别的机器上跑不起来」的问题,都出现在两个程序的交界处。</p>
@@ -300,7 +307,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td>binutils 的手册页与 info(<code>ld</code>、<code>as</code>、<code>nm</code>、<code>objdump</code>、<code>readelf</code>、<code>ar</code>)</td><td>参考手册</td><td>锚定</td><td>选项的准确语义与默认值,以及与本机这一版严格一致的输出,是全书查证动作的出口。局限:按工具分册,回答这个选项怎么用而不回答什么时候该用;默认值随发行版的构建配置变化,手册里写的未必是本机的取值</td></tr>
 <tr><td class="nw">lld 的官方文档</td><td>参考手册</td><td>参考</td><td>LLVM 链接器的选项清单,以及它与既有链接器的差异说明,三种格式各有独立的驱动。局限:叙述主线是与现有链接器兼容到什么程度,单独读不成体系;部分行为只写在提交记录与测试用例里,文档里查不到</td></tr>
 <tr><td class="nw">姊妹书《C++ 语言》</td><td>相邻领域</td><td>锚定</td><td>单一定义规则、编译单元、模板实例化、匿名命名空间的语言规则全在那本书里,本书一律引它,不重讲。局限:不含目标文件格式与链接器行为,链接期的报错原文那一层也不覆盖</td></tr>
-<tr><td class="nw">姊妹书《CMake 构建系统》</td><td>相邻领域</td><td>锚定</td><td>同一件事在工程里怎么配:RPATH 在安装时怎么设、链接期优化怎么开到目标上、产物怎么装到别人机器上。局限:不讲机制,只讲写法;问题落到链接器一侧时仍要回到本书</td></tr>
+<tr><td class="nw">姊妹书《CMake 构建手册》</td><td>相邻领域</td><td>锚定</td><td>同一件事在工程里怎么配:RPATH 在安装时怎么设、链接期优化怎么开到目标上、产物怎么装到别人机器上。局限:不讲机制,只讲写法;问题落到链接器一侧时仍要回到本书</td></tr>
 <tr><td class="nw">姊妹书《C++ 性能优化》</td><td>相邻领域</td><td>推荐</td><td>编译器各个优化选项换来多少运行速度,以及怎么测出来。局限:不讲这些选项改变了产物的什么结构,也不讲它们在链接期会产生什么冲突</td></tr>
 <tr><td class="nw">姊妹书《Qt 组件与生态》</td><td>相邻领域</td><td>推荐</td><td>崩溃上报的完整链路、打包、签名与分发在那本书里。局限:不讲调试符号本身怎么产生、怎么归档、怎么与已剥离的产物对上号</td></tr>
 </tbody>
@@ -320,38 +327,39 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tr><td>Ulrich Drepper「How To Write Shared Libraries」</td><td>7.2 节的编排顺序:先说明代码页为什么必须只读因而可共享,再引出 GOT 与 PLT,最后才给延迟绑定。4.4 节「默认全导出是一笔债」的立论,以及 9.2 节把导出面当成体积与启动开销来源来算账,都从它来</td></tr>
 <tr><td>Ian Lance Taylor「Linkers」连载</td><td>一条追问的固定位置:每处反直觉的规则都先给它要解决的问题,再给规则本身。5.4 节链接顺序为什么影响结果、6.2 节抽取粒度为什么是整个成员、7.2 节一次跨库调用为什么要跳两次,三节都按这个次序写</td></tr>
 <tr><td class="nw">三份格式规范与各架构的处理器补充</td><td>事实层的第一准绳:字段名、取值与语义一律以规范为准。第 3 章三节的字段表按各自规范的分节顺序排;3.4 节的对照表按「层」而不是按格式切列,列名取三份规范里都存在的概念;5.3 节只给读重定位项的判据,类型编号交回处理器补充</td></tr>
-<tr><td class="nw">三平台运行期查找的一手文档</td><td>7.4 节的档位表:Linux 一侧按 <code>ld.so</code> 手册页逐档排开并标出每一档的写入方式与作用范围,Windows 一侧按 DLL 搜索顺序文档排并标出安全搜索模式关闭时哪一档会上移,macOS 一侧按 dyld 文档的三个路径记号排。10.2 节三平台差异表里运行期查找那几行也出自这三份</td></tr>
+<tr><td class="nw">三平台运行期查找的一手文档</td><td>7.4 节的档位表:Linux 一侧按 <code>ld.so</code> 手册页逐档排开并标出每一档的写入方式与作用范围,Windows 一侧按 DLL 搜索顺序文档排并标出安全搜索模式关闭时哪一档会上移,macOS 一侧按 dyld 文档的三个路径记号排。11.2 节三平台差异表里运行期查找那几行也出自这三份</td></tr>
 <tr><td class="nw">binutils 的手册页与 info</td><td>全书查证动作的统一出口:凡是「这个选项在我这一版里是什么行为」的问题,正文一概不写死默认值,而是给一条可以立刻执行的命令。5.4 节的 <code>--as-needed</code>、6.2 节的 <code>--whole-archive</code>、9.2 节的 <code>--gc-sections</code>,三处用的是同一个形态</td></tr>
 <tr><td class="nw">姊妹书《C++ 语言》</td><td>一条分界:语言规则不在本书重复推导。单一定义规则、模板实例化、匿名命名空间三处只保留链接期能观察到的那一半——符号表里留下了什么、报错原文长什么样,规则本身指向那本书。2.3 节与 5.2 节的厚度由此定下来</td></tr>
-<tr><td class="nw">姊妹书《CMake 构建系统》</td><td>另一条分界:凡是「工程里怎么配」的写法一律移出。本书全部使用手写命令行,原因是构建系统会自动补上大量默认选项,干扰对照;RPATH 怎么设、链接期优化怎么开、产物装到哪里去,三处只给机制与判据</td></tr>
+<tr><td class="nw">姊妹书《CMake 构建手册》</td><td>另一条分界:凡是「工程里怎么配」的写法一律移出。本书全部使用手写命令行,原因是构建系统会自动补上大量默认选项,干扰对照;RPATH 怎么设、链接期优化怎么开、产物装到哪里去,三处只给机制与判据</td></tr>
 </tbody>
 </table>
-<p>九样锚定里有两样与其余七样性质不同。《C++ 语言》与《CMake 构建系统》不提供任何链接期的事实,它们提供的是两条分界:语言规则往上交,工程写法往旁交。去掉这两层之后剩下的正好是「产物长什么样、为什么会这样」,本书的厚度由此定下来。</p>
+<p>九样锚定里有两样与其余七样性质不同。《C++ 语言》与《CMake 构建手册》不提供任何链接期的事实,它们提供的是两条分界:语言规则往上交,工程写法往旁交。去掉这两层之后剩下的正好是「产物长什么样、为什么会这样」,本书的厚度由此定下来。</p>
 <p>手册页作为查证出口有一个固定形态:正文给判据与命令,不给这一版的输出。某个链接器选项在本机默认开不开,书里不写结论,而是给一条能把当前默认值打印出来的命令,5.4 节处理 <code>--as-needed</code> 时用的就是这个形态。代价是多敲一条命令,收益是结论不会随发行版失效。</p>
 <p>其余七样之间也有分工。骨架、概念定义与提问方式来自三本经典;字段、取值与语义来自三份格式规范;而「这个选项在本机是什么行为」既不来自经典也不来自规范,只来自手册页与一条能立刻跑起来的命令。</p>
-<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 经典书缺的四块在本书里各有独立落点</span><p>链接期优化落在 9.1 节,符号可见性与导出面的收缩落在 4.4 节与 9.2 节,可复现构建落在 9.4 节,三平台各自的运行期查找规则落在 7.4 节并在 10.2 节汇总。这四块在二十年前的经典里要么没有、要么只有一两页,因此它们的事实层不引任何二手总结,全部落在规范、手册页与本机实测上。四块之间还互相牵制:开了链接期优化,静态库的归档工具要换;收了导出面,注册式代码可能被裁掉;要可复现,就不能让构建路径与时间戳进产物。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 经典书缺的四块在本书里各有独立落点</span><p>链接期优化落在 9.1 节,符号可见性与导出面的收缩落在 4.4 节与 9.2 节,可复现构建落在 9.4 节,三平台各自的运行期查找规则落在 7.4 节并在 11.2 节汇总。这四块在二十年前的经典里要么没有、要么只有一两页,因此它们的事实层不引任何二手总结,全部落在规范、手册页与本机实测上。四块之间还互相牵制:开了链接期优化,静态库的归档工具要换;收了导出面,注册式代码可能被裁掉;要可复现,就不能让构建路径与时间戳进产物。</p></div>
 <div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 把书里的输出当成本机的期望值,会得出相反的结论</span><p>工具输出随架构、发行版、优化级别与工具版本变化。<code>nm</code> 打印的地址列是节内偏移,随变量排布而变;重定位类型编号随架构不同;Mach-O 的绑定信息换过一代实现,新旧系统上分析工具的输出差别很大。逐字对照书上的输出,差一个字段就以为环境坏了,是常见的时间浪费。正确用法是:书里的输出用来说明该看哪一列,本机的输出用来得出结论。4.1 节、3.3 节与 5.3 节都在正文里点明了这一点。</p></div>
 <h3>讲什么、不讲什么</h3>
 <p>本书覆盖<strong>从一行编译命令到一个能在别人机器上启动的产物之间的全部机制</strong>,十一章按五组归类。分组不是阅读顺序,是问题的归类。</p>
-<table style="contain-intrinsic-size:auto 325px">
+<table style="contain-intrinsic-size:auto 362px">
 <thead><tr><th>组</th><th>章与节</th><th>它回答的问题</th></tr></thead>
 <tbody>
 <tr><td class="nw">一次编译拆开看</td><td class="nw">第 0 到 2 章,12 节</td><td>一条命令行派生了哪几个进程、每个选项交给谁,中间产物怎么留下来,一个编译单元最后在目标文件里留下了什么</td></tr>
 <tr><td class="nw">格式与符号</td><td class="nw">第 3、4 章,11 节</td><td>ELF、PE/COFF、Mach-O 各自怎么安放代码、数据与元数据,以及一个符号的名字、绑定与可见性分别决定了什么</td></tr>
 <tr><td class="nw">链接</td><td class="nw">第 5 到 7 章,15 节</td><td>符号怎么被解析、哪些字节被链接器改写、静态库按什么粒度抽取、动态库在运行期怎么被找到并绑定</td></tr>
 <tr><td class="nw">运行期与交付</td><td class="nw">第 8、9 章,9 节</td><td>程序在 <code>main</code> 之前与退出之后各做了什么,以及链接期优化、体积、符号剥离与可复现构建</td></tr>
-<tr><td class="nw">排错</td><td class="nw">第 10 章,4 节</td><td>报错原文到根因的固定路径、三平台差异汇总,以及全书判据的总索引</td></tr>
+<tr><td class="nw">标准之外</td><td class="nw">第 10 章,5 节</td><td>调用约定、声明修饰与结构体布局由谁规定,标准、ABI 与编译器扩展三层怎么分</td></tr>
+<tr><td class="nw">排错</td><td class="nw">第 11 章,4 节</td><td>报错原文到根因的固定路径、三平台差异汇总,以及全书判据的总索引</td></tr>
 </tbody>
 </table>
 <p>第 4 章与第 7 章各六节,是全书最厚的两章,原因相同:符号与动态库这两件事在三个平台上分叉最多,而分叉处的失败形态互不相同,合成一节写会互相干扰。第 4 章按名字、修饰规则、外部链接、可见性、弱符号逐层剥开,第 7 章按动机、位置无关代码、加载、查找、Windows 一侧分开处理。</p>
-<p>合计 11 章 51 节。五组之间是单向依赖:后面每一组都在用前面的结论,而第 0 到 2 章不用后面任何一章的内容,可以放心先读。</p>
+<p>合计 12 章 56 节。六组之间是单向依赖:后面每一组都在用前面的结论,而第 0 到 2 章不用后面任何一章的内容,可以放心先读。</p>
 <p>平台基线在这里再明确一次:<strong>Linux 与 ELF、Windows 与 PE/COFF 双轨为主,macOS 与 Mach-O 在结构性不同处单列</strong>。双轨的含义是同一个问题两侧都给完整答案,而不是主讲一侧、另一侧一句带过;单列的含义是 Mach-O 只在与前两者结构不同的地方出现,例如加载命令、安装名与三个路径记号。</p>
 <p>每一章的收尾形态是统一的:小结先把本章的机制收成一两张表,再给一组可以直接抄走的观察命令。排查时往往只需要这一节;要判断某个结论为什么成立,才回到正文对应的小节。</p>
 <p>不讲的部分同样要说清楚,并指明归谁。<strong>分界一律写成一句能当场判断的话</strong>,遇到一个话题时可以立刻知道该翻哪一本。</p>
 <table style="contain-intrinsic-size:auto 691px">
 <thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
 <tbody>
-<tr><td>工程里怎么设 RPATH、怎么开链接期优化、怎么把产物装到别人机器上</td><td class="nw">《CMake 构建系统》</td><td>本书讲 RPATH 在运行期排第几,那本讲 RPATH 在 install 时怎么设对</td></tr>
+<tr><td>工程里怎么设 RPATH、怎么开链接期优化、怎么把产物装到别人机器上</td><td class="nw">《CMake 构建手册》</td><td>本书讲 RPATH 在运行期排第几,那本讲 RPATH 在 install 时怎么设对</td></tr>
 <tr><td class="nw">单一定义规则、模板实例化、匿名命名空间的语言规则</td><td class="nw">《C++ 语言》</td><td>本书只讲它们在链接期的表现与报错原文,规则本身不推导</td></tr>
 <tr><td class="nw">编译器优化的性能细账:哪个选项换来多少</td><td class="nw">《C++ 性能优化》</td><td>本书讲一个选项改变了产物的什么结构,那本讲这个选项值不值得开</td></tr>
 <tr><td class="nw">崩溃上报的完整链路、打包签名与分发</td><td class="nw">《Qt 组件与生态》</td><td>本书到「调试符号归档好、剥离后的产物仍能被调试器配上符号」为止</td></tr>
@@ -388,30 +396,30 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <tbody>
 <tr><td class="nw">报错原文用真实措辞,不转述</td><td>5.1 节把「找不到定义」与「重复定义」两类的原文按 GNU ld、LLVM lld、macOS ld、MSVC link 四侧并排列出,<code>undefined reference to</code>、<code>duplicate symbol for architecture arm64</code>、<code>LNK2019</code> 逐条给全</td></tr>
 <tr><td>七章的小结各带一张按报错或症状反查的表,合计 54 行</td><td>第 0、1、2、3 章的表头是「报错原文 → 根因 → 第一件该做的事」,第 5、6、7 章按关键词与症状分类;第 4、8、9 章的小结改用判据表,不硬凑</td></tr>
-<tr><td class="nw">第 10 章是三张可以直接查的大表</td><td>10.1 节 40 行的报错原文对照表,10.2 节 22 行的三平台差异表,10.3 节 52 行的判据索引</td></tr>
+<tr><td class="nw">第 11 章是三张可以直接查的大表</td><td>11.1 节 40 行的报错原文对照表,11.2 节 22 行的三平台差异表,11.3 节 52 行的判据索引</td></tr>
 <tr><td class="nw">工具输出会随版本变的地方逐处点明</td><td>4.1 节说明 <code>nm</code> 的地址列不值得记忆,3.3 节说明 Mach-O 的绑定信息换过一代实现,5.3 节说明重定位类型编号随架构与版本变化,三处都要求以本机实际输出为准</td></tr>
-<tr><td class="nw">三平台不是一句带过</td><td>ELF 与 PE 双轨落在 3.1 与 3.2 节、7.1 到 7.3 节与 7.5 节;Mach-O 单列落在 3.3 节的加载命令、7.4 节的三个路径记号,以及 10.2 节的差异表</td></tr>
-<tr><td class="nw">全书 17 张插图,只画文字讲不清的三类</td><td>5.3 节「重定位前后同一段字节」、7.2 节「一次跨库调用经过 PLT 与 GOT 的完整路径」、6.2 节「抽取以整个成员为单位」</td></tr>
-<tr><td class="nw">全书 177 个批注四色分工固定</td><td>红色 63 个写陷阱与事故,绿色 73 个写判据,蓝色 26 个写现代替代,黄色 15 个写历史包袱;7.4 节的 <code>DT_RPATH</code> 与 7.5 节的 <code>/DELAYLOAD</code> 是两个典型</td></tr>
+<tr><td class="nw">三平台不是一句带过</td><td>ELF 与 PE 双轨落在 3.1 与 3.2 节、7.1 到 7.3 节与 7.5 节;Mach-O 单列落在 3.3 节的加载命令、7.4 节的三个路径记号,以及 11.2 节的差异表</td></tr>
+<tr><td class="nw">全书 20 张插图,只画文字讲不清的三类</td><td>5.3 节「重定位前后同一段字节」、7.2 节「一次跨库调用经过 PLT 与 GOT 的完整路径」、6.2 节「抽取以整个成员为单位」</td></tr>
+<tr><td class="nw">全书 200 个批注四色分工固定</td><td>红色 76 个写陷阱与事故,绿色 79 个写判据,蓝色 29 个写现代替代,黄色 16 个写历史包袱;7.4 节的 <code>DT_RPATH</code> 与 7.5 节的 <code>/DELAYLOAD</code> 是两个典型</td></tr>
 </tbody>
 </table>
 <p>七条里有两条是负面约束:报错原文不转述,工具输出不当成期望值。它们决定的不是书里多了什么,而是书里刻意不做什么——转述一遍的报错在搜索引擎里搜不到,写死的输出会在下一个工具版本上失效。</p>
 <p>报错原文照抄而不转述,还有一个直接的用处:书里的字符串可以整段复制到搜索框里,命中同一条报错的其他讨论。转述过的报错做不到这一点,而排查时最常见的第一个动作恰好是搜索。</p>
-<p>17 张插图集中在三类地方:结构,一份产物内部的几张表互相指向什么;路径,一次解析或一次查找按什么顺序走;前后对照,同一段字节在某一步之前与之后分别是什么。文字讲得清的地方不配图。</p>
+<p>20 张插图集中在三类地方:结构,一份产物内部的几张表互相指向什么;路径,一次解析或一次查找按什么顺序走;前后对照,同一段字节在某一步之前与之后分别是什么。文字讲得清的地方不配图。</p>
 <h3>怎么读</h3>
 <p>四条路线按处境划分,起点不同,主干也不同。</p>
 <table style="contain-intrinsic-size:auto 287px">
 <thead><tr><th>读者的处境</th><th>读法路线</th><th>主干</th><th>可以先放过</th></tr></thead>
 <tbody>
-<tr><td class="nw">手上有一个链接不过的工程</td><td>第 10 章 → 表指到的那一章 → 第 4 章 → 第 5 章</td><td>4.1 节与 5.1 节</td><td>第 1、2、9 章</td></tr>
+<tr><td class="nw">手上有一个链接不过的工程</td><td>第 11 章 → 表指到的那一章 → 第 4 章 → 第 5 章</td><td>4.1 节与 5.1 节</td><td>第 1、2、9 章</td></tr>
 <tr><td class="nw">要把一个库交付给别人用</td><td>第 4 章 → 第 6 章 → 第 7 章 → 第 9 章</td><td>4.4 节与 7.4 节</td><td>第 1、2、8 章</td></tr>
-<tr><td class="nw">想把整条链搞清楚</td><td>第 0 章顺读到第 10 章</td><td>第 3、4、5 章</td><td>无</td></tr>
-<tr><td class="nw">只做 Windows 一侧</td><td>第 0 章 → 第 2 章 → 3.2 节 → 第 4 章 → 第 5 章 → 7.5 节 → 第 10 章</td><td>4.4 节与 7.5 节</td><td>3.3 节,以及 7.2 到 7.4 节里的 ELF 细节</td></tr>
+<tr><td class="nw">想把整条链搞清楚</td><td>第 0 章顺读到第 11 章</td><td>第 3、4、5 章</td><td>无</td></tr>
+<tr><td class="nw">只做 Windows 一侧</td><td>第 0 章 → 第 2 章 → 3.2 节 → 第 4 章 → 第 5 章 → 7.5 节 → 第 11 章</td><td>4.4 节与 7.5 节</td><td>3.3 节,以及 7.2 到 7.4 节里的 ELF 细节</td></tr>
 </tbody>
 </table>
 <p>四条路线里都没有把第 9 章排进主干。链接期优化、体积与可复现构建三件事在工程规模不大时几乎察觉不到,一旦产物要发布、要归档符号、要在两台机器上得到相同的字节,不读它就会在「为什么这次构建和上次不一样」上停很久。用到那一步再补,补的时候整章读完。</p>
 <p>另有一种处境值得单列:工程能构建、能运行,但没有人说得清它为什么能运行。这种情形按第三条路线走,并在读第 7 章时把产物的依赖记录打开对照——记在产物里的那些名字与路径,是「换一台机器就不行」这类现象最常见的来源。</p>
-<p>手上已经有一条具体报错时不必从头读。下表按报错原文指到章,进到章之后再按小节标题收窄;完整的四十行对照表在 10.1 节。</p>
+<p>手上已经有一条具体报错时不必从头读。下表按报错原文指到章,进到章之后再按小节标题收窄;完整的四十行对照表在 11.1 节。</p>
 <table style="contain-intrinsic-size:auto 388px">
 <thead><tr><th>报错原文</th><th>翻哪一章</th></tr></thead>
 <tbody>
@@ -424,9 +432,9 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </tbody>
 </table>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 第 3、4、5 章按顺序读完再挑章节,其余各章可跳</span><p>后面每一章都建立在这三章上:第 6 章的抽取规则用的是第 5 章的待办表,第 7 章的运行期解析用的是第 4 章的符号语义,第 9 章的优化与裁剪改变的是第 3 章那些节与符号的去留。跳着读的表现是每一节都看得懂字面,却记不住某条规矩为什么成立,遇到没见过的报错也推不出方向。第 0 到 2 章可以快读,第 8、9 章可以按需补。</p></div>
-<p>四条路线之外还有一条最短的用法:只读 10.1 节那张表,把手上的报错归到某一步,再决定要不要往下读。表里每一行都指到具体的章,查完不进正文也能解决相当一部分问题。</p>
+<p>四条路线之外还有一条最短的用法:只读 11.1 节那张表,把手上的报错归到某一步,再决定要不要往下读。表里每一行都指到具体的章,查完不进正文也能解决相当一部分问题。</p>
 <p>读完第 0 到 2 章,能说清一条命令行上的每个选项交给了哪个程序,以及一个编译单元最后在目标文件里留下了什么;读完第 3、4 章,能拿到一个陌生的二进制,读出它由什么构成、欠着谁、又对外提供什么。</p>
-<p>读完第 5 到 7 章,能解释一条未定义引用为什么换了链接顺序就消失,也能把一个库交付出去而不带上构建机的路径;读完第 8、9 章,能说清程序在 <code>main</code> 之前做了什么、体积由什么构成、两次构建为什么不一样;读完第 10 章,能把一条陌生的报错在一分钟内归到某一步。</p>
+<p>读完第 5 到 7 章,能解释一条未定义引用为什么换了链接顺序就消失,也能把一个库交付出去而不带上构建机的路径;读完第 8、9 章,能说清程序在 <code>main</code> 之前做了什么、体积由什么构成、两次构建为什么不一样;读完第 11 章,能把一条陌生的报错在一分钟内归到某一步。</p>
 <h2 id="l0-stage">0.1 一次编译到底跑了哪些程序</h2>
 <p>一条 <code>gcc a.c b.c -o app</code> 在终端里只占一行,磁盘上只多出一个 <code>app</code>。这一行背后有五个可执行文件先后运行过,每一个都有自己的输入、自己的输出、自己的报错格式。</p>
 <p>把这五个程序分开,是读懂后面十章的前提。全书反复使用的判据只有一条:<strong>拿到一条报错,先确定它是哪个程序打印的</strong>。程序归错了,排查方向就全错。</p>
@@ -638,7 +646,7 @@ hello.c  hello.i  hello.o  hello.s</code></pre>
 </table>
 <p>这张表的第二列就是本书的章节顺序:第 1 章停在 <code>-E</code>,第 2 章与第 3 章停在 <code>-c</code>,第 4 章之后不再停,直接观察链接过程与最终产物。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 观察之前先固定选项,对照的两次编译只能差一个变量</span><p>优化等级、<code>-D</code> 宏、<code>-std=</code>、目标架构中的任意一项不同,产物就会出现无关差异,读起来像是要找的那个问题。可行的做法是把完整命令行记下来,每次只改一处。<code>gcc -###</code> 的输出可以直接当作这份记录,里面已经包含驱动程序自动补上的全部参数。</p></div>
-<p>工程里怎么让构建系统按需保留中间产物、怎么把 <code>-save-temps=obj</code> 加进某个目标的编译选项,属于构建配置的范围,见《CMake 构建系统》。本书一律用手写命令行做观察,以免构建系统的默认值干扰结论。</p>
+<p>工程里怎么让构建系统按需保留中间产物、怎么把 <code>-save-temps=obj</code> 加进某个目标的编译选项,属于构建配置的范围,见《CMake 构建手册》。本书一律用手写命令行做观察,以免构建系统的默认值干扰结论。</p>
 <h2 id="l0-tool">0.3 查看产物的工具:两侧对照</h2>
 <p>中间产物取出来之后需要工具去读。<code>.i</code> 与 <code>.s</code> 是文本,任何编辑器都能打开;<code>.o</code>、<code>.a</code>、<code>.so</code>、<code>.exe</code>、<code>.dll</code> 是二进制,必须靠专门的工具把结构解出来。</p>
 <p>这一批工具的能力有明确边界。每一个都只解一部分结构,把不属于自己的部分原样跳过。用错工具的典型症状是「看不到本来就不在那里的东西」,而工具不会提示这一点。</p>
@@ -718,7 +726,7 @@ app:
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.100.2)</code></pre>
 <p><code>dumpbin /dependents</code> 与 <code>otool -L</code> 都属于「读文件里记的名字」这一类,Windows 没有内置的 <code>ldd</code> 等价物。macOS 的 <code>otool -L</code> 打印的是安装名(install name),可能是 <code>@rpath/libfoo.dylib</code> 这样的占位形式,同样不是最终路径。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 ldd 会启动动态加载器,不要对来路不明的二进制使用</span><p>glibc 的 <code>ldd</code> 是一段脚本,做法是设置 <code>LD_TRACE_LOADED_OBJECTS=1</code> 后<strong>运行这个程序</strong>,让加载器打印结果再退出。对于自带非标准 ELF 解释器的文件,这一步可能执行到目标代码。分析不受信任的文件时改用 <code>objdump -p</code> 或 <code>readelf -d</code>,两者只解析文件,不创建进程。</p></div>
-<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 文件里记的依赖与运行时实际加载的依赖是两件事</span><p><code>NEEDED</code> 与导入表记录的是链接时定下的名字,搜索规则、环境变量、rpath、系统缓存都在运行期才起作用。<code>ldd</code> 报「找到了」不等于目标机器上也能找到,报的路径也可能与真正运行时的选择不同。第 7 章讲搜索顺序,第 10 章讲怎么在目标机器上取得可信答案。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 文件里记的依赖与运行时实际加载的依赖是两件事</span><p><code>NEEDED</code> 与导入表记录的是链接时定下的名字,搜索规则、环境变量、rpath、系统缓存都在运行期才起作用。<code>ldd</code> 报「找到了」不等于目标机器上也能找到,报的路径也可能与真正运行时的选择不同。第 7 章讲搜索顺序,第 11 章讲怎么在目标机器上取得可信答案。</p></div>
 <h3>工具的来源与版本差异</h3>
 <p>Linux 一侧的这批工具来自 GNU binutils,LLVM 另提供一套同名实现:<code>llvm-nm</code>、<code>llvm-objdump</code>、<code>llvm-readelf</code>、<code>llvm-readobj</code>。常用选项互相兼容,输出格式略有出入。</p>
 <p>macOS 的 <code>otool</code> 与 <code>nm</code> 在近几年的 Xcode 里已由 LLVM 实现,<code>llvm-otool</code> 与 <code>otool</code> 指向同一个程序。用到冷门选项时以本机 <code>man</code> 为准,不同 Xcode 版本之间有差异。</p>
@@ -786,10 +794,10 @@ readelf -d app | grep NEEDED  # 动态依赖记了哪些名字</code></pre>
 <tr><td class="nw">第 7 章</td><td class="nw">运行期</td><td>动态库、加载器与搜索顺序</td></tr>
 <tr><td class="nw">第 8 章</td><td class="nw">运行期的开头与结尾</td><td>启动、全局初始化与退出</td></tr>
 <tr><td class="nw">第 9 章</td><td class="nw">贯穿第 2 到第 5 步</td><td>LTO、体积与可复现构建</td></tr>
-<tr><td class="nw">第 10 章</td><td class="nw">全流程</td><td>报错到根因的固定排查路径</td></tr>
+<tr><td class="nw">第 11 章</td><td class="nw">全流程</td><td>报错到根因的固定排查路径</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 工程里怎么把这些开关写进构建配置,一律见姊妹书</span><p>本书全部使用手写命令行,原因是构建系统会自动补上大量默认选项,干扰对照。真实工程里这些开关应当写进构建脚本而不是每次手敲,写法见《CMake 构建系统》。语言层面的规则,例如编译单元、单一定义规则、模板实例化本身的语义,见《C++ 语言》。编译器优化能做到什么程度、内联与体积的取舍,见《C++ 性能优化》。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 工程里怎么把这些开关写进构建配置,一律见姊妹书</span><p>本书全部使用手写命令行,原因是构建系统会自动补上大量默认选项,干扰对照。真实工程里这些开关应当写进构建脚本而不是每次手敲,写法见《CMake 构建手册》。语言层面的规则,例如编译单元、单一定义规则、模板实例化本身的语义,见《C++ 语言》。编译器优化能做到什么程度、内联与体积的取舍,见《C++ 性能优化》。</p></div>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 18564px;--thin-h:18564px">
@@ -908,7 +916,7 @@ End of search list.</code></pre>
 </ul>
 <p>Windows 一侧的对应物是 <code>/external:I</code>,配合 <code>/external:W0</code> 控制这些目录的警告级别,从 VS 2019 16.10 起可用。更早的版本只有 <code>/I</code>,没有区分。</p>
 <p>环境变量这一路同样参与查找:GCC 认 <code>CPATH</code>、<code>C_INCLUDE_PATH</code>、<code>CPLUS_INCLUDE_PATH</code>,MSVC 认 <code>INCLUDE</code>。它们的效果等同于在命令行末尾追加了一批 <code>-I</code>。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 靠环境变量提供头文件路径,构建结果会随终端而变,CI 上无法复现</span><p><code>CPATH</code> 与 <code>INCLUDE</code> 不出现在任何命令行里,<code>gcc -###</code> 也看不到它们,唯一的痕迹是 <code>-E -v</code> 打印的搜索链条变长了。典型症状是同一份代码在开发者机器上编得过、在干净容器里报找不到头文件,或者反过来。诊断办法是把两台机器的 <code>echo | gcc -xc -E -v -</code> 输出逐行对照。工程里的路径一律写进构建脚本,写法见《CMake 构建系统》。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 靠环境变量提供头文件路径,构建结果会随终端而变,CI 上无法复现</span><p><code>CPATH</code> 与 <code>INCLUDE</code> 不出现在任何命令行里,<code>gcc -###</code> 也看不到它们,唯一的痕迹是 <code>-E -v</code> 打印的搜索链条变长了。典型症状是同一份代码在开发者机器上编得过、在干净容器里报找不到头文件,或者反过来。诊断办法是把两台机器的 <code>echo | gcc -xc -E -v -</code> 输出逐行对照。工程里的路径一律写进构建脚本,写法见《CMake 构建手册》。</p></div>
 <h3>「改了头文件没重新编译」的根因</h3>
 <p>这个现象与编译器无关。编译器每次被调用都会从头重新展开全部头文件,它没有任何缓存,也没有任何记忆。<strong>决定要不要重新调用编译器的是构建系统</strong>,而构建系统只能依据一份事先算好的依赖清单。</p>
 <p>清单从哪里来:编译器在编译时顺便把这次实际打开的头文件列出来,写成一个文件,下次构建时由构建系统读取。GCC 与 Clang 的开关是 <code>-MMD</code> 与 <code>-MP</code>。</p>
@@ -938,7 +946,7 @@ Note: including file: C:\proj\include\app.h
 Note: including file:  C:\proj\include\util.h
 Note: including file: C:\...\ucrt\stdio.h</code></pre>
 <p>每行前面的空格数表示嵌套深度,直接子头文件一个空格,再下一层两个。VS 2019 16.7 起还有 <code>/sourceDependencies</code>,输出结构化的 JSON,含头文件、模块和 PCH 的完整清单,适合工具消费。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 依赖清单缺失的典型症状是改头文件不重编、改源文件才重编</span><p>构建脚本里只写了 <code>%.o: %.c</code> 而没有引入 <code>.d</code> 文件时,make 认为目标只依赖源文件。头文件改动不改变源文件的时间戳,于是整条链都不触发,得到的可执行文件里还是旧的结构体布局或旧的常量。更隐蔽的形态是只有一部分目标文件重编,新旧布局混在一起,运行时表现为读到的成员值不对、崩溃点飘忽。判定办法是 <code>touch</code> 一个头文件后跑构建,看有没有编译命令被执行;根治办法是让构建系统自动生成并引入依赖,见《CMake 构建系统》。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 依赖清单缺失的典型症状是改头文件不重编、改源文件才重编</span><p>构建脚本里只写了 <code>%.o: %.c</code> 而没有引入 <code>.d</code> 文件时,make 认为目标只依赖源文件。头文件改动不改变源文件的时间戳,于是整条链都不触发,得到的可执行文件里还是旧的结构体布局或旧的常量。更隐蔽的形态是只有一部分目标文件重编,新旧布局混在一起,运行时表现为读到的成员值不对、崩溃点飘忽。判定办法是 <code>touch</code> 一个头文件后跑构建,看有没有编译命令被执行;根治办法是让构建系统自动生成并引入依赖,见《CMake 构建手册》。</p></div>
 <p>生成的头文件是同一个问题的另一种形态。代码生成步骤产出的头文件在第一次构建时还不存在,依赖清单里自然也没有它,必须由构建系统用显式的先后关系保证生成步骤排在编译之前。</p>
 <h3>把包含关系打印出来</h3>
 <p>排查包含问题的两条命令都很短。<code>-H</code> 打印包含树,行首的点表示深度;把展开结果的行数数一遍,则能看出一个翻译单元实际有多大。</p>
@@ -1019,7 +1027,7 @@ $ gcc -E src/app.c | wc -l
 collect2: error: ld returned 1 exit status</code></pre>
 <p>守卫在这里完全正常地工作了:<code>a.c</code> 与 <code>b.c</code> 各自都只展开了一次 <code>util.h</code>。问题是两次展开分属两个翻译单元,产出两个目标文件,每个里面都有一份 <code>counter</code> 与 <code>helper</code> 的强定义,链接器把它们碰到一起才报错。</p>
 <p>改法有三条:头文件里只留声明 <code>extern int counter;</code>,定义放进某一个源文件;或者给函数加 <code>inline</code>;C++17 起变量也可以写成 <code>inline int counter = 0;</code>。三者背后的机制是同一个,第 2 章讲清楚。</p>
-<div class="note new" style="contain-intrinsic-size:auto 197px"><span class="t">🔵 C++20 模块把文本包含换成导入,守卫与 pragma once 都不再需要</span><p>模块的接口单元编译一次产出二进制形式的接口文件,<code>import</code> 读的是这份文件而不是源码文本,因此不存在重复展开,宏也不会跨模块泄漏。代价是构建系统必须知道模块之间的依赖并按拓扑序编译,这一层的配置见《CMake 构建系统》;语言层面的规则与迁移路径见《C++ 语言》。对本书而言,模块改变的是编译单元的划分方式,链接期的符号形态与本章讲的没有区别。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 197px"><span class="t">🔵 C++20 模块把文本包含换成导入,守卫与 pragma once 都不再需要</span><p>模块的接口单元编译一次产出二进制形式的接口文件,<code>import</code> 读的是这份文件而不是源码文本,因此不存在重复展开,宏也不会跨模块泄漏。代价是构建系统必须知道模块之间的依赖并按拓扑序编译,这一层的配置见《CMake 构建手册》;语言层面的规则与迁移路径见《C++ 语言》。对本书而言,模块改变的是编译单元的划分方式,链接期的符号形态与本章讲的没有区别。</p></div>
 <h2 id="l1-sum">1.4 小结</h2>
 <p>预处理是整条流水线上唯一不理解 C 与 C++ 语法的一段。它的全部行为都可以用「记号序列替换」概括,而绝大多数与它相关的问题,根子都在这句话被当成了别的意思。</p>
 <h3>预处理做的事只有四类</h3>
@@ -1429,7 +1437,7 @@ $ nm -C t.o
 <tr><td class="nw">不同的 <code>-std=</code> 或不同版本的第三方头文件</td><td class="nw">同名类型的定义已经改过</td></tr>
 </tbody>
 </table>
-<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 同一个头文件在不同单元里展开成了不同的代码,链接静默取一份</span><p>这是最难查的一类问题,因为构建全绿。症状包括:<code>sizeof</code> 在两个源文件里取到不同的值;读某个成员得到的是相邻成员的内容;断言在一半代码里生效另一半不生效;把两个 <code>.o</code> 的链接顺序调换一下,故障点跟着换位置。检查手段有三条:开 LTO 后 GCC 的 <code>-Wodr</code> 会报出不一致的类型定义;<code>lld</code> 与 <code>gold</code> 提供 <code>--detect-odr-violations</code>;AddressSanitizer 打开 <code>detect_odr_violation=1</code> 能抓住全局变量的重复定义。根治办法是让全工程共用同一套编译选项,这属于构建配置,见《CMake 构建系统》。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 同一个头文件在不同单元里展开成了不同的代码,链接静默取一份</span><p>这是最难查的一类问题,因为构建全绿。症状包括:<code>sizeof</code> 在两个源文件里取到不同的值;读某个成员得到的是相邻成员的内容;断言在一半代码里生效另一半不生效;把两个 <code>.o</code> 的链接顺序调换一下,故障点跟着换位置。检查手段有三条:开 LTO 后 GCC 的 <code>-Wodr</code> 会报出不一致的类型定义;<code>lld</code> 与 <code>gold</code> 提供 <code>--detect-odr-violations</code>;AddressSanitizer 打开 <code>detect_odr_violation=1</code> 能抓住全局变量的重复定义。根治办法是让全工程共用同一套编译选项,这属于构建配置,见《CMake 构建手册》。</p></div>
 <h3>虚表放在哪里:key function 规则</h3>
 <p>虚表不出现在源码里,由编译器自动生成。生成在哪个翻译单元,Itanium C++ ABI 给了一条规则:放在这个类的<strong>第一个非内联、非纯虚的虚函数</strong>的定义所在的单元里,只有一份,而且是强符号。这个函数叫 key function。</p>
 <p>一个类如果所有虚函数都写在类内(隐式内联)或者都是纯虚的,它就没有 key function。此时虚表在每个用到它的单元里各生成一份,走弱符号与段组的合并路径。</p>
@@ -1493,7 +1501,7 @@ collect2: error: ld returned 1 exit status</code></pre>
 <li><strong><code>inline</code> 管的是链接不是内联。</strong>头文件里的定义天然会重复,合并靠弱符号与 COMDAT,而合并的正确性由写代码的人保证,工具不检查。</li>
 </ul>
 <p>三条结论的共同后果是:<strong>构建成功的门槛低于正确的门槛</strong>。链接器的职责是把引用和定义配上并填好地址,不是验证程序的一致性。凡是希望被检查的东西,都要主动挑一件工具去查——头文件统一签名、LTO 查类型、消毒器查重复定义。</p>
-<p>与本章相邻的三本姊妹书各自负责一块。语言层面的单一定义规则、模板实例化的语义、匿名命名空间与 <code>inline</code> 的精确语义,见《C++ 语言》;把编译选项统一到全工程、让每个目标用同一套定义,见《CMake 构建系统》;内联到底该不该做、对体积与速度的实际影响,见《C++ 性能优化》。</p>
+<p>与本章相邻的三本姊妹书各自负责一块。语言层面的单一定义规则、模板实例化的语义、匿名命名空间与 <code>inline</code> 的精确语义,见《C++ 语言》;把编译选项统一到全工程、让每个目标用同一套定义,见《CMake 构建手册》;内联到底该不该做、对体积与速度的实际影响,见《C++ 性能优化》。</p>
 <h3>本章用到的命令</h3>
 <pre style="contain-intrinsic-size:auto 549px"><code># 看节
 objdump -h demo.o                 # 节名、尺寸、文件偏移、属性标志
@@ -1867,7 +1875,7 @@ SECTION HEADER #1
                  214 CloseHandle</code></pre>
 <p>调用点的形态由此确定:编译器生成的是一条<strong>间接调用</strong>,目标是地址表里的某一格,而不是直接跳到 DLL 里。地址表在运行期可写,代码段因此可以保持只读。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 200px"><span class="t">🟢 Windows 上链接一个 DLL 需要它的导入库,这是与 ELF 最大的使用差别</span><p>ELF 直接拿 <code>libfoo.so</code> 当链接输入,链接器读它的 <code>.dynsym</code> 就够了。PE 不能直接链接 <code>.dll</code>,需要一个同名的 <code>.lib</code> 导入库:里面没有函数体,只有 <code>__imp_</code> 前缀的符号、跳转桩,以及这些符号属于哪个 DLL 的记录。导入库在生成 DLL 时由链接器一并产出。缺了它的症状是 <code>LNK2019</code>,而 DLL 文件明明就在旁边——补的是 <code>.lib</code> 不是 <code>.dll</code>。</p></div>
-<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">🟡 不加 __declspec(dllimport) 也能用,代价是每次调用多一次跳转</span><p>不声明 <code>dllimport</code> 时,编译器按普通函数生成 <code>call Foo</code>,链接器把它指向导入库提供的一小段跳转桩,桩里再 <code>jmp</code> 到地址表。加上 <code>dllimport</code> 后编译器直接生成经地址表的间接调用,少一跳。数据导入则必须声明:不加 <code>dllimport</code> 引用 DLL 里的全局变量,取到的是桩的地址而不是变量地址,现代编译器会直接报错。跨平台工程通常用一个宏在导出方和使用方分别展开成 <code>dllexport</code> 与 <code>dllimport</code>,配置写法见《CMake 构建系统》。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 200px"><span class="t">🟡 不加 __declspec(dllimport) 也能用,代价是每次调用多一次跳转</span><p>不声明 <code>dllimport</code> 时,编译器按普通函数生成 <code>call Foo</code>,链接器把它指向导入库提供的一小段跳转桩,桩里再 <code>jmp</code> 到地址表。加上 <code>dllimport</code> 后编译器直接生成经地址表的间接调用,少一跳。数据导入则必须声明:不加 <code>dllimport</code> 引用 DLL 里的全局变量,取到的是桩的地址而不是变量地址,现代编译器会直接报错。跨平台工程通常用一个宏在导出方和使用方分别展开成 <code>dllexport</code> 与 <code>dllimport</code>,配置写法见《CMake 构建手册》。</p></div>
 <h3>导出表:提供的名字怎么被找到</h3>
 <p>导出表回答的是反方向的问题:这个 DLL 对外提供哪些名字。结构由三个平行数组组成。</p>
 <table style="contain-intrinsic-size:auto 149px">
@@ -1975,7 +1983,7 @@ $ otool -l app | grep -A2 LC_RPATH
 </tbody>
 </table>
 <p><code>@rpath</code> 与 <code>LC_RPATH</code> 是一对:库把自己的安装名写成 <code>@rpath/libcore.dylib</code>,使用它的程序在自己的 <code>LC_RPATH</code> 里给出若干个候选目录,运行期逐个尝试。搜索顺序与失败时的报错形态见第 7 章。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 安装名写错在链接期没有任何提示,运行时才报找不到库</span><p>链接时用的是磁盘上的实际路径,记进 <code>LC_LOAD_DYLIB</code> 的却是那个库的安装名。库构建时 <code>LC_ID_DYLIB</code> 填成了绝对路径(例如构建机的临时目录),分发到别的机器上就会报 <code>Library not loaded</code> 并列出那个不存在的路径。诊断办法是对依赖库本身跑 <code>otool -D</code> 看它声明的安装名;修补办法是 <code>install_name_tool -id</code> 与 <code>-change</code>。正确做法是在构建时就把安装名设成 <code>@rpath/</code> 形式,配置写法见《CMake 构建系统》。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 安装名写错在链接期没有任何提示,运行时才报找不到库</span><p>链接时用的是磁盘上的实际路径,记进 <code>LC_LOAD_DYLIB</code> 的却是那个库的安装名。库构建时 <code>LC_ID_DYLIB</code> 填成了绝对路径(例如构建机的临时目录),分发到别的机器上就会报 <code>Library not loaded</code> 并列出那个不存在的路径。诊断办法是对依赖库本身跑 <code>otool -D</code> 看它声明的安装名;修补办法是 <code>install_name_tool -id</code> 与 <code>-change</code>。正确做法是在构建时就把安装名设成 <code>@rpath/</code> 形式,配置写法见《CMake 构建手册》。</p></div>
 <h3>其他与 ELF、PE 结构性不同的地方</h3>
 <p>还有三处差别值得记住,它们都源自 Mach-O 的加载命令这一层。</p>
 <ul>
@@ -2219,7 +2227,7 @@ nm -m file            # 符号,带段与节的归属</code></pre>
 <tr><td><code>.dynamic</code>、导入导出表、<code>LC_LOAD_DYLIB</code></td><td class="nw">第 7 章</td><td>运行期的查找顺序、GOT 与 PLT、符号版本</td></tr>
 <tr><td class="nw"><code>.init_array</code> 与 <code>LC_MAIN</code></td><td class="nw">第 8 章</td><td>启动流程、全局对象的构造与析构</td></tr>
 <tr><td class="nw"><code>.debug_*</code> 与节的裁剪</td><td class="nw">第 9 章</td><td>体积、LTO 与可复现构建</td></tr>
-<tr><td class="nw">全部结构</td><td class="nw">第 10 章</td><td>从报错原文倒推到具体结构的固定路径</td></tr>
+<tr><td class="nw">全部结构</td><td class="nw">第 11 章</td><td>从报错原文倒推到具体结构的固定路径</td></tr>
 </tbody>
 </table>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 这一章的内容不必记住,需要的是知道去哪里查以及用哪条命令查</span><p>字段名与节名在后面各章会反复出现,每次出现都会带上当时的语境与对应的命令。回头翻这一章的正确用法是查表,而不是通读。真正需要固化下来的只有四条判据与那份六步读法,其余部分随用随查即可。第 4 章从符号开始,把这一章里那张符号表的每一列讲透。</p></div>
@@ -2676,7 +2684,7 @@ link /DLL /DEF:mylib.def /OUT:mylib.dll mylib.obj
 dumpbin /exports mylib.dll</code></pre>
 <p><code>.def</code> 的两个不可替代的用途:一是把 32 位 <code>__stdcall</code> 自动加上的 <code>@字节数</code> 后缀改回干净的名字,二是给需要按序号导入的老接口固定序号。日常工程用宏就够,不必上 <code>.def</code>。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 200px"><span class="t">🔴 引用 DLL 里的全局变量漏写 dllimport,链接期报符号找不到</span><p>症状是函数全都链得上,只有几个全局变量报 <code>error LNK2001: 无法解析的外部符号</code>,而 <code>dumpbin /exports</code> 里这些名字都在。根因是导入库对数据只提供 <code>__imp_</code> 前缀的那一份,编译器不加 <code>dllimport</code> 就不会生成带前缀的引用。排查手段是 <code>dumpbin /symbols mylib.lib</code> 查有没有不带前缀的同名符号。改法是给头文件里的变量声明加上导出宏,并确认使用方没有定义 <code>MYLIB_BUILD</code>。</p></div>
-<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 WINDOWS_EXPORT_ALL_SYMBOLS 只覆盖函数,数据仍要手写标记</span><p>这个开关让构建系统扫描目标文件、自动生成一份 <code>.def</code>,把 Windows 的默认行为凑成类似 ELF 的样子,常用于把 Linux 老库快速搬上 Windows。局限是它对全局变量无效,导出的数据仍然需要 <code>dllexport</code>,而且导出表里会混进大量内部符号。作为过渡手段可以接受,新工程应当直接写导出宏。配置写法见《CMake 构建系统》。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 WINDOWS_EXPORT_ALL_SYMBOLS 只覆盖函数,数据仍要手写标记</span><p>这个开关让构建系统扫描目标文件、自动生成一份 <code>.def</code>,把 Windows 的默认行为凑成类似 ELF 的样子,常用于把 Linux 老库快速搬上 Windows。局限是它对全局变量无效,导出的数据仍然需要 <code>dllexport</code>,而且导出表里会混进大量内部符号。作为过渡手段可以接受,新工程应当直接写导出宏。配置写法见《CMake 构建手册》。</p></div>
 <h3>一份能跨三平台的导出宏</h3>
 <p>把两个方向的动作收进同一个宏,源码里就只出现一个标记。下面这份可以直接拿去用,覆盖 MSVC、GCC、Clang 与 macOS。</p>
 <pre style="contain-intrinsic-size:auto 685px"><code>/* mylib_export.h */
@@ -2705,7 +2713,7 @@ dumpbin /exports mylib.dll</code></pre>
 <span class="kw">#endif</span> /* MYLIB_EXPORT_H */</code></pre>
 <p>三个分支各自对应一种情况。<code>MYLIB_STATIC</code> 分支不可省略:同一份头文件被静态库的使用者包含时,带 <code>dllimport</code> 的声明会让链接器去找 <code>__imp_</code> 前缀的符号,而静态库里没有这一份。</p>
 <p><code>MYLIB_LOCAL</code> 在 Windows 上是空的,因为 PE 本来就不导出。它的用途是在 ELF 上把个别符号强制隐藏,即使整体没有启用 <code>-fvisibility=hidden</code>。</p>
-<p><code>MYLIB_BUILD</code> 这个宏只能由库自己的构建定义,绝不能出现在安装后的头文件或配置文件里,否则使用者会拿到 <code>dllexport</code>,链接时报重复定义或者导出表里多出本不属于它的符号。这些宏在工程里怎么配,见《CMake 构建系统》。</p>
+<p><code>MYLIB_BUILD</code> 这个宏只能由库自己的构建定义,绝不能出现在安装后的头文件或配置文件里,否则使用者会拿到 <code>dllexport</code>,链接时报重复定义或者导出表里多出本不属于它的符号。这些宏在工程里怎么配,见《CMake 构建手册》。</p>
 <div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 导出头由构建系统生成,与手写的等价,新工程直接用</span><p>构建系统提供的导出头生成器会按目标名生成一份与上面结构相同的头文件,顺带处理静态库分支、废弃标记与「不导出」标记,并把 <code>-fvisibility=hidden</code> 一起配上。收益是三平台的分支不用自己维护,宏名也统一。手写版本的价值在于看清它生成了什么,排查时能直接读懂。</p></div>
 <h3>macOS 一侧的差异</h3>
 <p>Mach-O 的默认与 ELF 一致:全局符号做成 <code>.dylib</code> 后默认导出,<code>-fvisibility=hidden</code> 与 <code>__attribute__((visibility("default")))</code> 同样有效,写法可以照搬。</p>
@@ -2899,7 +2907,7 @@ ld ... -why_live _plugin_create</code></pre>
 <p>符号这一章只回答「一个名字在符号表里是什么状态」。名字怎么来的、状态由谁决定,都在这一章;拿这些状态去做解析、去改写字节、去分配地址,是第 5 章的内容。</p>
 <p>第 5 章接着讲三件事:符号解析的规则与三类失败各自的报错原文、链接器不会报错的那一类不一致、重定位与地址分配的实际过程。第 4 章的每一项判据都会在那里被用到,尤其是修饰名形态与绑定这两项。</p>
 <p>第 6 章讲静态库。归档只是一袋目标文件,但抽取规则会让符号是否被解析取决于成员的粒度与命令行顺序,4.5 节里两个弱符号陷阱的完整机制在那一章补齐。</p>
-<p>可见性对运行期的影响属于第 7 章:动态符号表怎么被加载器使用、符号抢占按什么顺序发生、隐藏符号能省掉多少解析工作。语言层面的规则,例如什么样的实体属于同一个实体、模板实例化在哪里发生,主场在《C++ 语言》;编译选项在工程里怎么配,主场在《CMake 构建系统》。</p>
+<p>可见性对运行期的影响属于第 7 章:动态符号表怎么被加载器使用、符号抢占按什么顺序发生、隐藏符号能省掉多少解析工作。语言层面的规则,例如什么样的实体属于同一个实体、模板实例化在哪里发生,主场在《C++ 语言》;编译选项在工程里怎么配,主场在《CMake 构建手册》。</p>
 <p>把三章连起来看,链接期的因果链是完整的:编译器按 ABI 规则生成符号名与绑定,链接器按解析规则把未定义符号填上,填不上就报错,填上了就按重定位项改写字节。任何一步的报错都能落回到这条链上的某一环。</p>
 </section>
 
@@ -3132,7 +3140,7 @@ g++ a.o b.o -o odr        # 链接成功,没有任何警告
 <li>两侧的 <code>#pragma pack</code> 不同,成员偏移随之改变,而成员个数完全一样。</li>
 <li>两侧用了不同的 <code>-std=</code>,而头文件里有依赖标准版本的条件成员。</li>
 </ul>
-<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 同一个头文件被不同的宏配置编译两次,是 ODR 违规最常见的来源</span><p>症状是程序在与改动无关的地方崩溃,或者某个成员的值莫名其妙不对,而且换个编译顺序、换个优化级别现象就变。根因是控制类成员的宏在一部分编译单元里有定义、另一部分没有。排查手段是把编译数据库里同一个头文件的所有使用者的宏定义列出来比对,重点看 <code>NDEBUG</code>、<code>_DEBUG</code> 与自定义的功能开关。修法是把影响布局的宏从头文件里移走,或者由构建系统统一定义给所有目标,配置方式见《CMake 构建系统》。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 同一个头文件被不同的宏配置编译两次,是 ODR 违规最常见的来源</span><p>症状是程序在与改动无关的地方崩溃,或者某个成员的值莫名其妙不对,而且换个编译顺序、换个优化级别现象就变。根因是控制类成员的宏在一部分编译单元里有定义、另一部分没有。排查手段是把编译数据库里同一个头文件的所有使用者的宏定义列出来比对,重点看 <code>NDEBUG</code>、<code>_DEBUG</code> 与自定义的功能开关。修法是把影响布局的宏从头文件里移走,或者由构建系统统一定义给所有目标,配置方式见《CMake 构建手册》。</p></div>
 <h3>内联函数:链接器只留一份,留哪一份取决于顺序</h3>
 <p>另一种形态更隐蔽:类定义一致,但同名内联函数的函数体不同。</p>
 <pre style="contain-intrinsic-size:auto 114px"><code><span class="cm">// a.cpp</span>
@@ -3187,7 +3195,7 @@ g++ -g -fuse-ld=gold -Wl,--detect-odr-violations a.o b.o -o odr
 # 三、Address Sanitizer 覆盖全局变量这一类
 g++ -fsanitize=address -g a.cpp b.cpp -o odr &amp;&amp; ./odr</code></pre>
 <p>三种手段都是事后检查,真正有效的是把它变成结构上不可能发生:<strong>一个类的定义只出现在一个头文件里,这个头文件里不出现任何影响布局的条件编译,影响布局的宏由构建系统统一定义给所有目标。</strong></p>
-<p>第三方库的头文件不受自己控制时,做法是把它们的包含路径与宏定义收进一处统一管理,不允许各个目标各配一套。这一条属于工程组织,写法见《CMake 构建系统》。</p>
+<p>第三方库的头文件不受自己控制时,做法是把它们的包含路径与宏定义收进一处统一管理,不允许各个目标各配一套。这一条属于工程组织,写法见《CMake 构建手册》。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 把类定义收进唯一的头文件,并禁止条件编译改变成员,是唯一治本的做法</span><p>检查工具都有覆盖盲区:LTO 要求全程序参与,gold 要求完整调试信息且自身正在退场,Sanitizer 只覆盖全局变量。相比之下,结构上的约束是确定的——同一个类只有一处定义、这处定义不随宏变化,违规就没有产生的机会。约束的执行靠代码审查与构建配置,不靠工具事后兜底。</p></div>
 <h3>MSVC 的 detect_mismatch:唯一能在链接期报出来的一类</h3>
 <p>Windows 一侧有一个别的平台没有的机制:编译器可以往目标文件里塞一条键值对,链接器在合并时发现同一个键有不同的值就报错。</p>
@@ -3477,7 +3485,7 @@ gcc main.o -Wl,--start-group -lA -lB -Wl,--end-group -o app
 gcc main.o -lA -lB -lA -o app</code></pre>
 <p>两种做法的机制是同一件事。<code>-lA</code> 写两遍之所以有效,是因为<strong>第二次扫到 A 时,待办表里已经装进了 B 抽取出来的成员所欠的符号</strong>,这些符号在第一次扫描时还不存在。第 6 章会把这个过程逐步走一遍。</p>
 <p><code>--start-group</code> 更可靠:它保证扫描到不动点,而重复列库只多给了一次机会,依赖链更长时可能仍然不够。代价是时间——组内的库要被反复读取,几十个库全放进一个组会让链接明显变慢。</p>
-<p>更值得做的是消除循环。两个库互相依赖,通常说明边界画错了,把公共部分抽成第三个库能同时解决顺序问题与理解成本。目标怎么划分见《CMake 构建系统》。</p>
+<p>更值得做的是消除循环。两个库互相依赖,通常说明边界画错了,把公共部分抽成第三个库能同时解决顺序问题与理解成本。目标怎么划分见《CMake 构建手册》。</p>
 <div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 用 --start-group 把所有库一包了事,掩盖了依赖关系也拖慢链接</span><p>这种写法确实能让链接通过,代价有两项:一是链接器要对组内所有库反复扫描,大工程里这一项开销可观;二是命令行不再反映真实的依赖方向,后续没有人能从构建脚本里读出谁依赖谁。正确的用法是只把确实存在循环的那几个库包进组,其余仍按依赖顺序排列,并且给循环记一笔待还的技术债。</p></div>
 <h3>动态库一侧:--as-needed 把顺序敏感性带了回来</h3>
 <p>动态库不按成员抽取,直觉上不该受顺序影响。多数 Linux 发行版默认给链接器加了 <code>--as-needed</code>,情况因此变了。</p>
@@ -3507,7 +3515,7 @@ gcc main.o -Wl,--no-as-needed -lfoo -Wl,--as-needed -o app</code></pre>
 </table>
 <p>MSVC 一侧不需要为顺序操心,这是它与 GNU 工具链最明显的行为差异之一。代价是链接器要多轮解析,以及重复符号只发警告不报错——<code>LNK4006</code> 在冗长的构建日志里很容易被忽略,而它的后果与重复定义同样严重。</p>
 <p>macOS 与 Linux 同属一遍扫描的模型,但没有 <code>--start-group</code>。跨平台的构建脚本要处理循环依赖时,<strong>重复列库是三个平台都能用的写法</strong>,分组开关只在 GNU 工具链上可用。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 跨平台的构建脚本处理循环依赖时,用重复列库而不是分组开关</span><p><code>--start-group</code> 只在 GNU ld 与 lld 上可用,MSVC 不需要它,macOS 的链接器没有它。重复列库在三个平台上语义一致:多给一次扫描机会,不需要的平台上只是多读一次索引,没有副作用。构建系统通常已经内置了这个处理,自己写命令行时按同样的方式做即可,配置见《CMake 构建系统》。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 跨平台的构建脚本处理循环依赖时,用重复列库而不是分组开关</span><p><code>--start-group</code> 只在 GNU ld 与 lld 上可用,MSVC 不需要它,macOS 的链接器没有它。重复列库在三个平台上语义一致:多给一次扫描机会,不需要的平台上只是多读一次索引,没有副作用。构建系统通常已经内置了这个处理,自己写命令行时按同样的方式做即可,配置见《CMake 构建手册》。</p></div>
 <h3>顺序还影响哪些结果</h3>
 <p>除了成败,顺序还会安静地改变几项结果,它们不产生任何报错。</p>
 <ul>
@@ -3688,7 +3696,7 @@ dumpbin /linkermember:1 util.lib</code></pre>
 ar rcsU libutil.a str.o dump.o     # 关掉确定性模式
 cmp libutil.a libutil2.a           # 两次构建的产物应当逐字节相同</code></pre>
 <p>另一种变体是薄归档:<code>ar rcsT</code> 建出来的 <code>.a</code> 里只存成员的路径,不存内容。好处是建库几乎不花时间、不占空间,坏处是这个文件不能单独分发,成员被移动或删除后它就失效了。</p>
-<p>薄归档在大型工程的中间产物上有价值,分发给外部时一律要用普通归档。判断一个 <code>.a</code> 是不是薄归档,看文件大小即可,薄归档通常只有几 KB。构建系统里怎么选,见《CMake 构建系统》。</p>
+<p>薄归档在大型工程的中间产物上有价值,分发给外部时一律要用普通归档。判断一个 <code>.a</code> 是不是薄归档,看文件大小即可,薄归档通常只有几 KB。构建系统里怎么选,见《CMake 构建手册》。</p>
 <div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">🟡 默认写入的时间戳让同样的输入建出不同字节的库,破坏可复现构建</span><p>归档头里有时间戳、用户号、组号与权限四个字段,它们与链接结果毫无关系,却让产物的字节随构建环境变化。后果是构建缓存频繁失效、二进制比对无法进行。现在多数发行版的 <code>ar</code> 已经默认开启确定性模式,但交叉工具链与自建的 binutils 未必如此。稳妥的做法是显式写 <code>ar rcsD</code>,并用 <code>cmp</code> 验证两次构建的产物逐字节相同。</p></div>
 <h2 id="l6-pick">6.2 抽取规则:整个成员要么不要,以及 --whole-archive</h2>
 <p>第 5 章给出了归档的处理方式:链接器只抽取能满足当前未定义符号的成员。这一节把「成员」这个单位讲透,因为它带来的后果远比字面看上去多。</p>
@@ -3813,7 +3821,7 @@ clang main.o -Wl,-force_load,./libcodecs.a -lz -o app</code></pre>
 <li>静态初始化:所有成员的全局构造函数都会执行,包括本来永远用不到的那些。</li>
 <li>重复定义:两个库里有同名符号时,按需抽取可能永远不会同时抽到它们,整体拉入则必然冲突。</li>
 </ul>
-<p>因此正确的用法是<strong>只对确实需要自注册的那一个库使用</strong>,不要图省事包住整段命令行。构建系统里的写法见《CMake 构建系统》。</p>
+<p>因此正确的用法是<strong>只对确实需要自注册的那一个库使用</strong>,不要图省事包住整段命令行。构建系统里的写法见《CMake 构建手册》。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 --whole-archive 只对确实依赖自注册的那一个库用,并且必须成对写</span><p>无差别地把所有库整体拉入,会同时带来体积膨胀、非预期的全局构造与重复定义三类问题,而收益只针对自注册这一种场景。Linux 一侧的 <code>--no-whole-archive</code> 不能省,它是作用范围的结束标记,不是可选的收尾。Windows 与 macOS 的开关本身就按库指定,不存在这个问题。</p></div>
 <h3>更精细的手段:-u 与 /INCLUDE</h3>
 <p>只需要让某一个成员进来时,整体拉入是过度的。更精确的做法是给链接器制造一个未定义符号,让它按正常的抽取规则去找。</p>
@@ -3940,9 +3948,9 @@ findstr /c:<span>"UNDEF"</span> A.txt</code></pre>
 <tr><td class="nw">跨平台通用写法</td><td>重复列库</td><td>同左</td><td>同左</td></tr>
 </tbody>
 </table>
-<p>跨平台的构建脚本应当统一用重复列库:三个平台语义一致,不需要平台判断,在不需要它的平台上也只是多读一次索引。构建系统通常已经内置了这个处理,自己写命令行时按同样的方式做,配置见《CMake 构建系统》。</p>
+<p>跨平台的构建脚本应当统一用重复列库:三个平台语义一致,不需要平台判断,在不需要它的平台上也只是多读一次索引。构建系统通常已经内置了这个处理,自己写命令行时按同样的方式做,配置见《CMake 构建手册》。</p>
 <p>治本的做法是消除循环本身。<strong>两个库互相引用,几乎总是意味着有一部分代码归属划错了。</strong>常见的两种整理方式:把两边都需要的公共部分抽成第三个库,或者把跨边界的调用改成由上层注入的回调,让依赖方向变成单向。</p>
-<p>消除循环的收益不止于链接:依赖单向之后,单个库可以被独立测试、独立替换,构建的并行度也更高。目标怎么划分、依赖怎么表达,主场在《CMake 构建系统》。</p>
+<p>消除循环的收益不止于链接:依赖单向之后,单个库可以被独立测试、独立替换,构建的并行度也更高。目标怎么划分、依赖怎么表达,主场在《CMake 构建手册》。</p>
 <h2 id="l6-sum">6.4 小结</h2>
 <p>静态库的全部行为可以由三条规则推导出来。这三条规则本身都不复杂,难的是记住它们会在什么地方产生后果。</p>
 <ol>
@@ -4010,7 +4018,7 @@ link main.obj /INCLUDE:png_codec_anchor codecs.lib /OPT:REF /OUT:app.exe</code><
 <thead><tr><th>分界</th><th>跨过去之前</th><th>跨过去之后</th><th>提前做什么</th></tr></thead>
 <tbody>
 <tr><td class="nw">归档里的成员数</td><td>几十个,抽取范围靠人也能算清</td><td>上百个,哪些进来只能靠 map 文件</td><td>从第一天起就在构建里留 map 文件</td></tr>
-<tr><td class="nw">依赖层数</td><td>两三层,命令行手写库顺序还能维护</td><td>五层以上,顺序靠人排必然出错</td><td>交给构建系统算拓扑序,见《CMake 构建系统》</td></tr>
+<tr><td class="nw">依赖层数</td><td>两三层,命令行手写库顺序还能维护</td><td>五层以上,顺序靠人排必然出错</td><td>交给构建系统算拓扑序,见《CMake 构建手册》</td></tr>
 <tr><td class="nw">自注册的类型数</td><td>个位数,漏一个当场能发现</td><td>几十个,漏一个可能几个月后才暴露</td><td>加一条构建期断言,核对注册数与预期数</td></tr>
 </tbody>
 </table>
@@ -4023,7 +4031,7 @@ link main.obj /INCLUDE:png_codec_anchor codecs.lib /OPT:REF /OUT:app.exe</code><
 <p>符号本身的属性在第 4 章:归档索引里只登记全局的已定义符号这一条,直接来自那一章讲的绑定与可见性。4.5 节里两个弱符号陷阱的完整机制,到这一章的抽取规则才算讲全。</p>
 <p>符号解析、顺序扫描与重定位在第 5 章。这一章反复用到的「待办表」模型,以及库必须写在目标文件之后这条结论,都出自 5.4 节。</p>
 <p>动态库是完全不同的一套东西:它经过了完整链接,不按成员抽取,符号在运行期由加载器解析,依赖记录写在产物里。这一层在第 7 章。<strong>静态库与动态库唯一共享的只有「符号解析」这个概念本身,机制没有一处相同。</strong></p>
-<p>库怎么划分目标、怎么表达依赖、怎么安装与分发,主场在《CMake 构建系统》;体积与启动时间的量化影响见《C++ 性能优化》。</p>
+<p>库怎么划分目标、怎么表达依赖、怎么安装与分发,主场在《CMake 构建手册》;体积与启动时间的量化影响见《C++ 性能优化》。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 静态库的三条规则合起来能预测几乎全部现象,记住它们比记住开关更有用</span><p>一袋目标文件、按成员抽取、一遍扫描不回头。任何一个静态库相关的疑问,先用这三条推一遍,通常在动手之前就能得出结论。开关是这三条规则的补救手段,记住开关而不理解规则,遇到没见过的形态仍然只能试错。</p></div>
 </section>
 
@@ -4118,7 +4126,7 @@ $ gcc plug.c -ldl -o plug &amp;&amp; ./plug
 <li>产物体积是硬指标且能接受重编发布,<strong>静态链接配合第 9 章的裁剪手段收益更大</strong></li>
 </ul>
 <p>混合做法很常见:系统的 C 运行库动态链接,第三方依赖静态链接。这样既避免了自带一份 libc 带来的兼容问题,又不必在目标机器上摆一堆第三方库。</p>
-<p>工程里怎么把这两种形态配出来——<code>add_library</code> 的 <code>STATIC</code> 与 <code>SHARED</code>、<code>BUILD_SHARED_LIBS</code>、以及安装规则怎么写——是《CMake 构建系统》的主场,本书只讲两种形态在链接与运行期的机制差别。</p>
+<p>工程里怎么把这两种形态配出来——<code>add_library</code> 的 <code>STATIC</code> 与 <code>SHARED</code>、<code>BUILD_SHARED_LIBS</code>、以及安装规则怎么写——是《CMake 构建手册》的主场,本书只讲两种形态在链接与运行期的机制差别。</p>
 <div class="note old" style="contain-intrinsic-size:auto 232px"><span class="t">🟡 把 libstdc++ 静态链接进产物,是一个需要额外条件的做法</span><p><code>-static-libstdc++</code> 能免掉目标机器上标准库版本过旧的问题,常被当成万能解。它成立的前提是:进程里<strong>只有一份</strong>标准库实现。一旦产物又动态加载了另一个同样链接了标准库的插件,进程里就有了两套 <code>std::string</code> 与两套异常运行时,跨模块传对象、跨模块抛异常都会出问题,而崩溃点与原因毫无关系。另一条约束是标准库里带全局状态的设施——<code>std::cout</code> 的初始化对象、类型信息的比较——都会各有一份。判据是:产物如果会 <code>dlopen</code> 别人的模块,或者会被别人 <code>dlopen</code>,就不要静态链接标准库。</p></div>
 <h2 id="l7-pic">7.2 位置无关代码、GOT 与 PLT</h2>
 <p>静态链接的可执行文件有一个固定的加载基址,链接器在构建期就知道每条指令、每个变量最终落在哪个虚拟地址上,重定位可以一次填死。</p>
@@ -4520,7 +4528,7 @@ readelf -d app | grep RUNPATH
 #   0x000000000000001d (RUNPATH)  Library runpath: [$ORIGIN/../lib]
 mv prefix /tmp/anywhere &amp;&amp; /tmp/anywhere/bin/app</code></pre>
 <p>转义是这里最容易出错的一处。<code>$ORIGIN</code> 必须原样进入二进制,被 shell 或 make 提前展开的结果是一条空路径,而空路径在查找时等同于当前工作目录,于是产生「在源码目录里能跑、换个目录就不行」的现象。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 230px"><span class="t">🟢 安装树能不能整体搬走,是判断 RPATH 设得对不对的唯一验收动作</span><p>把整个安装前缀移动到另一个路径下再运行一次,能跑就说明里面没有写死的绝对路径。这一步能同时挡住三类问题:路径写成了构建目录、<code>$ORIGIN</code> 被 shell 提前展开成空串、以及只给可执行文件设了路径而库没有设。验证时要把 <code>LD_LIBRARY_PATH</code> 清空,否则开发机上残留的那份配置会替产物兜底,把问题掩盖到用户那一侧才暴露。持续集成里做这件事的成本是三条命令:装到临时前缀、移动目录、运行一次。构建系统里怎么让安装期的 RPATH 与构建期的分开设置,见《CMake 构建系统》。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 230px"><span class="t">🟢 安装树能不能整体搬走,是判断 RPATH 设得对不对的唯一验收动作</span><p>把整个安装前缀移动到另一个路径下再运行一次,能跑就说明里面没有写死的绝对路径。这一步能同时挡住三类问题:路径写成了构建目录、<code>$ORIGIN</code> 被 shell 提前展开成空串、以及只给可执行文件设了路径而库没有设。验证时要把 <code>LD_LIBRARY_PATH</code> 清空,否则开发机上残留的那份配置会替产物兜底,把问题掩盖到用户那一侧才暴露。持续集成里做这件事的成本是三条命令:装到临时前缀、移动目录、运行一次。构建系统里怎么让安装期的 RPATH 与构建期的分开设置,见《CMake 构建手册》。</p></div>
 <h3>Windows 的 DLL 搜索顺序</h3>
 <p>PE 里没有 RPATH 这种字段,导入表只记 DLL 的文件名。查找顺序由加载器固定,程序能影响它的手段是几个 API 与清单文件,而不是写进产物的一条路径。</p>
 <p>顺序在开启安全 DLL 搜索模式时如下,该模式自 Windows XP SP2 起默认开启。在此之前,当前目录排在第二位,这正是 DLL 劫持问题的历史根源。</p>
@@ -4666,7 +4674,7 @@ DYLD_PRINT_LIBRARIES=1 ./app</code></pre>
 <tr><td class="nw">诊断命令</td><td><code>LD_DEBUG=libs</code></td><td>Process Monitor</td><td><code>DYLD_PRINT_LIBRARIES=1</code></td></tr>
 </tbody>
 </table>
-<p>规则本身到此为止。构建系统里怎么把这些路径配对——构建期与安装期分别设什么、跨平台怎么统一表达、安装规则里怎么避免把构建目录写进产物——一律见《CMake 构建系统》。</p>
+<p>规则本身到此为止。构建系统里怎么把这些路径配对——构建期与安装期分别设什么、跨平台怎么统一表达、安装规则里怎么避免把构建目录写进产物——一律见《CMake 构建手册》。</p>
 <h2 id="l7-win">7.5 Windows 的导入库与 DLL:另一套做法</h2>
 <p>Windows 上链接一个 DLL,命令行里给的是 <code>.lib</code> 而不是 <code>.dll</code>。这个 <code>.lib</code> 叫导入库,与第 6 章讲的静态库同为归档格式,内容却完全不同:它不含任何实现。</p>
 <p>这条差异不是包装方式的不同,它反映了 PE 与 ELF 在符号绑定上的根本分歧。ELF 把所有对象的符号并进一个平坦的全局命名空间,PE 把每一条引用绑定到一个具体的 DLL。</p>
@@ -4896,7 +4904,7 @@ where calc.dll
 :: 查找轨迹用 Process Monitor,过滤条件:进程名 = app.exe 且操作 = CreateFile
 dumpbin /headers app.exe | findstr /C:<span>"machine"</span>
 dumpbin /exports calc.dll | findstr calc_add</code></pre>
-<p>第七步与前六步的性质不同。前六步解决「文件在哪」,第七步解决「文件对不对」,后者的报错形态是 <code>symbol lookup error</code> 或者 <code>version not found</code>,处理方式见第 4 章与第 10 章。</p>
+<p>第七步与前六步的性质不同。前六步解决「文件在哪」,第七步解决「文件对不对」,后者的报错形态是 <code>symbol lookup error</code> 或者 <code>version not found</code>,处理方式见第 4 章与第 11 章。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 231px"><span class="t">🟢 排查从「文件在不在磁盘上」这一步分叉,先分叉再往下走</span><p>这一步之前的所有猜测都可能白费。文件根本不存在,说明问题在打包、安装或者构建产物清单,与查找规则毫无关系,继续调 <code>LD_LIBRARY_PATH</code> 只会掩盖真正的缺口;文件存在却没被找到,才轮到查找规则那一整套。把这一步放在第二位而不是最后,能省掉大部分无效尝试。判定命令在 Linux 上是 <code>find</code> 加 <code>ldconfig -p</code>,在 Windows 上是 <code>where</code>,在 macOS 上是 <code>ls</code> 加 <code>otool -L</code> 里给出的那个路径。容器与最小化镜像里最常见的形态是前者:镜像只拷了可执行文件,依赖的共享库一个都没进去。</p></div>
 <h3>三平台命令对照</h3>
 <p>同一件事在三个平台上的命令名字完全不同,记忆成本主要花在这张表上。左列是要回答的问题,不是工具名。</p>
@@ -4916,7 +4924,7 @@ dumpbin /exports calc.dll | findstr calc_add</code></pre>
 </tbody>
 </table>
 <p>表里有两处不对称值得记住。Windows 没有可写进产物的查找路径,一切靠目录布局;macOS 的安装名由被依赖方规定,因此改一个依赖关系要改的是库自己,不是使用者。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 patchelf 与 install_name_tool 是救火手段,不是构建手段</span><p>两者都能改已构建产物里的路径记录,在排查阶段用来快速验证某个猜想很方便。但把它们写进发布流程会带来三个问题:改动不在源码与构建脚本里,别人看不到也复现不了;<code>patchelf</code> 修改 ELF 的动态段可能需要移动段位置,个别版本改完的产物在某些加载器上行为异常;macOS 上用 <code>install_name_tool</code> 改完之后代码签名立即失效,必须重新签名,而重新签名需要证书。正确的位置是链接时就写对——链接命令里给 <code>-Wl,-rpath</code> 或 <code>-install_name</code>,由构建系统统一生成,见《CMake 构建系统》。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 patchelf 与 install_name_tool 是救火手段,不是构建手段</span><p>两者都能改已构建产物里的路径记录,在排查阶段用来快速验证某个猜想很方便。但把它们写进发布流程会带来三个问题:改动不在源码与构建脚本里,别人看不到也复现不了;<code>patchelf</code> 修改 ELF 的动态段可能需要移动段位置,个别版本改完的产物在某些加载器上行为异常;macOS 上用 <code>install_name_tool</code> 改完之后代码签名立即失效,必须重新签名,而重新签名需要证书。正确的位置是链接时就写对——链接命令里给 <code>-Wl,-rpath</code> 或 <code>-install_name</code>,由构建系统统一生成,见《CMake 构建手册》。</p></div>
 <h3>按症状反查</h3>
 <table style="contain-intrinsic-size:auto 509px">
 <thead><tr><th>症状</th><th>最可能的根因</th><th>第一条命令</th></tr></thead>
@@ -4934,7 +4942,7 @@ dumpbin /exports calc.dll | findstr calc_add</code></pre>
 </table>
 <h3>通向后面几章</h3>
 <p>加载完成之后,控制权还没有交到 <code>main</code> 手里。共享对象的初始化函数、C++ 全局对象的构造函数都排在这之间,而它们的次序正是第 8 章的主题。</p>
-<p>导出符号的多少直接决定启动期符号查找的成本,减少导出既是体积问题也是启动性能问题,手段在第 4 章与第 9 章。产物里的调试信息与剥离方式见第 9 章,报错原文到根因的完整对照表在第 10 章。</p>
+<p>导出符号的多少直接决定启动期符号查找的成本,减少导出既是体积问题也是启动性能问题,手段在第 4 章与第 9 章。产物里的调试信息与剥离方式见第 9 章,报错原文到根因的完整对照表在第 11 章。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 21682px;--thin-h:21682px">
@@ -5408,7 +5416,7 @@ $ nm -C ./app | grep _GLOBAL__sub_I_ | sort</code></pre>
 <h3>通向后面几章</h3>
 <p>初始化数组的顺序由链接顺序决定这条,在开启链接期优化之后仍然成立,但目标文件的边界会变——第 9 章讲 LTO 时会再提一次。</p>
 <p>全局对象数量与 <code>.init_array</code> 的体积,也是第 9 章体积构成里的一项。构造函数本身还常常挡住死代码裁剪:一个只被全局对象引用的类,链接器无法证明它没用。</p>
-<p>本章出现的两类报错——<code>unresolved external symbol WinMain</code> 与栈回溯里的 <code>_GLOBAL__sub_I_</code>——都会进第 10 章那张对照表。</p>
+<p>本章出现的两类报错——<code>unresolved external symbol WinMain</code> 与栈回溯里的 <code>_GLOBAL__sub_I_</code>——都会进第 11 章那张对照表。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 24827px;--thin-h:24827px">
@@ -5457,7 +5465,7 @@ $ readelf -SW geom.o | grep gnu.lto | head -3
 </tbody>
 </table>
 <p>瘦与胖的区别只在「这个 <code>.o</code> 能不能被不开 LTO 的链接直接用」。分发预编译静态库时这一点很要紧:库如果是瘦对象,使用者不开 LTO 就链不了,而且编译器版本还得对得上。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 LTO 对象进了静态库,ar 与 nm 必须换成带插件的版本</span><p><code>ar</code> 在建立索引时要读符号表,而 LTO 对象的符号藏在中间表示里,普通 <code>ar</code> 读不到,建出来的库索引是空的。后果是链接时报一片 <code>undefined reference</code>,而 <code>nm libfoo.a</code> 打印的是 <code>plugin needed to handle lto object</code>。改法是把三个工具换成 GCC 提供的包装版:<code>gcc-ar</code>、<code>gcc-nm</code>、<code>gcc-ranlib</code>,它们会自动加载 <code>liblto_plugin.so</code>。Clang 侧对应 <code>llvm-ar</code> 与 <code>llvm-nm</code>。构建系统里通常有对应的变量,《CMake 构建系统》讲了怎么设。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 LTO 对象进了静态库,ar 与 nm 必须换成带插件的版本</span><p><code>ar</code> 在建立索引时要读符号表,而 LTO 对象的符号藏在中间表示里,普通 <code>ar</code> 读不到,建出来的库索引是空的。后果是链接时报一片 <code>undefined reference</code>,而 <code>nm libfoo.a</code> 打印的是 <code>plugin needed to handle lto object</code>。改法是把三个工具换成 GCC 提供的包装版:<code>gcc-ar</code>、<code>gcc-nm</code>、<code>gcc-ranlib</code>,它们会自动加载 <code>liblto_plugin.so</code>。Clang 侧对应 <code>llvm-ar</code> 与 <code>llvm-nm</code>。构建系统里通常有对应的变量,《CMake 构建手册》讲了怎么设。</p></div>
 <h3>两侧的开关与工具链要求</h3>
 <table style="contain-intrinsic-size:auto 227px">
 <thead><tr><th>项目</th><th>GCC</th><th>Clang</th><th>MSVC</th></tr></thead>
@@ -5502,7 +5510,7 @@ lto1: fatal error: bytecode stream in file <span>'a.o'</span> generated with LTO
 compilation terminated.
 lto-wrapper: fatal error: gcc-13 returned 1 exit status</code></pre>
 <p>MSVC 侧的对应形态是 <code>fatal error C1047: The object or library file 'a.obj' was created with an older compiler than other objects; rebuild old objects and libraries</code>。含义一致:中间表示的版本对不上。</p>
-<div class="note new" style="contain-intrinsic-size:auto 228px"><span class="t">🔵 开发构建不开 LTO,发布构建才开,是成本最低的用法</span><p>LTO 的收益体现在最终产物上,而代价几乎全部落在构建速度与内存上。日常开发一天要链接几十次,每次多等几分钟是纯损失;发布构建一天几次,多等几分钟无所谓。因此配置的形态是按构建类型分开:调试构建关闭,发布构建开启。风险是两种构建的行为可能不同——LTO 会暴露 9.1 节末尾讲的那类未定义行为,发布构建才崩的情形确实存在。对策是让持续集成里至少有一条流水线跑开启 LTO 的构建并执行完整测试,而不是等到发版当天才第一次开。构建类型怎么分、开关放在哪一层,见《CMake 构建系统》。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 228px"><span class="t">🔵 开发构建不开 LTO,发布构建才开,是成本最低的用法</span><p>LTO 的收益体现在最终产物上,而代价几乎全部落在构建速度与内存上。日常开发一天要链接几十次,每次多等几分钟是纯损失;发布构建一天几次,多等几分钟无所谓。因此配置的形态是按构建类型分开:调试构建关闭,发布构建开启。风险是两种构建的行为可能不同——LTO 会暴露 9.1 节末尾讲的那类未定义行为,发布构建才崩的情形确实存在。对策是让持续集成里至少有一条流水线跑开启 LTO 的构建并执行完整测试,而不是等到发版当天才第一次开。构建类型怎么分、开关放在哪一层,见《CMake 构建手册》。</p></div>
 <h3>意外收获:ODR 违规从看不见变成看得见</h3>
 <p>单一定义规则要求同一个实体在整个程序里只有一个定义。违反它的典型形态是:两个编译单元里定义了同名但内容不同的类或函数,链接器只保留一份,另一份的使用者拿到的布局与自己的假设不符。</p>
 <p>传统链接看不到这类问题——它只比较符号名,不比较类型。LTO 拿到的是带类型信息的中间表示,于是能比出来。</p>
@@ -5864,7 +5872,7 @@ $ readelf -n app | grep <span>'Build ID'</span></code></pre>
 </table>
 <p>第三条在日常开发里价值最直接:声称「只是改了注释与格式」的提交,如果产物逐字节不变,这件事就被证明了;如果变了,<code>diffoscope</code> 能直接指出变在哪个函数。</p>
 <p>这四条收益都建立在同一个前提上——差异一旦出现就是<strong>信号</strong>而不是噪声。在没有做可复现构建的工程里,产物每次都不同,任何比较都得不出结论。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 可复现构建的验收动作只有一条:换个目录构建两次,比较散列</span><p>不需要一次配齐所有开关,也不需要专门的工具链。第一次跑这条验收多半会失败,<code>diffoscope</code> 的输出会直接指出是路径、时间戳还是构建标识,按本节的表逐条消即可。做完之后把这条验收加进持续集成,新引入的不确定性会当场暴露,而不是在某次供应链审计时才发现。构建系统里怎么把这些开关按目标统一注入、怎么让安装步骤也保持确定,是《CMake 构建系统》的内容。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 可复现构建的验收动作只有一条:换个目录构建两次,比较散列</span><p>不需要一次配齐所有开关,也不需要专门的工具链。第一次跑这条验收多半会失败,<code>diffoscope</code> 的输出会直接指出是路径、时间戳还是构建标识,按本节的表逐条消即可。做完之后把这条验收加进持续集成,新引入的不确定性会当场暴露,而不是在某次供应链审计时才发现。构建系统里怎么把这些开关按目标统一注入、怎么让安装步骤也保持确定,是《CMake 构建手册》的内容。</p></div>
 <h2 id="l9-sum">9.5 小结</h2>
 <p>这一章的三个主题指向同一件事:产物是可以被度量、被裁剪、被验证的对象,而不是构建过程的副产品。LTO 改变它的内容,剥离与裁剪改变它的大小,可复现构建让它的每一个字节都有出处。</p>
 <h3>这一章的骨架</h3>
@@ -5940,14 +5948,1017 @@ $ cmp /tmp/b1/app /tmp/b2/app &amp;&amp; echo 逐字节相同</code></pre>
 </table>
 <p>十行里 Windows 一侧有两处「不需要做」:调试符号天然分离,因此没有剥离这一步,产物体积也天然接近 Linux 剥离后的形态。移植构建脚本时不要机械地给 Windows 补上对应步骤。</p>
 <p>另有一处口径差别。<code>size -A</code> 给的是节的字节数,<code>dumpbin /headers</code> 给的是节的虚拟大小与原始数据大小两个值,后者才对应磁盘占用。两边的数字不能直接相减比较。</p>
-<h3>通向第 10 章</h3>
-<p>本章出现的报错——<code>plugin needed to handle lto object</code>、<code>bytecode stream ... LTO version</code>、以及剥离中间产物之后的一片 <code>undefined reference</code>——都会进第 10 章那张对照表。</p>
+<h3>通向第 11 章</h3>
+<p>本章出现的报错——<code>plugin needed to handle lto object</code>、<code>bytecode stream ... LTO version</code>、以及剥离中间产物之后的一片 <code>undefined reference</code>——都会进第 11 章那张对照表。</p>
 <p>剩下的最后一章不引入新机制,把全书的判据、三平台差异与报错对照收成三张表,并给出「拿到一个陌生二进制怎么读明白」的固定步骤。</p>
 </section>
 
+<section class="chapter" style="contain-intrinsic-size:auto 42410px;--thin-h:42410px">
+<h1 id="l10"><span class="part">第 10 章</span>标准之外:编译器扩展与平台约定</h1>
+<h2 id="l10-who">10.1 标准、ABI 与编译器扩展:三层各管什么</h2>
+<p>一个 <code>__stdcall</code> 写在函数声明上,翻遍 ISO C++ 标准也找不到它;一个 <code>__attribute__((packed))</code> 加在结构体上,标准同样只字未提。两者都不是编译器的私自发挥,而是落在标准之外的另外两层里。</p>
+<p>从一行源码到一个能与别人的目标文件链在一起的产物,规则由三层共同给出:<strong>语言标准定语法与语义,平台 ABI 定字节与寄存器,编译器扩展补前两层都没有覆盖的部分</strong>。三层的查证去处互不相同,层判错了,文档翻遍也找不到答案。</p>
+<p>前九章已经零散用过 <code>__declspec(dllexport)</code>、<code>__attribute__((visibility))</code> 与 <code>__stdcall</code>,每次都是在解决一个具体问题。把它们摆在一起看,归属关系才显出来。</p>
+<h3>标准刻意不规定的那些事</h3>
+<p>ISO C++ 标准描述的是一台抽象机器:程序由什么构成、名字怎么查找、表达式按什么规则求值、哪些行为是可观察的。这一整套描述里没有寄存器,也没有栈。</p>
+<p>标准不规定的清单是有限且明确的,与链接直接相关的有七项。</p>
+<ul>
+<li>参数怎么从调用方传到被调方</li>
+<li>函数返回后由谁把栈指针恢复回去</li>
+<li>函数名怎么编码成目标文件里的符号</li>
+<li>类的非静态成员之间填多少字节</li>
+<li>虚表放在哪个编译单元、表项按什么顺序排</li>
+<li>异常抛出后按什么数据结构展开调用栈</li>
+<li>一个全局符号在动态库里默认可不可见</li>
+</ul>
+<p>不规定不是疏漏。标准要能被寄存器数量、字长、栈生长方向各不相同的硬件实现,一旦把「第一个参数放进某个寄存器」写进标准,不满足条件的机器就无法提供一个合规的实现。</p>
+<p>同样的道理适用于类布局。标准只保证同一访问权限下的非静态成员按声明顺序地址递增,填充多少字节一概不提,因为填充量取决于目标机器对未对齐访问的容忍程度。</p>
+<h3>两个编译单元要链在一起,就必须有人规定</h3>
+<p>推导只有一步。编译单元 A 调用编译单元 B 里的函数,A 在生成调用序列时必须知道参数放哪、返回值取自哪、返回之后栈指针是什么状态,而这些信息不在 B 的声明里。</p>
+<p>声明只给出类型。<code>int f(int, double)</code> 说明有两个参数与一个返回值,不说明第一个参数走哪个寄存器,也不说明浮点参数与整型参数是否共用槽位。</p>
+<p>两侧要对上,就必须存在一份 A 与 B 都遵守的、独立于源码的约定。那份约定就是 ABI。它不属于语言,属于平台。</p>
+<p><strong>同一份 C++ 源码在两个平台上编出的目标文件不能互链,原因不是语言不同,而是两边遵守的 ABI 不同。</strong>这条推导解释了全章的内容——凡是「标准没说、而两个编译单元必须一致」的事,都能在某份 ABI 规范里找到条文。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 标准没规定的事,编译期不会暴露,报错落在链接期与运行期</span><p>编译器只按标准检查一个编译单元内部的自洽性,跨单元的约定它看不见。声明与定义的调用约定不一致,两侧各自编译都通过;两个编译单元算出的 <code>sizeof</code> 不同,两侧各自编译也都通过。前者在链接期变成符号找不到,后者连链接期都不报,一直拖到运行期读到错位的数据。判据是固定的:凡是「换一个编译单元看结果就变」的现象,一律先怀疑 ABI 层的不一致,而不是编译器的实现缺陷。</p></div>
+<figure style="contain-intrinsic-size:auto 449px">
+<svg viewBox="0 0 720 348" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="l10who_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+
+  <text class="svgtext" x="12" y="20" text-anchor="start" font-size="12">三层自上而下:上层刻意留白的部分,由下层补齐</text>
+
+  <rect x="12" y="30" width="392" height="76" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="28" y="52" text-anchor="start" font-size="12">ISO C++ 标准</text>
+  <text class="svgmuted" x="28" y="72" text-anchor="start" font-size="11">管:语法、名字查找、求值规则、抽象机器的可观察行为</text>
+  <text class="svgmuted" x="28" y="92" text-anchor="start" font-size="11">不管:寄存器、栈、符号名、内存布局、异常展开的实现</text>
+
+  <rect x="12" y="118" width="392" height="96" rx="6" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgtext" x="28" y="140" text-anchor="start" font-size="12">平台 ABI:处理器一层加 C++ 一层</text>
+  <text class="svgmuted" x="28" y="160" text-anchor="start" font-size="11">管:参数寄存器、谁清栈、名字修饰、类布局、虚表、展开表</text>
+  <text class="svgmuted" x="28" y="180" text-anchor="start" font-size="11">查:System V AMD64 ABI / Microsoft x64 calling convention</text>
+  <text class="svgmuted" x="28" y="200" text-anchor="start" font-size="11">    Itanium C++ ABI / AAPCS</text>
+
+  <rect x="12" y="226" width="392" height="76" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <text class="svgtext" x="28" y="248" text-anchor="start" font-size="12">编译器扩展</text>
+  <text class="svgmuted" x="28" y="268" text-anchor="start" font-size="11">管:把上面两层的选择写进源码,以及编译器自己的能力</text>
+  <text class="svgmuted" x="28" y="288" text-anchor="start" font-size="11">查:__declspec / __attribute__ / __builtin_ / #pragma 的文档</text>
+
+  <path d="M404,68 H426" stroke="var(--accent)" fill="none" marker-end="url(#l10who_a)"/>
+  <path d="M404,166 H426" stroke="var(--accent)" fill="none" marker-end="url(#l10who_a)"/>
+  <path d="M404,264 H426" stroke="var(--accent)" fill="none" marker-end="url(#l10who_a)"/>
+
+  <rect x="430" y="30" width="278" height="76" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="444" y="52" text-anchor="start" font-size="11">这个重载为什么选中了它</text>
+  <text class="svgmuted" x="444" y="72" text-anchor="start" font-size="11">编译期报错或告警,换编译器结论一致</text>
+  <text class="svgmuted" x="444" y="92" text-anchor="start" font-size="11">去处:标准文本与《C++ 语言》</text>
+
+  <rect x="430" y="118" width="278" height="96" rx="6" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="444" y="140" text-anchor="start" font-size="11">sizeof 为什么在两台机器上不同</text>
+  <text class="svgmuted" x="444" y="160" text-anchor="start" font-size="11">unresolved external symbol _foo@8</text>
+  <text class="svgmuted" x="444" y="180" text-anchor="start" font-size="11">链接期或运行期才暴露</text>
+  <text class="svgmuted" x="444" y="200" text-anchor="start" font-size="11">去处:对应平台的 ABI 规范</text>
+
+  <rect x="430" y="226" width="278" height="76" rx="6" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="444" y="248" text-anchor="start" font-size="11">__forceinline 在 GCC 上编不过</text>
+  <text class="svgmuted" x="444" y="268" text-anchor="start" font-size="11">编译期直接失败,换编译器连编都编不过</text>
+  <text class="svgmuted" x="444" y="288" text-anchor="start" font-size="11">去处:该编译器自己的文档</text>
+
+  <path d="M12,318 H708" stroke="var(--rule)" fill="none" stroke-dasharray="4 3"/>
+  <text class="svgtext" x="12" y="338" text-anchor="start" font-size="12">定层的问法:同一件事换个编译器、换个平台,结果会不会变</text>
+</svg>
+<figcaption>三层各管什么,以及一个具体问题该落在哪一层（原创绘制）</figcaption>
+</figure>
+<h3>平台 ABI:四份规范与各自的管辖范围</h3>
+<p>ABI 规范不是一份文档,而是分层的两份:处理器一层与 C++ 一层。两份合起来,才够描述一个 C++ 目标文件的全部对外约定。</p>
+<table style="contain-intrinsic-size:auto 490px">
+<thead><tr><th>规范</th><th>适用范围</th><th>规定了什么</th><th>不规定什么</th></tr></thead>
+<tbody>
+<tr><td>System V AMD64 ABI(psABI)</td><td>Linux、macOS、FreeBSD 等类 Unix 平台的 x86-64</td><td>基本类型的大小与对齐、结构体与联合的布局、整型与浮点参数的寄存器分配、栈帧与对齐要求、目标文件格式与重定位类型</td><td>C++ 特有的部分:名字修饰、虚表、异常展开表的内容</td></tr>
+<tr><td>Microsoft x64 calling convention</td><td>Windows 的 x86-64</td><td>四个整型参数寄存器与四个浮点寄存器、影子空间、清栈责任、易失与非易失寄存器的划分、栈展开数据的形态</td><td>同样不含 C++ 名字修饰,那一套由 MSVC 的实现定义,没有对应的公开规范</td></tr>
+<tr><td class="nw">Itanium C++ ABI</td><td>GCC、Clang 及遵循它的编译器,与处理器无关的那一层</td><td>名字修饰规则、虚表与虚基类的布局、RTTI 数据结构、构造与析构的调用序列、异常展开的接口</td><td>寄存器分配与栈帧,那部分交给各架构的 psABI</td></tr>
+<tr><td class="nw">AAPCS(Arm 架构的过程调用标准)</td><td>32 位与 64 位 Arm,64 位一份、32 位一份</td><td>参数寄存器分配、栈对齐、返回值规则、易失寄存器的划分、聚合类型怎么按字段拆进寄存器</td><td>C++ 层同样交给 Itanium C++ ABI</td></tr>
+</tbody>
+</table>
+<p>分工是分层的而不是并列的。Linux 上的 GCC 同时受 System V AMD64 ABI 与 Itanium C++ ABI 约束;Arm 上的 Clang 同时受 AAPCS 与 Itanium C++ ABI 约束。</p>
+<p>Windows 是唯一的例外:处理器一层由 Microsoft 的调用约定文档给出,C++ 一层由 MSVC 的实现定义。<code>undname</code> 能把修饰名还原成可读原型,编码规则本身要靠观察输出反推,4.2 节给过对照。</p>
+<p>三种目标文件格式的规范是另一套东西,与调用约定无关,在第 3 章。格式规范回答「字段怎么排」,ABI 规范回答「代码怎么生成」,两者不能互相替代。</p>
+<h3>编译器扩展:前两层都没有的那一层</h3>
+<p>扩展是编译器自己加的语法,标准里没有,ABI 规范里也没有。它们存在的原因有两类:一类是要在源码里表达 ABI 层的选择,另一类是要表达编译器自己的能力。</p>
+<table style="contain-intrinsic-size:auto 292px">
+<thead><tr><th>形态</th><th>典型用法</th><th>归哪一类</th><th>不认识它的编译器会怎样</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>__declspec(X)</code></td><td><code>dllexport</code>、<code>align</code>、<code>thread</code>、<code>noinline</code></td><td>多数是表达 ABI 层的选择</td><td>MSVC 之外,只有 Clang 认这套语法</td></tr>
+<tr><td class="nw"><code>__attribute__((x))</code></td><td><code>visibility</code>、<code>packed</code>、<code>weak</code>、<code>constructor</code></td><td>两类都有</td><td>MSVC 完全不认这套语法</td></tr>
+<tr><td class="nw"><code>__builtin_x</code></td><td><code>__builtin_expect</code>、<code>__builtin_unreachable</code>、<code>__builtin_clz</code></td><td>表达编译器自己的能力</td><td>MSVC 各有另一套名字的对应物</td></tr>
+<tr><td class="nw"><code>#pragma</code> 一族</td><td><code>pack</code>、<code>section</code>、<code>comment</code>、<code>once</code></td><td>多数是表达 ABI 层的选择</td><td>标准允许忽略不认识的 <code>#pragma</code></td></tr>
+</tbody>
+</table>
+<p>四类里只有 <code>#pragma</code> 在标准里有一句话:标准允许实现自定义 <code>#pragma</code> 的含义,不认识的可以忽略。其余三类标准完全不提。</p>
+<p><code>#pragma</code> 与另外三类还有一处关键差别:<strong>它的作用范围是词法的,不是声明的</strong>。<code>#pragma pack(1)</code> 一旦打开而没有关闭,后面所有被包含进来的头文件都受影响,10.4 节把这条单独展开。</p>
+<h3>三层对照:这件事归谁管</h3>
+<p>表的用法是从左往右:先确定这件事归哪一层,再决定查哪份文档,最后按末列判断两侧不一致时会在哪一步暴露。</p>
+<table style="contain-intrinsic-size:auto 1157px">
+<thead><tr><th>这件事</th><th>谁规定</th><th>在哪查</th><th>两侧不一致时的表现</th></tr></thead>
+<tbody>
+<tr><td class="nw">名字查找、重载决议、模板实例化</td><td>ISO C++ 标准</td><td>标准文本与《C++ 语言》</td><td>编译期直接报错,不会拖到链接期</td></tr>
+<tr><td class="nw"><code>int</code> 有多少位、<code>long</code> 与指针是否同宽</td><td>平台 ABI 的数据模型</td><td>psABI 的基本类型一节</td><td>结构体大小与成员偏移两侧不同,链接不报错</td></tr>
+<tr><td class="nw">前几个整型参数放进哪几个寄存器</td><td>平台 ABI 的调用约定</td><td>System V AMD64 ABI 与 Microsoft x64 calling convention</td><td>参数错位,被调方取到的是别的值</td></tr>
+<tr><td class="nw">谁负责把栈指针恢复回去</td><td>平台 ABI 的调用约定</td><td>同上</td><td>栈失衡,通常在返回处崩溃,现场与根因隔着整个函数体</td></tr>
+<tr><td class="nw">浮点参数走哪一组寄存器、变参怎么标记</td><td>平台 ABI 的调用约定</td><td>同上</td><td>浮点参数全错,而整型参数看上去正常</td></tr>
+<tr><td class="nw">C++ 函数名怎么编码成符号</td><td>C++ ABI</td><td>Itanium C++ ABI 的名字修饰一章;MSVC 侧靠 <code>undname</code> 反推</td><td><code>undefined reference</code> 或 <code>LNK2019</code>,见 4.2 节</td></tr>
+<tr><td class="nw">虚表放在哪个编译单元、表项怎么排</td><td>C++ ABI</td><td>Itanium C++ ABI 的虚表一章</td><td><code>undefined reference to &#96;vtable for X&#96;</code>,或调用到错误的虚函数</td></tr>
+<tr><td class="nw">类的非静态成员之间填多少字节</td><td>平台 ABI 的聚合布局规则</td><td>psABI 的结构体与联合一节</td><td><code>sizeof</code> 两侧不同而链接器不报错,10.4 节展开</td></tr>
+<tr><td class="nw">异常怎么展开、展开表放在哪个节</td><td>C++ ABI 与 psABI 各出一半</td><td>Itanium C++ ABI 的异常处理部分</td><td>跨模块抛异常时直接终止进程</td></tr>
+<tr><td class="nw">线程局部变量怎么寻址</td><td>psABI 的线程局部存储一节</td><td>各架构 psABI 的对应章节</td><td>链接期报与 TLS 相关的重定位错误</td></tr>
+<tr><td class="nw">全局符号默认导不导出</td><td>工具链约定,标准与 ABI 都不规定</td><td><code>-fvisibility</code> 与 <code>dllexport</code> 的文档,见 4.4 节</td><td>Windows 上 <code>GetProcAddress</code> 返回空,Linux 上导出面无谓地扩大</td></tr>
+<tr><td class="nw">程序入口叫什么、启动前做了什么</td><td>操作系统与运行库的接口约定</td><td>各平台运行库文档,见第 8 章</td><td><code>unresolved external symbol WinMain</code> 一类的报错</td></tr>
+<tr><td><code>__declspec(dllexport)</code> 这个写法本身</td><td>MSVC 的编译器扩展</td><td>MSVC 文档的 <code>__declspec</code> 页</td><td>换到 GCC 直接编译报错</td></tr>
+<tr><td><code>__attribute__((packed))</code> 这个写法本身</td><td>GCC 与 Clang 的编译器扩展</td><td>GCC 文档的类型属性页</td><td>换到 MSVC 编译报错,要改写成 <code>#pragma pack</code></td></tr>
+<tr><td class="nw"><code>[[nodiscard]]</code> 这个写法本身</td><td>ISO C++ 标准,C++17 起</td><td>标准文本与《C++ 语言》</td><td>不认识的实现允许忽略它,两侧行为一致</td></tr>
+</tbody>
+</table>
+<div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 三层混在一起查,会把 ABI 问题当成编译器缺陷</span><p>症状是同一份源码换个编译器行为不同,于是判定「某个编译器有问题」,提了缺陷单,拿到的回复是「符合 ABI 规定」。根因是把只有标准才需要保证一致的事,与本来就允许各平台不同的事混为一谈。排查顺序是固定的:先问这件事标准有没有规定,没有就去问对应平台的 ABI 规范怎么规定,ABI 也没有规定的才轮到编译器文档。三步走完,绝大多数「行为不一致」都能落到某一条明确的条文上。</p></div>
+<h3>定层的一条问法</h3>
+<p>定层不必先记住三份规范的目录,有一条更快的问法:<strong>把同一件事换个编译器、换个平台做一遍,结果会不会变</strong>。</p>
+<table style="contain-intrinsic-size:auto 225px">
+<thead><tr><th>问题</th><th>换编译器会不会变</th><th>换平台会不会变</th><th>结论</th></tr></thead>
+<tbody>
+<tr><td class="nw">一个模板特化为什么没有被选中</td><td>不变</td><td>不变</td><td>归标准</td></tr>
+<tr><td>一个含 <code>char</code> 与 <code>double</code> 的结构体占多少字节</td><td>同平台不变</td><td>会变</td><td>归 ABI</td></tr>
+<tr><td class="nw">一个 C 函数在目标文件里叫什么名字</td><td>同平台不变</td><td>会变</td><td>归 ABI</td></tr>
+<tr><td class="nw"><code>__forceinline</code> 能不能编过</td><td>会变</td><td>不适用</td><td>归编译器扩展</td></tr>
+<tr><td class="nw"><code>[[nodiscard]]</code> 有没有效果</td><td>可能变,不认识时被忽略</td><td>不变</td><td>归标准,而实现允许忽略</td></tr>
+</tbody>
+</table>
+<p>三行落在 ABI 的例子有一个共同特征:<strong>同一台机器上换编译器不变,换机器就变</strong>。这是 ABI 层最可靠的指纹,因为 ABI 的存在意义正是让同一平台上的不同编译器能互相链接。</p>
+<p>这条指纹可以直接测出来,不必查任何文档。两条命令分别验证「换编译器不变」与「换目标位数就变」。</p>
+<pre style="contain-intrinsic-size:auto 428px"><code># 一、同一平台上换编译器:符号名完全相同,因为两者遵守同一份 ABI
+$ printf <span>'struct S{char a;double b;};\nint f(struct S s){return (int)s.b;}\n'</span> &gt; d.c
+$ gcc -c d.c -o d1.o &amp;&amp; clang -c d.c -o d2.o
+$ nm d1.o | grep <span>' T '</span> ; nm d2.o | grep <span>' T '</span>
+0000000000000000 T f
+0000000000000000 T f
+
+# 二、换目标位数:同一份定义算出的大小不同,两边都合规
+# (-m32 需要本机装了 32 位支持,缺少时会报找不到 32 位的头文件与库)
+$ printf <span>'#include &lt;stdio.h&gt;\nstruct S{char a;double b;};\nint main(void){printf("%%zu\\n",sizeof(struct S));return 0;}\n'</span> &gt; s.c
+$ gcc      s.c -o s64 &amp;&amp; ./s64
+16
+$ gcc -m32 s.c -o s32 &amp;&amp; ./s32
+12</code></pre>
+<p>第二条的差别来自 <code>double</code> 的对齐值:x86-64 上是 8,i386 上是 4。规定这一项的是各自的 psABI,10.4 节把对齐规则整节展开。</p>
+<h3>判据:带两个前导下划线的名字属于实现</h3>
+<p>标准把一批标识符保留给实现:以两个下划线开头的、以一个下划线加大写字母开头的,以及全局命名空间里以一个下划线开头的。保留的目的正是让实现能自由添加扩展而不与用户代码撞名。</p>
+<p>这条规则反过来用就是判据。<code>__cdecl</code>、<code>__declspec</code>、<code>__attribute__</code>、<code>__forceinline</code>、<code>__builtin_expect</code>、<code>_Pragma</code> 全部落在保留区里,不必在标准文本里找它们。</p>
+<p>例外是标准自己也用保留名。<code>__cplusplus</code>、<code>__FILE__</code>、<code>__has_include</code> 由标准定义,<code>_Alignof</code> 与 <code>_Static_assert</code> 是 C 的关键字。判据给的是「多半」,确认仍要落到文档上。</p>
+<p>保留标识符的完整规则,以及自己的代码为什么不能使用这类名字,属于语言层,在《C++ 语言》里。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 199px"><span class="t">🟢 一个关键字带两个前导下划线,先查编译器文档而不是标准</span><p>判据来自标准自己:标准把这一类名字整体保留给实现,实现才敢用它们命名扩展。查证顺序因此是反的——先打开 MSVC 文档的 <code>__declspec</code> 页或 GCC 文档的属性页,而不是先翻标准。判据有两个已知的例外方向:标准自己定义的少数保留名(<code>__cplusplus</code>、<code>__FILE__</code>、<code>__has_include</code>),以及不带下划线却同样是扩展的写法(GCC 的 <code>typeof</code> 在部分模式下可用)。两个方向都不影响这条判据的日常价值。</p></div>
+<div class="note new" style="contain-intrinsic-size:auto 199px"><span class="t">🔵 C++11 起标准收编了一批属性,先查标准再查扩展</span><p><code>alignas</code>、<code>alignof</code>、<code>thread_local</code>、<code>noexcept</code> 从 C++11 起是语言的一部分;<code>[[noreturn]]</code>、<code>[[deprecated]]</code>、<code>[[nodiscard]]</code>、<code>[[maybe_unused]]</code>、<code>[[fallthrough]]</code> 陆续在 C++11 到 C++17 之间进入标准。被收编的部分不必再用扩展,可移植性直接由标准保证。判断某个属性在本机可不可用,不要按编译器版本号推断,用 <code>__has_cpp_attribute</code> 问一次,10.3 节给了完整写法。</p></div>
+<h2 id="l10-call">10.2 调用约定:参数怎么传、谁清栈、名字怎么变</h2>
+<p>调用方与被调方各自独立编译,却必须对同一片栈与同一组寄存器达成一致。这份一致由调用约定给出,它是平台 ABI 里最先被撞上的一部分。</p>
+<p><code>unresolved external symbol _foo@8</code> 这条报错之所以出现在本章而不是第 4 章,是因为那个 <code>@8</code> 不是名字修饰的规则问题,而是调用约定选错之后在符号名上留下的痕迹。</p>
+<h3>一次调用要约定的四件事</h3>
+<ol>
+<li><strong>参数放在哪</strong>:哪几个进寄存器、进哪几个、放不下的怎么排在栈上</li>
+<li><strong>参数按什么顺序排</strong>:从左到右还是从右到左压栈,这一项决定变参函数能不能实现</li>
+<li><strong>谁负责把栈指针恢复</strong>:调用方在 <code>call</code> 返回后自己加回去,还是被调方用带立即数的 <code>ret</code> 一并弹掉</li>
+<li><strong>返回值放在哪</strong>:整型走哪个寄存器、浮点走哪个、放不下的大对象怎么用隐藏指针带回</li>
+</ol>
+<p>四项之外还有两项同样属于约定,漏掉一样会出错。一是<strong>哪些寄存器由被调方负责保存</strong>,二是 <code>call</code> 指令执行时栈指针必须对齐到多少字节。</p>
+<p>前者写错的表现是调用返回后调用方手里的某个值被改掉,现场看上去像内存被踩;后者写错的表现是被调方内部的对齐访问指令直接触发异常,例如 <code>movaps</code> 在未对齐地址上会产生一般保护错误。</p>
+<p>返回值那一项在大对象上另有规则。返回一个超过寄存器宽度的结构体时,调用方先分配一块内存,把它的地址作为一个隐藏的第一参数传进去,被调方写完再返回这个地址。这条规则同样写在 psABI 里,而不在标准里。</p>
+<h3>x86-32 上的几种约定</h3>
+<p>32 位 x86 的寄存器少,能用来传参的更少,于是出现了多种约定并存的局面。它们的差别集中在参数走不走寄存器与谁清栈两项上。</p>
+<table style="contain-intrinsic-size:auto 380px">
+<thead><tr><th>约定</th><th>参数怎么传</th><th>谁清栈</th><th>C 函数在 MSVC 下的符号名</th><th>典型用处</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>__cdecl</code></td><td>全部压栈,从右到左</td><td>调用方</td><td><code>_foo</code></td><td>C 与 C++ 的默认;变参函数只能用它</td></tr>
+<tr><td class="nw"><code>__stdcall</code></td><td>全部压栈,从右到左</td><td>被调方,形如 <code>ret 8</code></td><td><code>_foo@8</code>,<code>@</code> 后是参数占用的字节数</td><td>Win32 API 与绝大多数系统回调</td></tr>
+<tr><td class="nw"><code>__fastcall</code></td><td>前两个不超过 4 字节的整型走 <code>ECX</code> 与 <code>EDX</code>,其余压栈</td><td>被调方</td><td><code>@foo@8</code></td><td>少数性能敏感的内部接口</td></tr>
+<tr><td class="nw"><code>__thiscall</code></td><td><code>this</code> 走 <code>ECX</code>,其余压栈,从右到左</td><td>被调方;变参成员函数退化为调用方清栈</td><td>不单独出现,编在 C++ 修饰名里</td><td>非静态成员函数的默认</td></tr>
+<tr><td class="nw"><code>__vectorcall</code></td><td>在 <code>__fastcall</code> 的基础上把浮点与向量参数放进 <code>XMM</code> 寄存器</td><td>被调方</td><td><code>foo@@8</code></td><td>向量运算密集的内部接口</td></tr>
+</tbody>
+</table>
+<p>变参与清栈之间有一条硬约束:<strong>被调方清栈要求被调方在编译期就知道参数总字节数</strong>,而变参函数的参数个数由每个调用点各自决定。<code>printf</code> 一类因此只能用调用方清栈的约定。</p>
+<p>GCC 与 Clang 在 32 位 x86 上同样支持这几种,写法是 <code>__attribute__((stdcall))</code> 与 <code>__attribute__((fastcall))</code>,MinGW 还直接接受 <code>__stdcall</code> 这个拼写。寄存器分配与清栈责任两边一致。</p>
+<p>名字上的装饰两边不一致:<code>@字节数</code> 后缀是 Windows 目标上的约定,Linux 的 i386 目标即使写了 <code>stdcall</code> 属性,符号名也不带后缀,也不带前导下划线。</p>
+<div class="note old" style="contain-intrinsic-size:auto 230px"><span class="t">🟡 32 位的四种调用约定关键字在 x64 上被接受但忽略</span><p>x86-64 上每个平台只保留一种通用约定,<code>__cdecl</code>、<code>__stdcall</code>、<code>__fastcall</code>、<code>__thiscall</code> 全部退化为无操作:代码生成不变,符号名也不变。编译器出于兼容旧代码的考虑接受这些关键字,通常连警告都不给。直接后果是同一份写满 <code>__stdcall</code> 的头文件,编成 x86 时符号名带 <code>@8</code>,编成 x64 时不带,跨位数排查符号名对不上因此有两个来源:一个是前导下划线,一个是这里的后缀,两者都在 4.1 节出现过。仍然需要认识这几个关键字的场合只有一个:维护还要出 32 位产物的接口。</p></div>
+<h3>x86-64 上只剩两种</h3>
+<p>64 位把这一层大幅简化:每个平台上只有一种通用调用约定,Windows 一种,类 Unix 一种。两者的差别不在于选择多少,而在于选择本身完全不同。</p>
+<table style="contain-intrinsic-size:auto 530px">
+<thead><tr><th>对照项</th><th>System V AMD64 ABI</th><th>Microsoft x64 calling convention</th></tr></thead>
+<tbody>
+<tr><td class="nw">整型与指针参数</td><td><code>RDI</code>、<code>RSI</code>、<code>RDX</code>、<code>RCX</code>、<code>R8</code>、<code>R9</code>,共六个</td><td><code>RCX</code>、<code>RDX</code>、<code>R8</code>、<code>R9</code>,共四个</td></tr>
+<tr><td class="nw">浮点参数</td><td><code>XMM0</code> 到 <code>XMM7</code>,共八个</td><td><code>XMM0</code> 到 <code>XMM3</code>,共四个</td></tr>
+<tr><td class="nw">整型与浮点是否共用槽位</td><td class="nw">不共用,两组各自计数</td><td>共用,第 n 个参数是整型就占第 n 个整型寄存器,是浮点就占第 n 个 <code>XMM</code></td></tr>
+<tr><td class="nw">放不下的参数</td><td class="nw">从右到左压栈</td><td>从右到左压栈</td></tr>
+<tr><td class="nw">返回值</td><td>整型 <code>RAX</code>,超宽时加 <code>RDX</code>;浮点 <code>XMM0</code></td><td>整型 <code>RAX</code>;浮点 <code>XMM0</code></td></tr>
+<tr><td class="nw">谁清栈</td><td class="nw">调用方</td><td>调用方</td></tr>
+<tr><td class="nw">调用方额外要做的事</td><td>把 <code>RSP</code> 对齐到 16 字节;变参调用还要把用到的向量寄存器个数放进 <code>AL</code></td><td>把 <code>RSP</code> 对齐到 16 字节;为前四个参数预留 32 字节影子空间,由调用方分配、被调方可自由使用</td></tr>
+<tr><td class="nw">被调方必须保存的寄存器</td><td><code>RBX</code>、<code>RBP</code>、<code>R12</code> 到 <code>R15</code></td><td><code>RBX</code>、<code>RBP</code>、<code>RDI</code>、<code>RSI</code>、<code>R12</code> 到 <code>R15</code>、<code>XMM6</code> 到 <code>XMM15</code></td></tr>
+<tr><td class="nw">栈指针以下的红区</td><td>叶子函数可以直接使用 <code>RSP</code> 以下的 128 字节,不必调整栈指针</td><td>没有红区</td></tr>
+</tbody>
+</table>
+<p>表里的取值有明确出处:左列出自 System V Application Binary Interface AMD64 Architecture Processor Supplement,右列出自 Microsoft 的 x64 calling convention 文档。两份文档都可公开取得,记不住时直接查表比凭印象可靠。</p>
+<p>两侧最容易被忽略的差别是第三行。System V 下 <code>f(int a, double b, int c)</code> 的三个参数分别走 <code>RDI</code>、<code>XMM0</code>、<code>RSI</code>;Microsoft x64 下则走 <code>RCX</code>、<code>XMM1</code>、<code>R8</code>——浮点占掉了第二个位置,后面的整型跳过了第二个整型寄存器。</p>
+<p>影子空间是 Windows 一侧独有的:调用方必须在栈上预留 32 字节,即使被调方的参数不足四个。手写汇编或 JIT 生成代码时漏掉这一步,被调方会把它自己的局部数据写到调用方的栈帧里。</p>
+<p>红区是 System V 一侧独有的:信号处理与中断必须避开这 128 字节,内核代码因此通常用 <code>-mno-red-zone</code> 编译。这条与本书主题相邻,不在此展开。</p>
+<h3>名字修饰随调用约定变</h3>
+<p>32 位 Windows 上,一个 C 函数在目标文件里叫什么名字由调用约定决定。这一层装饰发生在 <code>extern "C"</code> 之后,与 C++ 的名字修饰是两件事,4.3 节区分过两者。</p>
+<table style="contain-intrinsic-size:auto 227px">
+<thead><tr><th>声明</th><th>32 位 Windows 的符号名</th><th>64 位 Windows 的符号名</th></tr></thead>
+<tbody>
+<tr><td><code>int foo(int, int)</code>,默认 <code>__cdecl</code></td><td class="nw"><code>_foo</code></td><td><code>foo</code></td></tr>
+<tr><td><code>int __stdcall foo(int, int)</code></td><td class="nw"><code>_foo@8</code></td><td><code>foo</code></td></tr>
+<tr><td><code>int __fastcall foo(int, int)</code></td><td class="nw"><code>@foo@8</code></td><td><code>foo</code></td></tr>
+<tr><td><code>int __stdcall foo(double, int)</code></td><td class="nw"><code>_foo@12</code></td><td><code>foo</code></td></tr>
+<tr><td><code>int __vectorcall foo(int, int)</code></td><td class="nw"><code>foo@@8</code></td><td><code>foo@@8</code></td></tr>
+</tbody>
+</table>
+<p><code>@</code> 后面的数字是参数占用的栈字节数,不是参数个数。两个 <code>int</code> 占 8 字节,一个 <code>double</code> 加一个 <code>int</code> 占 12 字节,表里第二行与第四行的差别就来自这里。</p>
+<p><strong>报错原文里的 <code>@8</code> 是一条明确的线索:它说明引用方按 <code>__stdcall</code> 生成了调用,而库或目标文件里的定义不是。</strong>反过来,报错里的符号不带后缀而库里的带,是同一个问题的另一半。</p>
+<p>C++ 函数不走这套装饰,调用约定被编进 MSVC 的修饰名里占一个字母,4.2 节给过对照。判据因此分两条:带 <code>@数字</code> 后缀的是 C 链接的函数,以 <code>?</code> 开头的是 C++ 函数,两者的排查入口不同。</p>
+<h3>复现一次调用约定不匹配</h3>
+<p>复现需要三个文件与一个 32 位工具集。核心是让声明与定义分处两侧,而且只有一侧写了 <code>__stdcall</code>。</p>
+<pre style="contain-intrinsic-size:auto 767px"><code>REM 必须在 x86 的开发者命令提示符里执行,x64 下 __stdcall 被忽略,复现不出来
+REM 一、头文件里声明为 __stdcall
+&gt; type api.h
+<span class="kw">void</span> __stdcall Init(<span class="kw">int</span> a, <span class="kw">int</span> b);
+
+REM 二、实现文件不包含该头文件,按默认的 __cdecl 编译
+&gt; type impl.c
+<span class="kw">void</span> Init(<span class="kw">int</span> a, <span class="kw">int</span> b) { (<span class="kw">void</span>)a; (<span class="kw">void</span>)b; }
+
+REM 三、调用方包含头文件,按 __stdcall 生成调用
+&gt; type main.c
+<span class="kw">#include</span> <span>"api.h"</span>
+<span class="kw">int</span> main(<span class="kw">void</span>) { Init(1, 2); <span class="kw">return</span> 0; }
+
+REM 四、编译两侧都通过,链接时报错,原文里的 @8 就是调用约定的指纹
+&gt; cl /nologo /c impl.c main.c
+impl.c
+main.c
+&gt; link /nologo /out:app.exe impl.obj main.obj
+main.obj : error LNK2019: 无法解析的外部符号 _Init@8,函数 _main 中引用了该符号
+app.exe : fatal error LNK1120: 1 个无法解析的外部命令
+
+REM 五、把两侧的真实名字抄出来对比
+&gt; dumpbin /nologo /symbols impl.obj | findstr Init
+00A 00000000 SECT3  notype ()    External     | _Init
+&gt; dumpbin /nologo /symbols main.obj | findstr Init
+008 00000000 UNDEF  notype ()    External     | _Init@8</code></pre>
+<p>两处细节决定复现能否成功。第一,<code>impl.c</code> 不能包含 <code>api.h</code>,包含了编译期就会因为修饰符不一致而直接报错,问题不会流到链接期。第二,必须是 32 位工具集。</p>
+<p>修法只有一种是可靠的:把调用约定写成一个宏放进公开头文件,声明与定义共用同一个宏。任何「在实现文件里补写一次 <code>__stdcall</code>」的修法,下一个实现文件还会再犯。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 495px"><code>/* api.h —— 声明与定义共用同一个宏,不给两侧各写一遍的机会 */
+<span class="kw">#ifndef</span> API_H
+<span class="kw">#define</span> API_H
+
+<span class="kw">#ifdef</span> _WIN32
+#  define API_CALL __stdcall
+<span class="kw">#else</span>
+#  define API_CALL
+<span class="kw">#endif</span>
+
+<span class="kw">void</span> API_CALL Init(<span class="kw">int</span> a, <span class="kw">int</span> b);
+
+<span class="kw">#endif</span> /* API_H */
+
+/* impl.c —— 包含头文件,定义处直接复用宏 */
+<span class="kw">#include</span> <span>"api.h"</span>
+<span class="kw">void</span> API_CALL Init(<span class="kw">int</span> a, <span class="kw">int</span> b) { (<span class="kw">void</span>)a; (<span class="kw">void</span>)b; }</code></pre>
+<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 声明与定义的调用约定不一致,链接器只报符号找不到</span><p>症状是头文件里写了 <code>void __stdcall Init(int, int);</code>,实现文件里写成 <code>void Init(int, int) { }</code>,两侧各自编译都通过,链接时报 <code>error LNK2019: 无法解析的外部符号 _Init@8</code>。报错文字里没有任何字样提示「调用约定不符」,唯一的线索是符号名上的 <code>@8</code> 后缀。判据是把两侧的真实名字抄出来:<code>dumpbin /symbols</code> 各看一次,一侧是 <code>_Init</code>、另一侧是 <code>_Init@8</code> 即可确认。修法是把约定定义成宏放进公开头文件,让声明与定义共用;在实现文件里补写一次不解决下一个实现文件的同样问题。</p></div>
+<h3>什么时候必须显式写出调用约定</h3>
+<table style="contain-intrinsic-size:auto 416px">
+<thead><tr><th>场合</th><th>要求</th><th>写错的表现</th></tr></thead>
+<tbody>
+<tr><td class="nw">把窗口过程指针交给 Win32 注册</td><td>必须是 <code>CALLBACK</code>,展开后即 <code>__stdcall</code></td><td>32 位下处理若干条消息之后栈耗尽或立刻崩溃</td></tr>
+<tr><td class="nw">把线程入口交给 <code>CreateThread</code></td><td>必须是 <code>WINAPI</code>,展开后即 <code>__stdcall</code></td><td>线程函数返回时崩溃,调用栈已经不可读</td></tr>
+<tr><td class="nw">把比较函数交给 <code>qsort</code></td><td class="nw">必须是 <code>__cdecl</code></td><td>排序过程中崩溃,栈指针被逐次抬高</td></tr>
+<tr><td class="nw"><code>GetProcAddress</code> 之后强转函数指针</td><td>强转的目标类型里必须带上与导出方一致的约定</td><td>调用返回后栈失衡,崩在调用者后面的代码里</td></tr>
+<tr><td>跨语言接口,例如 P/Invoke 与 Delphi 的外部声明</td><td>按对方的约定写,通常是 <code>__stdcall</code></td><td>参数错位与栈失衡两者之一</td></tr>
+<tr><td class="nw">导出给第三方使用的 C 接口</td><td>在公开头文件里用一个宏统一,声明与定义共用</td><td>使用者与提供者各按各的默认,链接期或运行期出错</td></tr>
+</tbody>
+</table>
+<p>前四行有一个共同点:<strong>类型可见时编译器会检查,强转一次就绕过了检查</strong>。把一个 <code>__cdecl</code> 函数直接赋给 <code>WNDPROC</code> 类型的变量,MSVC 会报类型不兼容;而 <code>GetProcAddress</code> 返回的是 <code>FARPROC</code>,强转之后编译器无从判断。</p>
+<p>栈失衡的现场有一个固定特征:<strong>崩溃点与出错点隔着整个函数体</strong>。多弹或少弹的字节数在被调方返回时才生效,而崩溃往往发生在调用方后续读取局部变量或执行自己的 <code>ret</code> 时。</p>
+<p>判断方法是看调用前后的栈指针。在调用点前后各下一个断点,比较栈指针的取值:差值不等于零,而且恰好等于参数占用的字节数,就是清栈责任被算了两次或一次都没算。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 强转函数指针会绕过调用约定检查,崩在返回处而不是出错处</span><p>典型形态是 <code>auto fn = (void(*)(int))GetProcAddress(h, "Init");</code>,而导出方声明的是 <code>__stdcall</code>。32 位下这段代码编译通过、调用也「成功」,栈却在每次调用后偏移 4 字节,几十次之后崩在一个与该函数完全无关的位置。判据有两条:一是崩溃点的调用栈读不出有意义的帧,二是在调用点前后比较栈指针,差值恰好等于参数占用的字节数。修法是把函数指针类型定义在公开头文件里,类型里带上调用约定宏,使用方一律用这个 <code>typedef</code> 而不是就地拼一个类型。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 Win32 头文件里的 WINAPI 与 CALLBACK 就是调用约定,照抄即可</span><p><code>WINAPI</code>、<code>APIENTRY</code>、<code>CALLBACK</code>、<code>WINAPIV</code> 都是 Windows 头文件里定义的宏:前三个在 32 位下展开成 <code>__stdcall</code>、64 位下展开成空,<code>WINAPIV</code> 展开成 <code>__cdecl</code> 供变参函数使用。写自己的回调时直接抄文档上的原型,包括这些宏在内,一个字不改,是最省事也最不会出错的做法。回调原型的完整清单与各自的语义在《Win32 程序设计》里,本书只关心它们落到符号名上的那一层。</p></div>
+<figure style="contain-intrinsic-size:auto 463px">
+<svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="l10call_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+
+  <rect x="12" y="16" width="340" height="292" rx="6" fill="var(--svg-soft)" stroke="var(--rule)"/>
+  <text class="svgtext" x="26" y="38" text-anchor="start" font-size="12">__cdecl:调用方清栈</text>
+  <text class="svgmuted" x="26" y="58" text-anchor="start" font-size="11">push 2 / push 1 / call foo / add esp, 8</text>
+  <text class="svgmuted" x="26" y="76" text-anchor="start" font-size="11">foo 内部以裸 ret 结束</text>
+
+  <text class="svgmuted" x="44" y="100" text-anchor="start" font-size="11">压参后</text>
+  <text class="svgmuted" x="144" y="100" text-anchor="start" font-size="11">call 之后</text>
+  <text class="svgmuted" x="244" y="100" text-anchor="start" font-size="11">ret 之后</text>
+
+  <rect x="44" y="108" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="84" y="125" text-anchor="middle" font-size="11">参数 2</text>
+  <rect x="44" y="132" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="84" y="149" text-anchor="middle" font-size="11">参数 1</text>
+  <rect x="44" y="156" width="80" height="24" fill="none" stroke="var(--rule)" stroke-dasharray="3 3"/>
+  <path d="M24,144 H40" stroke="var(--accent)" fill="none" marker-end="url(#l10call_a)"/>
+
+  <rect x="144" y="108" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="184" y="125" text-anchor="middle" font-size="11">参数 2</text>
+  <rect x="144" y="132" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="184" y="149" text-anchor="middle" font-size="11">参数 1</text>
+  <rect x="144" y="156" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="184" y="173" text-anchor="middle" font-size="11">返回地址</text>
+  <path d="M124,168 H140" stroke="var(--accent)" fill="none" marker-end="url(#l10call_a)"/>
+
+  <rect x="244" y="108" width="80" height="24" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="284" y="125" text-anchor="middle" font-size="11">参数 2</text>
+  <rect x="244" y="132" width="80" height="24" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="284" y="149" text-anchor="middle" font-size="11">参数 1</text>
+  <rect x="244" y="156" width="80" height="24" fill="none" stroke="var(--rule)" stroke-dasharray="3 3"/>
+  <path d="M224,144 H240" stroke="var(--accent)" fill="none" marker-end="url(#l10call_a)"/>
+
+  <text class="svgmuted" x="26" y="206" text-anchor="start" font-size="11">① 从右到左压入两个参数,栈指针下移 8 字节</text>
+  <text class="svgmuted" x="26" y="226" text-anchor="start" font-size="11">② call 再压入返回地址</text>
+  <text class="svgmuted" x="26" y="246" text-anchor="start" font-size="11">③ ret 只弹返回地址,两个参数仍留在栈上</text>
+  <text class="svgtext" x="26" y="270" text-anchor="start" font-size="12">④ 调用方紧接着执行 add esp, 8 收回</text>
+  <text class="svgmuted" x="26" y="292" text-anchor="start" font-size="11">参数个数可变,收多少由调用点自己决定</text>
+
+  <rect x="368" y="16" width="340" height="292" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)"/>
+  <text class="svgtext" x="382" y="38" text-anchor="start" font-size="12">__stdcall:被调方清栈</text>
+  <text class="svgmuted" x="382" y="58" text-anchor="start" font-size="11">push 2 / push 1 / call foo</text>
+  <text class="svgmuted" x="382" y="76" text-anchor="start" font-size="11">foo 内部以 ret 8 结束</text>
+
+  <text class="svgmuted" x="400" y="100" text-anchor="start" font-size="11">压参后</text>
+  <text class="svgmuted" x="500" y="100" text-anchor="start" font-size="11">call 之后</text>
+  <text class="svgmuted" x="600" y="100" text-anchor="start" font-size="11">ret 8 之后</text>
+
+  <rect x="400" y="108" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="440" y="125" text-anchor="middle" font-size="11">参数 2</text>
+  <rect x="400" y="132" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="440" y="149" text-anchor="middle" font-size="11">参数 1</text>
+  <rect x="400" y="156" width="80" height="24" fill="none" stroke="var(--rule)" stroke-dasharray="3 3"/>
+  <path d="M380,144 H396" stroke="var(--accent)" fill="none" marker-end="url(#l10call_a)"/>
+
+  <rect x="500" y="108" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="540" y="125" text-anchor="middle" font-size="11">参数 2</text>
+  <rect x="500" y="132" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="540" y="149" text-anchor="middle" font-size="11">参数 1</text>
+  <rect x="500" y="156" width="80" height="24" fill="var(--svg-fill)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="540" y="173" text-anchor="middle" font-size="11">返回地址</text>
+  <path d="M480,168 H496" stroke="var(--accent)" fill="none" marker-end="url(#l10call_a)"/>
+
+  <rect x="600" y="108" width="80" height="24" fill="none" stroke="var(--rule)" stroke-dasharray="3 3"/>
+  <rect x="600" y="132" width="80" height="24" fill="none" stroke="var(--rule)" stroke-dasharray="3 3"/>
+  <rect x="600" y="156" width="80" height="24" fill="none" stroke="var(--rule)" stroke-dasharray="3 3"/>
+  <path d="M580,120 H596" stroke="var(--accent)" fill="none" marker-end="url(#l10call_a)"/>
+
+  <text class="svgmuted" x="382" y="206" text-anchor="start" font-size="11">① 压参与 ② call 与左侧完全相同</text>
+  <text class="svgtext" x="382" y="230" text-anchor="start" font-size="12">③ ret 8 弹返回地址,顺带弹掉 8 字节参数</text>
+  <text class="svgmuted" x="382" y="252" text-anchor="start" font-size="11">④ 调用方不再做任何收尾动作</text>
+  <text class="svgmuted" x="382" y="274" text-anchor="start" font-size="11">立即数 8 在编译被调方时就写死了</text>
+  <text class="svgmuted" x="382" y="294" text-anchor="start" font-size="11">因此变参函数无法使用这种约定</text>
+
+  <path d="M12,324 H708" stroke="var(--rule)" fill="none" stroke-dasharray="4 3"/>
+  <text class="svgtext" x="12" y="346" text-anchor="start" font-size="12">箭头标出栈指针位置。两侧写反时栈会每调用一次偏移 8 字节,崩溃点与出错点无关</text>
+</svg>
+<figcaption>同一次调用在 __cdecl 与 __stdcall 下的栈变化:参数由谁收回（原创绘制）</figcaption>
+</figure>
+<h3>Linux 一侧为什么几乎用不到这些属性</h3>
+<p>GCC 与 Clang 在 x86-64 上提供 <code>__attribute__((sysv_abi))</code> 与 <code>__attribute__((ms_abi))</code>,可以在同一个编译单元里生成另一套约定的函数;x86-32 上另有 <code>cdecl</code>、<code>stdcall</code>、<code>fastcall</code> 与 <code>regparm(n)</code> 四个属性。</p>
+<p>日常代码里这些几乎不出现,原因有两条:x86-64 的 Linux 上只有一种约定,没有可选项;系统调用与库调用走的是同一套 psABI,不存在 Win32 那样一大批采用另一种约定的系统接口。</p>
+<p>用得上的场合是明确的三类,三类之外写这些属性只会引入风险。</p>
+<ul>
+<li>与 UEFI 固件交互:UEFI 规定使用 Microsoft x64 约定,Linux 上编 UEFI 应用要给入口加 <code>ms_abi</code></li>
+<li>在 Linux 上实现 Windows 兼容层:需要在同一进程里同时生成两套约定的函数</li>
+<li>给 32 位遗留库写胶水层:对方的接口按 <code>stdcall</code> 导出,胶水层必须对上</li>
+</ul>
+<p><code>regparm(n)</code> 是 32 位上唯一还偶尔出现的一个,它让前 n 个整型参数走寄存器,某些内核与嵌入式工程曾整体使用。它改变的是 ABI,而不是名字。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 231px"><span class="t">🔴 regparm 改的是 ABI,两侧不一致时链接器无从发现</span><p><code>__attribute__((regparm(3)))</code> 加在声明上而没有加在定义上,或者一个编译单元用 <code>-mregparm=3</code> 而另一个没有,两侧的符号名完全相同,链接器把它们正常接上。运行期的表现是被调方从栈上读参数而调用方把参数放进了寄存器,取到的是未初始化的栈内容。判据是反汇编两侧各看一眼:调用点有没有把参数装进 <code>EAX</code>、<code>EDX</code>、<code>ECX</code>,被调方的开头有没有从这三个寄存器取值。修法是把这类开关放在整个工程的统一编译选项里,不允许按目录或按文件覆盖,更不要写进单个声明。</p></div>
+<h2 id="l10-decl">10.3 声明修饰:__declspec 与 __attribute__ 的对照</h2>
+<p>给一个声明附加编译器才认识的信息,三套语法各自成立:MSVC 的 <code>__declspec(X)</code>、GCC 与 Clang 的 <code>__attribute__((x))</code>,以及 C++11 起标准给出的 <code>[[attr]]</code>。</p>
+<p>三套在语义上大量重叠,在书写位置、未知项的处理与可移植性上完全不同。跨平台头文件写不对,多半错在后面这三点上而不是语义上。</p>
+<h3>三套语法与它们的书写位置</h3>
+<p>位置差别直接决定宏能不能收口。<code>__declspec</code> 必须出现在声明说明符的位置,也就是类型名之前;<code>__attribute__</code> 允许出现在声明的最前面、类型之后或声明符之后;标准属性的合法位置由标准逐条规定。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 169px"><code>/* 同一件事的四种写法,差别在位置 */
+__declspec(noreturn) <span class="kw">void</span> die(<span class="kw">const</span> <span class="kw">char</span>* msg);          /* MSVC:必须在类型名之前 */
+__attribute__((noreturn)) <span class="kw">void</span> die(<span class="kw">const</span> <span class="kw">char</span>* msg);     /* GCC:允许放在最前面 */
+<span class="kw">void</span> die(<span class="kw">const</span> <span class="kw">char</span>* msg) __attribute__((noreturn));     /* GCC:也允许放在声明符之后 */
+[[noreturn]] <span class="kw">void</span> die(<span class="kw">const</span> <span class="kw">char</span>* msg);                  /* 标准:必须放在最前面 */</code></pre>
+<p>四种里有三种共享同一个位置:声明的最前面。跨编译器的宏因此一律定义成放在最前面的形态。<strong>把宏定义成放在声明符之后的形态,MSVC 一侧展开出来是非法语法。</strong></p>
+<p>标准属性还有一种带命名空间的写法:<code>[[gnu::always_inline]]</code>、<code>[[clang::musttail]]</code>、<code>[[msvc::no_unique_address]]</code>。它用标准语法表达厂商扩展,好处在下一小节。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 宏收口时把属性统一放在声明最前面,三套语法都合法</span><p><code>__declspec</code> 只接受类型名之前这一个位置,标准属性在函数声明上也要求放最前面,只有 <code>__attribute__</code> 三个位置都接受。取交集就得到唯一可用的形态:宏一律展开成放在声明最前面的内容。这条约束还有一个副作用值得利用——把宏统一放在最前面之后,整个头文件里的声明形状一致,漏写一处一眼能看出来。类型属性(例如加在结构体上的对齐与打包)不适用这条,那一类的位置规则在 10.4 节。</p></div>
+<h3>能力对照:同一件事的三种写法</h3>
+<p>表按「要表达什么」分行。末列为空表示标准至今没有对应物,该能力只能用扩展表达。</p>
+<table style="contain-intrinsic-size:auto 1776px">
+<thead><tr><th>要表达什么</th><th>MSVC</th><th>GCC / Clang</th><th>有没有标准写法</th></tr></thead>
+<tbody>
+<tr><td class="nw">从动态库导出一个符号</td><td><code>__declspec(dllexport)</code></td><td>ELF 用 <code>__attribute__((visibility("default")))</code>;MinGW 用 <code>__attribute__((dllexport))</code></td><td>无</td></tr>
+<tr><td class="nw">从动态库导入一个符号</td><td><code>__declspec(dllimport)</code></td><td>ELF 不需要;MinGW 用 <code>__attribute__((dllimport))</code></td><td>无</td></tr>
+<tr><td class="nw">把符号隐藏在模块内部</td><td>无对应物,默认就不导出</td><td><code>__attribute__((visibility("hidden")))</code></td><td>无</td></tr>
+<tr><td class="nw">指定一个类型或对象的对齐</td><td><code>__declspec(align(16))</code></td><td><code>__attribute__((aligned(16)))</code></td><td><code>alignas(16)</code>,C++11 起</td></tr>
+<tr><td class="nw">查询一个类型的对齐</td><td><code>__alignof</code></td><td><code>__alignof__</code></td><td><code>alignof</code>,C++11 起</td></tr>
+<tr><td class="nw">去掉结构体成员之间的填充</td><td><code>#pragma pack(1)</code></td><td><code>__attribute__((packed))</code>,也支持 <code>#pragma pack</code></td><td>无</td></tr>
+<tr><td class="nw">标记一个接口已弃用</td><td><code>__declspec(deprecated("改用 X"))</code></td><td><code>__attribute__((deprecated("改用 X")))</code></td><td><code>[[deprecated("改用 X")]]</code>,C++14 起</td></tr>
+<tr><td class="nw">声明函数不会返回</td><td><code>__declspec(noreturn)</code></td><td><code>__attribute__((noreturn))</code></td><td><code>[[noreturn]]</code>,C++11 起</td></tr>
+<tr><td class="nw">要求调用方检查返回值</td><td>无直接对应物,静态分析注解 <code>_Check_return_</code> 属另一套</td><td><code>__attribute__((warn_unused_result))</code></td><td><code>[[nodiscard]]</code>,C++17 起</td></tr>
+<tr><td class="nw">强制内联</td><td><code>__forceinline</code></td><td><code>__attribute__((always_inline))</code>,须与 <code>inline</code> 同用</td><td>无</td></tr>
+<tr><td class="nw">禁止内联</td><td><code>__declspec(noinline)</code></td><td><code>__attribute__((noinline))</code></td><td>无</td></tr>
+<tr><td class="nw">在进入 main 之前调用</td><td>无对应物,靠 <code>#pragma section</code> 与 <code>__declspec(allocate)</code> 拼</td><td><code>__attribute__((constructor))</code></td><td>无,标准手段是带构造函数的全局对象</td></tr>
+<tr><td class="nw">在退出时调用</td><td>无对应物</td><td><code>__attribute__((destructor))</code></td><td>无,标准手段是全局对象的析构或 <code>atexit</code></td></tr>
+<tr><td class="nw">指定构造与析构的相对次序</td><td>无对应物</td><td><code>__attribute__((constructor(150)))</code>,数值小的先执行</td><td>无,标准不保证跨单元的初始化次序</td></tr>
+<tr><td class="nw">定义一个弱符号</td><td>数据一侧用 <code>__declspec(selectany)</code></td><td><code>__attribute__((weak))</code></td><td>无</td></tr>
+<tr><td class="nw">定义一个弱别名</td><td>无对应物</td><td><code>__attribute__((weak, alias("real_fn")))</code></td><td>无</td></tr>
+<tr><td class="nw">把符号放进指定的节</td><td><code>#pragma section</code> 加 <code>__declspec(allocate("mysec"))</code></td><td><code>__attribute__((section("mysec")))</code></td><td>无</td></tr>
+<tr><td class="nw">按 printf 规则检查格式串</td><td>无对应物,靠静态分析注解与 <code>/analyze</code></td><td><code>__attribute__((format(printf, 1, 2)))</code></td><td>无</td></tr>
+<tr><td class="nw">声明可能未被使用,不要告警</td><td>无对应物</td><td><code>__attribute__((unused))</code></td><td><code>[[maybe_unused]]</code>,C++17 起</td></tr>
+<tr><td class="nw">即使无人引用也要保留符号</td><td><code>#pragma comment(linker, "/include:_sym")</code></td><td><code>__attribute__((used))</code></td><td>无</td></tr>
+<tr><td class="nw">switch 分支贯穿是有意的</td><td>无对应物</td><td><code>__attribute__((fallthrough))</code></td><td><code>[[fallthrough]]</code>,C++17 起</td></tr>
+<tr><td class="nw">声明线程局部变量</td><td><code>__declspec(thread)</code></td><td><code>__thread</code></td><td><code>thread_local</code>,C++11 起</td></tr>
+<tr><td class="nw">声明函数不抛异常</td><td><code>__declspec(nothrow)</code></td><td><code>__attribute__((nothrow))</code></td><td><code>noexcept</code>,C++11 起</td></tr>
+<tr><td class="nw">空成员不占用独立空间</td><td><code>[[msvc::no_unique_address]]</code></td><td>Itanium C++ ABI 下由 <code>[[no_unique_address]]</code> 直接生效</td><td><code>[[no_unique_address]]</code>,C++20 起</td></tr>
+</tbody>
+</table>
+<p>表里有九行的末列非空,它们是可以直接删掉扩展写法的部分。其余十五行只能靠宏收口,或者靠把平台差异隔离到单独的目录。</p>
+<h3>有标准写法的一律用标准写法</h3>
+<p>C++11 之后标准陆续收编了一批常用能力。收编之后再用扩展没有收益,还会把可移植性从「标准保证」降回「两套宏各写一遍」。</p>
+<table style="contain-intrinsic-size:auto 457px">
+<thead><tr><th>能力</th><th>标准写法</th><th>进入标准的版本</th><th>被它取代的扩展</th></tr></thead>
+<tbody>
+<tr><td class="nw">不返回</td><td><code>[[noreturn]]</code></td><td>C++11</td><td><code>__declspec(noreturn)</code> 与 <code>__attribute__((noreturn))</code></td></tr>
+<tr><td class="nw">指定对齐</td><td><code>alignas(N)</code></td><td>C++11</td><td><code>__declspec(align(N))</code> 与 <code>__attribute__((aligned(N)))</code></td></tr>
+<tr><td class="nw">查询对齐</td><td><code>alignof(T)</code></td><td>C++11</td><td><code>__alignof</code> 与 <code>__alignof__</code></td></tr>
+<tr><td class="nw">线程局部</td><td><code>thread_local</code></td><td>C++11</td><td><code>__declspec(thread)</code> 与 <code>__thread</code></td></tr>
+<tr><td class="nw">不抛异常</td><td><code>noexcept</code></td><td>C++11</td><td><code>__declspec(nothrow)</code> 与 <code>throw()</code></td></tr>
+<tr><td class="nw">标记弃用</td><td><code>[[deprecated]]</code></td><td>C++14</td><td><code>__declspec(deprecated)</code> 与 <code>__attribute__((deprecated))</code></td></tr>
+<tr><td class="nw">返回值必须使用</td><td><code>[[nodiscard]]</code></td><td>C++17</td><td><code>__attribute__((warn_unused_result))</code></td></tr>
+<tr><td class="nw">可能未被使用</td><td><code>[[maybe_unused]]</code></td><td>C++17</td><td><code>__attribute__((unused))</code></td></tr>
+<tr><td class="nw">分支有意贯穿</td><td><code>[[fallthrough]]</code></td><td>C++17</td><td><code>__attribute__((fallthrough))</code></td></tr>
+</tbody>
+</table>
+<p>表里的版本号用来判断「这个写法从哪一版开始存在」,不能用来判断「本机的编译器支不支持」。后一个问题只有 <code>__has_cpp_attribute</code> 能给出可信答案。</p>
+<p>收编之后仍有两条边界。<code>alignas</code> 只能加大对齐,不能像 <code>#pragma pack</code> 那样去掉填充;<code>[[no_unique_address]]</code> 会改变类布局,属于 ABI 层的改变。</p>
+<p>第二条边界在 MSVC 上留下了一处可见的痕迹:为了不破坏既有产物的二进制兼容,MSVC 对标准写法不生效,另外提供带厂商命名空间的 <code>[[msvc::no_unique_address]]</code>。这是「标准写法也可能被实现有意忽略」的一个实例。</p>
+<div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 有标准写法的能力一律用标准写法,扩展只留给没有对应物的</span><p>判断依据只有一条:上一张表末列非空的行,一律删掉扩展写法。收益有三项——不再需要维护两套宏,不认识的实现允许忽略标准属性因而不会编译失败,以及静态分析工具对标准属性的支持普遍比对扩展更好。仍要用宏收口的是末列为空的那些:导出与导入、可见性、弱符号、节的指定、构造函数优先级、格式串检查。这批能力的共同点是它们直接操作产物的结构,而标准不描述产物,因此短期内不会被收编。</p></div>
+<h3>未知属性:三套语法三种反应</h3>
+<p>一个属性名在当前编译器上不存在时,三套语法的反应完全不同。这一条决定了跨平台头文件必须怎么写。</p>
+<table style="contain-intrinsic-size:auto 290px">
+<thead><tr><th>写法</th><th>GCC 与 Clang 的反应</th><th>MSVC 的反应</th><th>能不能直接写进跨平台代码</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>[[bogus]]</code></td><td>警告并忽略,归 <code>-Wattributes</code> 管</td><td>警告并忽略</td><td>可以</td></tr>
+<tr><td class="nw"><code>[[vendor::bogus]]</code></td><td>警告并忽略;标准明确允许忽略未知命名空间里的属性</td><td>警告并忽略</td><td>可以,厂商扩展用这种写法最稳</td></tr>
+<tr><td class="nw"><code>__attribute__((bogus))</code></td><td>警告并忽略,原文含 <code>attribute directive ignored</code></td><td>语法本身不认识,编译失败</td><td>不可以,必须先判编译器</td></tr>
+<tr><td class="nw"><code>__declspec(bogus)</code></td><td>Clang 认识这套语法,未知参数按告警或错误处理</td><td>不接受未知参数,该声明处编译失败</td><td>不可以,必须先判编译器</td></tr>
+</tbody>
+</table>
+<p>具体的警告号与错误号随编译器版本变化,不必记忆。判定方法是拿一个明显不存在的名字编译一次,以本机输出为准。</p>
+<pre style="contain-intrinsic-size:auto 359px"><code># GCC:未知的 __attribute__ 只是警告,编译继续
+$ printf <span>'void f(void) __attribute__((bogus));\n'</span> &gt; t.c
+$ gcc -c t.c -o /dev/null
+t.c:1:1: warning: ‘bogus’ attribute directive ignored [-Wattributes]
+
+# 标准属性同样只是警告,而且标准允许实现直接忽略
+$ printf <span>'[[bogus]] void g(void);\n'</span> &gt; t.cpp
+$ g++ -std=c++17 -c t.cpp -o /dev/null
+t.cpp:1:3: warning: ‘bogus’ attribute directive ignored [-Wattributes]
+
+# 同一份代码交给 MSVC:标准属性只是警告,未知的 __declspec 参数则编译失败
+&gt; cl /nologo /c /W4 t.cpp</code></pre>
+<p>三种反应合起来给出一条写法上的结论:<strong>只有标准属性可以无保护地写在跨平台代码里</strong>,两套扩展语法都必须先确认当前编译器认不认。确认的手段是特性检测,不是版本号。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 231px"><span class="t">🔴 未知属性三种语法三种反应,决定了跨平台头文件的写法</span><p>把 <code>__attribute__((visibility("default")))</code> 直接写进公开头文件,Linux 一侧正常,使用者换到 MSVC 时该头文件的每一行声明都报语法错误,而报错文字指向的是声明本身,看不出根因在属性上。<code>__declspec</code> 反向写进头文件的后果相同。判据是把报错行里的属性整段删掉再编一次,能过就说明问题在属性语法而不在声明。修法是所有扩展一律经宏,宏的取值由 <code>__has_attribute</code> 与 <code>__has_declspec_attribute</code> 决定;没有对应物时宏展开成空,而不是展开成另一侧的写法。</p></div>
+<h3>用特性检测收口,不用版本号</h3>
+<p>按编译器版本号做条件编译,在三种今天很常见的情况下会判错。</p>
+<ul>
+<li>Clang 同时定义 <code>__GNUC__</code> 与 <code>__GNUC_MINOR__</code>,取值固定在一个很低的版本上,按 <code>__GNUC__</code> 判特性会把 Clang 当成十几年前的 GCC</li>
+<li><code>clang-cl</code> 定义 <code>_MSC_VER</code>,按它判会走进 MSVC 分支,而 <code>clang-cl</code> 并不支持全部 <code>__declspec</code> 参数</li>
+<li>发行版会把特性向后移植到旧的版本号上,版本号与特性支持不再一一对应</li>
+</ul>
+<p>特性检测问的是另一个问题:<strong>这个编译器现在认不认这个属性</strong>。答案由编译器自己给出,不需要维护一张随时间失效的版本映射表。</p>
+<table style="contain-intrinsic-size:auto 330px">
+<thead><tr><th>探针</th><th>问什么</th><th>哪些编译器提供</th><th>返回什么</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>__has_attribute(x)</code></td><td>认不认 <code>__attribute__((x))</code></td><td>GCC、Clang</td><td>认识为非零</td></tr>
+<tr><td class="nw"><code>__has_cpp_attribute(x)</code></td><td>认不认标准属性 <code>[[x]]</code></td><td>GCC、Clang,以及开启对应标准模式的 MSVC</td><td>该属性的年月编号,例如 <code>201907L</code></td></tr>
+<tr><td><code>__has_declspec_attribute(x)</code></td><td>认不认 <code>__declspec(x)</code></td><td>Clang</td><td>认识为非零</td></tr>
+<tr><td class="nw"><code>__has_builtin(x)</code></td><td>认不认内建函数 <code>__builtin_x</code></td><td>GCC、Clang,以及较新的 MSVC</td><td>认识为非零</td></tr>
+<tr><td class="nw"><code>__has_include(&lt;h&gt;)</code></td><td>这个头文件在不在</td><td>标准写法,C++17 起</td><td>存在为 1</td></tr>
+</tbody>
+</table>
+<p>三个非标准探针本身在不支持的编译器上不存在,而这带来一个硬性要求:<strong>必须先给出保底定义</strong>。<code>#if __has_attribute(x)</code> 在没有定义这个宏的编译器上不会被当成 0,而是被当成语法错误,MSVC 报的是无效的整型常量表达式。</p>
+<h3>一份可以直接用的收口头文件</h3>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 1501px"><code>/* portable_attr.h —— 全部靠特性检测,不判断任何编译器版本号 */
+<span class="kw">#ifndef</span> PORTABLE_ATTR_H
+<span class="kw">#define</span> PORTABLE_ATTR_H
+
+/* 一、三个探针在不支持的编译器上不存在,先给保底定义,否则 #<span class="kw">if</span> 处直接语法错误 */
+<span class="kw">#ifndef</span> __has_attribute
+#  define __has_attribute(x) 0
+<span class="kw">#endif</span>
+<span class="kw">#ifndef</span> __has_cpp_attribute
+#  define __has_cpp_attribute(x) 0
+<span class="kw">#endif</span>
+<span class="kw">#ifndef</span> __has_declspec_attribute
+#  define __has_declspec_attribute(x) 0
+<span class="kw">#endif</span>
+
+/* 二、导出与导入:Windows 目标用 dllexport,ELF 目标用 visibility */
+<span class="kw">#if</span> defined(_WIN32)
+#  <span class="kw">if</span> defined(_MSC_VER) || __has_declspec_attribute(dllexport)
+#    define PA_EXPORT __declspec(dllexport)
+#    define PA_IMPORT __declspec(dllimport)
+#  elif __has_attribute(dllexport)
+#    define PA_EXPORT __attribute__((dllexport))
+#    define PA_IMPORT __attribute__((dllimport))
+#  <span class="kw">else</span>
+#    define PA_EXPORT
+#    define PA_IMPORT
+#  endif
+<span class="kw">#elif</span> __has_attribute(visibility)
+#  define PA_EXPORT __attribute__((visibility(<span>"default"</span>)))
+#  define PA_IMPORT __attribute__((visibility(<span>"default"</span>)))
+<span class="kw">#else</span>
+#  define PA_EXPORT
+#  define PA_IMPORT
+<span class="kw">#endif</span>
+
+/* 三、有标准写法的先问标准,问不到再退回扩展,都没有就展开成空 */
+<span class="kw">#if</span> __has_cpp_attribute(nodiscard)
+#  define PA_NODISCARD [[nodiscard]]
+<span class="kw">#elif</span> __has_attribute(warn_unused_result)
+#  define PA_NODISCARD __attribute__((warn_unused_result))
+<span class="kw">#else</span>
+#  define PA_NODISCARD
+<span class="kw">#endif</span>
+
+/* 四、没有标准写法的按能力分支,注意 always_inline 必须与 <span class="kw">inline</span> 同用 */
+<span class="kw">#if</span> __has_attribute(always_inline)
+#  define PA_FORCEINLINE <span class="kw">inline</span> __attribute__((always_inline))
+<span class="kw">#elif</span> defined(_MSC_VER)
+#  define PA_FORCEINLINE __forceinline
+<span class="kw">#else</span>
+#  define PA_FORCEINLINE <span class="kw">inline</span>
+<span class="kw">#endif</span>
+
+<span class="kw">#endif</span> /* PORTABLE_ATTR_H */</code></pre>
+<p>四段各有各的判断依据。第一段是纯粹的保底;第二段先判目标平台再判能力,因为 Windows 与 ELF 的导出机制本身不同;第三段先问标准再退回扩展;第四段只能按能力分支,标准没有对应物。</p>
+<p>保底定义把探针在旧编译器上的答案统一成 0,代价是保守:一个已经支持 <code>[[nodiscard]]</code> 却不提供 <code>__has_cpp_attribute</code> 的编译器会被判成不支持,于是宏展开成空。少一次告警,不会出错。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 196px"><code>/* 用法:头文件里的声明形状统一,一眼能看出漏写 */
+<span class="kw">#include</span> <span>"portable_attr.h"</span>
+
+PA_EXPORT PA_NODISCARD <span class="kw">int</span>  calc_open(<span class="kw">const</span> <span class="kw">char</span>* path);
+PA_EXPORT             <span class="kw">void</span> calc_close(<span class="kw">int</span> handle);
+PA_FORCEINLINE        <span class="kw">int</span>  calc_min(<span class="kw">int</span> a, <span class="kw">int</span> b) { <span class="kw">return</span> a &lt; b ? a : b; }</code></pre>
+<div class="note dead" style="contain-intrinsic-size:auto 233px"><span class="t">🔴 按编译器版本号做条件编译,会把 Clang 与 clang-cl 判错</span><p><code>#if __GNUC__ &gt;= 8</code> 这类写法在 Clang 上永远走不进去,因为 Clang 把 <code>__GNUC__</code> 固定在一个很低的取值上以兼容旧代码;<code>#if defined(_MSC_VER)</code> 在 <code>clang-cl</code> 上会成立,于是走进 MSVC 分支,而 <code>clang-cl</code> 只实现了一部分 <code>__declspec</code> 参数。症状是同一份头文件在某个编译器上莫名其妙地少了一批属性,或者报某个 <code>__declspec</code> 参数不受支持。判据是把条件编译的分支各打印一条 <code>#pragma message</code>,看实际走进了哪一支。修法是把所有版本号判断换成 <code>__has_attribute</code> 一族,只保留「目标平台是不是 Windows」这一类真正与平台有关的判断。</p></div>
+<h3>收口不了的那一部分怎么隔离</h3>
+<p>三档策略按顺序应用,能停在前一档就不进下一档。</p>
+<table style="contain-intrinsic-size:auto 199px">
+<thead><tr><th>档次</th><th>适用条件</th><th>做法</th><th>代价</th></tr></thead>
+<tbody>
+<tr><td class="nw">第一档:直接用标准写法</td><td>该能力已被标准收编</td><td>删掉全部扩展写法</td><td>无</td></tr>
+<tr><td class="nw">第二档:用宏收口</td><td>两侧都有对应物,只是写法不同</td><td>一个宏,取值由特性检测决定</td><td>多一个头文件,以及宏名要进公开接口</td></tr>
+<tr><td class="nw">第三档:隔离到平台目录</td><td>只有一侧有对应物,或语义差别大到无法对齐</td><td>接口层给一个平台无关的函数声明,实现按平台分文件</td><td>多一层间接调用,构建脚本要按平台选文件</td></tr>
+</tbody>
+</table>
+<p>判断落在第二档还是第三档,看语义能不能对齐。<code>[[noreturn]]</code> 与 <code>__declspec(noreturn)</code> 语义完全一致,落第二档;<code>__attribute__((constructor(150)))</code> 的优先级在 MSVC 上没有任何对应物,落第三档。</p>
+<p>落到第三档的能力有一个共同点:<strong>它们改变的是产物的结构,而不是某个声明的性质</strong>。构造函数优先级改的是初始化数组的顺序,弱别名改的是符号表的内容,这类差别无法靠一个宏抹平。</p>
+<p>第三档的接口层怎么划,以及构建脚本按平台选文件怎么写,属于工程组织,在《CMake 构建系统》里。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 把 __declspec 直接写进公开头文件,使用者换编译器就编不过</span><p>症状是库在 Windows 上一切正常,使用者拿到头文件在 Linux 上编译,每个带 <code>__declspec</code> 的声明都报语法错误。根因是公开头文件把提供方的编译器当成了使用方的编译器。判据很直接:头文件里出现未经宏包裹的 <code>__declspec</code> 或 <code>__attribute__</code> 就是这个问题。修法是所有扩展一律经宏,并且用一次跨编译器的编译来验收——只编一遍头文件即可,不必编整个库。验收命令的形态是把头文件单独送进编译器编一个空的编译单元,构建系统里怎么加这一步,见《CMake 构建系统》。</p></div>
+<h2 id="l10-layout">10.4 结构体布局:对齐、填充与 pragma pack</h2>
+<p>一个结构体在内存里占多少字节、每个成员从第几个字节开始,是链接之外最容易出问题的一处约定。两个编译单元对同一个结构体算出不同的答案时,链接器不会有任何反应。</p>
+<p>布局由三方共同决定:标准给出一条顺序保证,平台 ABI 给出对齐与填充规则,<code>#pragma pack</code> 一类的扩展在前两者之上再做修改。三方的边界必须分清,否则查不到该查的文档。</p>
+<h3>标准保证到哪里为止</h3>
+<p>标准对布局的保证非常有限,只有三条与日常代码相关。</p>
+<ol>
+<li>同一访问权限下的非静态数据成员,<strong>按声明顺序地址递增</strong>;声明在前的成员地址不会更高</li>
+<li>标准布局类型的第一个成员与整个对象<strong>起始地址相同</strong>,因此指向它的指针可以互相转换</li>
+<li><code>sizeof</code> 一定是该类型对齐值的整数倍,数组的相邻元素之间没有额外间隙</li>
+</ol>
+<p>三条之外,标准一律不管:成员之间填多少字节、结构体整体对齐到多少、有虚函数时虚表指针放在开头还是结尾、有基类时基类子对象放在哪里,全部交给平台 ABI。</p>
+<p><code>offsetof</code> 的适用范围也由标准划定:标准布局类型上一定可用,非标准布局类型上属于有条件支持,实现可以不支持。日常代码里凡是要按偏移访问的结构体,都应当保持标准布局。</p>
+<p>类的标准布局条件、虚表指针的位置对语义的影响,属于语言层,在《C++ 语言》里。本节只关心这些选择落到产物里之后能被 <code>sizeof</code>、<code>offsetof</code> 与 <code>pahole</code> 观察到的那一面。</p>
+<h3>对齐从哪来:三条规则决定每一个偏移</h3>
+<p>平台 ABI 为每个基本类型规定一个自然对齐值,通常等于它的大小。结构体的布局由三条规则逐条推出,顺序不能颠倒。</p>
+<ol>
+<li><strong>每个成员的偏移必须是它自身对齐值的整数倍</strong>;不满足时在前一个成员之后插入填充字节</li>
+<li><strong>结构体自身的对齐值取所有成员对齐值中的最大者</strong>;有 <code>double</code> 成员就至少对齐到 8</li>
+<li><strong>结构体的总大小补齐到自身对齐值的整数倍</strong>;补的是末尾填充,目的是让数组里的每个元素都满足第一条</li>
+</ol>
+<p>第三条常被忽略,而它是「删掉一个成员大小却不变」这类现象的来源:删掉的成员原本占的位置被末尾填充顶替了。</p>
+<p>自然对齐值本身随平台变化,这是同一个结构体在不同平台上大小不同的根源。</p>
+<table style="contain-intrinsic-size:auto 340px">
+<thead><tr><th>类型</th><th>Linux x86-64</th><th>Windows x64</th><th>Linux i386</th><th>Windows x86</th><th>macOS arm64</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>char</code></td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td class="nw"><code>short</code></td><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td></tr>
+<tr><td class="nw"><code>int</code></td><td>4</td><td>4</td><td>4</td><td>4</td><td>4</td></tr>
+<tr><td class="nw"><code>long</code></td><td>8,占 8 字节</td><td>4,占 4 字节</td><td>4,占 4 字节</td><td>4,占 4 字节</td><td>8,占 8 字节</td></tr>
+<tr><td class="nw"><code>long long</code></td><td>8</td><td>8</td><td>4</td><td>8</td><td>8</td></tr>
+<tr><td class="nw"><code>double</code></td><td>8</td><td>8</td><td><strong>4</strong></td><td>8</td><td>8</td></tr>
+<tr><td class="nw">指针</td><td>8</td><td>8</td><td>4</td><td>4</td><td>8</td></tr>
+<tr><td class="nw"><code>long double</code></td><td>16,占 16 字节</td><td>8,占 8 字节</td><td>4,占 12 字节</td><td>8,占 8 字节</td><td>8,占 8 字节</td></tr>
+</tbody>
+</table>
+<p>表里有两行值得单独指出。<code>long</code> 那一行是数据模型的差别:类 Unix 的 64 位平台用 LP64,<code>long</code> 与指针同宽;Windows 的 64 位平台用 LLP64,<code>long</code> 仍是 4 字节。</p>
+<p><code>double</code> 在 Linux i386 上对齐到 4 而不是 8,这是 i386 psABI 的规定,与 32 位 Windows 上 MSVC 的默认取值不同。<strong>同一份结构体定义在两个 32 位平台上算出的大小可以不同,而两边都合规。</strong></p>
+<p>各类型的准确取值以对应平台的 psABI 为准,不必背表。需要确认时用一行代码打印 <code>sizeof</code> 与 <code>alignof</code>,比查任何资料都快。</p>
+<h3>逐字节看一个结构体</h3>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 549px"><code>/* layout.c —— 一个含 <span class="kw">char</span>、<span class="kw">int</span>、<span class="kw">double</span> 的结构体,用来观察填充 */
+<span class="kw">#include</span> &lt;stdio.h&gt;
+<span class="kw">#include</span> &lt;stddef.h&gt;
+
+<span class="kw">struct</span> S {
+    <span class="kw">char</span>   a;   /* 偏移 0,占 1 字节 */
+    <span class="kw">int</span>    b;   /* 要求 4 字节对齐,前面补 3 字节填充,落在偏移 4 */
+    <span class="kw">char</span>   c;   /* 偏移 8,占 1 字节 */
+    <span class="kw">double</span> d;   /* 要求 8 字节对齐,前面补 7 字节填充,落在偏移 16 */
+};
+
+<span class="kw">int</span> main(<span class="kw">void</span>)
+{
+    printf(<span>"sizeof=%zu  alignof=%zu\n"</span>, <span class="kw">sizeof</span>(<span class="kw">struct</span> S), _Alignof(<span class="kw">struct</span> S));
+    printf(<span>"a=%zu b=%zu c=%zu d=%zu\n"</span>,
+           offsetof(<span class="kw">struct</span> S, a), offsetof(<span class="kw">struct</span> S, b),
+           offsetof(<span class="kw">struct</span> S, c), offsetof(<span class="kw">struct</span> S, d));
+    <span class="kw">return</span> 0;
+}</code></pre>
+<pre style="contain-intrinsic-size:auto 658px"><code># Linux x86-64:两处填充合计 10 字节,占了总大小的四成
+$ gcc -std=c11 layout.c -o layout &amp;&amp; ./layout
+<span class="kw">sizeof</span>=24  alignof=8
+a=0 b=4 c=8 d=16
+
+# 让编译器把每一处填充都报出来
+$ gcc -std=c11 -Wpadded -c layout.c -o layout.o
+layout.c:6:11: warning: padding <span class="kw">struct</span> to align <span>'b'</span> [-Wpadded]
+layout.c:8:12: warning: padding <span class="kw">struct</span> to align <span>'d'</span> [-Wpadded]
+
+# 带调试信息编译之后,pahole 直接把洞标出来
+$ gcc -std=c11 -g -c layout.c -o layout.o &amp;&amp; pahole layout.o
+<span class="kw">struct</span> S {
+        <span class="kw">char</span>                       a;                    /*     0     1 */
+        /* XXX 3 bytes hole, <span class="kw">try</span> to pack */
+        <span class="kw">int</span>                        b;                    /*     4     4 */
+        <span class="kw">char</span>                       c;                    /*     8     1 */
+        /* XXX 7 bytes hole, <span class="kw">try</span> to pack */
+        <span class="kw">double</span>                     d;                    /*    16     8 */
+
+        /* size: 24, cachelines: 1, members: 4 */
+        /* sum members: 14, holes: 2, sum holes: 10 */
+};</code></pre>
+<p>把成员按对齐值从大到小重排,填充可以降到最低:<code>double d; int b; char a; char c;</code> 排下来是 0、8、12、13,末尾补 2 字节,总大小 16。同样的四个成员,少了三分之一。</p>
+<p>重排不改变任何语义,也不需要任何扩展,是所有减少填充的手段里代价最低的一种。<strong>只有在重排之后仍然放不下时,才轮到考虑 <code>#pragma pack</code>。</strong></p>
+<figure style="contain-intrinsic-size:auto 396px">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="13">
+  <defs>
+    <marker id="l10lay_a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+
+  <text class="svgtext" x="12" y="20" text-anchor="start" font-size="12">struct S { char a; int b; char c; double d; };  每格 1 字节</text>
+
+  <text class="svgmuted" x="12" y="52" text-anchor="start" font-size="11">默认对齐</text>
+  <text class="svgmuted" x="40" y="46" text-anchor="middle" font-size="10">0</text>
+  <text class="svgmuted" x="144" y="46" text-anchor="middle" font-size="10">4</text>
+  <text class="svgmuted" x="248" y="46" text-anchor="middle" font-size="10">8</text>
+  <text class="svgmuted" x="352" y="46" text-anchor="middle" font-size="10">12</text>
+  <text class="svgmuted" x="456" y="46" text-anchor="middle" font-size="10">16</text>
+  <text class="svgmuted" x="560" y="46" text-anchor="middle" font-size="10">20</text>
+  <text class="svgmuted" x="664" y="46" text-anchor="middle" font-size="10">24</text>
+
+  <rect x="40" y="56" width="26" height="34" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="53" y="78" text-anchor="middle" font-size="11">a</text>
+  <rect x="66" y="56" width="78" height="34" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="105" y="78" text-anchor="middle" font-size="11">填充 3</text>
+  <rect x="144" y="56" width="104" height="34" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="196" y="78" text-anchor="middle" font-size="11">b(4 字节)</text>
+  <rect x="248" y="56" width="26" height="34" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="261" y="78" text-anchor="middle" font-size="11">c</text>
+  <rect x="274" y="56" width="182" height="34" fill="var(--svg-soft2)" stroke="var(--rule)"/>
+  <text class="svgmuted" x="365" y="78" text-anchor="middle" font-size="11">填充 7</text>
+  <rect x="456" y="56" width="208" height="34" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="560" y="78" text-anchor="middle" font-size="11">d(8 字节)</text>
+
+  <text class="svgmuted" x="12" y="112" text-anchor="start" font-size="11">sizeof 24,alignof 8,填充合计 10 字节;b 与 d 各自落在自己的对齐边界上</text>
+
+  <path d="M12,130 H708" stroke="var(--rule)" fill="none" stroke-dasharray="4 3"/>
+
+  <text class="svgmuted" x="12" y="164" text-anchor="start" font-size="11">pack(1)</text>
+  <text class="svgmuted" x="40" y="158" text-anchor="middle" font-size="10">0</text>
+  <text class="svgmuted" x="144" y="158" text-anchor="middle" font-size="10">4</text>
+  <text class="svgmuted" x="248" y="158" text-anchor="middle" font-size="10">8</text>
+  <text class="svgmuted" x="352" y="158" text-anchor="middle" font-size="10">12</text>
+  <text class="svgmuted" x="404" y="158" text-anchor="middle" font-size="10">14</text>
+
+  <rect x="40" y="168" width="26" height="34" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="53" y="190" text-anchor="middle" font-size="11">a</text>
+  <rect x="66" y="168" width="104" height="34" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="118" y="190" text-anchor="middle" font-size="11">b(4 字节)</text>
+  <rect x="170" y="168" width="26" height="34" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="183" y="190" text-anchor="middle" font-size="11">c</text>
+  <rect x="196" y="168" width="208" height="34" fill="var(--svg-fill)" stroke="var(--accent)"/>
+  <text class="svgmuted" x="300" y="190" text-anchor="middle" font-size="11">d(8 字节)</text>
+
+  <path d="M118,214 V228" stroke="var(--accent)" fill="none" marker-end="url(#l10lay_a)"/>
+  <text class="svgmuted" x="118" y="244" text-anchor="middle" font-size="10">b 起于偏移 1</text>
+  <path d="M300,214 V228" stroke="var(--accent)" fill="none" marker-end="url(#l10lay_a)"/>
+  <text class="svgmuted" x="300" y="244" text-anchor="middle" font-size="10">d 起于偏移 6</text>
+
+  <text class="svgmuted" x="12" y="268" text-anchor="start" font-size="11">sizeof 14,alignof 1,没有任何填充;代价是 b 与 d 都不在自己的对齐边界上</text>
+  <text class="svgtext" x="12" y="290" text-anchor="start" font-size="12">两种排开的成员顺序完全相同,偏移全部不同——把两侧的产物链在一起,链接器不会察觉</text>
+</svg>
+<figcaption>同一个结构体的两种排开:默认对齐 24 字节与 pack(1) 之后的 14 字节（原创绘制）</figcaption>
+</figure>
+<h3>pack 与 packed:改了什么,代价是什么</h3>
+<p>两套扩展表达同一件事,语义有细微差别。</p>
+<table style="contain-intrinsic-size:auto 277px">
+<thead><tr><th>对照项</th><th><code>#pragma pack(n)</code></th><th><code>__attribute__((packed))</code></th></tr></thead>
+<tbody>
+<tr><td class="nw">支持它的编译器</td><td>MSVC、GCC、Clang 都支持</td><td>GCC、Clang;MSVC 不认</td></tr>
+<tr><td class="nw">作用方式</td><td>把每个成员的对齐值<strong>上限</strong>压到 n,原本对齐值就小于 n 的成员不受影响</td><td>把成员之间的填充全部去掉,等效于上限压到 1</td></tr>
+<tr><td class="nw">作用范围</td><td>词法范围:从这一行起到下一条 <code>pack</code> 指令为止,跨 <code>#include</code> 继续有效</td><td>声明范围:只作用于被标注的那一个结构体</td></tr>
+<tr><td class="nw">结构体自身的对齐</td><td class="nw">同样被压到 n</td><td>被压到 1</td></tr>
+<tr><td class="nw">关闭方式</td><td><code>#pragma pack(pop)</code>,或 <code>#pragma pack()</code> 恢复默认</td><td>不需要关闭</td></tr>
+</tbody>
+</table>
+<p>作用范围那一行是两者最重要的差别。<code>#pragma pack</code> 是词法的,一旦打开而没有关闭,后面所有被包含进来的头文件里的结构体一并被打包,而那些头文件的作者并不知情。</p>
+<p>正确的用法只有一种形态:<strong>紧贴着要打包的定义打开,紧接着关闭</strong>,中间不放 <code>#include</code>。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 576px"><code>/* wire.h —— pack 的作用范围压到最小,中间不含任何 #include */
+<span class="kw">#ifndef</span> WIRE_H
+<span class="kw">#define</span> WIRE_H
+<span class="kw">#include</span> &lt;stdint.h&gt;
+<span class="kw">#include</span> &lt;stddef.h&gt;   /* offsetof */
+
+<span class="kw">#pragma</span> pack(push, 1)
+<span class="kw">struct</span> WireHdr {
+    <span class="kw">uint8_t</span>  ver;
+    <span class="kw">uint32_t</span> len;
+    <span class="kw">uint8_t</span>  kind;
+    <span class="kw">uint64_t</span> stamp;
+};
+<span class="kw">#pragma</span> pack(pop)
+
+/* 把期望的布局钉死在头文件里,任何一侧算出别的结果都在编译期失败 */
+_Static_assert(<span class="kw">sizeof</span>(<span class="kw">struct</span> WireHdr) == 14, <span>"WireHdr 布局被改变了"</span>);
+_Static_assert(offsetof(<span class="kw">struct</span> WireHdr, stamp) == 6, <span>"stamp 偏移被改变了"</span>);
+
+<span class="kw">#endif</span> /* WIRE_H */</code></pre>
+<p>代价有两层。第一层是访问速度:未对齐的读写在 x86 上仍然合法,但可能跨两条缓存线,编译器有时还会把一次访问拆成多条指令。</p>
+<p>第二层是可移植性,而且是硬性的。<strong>部分架构对未对齐访问直接产生硬件异常</strong>:某些 Arm 与 RISC-V 配置下的普通加载指令要求对齐,x86 上的对齐向量指令同样要求对齐。同一份代码在开发机上正常,换到目标板上以总线错误终止。</p>
+<p>第三层代价最隐蔽:<strong>取一个打包成员的地址,得到的是一个未对齐的指针</strong>。把它传给任何按正常对齐假设写成的函数,行为未定义。GCC 与 Clang 为此专门提供了一条告警。</p>
+<pre style="contain-intrinsic-size:auto 250px"><code># 取打包成员的地址,编译器直接告警
+$ cat &gt; pk.c &lt;&lt;<span>'EOF'</span>
+<span class="kw">struct</span> P { <span class="kw">char</span> a; <span class="kw">int</span> b; } __attribute__((packed));
+<span class="kw">int</span>* get(<span class="kw">struct</span> P* p) { <span class="kw">return</span> &amp;p-&gt;b; }
+EOF
+$ gcc -c pk.c -o /dev/null
+pk.c:2:31: warning: taking address of packed member of <span>'struct P'</span> may result in an
+ unaligned pointer value [-Waddress-of-packed-member]</code></pre>
+<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 取 packed 成员的地址传给期望对齐的接口,是未定义行为</span><p>症状分两种:在 x86 上通常只是慢一点,看不出问题;换到对齐敏感的架构上,同一份代码在解引用处以总线错误终止,而崩溃点在被调用的库函数里,与打包的结构体隔着好几层。根因是打包只改变了结构体的布局,没有改变指针类型上携带的对齐假设,编译器与被调函数仍按 <code>int</code> 已经 4 字节对齐来生成代码。判据是打开 <code>-Waddress-of-packed-member</code>,GCC 9 之后默认开启,一条告警对应一处风险。修法是不取地址:需要值就整体复制到一个正常对齐的局部变量上,需要写回就先改局部变量再整体复制回去。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 pragma pack 开了不关,会顺着 include 传染给后面的头文件</span><p>症状是某个与本次改动无关的结构体突然变小,或者一个第三方库的接口结构体在本工程里布局与库自己编译时不同,运行期读到错位数据。根因是某个头文件写了 <code>#pragma pack(1)</code> 却没有配对的 <code>pop</code>,而它被包含在其他头文件之前。判据有两条:预处理一次,看这个 <code>pack</code> 之后到底罩住了多少内容;或者在可疑位置插一条 <code>_Static_assert</code> 钉住期望大小。修法是所有 <code>pack</code> 一律成对写成 <code>push</code> 与 <code>pop</code>,并且两者之间不允许出现 <code>#include</code>。MSVC 提供 <code>#pragma pack(show)</code>,以警告的形式打印当前生效的取值,用来定位是谁打开的。</p></div>
+<p>嵌套结构体上还有一层传染,表现分两种,取决于内层结构体定义在哪里。</p>
+<table style="contain-intrinsic-size:auto 289px">
+<thead><tr><th>情形</th><th>内层自己的填充</th><th>内层在外层里的偏移</th><th>后果</th></tr></thead>
+<tbody>
+<tr><td class="nw">内层定义在 <code>pack</code> 区之外,外层定义在区内</td><td>保留</td><td>不再受内层对齐值约束,可以落在任意偏移</td><td>内层的每个成员整体错位,内层单独看仍然正常</td></tr>
+<tr><td class="nw">内层与外层都定义在 <code>pack</code> 区内</td><td>一并去掉</td><td>同上</td><td>内外都变,与两处独立打包的结果一致</td></tr>
+<tr><td>外层加 <code>__attribute__((packed))</code>,内层没加</td><td>保留</td><td>落在紧挨前一成员的位置</td><td>与第一行相同</td></tr>
+<tr><td>两处都加 <code>__attribute__((packed))</code></td><td>一并去掉</td><td>同上</td><td>与第二行相同</td></tr>
+</tbody>
+</table>
+<p>第一行是最容易判断错的一种:单独打印内层的 <code>sizeof</code> 与 <code>offsetof</code>,一切正常;把它放进外层之后,通过 <code>&amp;outer.inner</code> 拿到的指针不再满足内层的对齐要求。</p>
+<p>排查这一类的手段是打印外层里内层成员的偏移,而不是打印内层自己的大小。<code>offsetof(Outer, inner)</code> 不是内层对齐值的整数倍,即可确认。</p>
+<h3>alignas 与 alignof:标准写法及其边界</h3>
+<p>加大对齐这件事有标准写法,不需要扩展。<code>alignas(N)</code> 作用在类型或对象上,<code>alignof(T)</code> 查询一个类型的对齐值,两者都从 C++11 起可用。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 277px"><code>/* 避开伪共享:两个计数器各占一条缓存线 */
+<span class="kw">#include</span> &lt;cstddef&gt;
+
+<span class="kw">struct</span> alignas(64) Counter {
+    <span class="kw">long</span> <span class="kw">long</span> value;
+};
+
+<span class="kw">static_assert</span>(alignof(Counter) == 64, <span>"对齐没有生效"</span>);
+<span class="kw">static_assert</span>(<span class="kw">sizeof</span>(Counter)  == 64, <span>"末尾填充按对齐值补齐"</span>);</code></pre>
+<p><code>alignas</code> 有三条边界必须记住,每一条都对应一类常见错误。</p>
+<ul>
+<li><strong>只能加大,不能减小</strong>:<code>alignas(1)</code> 加在含 <code>int</code> 成员的类型上是非法的,减小对齐必须用 <code>pack</code> 或 <code>packed</code></li>
+<li><strong>加大对齐会连带加大 <code>sizeof</code></strong>:总大小要补齐到对齐值的整数倍,<code>alignas(64)</code> 的类型最小就是 64 字节</li>
+<li><strong>超对齐类型的动态分配需要额外支持</strong>:C++17 之前 <code>new</code> 不保证满足扩展对齐,C 一侧要用 <code>aligned_alloc</code>,MSVC 一侧用 <code>_aligned_malloc</code> 并配对 <code>_aligned_free</code></li>
+</ul>
+<p>缓存线的实际宽度随处理器变化,写死 64 只是常见取值。C++17 给出了 <code>std::hardware_destructive_interference_size</code> 作为标准查询手段,各实现的支持程度不一致,以本机标准库文档与 <code>__cpp_lib_hardware_interference_size</code> 的实际取值为准。</p>
+<div class="note new" style="contain-intrinsic-size:auto 233px"><span class="t">🔵 alignas 与 alignof 是标准写法,但只能加大对齐不能去填充</span><p><code>__declspec(align(N))</code> 与 <code>__attribute__((aligned(N)))</code> 的加大对齐能力已被 <code>alignas</code> 完整覆盖,新代码不必再写扩展。方向相反的那一半没有被收编:去掉填充仍然只能用 <code>#pragma pack</code> 或 <code>__attribute__((packed))</code>,标准至今没有对应物,原因是标准不描述产物的字节布局。判断一段代码该用哪一个很简单——目的是让访问更快、避开伪共享,用 <code>alignas</code>;目的是让布局与某个外部约定的字节序列对上,用 <code>pack</code>。两个目的混在一处时,先把外部约定那一部分单独拆成一个结构体。</p></div>
+<h3>同一个头文件两种 sizeof:链接器不报错的那一类</h3>
+<p>这是本节最要命的一条:同一个头文件在两个编译单元里被不同的 <code>pack</code> 状态包住,两边算出的 <code>sizeof</code> 与成员偏移都不同,而<strong>链接器不会报任何错误</strong>。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 875px"><code>/* pkt.h —— 公开头文件,没有任何自我保护 */
+<span class="kw">#ifndef</span> PKT_H
+<span class="kw">#define</span> PKT_H
+<span class="kw">struct</span> Pkt { <span class="kw">char</span> tag; <span class="kw">int</span> len; <span class="kw">char</span> ver; <span class="kw">double</span> ts; };
+<span class="kw">#endif</span>
+
+/* a.c —— 调用方在包含之前打开了 pack */
+<span class="kw">#include</span> &lt;stddef.h&gt;
+<span class="kw">#pragma</span> pack(push, 1)
+<span class="kw">#include</span> <span>"pkt.h"</span>
+<span class="kw">#pragma</span> pack(pop)
+<span class="kw">size_t</span> a_size(<span class="kw">void</span>)   { <span class="kw">return</span> <span class="kw">sizeof</span>(<span class="kw">struct</span> Pkt); }
+<span class="kw">size_t</span> a_ts_off(<span class="kw">void</span>) { <span class="kw">return</span> offsetof(<span class="kw">struct</span> Pkt, ts); }
+
+/* b.c —— 另一个编译单元按默认对齐包含同一个头文件 */
+<span class="kw">#include</span> &lt;stddef.h&gt;
+<span class="kw">#include</span> <span>"pkt.h"</span>
+<span class="kw">size_t</span> b_size(<span class="kw">void</span>)   { <span class="kw">return</span> <span class="kw">sizeof</span>(<span class="kw">struct</span> Pkt); }
+<span class="kw">size_t</span> b_ts_off(<span class="kw">void</span>) { <span class="kw">return</span> offsetof(<span class="kw">struct</span> Pkt, ts); }
+
+/* main.c —— 只声明,不包含 pkt.h,把两侧各自的答案打印出来 */
+<span class="kw">#include</span> &lt;stdio.h&gt;
+<span class="kw">#include</span> &lt;stddef.h&gt;
+<span class="kw">size_t</span> a_size(<span class="kw">void</span>); <span class="kw">size_t</span> a_ts_off(<span class="kw">void</span>);
+<span class="kw">size_t</span> b_size(<span class="kw">void</span>); <span class="kw">size_t</span> b_ts_off(<span class="kw">void</span>);
+<span class="kw">int</span> main(<span class="kw">void</span>)
+{
+    printf(<span>"a: size=%zu ts=%zu\n"</span>, a_size(), a_ts_off());
+    printf(<span>"b: size=%zu ts=%zu\n"</span>, b_size(), b_ts_off());
+    <span class="kw">return</span> 0;
+}</code></pre>
+<pre style="contain-intrinsic-size:auto 277px"><code># 三个编译单元链在一起,没有任何警告与错误
+$ gcc -std=c11 a.c b.c main.c -o t &amp;&amp; ./t
+a: size=14 ts=6
+b: size=24 ts=16
+
+# 换 Clang 与 lld 结果相同,这不是某个链接器的疏忽
+$ clang -fuse-ld=lld -std=c11 a.c b.c main.c -o t &amp;&amp; ./t
+a: size=14 ts=6
+b: size=24 ts=16</code></pre>
+<p>链接器不报错的原因在第 5 章讲过:<strong>符号名里不带类型布局信息</strong>。两个编译单元对同一个类型的定义不一致,属于 5.2 节那一类单一定义规则违规,链接期完全观察不到。</p>
+<p>后果的形态是固定的:a 一侧写进结构体的数据,b 一侧按另一套偏移读出来,读到的字段全是错位的。数值看上去像随机数,而没有任何一步报错。</p>
+<p>三条查法按代价从低到高排列。</p>
+<table style="contain-intrinsic-size:auto 380px">
+<thead><tr><th>手段</th><th>怎么用</th><th>能查出什么</th><th>代价</th></tr></thead>
+<tbody>
+<tr><td class="nw">在头文件里钉死大小与偏移</td><td><code>_Static_assert(sizeof(struct Pkt) == 24, "…")</code> 紧跟定义</td><td>任何一侧算出别的结果,该侧编译期失败</td><td>一行代码,应当作为公开头文件的默认写法</td></tr>
+<tr><td class="nw"><code>-Wpadded</code></td><td>编译时加上,GCC 与 Clang 都支持</td><td>每一处填充的插入位置</td><td>输出很吵,只适合定点排查</td></tr>
+<tr><td class="nw"><code>pahole</code></td><td>对带调试信息的目标文件运行</td><td>完整的逐成员偏移与每个洞的大小</td><td>需要 DWARF,不适用于 PE 上没有 DWARF 的产物</td></tr>
+<tr><td><code>clang -Xclang -fdump-record-layouts</code></td><td>编译时加上,直接打印记录布局</td><td>编译器实际算出的布局,含基类与虚表指针</td><td>只有 Clang 有</td></tr>
+<tr><td class="nw"><code>#pragma pack(show)</code></td><td>MSVC 侧插在可疑位置</td><td>该位置当前生效的 <code>pack</code> 取值</td><td>只答「当前是多少」,不答「谁改的」</td></tr>
+</tbody>
+</table>
+<div class="note dead" style="contain-intrinsic-size:auto 232px"><span class="t">🔴 同一个头文件被不同的 pack 状态包住,链接器不会报错</span><p>症状是跨编译单元传递结构体时字段错位:发送方写的 <code>len</code> 在接收方读出来是别的值,而两侧的代码逐行看都没有问题。根因是某个编译单元在包含公开头文件之前打开了 <code>#pragma pack</code>,两侧算出的偏移不同。判据是在两侧各打印一次 <code>sizeof</code> 与关键成员的 <code>offsetof</code>,取值不同即可确认;链接期与运行期都不会给出任何提示。修法是在公开头文件里紧跟结构体定义写 <code>_Static_assert</code>,把期望的大小与偏移钉死,把运行期的错位提前成一侧的编译期错误。这与 5.2 节的单一定义规则违规是同一族问题,只是触发方式不同。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 公开头文件里给关键结构体加 static_assert,错位提前到编译期</span><p>适用对象是三类结构体:跨编译单元传递的、要写进文件或网络的、以及要交给另一种语言读的。写法是紧跟定义写两行,一行钉 <code>sizeof</code>,一行钉最后一个成员的 <code>offsetof</code>,两行合起来能锁住整个布局。收益是把一个链接器不报、运行期才发作的问题,变成一条指向具体行号的编译错误。代价接近于零:断言不产生任何代码,不影响产物大小,也不影响构建时间。C 一侧用 <code>_Static_assert</code>,C++11 起用 <code>static_assert</code>。</p></div>
+<h3>位域几乎什么都不保证</h3>
+<p>位域看上去是描述硬件寄存器与协议报文的现成工具,而标准在这件事上留下的空白比结构体布局还多。</p>
+<table style="contain-intrinsic-size:auto 325px">
+<thead><tr><th>这一项</th><th>标准怎么规定</th><th>实际后果</th></tr></thead>
+<tbody>
+<tr><td class="nw">位在存储单元里从高位排还是从低位排</td><td class="nw">由实现决定</td><td>同一份定义在大端与小端机器上读出的字段完全不同</td></tr>
+<tr><td class="nw">一个位域能不能跨越存储单元边界</td><td class="nw">由实现决定</td><td>同一份定义在两个编译器上占用的总字节数不同</td></tr>
+<tr><td class="nw">存储单元本身对齐到多少</td><td class="nw">不指明</td><td>结构体总大小两侧不同</td></tr>
+<tr><td class="nw">相邻位域声明类型不同时是否共用一个单元</td><td class="nw">由实现决定</td><td>MSVC 在类型变化处开新单元,Itanium C++ ABI 继续在同一单元里排</td></tr>
+<tr><td>不带 <code>signed</code> 与 <code>unsigned</code> 的 <code>int</code> 位域是否带符号</td><td class="nw">由实现决定</td><td>同一个取值在两边读出正负不同</td></tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code>/* 同一个声明,两侧算出的大小不同 —— 第四行那条规则的直接后果 */
+<span class="kw">struct</span> M {
+    <span class="kw">unsigned</span> <span class="kw">char</span> a : 4;
+    <span class="kw">unsigned</span> <span class="kw">int</span>  b : 4;
+};
+/* GCC 与 Clang(Itanium C++ ABI):a 与 b 排在同一个单元里,<span class="kw">sizeof</span> 为 4 */
+/* MSVC:声明类型由 <span class="kw">unsigned</span> <span class="kw">char</span> 变为 <span class="kw">unsigned</span> <span class="kw">int</span>,开新单元,<span class="kw">sizeof</span> 为 8 */
+/* 结论不必记忆,打印一次 <span class="kw">sizeof</span> 即可确认本机的取值 */</code></pre>
+<p>结论是明确的:<strong>位域不能用来描述硬件寄存器,也不能用来描述协议报文</strong>。这两类用途都要求字节与位的排列完全确定,而位域恰好在这一点上不给任何保证。</p>
+<p>替代做法只有一种:用固定宽度整型保存整个字,用显式的移位与掩码取出各个字段,字节序由调用方显式转换。布局因此完全由代码决定,与编译器和平台无关。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 604px"><code>/* 用固定宽度整型加显式移位,布局不依赖任何实现定义的规则 */
+<span class="kw">#include</span> &lt;stdint.h&gt;
+
+/* 16 位控制字:高 4 位版本,次 4 位类型,低 8 位长度 */
+<span class="kw">#define</span> HDR_VER(w)  ((<span class="kw">uint8_t</span>)(((w) &gt;&gt; 12) &amp; 0x0Fu))
+<span class="kw">#define</span> HDR_KIND(w) ((<span class="kw">uint8_t</span>)(((w) &gt;&gt;  8) &amp; 0x0Fu))
+<span class="kw">#define</span> HDR_LEN(w)  ((<span class="kw">uint8_t</span>)( (w)        &amp; 0xFFu))
+
+<span class="kw">static</span> <span class="kw">inline</span> <span class="kw">uint16_t</span> hdr_pack(<span class="kw">uint8_t</span> ver, <span class="kw">uint8_t</span> kind, <span class="kw">uint8_t</span> len)
+{
+    <span class="kw">return</span> (<span class="kw">uint16_t</span>)(((<span class="kw">uint16_t</span>)(ver  &amp; 0x0Fu) &lt;&lt; 12)
+                    | ((<span class="kw">uint16_t</span>)(kind &amp; 0x0Fu) &lt;&lt;  8)
+                    |  (<span class="kw">uint16_t</span>)len);
+}
+
+/* 写进网络前显式转成大端,读出后显式转回来,不依赖结构体在内存里的样子 */
+<span class="kw">static</span> <span class="kw">inline</span> <span class="kw">void</span> hdr_store_be(<span class="kw">uint8_t</span> out[2], <span class="kw">uint16_t</span> w)
+{
+    out[0] = (<span class="kw">uint8_t</span>)(w &gt;&gt; 8);
+    out[1] = (<span class="kw">uint8_t</span>)(w &amp; 0xFFu);
+}</code></pre>
+<p>这种写法比位域多几行代码,换来的是三件事:布局与编译器无关、字节序显式可见、每一个字段的取出过程都可以单步调试。协议与寄存器定义一旦稳定,这几行代码也不再变动。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 位域的存储顺序与跨边界规则由实现决定,不能用来描述报文</span><p>症状是一段解析代码在开发机上正确,换一个编译器或换到大端设备上读出来的字段全部错乱,而结构体的 <code>sizeof</code> 甚至可能相同。根因是标准把位在存储单元里的排列顺序、能否跨越单元边界、相邻不同类型位域是否共用单元三件事全部交给实现,而这三件事恰好完全决定了报文的解析结果。判据是把同一份定义在两个编译器上各打印一次 <code>sizeof</code> 与各字段的取值,不一致即可确认。修法是把位域整体换成固定宽度整型加显式移位与掩码,并把字节序转换写成显式的一步。</p></div>
+<h2 id="l10-sum">10.5 小结:遇到一个不认识的关键字按什么顺序查</h2>
+<p>本章的全部内容可以压成一句话:<strong>标准之外还有两层,ABI 与编译器扩展,层判对了文档就在手边,层判错了怎么找都找不到</strong>。</p>
+<p>三层的边界不靠记忆维持,靠一个问法与一条排查顺序。问法在 10.1 节给过:同一件事换编译器、换平台各做一遍,看结果变不变。顺序在下面。</p>
+<h3>固定的排查顺序</h3>
+<table style="contain-intrinsic-size:auto 377px">
+<thead><tr><th>步骤</th><th>要回答的问题</th><th>怎么回答</th><th>输出</th></tr></thead>
+<tbody>
+<tr><td class="nw">一、定层</td><td>它属于标准、ABI,还是某个编译器</td><td>看有没有两个前导下划线或下划线加大写字母;把同一件事换编译器与换平台各做一遍,看结果变不变</td><td>三层之一</td></tr>
+<tr><td class="nw">二、查去处</td><td>它到底规定了什么</td><td>标准层查标准文本与《C++ 语言》;ABI 层查对应平台的 psABI 与 Itanium C++ ABI;扩展层查该编译器文档的属性页</td><td>一条明确的语义</td></tr>
+<tr><td class="nw">三、找对应物</td><td>另一侧有没有能表达同一件事的写法</td><td><code>__has_cpp_attribute</code>、<code>__has_attribute</code>、<code>__has_declspec_attribute</code> 各问一次,再查另一侧的文档</td><td>有、没有、或者语义不完全一致</td></tr>
+<tr><td class="nw">四、定策略</td><td>写进代码里的形态是什么</td><td>已被标准收编的直接用标准写法;两侧都有对应物的用宏收口;只有一侧有的隔离到平台目录</td><td>一处改动,而不是散落各处</td></tr>
+<tr><td class="nw">五、验收</td><td>换一个编译器还编不编得过</td><td>把公开头文件单独送进另一侧的编译器,编一个只包含它的空编译单元</td><td>编译通过,或者一条指向具体行的报错</td></tr>
+</tbody>
+</table>
+<p>五步里最容易被跳过的是第一步与第五步。跳过第一步的表现是在标准文本里找 <code>__stdcall</code>;跳过第五步的表现是把未经宏包裹的扩展写进公开头文件,直到使用者报告编不过才发现。</p>
+<pre style="contain-intrinsic-size:auto 413px"><code># 第三步的三个探针,各问一次就够,不必猜版本号
+$ cat &gt; probe.c &lt;&lt;<span>'EOF'</span>
+<span class="kw">#if</span> defined(__has_attribute) &amp;&amp; __has_attribute(packed)
+<span class="kw">#pragma</span> message(<span>"__attribute__((packed)) 可用"</span>)
+<span class="kw">#endif</span>
+EOF
+$ gcc -fsyntax-only probe.c
+probe.c:2:9: note: <span>'#pragma message: __attribute__((packed)) 可用'</span>
+
+# 第五步的验收:只编头文件,不编整个库
+$ echo <span>'#include "calc.h"'</span> &gt; hdrcheck.c
+$ gcc   -fsyntax-only hdrcheck.c        # ELF 一侧
+$ clang -fsyntax-only hdrcheck.c        # Clang 一侧
+&gt; cl /nologo /c /W4 hdrcheck.c          REM MSVC 一侧</code></pre>
+<h3>按使用场景的速查表</h3>
+<p>表按「手上要做的事」分行,与 10.3 节按能力分行的那张互补。末列为空表示只能靠宏收口或隔离到平台目录。</p>
+<table style="contain-intrinsic-size:auto 1191px">
+<thead><tr><th>手上要做的事</th><th>MSVC</th><th>GCC / Clang</th><th>标准写法</th></tr></thead>
+<tbody>
+<tr><td class="nw">写一个跨平台动态库的导出宏</td><td><code>__declspec(dllexport)</code> 与 <code>dllimport</code> 二选一</td><td><code>__attribute__((visibility("default")))</code></td><td>无,写法见 4.4 节</td></tr>
+<tr><td class="nw">让一个内部符号不进导出面</td><td>默认就不导出,无须动作</td><td><code>-fvisibility=hidden</code> 加逐个标 <code>default</code></td><td>无</td></tr>
+<tr><td class="nw">指定一个类型按 64 字节对齐</td><td><code>__declspec(align(64))</code></td><td><code>__attribute__((aligned(64)))</code></td><td><code>alignas(64)</code></td></tr>
+<tr><td class="nw">让一个协议头结构体不带填充</td><td><code>#pragma pack(push, 1)</code> 与 <code>pop</code></td><td><code>__attribute__((packed))</code> 或同样的 <code>pragma</code></td><td>无</td></tr>
+<tr><td class="nw">查一个类型占多少字节、对齐到多少</td><td><code>sizeof</code> 与 <code>__alignof</code></td><td><code>sizeof</code> 与 <code>__alignof__</code></td><td><code>sizeof</code> 与 <code>alignof</code></td></tr>
+<tr><td class="nw">在头文件里把结构体布局钉死</td><td><code>static_assert</code></td><td><code>static_assert</code>,C 一侧 <code>_Static_assert</code></td><td><code>static_assert</code></td></tr>
+<tr><td class="nw">声明一个线程局部变量</td><td><code>__declspec(thread)</code></td><td><code>__thread</code></td><td><code>thread_local</code></td></tr>
+<tr><td class="nw">标记一个即将移除的接口</td><td><code>__declspec(deprecated("…"))</code></td><td><code>__attribute__((deprecated("…")))</code></td><td><code>[[deprecated("…")]]</code></td></tr>
+<tr><td class="nw">让调用方不能忽略返回值</td><td>无对应物</td><td><code>__attribute__((warn_unused_result))</code></td><td><code>[[nodiscard]]</code></td></tr>
+<tr><td class="nw">强制展开一个极短的访问器</td><td><code>__forceinline</code></td><td><code>inline __attribute__((always_inline))</code></td><td>无</td></tr>
+<tr><td class="nw">禁止内联以便打断点</td><td><code>__declspec(noinline)</code></td><td><code>__attribute__((noinline))</code></td><td>无</td></tr>
+<tr><td class="nw">在 main 之前注册一个工厂</td><td>带构造函数的全局对象</td><td><code>__attribute__((constructor))</code> 或同样的全局对象</td><td>全局对象,次序见 8.2 节</td></tr>
+<tr><td class="nw">把一批数据放进自定义节</td><td><code>#pragma section</code> 加 <code>__declspec(allocate)</code></td><td><code>__attribute__((section("…")))</code></td><td>无,机制见 5.3 节</td></tr>
+<tr><td class="nw">让一个无人引用的符号保留下来</td><td><code>#pragma comment(linker, "/include:…")</code></td><td><code>__attribute__((used))</code></td><td>无</td></tr>
+<tr><td class="nw">检查一个自定义日志函数的格式串</td><td>无对应物,靠静态分析注解</td><td><code>__attribute__((format(printf, 1, 2)))</code></td><td>无</td></tr>
+<tr><td class="nw">写一个 Win32 回调</td><td>直接抄文档原型里的 <code>CALLBACK</code> 或 <code>WINAPI</code></td><td>MinGW 下同样有这些宏</td><td>无,用法见《Win32 程序设计》</td></tr>
+<tr><td class="nw">从动态库取地址后强转函数指针</td><td>类型里带上调用约定宏,不要就地拼类型</td><td>同左,ELF 上无调用约定之分</td><td>无</td></tr>
+<tr><td class="nw">判断当前编译器认不认某个属性</td><td><code>__has_cpp_attribute</code>,需开启对应标准模式</td><td><code>__has_attribute</code> 一族</td><td><code>__has_cpp_attribute</code>,C++20 起</td></tr>
+</tbody>
+</table>
+<div class="note ok" style="contain-intrinsic-size:auto 195px"><span class="t">🟢 遇到不认识的关键字,先定层再查文档,顺序反了会白费时间</span><p>定层只需要两个动作:看名字有没有两个前导下划线,以及把同一件事换编译器与换平台各做一遍看结果变不变。两个动作合起来能把绝大多数关键字准确归到三层中的一层。归错层的代价是具体的——把 ABI 层的问题拿到标准文本里找,永远找不到;把编译器扩展当成标准的一部分写进公开头文件,使用者换编译器就编不过。定完层再查文档,五分钟能解决的事不会拖成半天。</p></div>
+<h3>全章判据</h3>
+<table style="contain-intrinsic-size:auto 738px">
+<thead><tr><th>现象或线索</th><th>结论</th><th>去处</th></tr></thead>
+<tbody>
+<tr><td class="nw">关键字带两个前导下划线,或下划线加大写字母</td><td>多半是实现保留的扩展,查编译器文档而不是标准</td><td>10.1</td></tr>
+<tr><td class="nw">同平台换编译器结果一致,换平台结果就变</td><td>落在 ABI 层,查对应平台的 psABI 与 C++ ABI</td><td>10.1</td></tr>
+<tr><td class="nw">换个编译器直接编不过</td><td>落在编译器扩展层,查该编译器的属性页</td><td>10.1、10.3</td></tr>
+<tr><td class="nw">报错里的符号带 <code>@数字</code> 后缀,而库里的不带</td><td>32 位下两侧的调用约定不一致</td><td>10.2</td></tr>
+<tr><td class="nw">崩在函数返回处,调用栈读不出有意义的帧</td><td>栈失衡,先查调用约定与函数指针强转</td><td>10.2</td></tr>
+<tr><td class="nw">调用点前后栈指针差值恰好等于参数占用的字节数</td><td>清栈责任被算了两次或一次都没算</td><td>10.2</td></tr>
+<tr><td class="nw">两个编译单元的 <code>sizeof</code> 不同而链接器不报错</td><td><code>pack</code> 状态不一致,属单一定义规则违规</td><td>10.4、5.2</td></tr>
+<tr><td class="nw">编译器告警取了打包成员的地址</td><td>该指针未对齐,不能传给按正常对齐写成的接口</td><td>10.4</td></tr>
+<tr><td>公开头文件里出现未经宏包裹的 <code>__declspec</code> 或 <code>__attribute__</code></td><td>该头文件不可移植,使用者换编译器即失败</td><td>10.3</td></tr>
+<tr><td><code>#if __has_attribute(x)</code> 报无效的整型常量表达式</td><td class="nw">缺少探针的保底定义</td><td>10.3</td></tr>
+<tr><td class="nw">属性写了但没有任何效果</td><td>未知属性被静默忽略,或写在了不合法的位置上</td><td>10.3</td></tr>
+<tr><td class="nw">位域结构体在两个编译器上 <code>sizeof</code> 不同</td><td>位域的分配规则由实现决定,不能用于报文与寄存器</td><td>10.4</td></tr>
+<tr><td class="nw"><code>alignas(1)</code> 编译报错</td><td><code>alignas</code> 只能加大对齐,减小对齐要用 <code>pack</code></td><td>10.4</td></tr>
+<tr><td class="nw">删掉一个成员而 <code>sizeof</code> 不变</td><td class="nw">被删成员的位置由末尾填充顶替</td><td>10.4</td></tr>
+</tbody>
+</table>
+<h3>与相邻各章的分工</h3>
+<p>本章与前后各章有明确的分界,凡是已经在别处讲透的一律不重复。</p>
+<table style="contain-intrinsic-size:auto 548px">
+<thead><tr><th>这件事</th><th>在哪里</th><th>本章讲到哪一步</th></tr></thead>
+<tbody>
+<tr><td class="nw">名字修饰的编码规则与还原工具</td><td class="nw">4.2 节</td><td>只讲调用约定怎么改变符号名上的装饰</td></tr>
+<tr><td class="nw"><code>extern "C"</code> 与语言链接</td><td class="nw">4.3 节</td><td>只讲它管不到调用约定带来的那一层装饰</td></tr>
+<tr><td class="nw">符号可见性与导出面的收缩</td><td class="nw">4.4 节</td><td>只在对照表里给出两侧的语法</td></tr>
+<tr><td class="nw">弱符号与 <code>selectany</code></td><td class="nw">4.5 节</td><td>只在对照表里给出两侧的语法</td></tr>
+<tr><td class="nw">单一定义规则违规里链接期不报错的那一类</td><td class="nw">5.2 节</td><td>只讲 <code>pack</code> 不一致这一个来源</td></tr>
+<tr><td class="nw">自定义节与链接脚本</td><td class="nw">5.3 节</td><td>只讲 <code>section</code> 属性与 <code>#pragma section</code> 的写法</td></tr>
+<tr><td class="nw">静态初始化次序</td><td class="nw">8.2 节</td><td>只讲 <code>constructor</code> 属性的优先级参数</td></tr>
+<tr><td class="nw">报错原文到根因的完整对照表</td><td class="nw">11.1 节</td><td>本章出现的报错都会进那张表</td></tr>
+<tr><td class="nw">三平台差异的汇总</td><td class="nw">11.2 节</td><td>本章只给三层归属,不做平台汇总</td></tr>
+<tr><td class="nw">保留标识符、单一定义规则本身、标准布局的条件</td><td class="nw">《C++ 语言》</td><td>一律指向那本书,不重讲</td></tr>
+<tr><td class="nw">把这些选项配到工程里去</td><td class="nw">《CMake 构建系统》</td><td>只给机制与判据,不给构建脚本</td></tr>
+<tr><td class="nw">某个扩展换来多少运行速度</td><td class="nw">《C++ 性能优化》</td><td>只给代价的方向,不给数字</td></tr>
+<tr><td class="nw">Win32 API 与回调原型的用法</td><td class="nw">《Win32 程序设计》</td><td>只讲回调原型落到符号名上的那一层</td></tr>
+</tbody>
+</table>
+<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 把平台专有的写法散落在业务代码里,移植时无处下手</span><p>症状是工程要支持第二个平台时,<code>__declspec</code>、<code>#pragma pack</code>、调用约定关键字散落在几百个文件里,改动量无法估计,而每漏改一处都变成一条链接期或运行期的错误。根因是扩展被当成普通语法直接写在了使用处,而不是收进少数几个位置。判据是搜一遍源码树:业务代码里能搜到 <code>__declspec</code> 或 <code>__attribute__</code> 就是这个问题。修法是把全部扩展收进一个属性头文件与一个平台目录,业务代码只用宏与平台无关的接口;工程里怎么按平台选文件,见《CMake 构建系统》。</p></div>
+<h3>通向第 11 章</h3>
+<p>本章出现的三条报错都会进 11.1 节那张对照表:<code>unresolved external symbol _foo@8</code> 指向调用约定不一致,未知 <code>__declspec</code> 参数的编译失败指向扩展没有经宏收口,而 <code>pack</code> 不一致这一类恰恰没有报错,它出现在 11.3 节的判据索引里而不是报错表里。</p>
+<p>三条合起来说明一件事:<strong>标准之外这一层的问题,一部分落在链接期,一部分连报错都没有</strong>。前者靠报错原文定位,后者只能靠判据主动去查——这正是判据索引存在的理由。</p>
+</section>
+
 <section class="chapter" style="contain-intrinsic-size:auto 17886px;--thin-h:17886px">
-<h1 id="l10"><span class="part">第 10 章</span>排错与小结</h1>
-<h2 id="l10-diag">10.1 报错原文到根因:一张对照表</h2>
+<h1 id="l11"><span class="part">第 11 章</span>排错与小结</h1>
+<h2 id="l11-diag">11.1 报错原文到根因:一张对照表</h2>
 <p>全书的判据是同一条:报错原文对应哪一步。前九章逐步拆开了每一步的产出与消费者,这一节把散落的对应关系收成一张可以直接查的表。</p>
 <p>表的用法是从左往右:先按报错原文定位到「发生在哪一步」,再看根因与第一步该查什么,最后回到对应章节看机制。跳过第二列直接猜根因,是排查耗时最长的做法。</p>
 <h3>读报错的三条通则</h3>
@@ -6041,7 +7052,7 @@ main.obj : error LNK2019: unresolved external symbol <span>"int __cdecl calc_add
 </ul>
 <p>五条的共同排查思路是把「本应发生却没发生」的事情变成可观察的:用 <code>--print-gc-sections</code> 看回收了什么,用 <code>LD_DEBUG=bindings</code> 看符号绑定到了哪里,用 <code>nm</code> 看产物里还有没有那个符号。</p>
 <div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 没有报错不等于构建正确,五类静默失败都有对应的观察手段</span><p>这类问题的代价高于报错类问题,因为它们通常在功能测试或用户现场才暴露,而那时距离引入它的那次改动已经很远。共同特征是「某个开关改变了链接器的行为,而语言语义上并没有错」。防御手段是把观察输出留档并比对:开启裁剪的构建保存一份 <code>--print-gc-sections</code> 的输出,开启折叠的构建保存一份 <code>--print-icf-sections</code>,改成静态库时确认注册型符号有没有被 <code>--whole-archive</code> 覆盖。三份输出都是纯文本,进版本管理之后,任何一次异常变化都能在评审里看见。</p></div>
-<h2 id="l10-plat">10.2 三平台差异汇总</h2>
+<h2 id="l11-plat">11.2 三平台差异汇总</h2>
 <p>全书每一章都在结构不同处单列了 macOS,双轨给出 Linux 与 Windows。这一节把散落的差异收成一张表,并说清这些差异分别属于哪个层次。</p>
 <p>层次这件事有实际用途:格式层的差异只影响用什么工具去看,机制层的差异会影响代码怎么写,而策略层的差异只影响构建配置。移植时按层次排优先级,比逐条对照更省时间。</p>
 <h3>三平台差异汇总</h3>
@@ -6113,7 +7124,7 @@ $ install_name_tool -add_rpath @executable_path/../lib app   # macOS</code></pre
 <li><strong>调试符号</strong>——Windows 的 <code>.pdb</code> 必须单独归档,不随 exe 分发,漏掉这一步崩溃报告全不可读,见第 9 章</li>
 </ol>
 <div class="note new" style="contain-intrinsic-size:auto 228px"><span class="t">🔵 跨平台库的接口先收窄成 C,再在上面包一层各平台的胶水</span><p>机制层的差异集中在 C++ 特有的东西上:名字修饰规则不同、异常无法跨编译器传播、标准库类型不是同一个类型、对象布局与虚表结构由各自的 ABI 决定。把对外接口收窄成 C 函数加不透明指针之后,这些差异一次性消失,剩下的只有导出宏与调用约定两项,都能用宏统一。代价是接口写起来更啰嗦、要自己管理生命周期。判据是接口的跨度:同一个工程内部的模块划分不必这么做,交付给外部或需要跨编译器使用的库应当这么做。第 4 章给出了导出宏的完整写法,第 7 章给出了两侧的加载与查找差别。</p></div>
-<h2 id="l10-index">10.3 判据索引</h2>
+<h2 id="l11-index">11.3 判据索引</h2>
 <p>判据是全书的组织方式:每一条都是一句可以直接用来判断的结论,后面标出它所属的章节。遇到具体问题时,先在这里找到对应的那一条,再回到原章看机制。</p>
 <h3>构建期的判据</h3>
 <table style="contain-intrinsic-size:auto 1011px">
@@ -6176,7 +7187,7 @@ $ install_name_tool -add_rpath @executable_path/../lib app   # macOS</code></pre
 <tr><td>符号必须先归档再剥离,事后重编得到的符号文件对不上</td><td class="nw">第 9 章</td></tr>
 <tr><td><code>--build-id=sha1</code> 是内容散列,<code>uuid</code> 是随机数</td><td class="nw">第 9 章</td></tr>
 <tr><td class="nw">可复现构建的验收动作是换个目录构建两次比较散列</td><td class="nw">第 9 章</td></tr>
-<tr><td>没有报错不等于构建正确,静默失败各有对应的观察手段</td><td class="nw">第 10 章</td></tr>
+<tr><td>没有报错不等于构建正确,静默失败各有对应的观察手段</td><td class="nw">第 11 章</td></tr>
 </tbody>
 </table>
 <h3>怎么用这张索引</h3>
@@ -6197,7 +7208,7 @@ $ size -A app | head -6                      # 体积构成</code></pre>
 <p>六条命令对应索引里的六条判据,跑一遍不到十秒。放进发布前的检查脚本,能挡住本书讲过的大部分部署类问题。</p>
 <div class="note new" style="contain-intrinsic-size:auto 198px"><span class="t">🔵 把判据写成一个可执行的检查脚本,比记在脑子里可靠</span><p>索引里的每一条都对应一个可以自动判定的事实:有没有 <code>build-id</code>、有没有 <code>RUNPATH</code>、对 C 库的最低版本要求是多少、产物里有没有绝对路径、<code>.init_array</code> 有多少项。把它们写成十几行 shell 或 PowerShell,加进发布流水线,判据就从「需要有人记得检查」变成「不合格就构建失败」。这比任何形式的文档与培训都更能保证结论被真正执行。脚本本身要做到只读且不执行被检查的产物,这样它对第三方交付来的二进制同样适用。</p></div>
 <div class="note ok" style="contain-intrinsic-size:auto 197px"><span class="t">🟢 判据的价值在于它给出的是判断依据,而不是操作步骤</span><p>操作步骤会过时:选项改名、工具换代、默认值调整,每隔几年就要重学一遍。判断依据不会——「符号有没有定义看所在节是不是 UND」这条,在 <code>nm</code> 的输出格式变了之后依然成立,因为它说的是 ELF 符号表的语义而不是某个工具的用法。因此遇到与书上不同的工具输出时,正确的做法不是照抄书上的命令,而是回到判据本身,再在手上这个工具里找到对应的字段。全书每一节末尾的批注框,写的都是这一类结论。</p></div>
-<h2 id="l10-sum">10.4 小结</h2>
+<h2 id="l11-sum">11.4 小结</h2>
 <p>全书的主线是一次编译的展开:预处理产出一份展开后的源码,编译产出带符号表与重定位表的目标文件,静态链接把它们合并,动态链接把一部分合并推迟到运行期,启动代码把控制权交给 <code>main</code>,退出时再逐层收回。</p>
 <p>每一步的产出都是可以直接看的:文本、节表、符号表、重定位表、动态段、初始化数组。看得见,判断才有依据。</p>
 <h3>五步读懂一个陌生二进制</h3>
@@ -6309,14 +7320,14 @@ $ LD_DEBUG=libs ./app 2&gt;&amp;1 | grep -E <span>'find library|calling init'</s
 <tr><td class="nw">第 7 章 动态库</td><td>一条记账式的依赖记录</td><td>运行期解析</td><td><code>cannot open shared object file</code></td></tr>
 <tr><td class="nw">第 8 章 启动与退出</td><td>初始化数组与清理链表</td><td><code>main</code> 前后各跑一遍</td><td>栈回溯里没有 <code>main</code></td></tr>
 <tr><td class="nw">第 9 章 LTO 与体积</td><td>可度量、可裁剪、可验证的产物</td><td>分发与调试</td><td>LTO 版本不一致</td></tr>
-<tr><td class="nw">第 10 章 排错</td><td>三张对照表</td><td>按报错定位到章节</td><td>—</td></tr>
+<tr><td class="nw">第 11 章 排错</td><td>三张对照表</td><td>按报错定位到章节</td><td>—</td></tr>
 </tbody>
 </table>
 <p>表的第二列是全书的主线:每一步的产出都是下一步的输入,而每一类报错都出现在两步的交界处。定位问题就是定位交界。</p>
 <h3>接下来往哪走</h3>
 <p>本书讲的是机制:每一步产出了什么、下一步拿它做了什么。工程里怎么把这些机制配置出来,是姊妹书的范围。</p>
 <ul>
-<li>构建配置的主场是《CMake 构建系统》——RPATH 怎么按构建期与安装期分别设、LTO 怎么按构建类型开、导出宏怎么由目标属性统一注入、安装规则怎么写</li>
+<li>构建配置的主场是《CMake 构建手册》——RPATH 怎么按构建期与安装期分别设、LTO 怎么按构建类型开、导出宏怎么由目标属性统一注入、安装规则怎么写</li>
 <li>语言层面的规则见《C++ 语言》——单一定义规则、内联与链接性、模板实例化、静态存储期对象的生存期</li>
 <li>优化收益的度量见《C++ 性能优化》——LTO 与 PGO 的实际收益怎么测、怎么归因到具体函数</li>
 <li>打包、签名与崩溃上报的完整链路见《Qt 组件与生态》——从崩溃现场采集到按标识符解析成可读栈回溯</li>

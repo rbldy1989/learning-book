@@ -66,7 +66,7 @@ figure table { width: 100%; }
 <div class="wrap">
 <header>
   <h1>现代编程书系 · AI 重构版</h1>
-  <p class="lead">沿用经典教材的知识脉络，剔除已废弃技术，补上现代实践 &middot; 三十一本 · 教材 + 速查手册 + 源码精读</p>
+  <p class="lead">沿用经典教材的知识脉络，剔除已废弃技术，补上现代实践 &middot; 三十本 · 教材 + 速查手册 + 源码精读</p>
 </header>
 <h2 class="secttl">C 与 C++</h2>
 <p class="sectsub">语言本体、标准库速查与性能优化,四本互为前后。先把语言读透,再按需要查库、按症状调性能。</p>
@@ -107,29 +107,20 @@ figure table { width: 100%; }
     <div class="tags"><span class="tag">先测再改</span><span class="tag">perf 与 VTune</span><span class="tag">缓存与布局</span><span class="tag">实测数字</span></div>
   </div>
 </a>
-<a class="card" target="_blank" rel="noopener" href="CMake构建系统.html" style="--accent:#0b7285">
+<a class="card" target="_blank" rel="noopener" href="CMake构建手册.html" style="--accent:#0b7285">
   <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><text x="100" y="112" text-anchor="middle" font-size="38" font-weight="700" fill="#0b7285" opacity=".9" font-family="Consolas,monospace">CMake</text><text x="100" y="142" text-anchor="middle" font-size="13" fill="#0b7285" opacity=".55" font-family="Consolas,monospace">target-based</text><rect x="78" y="168" width="44" height="20" rx="4" fill="#0b7285" opacity=".42"/><rect x="40" y="212" width="44" height="20" rx="4" fill="none" stroke="#0b7285" stroke-width="2" opacity=".5"/><rect x="116" y="212" width="44" height="20" rx="4" fill="none" stroke="#0b7285" stroke-width="2" opacity=".35"/><path d="M100 188 V200 M100 200 H62 V212 M100 200 H138 V212" stroke="#0b7285" stroke-width="2" fill="none" opacity=".5"/><rect x="40" y="246" width="120" height="6" rx="3" fill="#0b7285" opacity=".22"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#0b7285"/></svg></div>
   <div class="info">
-    <h2>CMake 构建系统</h2>
-    <div class="meta">11 章 · 51 节 · 16 图 · 839 KB</div>
-    <p>现代 CMake 只有一个主角:目标。讲清使用要求如何传播、第三方库如何引入、三个平台的差异所在，以及目录级老写法为何应当退场。</p>
-    <div class="tags"><span class="tag">目标与属性</span><span class="tag">使用要求</span><span class="tag">find_package</span><span class="tag">交叉编译</span></div>
-  </div>
-</a>
-<a class="card" target="_blank" rel="noopener" href="CMake手册.html" style="--accent:#1098ad">
-  <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><text x="100" y="108" text-anchor="middle" font-size="30" font-weight="700" fill="#1098ad" opacity=".9" font-family="Consolas,monospace">target_</text><text x="100" y="136" text-anchor="middle" font-size="13" fill="#1098ad" opacity=".55" font-family="Consolas,monospace">reference</text><rect x="40" y="164" width="120" height="9" rx="2" fill="#1098ad" opacity=".42"/><rect x="40" y="180" width="86" height="9" rx="2" fill="#1098ad" opacity=".3"/><rect x="40" y="196" width="104" height="9" rx="2" fill="#1098ad" opacity=".3"/><rect x="40" y="212" width="70" height="9" rx="2" fill="#1098ad" opacity=".22"/><rect x="40" y="228" width="96" height="9" rx="2" fill="#1098ad" opacity=".22"/><rect x="40" y="250" width="120" height="6" rx="3" fill="#1098ad" opacity=".22"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#1098ad"/></svg></div>
-  <div class="info">
-    <h2>CMake 手册</h2>
-    <div class="meta">6 章 · 31 节 · 610 KB</div>
-    <p>命令、变量、属性、生成器表达式与模块逐条收录:命令形式、参数、状态改动、最小示例，以及各自不宜使用的场合。</p>
-    <div class="tags"><span class="tag">62 条命令</span><span class="tag">逐条速查</span><span class="tag">按需求索引</span><span class="tag">配套教材</span></div>
+    <h2>CMake 构建手册</h2>
+    <div class="meta">11 章 · 78 节 · 16 图 · 1379 KB</div>
+    <p>机制与条目同章:先讲清使用要求如何传播、第三方库如何引入、三平台差异所在;随后逐条给出命令、变量、属性的形态与陷阱。</p>
+    <div class="tags"><span class="tag">目标与属性</span><span class="tag">find_package</span><span class="tag">逐条速查</span><span class="tag">按需求索引</span></div>
   </div>
 </a>
 <a class="card" target="_blank" rel="noopener" href="编译与链接.html" style="--accent:#5f3dc4">
   <div class="coverwrap"><svg class="cover" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="270" rx="10" fill="var(--cover-bg)" stroke="var(--rule)"/><text x="100" y="110" text-anchor="middle" font-size="34" font-weight="700" fill="#5f3dc4" opacity=".9" font-family="Consolas,monospace">.o .a .so</text><text x="100" y="140" text-anchor="middle" font-size="13" fill="#5f3dc4" opacity=".55" font-family="Consolas,monospace">ELF / PE</text><rect x="34" y="170" width="30" height="18" rx="3" fill="#5f3dc4" opacity=".45"/><rect x="34" y="194" width="30" height="18" rx="3" fill="#5f3dc4" opacity=".35"/><rect x="34" y="218" width="30" height="18" rx="3" fill="#5f3dc4" opacity=".25"/><rect x="126" y="194" width="40" height="24" rx="4" fill="none" stroke="#5f3dc4" stroke-width="2" opacity=".55"/><path d="M64 179 H96 V204 H126 M64 203 H126 M64 227 H96 V208" stroke="#5f3dc4" stroke-width="2" fill="none" opacity=".45"/><rect x="40" y="248" width="120" height="6" rx="3" fill="#5f3dc4" opacity=".22"/><rect x="0" y="0" width="200" height="8" rx="4" fill="#5f3dc4"/></svg></div>
   <div class="info">
     <h2>编译与链接</h2>
-    <div class="meta">11 章 · 52 节 · 17 图 · 751 KB</div>
+    <div class="meta">12 章 · 57 节 · 20 图 · 869 KB</div>
     <p>编译器、汇编器、链接器与加载器各自承担什么，以及报错原文对应其中哪一步。ELF 与 PE 双轨，macOS 单列差异。</p>
     <div class="tags"><span class="tag">ELF 与 PE</span><span class="tag">符号解析</span><span class="tag">动态库</span><span class="tag">报错到根因</span></div>
   </div>
