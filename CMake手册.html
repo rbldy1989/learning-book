@@ -198,7 +198,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <button id="navBtn" title="显示/隐藏目录"></button>
 <nav id="sidebar">
 <div class="booktitle">CMake 手册</div>
-<details><summary><a class="ch" href="#r1">命令速查(一):项目、目标与使用要求</a></summary>
+<details><summary><a class="ch" href="#r1">项目、目标与使用要求</a></summary>
 <a class="sec" href="#r1-open">1.0 导读</a>
 <a class="sec" href="#r1-project">1.1 项目与最低版本</a>
 <a class="sec" href="#r1-define">1.2 定义目标:可执行、库与自定义目标</a>
@@ -206,46 +206,46 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#r1-prop">1.4 属性读写:set_target_properties 与 set_property</a>
 <a class="sec" href="#r1-sum">1.5 小结:一份 CMakeLists 里这些命令的出场顺序</a>
 </details>
-<details><summary><a class="ch" href="#r2">命令速查(二):查找、引入与安装</a></summary>
+<details><summary><a class="ch" href="#r2">查找、引入与安装</a></summary>
 <a class="sec" href="#r2-find">2.1 find_package 与四个 find_*</a>
 <a class="sec" href="#r2-fetch">2.2 FetchContent、ExternalProject 与 add_subdirectory</a>
 <a class="sec" href="#r2-install">2.3 install() 的六种形态</a>
 <a class="sec" href="#r2-export">2.4 导出与配置文件:install(EXPORT)、export、两个 helper</a>
 <a class="sec" href="#r2-sum">2.5 小结:引入到发布的完整链路</a>
 </details>
-<details><summary><a class="ch" href="#r3">命令速查(三):控制流、变量、文件与字符串</a></summary>
+<details><summary><a class="ch" href="#r3">控制流、变量、文件与字符串</a></summary>
 <a class="sec" href="#r3-flow">3.1 条件与循环</a>
 <a class="sec" href="#r3-def">3.2 函数、宏与包含</a>
 <a class="sec" href="#r3-var">3.3 变量、列表与选项</a>
 <a class="sec" href="#r3-str">3.4 字符串与文件</a>
 <a class="sec" href="#r3-sum">3.5 小结:脚本化的三条边界</a>
 </details>
-<details><summary><a class="ch" href="#r4">变量速查</a></summary>
+<details><summary><a class="ch" href="#r4">变量</a></summary>
 <a class="sec" href="#r4-project">4.1 项目、路径与目标名变量</a>
 <a class="sec" href="#r4-compiler">4.2 编译器、平台与架构变量</a>
 <a class="sec" href="#r4-build">4.3 构建配置与选项变量</a>
 <a class="sec" href="#r4-find">4.4 查找、安装与打包变量</a>
 <a class="sec" href="#r4-sum">4.5 小结:哪些能改、哪些只读、哪些必须在 project 之前设</a>
 </details>
-<details><summary><a class="ch" href="#r5">属性速查</a></summary>
+<details><summary><a class="ch" href="#r5">属性</a></summary>
 <a class="sec" href="#r5-build">5.1 目标属性:编译与链接</a>
 <a class="sec" href="#r5-out">5.2 目标属性:输出、位置与安装</a>
 <a class="sec" href="#r5-lang">5.3 目标属性:语言、标准与平台</a>
 <a class="sec" href="#r5-other">5.4 目录、源文件、测试与全局属性</a>
 <a class="sec" href="#r5-sum">5.5 小结:属性、变量与命令三者怎么对应</a>
 </details>
-<details><summary><a class="ch" href="#r6">生成器表达式、模块与速查索引</a></summary>
-<a class="sec" href="#r6-genex">6.1 生成器表达式速查</a>
+<details><summary><a class="ch" href="#r6">生成器表达式、模块与索引</a></summary>
+<a class="sec" href="#r6-genex">6.1 生成器表达式</a>
 <a class="sec" href="#r6-mod">6.2 常用模块(一):安装、导出与测试</a>
 <a class="sec" href="#r6-mod2">6.3 常用模块(二):检测、依赖与信息</a>
-<a class="sec" href="#r6-index">6.4 速查索引:想做什么查哪一条</a>
+<a class="sec" href="#r6-index">6.4 索引:想做什么查哪一条</a>
 <a class="sec" href="#r6-sum">6.5 小结:这本书怎么当手册用</a>
 </details>
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
 <section class="chapter" style="contain-intrinsic-size:auto 55037px;--thin-h:55037px">
-<h1 id="r1"><span class="part">第 1 章</span>命令速查(一):项目、目标与使用要求</h1>
+<h1 id="r1"><span class="part">第 1 章</span>项目、目标与使用要求</h1>
 <h2 id="r1-open">1.0 导读</h2>
 <p>CMake 的命令、变量、属性与生成器表达式合起来数以百计,工程里常用的那一批也有上百个名字。写 CMakeLists.txt 时的真实处境往往是:知道要做什么,只是记不清这一条的参数顺序、某个关键字的确切拼法,或者它到底改了哪个属性。</p>
 <p><strong>本书按「想查什么」组织,逐条回答「怎么写」。</strong>每个命令条目给出命令形式、参数、它改了什么、一段可以直接粘走的最小示例,以及什么时候别用它;变量与属性两章以表格为主体,一行一条,直接给初值来源与改动后果。</p>
@@ -292,12 +292,12 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <table style="contain-intrinsic-size:auto 259px">
 <thead><tr><th>章</th><th>标题</th><th>节数</th></tr></thead>
 <tbody>
-<tr><td class="nw">1</td><td>命令速查(一):项目、目标与使用要求</td><td>5</td></tr>
-<tr><td class="nw">2</td><td>命令速查(二):查找、引入与安装</td><td>5</td></tr>
-<tr><td class="nw">3</td><td>命令速查(三):控制流、变量、文件与字符串</td><td>5</td></tr>
-<tr><td class="nw">4</td><td class="nw">变量速查</td><td>5</td></tr>
-<tr><td class="nw">5</td><td class="nw">属性速查</td><td>5</td></tr>
-<tr><td class="nw">6</td><td class="nw">生成器表达式、模块与速查索引</td><td>5</td></tr>
+<tr><td class="nw">1</td><td class="nw">项目、目标与使用要求</td><td>5</td></tr>
+<tr><td class="nw">2</td><td class="nw">查找、引入与安装</td><td>5</td></tr>
+<tr><td class="nw">3</td><td class="nw">控制流、变量、文件与字符串</td><td>5</td></tr>
+<tr><td class="nw">4</td><td class="nw">变量</td><td>5</td></tr>
+<tr><td class="nw">5</td><td class="nw">属性</td><td>5</td></tr>
+<tr><td class="nw">6</td><td class="nw">生成器表达式、模块与索引</td><td>5</td></tr>
 </tbody>
 </table>
 <p>合计 6 章 30 节。每章的末节是小结,把本章的判据收成对照表;第 6 章的第四节另外收了一张按需求组织的索引,是长期使用时最常用的入口。</p>
@@ -1238,7 +1238,7 @@ message(STATUS <span>"core kind = ${kind}"</span>)</code></pre>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 51048px;--thin-h:51048px">
-<h1 id="r2"><span class="part">第 2 章</span>命令速查(二):查找、引入与安装</h1>
+<h1 id="r2"><span class="part">第 2 章</span>查找、引入与安装</h1>
 <h2 id="r2-find">2.1 find_package 与四个 find_*</h2>
 <p>五条 <code>find_*</code> 命令解决同一件事的两个层次:<code>find_package</code> 找的是「一个包及其全部使用要求」,另外四条找的是「一个具体文件或目录」。两种模式的机制见 《CMake 构建系统》4.2 节,Config 文件的内容见 《CMake 构建系统》4.3 节。</p>
 <p>四条 <code>find_library</code> 一族命令共用同一套参数、同一套搜索顺序与同一套缓存行为。差别只在找什么、用哪组路径变量,以及缓存条目的类型。</p>
@@ -2258,7 +2258,7 @@ check_required_components(Engine)</code></pre>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 41236px;--thin-h:41236px">
-<h1 id="r3"><span class="part">第 3 章</span>命令速查(三):控制流、变量、文件与字符串</h1>
+<h1 id="r3"><span class="part">第 3 章</span>控制流、变量、文件与字符串</h1>
 <h2 id="r3-flow">3.1 条件与循环</h2>
 <p>CMake 的控制流只有三条命令:<code>if</code>、<code>foreach</code>、<code>while</code>。三者共用同一套条件求值规则,与 C 系语言差别最大的一点是:未加引号的实参会先被当成变量名解引用一次,再参与判断。求值机制见 《CMake 构建系统》3.1 节。</p>
 <p>条件判据分四类:存在性判断、三组比较(字符串、整数、版本)、正则与列表成员判断、布尔组合。判据的完整清单与各自的引入版本以 <code>cmake --help-command if</code> 与官方文档的 Added in 标注为准。</p>
@@ -3031,7 +3031,7 @@ file(WRITE <span>"${OUT}"</span> <span>"static const Entry kTable[] = {\n${_body
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 38472px;--thin-h:38472px">
-<h1 id="r4"><span class="part">第 4 章</span>变量速查</h1>
+<h1 id="r4"><span class="part">第 4 章</span>变量</h1>
 <h2 id="r4-project">4.1 项目、路径与目标名变量</h2>
 <p>CMake 的内建变量分两类:一类由 CMake 或 <code>project()</code> 填好,工程只读;另一类是工程或使用者写进去、CMake 读出来用。分不清是哪一类,后果通常是「设了没反应」。</p>
 <p>项目与路径这一组绝大多数属于第一类。它们回答三个问题:当前是哪个项目、当前在哪个目录、产物往哪里放。变量与目标属性的分界见 《CMake 构建系统》1.2 节。</p>
@@ -3675,7 +3675,7 @@ include(CPack)</code></pre>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 39972px;--thin-h:39972px">
-<h1 id="r5"><span class="part">第 5 章</span>属性速查</h1>
+<h1 id="r5"><span class="part">第 5 章</span>属性</h1>
 <h2 id="r5-build">5.1 目标属性:编译与链接</h2>
 <p>目标属性是 CMake 里唯一真正保存构建信息的地方。<code>target_compile_definitions()</code> 这一类命令做的事只有一件:把参数追加进目标上的某个属性。机制见 《CMake 构建系统》1.2 节与 《CMake 构建系统》2.2 节。</p>
 <p>每条属性都要回答四个问题:它叫什么、它影响哪一步、能填什么值、没人设置时它是什么。第四个问题的答案在多数情况下不是「空」,而是「创建目标那一刻从某个 <code>CMAKE_</code> 变量或同名目录属性抄了一份」。这条对应关系是全章的骨架。</p>
@@ -4352,9 +4352,9 @@ message(STATUS <span>"已登记: ${all}"</span>)</code></pre>
 <div class="note new" style="contain-intrinsic-size:auto 195px"><span class="t">🔵 属性的引入版本以官方文档的 Added in 标注为准</span><p>CMake 每个版本都在增加属性,手册与教程里出现的名字未必在目标环境的版本上存在。设置一个当前版本不认识的属性,CMake 通常不报错,只是默默不起作用,问题要到构建甚至运行时才暴露。确认办法是跑一次 cmake --help-property 名字:有输出说明当前版本认识它,没有就说明需要提高 cmake_minimum_required 或改用别的表达。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 38185px;--thin-h:38185px">
-<h1 id="r6"><span class="part">第 6 章</span>生成器表达式、模块与速查索引</h1>
-<h2 id="r6-genex">6.1 生成器表达式速查</h2>
+<section class="chapter" style="contain-intrinsic-size:auto 38058px;--thin-h:38058px">
+<h1 id="r6"><span class="part">第 6 章</span>生成器表达式、模块与索引</h1>
+<h2 id="r6-genex">6.1 生成器表达式</h2>
 <p>生成器表达式写作 <code>$&lt;...&gt;</code>,是 CMake 里唯一能表达「等到生成期才知道」的语法。机制与三个时期的分界见 《CMake 构建系统》3.3 节。</p>
 <p>全部表达式可以按用途归成五类:条件、查询、目标、接口边界、变换。查阅时先确定属于哪一类,再在对应的表里找名字。</p>
 <p>五类之间可以任意嵌套。最常见的组合是「查询类求出一个 0 或 1,交给条件类决定展开成什么」,写出来就是 <code>$&lt;$&lt;CONFIG:Debug&gt;:-g3&gt;</code> 这种形态。</p>
@@ -4864,7 +4864,7 @@ endif()
 set(CMAKE_CTEST_ARGUMENTS <span>"--output-on-failure;-j${NPROC}"</span>)
 set_property(GLOBAL PROPERTY JOB_POOLS link_pool=2)</code></pre>
 <div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 核心数只是起点,链接与测试的并行度另有上限</span><p>逻辑核心数决定的是编译能并行到多少,链接受内存限制、测试受端口与临时目录冲突限制,两者的合理并行度通常都低于核心数。链接用 5.4 节的作业池压低,测试用 RUN_SERIAL 与 RESOURCE_LOCK 逐个隔离。容器环境里检测到的核心数可能是宿主机的,与实际可用的配额不符,发现构建被限流时先核对这个数字。</p></div>
-<h2 id="r6-index">6.4 速查索引:想做什么查哪一条</h2>
+<h2 id="r6-index">6.4 索引:想做什么查哪一条</h2>
 <p>前面五章按对象组织:命令归命令,变量归变量,属性归属性。实际查阅时的起点往往不是对象而是需求——「想让别人 find_package 到我」并不知道该翻哪一章。</p>
 <p>索引按需求组织,第三列同时给出速查部的位置与部一讲机制的位置。速查部回答「写哪一条」,部一回答「为什么是这一条」,两者配合使用。</p>
 <p>一条需求可能牵涉多章。第三列里用分号隔开的几个位置,一般是「先看前一个,不够再看后一个」的顺序。</p>
@@ -5082,7 +5082,7 @@ cmake --help-manual cmake-generator-expressions</code></pre>
 <p>姊妹书可以覆盖 CMake 之外的那一半问题:命令行拼出来之后编译器与链接器做了什么,见《编译与链接》;语言层面的写法与标准细节,见《C++ 语言》;Qt 工程的组织与组件用法,见《Qt 组件与生态》。</p>
 <div class="note old" style="contain-intrinsic-size:auto 195px"><span class="t">🟡 网上的写法有相当一部分停留在目录级老命令的时代</span><p>include_directories()、link_directories()、link_libraries()、add_definitions() 这一套在早期教程里随处可见,照抄之后使用要求无法表达,问题要到工程长大之后才集中爆发。判断一份写法新旧的最快办法是看它有没有 target_ 前缀:围绕目标写的是现代写法,围绕目录写的是老写法。遇到只有老写法的资料,先在部二找对应的现代命令再动手。</p></div>
 <h3>全书结构一览</h3>
-<table style="contain-intrinsic-size:auto 793px">
+<table style="contain-intrinsic-size:auto 666px">
 <thead><tr><th>章</th><th>讲什么</th><th>什么时候翻它</th></tr></thead>
 <tbody>
 <tr><td class="nw">《CMake 构建系统》第 0 章</td><td>预备:CMake 做什么、不做什么</td><td>第一次接触,或者搞不清配置与构建的分界</td></tr>
@@ -5096,12 +5096,12 @@ cmake --help-manual cmake-generator-expressions</code></pre>
 <tr><td class="nw">《CMake 构建系统》第 8 章</td><td class="nw">自定义命令、代码生成与测试</td><td>要生成代码,或者要接测试框架</td></tr>
 <tr><td class="nw">《CMake 构建系统》第 9 章</td><td class="nw">安装、打包与交叉编译</td><td>要装出去、打包,或者交叉编译</td></tr>
 <tr><td class="nw">《CMake 构建系统》第 10 章</td><td class="nw">大型工程与小结</td><td>工程变大之后的拆分与构建时间</td></tr>
-<tr><td class="nw">第 1 章</td><td>命令速查(一):项目、目标与使用要求</td><td>查建目标与传使用要求的命令</td></tr>
-<tr><td class="nw">第 2 章</td><td>命令速查(二):查找、引入与安装</td><td>查查找、引入与安装的命令</td></tr>
-<tr><td class="nw">第 3 章</td><td>命令速查(三):控制流、变量、文件与字符串</td><td>查脚本层面的命令</td></tr>
-<tr><td class="nw">第 4 章</td><td class="nw">变量速查</td><td>查一个 <code>CMAKE_</code> 变量的含义与取值</td></tr>
-<tr><td class="nw">第 5 章</td><td class="nw">属性速查</td><td>查一条属性的作用、取值与初值来源</td></tr>
-<tr><td class="nw">第 6 章</td><td class="nw">生成器表达式、模块与速查索引</td><td>查表达式与模块,或者从索引找入口</td></tr>
+<tr><td class="nw">第 1 章</td><td class="nw">项目、目标与使用要求</td><td>查建目标与传使用要求的命令</td></tr>
+<tr><td class="nw">第 2 章</td><td class="nw">查找、引入与安装</td><td>查查找、引入与安装的命令</td></tr>
+<tr><td class="nw">第 3 章</td><td class="nw">控制流、变量、文件与字符串</td><td>查脚本层面的命令</td></tr>
+<tr><td class="nw">第 4 章</td><td class="nw">变量</td><td>查一个 <code>CMAKE_</code> 变量的含义与取值</td></tr>
+<tr><td class="nw">第 5 章</td><td class="nw">属性</td><td>查一条属性的作用、取值与初值来源</td></tr>
+<tr><td class="nw">第 6 章</td><td class="nw">生成器表达式、模块与索引</td><td>查表达式与模块,或者从索引找入口</td></tr>
 </tbody>
 </table>
 <p>部一读完一遍之后,长期使用的是部二加索引。索引本身也在部二里,从 6.4 节进入是最短的路径。</p>
