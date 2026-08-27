@@ -259,99 +259,39 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 20708px;--thin-h:20708px">
+<section class="chapter" style="contain-intrinsic-size:auto 17783px;--thin-h:17783px">
 <h1 id="m1"><span class="part">第 1 章</span>认识 CMD：它是什么，不是什么</h1>
 <h2 id="m1-open">1.0 导读</h2>
 <p>批处理不是一门为写程序设计的语言，它是 <code>cmd.exe</code> 的命令解析器顺手提供的脚本能力。它的全部疑难都来自同一处：<strong>一行命令在真正执行之前，要先经过读入、转义、变量展开、括号块整体解析这几道加工</strong>。<strong>本书讲清这条流水线，以及每一道加工在什么条件下会把脚本改成你没写过的样子。</strong>凡涉及版本差异之处，给的是本机自查方式，不是写死的结论。</p>
-<h3>这个领域有哪些资料</h3>
-<p>批处理没有公认的圣经。成体系的书屈指可数且早已绝版，最准的是一手来源与几份在线速查，最细的实证记录散在问答站点里。下表按类型排开。<strong>锚定</strong>指本书的骨架或写法从它来，<strong>参考</strong>指写作时查证过但没有影响结构，<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 729px">
-<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 451px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>Tim Hill《Windows NT Shell Scripting》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>把解析器的展开时机与执行模型讲透的少数几本之一，本书解析流水线的思路从它来。局限：成书于 NT 时代，早已绝版，后来新增的命令与选项一概没有，只能当机制读、不能当手册查</td></tr>
-<tr><td>William Stanek《Windows 命令行详解手册》</td><td class="nw">参考手册</td><td class="nw">推荐</td><td>命令覆盖面广，有中译本，适合按命令翻。局限：偏命令罗列，展开与转义的机制讲得浅，读完仍解释不了脚本为什么换台机器就崩</td></tr>
-<tr><td>Microsoft Learn 的 Windows 命令参考</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>一手来源：每条命令的选项与退出行为以它为准，随系统更新。局限：按命令切片，不讲 <code>cmd.exe</code> 的解析顺序，示例偏少</td></tr>
-<tr><td>各命令的内建帮助（<code>命令 /?</code>）</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>与你这台机器上的这一版完全对应，是判定版本差异最可靠的手段。局限：只有选项说明没有场景，<code>for /?</code> 这类长帮助不读两遍读不懂</td></tr>
-<tr><td>SS64 的 CMD 命令参考</td><td class="nw">在线资料</td><td class="nw">锚定</td><td>在线速查里最全的一份，选项、退出码、示例俱全，并标出版本差异。局限：速查性质不成体系；个别页面沿用旧写法，抄之前要核对</td></tr>
-<tr><td>Stack Overflow 上关于 <code>cmd</code> 解析行为的长篇答复</td><td class="nw">在线资料</td><td class="nw">参考</td><td>转义层数、延迟展开、<code>for /F</code> 分词这些边界行为最细的实证记录都在那里。局限：分散在数百个问答里，结论要自己在本机验证一遍</td></tr>
-<tr><td>Raymond Chen《The Old New Thing》</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>解释 Windows 的若干行为为什么保持成现在这样，读懂兼容性包袱的来源。局限：随笔性质，与批处理直接相关的只有零星几篇</td></tr>
-<tr><td>Microsoft Learn 的 PowerShell 文档</td><td class="nw">官方文档</td><td class="nw">推荐</td><td>判断「这件事还该不该用批处理写」时的对照面。局限：与 <code>cmd.exe</code> 的行为差异要自己比对，文档本身不做横向对照</td></tr>
-<tr><td>《PowerShell》与《Shell 脚本与命令行工具》</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>同一套三本里的另外两本，同样的教材加速查结构。局限：不含批处理内容，只在互相调用的写法上与本书衔接</td></tr>
+<tr><td>Tim Hill《Windows NT Shell Scripting》</td><td>把解析器的展开时机与执行模型讲透的少数几本之一；成书于 NT 时代且早已绝版，只能当机制读、不能当手册查</td></tr>
+<tr><td>Microsoft Learn 的 Windows 命令参考</td><td>一手来源，每条命令的选项与退出行为以它为准，随系统更新；按命令切片，不讲 <code>cmd.exe</code> 的解析顺序</td></tr>
+<tr><td>各命令的内建帮助（<code>命令 /?</code>）</td><td>与本机这一版完全对应，是判定版本差异最可靠的手段；只有选项说明没有场景</td></tr>
+<tr><td>SS64 的 CMD 命令参考</td><td>在线速查里最全的一份，选项、退出码、示例俱全并标出版本差异；个别页面沿用旧写法，抄之前要核对</td></tr>
+<tr><td>Stack Overflow 上关于 <code>cmd</code> 解析行为的长篇答复</td><td>转义层数、延迟展开、<code>for /F</code> 分词这些边界行为最细的实证记录；分散在数百个问答里，结论要在本机验证</td></tr>
+<tr><td>William Stanek《Windows 命令行详解手册》</td><td>命令覆盖面广，有中译本，适合按命令翻；偏命令罗列，展开与转义的机制讲得浅</td></tr>
+<tr><td>Raymond Chen《The Old New Thing》</td><td>解释 Windows 的若干行为为什么保持成现在这样；随笔性质，与批处理直接相关的只有零星几篇</td></tr>
 </tbody>
 </table>
-<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 批处理是维护语言，新脚本优先选 PowerShell</span><p>本书花五章讲清批处理的机制，目的是让你能读懂、改对、改稳手上那些已经存在的 <code>.bat</code> 与 <code>.cmd</code>，不是鼓励用它写新东西。要处理结构化数据、要错误分类、要写超过两百行的逻辑，第 1.4、1.5 两节给了明确的判据与去处。</p></div>
-<h3>锚定的四样各借鉴了什么</h3>
-<p>借鉴的都是具体手法，不是笼统的风格。</p>
-<table style="contain-intrinsic-size:auto 313px">
-<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴前四样，选项与退出行为一律以 Microsoft Learn 命令参考与本机 <code>/?</code> 的输出为准。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 377px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td>Tim Hill 的《Windows NT Shell Scripting》</td><td>把一行命令的处理拆成固定几步来讲，而不是按语法点罗列。第 2 章讲展开、第 5 章讲转义与括号块，两章共用同一条流水线；解释延迟展开时的入口是「展开发生在什么时候」，不是「<code>!VAR!</code> 是什么语法」</td></tr>
-<tr><td class="nw">Microsoft Learn 命令参考</td><td>命令速查表的字段划分：命令、作用、常用选项、退出行为各占一列；命令的退出码语义以它为准</td></tr>
-<tr><td class="nw">内建帮助 <code>/?</code></td><td>「不确定就现场问机器」这条做法。凡涉及某个选项在哪一版才有，书里给的是自查命令，不是写死的版本号</td></tr>
-<tr><td class="nw">SS64</td><td>速查表的粒度：一个命令一行，常用选项直接进表格，不为每个选项另起段落。全书 7 节整节速查表都按这个粒度做</td></tr>
+<tr><td>第 2 章展开机制的编排</td><td>Tim Hill：把一行命令的处理拆成固定几步来讲，而不是按语法点罗列；讲延迟展开的入口是「展开发生在什么时候」，不是「<code>!VAR!</code> 是什么语法」</td></tr>
+<tr><td>第 5 章的转义与括号块</td><td>Tim Hill：与第 2 章共用同一条解析流水线，转义按加工次序讲，不按符号罗列</td></tr>
+<tr><td>第 4 章的命令速查表</td><td>Microsoft Learn 命令参考：命令、作用、常用选项、退出行为各占一列的字段划分；命令的退出码语义以它为准</td></tr>
+<tr><td>全书的版本差异处理</td><td>内建帮助 <code>/?</code>：「不确定就现场问机器」，凡涉及某个选项在哪一版才有，书里给的是自查命令，不是写死的版本号</td></tr>
+<tr><td>全书 7 节整节速查表</td><td>SS64：速查表的粒度——一个命令一行，常用选项直接进表格，不为每个选项另起段落</td></tr>
 </tbody>
 </table>
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>读懂与写稳一个批处理脚本所需要的全部机制</strong>，5 章 50 节，每章回答一个问题。</p>
-<table style="contain-intrinsic-size:auto 224px">
-<thead><tr><th class="nw">章</th><th>主题</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 1 章</td><td>CMD 是什么，与 PowerShell、WSL 的分工</td><td>什么时候非它不可，什么时候该换</td></tr>
-<tr><td class="nw">第 2 章</td><td>变量、参数与展开机制</td><td><code>%VAR%</code> 与 <code>!VAR!</code> 为什么结果不一样</td></tr>
-<tr><td class="nw">第 3 章</td><td>流程控制：<code>if</code> / <code>for</code> / <code>goto</code></td><td>怎么写出有分支、有循环、有子过程的脚本</td></tr>
-<tr><td class="nw">第 4 章</td><td>重定向、管道与常用命令</td><td>输出怎么分流，手上这件事该用哪个命令</td></tr>
-<tr><td class="nw">第 5 章</td><td>转义、引号与实战陷阱</td><td>同一个脚本换台机器为什么会崩</td></tr>
-</tbody>
-</table>
-<p>不讲的部分同样要说清楚，并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 350px">
-<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td>PowerShell 的语法、对象管道与模块</td><td class="nw">《PowerShell》</td><td>本书只讲两者互相调用的写法与退出码怎么接</td></tr>
-<tr><td>bash 语法与 Linux 命令行工具</td><td>《Shell 脚本与命令行工具》</td><td>本书只讲通过 <code>wsl</code> 调用它们时的引号与路径规则</td></tr>
-<tr><td>Windows API、服务与注册表编程</td><td>《Windows API 手册》《Win32 程序设计》</td><td>批处理只能经命令行工具间接碰这些，本书讲怎么调、不讲它们本身</td></tr>
-<tr><td>具体产品命令行工具的用法（git、docker、msbuild 等）</td><td class="nw">各自的官方文档</td><td>本书讲怎么在批处理里安全地调它们、怎么接住退出码</td></tr>
-<tr><td>用批处理承载复杂业务逻辑的写法</td><td class="nw">不建议做的事</td><td>第 1.4、1.5 两节给出边界，越过这条线换 PowerShell</td></tr>
-</tbody>
-</table>
-<h3>读之前要会什么</h3>
-<p>本书的前置很低，低到「不需要什么」比「需要什么」更值得先说。</p>
-<table style="contain-intrinsic-size:auto 313px">
-<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>会打开命令提示符并执行一条命令</td><td>打开 <code>cmd</code>，用命令进到某个目录，再列出里面的文件</td></tr>
-<tr><td class="nw">必须</td><td>分得清「命令名」与「文件路径」</td><td>说出 <code>dir</code> 与 <code>C:\Windows\System32\where.exe</code> 被 <code>cmd</code> 找到的方式有什么不同</td></tr>
-<tr><td class="nw">必须</td><td>知道扩展名决定了双击的行为</td><td>说出把一个 <code>.txt</code> 改名成 <code>.bat</code> 之后，双击它会发生什么</td></tr>
-<tr><td class="nw">最好有</td><td>写过任何一种脚本或程序</td><td>说出「变量」「条件」「循环」在你用过的那门语言里各是什么写法</td></tr>
-<tr><td class="nw">最好有</td><td>用过重定向</td><td>说出 <code>dir &gt; a.txt</code> 之后 <code>a.txt</code> 里是什么、屏幕上还剩什么</td></tr>
-<tr><td class="nw">最好有</td><td>知道退出码是什么</td><td>说出一个程序返回 0 与返回非 0 分别表示什么，谁会去读这个值</td></tr>
-</tbody>
-</table>
-<p>三样不需要：不需要会任何编程语言，第 1.7 节从 <code>echo</code> 与 <code>@echo off</code> 开始；不需要安装任何东西，<code>cmd.exe</code> 每台 Windows 都自带；不需要管理员权限，除个别涉及服务与注册表的示例外，全书内容在普通用户下都能跑。</p>
-<h3>与那些资料相比，本书多给了什么</h3>
-<ul>
-<li><strong>按解析机制组织，不按命令罗列。</strong>延迟展开、<code>for /F</code> 的分词、括号块里的换行断点这三处最常见的坑，都能从第 2、5 章同一条流水线推出来，不必逐条死记。</li>
-<li><strong>教材与速查双结构。</strong>50 节里有 7 节是整节的速查表：参数修饰符全表、重定向速查、文件与目录命令速查、十个最常见的坑等，全书 93 张表。顺读时它们是章末总结，查阅时它们是入口。</li>
-<li><strong>80 个批注按四色分工，颜色本身就是结论。</strong>25 个黄色标历史包袱（能用但别选），24 个蓝色指现代替代（该换 <code>robocopy</code>、该换 PowerShell 的地方逐处点名），15 个红色标事故。</li>
-<li><strong>明确写了什么时候不该用批处理。</strong>1.4 把 <code>cmd</code>、PowerShell、WSL 的分工列成表，1.5 列出今天仍然绕不开批处理的六个位置，并给出每个位置的正确做法。</li>
-<li><strong>12 张图画的是解析过程与数据流</strong>：展开的先后顺序、三个流编号的默认去向、括号块的解析边界，都是文字讲不清的部分。</li>
-</ul>
-<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 照抄网上的选项之前，先在本机敲一次 /? 核对</span><p>批处理的资料横跨二十多年，同一个命令的选项在不同 Windows 版本上未必都有，个别选项的默认行为也改过。照抄的后果通常不是报错，而是选项被当成普通参数吞掉，脚本照跑但结果不对。改的时候先在目标机器上敲一次 <code>命令 /?</code>，确认这一版有没有你要用的那个选项。</p></div>
-<h3>两条读法：顺读与按需查</h3>
-<p>第一次写批处理走顺读，手上已经有一个坏掉的脚本走按需查。</p>
-<table style="contain-intrinsic-size:auto 185px">
-<thead><tr><th>你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
-<tbody>
-<tr><td class="nw">第一次写批处理</td><td>第 1 章顺读到第 3 章，再按需取第 4 章的命令表</td><td class="nw">第 1、2、3 章</td><td class="nw">4.5 到 4.8、第 5 章后半</td></tr>
-<tr><td class="nw">接手别人留下的脚本</td><td>先读 2.2、2.8、5.2、5.3 四节，再回头补第 3 章</td><td class="nw">第 2、5 章</td><td class="nw">第 1 章</td></tr>
-<tr><td class="nw">脚本换台机器就崩</td><td>直接进第 5 章，从 5.1 起顺读</td><td class="nw">第 5 章</td><td>—</td></tr>
-<tr><td class="nw">只想查一条命令怎么写</td><td>第 4 章的两张速查表，再看 5.10</td><td>—</td><td>—</td></tr>
-</tbody>
-</table>
-<p><strong>主干是第 2 章与第 5 章。</strong>展开与转义是批处理全部疑难的来源，第 3、4 章遇到的坑几乎都能追回到这两章的某一条规则。第 3 章的 <code>for /F</code> 与第 5 章的括号块是全书最密的两节，第一遍读不透属正常，写脚本时回来查即可。</p>
-<p>按需查有三个入口：<strong>2.10 展开机制速查与踩坑清单</strong>按机制查，<strong>4.2 与 4.4 的两张命令速查表</strong>按命令查，<strong>5.10 十个最常见的坑</strong>按现象查。手上有一个跑不对的脚本时，从 5.10 反查最快。</p>
-<p>读完第 1 到 3 章，能写出带参数、分支、循环与子过程的脚本，并让它的退出码可被调用方判断；读完第 4 章，能把输出与错误分流到日志，能用 <code>robocopy</code> 替掉 <code>xcopy</code>；读完第 5 章，能读懂并修好一段满是 <code>^</code>、<code>%%</code> 与嵌套引号的存量脚本，能说清它在哪台机器上会崩、为什么崩。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 按目标机器选语言：CMD 保底，PowerShell 管数据</span><p>三本脚本书是一套。要在任何一台 Windows 上、不做任何配置、双击就能跑起来，用批处理；要筛选、排序、导出 CSV 或 JSON、调用接口，用 PowerShell；要用 Linux 的工具链，用 WSL 里的 bash。1.4 给了三者互相调用的完整写法表，选错了也能在外面包一层转发。</p></div>
+<h3>前提与读法</h3>
+<p>读之前要会打开命令提示符并执行一条命令，分得清「命令名」与「文件路径」，知道扩展名决定了双击的行为；不需要会任何编程语言，不需要安装任何东西，除个别涉及服务与注册表的示例外也不需要管理员权限。读法有两种：第一次写批处理按第 1 章顺读到第 3 章，主干是第 2 章与第 5 章——展开与转义是批处理全部疑难的来源，第 3、4 章遇到的坑几乎都能追回到这两章的某一条规则——再按需取第 4 章的命令表；手上有一个坏掉的脚本时从 5.10 的十个最常见的坑反查最快，查命令用第 4 章的两张速查表，查机制用 2.10。</p>
+<h3>读完之后</h3>
+<p>读完能写出带参数、分支、循环与子过程的脚本，并让它的退出码可被调用方判断；能把输出与错误分流到日志；能读懂并修好一段满是 <code>^</code>、<code>%%</code> 与嵌套引号的存量脚本，说清它在哪台机器上会崩、为什么崩。进阶方向有二：把新写的自动化交给 PowerShell 这类以对象管道为中心的现代 shell，批处理退回「保底与转发」的位置；向下弄清 <code>cmd.exe</code> 之下的进程创建与环境变量机制，把「脚本为什么这样跑」补上。</p>
 <h2 id="m1-why">1.1 先看三个真实的麻烦</h2>
 
 <p>你几乎不会主动选择 CMD。你是被推到它面前的：</p>
