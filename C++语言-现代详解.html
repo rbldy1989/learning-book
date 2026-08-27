@@ -365,117 +365,39 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 82842px;--thin-h:82842px">
+<section class="chapter" style="contain-intrinsic-size:auto 78852px;--thin-h:78852px">
 <h1 id="c0"><span class="part">第 0 章</span>预备:C 程序员够用的 C++ 基础</h1>
 <h2 id="c0-open">0.0 导读</h2>
-<p>本书面向<strong>已经写得动 C、C++ 只有零星经验</strong>的读者。讲法是从 C 的已知出发:先说清同一件事在两种语言里差在哪,再说清 C++ 多出来的那部分机制是为解决什么问题而存在的,最后给出它在什么条件下不成立。</p>
-<p>语言基线取 <strong>C++17</strong>——凡是没有标注版本的写法在 C++17 上都成立;C++20 与 C++23 的设施逐处标出最低版本。0.11 节给出的工程配置把标准直接开到 C++20,因为后面的示例用到了 <code>std::format</code> 与 ranges。编译器覆盖 GCC、Clang 与 MSVC,行为不一致处三家分别给出。</p>
-<p>手上只有旧编译器时有三条替代路线:<code>std::format</code> 换成 fmt 库,格式串语法相同;ranges 换成写全 <code>begin()</code> 与 <code>end()</code>;<code>std::span</code> 换成指针加长度两个参数。</p>
-<h3>这个领域有哪些经典与主要资料</h3>
-<p>C++ 的资料密度在编程语言里排在前列,问题不是找不到,而是版本跨度太大:同一个问题在 1998 年、2011 年与今天有三种正确答案。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。按触发场景决定翻哪一本的对照表另见 1.0 节。</p>
-<table style="contain-intrinsic-size:auto 1051px">
-<thead><tr><th>资料</th><th>类型</th><th>关系</th><th>特点与局限</th></tr></thead>
+<p>C++ 在 C 之上加了类与对象、模板、异常与更严格的类型系统,既能贴着硬件写,又能向上抽象;代价是同一件事往往有几代写法并存,机制之间互相牵连。<strong>本书面向已经写得动 C 的读者,讲清 C++ 语言本体的机制与取舍:每个设施为解决什么问题而存在、在内存与编译两层实际发生了什么、在什么条件下不成立。</strong>语言基线取 C++17,C++20 与 C++23 的设施逐处标出最低版本;编译器覆盖 GCC、Clang 与 MSVC,行为不一致处三家分别给出。</p>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 474px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>Stroustrup《C++ 程序设计语言》(第 4 版)</td><td>经典教材</td><td>参考</td><td>语言之父写的大全,设计意图的权威出处。局限:极厚,内容止于 C++11,不适合顺序读</td></tr>
-<tr><td class="nw">Lippman 等《C++ Primer》</td><td>经典教材</td><td>推荐</td><td>最完整的入门教材,例题密度高。局限:面向没有编程经验的读者,C 程序员会觉得前几百页在重复已知的东西</td></tr>
-<tr><td class="nw">Lippman《深度探索 C++ 对象模型》</td><td>进阶与专题</td><td>锚定</td><td>类的内存布局、构造析构的编译期展开、虚表的生成过程,C 程序员最缺的就是这一层。局限:成书较早,不含移动语义与模板新特性</td></tr>
-<tr><td>Meyers《Effective C++》与《Effective Modern C++》</td><td>进阶与专题</td><td>锚定</td><td>条款式:做什么、为什么、记住哪几条。前者管类设计与资源管理,后者管现代写法。局限:非入门书;前者止于 C++03,涉及拷贝与性能的条款要用后者修正</td></tr>
-<tr><td>Sutter《Exceptional C++》系列与《C++ 编程规范》</td><td>进阶与专题</td><td>锚定</td><td>以问答推导异常安全与对象生命周期的边界情形,「什么时候会错」讲得最透。局限:例子偏刁钻,不适合当第一本</td></tr>
-<tr><td>Vandevoorde 与 Josuttis《C++ Templates》</td><td>进阶与专题</td><td>参考</td><td>模板推导、特化与元编程的完整参考。局限:后半部分难度陡增,是查阅书不是通读书</td></tr>
-<tr><td>Williams《C++ Concurrency in Action》</td><td>进阶与专题</td><td>参考</td><td>标准线程库与内存模型,含无锁数据结构。局限:内存序部分需要反复读</td></tr>
-<tr><td class="nw">侯捷《STL 源码剖析》</td><td>进阶与专题</td><td>推荐</td><td>从实现看容器与迭代器,能补上「标准库是怎么做到的」这一层。局限:基于早期的 SGI STL,与现在的实现有出入</td></tr>
-<tr><td class="nw">cppreference</td><td>参考手册</td><td>锚定</td><td>接口签名、参数含义、各版本的行为差异与编译器支持表,查得最快。局限:给规则不给取舍;中文版更新滞后,建议看英文版</td></tr>
-<tr><td>ISO C++ 标准工作草案与 WG21 提案文档</td><td>官方文档与规范</td><td>参考</td><td>编译器行为不一致时的仲裁依据;提案的动机一节往往比标准正文好读。局限:草案不是给人顺序阅读的,只能按条款号查</td></tr>
-<tr><td class="nw">C++ Core Guidelines</td><td>官方文档与规范</td><td>锚定</td><td>Stroustrup 与 Sutter 主持,每条带编号,适合作团队规范的依据。局限:是清单不是教材,不解释背景</td></tr>
-<tr><td>GCC / Clang / MSVC 的文档与标准库实现源码</td><td>官方文档与规范</td><td>参考</td><td>扩展、警告开关、ABI 约定,以及文档说不清时的最终事实。局限:实现细节随版本改动,读出的结论不能当接口承诺</td></tr>
-<tr><td class="nw">Compiler Explorer</td><td>在线资料</td><td>参考</td><td>一段代码被编译成了什么,可同时开三个编译器对比,能快速验证行为差异。局限:看得到生成代码,看不到运行期行为</td></tr>
+<tr><td class="nw">Lippman《深度探索 C++ 对象模型》</td><td>类的内存布局、构造析构的编译期展开、虚表的生成过程,C 程序员最缺的就是这一层;成书较早,不含移动语义</td></tr>
+<tr><td>Meyers《Effective C++》与《Effective Modern C++》</td><td>条款式:做什么、为什么、记住哪几条;前者管类设计与资源管理但止于 C++03,后者管现代写法</td></tr>
+<tr><td>Sutter《Exceptional C++》系列与《C++ 编程规范》</td><td>以问答推导异常安全与对象生命周期的边界情形,「什么时候会错」讲得最透;例子偏刁钻,不适合当第一本</td></tr>
+<tr><td class="nw">cppreference</td><td>接口签名、参数含义、各版本行为差异与编译器支持表,查得最快;给规则不给取舍,中文版更新滞后</td></tr>
+<tr><td class="nw">C++ Core Guidelines</td><td>Stroustrup 与 Sutter 主持的编号清单,适合作团队规范的依据;是清单不是教材,不解释背景</td></tr>
+<tr><td>Stroustrup《C++ 程序设计语言》(第 4 版)</td><td>语言之父写的大全,设计意图的权威出处;极厚,内容止于 C++11,不适合顺读</td></tr>
+<tr><td>Vandevoorde 与 Josuttis《C++ Templates》</td><td>模板推导、特化与元编程的完整参考;后半部分难度陡增,是查阅书不是通读书</td></tr>
 </tbody>
 </table>
-<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 经典的机制层没有过时,涉及拷贝与性能的结论要用移动语义修正</span><p>Lippman 讲的对象布局与虚函数机制至今没有变化,Meyers 里类设计与资源管理的条款也仍然成立。要修正的是三类:「返回容器要靠输出参数」这类性能建议在移动语义之后不再成立;围绕 <code>std::auto_ptr</code> 的条款已随它被移除而作废;自己写拷贝构造与赋值的前提换成了三五零法则(4.2 节)。本书在需要修正处会明确标出。</p></div>
-<h3>锚定的五样各借鉴了什么</h3>
-<p>借鉴的都是具体手法,不是笼统的风格。</p>
-<table style="contain-intrinsic-size:auto 426px">
-<thead><tr><th>锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴前五样,接口与版本事实一律以 cppreference 为准,行为有分歧时用多编译器实测与标准条款仲裁。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 349px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">Lippman《深度探索 C++ 对象模型》</td><td>第 3 章的编排与讲法:先摊开内存布局,再说编译器在构造析构处插入了什么,最后才是虚表与继承下的布局。区别在于每一处布局都按现代编译器的实际输出重新核对过,而不是照抄早期实现的图</td></tr>
-<tr><td class="nw">Meyers</td><td>结论的形式。每条使用规矩都写成「做什么、为什么、什么时候不适用」,但不逐条对应条款号,而是按主题聚合进章里;涉及拷贝与性能的旧结论用移动语义重写过(第 5 章)</td></tr>
-<tr><td class="nw">Sutter</td><td>边界与失效情形的写法。问答式的刁钻例子换成真实事故的症状与排查手段——报错原文长什么样、在哪一步暴露、用哪条命令区分两种成因;12.2 节的异常安全三级保证照它的划分</td></tr>
-<tr><td class="nw">cppreference</td><td>两处。一是接口与版本事实的准绳,二手资料与它冲突时以它为准;二是版本标注的形式,每个设施标出最低标准版本,单独占一列</td></tr>
-<tr><td class="nw">C++ Core Guidelines</td><td>绿色批注的形态:一句祈使句加一条理由,能对应到某条编号的写法与它保持一致,团队要给规范找依据时可以按编号引用</td></tr>
+<tr><td class="nw">第 3 章对象模型的编排</td><td>Lippman:先摊开内存布局,再讲编译器在构造析构处插入了什么,最后才是虚表与继承下的布局;每处布局按现代编译器的实际输出重新核对</td></tr>
+<tr><td class="nw">全书使用规矩的结论形式</td><td>Meyers:每条写成「做什么、为什么、什么时候不适用」,按主题聚合进章;涉及拷贝与性能的旧结论在第 5 章用移动语义重写</td></tr>
+<tr><td class="nw">失效情形的写法、12.2 节异常安全三级保证</td><td>Sutter:问答式的刁钻例子换成真实事故的症状与排查手段——报错原文长什么样、在哪一步暴露、用哪条命令区分两种成因</td></tr>
+<tr><td class="nw">版本标注的形式</td><td>cppreference:每个设施标出最低标准版本,单独占一列;二手资料与它冲突时以它为准</td></tr>
+<tr><td class="nw">绿色批注的形态</td><td>C++ Core Guidelines:一句祈使句加一条理由,能对应到某条编号写法的保持一致,团队找规范依据时可按编号引用</td></tr>
 </tbody>
 </table>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 语言行为有分歧时按标准、多编译器实测、二手资料的顺序取信</span><p>先查 cppreference 确认接口与所需的标准版本;行为与预期不符时用 Compiler Explorer 在三家编译器上复现一次,这一步能立刻区分「标准如此」与「某家实现的差异」;仍有分歧才去查标准条款。绝大多数问题在第一步就能解决,直接跳到第三步的代价是查一条规则往往要读五页交叉引用。</p></div>
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>C++ 语言本体的机制与取舍</strong>,19 章 126 节。</p>
-<table style="contain-intrinsic-size:auto 370px">
-<thead><tr><th>章</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 0 章</td><td>读懂后面章节所需的最小 C++ 语法,以及一个能编译能调试的工程</td></tr>
-<tr><td class="nw">第 1、2 章</td><td>同一件事在 C 与 C++ 里差在哪:编译单元、ODR、名字改编、初始化与值类别</td></tr>
-<tr><td class="nw">第 3 到 5 章</td><td>对象模型与资源管理:类在内存里长什么样,谁负责释放,移动语义解决什么</td></tr>
-<tr><td class="nw">第 6 到 8 章</td><td>一次调用编译器选中了哪个函数,继承什么时候该用,值语义类怎么设计</td></tr>
-<tr><td class="nw">第 9 到 11 章</td><td>模板、concepts 与 lambda:泛型代码怎么写、报错怎么读、代价在哪</td></tr>
-<tr><td class="nw">第 12、13 章</td><td>异常与并发:错误怎么传,内存模型保证了什么</td></tr>
-<tr><td class="nw">第 14、15 章</td><td>C++20 与 C++23 的新设施,以及未定义行为、诊断与工具链</td></tr>
-<tr><td class="nw">第 16、17 章</td><td>让自己的类型接进标准库,以及把判据写进接口</td></tr>
-<tr><td class="nw">第 18 章</td><td>从 C 迁移的完整对照表、混合工程与分步演练</td></tr>
-</tbody>
-</table>
-<p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 398px">
-<thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td class="nw">标准库各设施的接口清单、参数与复杂度保证</td><td>《C++ 标准库 API 编程手册》</td><td>本书讲机制与取舍,不讲某个容器有哪些成员函数</td></tr>
-<tr><td class="nw">性能的测量、剖析与调优流程</td><td class="nw">《C++ 性能优化》</td><td>本书指出开销来自哪里,不给测量步骤与优化顺序</td></tr>
-<tr><td class="nw">C 标准库函数的逐个用法</td><td class="nw">《C 标准库 API 手册》</td><td>本书只讲它在 C++ 里该换成什么</td></tr>
-<tr><td class="nw">系统调用、进程与文件系统的语义</td><td class="nw">《Linux 系统编程手册》</td><td>本书的边界停在标准设施</td></tr>
-<tr><td class="nw">Qt 的对象系统、信号槽与部件</td><td class="nw">Qt 四本</td><td>Qt 在 C++ 之上另有一套对象模型与生命周期规则</td></tr>
-<tr><td class="nw">构建系统与包管理的完整用法</td><td class="nw">不在本书系范围</td><td>第 15 章只给一份够用的最小配置</td></tr>
-<tr><td class="nw">语言史与跨语言比较</td><td class="nw">不在本书系范围</td><td>只在解释某个设计为什么是现在这样时提一句</td></tr>
-</tbody>
-</table>
-<h3>读之前要会什么</h3>
-<p>前置分两档,每条都给自测方式——「熟悉 C」无法自测,也就无法用来判断该不该现在读。</p>
-<table style="contain-intrinsic-size:auto 462px">
-<thead><tr><th>档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td class="nw">写得动 C</td><td>独立写出一个用到指针、结构体与动态内存的程序,并指出哪一行分配、哪一行释放</td></tr>
-<tr><td class="nw">必须</td><td class="nw">说得清指针与数组的关系</td><td>说出 <code>int a[10]</code> 与 <code>int *p</code> 在 <code>sizeof</code> 和传参时的差别,并解释原因</td></tr>
-<tr><td class="nw">必须</td><td class="nw">知道源码怎么变成可执行文件</td><td>说出预处理、编译、汇编、链接各自的输入与输出,以及「未定义的引用」是哪一步报的</td></tr>
-<tr><td class="nw">必须</td><td class="nw">能在命令行编译并调试</td><td>不借助 IDE 把两个源文件编成一个可执行文件,再用调试器在某一行停下来看变量</td></tr>
-<tr><td class="nw">最好有</td><td class="nw">读过带函数指针的 C 代码</td><td>说清一张函数指针表怎么做到「同一个调用走不同实现」,这正是虚函数要解决的问题</td></tr>
-<tr><td class="nw">最好有</td><td class="nw">用过一次内存检查工具</td><td>说出上次定位到的是越界、泄漏还是重复释放,以及工具是从哪里发现的</td></tr>
-<tr><td class="nw">最好有</td><td class="nw">了解结构体填充与对齐</td><td>说出一个含 <code>char</code> 与 <code>int</code> 的结构体在常见平台上的 <code>sizeof</code>,并指出多出来的字节在哪</td></tr>
-<tr><td class="nw">最好有</td><td class="nw">读过其他语言的面向对象代码</td><td>说出那门语言里一个对象什么时候被回收,再对照 C++ 的答案</td></tr>
-</tbody>
-</table>
-<p>有两样不在前置里:不需要有 C++ 经验,第 0 章从类与引用开始补;不需要懂模板,第 9 章从实参推导讲起。</p>
-<h3>与那些资料相比,本书多给了什么</h3>
-<ul>
-<li><strong>每个机制都从 C 的已知出发。</strong>先说它在 C 里对应什么、差别在哪,再讲机制本身——第 1 章整章做这件事,第 18 章给出完整对照表,中间各章在概念首次出现时都补一句 C 的对照。</li>
-<li><strong>全书批注共 467 条,写失效与陷阱的红色一类有 236 条,占一半。</strong>每条红色批注给症状:报错原文长什么样、在哪一步暴露、用什么手段区分两种成因,而不只是「注意不要这样写」。</li>
-<li><strong>版本标注到设施一级。</strong>C++17 之外的每个设施标出最低标准版本,14.1 节另有一张地图说明哪些值得现在就用、哪些可以先放着。</li>
-<li><strong>节标题按要回答的问题命名,可直接当查阅入口。</strong>带着具体问题扫一遍目录就能定位到小节;第 18 章的对照表按「C 程序员手头有什么」组织,迁移时从那里查最快。</li>
-<li><strong>八百段以上的代码都是可编译的最小形态。</strong>配套的工具链配置——警告开关、sanitizer、静态分析——在 0.11 节与第 15 章给出可以直接抄的完整版本。</li>
-</ul>
-<h3>三条读法:顺读、补语法与按需查</h3>
-<p>第一次学 C++ 走顺读,已经写过一些 C++ 走补机制,手上有具体问题走按需查。</p>
-<table style="contain-intrinsic-size:auto 222px">
-<thead><tr><th>你的情形</th><th>从哪读起</th><th>主干</th><th>可以先放过</th></tr></thead>
-<tbody>
-<tr><td class="nw">写得动 C,没写过 C++</td><td>第 0 章顺读,再从第 1 章往下</td><td>第 0 到 5 章</td><td>第 10、13、14 章</td></tr>
-<tr><td class="nw">写过一些 C++,想补机制</td><td>跳过第 0 章,第 2 章读到第 8 章</td><td>第 2 到 6 章</td><td>第 0 章</td></tr>
-<tr><td class="nw">维护 C 与 C++ 混合的工程</td><td>第 1 章,再跳到第 18 章</td><td>第 1、18 章</td><td>第 9 到 11 章</td></tr>
-<tr><td class="nw">要写库或对外的公共接口</td><td>第 4、8、16、17 章</td><td>第 17 章</td><td>第 13、14 章</td></tr>
-<tr><td class="nw">手上有具体问题</td><td>拿着问题扫目录的节标题,迁移类问题从第 18 章进</td><td>—</td><td>—</td></tr>
-</tbody>
-</table>
-<p><strong>第 2 到 5 章必须按顺序读完</strong>,这四章是主干,后面每一章都建立在它们之上:第 2 章值类别与初始化,第 3 章对象布局与虚表,第 4 章 RAII 与拷贝控制,第 5 章移动语义与完美转发。第 6 章的重载决议要用到第 2 章的转换序列,第 7 章的继承要用到第 3 章的布局,第 9 章的模板推导要用到第 5 章的引用折叠。</p>
-<p>第 0 章按「读代码需要什么」排序,不按概念的重要性排序:时间有限时 0.1 与 0.2 必读,其余可以边读后面章节边回来查,0.11 建议先跑一遍把环境配好。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 第 2 到 5 章按顺序读完再挑章节</span><p>跳着读的表现很典型:每章都看得懂字面,却记不住为什么要这样写,遇到没见过的现象也推不出原因。原因是后面各章的判据都是从这四章的机制推出来的,机制没有过一遍时,判据只能当口诀背,而口诀在边界情形上一定失效。</p></div>
-<p>第 10 章的模板进阶不写库时可以先放过,第 13 章在动到多线程之前不必读,第 14 章按当前项目的标准版本取用。第 15 章的工具链建议早读一遍,它决定了后面每一次调试能省多少时间。</p>
-<p>按需查的入口是目录:节标题大都按要回答的问题命名——「什么时候写哪几个函数」「异常、返回值还是错误码」「哪些值得现在就用」——拿着手上的问题扫一遍目录,就能直接定位到小节;定位之后先读该节的批注,每条批注的题头就是一句可执行的结论。迁移类的问题另有一条近路:第 18 章的对照表按「C 程序员手头有什么」组织,从那里查最快。</p>
-<p>读完第 0 到 2 章,能读懂日常的 C++ 代码并说清它与等价 C 代码的差别;读完第 3 到 5 章,能解释一个类为什么是这个大小、对象什么时候被销毁、一次移动省下了什么;读完全书,能把一个 C 模块迁到 C++,并说清每一处改动换来了什么保障。</p>
+<h3>前提与读法</h3>
+<p>读之前要写得动 C:独立写出用到指针、结构体与动态内存的程序,说得清指针与数组在 <code>sizeof</code> 与传参时的差别,知道源码经过预处理、编译、汇编、链接变成可执行文件,能在命令行编译并调试;不需要有 C++ 经验,第 0 章从类与引用开始补。读法:没写过 C++ 从第 0 章顺读,写过一些则从第 2 章进;第 2 到 5 章必须按顺序读完——值类别、对象布局、RAII 与移动语义是后面每一章判据的来源;手上有具体问题时拿着问题扫目录的节标题,迁移类问题从第 18 章的对照表进。</p>
+<h3>读完之后</h3>
+<p>读完能读懂日常的 C++ 代码并说清它与等价 C 代码的差别,能解释一个类为什么是这个大小、对象什么时候被销毁、一次移动省下了什么,能把一个 C 模块迁到 C++ 并说清每一处改动换来了什么保障。进阶方向有二:向下读标准库实现与编译器生成的代码,把「语言设施是怎么做到的」补上;向外把语言能力落到泛型库设计、并发与性能工程上。</p>
 <h2 id="c0-class">0.1 类与对象:从 struct 到 class</h2>
 <p>C++ 的类就是 C 的结构体加上三样东西:<strong>成员函数</strong>、<strong>访问控制</strong>、<strong>构造与析构</strong>。除此之外的内存布局、字段排布,与 C 完全一致(第 3 章会证明这一点)。</p>
 <h3>struct 与 class 只差一个默认值</h3>
@@ -8067,7 +7989,7 @@ log(<span>"hello"</span>);     <span class="cm">// 跑一遍就知道进的是�
 <div class="note dead" style="contain-intrinsic-size:auto 195px"><span class="t">🔴 候选集里出现意外的函数时,报错往往指向一个从没听说过的头文件</span><p>真实形态:某天给一个类加了个基类,或者升级了一个第三方库,原本正常的调用突然报「二义」或者行为变了。原因是候选集变了——基类所在的命名空间被实参依赖查找拉了进来,或者库在自己的命名空间里新增了一个同名函数。这类问题的特征是<strong>「改动 A 处,B 处出错,而 B 处的代码一个字没动」</strong>。排查第一步永远是看清候选集(6.2 节给了办法),不要在 B 处的代码里找原因。</p></div>
 <h3>当场验证选中了哪个重载:三种手段</h3>
 <p>前面给了一种(加打印)。三种手段各有适用场景,合起来能覆盖全部情况。</p>
-<table style="contain-intrinsic-size:auto 149px">
+<table style="contain-intrinsic-size:auto 150px">
 <thead><tr><th>手段</th><th>做法</th><th>能回答什么</th><th>代价</th></tr></thead>
 <tbody>
 <tr><td class="nw">运行期标记</td><td>在可疑的几个重载里各加一行打印</td><td><strong>实际跑起来进了哪个</strong></td><td>要能跑到那条路径</td></tr>
@@ -8244,7 +8166,7 @@ c.f(1);                       <span class="cm">// 选中私有的 f(int),报「�
 algo(1.5);      <span class="cm">// helper(x):ADL 对 double 没有关联命名空间 → 找不到 helper(double)</span>
 <span class="cm">                // 于是用第一阶段找到的 helper(int),1.5 被截断成 1</span></code></pre>
 <p>结论是一条很实用的规矩:<strong>模板里要调用的自由函数,要么在模板定义之前声明,要么保证它与实参类型在同一个命名空间里(靠实参依赖查找找到)。</strong>写在模板之后的全局函数,模板看不见。</p>
-<table style="contain-intrinsic-size:auto 150px">
+<table style="contain-intrinsic-size:auto 149px">
 <thead><tr><th>名字的性质</th><th>什么时候查</th><th>查找方式</th><th>风险</th></tr></thead>
 <tbody>
 <tr><td class="nw">不依赖模板参数</td><td><strong>定义模板时</strong></td><td>常规查找</td><td>之后新增的重载看不见</td></tr>
@@ -9209,7 +9131,7 @@ std::vector&lt;std::unique_ptr&lt;Shape&gt;&gt; copy_all(<span class="kw">const<
 </table>
 <h3>clone 的三个变体</h3>
 <p>上面那份 <code>clone()</code> 是最基本的形态。实际用起来会被继续追问三件事:派生类想拿到精确类型怎么办、每个派生类都要重复写同样的一行能不能省掉、以及派生类忘记重写时会发生什么。</p>
-<table style="contain-intrinsic-size:auto 150px">
+<table style="contain-intrinsic-size:auto 149px">
 <thead><tr><th>写法</th><th>派生类要写什么</th><th>能不能拿到精确类型</th><th>漏写会怎样</th></tr></thead>
 <tbody>
 <tr><td class="nw">基类<strong>纯虚</strong> <code>clone()</code></td><td>每个类一行 <code>make_unique</code></td><td>不能,统一返回 <code>unique_ptr&lt;Base&gt;</code></td><td><strong>编译失败</strong>,类无法实例化</td></tr>
@@ -11406,7 +11328,7 @@ Tag&lt;<span class="kw">int</span>* <span class="kw">const</span>&gt;::v;     <s
 <div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 把一个能编译的普通类改成类模板之后,突然报「未声明的标识符」</span><p>根因几乎总是同一个:基类现在依赖模板参数了,于是基类的成员不再被非限定查找找到(9.4 节)。报错指向的是那些成员名,完全看不出与继承有关。<strong>修法是给每一处加 <code>this-&gt;</code></strong>,或者在类里写 <code>using Base&lt;T&gt;::member;</code>。这个坑在把手写容器改成模板容器时几乎必然遇到一次。</p></div>
 <h3>三个编译器的差异</h3>
 <p>两阶段查找是模板代码里跨编译器差异最大的一块,写跨平台代码时要有准备。</p>
-<table style="contain-intrinsic-size:auto 150px">
+<table style="contain-intrinsic-size:auto 149px">
 <thead><tr><th>编译器</th><th>默认行为</th><th>注意事项</th></tr></thead>
 <tbody>
 <tr><td class="nw">GCC</td><td class="nw"><strong>严格两阶段</strong></td><td>参照实现,以它为准通常是对的</td></tr>
@@ -11773,7 +11695,7 @@ ClangBuildAnalyzer --analyze capture.bin</code></pre>
 <div class="note new" style="contain-intrinsic-size:auto 229px"><span class="t">🔵 C++20 的模块从根上消掉了「同一个头文件被解析几百次」这项成本</span><p>头文件的成本来自它的工作方式:每个包含它的编译单元都要把它完整解析一遍,一千个编译单元就解析一千遍,而且宏与包含顺序还会让每次解析的结果可能不同。模块把「解析」与「使用」分开——模块接口只编译一次,产出一份二进制的接口表示,使用方直接读它。<strong>对模板密集的工程,这一项通常是编译时间的大头</strong>,而且它是本节所有手段里唯一不需要改动代码结构的。代价是工具链支持仍在完善,构建系统需要处理模块之间的依赖顺序。判断是否值得迁移的标准很具体:先用 <code>-ftime-trace</code> 看 <code>Source</code> 条目占了多少,占比高才有收益。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 40471px;--thin-h:40471px">
+<section class="chapter" style="contain-intrinsic-size:auto 40470px;--thin-h:40470px">
 <h1 id="c10"><span class="part">第 10 章</span>模板进阶:元编程、SFINAE 与 concepts</h1>
 <p>第 9 章解决「写一份对所有类型适用的代码」,本章解决进一步的需求:让泛型代码按类型的性质分岔,并把对类型的要求写成编译器能检查的东西。</p>
 <p>路线按历史与优劣排:类型萃取是「在编译期向类型提问」的基础设施;SFINAE 是 C++17 之前唯一的分岔手段,读存量代码绕不开;标签分派与 <code>if constexpr</code> 是更好读的替代;C++20 的 concepts 把隐式要求变成显式声明;随后是元编程真正实用的几个固定形态,最后是用继承实现静态多态的 CRTP。</p>
@@ -12322,7 +12244,7 @@ std::apply([](<span class="kw">auto</span>... xs) { (std::cout &lt;&lt; ... &lt;
 <p>实用价值在序列化、反射式的字段映射、以及带名字的强类型上。<strong>C++17 及以前做不到这一点</strong>,只能用宏拼名字。</p>
 <h3>递归展开还是折叠</h3>
 <p>C++11/14 的元编程大量使用递归模板,C++17 之后多数可以换成折叠表达式或 <code>constexpr</code> 循环,性能与可读性都更好。</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 305px"><code><span class="cm">// C++11:递归,每一步实例化一个新类型,编译慢</span>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code><span class="cm">// C++11:递归,每一步实例化一个新类型,编译慢</span>
 <span class="kw">template</span> &lt;<span class="kw">typename</span> T, <span class="kw">typename</span>... Rest&gt;
 <span class="kw">struct</span> max_size { <span class="kw">static</span> <span class="kw">constexpr</span> std::<span class="kw">size_t</span> value =
     <span class="kw">sizeof</span>(T) &gt; max_size&lt;Rest...&gt;::value ? <span class="kw">sizeof</span>(T) : max_size&lt;Rest...&gt;::value; };
