@@ -224,17 +224,26 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#f3-cascade">4.1 选择器、优先级与层叠</a>
 <a class="sec" href="#f3-units">4.2 单位与值:px、em、rem、vw、% 与 calc</a>
 <a class="sec" href="#f3-counter">4.3 伪元素与生成内容:::before、::after 与 content</a>
+<a class="sec" href="#fcss-syntax">4.4 样式表的语法:规则、at-rule 与简写属性</a>
+<a class="sec" href="#fcss-value">4.5 值处理全流程:从声明值到实际值</a>
+<a class="sec" href="#fcss-newsel">4.6 :is()、:where() 与 :has():组合选择器的机制与边界</a>
 </details>
 <details><summary><a class="ch" href="#a5">盒模型与视觉格式化</a></summary>
 <a class="sec" href="#f3-box">5.1 盒模型:content/padding/border/margin</a>
 <a class="sec" href="#f3-display">5.2 display、position 与层叠上下文</a>
 <a class="sec" href="#fcss-width">5.3 width、height 与尺寸的细节</a>
 <a class="sec" href="#fcss-flow">5.4 流的破坏与保护:float、BFC 与定位深入</a>
+<a class="sec" href="#fcss-scroll">5.5 滚动行为:scroll-snap、滚动链与滚动条样式</a>
+<a class="sec" href="#fcss-replaced">5.6 替换元素的适配:object-fit、aspect-ratio 与内在尺寸</a>
+<a class="sec" href="#fcss-logical">5.7 逻辑属性:按文字流向命名的盒模型</a>
 </details>
 <details><summary><a class="ch" href="#a6">布局:Flex、Grid 与响应式</a></summary>
 <a class="sec" href="#f4-flex">6.1 Flexbox:一维布局</a>
 <a class="sec" href="#f4-grid">6.2 Grid:二维布局</a>
 <a class="sec" href="#f4-responsive">6.3 响应式:媒体查询、容器查询与移动优先</a>
+<a class="sec" href="#fcss-flex-deep">6.4 Flex 深入:伸缩算法的完整过程与常见陷阱</a>
+<a class="sec" href="#fcss-grid-deep">6.5 Grid 深入:放置算法、隐式网格与轨道的最小尺寸</a>
+<a class="sec" href="#fcss-multicol">6.6 多列布局 multicol:让内容自己分栏</a>
 </details>
 <details><summary><a class="ch" href="#a7">文本、字体与内联格式化</a></summary>
 <a class="sec" href="#f3-typography">7.1 字体与文本</a>
@@ -245,6 +254,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#f3-color-bg">8.1 颜色、背景、边框与阴影</a>
 <a class="sec" href="#fcss-decor">8.2 背景与边框的技巧(CSS 揭秘)</a>
 <a class="sec" href="#fcss-shape">8.3 形状与视觉效果</a>
+<a class="sec" href="#fcss-blend">8.4 混合模式:mix-blend-mode、background-blend-mode 与 isolation</a>
 </details>
 <details><summary><a class="ch" href="#a9">变换、过渡与动画</a></summary>
 <a class="sec" href="#f4-motion">9.1 变换、过渡与动画</a>
@@ -255,6 +265,8 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <a class="sec" href="#fcss-counter">10.2 计数器:让编号跟着结构走</a>
 <a class="sec" href="#fcss-ux">10.3 用户体验与结构布局</a>
 <a class="sec" href="#fcss-arch">10.4 CSS 架构与工程化</a>
+<a class="sec" href="#fcss-perf">10.5 渲染性能:重排、重绘与 contain、content-visibility</a>
+<a class="sec" href="#fcss-print">10.6 打印样式:print 媒体、@page 与分页控制</a>
 </details>
 <details><summary><a class="ch" href="#a11">前端之旅:学习路线与进阶地图</a></summary>
 <a class="sec" href="#fjourney-books">11.1 五本书怎么读</a>
@@ -265,111 +277,43 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 40457px;--thin-h:26768px">
+<section class="chapter" style="contain-intrinsic-size:auto 36653px;--thin-h:22964px">
 <h1 id="a1"><span class="part">入门</span>前端是什么,以及怎么把它跑起来</h1>
 <p>这本书假定你已经会写程序,只是没在浏览器里写过。所以这一章不从语法开始,而是回答换一个运行时之后最先要弄清的四件事:谁在执行你的代码——浏览器由渲染引擎、JS 引擎、网络栈拼成,HTML/CSS/JS 三件套各自交给谁(<a href="#f1-what">1.1</a>);出了问题去哪看——DevTools 六个面板分别对应 DOM、日志、断点、请求、主线程与存储(<a href="#f1-devtools">1.2</a>);工程怎么起——从双击一个 html 文件,到 <code>npm create vite</code> 出来的那个目录里每一样东西是什么(<a href="#f1-setup">1.3</a>);以及遇到没见过的 API 时去哪查、怎么判断今天能不能用(<a href="#f1-mdn">1.4</a>)。</p>
 <p>这个顺序就是把一页代码跑起来所必需的顺序:先知道执行环境,再有观测手段,再有工程与依赖,最后有查证渠道。四件事都是后面每一章的前提——<a href="#f2-doc">2.1</a> 讲脚本加载时序时,你要能在 Network 面板里读出那几条请求的先后;<a href="#f3-cascade">4.1</a> 讲层叠时,判断「谁赢了」全靠 Elements 面板的 Styles 与 Computed;<a href="前端框架与工程化手册.html#f11-vite">《前端框架与工程化手册》5.1</a> 讲构建链时,默认你已经跑过 <code>npm run dev</code> 与 <code>npm run build</code>。章首先列出全书反复引用的书目,后面再引用时只写书名。</p>
 <h2 id="f1-open">1.0 导读</h2>
-<p>本书讲 <strong>HTML 与 CSS 这两门声明式语言</strong>:标记怎么表达文档的结构与语义,样式表怎么被层叠成一份计算值,浏览器再按这份计算值把盒子摆到屏幕上。读者设定是已经会写后端或系统程序的工程师,所以不从「什么是变量」开始。全书是前端五本手册的入口,末章给出整套书系与相关经典的学习路线。</p>
-<h3>这个领域有哪些经典与主要资料</h3>
-<p>HTML 与 CSS 的资料分布有一个特点:讲机制的书很少但很耐用,讲特性的书出版当年就开始滞后,而规范与 MDN 一直在动。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 964px">
-<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<p>网页由两门声明式语言写成:HTML 用标记表达文档的结构与语义,CSS 把一条条规则层叠成每个元素的计算值,浏览器再按这份计算值把盒子摆到屏幕上。声明式意味着写下的是结果而不是步骤,「页面为什么长成这样」要回到层叠、值计算与格式化模型里找答案;这一层的地基十几年没有变过,特性却持续新增。<strong>本书讲 HTML 的文档骨架、语义、表单与可访问性,以及 CSS 从选择器与值、盒模型与布局到文字、装饰、动画与样式组织的完整计算链。</strong></p>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 537px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>Eric Meyer《CSS 权威指南》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>按属性逐条讲,每条给取值语法、初值、继承性与计算值。局限:成书节奏跟不上模块推进,容器查询、<code>@layer</code>、嵌套、锚点定位这一批要另补</td></tr>
-<tr><td>张鑫旭《CSS 世界》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>把流、内联盒模型、基线、BFC 这些「老 CSS」的行为讲到根,而这一层至今没有变过。局限:文风个人化,例子偏桌面端,不是查阅型的书</td></tr>
-<tr><td>张鑫旭《CSS 新世界》</td><td class="nw">进阶专题</td><td class="nw">参考</td><td>补现代特性:逻辑属性、自定义属性、新单位与新函数。局限:按属性罗列,推导线不如前一本连贯</td></tr>
-<tr><td>Lea Verou《CSS 揭秘》</td><td class="nw">进阶专题</td><td class="nw">锚定</td><td>四十多个问题式技巧,每一个都从规范推导而不是背口诀。局限:成书较早,其中不少方案今天有更直接的属性可用,读的时候把解法当历史、把原理当正课</td></tr>
-<tr><td>MDN Web Docs</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>每页有语法框、参数、可运行示例、规范链接与浏览器兼容性表,并标 Baseline。局限:是参考不是教程,不成体系;中文页滞后于 en-US,拿不准时切英文</td></tr>
-<tr><td>WHATWG HTML Standard</td><td class="nw">官方规范</td><td class="nw">锚定</td><td>解析算法、内容模型、元素默认行为的最终裁判,持续修订。局限:写给实现者读,不给用法建议,也不写兼容性</td></tr>
-<tr><td>W3C 的各份 CSS 模块规范</td><td class="nw">官方规范</td><td class="nw">锚定</td><td>一个属性的初值、适用于、是否继承、计算值、动画类型全部在这里定义。局限:模块各自推进、成熟度不一,同一个属性的定义可能分散在几份文档里</td></tr>
-<tr><td>Can I Use</td><td class="nw">在线资料</td><td class="nw">参考</td><td>按浏览器份额回答「这个特性现在能不能上线」。局限:给的是统计口径的全球份额,不等于你自己的用户构成,判断前先换成你的目标浏览器区间</td></tr>
-<tr><td>web.dev</td><td class="nw">在线资料</td><td class="nw">参考</td><td>Learn CSS 与 Learn HTML 系列成体系,Baseline 与 Core Web Vitals 的解释以它为准。局限:Chrome 视角,部分建议与其他引擎的现状有差</td></tr>
-<tr><td>WAI-ARIA 规范与 ARIA Authoring Practices</td><td class="nw">官方规范</td><td class="nw">参考</td><td>角色、状态、属性与键盘交互模式的权威出处,第 3 章的可访问性两节以它为准。局限:给的是模式骨架,落到具体控件仍要自己补细节</td></tr>
-<tr><td>The A11Y Project</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>清单式的可访问性自查,适合交付前过一遍。局限:清单只说该做什么,不解释为什么</td></tr>
-<tr><td>《JavaScript 语言手册》与《浏览器 API 与工作原理手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>本书刻意不讲的两块在这两本里:语言本体,以及用脚本改这棵树。局限:都不含 CSS</td></tr>
+<tr><td>Eric Meyer《CSS 权威指南》</td><td>按属性逐条给取值语法、初值、继承性与计算值的经典教材,成书节奏跟不上模块推进,容器查询、<code>@layer</code> 这批要另补</td></tr>
+<tr><td>张鑫旭《CSS 世界》</td><td>把流、内联盒模型、基线与 BFC 这些至今未变的「老 CSS」行为讲到根,文风个人化,例子偏桌面端</td></tr>
+<tr><td>Lea Verou《CSS 揭秘》</td><td>四十多个问题式技巧,每一个都从规范推导而不是背口诀,其中不少方案今天已有更直接的属性可用</td></tr>
+<tr><td>MDN Web Docs</td><td>每页给语法框、可运行示例、规范链接与兼容性表并标 Baseline,是参考不是教程,中文页滞后于 en-US</td></tr>
+<tr><td>WHATWG HTML Standard</td><td>解析算法、内容模型与元素默认行为的最终裁判,写给实现者读,不给用法建议也不写兼容性</td></tr>
+<tr><td>W3C 各份 CSS 模块规范</td><td>属性的初值、适用于、是否继承、计算值与动画类型的权威定义,模块各自推进,同一属性的定义可能分散在几份文档里</td></tr>
+<tr><td>张鑫旭《CSS 新世界》</td><td>补逻辑属性、自定义属性、新单位与新函数这批现代特性,按属性罗列,推导线不如《CSS 世界》连贯</td></tr>
+<tr><td>WAI-ARIA 规范与 ARIA Authoring Practices</td><td>角色、状态、属性与键盘交互模式的权威出处,给的是模式骨架,落到具体控件要自己补细节</td></tr>
 </tbody>
 </table>
-<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 老书拿来读机制,特性与兼容性一律回 MDN 和规范核对</span><p>一条通用判据:讲机制的部分越老越可靠,讲特性与工具的部分越新越可靠。流、内联盒模型、层叠与 BFC 这些地基十年没有变过,老书在这里讲得最好;而某个属性有没有落地、默认值是多少、写法有没有被新语法取代,任何书都不该当作事实来源。</p></div>
-<h3>锚定的五样各借鉴了什么</h3>
-<p>下表只收标为「锚定」的,借鉴的内容具体到手法。</p>
-<table style="contain-intrinsic-size:auto 437px">
-<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴前六样;取值、默认值与兼容性这类事实,一律以规范与 MDN 的当前版为准。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 386px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">W3C CSS 模块规范</td><td>语法框的字段划分照规范的属性定义表:取值语法、初值、适用于、是否继承、计算值、动画类型各占一行。另一处是「计算规则」那一段——每条规则都写清规范是按什么顺序算的,而不是只给结论</td></tr>
-<tr><td class="nw">WHATWG HTML Standard</td><td>HTML 元素节的组织:内容模型、属性全表、默认样式与默认行为,顺序照规范的元素定义。行为在不同引擎里有分歧时,以规范条文裁决并写明分歧在哪</td></tr>
-<tr><td>MDN Web Docs</td><td>参考面的字段与术语:属性名、取值、示例、兼容性各占一栏,术语与 MDN 中文页保持一致,便于交叉查阅;每个较新的特性标注 Baseline 状态而不是写死浏览器版本号</td></tr>
-<tr><td>Meyer《CSS 权威指南》</td><td>章节骨架:选择器与层叠、值与单位、盒模型、视觉格式化、布局、文本、装饰这条顺序,以及每个属性都配一张取值全表的做法</td></tr>
-<tr><td>张鑫旭《CSS 世界》</td><td>机制节的写法:先给一个反直觉的渲染结果,再拆浏览器按什么算,最后推出能记住的规则。第 5 章与 7.2 整节按这条线组织</td></tr>
-<tr><td>Lea Verou《CSS 揭秘》</td><td>技巧节的四步显式成段:问题、常规解法为什么不够、解法、原理与边界。第 8.2、8.3、9.2、10.3 四节用这个形状</td></tr>
+<tr><td>第 4 到 10 章的章节骨架</td><td>Meyer《CSS 权威指南》:选择器与层叠、值与单位、盒模型、视觉格式化、布局、文本、装饰这条顺序,以及每个属性配一张取值全表</td></tr>
+<tr><td>CSS 属性节的语法框</td><td>W3C 模块规范的属性定义表:取值语法、初值、适用于、是否继承、计算值、动画类型各占一行;「计算规则」段照规范的计算顺序写</td></tr>
+<tr><td>第 2、3 章的 HTML 元素节</td><td>WHATWG 规范的元素定义顺序:内容模型、属性全表、默认样式与默认行为;引擎行为有分歧时以规范条文裁决</td></tr>
+<tr><td>参考面的字段与术语</td><td>MDN:属性名、取值、示例、兼容性各占一栏,较新特性标 Baseline 状态而不写死浏览器版本号</td></tr>
+<tr><td>第 5 章与 7.2 的机制节</td><td>《CSS 世界》的写法:先给一个反直觉的渲染结果,再拆浏览器按什么算,最后推出能记住的规则</td></tr>
+<tr><td>8.2、8.3、9.2、10.3 的技巧节</td><td>《CSS 揭秘》的四步成段:问题、常规解法为什么不够、解法、原理与边界</td></tr>
 </tbody>
 </table>
-<p>这个领域还有一条别的领域没有的情况必须写清:<strong>HTML 与 CSS 的规范和官方文档更新极快,书出版即滞后</strong>。所以本书系把事实层与组织层分开——书提供章节骨架与推导路径,取值、默认值、兼容性这类事实一律以规范和 MDN 为准。上表里四份官方来源被标为锚定,而不是「参考」,原因就在这里。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 取信顺序固定为规范、MDN、书,三者冲突时按这个顺序</span><p>先在 MDN 看语法框、取值与 Baseline 标记;不确定能不能上线,去 Can I Use 对照目标浏览器;两边都说不清、或者要解释「引擎为什么这么做」时才翻规范。反过来先啃规范会很慢,规范里也不写兼容性。完整的查法见 <a href="#f1-mdn">1.4</a>。</p></div>
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>不借助任何框架、把一个界面写出来并说清它为什么长这样</strong>所需要的全部内容,四部分各回答一个问题。</p>
-<table style="contain-intrinsic-size:auto 211px">
-<thead><tr><th class="nw">部分</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">入门</td><td class="nw">第 1 章,5 节</td><td>浏览器这个运行时长什么样、调试器在哪、最小工程怎么搭、文档怎么查</td></tr>
-<tr><td class="nw">HTML</td><td class="nw">第 2 到 3 章,11 节</td><td>文档骨架与语义、元数据与分享卡片、内容元素与表单、可访问性怎么验收</td></tr>
-<tr><td class="nw">CSS</td><td class="nw">第 4 到 10 章,22 节</td><td>一条样式怎么被选中、值怎么算出来、盒子怎么摆、文字怎么排、怎么装饰与动起来、样式怎么组织</td></tr>
-<tr><td class="nw">路线</td><td class="nw">第 11 章,4 节</td><td>五本手册与相关经典各自怎么读,练手项目与掌握判据是什么</td></tr>
-</tbody>
-</table>
-<p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 499px">
-<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td>JavaScript 语言本体:类型转换、作用域、原型、异步</td><td class="nw">《JavaScript 语言手册》</td><td>本书只在 1.1 与 1.3 用到最少量的脚本,用来把工程跑起来</td></tr>
-<tr><td>用脚本改这棵树:DOM 操作、事件、Web API、渲染管线的内部实现</td><td class="nw">《浏览器 API 与工作原理手册》</td><td>本书讲声明式的那一半——标记与样式写下去会发生什么;命令式的那一半在那本</td></tr>
-<tr><td>类型标注与类型系统</td><td class="nw">《TypeScript 手册》</td><td>本书的示例是纯 HTML、CSS 与少量 JavaScript</td></tr>
-<tr><td>组件级样式方案与框架接入:CSS-in-JS、原子化框架、样式作用域</td><td class="nw">《前端框架与工程化手册》</td><td>本书的 10.4 讲与框架无关的那一层:命名约定、层次划分与自定义属性的组织</td></tr>
-<tr><td>构建配置、打包产物、部署与性能预算</td><td class="nw">《前端框架与工程化手册》</td><td>本书的 1.3 只搭到「能跑起来、能热更新」为止</td></tr>
-<tr><td>Canvas、SVG 的脚本化与图形编程</td><td class="nw">《浏览器 API 与工作原理手册》第 5 章</td><td>本书只把 SVG 当作一种可以用 CSS 样式化的内容</td></tr>
-<tr><td>邮件 HTML、AMP、WebGL 着色器与打印排版的深水区</td><td class="nw">不在本书系范围</td><td>各有独立的子集与实现约束</td></tr>
-</tbody>
-</table>
-<h3>读之前要会什么</h3>
-<p>前置分两档,每条给自测方式——「熟悉网页」无法自测,也就无法用来判断该不该现在读。</p>
-<table style="contain-intrinsic-size:auto 477px">
-<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>能在命令行装好 Node 并起一个本地静态服务</td><td>不借助 IDE,把一个含 <code>index.html</code> 的目录跑成本地地址上能打开的站点,再把端口换一个重来一次</td></tr>
-<tr><td class="nw">必须</td><td>知道一次 HTTP 请求与响应由哪几部分构成</td><td>各举两个常见的请求头与响应头,说清 <code>Content-Type</code> 决定了什么、状态码 304 与 200 对浏览器的区别</td></tr>
-<tr><td class="nw">必须</td><td>读得懂嵌套的树形文本格式</td><td>拿一段三层嵌套的 JSON 或 XML,画出它的树,指出哪些节点是容器、哪些是叶子</td></tr>
-<tr><td class="nw">必须</td><td>装好一个现代桌面浏览器,知道开发者工具在哪</td><td>打开任意页面,找到 Elements 与 Network 两个面板,并在页面上选中一个元素</td></tr>
-<tr><td class="nw">最好有</td><td>写过任何一种界面:桌面 GUI、终端界面或服务端模板</td><td>说出在那套系统里,「容器变宽,里面的元素怎么重新摆」这件事由谁计算、按什么规则</td></tr>
-<tr><td class="nw">最好有</td><td>一点 JavaScript</td><td>读懂 <code>document.querySelector('.card').classList.toggle('on')</code> 这一行改了什么,以及页面上会有什么变化</td></tr>
-<tr><td class="nw">最好有</td><td>与设计稿打过交道</td><td>指着一张设计稿说出哪些数字应该写成固定值、哪些应该随视口或容器变化</td></tr>
-</tbody>
-</table>
-<p>两样不在前置里:不需要有前端经验,第 1 章从最小工程开始;不需要懂色彩理论,第 8 章只用到取值形式与对比度的计算方式。</p>
-<h3>与那些资料相比,本书多给了什么</h3>
-<ul>
-<li><strong>每个属性都有语法框加取值全表。</strong>语法框固定给取值语法、初值、适用于、是否继承、计算值、动画类型六个字段;取值表每个关键字一行,含义、什么时候用、坑各占一栏。这是 MDN 的字段划分加上规范的定义精度,单看任何一边都拿不到。</li>
-<li><strong>41 个「完整示例」都可运行,且带实测数值。</strong>示例不是片段,是能直接粘进 <code>index.html</code> 跑起来的整段代码,涉及尺寸与耗时的地方给出在开发者工具里量到的数字,读者可以照着复现。</li>
-<li><strong>105 个批注按四色分工。</strong>44 个红色写会写错的地方,每个配症状:页面上表现成什么样、在哪个面板能看出来;40 个绿色写成一句能直接执行的判据;16 个蓝色写现代替代;5 个黄色写历史包袱。</li>
-<li><strong>时效性有固定对策,不写死版本号。</strong>较新的特性标 Baseline 状态(全书 41 处),能不能上线指向 Can I Use(23 处),行为有分歧指向 WHATWG 与 W3C 规范(29 处)。哪些内容会过时也说明白:特性与兼容性会过时,层叠、盒模型、内联格式化这些机制不会。</li>
-<li><strong>95 个「深入」块把规范条文与历史演进分了出去。</strong>主线只留推导得出结论所需的部分,规范原文、引擎差异、某个写法的来历折进「深入」,顺读时不被打断,需要考据时展开。</li>
-<li><strong>第 11 章把五本经典按章对到本书系的节。</strong>红宝书、犀牛书、《你不知道的 JavaScript》、两本 CSS 书与《Web 性能权威指南》各自哪一章对应本书系哪一节、哪些章可以跳过,列成了表。</li>
-</ul>
-<h3>两条读法:顺读与按需查</h3>
-<p>第一次系统学前端走顺读,手上已经有具体问题走按需查。</p>
-<table style="contain-intrinsic-size:auto 273px">
-<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
-<tbody>
-<tr><td class="nw">第一次系统学前端</td><td>第 1 章顺读到第 6 章,再按需取第 7 到 10 章,最后读第 11 章定路线</td><td class="nw">第 1、4、5、6 章</td><td class="nw">第 8、9 章</td></tr>
-<tr><td class="nw">会写后端,只要能改页面</td><td>第 1、2 章,再直接进第 4、5 章,补 6.1 与 6.3</td><td class="nw">第 4、5 章</td><td class="nw">第 3、7、8、9 章</td></tr>
-<tr><td class="nw">样式写得出来但说不清为什么</td><td>第 4、5 章顺读,再读 7.2 与 5.4</td><td class="nw">第 4、5 章</td><td class="nw">第 1、2、3 章</td></tr>
-<tr><td class="nw">要做可访问性验收</td><td>3.6 与 3.7,再回头补 2.2 的文档大纲</td><td class="nw">3.6、3.7</td><td class="nw">CSS 各章</td></tr>
-<tr><td class="nw">手上有具体问题</td><td>先在 MDN 查到属性名或元素名,再回本书对应节看计算规则与坑</td><td class="nw">—</td><td class="nw">—</td></tr>
-</tbody>
-</table>
-<p><strong>第 4 章与第 5 章必须按顺序读完</strong>,后面所有 CSS 章节都建立在这两章上:一条样式怎么被选中并胜出(4.1)、值怎么算成计算值(4.2)、盒子的四层怎么叠(5.1)、<code>display</code> 与 <code>position</code> 怎么决定它参与哪种格式化(5.2)。第 6 章的 Flex 与 Grid 是在 5.3 的尺寸计算之上的一层,顺序颠倒会读成一堆记不住的属性名。</p>
-<p>按需查有两个入口:知道属性名的,先在 MDN 查语法,再回本书对应节看「计算规则」与批注;不知道该查什么的,从 1.4 的查阅流程走一遍。</p>
-<p>读完第 1 到 6 章,能不用框架做出一个响应式、可访问的界面,并说清每条样式为什么生效;读完第 7 到 10 章,能解释一段陌生 CSS 的计算过程,把一个项目的样式组织成能长期维护的结构;读完第 11 章,知道接下来四本手册与那几本经典各自该按什么顺序读。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 第 4、5 章按顺序读完再挑章节,它们是全书的地基</span><p>跳着读的表现是每一节看着都懂,但遇到没见过的现象推不出原因:两个 <code>margin</code> 为什么合并成一个、百分比高度为什么不生效、绝对定位的元素为什么跑到了意料之外的位置。这三个问题的答案分别在 5.4、5.3、5.2,而它们都要先有 4.2 的值与计算值这一层才讲得通。</p></div>
+<h3>前提与读法</h3>
+<p>读者设定是已经会写程序的工程师,不从「什么是变量」讲起。读之前要能在命令行装好 Node 并起一个本地静态服务,知道一次 HTTP 请求与响应由哪几部分构成,读得懂嵌套的树形文本格式,装好一个带开发者工具的现代桌面浏览器;不需要前端经验,也不需要色彩理论。读法有两种:第一次系统学从第 1 章顺读到第 6 章,其中第 4、5 章是全书地基,必须按顺序读完,第 7 到 10 章按需取,最后读第 11 章定后续路线;手上有具体问题时,先在 MDN 查到属性名或元素名,再回本书对应节看计算规则与批注。</p>
+<h3>读完之后</h3>
+<p>读完能不用框架做出一个响应式、可访问的界面,并说清每条样式为什么生效;能解释一段陌生 CSS 的计算过程,把一个项目的样式组织成能长期维护的结构。进阶方向有二:向内补语言与运行时,学会用脚本操作这棵树与这份样式;向外把样式组织接进组件与构建链,进入框架与工程化的那一层。</p>
 <h2 id="f1-what">1.1 前端三件套与浏览器这个运行时</h2>
 <p>一个网页由三种东西组成:HTML 负责<strong>结构</strong>(有什么内容、内容之间是什么关系),CSS 负责<strong>表现</strong>(长什么样、摆在哪),JavaScript 负责<strong>行为</strong>(响应什么、什么时候改变)。这三者各自是一门独立的语言,由浏览器里三套不同的代码解析执行,但它们操作的是同一个对象——文档。分清「谁管什么」不是为了分类好看,而是因为把事做错地方会有具体代价:用 JS 去设置本该写在 CSS 里的样式,页面会先以无样式状态闪一下;用 CSS 去藏掉本该由 HTML 决定不存在的内容,屏幕阅读器和搜索引擎仍会读到它;用 HTML 的属性去干本该由 JS 判断的事,逻辑就散进了标记里。</p>
 <p>写后端的人容易把浏览器当成「显示 HTML 的程序」。更准确的模型是:<strong>浏览器是一个运行时</strong>,地位相当于操作系统之于你的进程——它给页面提供 API(DOM、fetch、存储、定时器),隔离不同来源的页面,替页面管网络和缓存,并在页面越界时拒绝执行。你写的 HTML/CSS/JS 是交给这个运行时的「程序」,理解运行时提供什么、禁止什么,比记住任何一个标签都重要。</p>
@@ -1699,7 +1643,7 @@ $ node metacheck.mjs http:<span class="cm">//localhost:5173/posts/this-post-does
 <p>第二份输出是同一篇文章在 SPA 里的样子:除了 Vite 模板自带的 charset、viewport、图标,什么都没有——人在浏览器里看到的文章标题、正文、日期全在 JS 执行之后才出现,而这个脚本(和爬虫)不执行 JS。第三份说明 history 回退把不存在的路径也当 200 处理,爬虫会把它当成一个内容为「Vite App」的真实页面。把 SPA 换成 SSR/SSG 输出后再跑这个脚本,第二、三份输出应当分别变成第一份的样子和一个 404——这就是 <a href="前端框架与工程化手册.html#f10-concurrent">《前端框架与工程化手册》4.1</a> 要解决的事,验收标准就是这个脚本的输出。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 69182px;--thin-h:47523px">
+<section class="chapter" style="contain-intrinsic-size:auto 69980px;--thin-h:48320px">
 <h1 id="a3"><span class="part">HTML</span>内容元素、表单与可访问性</h1>
 <p>上一章把文档的外壳立了起来(<a href="#f2-doc">2.1</a> 的骨架行、<a href="#f2-semantic">2.2</a> 的分区与标题),这一章往里面填内容。</p>
 <p>七节按一页东西的组成顺序排。</p>
@@ -2323,6 +2267,13 @@ Content-Type: application/json
 &lt;/script&gt;</code></pre>
 <div class="note dead" style="contain-intrinsic-size:auto 266px"><span class="t">🔴 视觉隐藏 file 输入框时不能用 display:none 或 visibility:hidden</span><p>这两种写法会把元素从 Tab 序里移除,键盘用户永远聚焦不到它,<code>label</code> 的点击虽然还能触发文件选择,但键盘上按 Enter 没有任何反应。正确的「视觉隐藏但仍可聚焦」写法是把它缩到 1x1 并裁剪掉(<code>clip-path: inset(50%)</code>),再给外层 <code>label</code> 加 <code>:focus-within</code> 的焦点样式——这样 Tab 能停在它上面,焦点看得见,空格/Enter 打开文件选择器。同一套写法就是屏幕阅读器专用文本(常见类名 <code>.visually-hidden</code>/<code>.sr-only</code>)的实现,见 <a href="#f2-a11y">3.6</a>。另外,选中的文件名<strong>不会</strong>自己显示出来,路线二必须自己监听 <code>change</code> 把 <code>files[0].name</code> 写上去,否则用户不知道选没选中。</p></div>
 <div class="note ok" style="contain-intrinsic-size:auto 262px"><span class="t">🟢 同一件信息不要让用户输入两遍</span><p>WCAG 2.2 的「重复输入」(3.3.7)要求:同一个流程里已经提供过的信息,后面不得要求用户重新输入——要么自动填好,要么给一个可选择的选项,除非重新输入是这一步的本质(确认密码、安全校验)。落到表单设计上就是三条:结账时「账单地址同收货地址」的勾选框;多步表单返回上一步时保留已填内容(别在路由切换时清空状态);全套写对 <code>autocomplete</code> 令牌(<code>name</code>、<code>email</code>、<code>tel</code>、<code>street-address</code>、<code>postal-code</code>、<code>cc-number</code>、<code>one-time-code</code>…),让浏览器与密码管理器替用户填。这条准则和 <code>autocomplete</code>、和「别禁用粘贴」是同一件事的三个面,详见 <a href="#f2-a11y">3.6</a> 的 WCAG 表。</p></div>
+<h3>表单外观的三个现代属性:accent-color、color-scheme 与 field-sizing</h3>
+<p><code>appearance: none</code> 是全拆重画,代价是校验态、高对比模式、平台惯例都要自己补。三个新属性提供了轻得多的折中,能不拆就不拆。<code>accent-color</code> 一条声明把复选框、单选、进度条、滑块的「主题色」换成品牌色,控件仍由平台绘制,勾形、焦点环、对比度全部保留——「只是想让勾选框不是默认蓝」的需求到此为止,不必走 <code>appearance: none</code> 重画那条路。</p>
+<p><code>color-scheme: light dark</code> 声明「本页(或本控件)支持两种配色」,深色模式下控件、滚动条、日期选择器的弹出面板都会换成深色版;没有它,深色页面里会嵌着一块块刺眼的浅色原生控件(机制与主题切换的关系见 <a href="#f4-modern">10.1</a>)。<code>field-sizing: content</code> 让 <code>textarea</code> 与 <code>input</code> 按内容自动长高长宽,取代「监听 input 事件改 height」的脚本方案;Chrome 123 起支持,其他引擎落地前把它当渐进增强写。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 114px"><code>:root { color-scheme: light dark; accent-color: #1a5fb4; }
+textarea { field-sizing: content; min-block-size: 3lh; max-block-size: 12lh; }
+/* 三条声明覆盖了过去要几十行自绘 + 脚本才能做到的事 */</code></pre>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 改控件外观先试 accent-color,不够再上 appearance: none</span><p>顺序判据:只换主题色 → <code>accent-color</code>;要换尺寸、边框、布局 → 保留原生行为的局部改造(本节上文);连交互形态都要换 → <code>appearance: none</code> 全拆,同时把键盘、焦点、校验样式全部补齐。从最轻的方案开始,每往下走一步都要有具体理由。</p></div>
 <div class="deep"><h3 class="deep">自定义控件怎么接进表单:ElementInternals</h3>
 <p>自己写一个 <code>&lt;my-rating&gt;</code> 星级控件,把它放进 <code>&lt;form&gt;</code> 里,默认什么都不会发生:<code>new FormData(form)</code> 收不到它的值,<code>form.checkValidity()</code> 不看它,<code>&lt;fieldset disabled&gt;</code> 也级联不到它——因为「参与表单」不是一个可以用属性声明的能力,它是浏览器只给已知元素的特权。<strong>表单关联自定义元素</strong>(form-associated custom elements)是把这份特权开放给自定义元素的唯一途径,入口是 <code>ElementInternals</code>。</p>
 <p>三步:类上写静态字段 <code>static formAssociated = true</code>(必须在定义时就有,浏览器据此决定要不要把它当表单控件对待);构造函数里调 <code>this.attachInternals()</code> 拿到 internals 对象(每个元素只能调一次,再调抛 <code>NotSupportedError</code>);之后用 <code>internals.setFormValue(value)</code> 报告当前值、用 <code>internals.setValidity(flags, message, anchor)</code> 报告校验状态。</p>
@@ -2474,7 +2425,7 @@ username=zhang_san&amp;email=zs%40example.com&amp;password=Secret123&amp;passwor
 <p>第二次输出里 <code>password2</code> 的提示是我们自己的字符串——<code>setCustomValidity</code> 设置的文案原样进入 <code>validationMessage</code>,并让 <code>validity.customError</code> 为 true;如果忘了在一致时调 <code>setCustomValidity('')</code>,这个字段会永远不合法,这是该 API 最常见的 bug。第三次的 FormData 条目就是原生提交会发出的数据集:未勾选的 checkbox 不在里面,勾了就是 <code>"on"</code>,年龄是字符串 <code>"30"</code>——所以 JSON 形态需要那两行类型整形。</p>
 <p>最后的对照里,同一张表单原生提交的正文是 urlencoded 的键值串,<code>@</code> 被编码成 <code>%40</code>;如果加上一个 <code>type=file</code> 并把 enctype 改成 multipart,Payload 里会变成以 <code>------WebKitFormBoundary…</code> 分隔的多段。把 <code>novalidate</code> 去掉再点提交,浏览器会先于 JS 拦下并弹出原生气泡——说明 <code>novalidate</code> 关的只是「拦截与气泡」,<code>validity</code>、伪类与 <code>checkValidity()</code> 都还在。</p></div>
 <h2 id="f2-table-list">3.5 表格与其他结构</h2>
-<p>「结构类」元素包括:<code>&lt;table&gt;</code> 一族、<code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code>、<code>&lt;dialog&gt;</code>、<code>&lt;template&gt;</code>/<code>&lt;slot&gt;</code> 与 <code>&lt;iframe&gt;</code>。它们的共同点是都自带一套「不用 JS 也能动」的行为:表格自带行列语义供屏幕阅读器按单元格导航,details 自带折叠展开,dialog 自带模态、遮罩、Esc 关闭与焦点管理,iframe 自带一整个独立的浏览上下文。知道它们自带了什么,才不会去手写一个更差的版本;知道它们的边界(表格不做布局、dialog 的 returnValue 不会自动清空、iframe 的 sandbox 与 allow 各管什么),才不会在事故现场发懵。</p>
+<p>「结构类」元素包括:<code>&lt;table&gt;</code> 一族、<code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code>、<code>&lt;dialog&gt;</code>、<code>&lt;template&gt;</code>/<code>&lt;slot&gt;</code> 与 <code>&lt;iframe&gt;</code>。它们的共同点是都自带一套「不用 JS 也能动」的行为:表格自带行列语义供屏幕阅读器按单元格导航,details 自带折叠展开,dialog 自带模态、遮罩、Esc 关闭与焦点管理,iframe 自带一整个独立的浏览上下文。知道它们自带了什么,才不会去手写一个更差的版本;知道它们的边界(表格不做布局、dialog 的 returnValue 不会自动清空、iframe 的 sandbox 与 allow 各管什么),才能在事故现场找到排查入口。</p>
 <h3>表格:结构、表头与作用域</h3>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 292px"><code>&lt;table&gt;
   &lt;caption&gt;2026 年各季度营收(万元)&lt;/caption&gt;    <span class="cm">// 表的标题,必须是第一个子元素;屏幕阅读器进表先读它</span>
@@ -2960,10 +2911,11 @@ html lang = zh-CN
 <p>审计脚本只查了六类机械可判的问题,和 Lighthouse 的定位一样:它报零不代表没问题,反例里「没有 lang」「div 可点击」它抓到了,但如果按钮文字是「点这里」它不会报——这条只有人能判断。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 28511px;--thin-h:17831px">
+<section class="chapter" style="contain-intrinsic-size:auto 39444px;--thin-h:28765px">
 <h1 id="a4"><span class="part">CSS</span>选择器、层叠与值</h1>
 <p>CSS 只做一件事:给文档树上的每个元素、每个属性算出一个值,再把这些值交给布局与绘制(见 <a href="浏览器API与工作原理手册.html#f8-render">《浏览器 API 与工作原理手册》9.2</a>)。这一章讲算值链条的前两环,也是排查一切「样式怎么不生效」的两把尺子。<a href="#f3-cascade">4.1</a> 回答「这个属性的值从哪条声明来」——选择器决定哪些声明命中,层叠从命中的声明里挑出一条赢家,一条都没命中时再由继承或初始值兜底;这一环里最反直觉的一句是「写在后面不一定赢,优先级高也不一定赢」,因为优先级只是层叠的第四道关。</p>
 <p><a href="#f3-units">4.2</a> 回答「赢下来的那个值到底有多大」——<code>1em</code>、<code>50%</code>、<code>100vw</code> 各自相对谁换算,同一个百分比在 <code>width</code>、<code>padding</code>、<code>line-height</code> 上参照的根本不是一个东西,<code>calc()</code> 与 <code>clamp()</code> 又怎么把这些相对量组合成一个能随视口连续变化的表达式。<a href="#f3-counter">4.3</a> 把这两环合起来用在一个特殊的属性上——<code>content</code>:<code>::before</code>/<code>::after</code> 凭空造出来的那个盒是什么、不是什么,以及 <code>content</code> 能往里装的六类东西(字符串、<code>attr()</code>、图像、引号、计数器,加一段只给辅助技术读的备用文本)。</p>
+<p>后三节把这条链再往两头延伸。<a href="#fcss-syntax">4.4</a> 补语法层本身:CSS 为什么从不报错、写错的东西按什么粒度被静默丢弃、简写属性展开时会重置哪些没写的长属性;<a href="#fcss-value">4.5</a> 把「一个值」拆成六个阶段——声明值、层叠值、指定值、计算值、使用值、实际值,DevTools 与 <code>getComputedStyle()</code> 各取哪一层;<a href="#fcss-newsel">4.6</a> 讲 <code>:is()</code>/<code>:where()</code>/<code>:has()</code> 这三个改变了优先级算法与匹配方向的新伪类。</p>
 <p>两节合起来正好是 DevTools 里两个面板的分工:Styles 面板显示层叠的过程与结果(谁被划掉了),Computed 面板显示换算之后的最终值。后面几章的每个属性都架在这条链上——<a href="#f3-box">5.1</a> 的 <code>width</code> 落在盒子哪一圈、<a href="#fcss-width">5.3</a> 的 <code>height: 100%</code> 为什么时灵时不灵、<a href="#f4-responsive">6.3</a> 的断点为什么建议用 <code>em</code>,追到底都是「谁赢了」和「这个值相对谁」这两个问题。<a href="#f4-modern">10.1</a> 的 <code>@layer</code>、自定义属性与 <code>:has()</code> 是本章规则的现代扩展,读完那一节值得回来再看一遍层叠顺序表。</p>
 <h2 id="f3-cascade">4.1 选择器、优先级与层叠</h2>
 <p>CSS 的每条规则都在回答同一个问题:「这个元素的这个属性,最终取什么值?」一个元素身上往往同时命中几十条声明——浏览器默认样式、引入的组件库、自己写的页面样式、用户的偏好设置,对同一个属性各执一词。层叠(cascade)是裁决这种冲突的固定算法;选择器决定哪些声明「命中」这个元素;优先级(specificity)只是层叠里排在中间的一步。把「选择器匹配 → 层叠裁决 → 没命中就继承或取初始值」这条线走通,「为什么我的样式没生效」就从玄学变成查表。</p>
@@ -3449,7 +3401,7 @@ innerWidth 1280 → font-size 24px       ← 12 + 16 = 28 被夹到 24</code></p
   a.textContent = <span>"CSS 生成内容"</span>
   innerText 里有「在新窗口打开」吗 = <span class="kw">false</span></code></pre>
 <p>这几行输出各钉死一条规矩。第一行加最后一行:备用文本原样留在计算值里,却<strong>不进 <code>innerText</code></strong>——它只走可访问树,不走文本内容,所以页内查找永远搜不到它。第二、三行:<code>attr()</code> 在<strong>计算值阶段</strong>就被属性值替换掉了,替换完还会跟相邻的字符串<strong>合并成一段</strong>(<code>"图 " attr(data-n) ":"</code> 变成了单个 <code>"图 7:"</code>),所以想在 DevTools 里看到 <code>attr()</code> 三个字是看不到的。第四行:空串是合法的 <code>content</code>,盒真的生成了,而且因为在 flex 容器里被块化,<code>width: 4px</code> 直接生效。第五行是「设了宽高什么都没有」的标准现场:<code>content</code> 是 <code>none</code>,<code>width</code> 却返回 <code>80px</code>——只看 <code>width</code> 会以为盒存在。第六行配上 <code>span</code> 的宽度:<code>img::after</code> 的计算值是完整的字符串,父盒宽度却仍然只有图片本身的 <code>120px</code>,替换元素上的伪元素从来没被生成过。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 装饰交给伪元素,信息交给 HTML</span><p>一条能一直用的分界线:<strong>把这段生成内容删掉,页面的意思变了没有?</strong>没变(箭头角标、装饰竖杠、引号、序号、卡片化表格回显的列名)就放心用 <code>content</code>,顺手配一段 <code>/ 备用文本</code>;变了(按钮文案、状态提示、错误信息)就写进 HTML。打印时展开 URL 是这条线上很典型的一例:屏幕上有超链接可点,地址是冗余的;纸上点不了,地址才变成信息——所以它只出现在 <code>@media print</code> 里,而不是一直挂在那儿。</p></div></div>
+<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 装饰交给伪元素,信息交给 HTML</span><p>一条能一直用的分界线:<strong>把这段生成内容删掉,页面的意思变了没有?</strong>没变(箭头角标、装饰竖杠、引号、序号、卡片化表格回显的列名)就放心用 <code>content</code>,并配一段 <code>/ 备用文本</code>;变了(按钮文案、状态提示、错误信息)就写进 HTML。打印时展开 URL 是这条线上很典型的一例:屏幕上有超链接可点,地址是冗余的;纸上点不了,地址才变成信息——所以它只出现在 <code>@media print</code> 里,而不是一直挂在那儿。</p></div></div>
 <div class="deep"><h3 class="deep">深入:计算值里没有「最后渲染出来的那串字」</h3>
 <p><code>content</code> 的计算值是个半成品:能立刻替换的替换掉,要等布局的原样留着。<code>attr()</code> 与相对 <code>url()</code> 属于前者——属性值和文档基地址在算样式时就已知,直接换成结果。<code>counter()</code>、<code>counters()</code>、<code>open-quote</code> 属于后者——一个计数器的值取决于这个盒在盒树里的位置,一对引号取哪一层要看嵌套深度,都得等布局阶段才有答案。下面这张表是在同一个页面上逐条量到的对照。</p>
 <table style="contain-intrinsic-size:auto 486px">
@@ -3470,11 +3422,256 @@ innerWidth 1280 → font-size 24px       ← 12 + 16 = 28 被夹到 24</code></p
 <li>单冒号 <code>:before</code> 与双冒号 <code>::before</code> 指的是同一个东西,双冒号是 CSS2.1 之后用来区分伪元素与伪类的写法;浏览器两种都认,<code>cssText</code> 序列化时统一吐出双冒号,今天写新代码一律写双冒号。</li>
 <li><strong>伪元素只能出现在复合选择器的最后一位,而且一条规则里只能有一个</strong>:<code>.card::before:hover</code> 与 <code>.card::before::after</code> 都会被当成无法解析的选择器,整条规则被丢弃(在 DevTools 的 Styles 面板里根本看不到它,遍历 <code>cssRules</code> 也找不到),想表达「悬停时的角标」要写成 <code>.card:hover::before</code>——伪类描述宿主元素的状态,伪元素永远是这条选择器的终点。</li>
 </ul></div>
+<h2 id="fcss-syntax">4.4 样式表的语法:规则、at-rule 与简写属性</h2>
+<p>CSS 的语法只有两层:<strong>规则</strong>(选择器加一对花括号)与规则里的<strong>声明</strong>(属性名、冒号、值)。这一层几乎没人专门学,因为它看起来不言自明;但 CSS 与多数语言有一个根本差别——<strong>它没有报错这回事</strong>。拼错属性名、写错值、用了浏览器不认识的选择器,结果都不是异常,而是那一段被静默丢弃,页面带着「少了几条样式」继续渲染。不知道丢弃的边界在哪一层,排查「写了却没生效」时就只能挨个删代码试。</p>
+<h3>两层语法单元:规则与声明</h3>
+<p>一条普通规则由<strong>选择器列表</strong>与<strong>声明块</strong>组成;声明块里是分号分隔的声明,每条声明是「属性: 值」,可以在值后面加 <code>!important</code>(它属于层叠的输入,见 <a href="#f3-cascade">4.1</a>)。属性名与多数关键字值不区分大小写,<code>COLOR: RED</code> 完全合法;唯一的例外是自定义属性,<code>--Main</code> 与 <code>--main</code> 是两个变量。注释只有 <code>/* */</code> 一种,不支持 <code>//</code>——从 Sass 带过来的双斜杠注释在原生 CSS 里不是注释,而是一段非法内容,会连累它后面直到分号的整条声明。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 277px"><code>/* 一条规则的全部语法部件 */
+h1, .title {            /* 选择器列表:命中任意一个就应用 */
+  color: #1a5fb4;       /* 声明:属性名不分大小写 */
+  margin-block: 1em 0;  /* 一条声明写两个值:这是简写,见下文 */
+  font-size: 2rem !important;  /* important 标记属于层叠,不属于值 */
+}
+@media (width &lt;= 40em) { /* at-rule:改变里面规则的适用条件 */
+  h1 { font-size: 1.5rem; }
+}</code></pre>
+<h3>出错恢复:写错为什么不报错,以及丢弃的三个粒度</h3>
+<p>CSS 的容错规则写在规范里,叫<strong>出错恢复</strong>(error handling):解析器遇到不认识的内容时,按固定粒度丢弃,然后从下一个安全点继续。这套设计让 1998 年的浏览器能跳过 2024 年的新语法而不至于整张样式表作废,也是渐进增强能成立的语法基础(<a href="#f1-mdn">1.4</a> 的 <code>@supports</code> 是它的显式版本)。丢弃发生在三个粒度上,粒度判断错了,排查方向就错了。</p>
+<ul>
+<li><strong>声明级</strong>:属性名不认识、值不合法,只丢这一条声明,同一块里的其他声明照常生效。<code>widht: 100px</code> 只废掉自己。</li>
+<li><strong>规则级</strong>:选择器列表里<strong>只要有一个</strong>选择器解析失败,整条规则连同声明块一起作废。<code>h1, h2, p:hover2 { }</code> 里三个目标一个都不会生效。宽容的例外只有 <code>:is()</code>/<code>:where()</code> 的参数,见 <a href="#fcss-newsel">4.6</a>。</li>
+<li><strong>at-rule 级</strong>:不认识的 at-rule 连头带块整个跳过,里面写得再对也不看。</li>
+</ul>
+<p>在 DevTools 的 Styles 面板里,被丢弃的声明会显示为划掉的文字加黄色警告三角,鼠标悬停能看到「Invalid property value」这类原因——这是 CSS 唯一的「报错输出」,排查没生效的样式先看这里,再去查层叠(<a href="#f3-cascade">4.1</a>)。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 选择器列表里混进一个非法选择器,整条规则一起作废</span><p>典型现场:一份兼容旧浏览器的样式里写 <code>input::-ms-clear, input::-webkit-search-cancel-button { display: none }</code>,在不认识其中一个伪元素的浏览器里,另一个也失效了。症状是「两个浏览器各有一半样式不生效」。改法:拆成两条规则,或者用 <code>:is()</code> 不行——伪元素不能进 <code>:is()</code>,这类前缀伪元素只能一条一写。</p></div>
+<h3>at-rule:两类语句,一类带块一类不带</h3>
+<p>at-rule 以 <code>@</code> 开头,分两类:<strong>语句型</strong>不带花括号,以分号结束(<code>@charset</code>、<code>@import</code>、<code>@namespace</code>);<strong>块型</strong>带一对花括号,里面套声明或整条规则。它们不描述样式本身,而是改变「里面的内容在什么条件下、以什么身份被解释」。全书用到的 at-rule 汇总如下,各自的机制在对应节展开。</p>
+<table style="contain-intrinsic-size:auto 415px">
+<thead><tr><th class="nw">at-rule</th><th>作用</th><th class="nw">展开位置</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>@charset</code> / <code>@import</code></td><td>声明编码;引入另一份样式表,可附带媒体条件与 <code>layer()</code></td><td class="nw">本节</td></tr>
+<tr><td class="nw"><code>@media</code></td><td>按媒体特征(宽度、指针类型、配色偏好)开关一组规则</td><td class="nw"><a href="#f4-responsive">6.3</a></td></tr>
+<tr><td class="nw"><code>@supports</code></td><td>按「浏览器认不认识这条声明/选择器」开关一组规则</td><td class="nw"><a href="#f1-mdn">1.4</a></td></tr>
+<tr><td class="nw"><code>@container</code></td><td>按容器尺寸开关一组规则</td><td class="nw"><a href="#f4-responsive">6.3</a></td></tr>
+<tr><td class="nw"><code>@font-face</code> / <code>@keyframes</code> / <code>@counter-style</code></td><td>定义一个可被引用的资源:字体、动画、编号体系</td><td class="nw"><a href="#f3-typography">7.1</a>、<a href="#f4-motion">9.1</a>、<a href="#fcss-counter">10.2</a></td></tr>
+<tr><td class="nw"><code>@layer</code></td><td>把规则归进命名的层叠层,层序压过优先级</td><td class="nw"><a href="#f4-modern">10.1</a></td></tr>
+<tr><td class="nw"><code>@property</code></td><td>给自定义属性注册类型、初值与继承性</td><td class="nw"><a href="#fcss-motion">9.2</a></td></tr>
+<tr><td class="nw"><code>@page</code></td><td>打印时的页面盒:纸张、边距与页边内容</td><td class="nw"><a href="#fcss-print">10.6</a></td></tr>
+</tbody>
+</table>
+<p><code>@import</code> 有一条工程上的硬边界:它必须出现在样式表里除 <code>@charset</code>/<code>@layer</code> 语句外的所有规则之前,而且被引入的文件要等宿主文件下载解析后才开始请求——串行加载。同样是拆文件,HTML 里写两个 <code>&lt;link&gt;</code> 是并行下载,<code>@import</code> 是串行,首屏样式表里不要用它引关键样式。</p>
+<h3>简写属性:一次设置一族,也一次重置一族</h3>
+<p>简写属性(<code>margin</code>、<code>background</code>、<code>font</code>、<code>border</code>、<code>inset</code>、<code>flex</code>、<code>grid</code> 等)是「一条声明展开成 N 条长属性声明」的语法糖。机制上只有一句话,但这一句是大量事故的根源:<strong>简写会给它名下的每一个长属性赋值——没写出来的那些,一律赋初始值</strong>。也就是说简写不是「改我写的这几项」,而是「整族重置,再按我写的覆盖」。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code>.brand { background-color: #1a5fb4; }
+/* 三百行之外,另一个人补了一张背景图: */
+.brand { background: url(logo.svg) no-repeat center; }
+/* 蓝底消失了:background 简写把没写的 background-color
+   重置成了初始值 transparent。 */
+
+.text { line-height: 1.8; }
+.text { font: 14px sans-serif; }
+/* line-height 变回了 normal:font 简写重置整个字体族,
+   包括 line-height、font-weight、font-style。 */</code></pre>
+<p>几条简写各有语法细节:<code>margin</code>/<code>padding</code>/<code>inset</code> 按「上右下左」顺时针取值,两个值是「上下、左右」;<code>background</code> 里 <code>position</code> 与 <code>size</code> 必须用斜杠连写(<code>center / cover</code>),size 不能单独出现;<code>font</code> 简写必须同时含字号与字族,缺一个整条声明非法;<code>border-radius</code> 斜杠前后分别是水平与垂直半径(<a href="#f3-color-bg">8.1</a>);<code>flex</code> 单值的展开另有陷阱,见 <a href="#fcss-flex-deep">6.4</a>。</p>
+<p>展开结果拿不准时,在 Styles 面板点开简写声明前的箭头,浏览器会列出它实际展开成的每一条长属性。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 简写用于整体初始化,后续覆盖单项一律用长属性</span><p>组件的基准样式用简写一次写全(<code>background: …</code>、<code>font: …</code>),状态与变体只动长属性(<code>background-color</code>、<code>font-weight</code>)。反过来在覆盖处用简写,就是在重置一整族——被清掉的那几项不会有任何警告。code review 里看到状态类写了简写,默认当疑点。</p></div>
+<h2 id="fcss-value">4.5 值处理全流程:从声明值到实际值</h2>
+<p>「这个属性现在到底是多少」在 CSS 里不是一个问题,而是六个:同一个属性在处理管线的六个阶段各有一个值,<strong>声明值、层叠值、指定值、计算值、使用值、实际值</strong>。DevTools 的 Computed 面板、<code>getComputedStyle()</code>、继承、过渡动画,各自取的是不同阶段的值。分不清阶段,就会撞上一串解释不了的现象:百分比有时原样保留有时变像素,<code>em</code> 继承下去为什么不翻倍,<code>auto</code> 为什么不能过渡。这一节把管线一次讲完,后面各章都要引用这套词汇。</p>
+<h3>六个阶段:每一步的输入与输出</h3>
+<p>管线对<strong>每个元素的每个属性</strong>独立走一遍。前三步回答「用哪条声明」,后三步回答「这个值折算成多少」。</p>
+<table style="contain-intrinsic-size:auto 291px">
+<thead><tr><th class="nw">阶段</th><th>做什么</th><th class="nw">以 <code>width: 50%</code> 为例</th></tr></thead>
+<tbody>
+<tr><td class="nw">声明值</td><td>收集所有命中该元素的该属性声明,可能有很多条</td><td class="nw"><code>50%</code>、<code>auto</code>、…</td></tr>
+<tr><td class="nw">层叠值</td><td>层叠(<a href="#f3-cascade">4.1</a>)从声明值里挑出唯一赢家;可能一条都没有</td><td class="nw"><code>50%</code></td></tr>
+<tr><td class="nw">指定值</td><td>层叠没结果时兜底:可继承属性取父元素计算值,否则取初始值</td><td class="nw"><code>50%</code></td></tr>
+<tr><td class="nw">计算值</td><td>不看布局也能算的换算全部做掉:<code>em</code>/<code>rem</code> 折成 px,关键字落定,<code>url()</code> 绝对化;多数百分比原样保留</td><td class="nw"><code>50%</code></td></tr>
+<tr><td class="nw">使用值</td><td>布局之后才知道的数落定:百分比按包含块折算,<code>auto</code> 算出具体尺寸</td><td class="nw"><code>341px</code></td></tr>
+<tr><td class="nw">实际值</td><td>设备与实现的最后修正:按物理像素取整等</td><td class="nw"><code>341px</code></td></tr>
+</tbody>
+</table>
+<figure style="contain-intrinsic-size:auto 396px">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<defs><marker id="ar-fval" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--muted)"/></marker></defs>
+<rect x="16" y="18" width="200" height="112" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="28" y="40">① 声明值(一堆)</text>
+<text class="svgmuted" x="28" y="60" font-size="11">width: 50%(作者)</text>
+<text class="svgmuted" x="28" y="78" font-size="11">width: auto(UA 样式表)</text>
+<text class="svgmuted" x="28" y="102" font-size="11">来源:作者 / 用户 / UA</text>
+<rect x="260" y="18" width="200" height="112" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="272" y="40">② 层叠值(一个)</text>
+<text class="svgmuted" x="272" y="60" font-size="11">width: 50% 胜出</text>
+<text class="svgmuted" x="272" y="84" font-size="11">重要性 → 层 → 优先级</text>
+<text class="svgmuted" x="272" y="102" font-size="11">→ 顺序(4.1 的四道关)</text>
+<rect x="504" y="18" width="200" height="112" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="516" y="40">③ 指定值(必有)</text>
+<text class="svgmuted" x="516" y="60" font-size="11">有层叠值:照抄</text>
+<text class="svgmuted" x="516" y="84" font-size="11">没有:可继承 → 父的计算值</text>
+<text class="svgmuted" x="516" y="102" font-size="11">其余 → 规范里的初始值</text>
+<rect x="504" y="170" width="200" height="110" rx="8" fill="var(--svg-fill)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgtext" x="516" y="192">④ 计算值</text>
+<text class="svgmuted" x="516" y="212" font-size="11">em/rem → px,关键字落定</text>
+<text class="svgmuted" x="516" y="230" font-size="11">width 的 % 原样保留</text>
+<text class="svgmuted" x="516" y="254" font-size="11">继承、过渡都取这一层</text>
+<rect x="260" y="170" width="200" height="110" rx="8" fill="var(--svg-soft2)" stroke="var(--muted)"/>
+<text class="svgtext" x="272" y="192">⑤ 使用值</text>
+<text class="svgmuted" x="272" y="212" font-size="11">布局后:50% → 341px</text>
+<text class="svgmuted" x="272" y="230" font-size="11">auto 算出实数</text>
+<text class="svgmuted" x="272" y="254" font-size="11">getComputedStyle 的宽高取此</text>
+<rect x="16" y="170" width="200" height="110" rx="8" fill="var(--svg-soft2)" stroke="var(--muted)"/>
+<text class="svgtext" x="28" y="192">⑥ 实际值</text>
+<text class="svgmuted" x="28" y="212" font-size="11">物理像素取整</text>
+<text class="svgmuted" x="28" y="230" font-size="11">设备能力修正</text>
+<text class="svgmuted" x="28" y="254" font-size="11">最终画出来的数</text>
+<line x1="216" y1="74" x2="256" y2="74" stroke="var(--muted)" marker-end="url(#ar-fval)"/>
+<line x1="460" y1="74" x2="500" y2="74" stroke="var(--muted)" marker-end="url(#ar-fval)"/>
+<line x1="604" y1="130" x2="604" y2="166" stroke="var(--muted)" marker-end="url(#ar-fval)"/>
+<line x1="500" y1="225" x2="464" y2="225" stroke="var(--muted)" marker-end="url(#ar-fval)"/>
+<line x1="256" y1="225" x2="220" y2="225" stroke="var(--muted)" marker-end="url(#ar-fval)"/>
+<text class="svgmuted" x="222" y="66" font-size="11">层叠</text>
+<text class="svgmuted" x="464" y="66" font-size="11">兜底</text>
+<text class="svgmuted" x="612" y="152" font-size="11">换算</text>
+<text class="svgmuted" x="470" y="217" font-size="11">布局</text>
+<text class="svgmuted" x="228" y="217" font-size="11">绘制</text>
+</svg>
+<figcaption>值处理的六个阶段:前三步选出「用哪条声明」,后三步把它折算成能画的数;继承与过渡都发生在计算值这一层（原创绘制）</figcaption>
+</figure>
+<h3>继承传的是计算值,不是你写的那个值</h3>
+<p>可继承属性(基本都是文本类:<code>color</code>、<code>font-*</code>、<code>line-height</code>、<code>text-align</code> 等)在子元素上兜底时,拿的是<strong>父元素的计算值</strong>。这解释了两个高频现象。</p>
+<p>其一,父元素 <code>font-size: 1.2em</code>,孙元素不会 1.2 × 1.2 无限复利——<code>em</code> 在计算值阶段已经折成了 px,传下去的是 px。其二,<code>line-height: 1.5</code> 这种无单位系数是唯一的例外:它的计算值就是系数本身,每个后代拿系数乘<strong>自己的</strong>字号,这正是 <a href="#fcss-inline">7.2</a> 里「行高优先写无单位值」的机制根源。</p>
+<p>另一个常被混淆的边界:<strong>初始值是规范定的,浏览器默认样式是 UA 样式表给的,两者不是一回事</strong>。<code>display</code> 的初始值是 <code>inline</code>;<code>div</code> 默认呈块级,是因为 UA 样式表里有 <code>div { display: block }</code> 这条声明参与层叠。所以 <code>display: initial</code> 会把 <code>div</code> 变成行内元素——想回到「浏览器默认」,要用的是 <code>revert</code>。</p>
+<h3>五个全局关键字与 all</h3>
+<p>任何属性都接受五个全局关键字,它们直接操纵管线的兜底环节;配合 <code>all</code> 属性(一次作用于除 <code>direction</code>/<code>unicode-bidi</code> 外的全部属性)可以整体重置一个元素。</p>
+<table style="contain-intrinsic-size:auto 227px">
+<thead><tr><th class="nw">关键字</th><th>效果</th><th class="nw">典型用途</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>inherit</code></td><td>强制取父元素计算值,不管该属性是否可继承</td><td class="nw">让边框色跟随父级文字色</td></tr>
+<tr><td class="nw"><code>initial</code></td><td>取规范初始值,<strong>无视 UA 样式表</strong></td><td class="nw">少用,容易回到意料之外的值</td></tr>
+<tr><td class="nw"><code>unset</code></td><td>可继承属性当 <code>inherit</code>,其余当 <code>initial</code></td><td class="nw">「当作没写过」的语义</td></tr>
+<tr><td class="nw"><code>revert</code></td><td>撤销作者样式,回到用户/UA 样式表的结果</td><td class="nw">「回到浏览器默认」</td></tr>
+<tr><td class="nw"><code>revert-layer</code></td><td>撤销当前层叠层,回到下一层的结果</td><td class="nw">配 <code>@layer</code>(<a href="#f4-modern">10.1</a>)</td></tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 304px"><code>&lt;div&gt;块一&lt;/div&gt;
+&lt;div style="display: initial"&gt;块二:变成了行内&lt;/div&gt;
+&lt;div style="display: revert"&gt;块三:仍是块级&lt;/div&gt;
+&lt;script&gt;
+  for (const d of document.querySelectorAll('div'))
+    console.log(d.textContent.slice(0, 2), getComputedStyle(d).display);
+  // 块一 block   ← UA 样式表
+  // 块二 inline  ← initial 无视 UA 样式表,取规范初始值
+  // 块三 block   ← revert 只撤作者样式,UA 的 block 还在
+&lt;/script&gt;</code></pre>
+<h3>getComputedStyle 返回的既不全是计算值,也不全是使用值</h3>
+<p><code>getComputedStyle()</code> 返回的是规范定义的<strong>解析值</strong>(resolved value):对 <code>width</code>/<code>height</code>/<code>margin</code>/<code>padding</code>/<code>inset</code> 这些布局属性,取<strong>使用值</strong>(百分比与 <code>auto</code> 都已折成 px);对其余多数属性,取<strong>计算值</strong>。</p>
+<p>所以同一个 API,读 <code>width: 50%</code> 得到 <code>341px</code>,读 <code>line-height: 1.5</code> 却得到 <code>24px</code> 还是 <code>1.5</code> 因浏览器对计算值的定义而异,读 <code>display: none</code> 里的元素宽度得到 <code>auto</code>——没有布局就没有使用值可取。DevTools 的 Computed 面板展示的就是这套解析值。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 排值先开 Computed 面板,再回 Styles 找来源</span><p>Computed 面板回答「现在到底是多少」,每一行点开箭头能跳到贡献这个值的那条声明;Styles 面板回答「为什么是它赢」。顺序反了会在十几条互相覆盖的声明里人肉做层叠。勾选 Computed 面板的 Show all 能看到没人声明过的属性各自的兜底结果,验证继承与初始值的判断。</p></div>
+<h3>var() 的失效发生在计算值阶段,回退不到上一条声明</h3>
+<p>自定义属性(<a href="#f4-modern">10.1</a>)在这条管线上有一个独有的失效点:<code>var()</code> 替换发生在计算值阶段,<strong>层叠早已结束</strong>。如果替换出来的值对这个属性不合法,这条声明不会像普通语法错误那样在解析期被丢弃、让位给上一条声明——层叠已经没法重跑,规范把这种情况定为「计算值时刻无效」,该属性按 <code>unset</code> 处理。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 169px"><code>p { color: #1a5fb4; }
+p { color: var(--brand); }   /* --brand 没定义,也没写回退 */
+/* 解析期两条都合法;计算期 var() 替换失败。
+   color 不会回到 #1a5fb4,而是按 unset → 继承体色。
+   写法上的保险:var(--brand, #1a5fb4) 自带回退。 */</code></pre>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 var() 拼出非法值时整条按 unset 处理,不回退上一条</span><p>症状:引入一个没定义的变量后,颜色不是「退回旧值」而是变成继承来的黑色;Styles 面板里两条声明都没被划掉,看起来都合法。根因是失效发生在计算值阶段,层叠无法重跑。给每个跨文件引用的 <code>var()</code> 写回退值,或用 <code>@property</code> 注册初值。</p></div>
+<h2 id="fcss-newsel">4.6 :is()、:where() 与 :has():组合选择器的机制与边界</h2>
+<p>这三个函数式伪类补齐了选择器长期缺失的三块能力:<code>:is()</code> 把重复的选择器列表折叠成一处,<code>:where()</code> 在此之上把优先级压成零,<code>:has()</code> 第一次允许「按后代与后邻的状态选中祖先」。它们不是语法糖——每一个都改变了优先级的算法或匹配的方向,不清楚机制就会写出「明明命中了却压不过别人」或「一条选择器拖慢整页」的样式。基本用法在 <a href="#f4-modern">10.1</a> 有速览,这一节讲机制与边界。</p>
+<h3>:is():列表折叠,优先级取参数里最高的</h3>
+<p>没有 <code>:is()</code> 时,「三个区域里的 h2」要写三遍:<code>header h2, main h2, footer h2</code>,组合器越多重复越多,漏改一处就出不一致。<code>:is(header, main, footer) h2</code> 把公共部分提出来,展开语义与列表完全等价。它还带来第二个价值:普通选择器列表里混进一个非法选择器会废掉整条规则(<a href="#fcss-syntax">4.4</a>),而 <code>:is()</code>/<code>:where()</code> 的参数是<strong>宽容列表</strong>,不认识的参数只被忽略,其余照常匹配。</p>
+<p>代价在优先级上:<strong><code>:is()</code> 的优先级取参数中最高者,而且不看实际命中的是哪个</strong>。规范这样定是为了让优先级在匹配前就能静态算出,不随命中路径变化;但它经常违反直觉。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 169px"><code>:is(#sidebar, nav) a { color: teal; }
+nav a { color: crimson; }
+/* nav 里的链接是 teal 不是 crimson:
+   :is() 按参数里的 #sidebar 计为 (1,0,1),
+   即使命中的路径是 nav。crimson 那条 (0,0,2) 输了。 */</code></pre>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 :is() 按参数里最高的优先级计,不看命中的是哪个</span><p>症状:往 <code>:is()</code> 里加了一个带 id 的参数,别处一批本来正常的覆盖突然失效;Styles 面板里失效声明被划掉,赢家是那条 <code>:is()</code> 规则。排查时把 <code>:is()</code> 当成「整体按最重参数计价」;需要列表但不想抬高优先级时换 <code>:where()</code>。</p></div>
+<h3>:where():同样的折叠,优先级恒为零</h3>
+<p><code>:where()</code> 与 <code>:is()</code> 的匹配行为完全相同,唯一差别是它<strong>整体计为零优先级</strong>(参数再重也是零)。这让它成为「提供默认值」的标准工具:重置样式、组件库的基准样式用 <code>:where()</code> 写,使用者用任何一条最普通的类型选择器都能覆盖,不必比谁的选择器更重。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 196px"><code>/* 重置层:零优先级,谁都能推翻 */
+:where(ul, ol) { margin: 0; padding-inline-start: 0; list-style: none; }
+:where(button, input, select, textarea) { font: inherit; color: inherit; }
+
+/* 业务代码里一条最朴素的声明就能覆盖: */
+ul { padding-inline-start: 1.5em; }   /* (0,0,1) &gt; 0,直接生效 */</code></pre>
+<p>与 <code>@layer</code>(<a href="#f4-modern">10.1</a>)相比,两者解决同一个「默认值要可覆盖」的问题:<code>:where()</code> 按条生效、粒度细,适合零散的重置;<code>@layer</code> 按整层排序,适合整份第三方样式。同时使用也常见:重置文件整体进最低层,内部再用 <code>:where()</code> 把优先级压平。</p>
+<h3>:has():把匹配方向反过来</h3>
+<p>选择器本来只能顺着树往下、往后选(后代、子、后邻),「有图的卡片」「输入非法时的 label」这类需求三十年来只能上 JS 加类。<code>:has(参数)</code> 选中的是<strong>锚元素自己</strong>——只要以它为起点能匹配到参数,锚就命中。参数是相对选择器,省略组合器时默认后代。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 169px"><code>.card:has(img) { grid-template-columns: 96px 1fr; }  /* 有图换双栏 */
+label:has(+ input:invalid) { color: crimson; }        /* 后邻非法,label 变红 */
+li:has(&gt; ul) &gt; a::after { content: " ▸"; }            /* 有子菜单的项加角标 */
+form:has(:focus-visible) { outline: 2px solid; }      /* 表单里任一控件聚焦 */
+h2:has(+ p) { margin-block-end: .25em; }              /* 紧跟段落的标题收紧下距 */</code></pre>
+<figure style="contain-intrinsic-size:auto 340px">
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<defs><marker id="ar-fhas" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker><marker id="ar-fhas2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--muted)"/></marker></defs>
+<text class="svgtext" x="20" y="28">普通选择器:.card img</text>
+<rect x="60" y="44" width="150" height="40" rx="6" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="88" y="68">.card</text>
+<rect x="30" y="120" width="100" height="40" rx="6" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgtext" x="56" y="144">h2</text>
+<rect x="150" y="120" width="100" height="40" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgtext" x="178" y="144">img</text>
+<line x1="110" y1="84" x2="85" y2="116" stroke="var(--muted)"/>
+<line x1="160" y1="84" x2="192" y2="116" stroke="var(--muted)" marker-end="url(#ar-fhas2)"/>
+<text class="svgmuted" x="30" y="196" font-size="11">沿树往下找,选中的是终点 img</text>
+<text class="svgmuted" x="30" y="214" font-size="11">(实心框 = 被选中)</text>
+<text class="svgtext" x="400" y="28">:has():.card:has(img)</text>
+<rect x="440" y="44" width="150" height="40" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgtext" x="468" y="68">.card</text>
+<text class="svgmuted" x="600" y="68" font-size="11">← 锚,被选中</text>
+<rect x="410" y="120" width="100" height="40" rx="6" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgtext" x="436" y="144">h2</text>
+<rect x="530" y="120" width="100" height="40" rx="6" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="558" y="144">img</text>
+<line x1="490" y1="84" x2="465" y2="116" stroke="var(--muted)"/>
+<line x1="540" y1="84" x2="572" y2="116" stroke="var(--muted)"/>
+<line x1="580" y1="116" x2="536" y2="88" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar-fhas)"/>
+<text class="svgmuted" x="410" y="196" font-size="11">条件仍向下看(子树里有没有 img),</text>
+<text class="svgmuted" x="410" y="214" font-size="11">但命中结果回到锚自己:方向反转</text>
+</svg>
+<figcaption>:has() 把匹配方向反过来:普通选择器选中路径的终点,:has() 的参数只是条件,被选中的是锚元素自己（原创绘制）</figcaption>
+</figure>
+<p>三条硬边界:<code>:has()</code> <strong>不能嵌套</strong>(<code>:has(:has())</code> 非法);参数里<strong>不能写伪元素</strong>;它的参数列表<strong>不宽容</strong>——混一个非法参数整条规则作废,这一点与 <code>:is()</code> 相反,是规范后来专门改的。优先级与 <code>:is()</code> 同规则:取参数中最高者。</p>
+<p>性能边界来自匹配方向的反转。普通选择器变化时浏览器只需重估自身与后代;<code>:has()</code> 意味着子树里任何变动都可能改变<strong>祖先</strong>的命中结果,引擎要维护更大的失效范围。写在具体组件上的 <code>:has()</code>(如 <code>.card:has(img)</code>)代价可控;挂在 <code>body</code>/<code>html</code> 上、参数又宽(如 <code>body:has(*:hover)</code>)的写法,会把整页变成一个高频重算区,滚动与输入时掉帧的现场里常能翻出这类选择器。</p>
+<h3>三者对照与可用性</h3>
+<table style="contain-intrinsic-size:auto 222px">
+<thead><tr><th class="nw">能力</th><th class="nw">:is()</th><th class="nw">:where()</th><th class="nw">:has()</th></tr></thead>
+<tbody>
+<tr><td class="nw">解决的问题</td><td>列表去重</td><td>可覆盖的默认值</td><td>反向选择</td></tr>
+<tr><td class="nw">优先级</td><td>参数最高者</td><td>恒为 0</td><td>参数最高者</td></tr>
+<tr><td class="nw">参数宽容</td><td>宽容</td><td>宽容</td><td><strong>不宽容</strong></td></tr>
+<tr><td class="nw">参数可带组合器</td><td>否(复合选择器)</td><td>否</td><td>是(相对选择器)</td></tr>
+<tr><td class="nw">Baseline</td><td>2021</td><td>2021</td><td>2023 年底全绿</td></tr>
+</tbody>
+</table>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 :has() 已全线可用,渐进增强用 @supports selector() 收边</span><p>四大引擎自 2023 年末起都支持 <code>:has()</code>。仍需兜住旧浏览器时,把增强样式包进 <code>@supports selector(:has(a)) { … }</code>,基础布局在外面写好——写法见 <a href="#f1-mdn">1.4</a>。用 JS 探测的老办法(加 <code>.has-img</code> 类)只在要支持 2022 以前浏览器的项目里保留。</p></div>
+<h3>完整示例:无 JS 的表单错误提示</h3>
+<p>下面的表单只用 <code>:has()</code> 与 <code>:user-invalid</code>(<a href="#f2-form-validate">3.4</a>)实现「碰过且非法的字段整行变红、提示语出现、提交按钮禁用态」,一行脚本都没有。</p>
+<pre style="contain-intrinsic-size:auto 522px"><code>&lt;style&gt;
+  .field { display: grid; gap: .25em; margin-block: 1em; }
+  .field .hint { display: none; color: #c01c28; font-size: .875em; }
+  /* 字段行:里面有碰过且非法的控件时整行标红 */
+  .field:has(:user-invalid) { border-inline-start: 3px solid #c01c28;
+                              padding-inline-start: .75em; }
+  .field:has(:user-invalid) .hint { display: block; }
+  /* 表单里存在任何非法控件时,提交按钮呈禁用态(视觉层) */
+  form:has(:user-invalid) button[type=submit] { opacity: .5; }
+&lt;/style&gt;
+&lt;form&gt;
+  &lt;div class="field"&gt;
+    &lt;label for="mail"&gt;邮箱&lt;/label&gt;
+    &lt;input id="mail" type="email" required&gt;
+    &lt;p class="hint"&gt;需要一个合法的邮箱地址&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;button type="submit"&gt;注册&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+<p>在输入框里敲一个不含 <code>@</code> 的串再移开焦点:左侧红条与提示语同时出现;修好后自动消失。真正的禁用逻辑仍要服务端与 JS 校验兜底——这里的 <code>opacity</code> 只是视觉反馈,<code>:has()</code> 改不了 <code>disabled</code> 属性本身,这条边界与 <a href="#f2-form-validate">3.4</a> 的「客户端校验只是体验层」一脉相承。</p>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 31513px;--thin-h:21713px">
+<section class="chapter" style="contain-intrinsic-size:auto 42067px;--thin-h:32267px">
 <h1 id="a5"><span class="part">CSS</span>盒模型与视觉格式化</h1>
-<p>上一章算出了每个属性的值(<a href="#f3-cascade">4.1</a> 决定用哪条声明,<a href="#f3-units">4.2</a> 决定这个值有多大),这一章把值变成屏幕上的矩形。四节沿着一个盒子的一生排:<a href="#f3-box">5.1</a> 讲盒子的四圈——<code>width</code> 写的是哪一圈由 <code>box-sizing</code> 决定,<code>margin</code> 为什么会折叠、能为负、能 <code>auto</code>,以及 <code>outline</code> 与 <code>box-shadow</code> 为什么画得出来却不占地方;<a href="#f3-display">5.2</a> 讲这个盒子参与哪种布局、脱不脱离正常流、重叠时谁在上面;<a href="#fcss-width">5.3</a> 回到尺寸本身,把「不写 <code>width</code> 有多宽」的四种表现、百分比高度的生效条件、min/max 的优先级、<code>margin: auto</code> 到底靠什么判断,讲成能在 DevTools 里逐条复核的规则;<a href="#fcss-flow">5.4</a> 讲流的破坏与保护——<code>float</code> 与绝对定位怎么把元素拿出正常流,BFC 又怎么把一块区域围起来让内外互不干扰。</p>
+<p>上一章算出了每个属性的值(<a href="#f3-cascade">4.1</a> 决定用哪条声明,<a href="#f3-units">4.2</a> 决定这个值有多大),这一章把值变成屏幕上的矩形。前四节沿着一个盒子的一生排:<a href="#f3-box">5.1</a> 讲盒子的四圈——<code>width</code> 写的是哪一圈由 <code>box-sizing</code> 决定,<code>margin</code> 为什么会折叠、能为负、能 <code>auto</code>,以及 <code>outline</code> 与 <code>box-shadow</code> 为什么画得出来却不占地方;<a href="#f3-display">5.2</a> 讲这个盒子参与哪种布局、脱不脱离正常流、重叠时谁在上面;<a href="#fcss-width">5.3</a> 回到尺寸本身,把「不写 <code>width</code> 有多宽」的四种表现、百分比高度的生效条件、min/max 的优先级、<code>margin: auto</code> 到底靠什么判断,讲成能在 DevTools 里逐条复核的规则;<a href="#fcss-flow">5.4</a> 讲流的破坏与保护——<code>float</code> 与绝对定位怎么把元素拿出正常流,BFC 又怎么把一块区域围起来让内外互不干扰。</p>
+<p>后三节处理盒子与内容、与滚动、与文字流向的关系:<a href="#fcss-scroll">5.5</a> 讲滚动行为——锚点怎么给顶栏让位、scroll-snap 怎么停准、滚动链在哪一层断开;<a href="#fcss-replaced">5.6</a> 讲替换元素的适配——<code>object-fit</code> 怎么裁、<code>aspect-ratio</code> 怎么在图片到达前占位;<a href="#fcss-logical">5.7</a> 把整套盒模型按文字流向重新命名成逻辑属性。</p>
 <p>《CSS 世界》的路子是每条规则都从「浏览器为什么必须这样做」推出来,而不是背口诀。CSS 部分排错密度最高的内容也在这里——<code>width: 100%</code> 加 padding 就溢出、子元素的 <code>margin-top</code> 跑到父元素外面、<code>height: 100%</code> 时灵时不灵、<code>fixed</code> 弹窗跟着页面滚、<code>z-index: 9999</code> 压不过 2、父元素高度塌成 0,这六个现场在这里都有确定答案。Flex 与 Grid 容器内部建立各自的格式化上下文,不走本章的正常流规则(见 <a href="#f4-flex">6.1</a>、<a href="#f4-grid">6.2</a>),但容器自己与外部世界的关系仍由本章决定;元素画出来之后的着色、圆角与阴影在 <a href="#f3-color-bg">8.1</a>。</p>
 <h2 id="f3-box">5.1 盒模型:content/padding/border/margin</h2>
 <p>布局里每个元素生成一个或多个矩形盒,每个盒从里到外四圈:内容(content)、内边距(padding)、边框(border)、外边距(margin)。<code>width</code>/<code>height</code> 写的到底是哪一圈的尺寸,由 <code>box-sizing</code> 决定;这是「给元素设了 200px 宽却占了 250px」这类问题的全部来源。理解盒模型的另一半是 <code>margin</code> 的几条特殊规矩:它可以为负、可以 <code>auto</code>、垂直方向会折叠;以及哪些东西画出来但<strong>不占空间</strong>(<code>outline</code>、<code>box-shadow</code>)。</p>
@@ -3545,7 +3742,7 @@ after : p.top=8   c1.top=38  gap(c1→c2)=40</code></pre>
 <p>折叠看起来有三种互不相关的情形——相邻兄弟之间、父子之间、空元素自己的上下 margin 之间——但它们是同一条规则的三个投影:<strong>当两个 margin 边在块轴方向上「贴在了一起」,中间没有任何东西把它们隔开,它们就合成一个</strong>。所谓「隔开」的东西只有四类:边框、内边距、行内内容(哪怕只有一个字符)、以及 clearance。把这句话代进三种情形:相邻兄弟之间,上一个的下 margin 与下一个的上 margin 直接相邻,没东西隔开 → 折叠;父子之间,父元素若没有 <code>border-top</code>、没有 <code>padding-top</code>、第一个孩子之前没有任何行内内容,那么父的上 margin 边与子的上 margin 边就是同一条线 → 折叠(现象是「子元素的 margin-top 跑到父元素外面去了」);一个高度为 0、没有边框和内边距的空块,它自己的上下 margin 边贴在一起 → 自己和自己折叠。</p>
 <p>折叠的<strong>结果</strong>也只有一条规则:都为正取最大值,都为负取绝对值最大的那个(即取最小值),一正一负则相加。三个 margin 折叠在一起时按同一规则一次算完,而不是两两算。这解释了「我给下面那个元素加了 <code>margin-top: 10px</code>,间距为什么没变」——上面那个的 <code>margin-bottom</code> 是 24px,取最大值仍是 24px。</p>
 <p>规范用的词是<strong>块轴方向的 margin</strong>,不是「垂直 margin」。这一点解释了两件事:横排文档里块轴是竖直的,所以折叠发生在上下;把 <code>writing-mode</code> 改成竖排(<a href="#f2-text-i18n">3.2</a> 提到的方向体系),块轴变成水平的,折叠方向也跟着转九十度。同一条规则还解释了为什么<strong>内联方向从不折叠</strong>——两个行内盒之间的 margin 是把同一行里的内容拉开,把它们合并会破坏行内布局的语义。</p>
-<p>至于「什么时候不折叠」,列举出来是一长串(浮动元素、绝对定位元素、flex 子项、grid 子项、建立了 BFC 的元素、根元素),但它们的共同根因只有一句:<strong>折叠只发生在同一个块格式化上下文的正常流里</strong>。上面那一串要么脱离了正常流(浮动、绝对定位),要么根本不在块布局里(flex/grid 子项走的是各自的布局算法),要么自己开了一个新的 BFC 把内外隔开。所以修 margin 折叠的标准动作永远是同一个——<strong>给父元素 <code>display: flow-root</code></strong>(见 <a href="#fcss-flow">5.4</a>),而不是去加一个 <code>1px</code> 的透明边框或者 <code>overflow: hidden</code>:前者会让盒子实际大 2px,后者会顺手把溢出内容裁掉并可能变成滚动容器。</p></div>
+<p>至于「什么时候不折叠」,列举出来是一长串(浮动元素、绝对定位元素、flex 子项、grid 子项、建立了 BFC 的元素、根元素),但它们的共同根因只有一句:<strong>折叠只发生在同一个块格式化上下文的正常流里</strong>。上面那一串要么脱离了正常流(浮动、绝对定位),要么根本不在块布局里(flex/grid 子项走的是各自的布局算法),要么自己开了一个新的 BFC 把内外隔开。所以修 margin 折叠的标准动作永远是同一个——<strong>给父元素 <code>display: flow-root</code></strong>(见 <a href="#fcss-flow">5.4</a>),而不是去加一个 <code>1px</code> 的透明边框或者 <code>overflow: hidden</code>:前者会让盒子实际大 2px,后者会连带把溢出内容裁掉并可能变成滚动容器。</p></div>
 <h3>padding、border 与 outline</h3>
 <p><code>padding</code> 不能为负、不能 <code>auto</code>;它的<strong>百分比按包含块的宽度算,包括 padding-top/bottom</strong>。这条反直觉的规则是「<code>padding-top: 56.25%</code> 做 16:9 占位」技巧的原理——高度跟着宽度走。今天这个需求直接用 <code>aspect-ratio: 16 / 9</code>(Chrome 88+ / Firefox 89+ / Safari 15+)就行,不必再绕。内联元素(<code>span</code>)的水平 padding 正常占位,垂直 padding 会画出来但<strong>不撑高行框</strong>,会和上下行重叠;要让它占位,把元素改成 <code>inline-block</code>。</p>
 <p><code>border</code> 三个分量里 <code>border-style</code> 的初值是 <code>none</code>,<code>none</code> 会把边框宽度的计算值压成 0,所以只写 <code>border-width: 2px</code> 或 <code>border-color: red</code> 什么都看不见——必须给样式。<code>border-color</code> 不写时取 <code>currentcolor</code>(见 <a href="#f3-color-bg">8.1</a>)。边框占布局空间、参与 <code>border-box</code> 的 width,背景默认画到它下面(虚线边框的空隙里透出背景色就是这个原因,想避免设 <code>background-clip: padding-box</code>)。</p>
@@ -3977,12 +4174,260 @@ v1 父元素去掉 flow-root 后父高 = 62 px(仍被 BFC 的 .main 撑着);再�
 页面上最后一步:主栏的黄色背景铺满整行,「侧栏」蓝块盖在它左上;文字「主栏 <span class="kw">float</span> + BFC」却从蓝块右边开始——行框绕开浮动,块盒没有</code></pre>
 <p>解读:三种写法量出来的数字完全一样,差别在机制和可维护性。v1 的 380 来自「BFC 不与浮动重叠」:<code>.main</code> 没写宽度,作为 BFC 它的边框盒从浮动的 margin 外边缘(200 + 20)开始到容器右边,正好 380;父元素的 62px(60 + 上下 1px 边框)来自「BFC 高度包含浮动」。v2 的 380 是 <code>flex: 1</code> 吃掉 600 − 200 − 20 的剩余空间,<code>min-width: 0</code> 保证内容很长时它仍能收缩(见 <a href="#f4-flex">6.1</a>)。</p>
 <p>v3 的 380 是 <code>1fr</code> 分配剩余空间。去掉两个 <code>flow-root</code> 之后的最后两行是「塌陷 + 穿透」的标准现场:主栏占满 400,背景被浮动盖住,而文字绕开了浮动;父元素高度此时仍是 62,是因为主栏自己有 <code>min-height: 60px</code> 还在流里——把主栏也删掉,父高就塌成 2px(只剩边框)。新代码选 v2 或 v3;v1 值得理解,因为老项目里它无处不在,而且「给兄弟加 <code>overflow: hidden</code> 就能不被浮动盖住」这个技巧,在富文本环绕图片时依然是最省事的解法。</p></div>
+<h2 id="fcss-scroll">5.5 滚动行为:scroll-snap、滚动链与滚动条样式</h2>
+<p>上一节讲清了滚动容器怎么建立(<code>overflow</code>)与 <code>sticky</code> 怎么粘(<a href="#fcss-flow">5.4</a>),这一节讲<strong>滚动这件事本身的行为控制</strong>:页面的根滚动容器到底是谁,锚点跳转怎么给固定顶栏让位,轮播怎么不写 JS 就能一页页停准,弹窗里滚到底为什么会带动整个页面,以及滚动条本身能改什么、不能改什么。这些属性各自很小,但都在回答同一个问题——滚动的位置、去向与外观,有多少能交给 CSS 声明,而不是交给滚动事件里的脚本。</p>
+<h3>根滚动容器:html、body 与传播规则</h3>
+<p>页面级滚动发生在<strong>视口</strong>上,而控制它的 <code>overflow</code> 有一条特殊的传播规则:视口取 <code>html</code> 元素的 <code>overflow</code>;若 <code>html</code> 是 <code>visible</code>,则取 <code>body</code> 的值<strong>上移给视口</strong>,此时 <code>body</code> 自己按 <code>visible</code> 处理。</p>
+<p>所以「禁掉页面滚动」写 <code>html { overflow: hidden }</code> 或 <code>body { overflow: hidden }</code> 都生效,但两者写了<strong>不同的元素</strong>——脚本里对应的是 <code>document.scrollingElement</code>(标准模式下即 <code>html</code>),读页面滚动量用它,不要猜 <code>body.scrollTop</code>。</p>
+<p>这条规则的常见事故形态:给 <code>body</code> 同时写了 <code>overflow: hidden</code> 与 <code>height: 100vh</code>,页面确实不滚了,但弹层关闭后忘了还原,或者在 iOS 上内层仍能带动橡皮筋回弹。工程上更稳的锁滚动方案见下文 <code>overscroll-behavior</code>,以及现代的 <code>:has()</code> 写法:<code>html:has(dialog[open]) { overflow: hidden }</code>(<a href="#fcss-newsel">4.6</a>)。</p>
+<h3>锚点滚动:scroll-behavior、scroll-margin 与 scroll-padding</h3>
+<p>点击 <code>#section3</code> 链接、调用 <code>scrollIntoView()</code>、聚焦一个屏外控件,这三件事都会触发「程序化滚动」。三个属性声明它的行为:<code>scroll-behavior: smooth</code> 写在<strong>滚动容器</strong>上,把瞬移变成平滑滚动(只管程序化滚动,不管用户拖滚动条);<code>scroll-padding</code> 写在<strong>滚动容器</strong>上,声明「内容区四边各有多少被遮挡,停靠时要避开」;<code>scroll-margin</code> 写在<strong>目标元素</strong>上,给它自己加停靠外边距。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code>/* 顶栏 sticky 高 56px:锚点跳转后标题不被压在顶栏底下 */
+html { scroll-behavior: smooth; scroll-padding-block-start: 56px; }
+/* 或者只给标题自己声明(两者取效果并集): */
+h2[id] { scroll-margin-block-start: 56px; }
+/* 尊重「减少动态效果」的用户(9.1): */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}</code></pre>
+<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 有 sticky 顶栏时给锚点目标配 scroll-margin</span><p>症状不配就会出现:目录点过去,标题正好藏在顶栏后面,读者看到的第一行是正文中间。修一处就够——按顶栏高度给 <code>html</code> 写 <code>scroll-padding-block-start</code>,或给所有带 id 的标题写 <code>scroll-margin-block-start</code>;两个属性一个站在容器立场、一个站在目标立场,机制相同。</p></div>
+<h3>scroll-snap:让滚动停在声明好的位置</h3>
+<p>轮播、整屏滚动、横向卡片列表的共同需求是「松手后停在整页/整卡的边界上」。滚动吸附把它做成了声明式:<strong>容器</strong>写 <code>scroll-snap-type: 轴 严格度</code>,<strong>子项</strong>写 <code>scroll-snap-align</code> 声明自己哪条边对齐到容器的哪条边。严格度是行为分界:<code>proximity</code> 只在滚动停点<strong>接近</strong>吸附点时才吸过去,<code>mandatory</code> 则保证任何时刻都停在某个吸附点上。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 332px"><code>.carousel {
+  display: flex; gap: 1rem;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1rem;      /* 吸附时避开容器内衬 */
+}
+.carousel &gt; * {
+  flex: 0 0 80%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;         /* 一次滑动只翻一张,不许连跳 */
+}</code></pre>
+<p><code>mandatory</code> 的适用前提是<strong>每个吸附项不高(宽)于滚动口</strong>。子项一旦比滚动口大,规范虽然要求引擎允许滚动到项内区域,但「永远停在吸附点」的约束仍会让长内容的中段很难停留阅读。所以整屏滚动的落地页只在每屏内容确定不超过一屏时才用 <code>mandatory</code>,内容高度不可控(用户字号、窄屏)时一律 <code>proximity</code> 或不吸附。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 吸附项可能超过一屏时不要用 mandatory</span><p>症状:手机上大字号用户在整屏滚动页里,某一屏的最后两行永远看不到——一松手就被吸回屏首或吸到下一屏。根因是吸附项高于滚动口,<code>mandatory</code> 不给中间留合法停点。改 <code>proximity</code>,或按 <code>@media (height &lt; …)</code> 降级关掉吸附。</p></div>
+<h3>overscroll-behavior:滚动链在哪一层断开</h3>
+<p>用户在一个滚动容器里滚到了尽头,继续滚会发生什么?默认行为是<strong>滚动链</strong>(scroll chaining):多余的滚动量交给最近的可滚祖先,一路传到根容器,根容器再滚到头就触发平台的边界效果——iOS 的橡皮筋、Android 的辉光、下拉刷新、桌面端「后退」手势。<code>overscroll-behavior</code> 写在滚动容器上,声明链在自己这里怎么处理:<code>auto</code> 照传;<code>contain</code> 到此为止,不传给祖先,但保留自己的边界效果;<code>none</code> 既不传也不要边界效果。</p>
+<figure style="contain-intrinsic-size:auto 340px">
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<defs><marker id="ar-fscr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker><marker id="ar-fscr2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--dead-fg)"/></marker></defs>
+<rect x="16" y="16" width="330" height="218" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="28" y="38">默认:滚动链一路上传</text>
+<rect x="40" y="52" width="280" height="166" rx="6" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgmuted" x="50" y="70" font-size="11">页面(根滚动容器)</text>
+<rect x="70" y="84" width="220" height="110" rx="6" fill="var(--svg-soft2)" stroke="var(--muted)"/>
+<text class="svgmuted" x="80" y="102" font-size="11">弹窗内的列表 overflow: auto</text>
+<text class="svgmuted" x="80" y="130" font-size="11">已滚到底,手指继续滑</text>
+<line x1="180" y1="150" x2="180" y2="184" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar-fscr)"/>
+<text class="svgmuted" x="190" y="172" font-size="11">多余滚动量交给页面</text>
+<text class="svgmuted" x="50" y="212" font-size="11">背景页跟着滚走 = 弹窗滚动穿透</text>
+<rect x="374" y="16" width="330" height="218" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="386" y="38">overscroll-behavior: contain</text>
+<rect x="398" y="52" width="280" height="166" rx="6" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgmuted" x="408" y="70" font-size="11">页面(根滚动容器)——不动</text>
+<rect x="428" y="84" width="220" height="110" rx="6" fill="var(--svg-soft2)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgmuted" x="438" y="102" font-size="11">列表 overscroll-behavior: contain</text>
+<text class="svgmuted" x="438" y="130" font-size="11">已滚到底,手指继续滑</text>
+<line x1="538" y1="150" x2="538" y2="178" stroke="var(--dead-fg)" stroke-width="1.5" marker-end="url(#ar-fscr2)"/>
+<line x1="522" y1="180" x2="554" y2="180" stroke="var(--dead-fg)" stroke-width="1.5"/>
+<text class="svgmuted" x="548" y="168" font-size="11">链在这里断开</text>
+<text class="svgmuted" x="408" y="212" font-size="11">边界效果保留在弹窗上,页面不动</text>
+</svg>
+<figcaption>滚动链:内层滚到头后多余的滚动量默认传给祖先直到根容器,overscroll-behavior: contain 在声明处切断这条链（原创绘制）</figcaption>
+</figure>
+<p>它解决的最高频问题就是<strong>弹窗滚动穿透</strong>:抽屉里的列表滚到底,再滑一下,背景页跟着滚走,关掉弹窗后页面已经不在原位。给弹窗的滚动容器写一条 <code>overscroll-behavior: contain</code> 即可,不需要监听 <code>touchmove</code> 再 <code>preventDefault()</code> 的老方案。</p>
+<p>写在 <code>html</code> 上的 <code>overscroll-behavior-y: contain</code> 还能整页关掉下拉刷新与滚动边界手势——做全屏应用(地图、画布)时常用,普通内容页不要关,那是用户的导航习惯。</p>
+<h3>滚动条样式:标准属性与 ::-webkit-scrollbar</h3>
+<p>滚动条外观有两套不兼容的机制。<strong>标准属性</strong>两条,写在滚动容器上:<code>scrollbar-width: auto | thin | none</code> 与 <code>scrollbar-color: 滑块色 轨道色</code>,四大引擎自 2024 年起都支持。</p>
+<p><strong>WebKit 私有伪元素</strong>一族(<code>::-webkit-scrollbar</code>、<code>::-webkit-scrollbar-thumb</code> 等)可以画得更细(圆角、悬停态、角落),但只在 Chromium 与 Safari 生效,而且规范定了取舍规则:<strong>同一容器上标准属性一旦生效,私有伪元素整族被忽略</strong>——两套混写等于只有一套在工作,还因浏览器而异。</p>
+<table style="contain-intrinsic-size:auto 225px">
+<thead><tr><th class="nw">写法</th><th class="nw">生效范围</th><th>能改什么</th><th>选它的条件</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>scrollbar-width</code> / <code>scrollbar-color</code></td><td class="nw">全部现代引擎</td><td>粗细三档、滑块与轨道颜色</td><td>默认选择;需求只是「细一点、颜色跟主题」</td></tr>
+<tr><td class="nw"><code>::-webkit-scrollbar</code> 一族</td><td class="nw">Chromium / Safari</td><td>宽度任意值、圆角、悬停态、四角</td><td>只服务内嵌 WebView 等引擎确定的场景</td></tr>
+<tr><td class="nw"><code>scrollbar-width: none</code> + 溢出仍可滚</td><td class="nw">全部现代引擎</td><td>隐藏滚动条</td><td>仅限有明确替代指示的横向轮播;成段文字的容器不要藏</td></tr>
+</tbody>
+</table>
+<p>可用性的两条底线:滚动条是「这里还有内容」的第一提示,藏掉它就要有替代提示(渐隐边缘、页码点,见 <a href="#fcss-ux">10.3</a> 的滚动提示);<code>scrollbar-width: thin</code> 在触屏之外的设备上会把可点击目标压得很窄,内容长的容器慎用。滚动条占不占布局空间、<code>scrollbar-gutter</code> 怎么防抖动,在 <a href="#fcss-flow">5.4</a> 已经讲过,此处不重复。</p>
+<h3>完整示例:一个不写 JS 的横向卡片轮播</h3>
+<p>把下面的代码存成页面打开:拖动或滑动列表,松手后总是停在整卡边界;滚到最后一张继续滑,页面不会被带走;滚动条按主题色变细。</p>
+<pre style="contain-intrinsic-size:auto 495px"><code>&lt;style&gt;
+  .strip {
+    display: flex; gap: 12px; padding: 12px;
+    overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding-inline: 12px;
+    scrollbar-width: thin; scrollbar-color: #1a5fb4 transparent;
+  }
+  .strip &gt; article {
+    flex: 0 0 min(320px, 85%);
+    scroll-snap-align: start; scroll-snap-stop: always;
+    border: 1px solid #ccc; border-radius: 8px; padding: 1rem;
+  }
+&lt;/style&gt;
+&lt;div class="strip"&gt;
+  &lt;article&gt;卡片一&lt;/article&gt;&lt;article&gt;卡片二&lt;/article&gt;
+  &lt;article&gt;卡片三&lt;/article&gt;&lt;article&gt;卡片四&lt;/article&gt;
+&lt;/div&gt;</code></pre>
+<p>验证吸附点:在 DevTools 的 Elements 里选中 <code>.strip</code>,面板会出现 scroll-snap 徽标,点亮后吸附点直接画在页面上。这个轮播剩下的工作只有「当前页指示」,用 <code>scrollend</code> 事件读 <code>scrollLeft</code> 即可,滚动本身一行脚本都不用写。</p>
+<h2 id="fcss-replaced">5.6 替换元素的适配:object-fit、aspect-ratio 与内在尺寸</h2>
+<p>图片、视频这类替换元素的内容来自外部文件,自带一份<strong>内在尺寸</strong>与<strong>内在比例</strong>;CSS 给它的盒又是另一套尺寸。两套尺寸比例一致时相安无事,不一致时就出全站最常见的两种事故:图片被拉变形,或页面在图片加载完成的瞬间整体跳一下。</p>
+<p>三部分:内在尺寸从哪来;盒与内容不一致时 <code>object-fit</code> 怎么裁怎么缩;<code>aspect-ratio</code> 怎么在资源到达之前把位置占好。替换元素的宽高计算规则(哪来的 300×150)在 <a href="#fcss-width">5.3</a>,此处只处理「盒定了之后,内容怎么放」。</p>
+<h3>内在尺寸与内在比例:适配问题的两个输入</h3>
+<p>位图的内在尺寸就是它的像素数,再除以资源的<strong>密度</strong>——<code>srcset</code> 里标了 <code>2x</code> 的图,内在尺寸按一半算(<a href="#f2-text">3.1</a>)。SVG 可以只有比例没有尺寸(只写 <code>viewBox</code>),也可以两者都没有。<code>iframe</code>、<code>embed</code> 没有内在比例,拿不到内容的任何尺寸信息,这是它们默认 300×150 的原因。内在比例参与 <a href="#fcss-width">5.3</a> 讲过的规则:只定宽,高按比例来;这也意味着<strong>比例已知的替换元素天然不会变形</strong>——变形只发生在宽高都被显式钉死、且与内在比例不符的时候。</p>
+<h3>object-fit:盒与内容不一致时的五种处理</h3>
+<p><code>object-fit</code> 写在替换元素上,决定内容在<strong>内容盒</strong>里怎么摆;<code>object-position</code> 决定对齐位置(语法同 <code>background-position</code>,默认居中)。它只动内容、不动盒——布局尺寸完全不变,所以改它永远不会引发页面跳动。</p>
+<figure style="contain-intrinsic-size:auto 329px">
+<svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<g>
+<rect x="20" y="30" width="120" height="150" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="20" y="55" width="120" height="100" fill="var(--svg-soft2)" stroke="var(--muted)"/>
+<ellipse cx="80" cy="105" rx="44" ry="40" fill="none" stroke="var(--fg)"/>
+<text class="svgtext" x="52" y="205">fill</text>
+<text class="svgmuted" x="30" y="225" font-size="11">拉满,会变形</text>
+</g>
+<g>
+<rect x="160" y="30" width="120" height="150" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="160" y="70" width="120" height="70" fill="var(--svg-soft2)" stroke="var(--muted)"/>
+<circle cx="220" cy="105" r="30" fill="none" stroke="var(--fg)"/>
+<text class="svgtext" x="182" y="205">contain</text>
+<text class="svgmuted" x="168" y="225" font-size="11">整图可见,留白</text>
+</g>
+<g>
+<rect x="300" y="30" width="120" height="150" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="300" y="30" width="120" height="150" fill="var(--svg-soft2)" stroke="var(--muted)"/>
+<circle cx="360" cy="105" r="62" fill="none" stroke="var(--fg)"/>
+<line x1="300" y1="30" x2="300" y2="180" stroke="var(--dead-fg)" stroke-dasharray="4 3"/>
+<line x1="420" y1="30" x2="420" y2="180" stroke="var(--dead-fg)" stroke-dasharray="4 3"/>
+<text class="svgtext" x="330" y="205">cover</text>
+<text class="svgmuted" x="306" y="225" font-size="11">铺满,两侧被裁</text>
+</g>
+<g>
+<rect x="440" y="30" width="120" height="150" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="440" y="42" width="120" height="126" fill="var(--svg-soft2)" stroke="var(--muted)"/>
+<circle cx="500" cy="105" r="54" fill="none" stroke="var(--fg)"/>
+<text class="svgtext" x="468" y="205">none</text>
+<text class="svgmuted" x="446" y="225" font-size="11">原始尺寸,溢出裁</text>
+</g>
+<g>
+<rect x="580" y="30" width="120" height="150" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="580" y="70" width="120" height="70" fill="var(--svg-soft2)" stroke="var(--muted)"/>
+<circle cx="640" cy="105" r="30" fill="none" stroke="var(--fg)"/>
+<text class="svgtext" x="590" y="205">scale-down</text>
+<text class="svgmuted" x="586" y="225" font-size="11">none 与 contain 取小</text>
+</g>
+</svg>
+<figcaption>object-fit 五个值:同一张横图放进同一个竖框,内容各自怎么缩放与裁切;蓝框是内容盒,布局尺寸始终不变（原创绘制）</figcaption>
+</figure>
+<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 87px"><code>object-fit: fill | contain | cover | none | scale-down  /* 初始值 fill;不继承 */
+object-position: &lt;position&gt;                             /* 初始值 50% 50% */</code></pre>
+<table style="contain-intrinsic-size:auto 227px">
+<thead><tr><th class="nw">值</th><th class="nw">保比例</th><th class="nw">看全 / 铺满</th><th>典型用途</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>fill</code>(初始值)</td><td class="nw">否</td><td class="nw">铺满,变形</td><td>几乎只在故意变形时正确</td></tr>
+<tr><td class="nw"><code>contain</code></td><td class="nw">是</td><td class="nw">看全,留白</td><td>商品图、截图预览、竖屏视频</td></tr>
+<tr><td class="nw"><code>cover</code></td><td class="nw">是</td><td class="nw">铺满,裁边</td><td>头像、卡片封面、hero 图</td></tr>
+<tr><td class="nw"><code>none</code></td><td class="nw">是</td><td class="nw">原始尺寸,溢出裁</td><td>像素级素材、地图切片</td></tr>
+<tr><td class="nw"><code>scale-down</code></td><td class="nw">是</td><td class="nw"><code>none</code> 与 <code>contain</code> 取小</td><td>「小图不放大、大图缩进来」的相册</td></tr>
+</tbody>
+</table>
+<p>五个值只需要记两个判据:<strong>保不保比例</strong>(除 <code>fill</code> 都保),<strong>以能看全为准还是以铺满为准</strong>。裁切位置默认居中,人像顶部被裁时配 <code>object-position: top</code>。</p>
+<p>同一套值在 <code>background-size</code> 上有孪生兄弟(<code>cover</code>/<code>contain</code>,<a href="#f3-color-bg">8.1</a>),区别是背景不参与布局、没有内在尺寸兜底,而 <code>img</code> 是内容,有 alt、能被抓取(<a href="#f2-text">3.1</a> 的选型判据)。</p>
+<h3>aspect-ratio:资源到达之前把位置占好</h3>
+<p><code>aspect-ratio</code> 给任何元素声明一个<strong>期望比例</strong>,在宽高只有一边确定时,用比例推出另一边。它对替换元素的第一价值是<strong>防布局跳动</strong>:图片没加载完时内在尺寸未知,盒的高是 0;图一到,整页内容被推下去一截。</p>
+<p>这就是 Core Web Vitals 里的 CLS(布局偏移),也是「为什么 <code>img</code> 一定要写 width/height 属性」的现代答案——浏览器会把这两个属性映射成一条 <code>aspect-ratio: auto 宽/高</code> 的 UA 样式,配合 CSS 的 <code>img { max-width: 100%; height: auto }</code>,盒在加载前就按正确比例占位。</p>
+<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 332px"><code>&lt;img src="hero.jpg" width="1600" height="900" alt="…"&gt;
+&lt;style&gt;
+  img { max-width: 100%; height: auto; }
+  /* UA 自动生成:img { aspect-ratio: auto 1600 / 900 } —— 加载前就占 16:9 */
+
+  .thumb { width: 160px; aspect-ratio: 1; object-fit: cover; }
+  /* 方形缩略图:不写 height,比例推;内容按 cover 裁 */
+
+  iframe.video { inline-size: 100%; aspect-ratio: 16 / 9; border: 0; }
+  /* iframe 没有内在比例,这是唯一的声明途径 */
+&lt;/style&gt;</code></pre>
+<p><code>aspect-ratio: auto 16 / 9</code> 的双值形态是给替换元素的:内在比例可用时优先用内在比例(<code>auto</code>),拿不到再用 16/9 兜底。边界有两条:比例推出的尺寸仍受 <code>min-*</code>/<code>max-*</code> 约束,冲突时比例让步(优先级规则见 <a href="#fcss-width">5.3</a>);两边都被显式定死时,<code>aspect-ratio</code> 整个不参与——它只在「缺一边」时说话。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 img 一律写 width、height 属性,CSS 配 height: auto</span><p>判据可以闭眼执行:凡是 <code>&lt;img&gt;</code>,HTML 里写上真实像素的 <code>width</code>/<code>height</code>(值会被 CSS 覆盖,不怕「写死」),样式表里全局一条 <code>img { max-width: 100%; height: auto }</code>。没写的现场在 Performance 面板的 Layout Shift 记录里一眼可见:图片加载完成的时间点上有一条偏移条目,受害者是它下面的全部内容。</p></div>
+<div class="note old" style="contain-intrinsic-size:auto 165px"><span class="t">🟡 padding-top 百分比撑比例是 aspect-ratio 之前的旧方案</span><p>「<code>padding-top: 56.25%</code> + 绝对定位内层」利用的是 padding 百分比按宽度算(<a href="#fcss-width">5.3</a>)。它仍能用,但要多一层包裹元素、内层要脱流,比例改动要换算小数;维护旧代码认得出即可,新代码一律 <code>aspect-ratio: 16 / 9</code> 一行解决。</p></div>
+<h3>视频、iframe 与「类替换」控件的差异</h3>
+<p><code>video</code> 与 <code>img</code> 同规则,<code>poster</code> 图与视频帧都受 <code>object-fit</code> 控制;竖屏视频放横框时 <code>contain</code> 会出黑边(实为容器背景),产品上常用「同源视频 <code>cover</code> 铺满做虚化背景 + <code>contain</code> 前景」两层叠放。</p>
+<p><code>iframe</code>/<code>embed</code> 拿不到内容尺寸,<code>object-fit</code> 对它们无意义,适配只有 <code>aspect-ratio</code> 一条路。表单控件是「类替换」元素,尺寸规则相近,但外观由平台绘制,适配交给 <a href="#f2-form-validate">3.4</a> 的 <code>appearance</code> 一族,不走 <code>object-fit</code>。</p>
+<h2 id="fcss-logical">5.7 逻辑属性:按文字流向命名的盒模型</h2>
+<p><code>margin-left</code>、<code>width</code>、<code>top</code> 这些属性名里藏着一个假设:文字从左往右、从上往下走。这个假设在阿拉伯语、希伯来语界面(从右往左)与竖排东亚文字(<a href="#fcss-typo">7.3</a>)里不成立——「段前空一行」在横排是 <code>margin-top</code>,在竖排 <code>vertical-rl</code> 里却该是 <code>margin-right</code>。逻辑属性把整套盒模型按<strong>文字流向</strong>重新命名:不说上下左右,说块轴与内联轴、start 与 end。同一份样式,换书写方向自动镜像,不需要为 RTL 再维护一份「翻转版」。</p>
+<h3>两条轴、四个方向:一张映射表</h3>
+<p><strong>内联轴</strong>是文字排列的方向,<strong>块轴</strong>是段落堆叠的方向;每条轴有 <code>start</code> 与 <code>end</code> 两端。轴由 <code>writing-mode</code> 定(块轴转向),端由 <code>direction</code>/<code>dir</code> 属性定(内联轴哪头是 start,<a href="#f2-text-i18n">3.2</a>)。物理方向与逻辑方向的对应关系随两者变化:</p>
+<table style="contain-intrinsic-size:auto 185px">
+<thead><tr><th class="nw">逻辑方向</th><th class="nw">横排 + LTR(默认)</th><th class="nw">横排 + RTL</th><th class="nw">vertical-rl 竖排</th></tr></thead>
+<tbody>
+<tr><td class="nw">block-start</td><td>上</td><td>上</td><td><strong>右</strong></td></tr>
+<tr><td class="nw">block-end</td><td>下</td><td>下</td><td><strong>左</strong></td></tr>
+<tr><td class="nw">inline-start</td><td>左</td><td><strong>右</strong></td><td><strong>上</strong></td></tr>
+<tr><td class="nw">inline-end</td><td>右</td><td><strong>左</strong></td><td><strong>下</strong></td></tr>
+</tbody>
+</table>
+<figure style="contain-intrinsic-size:auto 358px">
+<svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<defs><marker id="ar-flog" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker><marker id="ar-flog2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--muted)"/></marker></defs>
+<rect x="30" y="40" width="280" height="160" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="40" y="30">horizontal-tb + LTR(默认)</text>
+<line x1="60" y1="70" x2="250" y2="70" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar-flog)"/>
+<text class="svgmuted" x="60" y="90" font-size="11">内联轴:文字向右走(start 在左)</text>
+<line x1="60" y1="110" x2="60" y2="180" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar-flog2)"/>
+<text class="svgmuted" x="74" y="130" font-size="11">块轴:段落向下摞</text>
+<text class="svgmuted" x="74" y="148" font-size="11">(block-start 在上)</text>
+<text class="svgmuted" x="74" y="176" font-size="11">inline-size = width</text>
+<text class="svgmuted" x="74" y="192" font-size="11">block-size = height</text>
+<rect x="410" y="40" width="280" height="160" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="420" y="30">vertical-rl(竖排,7.3)</text>
+<line x1="660" y1="70" x2="660" y2="180" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar-flog)"/>
+<text class="svgmuted" x="500" y="66" font-size="11">内联轴:文字向下走</text>
+<line x1="630" y1="70" x2="450" y2="70" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar-flog2)"/>
+<text class="svgmuted" x="452" y="90" font-size="11">块轴:行从右往左摞(block-start 在右)</text>
+<text class="svgmuted" x="440" y="130" font-size="11">inline-size = height</text>
+<text class="svgmuted" x="440" y="148" font-size="11">block-size = width</text>
+<text class="svgmuted" x="440" y="176" font-size="11">margin-block-start 落在物理的右边</text>
+</svg>
+<figcaption>内联轴与块轴:writing-mode 转动两条轴,direction 决定内联轴哪头是 start;逻辑属性跟着轴走,物理属性钉在屏幕方向上（原创绘制）</figcaption>
+</figure>
+<h3>属性对照:物理一套、逻辑一套</h3>
+<p>每个物理属性都有逻辑对应,命名规律统一:<code>top/bottom</code> → <code>block-start/block-end</code>,<code>left/right</code> → <code>inline-start/inline-end</code>,<code>width/height</code> → <code>inline-size/block-size</code>。常用映射与简写:</p>
+<table style="contain-intrinsic-size:auto 317px">
+<thead><tr><th class="nw">物理写法</th><th class="nw">逻辑写法</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>margin-left</code></td><td class="nw"><code>margin-inline-start</code></td><td>padding、border 同规律</td></tr>
+<tr><td class="nw"><code>margin-left</code> + <code>margin-right</code></td><td class="nw"><code>margin-inline: a b</code></td><td>双值是 start、end,不是左、右</td></tr>
+<tr><td class="nw"><code>width</code> / <code>max-height</code></td><td class="nw"><code>inline-size</code> / <code>max-block-size</code></td><td>min/max 同规律</td></tr>
+<tr><td class="nw"><code>top: 0; left: 0</code></td><td class="nw"><code>inset-block-start: 0; inset-inline-start: 0</code></td><td><code>inset</code> 简写本身按物理「上右下左」取值</td></tr>
+<tr><td class="nw"><code>border-top-left-radius</code></td><td class="nw"><code>border-start-start-radius</code></td><td>两个 start 依次是块轴、内联轴</td></tr>
+<tr><td class="nw"><code>text-align: left</code></td><td class="nw"><code>text-align: start</code></td><td>值也有逻辑版;<code>float: inline-start</code>、<code>clear: inline-end</code> 同理</td></tr>
+</tbody>
+</table>
+<p><strong>示例</strong>:同一个「带侧条的引用卡」,物理版在 RTL 页面里侧条站错边,逻辑版自动镜像。</p>
+<pre style="contain-intrinsic-size:auto 359px"><code>&lt;style&gt;
+  blockquote {
+    border-inline-start: 4px solid #1a5fb4;  /* RTL 下自动变右边 */
+    padding-inline: 1em 0.5em;               /* start 侧厚、end 侧薄 */
+    margin-block: 1em;                       /* 块轴上下(竖排时变左右)*/
+    inline-size: min(60ch, 100%);
+  }
+&lt;/style&gt;
+&lt;blockquote&gt;横排从左镶边。&lt;/blockquote&gt;
+&lt;div dir="rtl"&gt;
+  &lt;blockquote&gt;نفس الشيفرة، الحد على اليمين.&lt;/blockquote&gt;
+&lt;/div&gt;</code></pre>
+<p>打开页面对照:两个引用块各自把侧条镶在「行首」一侧,而样式只有一份。用物理属性实现同样效果,要写 <code>[dir=rtl] blockquote { border-left: 0; border-right: … }</code> 这样的覆盖对,并且每次改样式都要记得改两处——漏改的那处就是 RTL 用户看到的破版。</p>
+<h3>哪些东西仍然是物理的</h3>
+<p>逻辑属性覆盖盒模型与定位,但有几族刻意保持物理,因为它们描述的是屏幕上的几何而不是文字流:<code>transform</code> 的 <code>translateX/Y</code>、<code>box-shadow</code> 与 <code>text-shadow</code> 的偏移、<code>background-position</code> 的 <code>left/right</code> 关键字、媒体查询的 <code>width/height</code>(<a href="#f4-responsive">6.3</a>)。视口单位有逻辑版 <code>vi</code>/<code>vb</code>(<a href="#f3-units">4.2</a>)。</p>
+<p>Flex 与 Grid 生来就是流相对的——<code>justify-content: start</code>、<code>margin-inline-start: auto</code> 在任何书写方向下都对,这也是它们比 <code>float: left</code> 时代进步的一处(<a href="#f4-flex">6.1</a>)。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 与文字流向相关的间距与尺寸,新代码一律写逻辑属性</span><p>判据:这个间距是「行首/行尾/段前/段后」语义的,用逻辑属性;是「屏幕上物理的左边」语义的(如钉在左下角的悬浮按钮、阴影方向),保留物理属性。只做简中横排的项目照此写也没有成本——两套属性在默认书写方向下逐一等价,而习惯一旦养成,国际化就是零改动。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 margin-inline 双值是 start 与 end,不是左与右</span><p>症状:RTL 页面里「左 1em 右 2em」的预期变成了右 1em 左 2em——正是逻辑属性该有的行为,但如果写的人按物理方向理解双值,两边就正好写反。团队约定里把「双值简写 = start end」写进 code review 清单;拿不准时写全 <code>margin-inline-start</code>/<code>-end</code> 两条。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 27456px;--thin-h:17943px">
+<section class="chapter" style="contain-intrinsic-size:auto 37206px;--thin-h:27693px">
 <h1 id="a6"><span class="part">CSS</span>布局:Flex、Grid 与响应式</h1>
 <p>正常流擅长文档,不擅长界面:块盒从上往下摞、行内盒从左往右排(见 <a href="#f3-display">5.2</a>),而真实的界面要求导航栏把最后一项推到最右、三张卡片不管内容多少都等高、页脚吸在视口底部、一组卡片随容器宽度自动决定列数。这些事在只有 <code>float</code> 与 <code>inline-block</code> 的年代全靠技巧和补丁,今天由两种专为界面设计的格式化上下文承担:<a href="#f4-flex">6.1</a> 管一条轴线上的空间分配与对齐,<a href="#f4-grid">6.2</a> 管行列两个方向的轨道;<a href="#f4-responsive">6.3</a> 在它们之上按视口或容器尺寸切换参数,让同一份 HTML 在 375px 和 1440px 下都成立。</p>
-<p>三节的顺序就是解决一个布局问题的顺序:先问它是一维还是二维,再问尺寸变化时哪些参数要跟着变。三节共用同一批底层概念——包含块、剩余空间、最小内容尺寸——它们在 <a href="#f3-box">5.1</a> 与 <a href="#fcss-width">5.3</a> 已经讲过,布局里的怪事十有八九能追回去:「这一列怎么被撑宽了」的答案是 <code>min-content</code>,「<code>justify-content</code> 怎么没效果」的答案是剩余空间已经被吃光。这一章不讲动效与新语法:<code>transform</code>/<code>transition</code>/<code>animation</code> 在 <a href="#f4-motion">9.1</a>,自定义属性、原生嵌套、<code>:has()</code> 与 <code>@layer</code> 在 <a href="#f4-modern">10.1</a>;响应式图片的 <code>srcset</code>/<code>sizes</code> 属于 HTML,在 <a href="#f2-text">3.1</a>。</p>
+<p>前三节的顺序就是解决一个布局问题的顺序:先问它是一维还是二维,再问尺寸变化时哪些参数要跟着变。后三节往下挖一层:<a href="#fcss-flex-deep">6.4</a> 把伸缩算法的迭代与冻结走完,归纳 Flex 的高频陷阱;<a href="#fcss-grid-deep">6.5</a> 讲自动放置的光标、隐式网格与 <code>1fr</code> 的最小尺寸;<a href="#fcss-multicol">6.6</a> 补上第三种布局机制 multicol,并给出五种布局的选型全景。</p>
+<p>六节共用同一批底层概念——包含块、剩余空间、最小内容尺寸——它们在 <a href="#f3-box">5.1</a> 与 <a href="#fcss-width">5.3</a> 已经讲过,布局里的怪事十有八九能追回去:「这一列怎么被撑宽了」的答案是 <code>min-content</code>,「<code>justify-content</code> 怎么没效果」的答案是剩余空间已经被吃光。这一章不讲动效与新语法:<code>transform</code>/<code>transition</code>/<code>animation</code> 在 <a href="#f4-motion">9.1</a>,自定义属性、原生嵌套、<code>:has()</code> 与 <code>@layer</code> 在 <a href="#f4-modern">10.1</a>;响应式图片的 <code>srcset</code>/<code>sizes</code> 属于 HTML,在 <a href="#f2-text">3.1</a>。</p>
 <h2 id="f4-flex">6.1 Flexbox:一维布局</h2>
 <p>Flexbox(弹性盒布局)是一种格式化上下文:给一个元素写 <code>display: flex</code>,它就成为 <strong>flex 容器</strong>,它的每个子元素(以及直接写在容器里的文本——会被包成匿名项目)成为 <strong>flex 项目</strong>。项目沿着一条<strong>主轴</strong>排成一行或一列,容器负责把主轴上的剩余空间按权重分给项目,并在垂直于主轴的<strong>交叉轴</strong>上对齐它们。它解决的是正常流解决不了的一类问题:一行里几个盒子怎么按比例分宽度、怎么垂直居中、怎么把某一个推到最右边、空间富余时谁拉伸、空间不够时谁让步。</p>
 <p>叫它「一维」不是说它只能横排——<code>flex-direction: column</code> 就是竖排——而是说它一次只沿一条轴线做分配:换行之后每一行是独立的一条主轴,第二行的项目不会与第一行的对齐成列。需要行列都对齐的场合用 Grid(见 <a href="#f4-grid">6.2</a>)。</p>
@@ -4106,7 +4551,7 @@ row b  [200, 200, 200]     ← 基准 0,600 三等分</code></pre>
 <pre style="contain-intrinsic-size:auto 114px"><code>渲染结果:第一行文字完整显示并伸出容器右边界,PDF 标签被推到容器外面;
 第二行文字在容器内被截断并以「…」结尾,PDF 标签贴在右边缘。
 DevTools Computed(第一行 .name):width 约 560px(大于容器 320px);第二行 .name:width 约 275px。</code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 flex 项目缩不下去,先查 min-width: auto</span><p>看到 flex 子项撑破容器、省略号不出现、列方向的滚动区不滚动,第一反应是给那个项目加 <code>min-width: 0</code>(或 <code>min-height: 0</code>)。写 <code>flex-shrink: 999</code>、<code>width: 0</code> 都没用——自动最小尺寸是在收缩之后才夹上去的下限。<code>overflow: hidden</code> 也能解,但会顺手裁掉阴影与焦点环,按需选。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 167px"><span class="t">🔴 flex 项目缩不下去,先查 min-width: auto</span><p>看到 flex 子项撑破容器、省略号不出现、列方向的滚动区不滚动,第一反应是给那个项目加 <code>min-width: 0</code>(或 <code>min-height: 0</code>)。写 <code>flex-shrink: 999</code>、<code>width: 0</code> 都没用——自动最小尺寸是在收缩之后才夹上去的下限。<code>overflow: hidden</code> 也能解,但会连带裁掉阴影与焦点环,按需选。</p></div>
 <h3>居中、推到一边与 margin: auto</h3>
 <p>一个项目在容器里水平垂直居中,flex 的标准写法是 <code>display: flex; justify-content: center; align-items: center</code>;只有一个子元素时更短的写法是给<strong>子元素</strong>写 <code>margin: auto</code>——flex 项目的 auto 外边距会吸收该方向上的全部正剩余空间,四边都 auto 就四边均分,效果就是居中。同一个机制用来「推」:导航栏最后一个按钮写 <code>margin-left: auto</code>,它左侧的外边距吃掉所有剩余空间,按钮贴到最右边。auto 外边距的优先级高于 <code>justify-content</code>:只要有项目的 auto 外边距能吃到剩余空间,<code>justify-content</code> 就没有剩余空间可分了。</p>
 <p>需要注意两点:auto 外边距只在有<strong>正</strong>剩余空间时起作用,项目放不下时它算 0;<code>justify-content: space-between</code> 在只有一个项目时等同于 <code>flex-start</code>,只有两个项目时把它们分到两端,这是它和 <code>space-evenly</code> 在项目数很少时看起来不一样的原因。单个元素在页面里居中,今天最短的写法是 <code>display: grid; place-items: center</code>(见 <a href="#f4-grid">6.2</a>),flex 写法依然完全正确。</p>
@@ -4180,7 +4625,7 @@ main    { flex: 1; }                            /* 页脚吸底 */
 <p>把 <code>.search</code> 的 basis 改成 <code>100px</code>,500px 时就会回到一行,代价是搜索框最窄可到 100px。Elements 面板里 <code>nav</code> 旁边有一个 flex 徽章,点亮后能看到每一行的主轴线和 gap 区域,换行后的第二行是另一条独立主轴,第一行的 links 不会对齐第二行的任何项目——这就是「一维」的含义。</p></div>
 <h2 id="f4-grid">6.2 Grid:二维布局</h2>
 <p>Grid(网格布局)是另一种格式化上下文:<code>display: grid</code> 把元素变成 <strong>grid 容器</strong>,容器先用 <code>grid-template-columns</code>/<code>grid-template-rows</code> 定义出若干条<strong>轨道</strong>(列与行),轨道之间的分界叫<strong>网格线</strong>,线围出的最小方块叫<strong>单元格</strong>,若干个相邻单元格可以拼成一个<strong>区域</strong>;然后把子元素(grid 项目)放进指定的线与线之间,或者让浏览器按顺序自动填。它与 Flex 的根本差别在方向:Flex 是项目沿一条轴流动、由内容尺寸决定排布;Grid 是<strong>先定轨道再放内容</strong>,行与列同时受控,所以第二行的项目一定和第一行的对齐成列。</p>
-<p>页面级的版式(页眉、侧栏、主区、页脚)、卡片墙、表单的「标签一列控件一列」、任何需要两个方向同时对齐的东西,Grid 都比 Flex 省代码而且更可预测;在一条线上排按钮、分配一行里的空间,Flex 更顺手。两者不是替代关系,一个页面里通常外层 Grid、组件内 Flex。</p>
+<p>页面级的版式(页眉、侧栏、主区、页脚)、卡片墙、表单的「标签一列控件一列」、任何需要两个方向同时对齐的东西,Grid 都比 Flex 省代码而且更可预测;在一条线上排按钮、分配一行里的空间,Flex 更合适。两者不是替代关系,一个页面里通常外层 Grid、组件内 Flex。</p>
 <h3>语法框:轨道、线与区域</h3>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 646px"><code>/* 容器属性:写在 display: grid | <span class="kw">inline</span>-grid 的元素上 */
 grid-<span class="kw">template</span>-columns | grid-<span class="kw">template</span>-rows:  none | &lt;track-list&gt; | subgrid    <span class="cm">// 默认 none(没有显式轨道)</span>
@@ -4463,6 +4908,221 @@ DevTools:Elements 面板里 .card-wrap 旁出现「container」徽章;Styles 面
 1280px → 三栏;列:200px 677.333px 338.667px;main 宽 677px    ← 导航竖排在左栏,主区与侧栏 2:1
 把窗口从 1280 慢慢缩到 1023,控制台只在跨过 1024(64em)与 640(40em)那两刻各打印一次——matchMedia 的 change 事件只在断点切换时触发。</code></pre>
 <p>三档的 HTML 完全相同,切换的只是 <code>grid-template-areas</code> 里那几个字符串与列定义——这是命名区域在响应式里的价值:版式是数据,不是结构。<code>1fr</code> 行让页脚在内容短时也在视口底部;列宽里用 <code>minmax(0, 2fr)</code> 而不是裸 <code>2fr</code>,是为了主区里出现超长内容时不把侧栏挤没。两个断点都用 em 写,用户把浏览器默认字号改成 20px 后,两栏的临界点从 640px 变成 800px,更早进入适合大字的窄布局。在 Styles 面板里把视口拖到 1000px,<code>(width &gt;= 64em)</code> 那条 <code>@media</code> 头会变灰、它里面的 <code>grid-template-areas</code> 被划掉,正在生效的是 40em 那条。</p></div>
+<h2 id="fcss-flex-deep">6.4 Flex 深入:伸缩算法的完整过程与常见陷阱</h2>
+<p><a href="#f4-flex">6.1</a> 讲了 <code>basis</code>/<code>grow</code>/<code>shrink</code> 各管什么与收缩的加权规则,足够写出正确的 Flex 布局;但排查「这个项目为什么是这个宽度」时,需要的是规范里那套<strong>完整的求解过程</strong>——浏览器不是「按比例分一下」,而是带着冻结与钳制反复迭代,迭代的每一步都可能改变结果。这一节把算法走完,再把 <code>flex</code> 简写的展开陷阱、嵌套滚动、文本截断这些高频事故归到算法的对应步骤上。</p>
+<h3>算法五步:从 flex base size 到最终尺寸</h3>
+<p>对每一行(<code>nowrap</code> 时全部项目算一行),浏览器按固定顺序求解:</p>
+<ol>
+<li><strong>定基准尺寸</strong>(flex base size):有 <code>flex-basis</code> 用它,<code>basis: auto</code> 退到 <code>width</code>/<code>height</code>,再没有就用内容尺寸(<code>max-content</code>)。</li>
+<li><strong>算假设尺寸</strong>:基准尺寸先被自己的 <code>min-*</code>/<code>max-*</code> 钳一遍,得到「假设主尺寸」;换行布局用它决定哪些项目进同一行。</li>
+<li><strong>算剩余空间</strong>:容器内容区减去所有假设尺寸与 <code>gap</code>。为正走 <code>grow</code>,为负走 <code>shrink</code>。</li>
+<li><strong>分配并检查违例</strong>:按权重把剩余空间分给各未冻结项目;分完后逐个检查是否越过了自己的 min/max,越过的钳回边界并<strong>冻结</strong>。</li>
+<li><strong>回到第 3 步重算</strong>:被钳掉的差额重新计入剩余空间,在剩下的未冻结项目里再分,直到没有新违例。</li>
+</ol>
+<p>「迭代 + 冻结」解释了单轮按比例心算与实际结果对不上的全部情形:某个项目撞到 <code>min-width: auto</code> 的内容下限被冻结后,它少缩的部分由其余项目<strong>加倍承担</strong>;同理,<code>max-width</code> 挡住了一个该长大的项目,多出来的空间会流向别人。</p>
+<figure style="contain-intrinsic-size:auto 425px">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<text class="svgtext" x="20" y="28">容器 600px,三个项目 basis 300 / 300 / 200(总 800,差 200),shrink 全为 1</text>
+<text class="svgmuted" x="20" y="60" font-size="11">第一轮:按 basis 加权分摊 −200</text>
+<rect x="20" y="70" width="225" height="30" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text class="svgtext" x="30" y="90" font-size="12">A 300 → 225</text>
+<rect x="249" y="70" width="225" height="30" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<text class="svgtext" x="259" y="90" font-size="12">B 300 → 225</text>
+<rect x="478" y="70" width="150" height="30" fill="var(--svg-soft2)" stroke="var(--dead-fg)"/>
+<text class="svgtext" x="488" y="90" font-size="12">C 200 → 150</text>
+<text class="svgmuted" x="20" y="128" font-size="11">但 C 里有一张 180px 的图,min-width: auto 下限 180:C 被钳回 180 并冻结</text>
+<rect x="478" y="138" width="180" height="30" fill="var(--svg-soft2)" stroke="var(--dead-fg)" stroke-width="1.5"/>
+<text class="svgtext" x="488" y="158" font-size="12">C = 180(冻结)</text>
+<text class="svgmuted" x="20" y="196" font-size="11">第二轮:少缩的 30px 由 A、B 重新分摊(各再缩 15)</text>
+<rect x="20" y="206" width="210" height="30" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgtext" x="30" y="226" font-size="12">A = 210</text>
+<rect x="234" y="206" width="210" height="30" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgtext" x="244" y="226" font-size="12">B = 210</text>
+<rect x="448" y="206" width="180" height="30" fill="var(--svg-soft2)" stroke="var(--dead-fg)" stroke-width="1.5"/>
+<text class="svgtext" x="458" y="226" font-size="12">C = 180</text>
+<text class="svgmuted" x="20" y="266" font-size="11">210 + 210 + 180 = 600:总和精确等于容器,冻结项少缩的部分由未冻结项加倍承担</text>
+<text class="svgmuted" x="20" y="284" font-size="11">一轮心算(225 / 225 / 150)对不上实测,原因就是第 4、5 步的「钳制后重算」</text>
+</svg>
+<figcaption>伸缩算法的迭代:第一轮按权重分摊负剩余空间,撞到内容下限的项目被钳回并冻结,差额在第二轮里由其余项目重新分摊（原创绘制）</figcaption>
+</figure>
+<h3>flex 简写的展开:四个预设各是什么</h3>
+<p><code>flex</code> 是简写,单值展开的结果与常识不同步,四个常用形态必须背下来——它们的 <code>basis</code> 差异正是「内容多的那列宽一点」与「严格等分」的分水岭。</p>
+<table style="contain-intrinsic-size:auto 189px">
+<thead><tr><th class="nw">写法</th><th class="nw">展开(grow shrink basis)</th><th>行为</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>flex: initial</code>(默认)</td><td class="nw"><code>0 1 auto</code></td><td>不长大、可收缩,基准是内容/width</td></tr>
+<tr><td class="nw"><code>flex: auto</code></td><td class="nw"><code>1 1 auto</code></td><td>从内容尺寸出发再分剩余:内容多者更宽</td></tr>
+<tr><td class="nw"><code>flex: 1</code></td><td class="nw"><code>1 1 <strong>0%</strong></code></td><td>基准清零,剩余全部按 grow 分:趋向等分</td></tr>
+<tr><td class="nw"><code>flex: none</code></td><td class="nw"><code>0 0 auto</code></td><td>完全刚性,溢出也不缩</td></tr>
+</tbody>
+</table>
+<p><code>flex: 1</code> 的「等分」还差最后一步:<code>basis</code> 清零后,<code>min-width: auto</code> 的内容下限仍在,某列有超长单词或大图时照样比别人宽。真正的严格等分是固定搭配:<code>flex: 1</code> 加 <code>min-width: 0</code>(或 <code>overflow: hidden</code>,机制见 <a href="#f4-flex">6.1</a>)。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 165px"><span class="t">🟢 等分列的固定写法:flex: 1 配 min-width: 0</span><p>只写 <code>flex: 1</code> 的现场:三列布局平时等宽,某天一条无空格的长链接把中间列撑宽,另两列被挤扁。<code>basis: 0%</code> 管分配起点,<code>min-width: 0</code> 管收缩下限,两个都写才封死。列内内容自己再用 <code>overflow-wrap</code> 或省略号收尾(<a href="#f3-typography">7.1</a>)。</p></div>
+<h3>陷阱一:列方向的百分比高度与滚动区</h3>
+<p><code>flex-direction: column</code> 的容器里,子项写 <code>height: 100%</code> 常常落空——百分比高度要求包含块高度明确(<a href="#fcss-width">5.3</a>),而 flex 项的高度多半正在被算。正确做法是放弃百分比,用伸缩本身:「头部固定、内容区撑满并自己滚动」的经典三段式是 <code>flex: 1</code> 加 <code>min-height: 0</code>:</p>
+<pre style="contain-intrinsic-size:auto 141px"><code>.panel { display: flex; flex-direction: column; height: 100dvh; }
+.panel &gt; header { flex: none; }
+.panel &gt; main   { flex: 1; min-height: 0; overflow-y: auto; }
+.panel &gt; footer { flex: none; }</code></pre>
+<p>漏掉 <code>min-height: 0</code> 时,<code>main</code> 的内容下限(<code>min-height: auto</code>)让它拒绝缩到视口以内,<code>overflow-y</code> 等于没写,整个面板被撑出屏幕——这是嵌套滚动布局里出现率最高的一个错,而且症状(页面整体出滚动条)看起来与病因(深处某个 flex 项的 min 尺寸)毫无关系。列方向的收缩下限是 <code>min-height</code>,行方向才是 <code>min-width</code>,两个轴不要写串。</p>
+<h3>陷阱二:margin 折叠、绝对定位与 z-index</h3>
+<p>三条容易忘的规矩,都源于「flex 项被块化并各自独立成格式化上下文」:相邻 flex 项之间的 <code>margin</code> <strong>不折叠</strong>(<a href="#f3-box">5.1</a> 的折叠只发生在块格式化上下文里),从正常流迁移过来的列表间距会变大一倍,项目间距一律改用 <code>gap</code>;<code>position: absolute</code> 的子元素<strong>退出 flex 布局</strong>,不占格也不参与对齐,它的包含块规则回到 <a href="#fcss-flow">5.4</a>;flex 项在 <code>z-index</code> 为数值时即使不写 <code>position</code> 也创建层叠上下文,与 <a href="#f3-display">5.2</a> 的清单叠加记忆。</p>
+<h3>陷阱三:baseline 对齐与 wrap 后的 align-content</h3>
+<p><code>align-items: baseline</code> 让不同字号的行内容按第一行文字基线对齐(工具栏里「大标题 + 小说明」并排时比 <code>center</code> 稳),但空项目或纯图标项没有基线,会退到自身 margin 盒边缘,混排时出现几像素的错位——给图标项显式 <code>align-self: center</code> 即可。</p>
+<p>换行之后,行与行的分布由 <code>align-content</code> 管、行内对齐仍归 <code>align-items</code>:多行容器里写了 <code>align-items: center</code> 却发现整体还是贴顶,缺的是 <code>align-content: center</code>。这组属性与 Grid 完全同名同义,对照表在 <a href="#f4-grid">6.2</a>。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 从正常流迁到 Flex 后,靠 margin 折叠实现的间距会翻倍</span><p>症状:一列卡片本来间距 24px(相邻 margin 24px 折叠),套上 <code>display: flex; flex-direction: column</code> 后变 48px。Flex 格式化上下文里 margin 一律不折叠。迁移时把项目自身的上下 margin 清掉,间距统一交给容器的 <code>gap</code>——这也是间距「写在容器上」比「写在项目上」更可维护的原因。</p></div>
+<h3>完整示例:量出迭代与冻结</h3>
+<p>把图里的算例落成代码,直接验证两轮分配的数字:</p>
+<pre style="contain-intrinsic-size:auto 468px"><code>&lt;style&gt;
+  .row { display: flex; width: 600px; }
+  .row &gt; div { flex-shrink: 1; outline: 1px solid #888; }
+  .a, .b { flex-basis: 300px; }
+  .c { flex-basis: 200px; }
+  .c img { width: 180px; display: block; }
+&lt;/style&gt;
+&lt;div class="row"&gt;
+  &lt;div class="a"&gt;A&lt;/div&gt;&lt;div class="b"&gt;B&lt;/div&gt;
+  &lt;div class="c"&gt;&lt;img src="pic.png" alt=""&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+  for (const d of document.querySelectorAll('.row &gt; div'))
+    console.log(d.className, d.getBoundingClientRect().width);
+  // a 210  b 210  c 180 —— 不是一轮心算的 225/225/150
+&lt;/script&gt;</code></pre>
+<p>再做两个对照:给 <code>.c img</code> 加 <code>max-width: 100%</code>,图片跟着盒缩,C 不再冻结,三个数回到 225/225/150;给 <code>.c</code> 加 <code>min-width: 0</code> 效果相同。事故现场里「加了一张图整行布局就变」的排查路径,就是按这两个开关找到那只被冻结的项目。</p>
+<h2 id="fcss-grid-deep">6.5 Grid 深入:放置算法、隐式网格与轨道的最小尺寸</h2>
+<p><a href="#f4-grid">6.2</a> 讲了轨道怎么定义、区域怎么命名、对齐怎么写;这一节讲浏览器拿到一堆没写位置的项目后<strong>怎么决定谁进哪个格子</strong>,格子不够时<strong>凭空长出来的行</strong>按什么尺寸算,以及 <code>1fr</code> 在内容超宽时为什么守不住等分。这三件事分别对应放置算法、隐式网格与轨道最小尺寸——Grid 的「怪现象」几乎全部出自这三处。</p>
+<h3>放置算法:先放定过位的,再拿光标扫</h3>
+<p>自动放置按固定顺序进行:先把<strong>显式定位</strong>的项目(写了 <code>grid-area</code>/<code>grid-row</code>/<code>grid-column</code> 的)钉进网格;剩下的项目按文档序,由一个<strong>放置光标</strong>沿 <code>grid-auto-flow</code> 的方向逐格扫描,放进第一个装得下的空位。默认 <code>row</code>(逐行)且<strong>稀疏</strong>:光标只前进不回头,一个占两列的项目放不进当前行剩下的一格时,那一格就空着留在身后。<code>grid-auto-flow: dense</code> 换成<strong>紧凑</strong>模式:每放一个项目光标都回到起点找最早的空洞。</p>
+<table style="contain-intrinsic-size:auto 151px">
+<thead><tr><th class="nw">grid-auto-flow</th><th>光标怎么走</th><th>空洞</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>row</code>(初始值)</td><td>逐行扫,只前进不回头(稀疏)</td><td>装不下跨列项时留洞</td></tr>
+<tr><td class="nw"><code>column</code></td><td>逐列扫,列满进下一列;列是隐式生成的</td><td>同上,洞留在列里</td></tr>
+<tr><td class="nw"><code>row dense</code> / <code>column dense</code></td><td>每放一项都回起点找最早的空位</td><td>基本填满</td></tr>
+</tbody>
+</table>
+<p><code>dense</code> 填得满,代价是<strong>视觉顺序偏离文档顺序</strong>——Tab 键与屏幕阅读器仍按 DOM 走,视觉上第 3 张卡可能是 DOM 里的第 7 个。图片墙这类浏览型内容可以用,带交互的列表(表单、可聚焦卡片)不要用,判据与 <a href="#f4-flex">6.1</a> 的 <code>order</code> 一致:只重排装饰,不重排操作对象。</p>
+<h3>隐式网格:格子不够时长出来的轨道</h3>
+<p><code>grid-template-*</code> 定义的是<strong>显式网格</strong>;项目太多、或被定位到了定义之外(<code>grid-row: 8</code> 而模板只有三行),浏览器就按需生成<strong>隐式轨道</strong>。隐式轨道的尺寸不归模板管,由 <code>grid-auto-rows</code>/<code>grid-auto-columns</code> 决定,默认 <code>auto</code>(按内容)。「前三行整整齐齐、后面的行高全乱了」的现场,就是模板只写了三行、后面全是 <code>auto</code> 隐式行——把 <code>grid-auto-rows</code> 补上即可。</p>
+<figure style="contain-intrinsic-size:auto 402px">
+<svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<text class="svgtext" x="20" y="26">grid-template-columns: 1fr 1fr 1fr;  grid-template-rows: 80px 80px(显式 3×2)</text>
+<g>
+<rect x="40" y="44" width="180" height="70" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="220" y="44" width="180" height="70" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="400" y="44" width="180" height="70" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="40" y="114" width="180" height="70" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="220" y="114" width="180" height="70" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="400" y="114" width="180" height="70" fill="var(--svg-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgmuted" x="50" y="84" font-size="11">1</text><text class="svgmuted" x="230" y="84" font-size="11">2</text><text class="svgmuted" x="410" y="84" font-size="11">3</text>
+<text class="svgmuted" x="50" y="154" font-size="11">4</text><text class="svgmuted" x="230" y="154" font-size="11">5</text><text class="svgmuted" x="410" y="154" font-size="11">6</text>
+<rect x="40" y="184" width="180" height="52" fill="var(--svg-soft2)" stroke="var(--muted)" stroke-dasharray="5 4"/>
+<rect x="220" y="184" width="180" height="52" fill="var(--svg-soft2)" stroke="var(--muted)" stroke-dasharray="5 4"/>
+<rect x="400" y="184" width="180" height="52" fill="var(--svg-soft2)" stroke="var(--muted)" stroke-dasharray="5 4"/>
+<text class="svgmuted" x="50" y="214" font-size="11">7</text><text class="svgmuted" x="230" y="214" font-size="11">8</text>
+<text class="svgmuted" x="446" y="206" font-size="11">隐式行:尺寸由</text>
+<text class="svgmuted" x="446" y="222" font-size="11">grid-auto-rows 决定</text>
+</g>
+<text class="svgmuted" x="26" y="40" font-size="11">1</text>
+<text class="svgmuted" x="204" y="40" font-size="11">2</text>
+<text class="svgmuted" x="384" y="40" font-size="11">3</text>
+<text class="svgmuted" x="564" y="40" font-size="11">4</text>
+<text class="svgmuted" x="600" y="60" font-size="11">← 线号 4 = −1</text>
+<text class="svgmuted" x="600" y="120" font-size="11">负号只数显式网格:</text>
+<text class="svgmuted" x="600" y="136" font-size="11">−1 是显式末线,</text>
+<text class="svgmuted" x="600" y="152" font-size="11">不含隐式行的边线</text>
+<text class="svgtext" x="20" y="264">项目 7、8 放不进显式格 → 自动生成第三行(虚线),该行不受 grid-template-rows 管</text>
+</svg>
+<figcaption>显式网格与隐式网格:模板只定义了 3×2,多出来的项目让浏览器按 grid-auto-rows 生成隐式行;负数线号从显式网格的末线倒数,数不到隐式轨道（原创绘制）</figcaption>
+</figure>
+<p>与隐式网格相关的一条暗规则:<strong>负数线号只数显式网格</strong>。<code>grid-column: 1 / -1</code> 是「横贯整行」的惯用写法,但当列是隐式生成的(比如 <code>grid-auto-flow: column</code> 的横向列表),<code>-1</code> 指向的仍是显式网格的末线——只定义过一列时 <code>1 / -1</code> 等于什么都没跨。横向自动扩列的容器里要通栏,用 <code>grid-column: 1 / span 全部列数</code> 或改造显式模板。</p>
+<h3>轨道的最小尺寸:1fr 为什么守不住等分</h3>
+<p><code>1fr</code> 是 <code>minmax(auto, 1fr)</code> 的简写——它的下限不是 0,而是<strong>内容的最小尺寸</strong>。三列 <code>1fr 1fr 1fr</code> 平时等宽,某列出现一条长 URL 或一张固有宽度很大的图,该列就以 <code>min-content</code> 为底不肯再缩,把另两列挤扁;症状与 Flex 的 <code>min-width: auto</code> 完全同源(<a href="#fcss-flex-deep">6.4</a>),解法也同构:</p>
+<pre style="contain-intrinsic-size:auto 141px"><code>/* 严格等分,内容超宽自己裁: */
+grid-template-columns: repeat(3, minmax(0, 1fr));
+/* 列里再配文本收尾: */
+.cell { overflow-wrap: anywhere; }  /* 或 overflow: hidden + 省略号 */</code></pre>
+<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 1fr 的下限是内容最小尺寸,严格等分要写 minmax(0, 1fr)</span><p>症状:三等分卡片网格,某张卡里贴了行超长代码,整列被撑到 40%,相邻列的文字挤成一柱。根因是 <code>1fr = minmax(auto, 1fr)</code>。把模板换成 <code>repeat(3, minmax(0, 1fr))</code>,再决定超宽内容是断行还是滚动——两步各管一半,只做第一步会把内容裁没。</p></div>
+<h3>同格堆叠:用网格取代一批 position: absolute</h3>
+<p>多个项目可以放进<strong>同一个格子</strong>:都写 <code>grid-area: 1 / 1</code> 即可,重叠顺序按文档序,可用 <code>z-index</code> 调(网格项与 flex 项一样,<code>z-index</code> 数值直接生效,不需要 <code>position</code>)。「图上压文字」「多层徽标」这类需求从此不必让子元素脱流——绝对定位方案里父元素要 <code>position: relative</code>、层层坐标手算,而同格堆叠的每一层都还在布局里,各自可以用 <code>place-self</code> 对齐,容器高度取最高一层,不会像绝对定位那样塌陷(<a href="#fcss-flow">5.4</a>)。</p>
+<pre style="contain-intrinsic-size:auto 169px"><code>.hero { display: grid; }
+.hero &gt; * { grid-area: 1 / 1; }
+.hero img { inline-size: 100%; aspect-ratio: 21 / 9; object-fit: cover; }
+.hero h1  { place-self: end start; margin: 1rem; color: #fff; }
+.hero .badge { place-self: start end; margin: .5rem; }</code></pre>
+<h3>对齐的两个盲区:stretch 拉伸与 auto-fit 的空轨道</h3>
+<p>项目级对齐默认 <code>stretch</code>:格子比内容大时项目被拉满。块状卡片正合适,但替换元素会被拉变形——网格里的 <code>img</code> 要么 <code>place-self: center</code>,要么配 <a href="#fcss-replaced">5.6</a> 的 <code>object-fit</code>。</p>
+<p>另一个盲区在容器级:<code>auto-fit</code> 折叠空轨道后,若剩余空间被 <code>justify-content: center</code> 之类接管,卡片数量不同的两个区块会呈现不同的起始位置;想要「不满一行也靠左对齐」保持默认 <code>start</code> 即可。六个对齐属性的分工表在 <a href="#f4-grid">6.2</a>,此处只补这两个高频误判。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 排查网格布局先开 DevTools 的 Grid 覆盖层</span><p>Elements 里每个网格容器后面有 grid 徽标,点亮后线号、轨道尺寸、gap、命名区域全部画在页面上,隐式轨道以虚线区分。「这个项目到底在几号线之间」「这行是显式还是隐式」不要靠读代码推,覆盖层十秒钟给出答案;Firefox 的网格检查器还能显示负数线号。</p></div>
+<h2 id="fcss-multicol">6.6 多列布局 multicol:让内容自己分栏</h2>
+<p>Flex 与 Grid 摆的是<strong>盒子</strong>,multicol 摆的是<strong>内容</strong>:给一个容器写 <code>column-count: 3</code>,里面的文字、图片、标题像报纸一样灌进三栏,第一栏满了流进第二栏。它是 CSS 里唯一在屏幕上做<strong>分片</strong>(fragmentation)的布局——同一个盒的内容被切成几段分开摆放,这套切割规则与打印分页共用(<a href="#fcss-print">10.6</a>)。用途比 Flex/Grid 窄得多,但在它的领地里(长文分栏、标签云、简单瀑布流)别的布局要么做不到、要么要 JS。</p>
+<h3>语法框:定义列、列间装饰与跨列</h3>
+<p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 211px"><code>column-count: auto | &lt;整数&gt;        /* 最多几列 */
+column-width: auto | &lt;长度&gt;        /* 每列最小宽;两者可同写,简写 columns: 3 / columns: 16em / columns: 3 16em */
+column-gap:   normal | &lt;长度&gt;      /* 列间距,初始 1em(与 Flex/Grid 的 gap 同名同义) */
+column-rule:  &lt;宽度&gt; &lt;线型&gt; &lt;颜色&gt; /* 列间分隔线,语法同 border,画在 gap 中央,不占空间 */
+column-span:  none | all           /* 写在子元素上:横贯所有列 */
+column-fill:  balance | auto       /* 各列尽量等高,还是逐列填满 */</code></pre>
+<p><code>column-count</code> 与 <code>column-width</code> 的关系类似 <code>repeat(auto-fill, minmax(16em, 1fr))</code>(<a href="#f4-grid">6.2</a>):只写 <code>count</code> 是硬性列数;只写 <code>width</code> 是「装得下几列算几列」,天生响应式;两者都写,<code>count</code> 是上限。正文分栏优先用 <code>column-width</code>——它保证窄屏自动降到一列,不需要媒体查询。</p>
+<h3>机制:分片、平衡与跨列元素</h3>
+<p>multicol 容器把自己的内容排成一条长流,再按容器高度切成片分进各列。两条派生规则:<code>column-fill</code> 默认 <code>balance</code>,浏览器会<strong>反推容器高度</strong>让各列尽量等高——所以不限高的 multicol 容器,高度是「总内容 ÷ 列数」而不是内容全高;<code>column-span: all</code> 的子元素(通常是标题)把内容流拦腰截断,上方内容先平衡成几列,跨栏元素横贯,下方内容重新开始分片。</p>
+<p>写了 <code>height</code>/<code>max-height</code> 的 multicol 容器行为会变:内容装不下时不换行堆叠,而是<strong>横向生成更多列</strong>,从容器右边溢出(<code>overflow</code> 决定裁不裁)。「限高 + 横向滚动」可以做出全部内容横排翻页的阅读器;不知道这条规则时,它是「设了 max-height 内容跑到容器外面」的事故来源。</p>
+<h3>断点控制:哪里许切、哪里不许</h3>
+<p>分片默认可以发生在任何行盒之间——卡片被从中间切成两半、标题孤零零留在栏底,都是默认行为。三个属性管切割点,它们同时管打印分页,值也通用:</p>
+<table style="contain-intrinsic-size:auto 201px">
+<thead><tr><th class="nw">属性</th><th>写在谁身上</th><th>管什么</th></tr></thead>
+<tbody>
+<tr><td class="nw"><code>break-inside: avoid</code></td><td>不想被切开的块(卡片、图表、<code>figure</code>)</td><td>禁止内部断点,整块挪进下一列</td></tr>
+<tr><td class="nw"><code>break-before</code> / <code>break-after</code>: <code>avoid | column | all</code></td><td>标题、小节首</td><td>元素前/后禁止断,或强制换列</td></tr>
+<tr><td class="nw"><code>orphans</code> / <code>widows</code>: <code>&lt;整数&gt;</code></td><td>段落容器</td><td>段落被切开时,栏底/栏首至少留几行(初始 2)</td></tr>
+</tbody>
+</table>
+<h3>用它做卡片瀑布流:能力与代价</h3>
+<p>Pinterest 式「等宽不等高、上边对齐」的瀑布流,Grid 与 Flex 都做不了(Grid 的行是整行对齐的),multicol 三行样式就有形状:</p>
+<pre style="contain-intrinsic-size:auto 87px"><code>.masonry { columns: 16em; column-gap: 1rem; }
+.masonry &gt; * { break-inside: avoid; margin-block: 0 1rem; }</code></pre>
+<p>代价是<strong>阅读顺序是竖的</strong>:第 1、2、3 张卡在第一列从上往下,视觉上「第一行」里的几张卡在 DOM 里隔得很远。按时间线浏览的内容(动态、新闻)用它会让「最新的几条」散在各列底部;作品集、图片墙这类无序内容才合适。真正按横向顺序排的瀑布流要等 Grid 的 masonry 布局落地,或用 JS 计算。</p>
+<figure style="contain-intrinsic-size:auto 380px">
+<svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<text class="svgtext" x="20" y="28">columns: 3 的填充顺序:内容先灌满一列,再进下一列</text>
+<rect x="20" y="44" width="200" height="190" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<rect x="244" y="44" width="200" height="190" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<rect x="468" y="44" width="200" height="190" rx="6" fill="var(--svg-soft)" stroke="var(--accent)"/>
+<rect x="36" y="58" width="168" height="46" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgtext" x="104" y="86">卡 1</text>
+<rect x="36" y="112" width="168" height="70" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgtext" x="104" y="152">卡 2</text>
+<rect x="36" y="190" width="168" height="36" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgtext" x="104" y="214">卡 3</text>
+<rect x="260" y="58" width="168" height="80" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgtext" x="328" y="102">卡 4</text>
+<rect x="260" y="146" width="168" height="50" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgtext" x="328" y="176">卡 5</text>
+<rect x="484" y="58" width="168" height="56" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgtext" x="552" y="90">卡 6</text>
+<rect x="484" y="122" width="168" height="74" rx="4" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgtext" x="552" y="162">卡 7</text>
+<line x1="120" y1="228" x2="120" y2="244" stroke="var(--muted)"/>
+<line x1="120" y1="244" x2="344" y2="244" stroke="var(--muted)"/>
+<line x1="344" y1="244" x2="344" y2="236" stroke="var(--muted)"/>
+<text class="svgmuted" x="360" y="250" font-size="11">DOM 顺序沿列走:视觉同一行的卡 1、4、6 在 DOM 里并不相邻</text>
+</svg>
+<figcaption>multicol 的阅读顺序:内容按列灌注,卡 1、2、3 竖着排满第一列才轮到卡 4;按时间线浏览的内容用它会把「最新几条」散进各列（原创绘制）</figcaption>
+</figure>
+<div class="note new" style="contain-intrinsic-size:auto 165px"><span class="t">🔵 原生 masonry 布局已在规范推进,落地前 columns 是最省的近似</span><p>CSSWG 正在推进网格瀑布流(<code>grid-template-rows: masonry</code> 与替代提案之争),Firefox 与 Safari 有实验实现。上线前,无序内容用 <code>columns</code> 方案零 JS 成本;必须保横向顺序的,才值得引一个 JS 布局库。选型时先确认「顺序到底重不重要」,多数图墙对顺序并无要求。</p></div>
+<h3>放进全景:五种布局机制的分工</h3>
+<p>到这里,本书的布局工具全部到齐,选型只需要两问:摆的是<strong>盒子还是内容流</strong>?方向是<strong>一维还是二维</strong>?</p>
+<table style="contain-intrinsic-size:auto 222px">
+<thead><tr><th class="nw">机制</th><th class="nw">摆什么</th><th>选它的信号</th></tr></thead>
+<tbody>
+<tr><td class="nw">正常流(<a href="#f3-display">5.2</a>)</td><td class="nw">文档</td><td>默认;能不写布局属性就不写</td></tr>
+<tr><td class="nw">Flex(<a href="#f4-flex">6.1</a>)</td><td class="nw">一维盒子</td><td>一行/一列内分配与对齐,尺寸由内容驱动</td></tr>
+<tr><td class="nw">Grid(<a href="#f4-grid">6.2</a>)</td><td class="nw">二维盒子</td><td>行列都要对齐,版式先于内容;选型细表见 6.2</td></tr>
+<tr><td class="nw">multicol(本节)</td><td class="nw">连续内容流</td><td>长文分栏、无序卡片墙;内容要「灌」不要「摆」</td></tr>
+<tr><td class="nw">定位(<a href="#fcss-flow">5.4</a>)</td><td class="nw">脱流的单个盒</td><td>浮层、徽标;同格堆叠能替代的场合优先 Grid(<a href="#fcss-grid-deep">6.5</a>)</td></tr>
+</tbody>
+</table>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 33226px;--thin-h:21695px">
@@ -5051,10 +5711,10 @@ text-underline-offset  <span class="kw">true</span></code></pre>
 <p>解读:这些特性几乎都是渐进增强——不支持的浏览器里标题照常换行、段落照常排、下划线回到默认样式,页面不会坏,所以不需要 <code>@supports</code> 分支;唯一要分支的是 <code>initial-letter</code>,因为它和 <code>float</code> 版首字下沉写法互斥,支持的浏览器用前者、不支持用后者。<code>\A</code> 那条能工作依赖两件事:<code>dt</code>/<code>dd</code> 都是 <code>inline</code>(否则本来就换行,伪元素的换行会多出一个空行),以及伪元素上 <code>white-space: pre</code>;把 <code>pre</code> 去掉,三个术语会连成一行。代码块的斑马纹用了 <code>2lh</code>,把 <code>pre</code> 的 <code>line-height</code> 改成 1.8 条纹仍然对齐——这是 <code>lh</code> 相对 <code>3em</code> 的好处。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 32252px;--thin-h:19368px">
+<section class="chapter" style="contain-intrinsic-size:auto 35489px;--thin-h:22605px">
 <h1 id="a8"><span class="part">CSS</span>颜色、背景、边框与形状</h1>
 <p>上一章把文字排好,这一章处理文字之外的那一层:颜色、背景、边框、阴影、渐变与形状。它们几乎不参与布局(边框是唯一的例外),只改变最终画出来的像素,所以调错了不会让页面塌掉,只会让它看起来像没做完。这一层的共同模型是<strong>分层</strong>:背景是若干层图像叠在一层底色之上,阴影可以叠任意多层,每个圆角有水平与垂直两个半径,滤镜作用在整棵子树上。再加一条「渐变是一张没有固有尺寸、可以定尺寸并平铺的图像」,设计稿上大半的装饰效果就不需要切图,也能随主题色一起变。</p>
-<p>三节是同一批属性的三种深度。<a href="#f3-color-bg">8.1</a> 给形态与模型:<code>currentcolor</code> 怎么省掉一半颜色声明、<code>background</code> 的八个长属性与多层顺序、三种渐变函数、<code>border-radius</code> 的两个半径、<code>box-shadow</code> 与 <code>filter</code>/<code>backdrop-filter</code> 各自投的是什么、<code>opacity</code> 与颜色 alpha 为什么不能互换、<code>overflow</code> 为什么必须放在这里讲,最后往下一层挖到色彩空间——记法与「在哪个空间里插值」是两件事,渐变中间发灰的原因就在那里。</p>
+<p>前三节是同一批属性的三种深度,<a href="#fcss-blend">8.4</a> 再补上像素合成的最后一步——混合模式:<code>mix-blend-mode</code> 让元素与背后的内容按公式互算,<code>background-blend-mode</code> 在元素自己的背景层之间做同样的事。<a href="#f3-color-bg">8.1</a> 给形态与模型:<code>currentcolor</code> 怎么省掉一半颜色声明、<code>background</code> 的八个长属性与多层顺序、三种渐变函数、<code>border-radius</code> 的两个半径、<code>box-shadow</code> 与 <code>filter</code>/<code>backdrop-filter</code> 各自投的是什么、<code>opacity</code> 与颜色 alpha 为什么不能互换、<code>overflow</code> 为什么必须放在这里讲,最后往下一层挖到色彩空间——记法与「在哪个空间里插值」是两件事,渐变中间发灰的原因就在那里。</p>
 <p><a href="#fcss-decor">8.2</a> 换成《CSS 揭秘》的问法——半透明边框、多重边框、三角形与箭头、同心圆角、条纹、网格、波点、棋盘、连续图像边框,每个效果都只落在两条机制上:背景的绘制区域与定位原点可配置,渐变是可平铺的图像;边框那几个则来自「四条边在角上 45° 斜接」这一条。</p>
 <p><a href="#fcss-shape">8.3</a> 处理非矩形:椭圆、平行四边形、切角、梯形、饼图、沿轮廓的投影、毛玻璃、<code>clip-path</code> 的过渡前提与 SVG 路径引用、文字环绕的 <code>shape-outside</code> 三兄弟,再加两块 CSS 的边界能力——三角函数排布与 SVG 滤镜,并给出「什么时候该停下来改用 SVG」的判据。全章的判断标准只有一条:形状只改绘制,只有 <code>shape-outside</code> 会改变文字的流动。让这些效果动起来在 <a href="#f4-motion">9.1</a>,把颜色收成令牌与主题在 <a href="#f4-modern">10.1</a>、<a href="#fcss-arch">10.4</a>。</p>
 <h2 id="f3-color-bg">8.1 颜色、背景、边框与阴影</h2>
@@ -5598,6 +6258,77 @@ glass backdrop-filter = blur(6px)
 para 左上角 (x+2,y+2) 命中的是: row
 para 中心命中的是: para</code></pre>
 <p>解读:最后两行印证「<code>clip-path</code> 影响命中测试」——左上角被裁掉的区域 <code>elementFromPoint</code> 拿到的是父元素 <code>.row</code>,而 <code>background</code> 渐变切角的 <code>.cut</code> 如果做同样测试,角上仍会命中自己,因为渐变只改了绘制。箭头的投影之所以能沿着尖角,是 <code>filter</code> 写在外层 <code>.shadow-wrap</code> 上、<code>clip-path</code> 写在内层;把两者写到同一个元素上,投影会随 clip 一起被裁成直边。把 <code>.glass</code> 的 <code>background</code> 改成不透明的白,毛玻璃效果消失——<code>backdrop-filter</code> 模糊的是背后,前面不透就看不见。饼图的三个份额改成自定义属性后,配 <code>@property</code> 即可过渡,这在 <a href="#fcss-motion">9.2</a> 里接着讲。</p></div>
+<h2 id="fcss-blend">8.4 混合模式:mix-blend-mode、background-blend-mode 与 isolation</h2>
+<p>透明度(<code>opacity</code> 与颜色的 alpha,<a href="#f3-color-bg">8.1</a>)把上下两层像素做线性加权,只有「盖住多少」一个维度。<strong>混合模式</strong>把这一步换成任意函数:上层像素与下层像素逐通道进公式,得出「正片叠底」「滤色」这些设计工具里的经典效果。</p>
+<p>CSS 提供两个属性:<code>mix-blend-mode</code> 让<strong>整个元素</strong>与它背后的内容混,<code>background-blend-mode</code> 让元素<strong>自己的多层背景</strong>互混;再加一个 <code>isolation</code> 控制混合的波及范围。三者补上了「不切图做图像特效」的最后一块:染色、压字、镂空、高亮笔,全部纯 CSS。</p>
+<h3>十六种模式:按五族记,不逐个背</h3>
+<p>可用的模式共十六种(含 <code>normal</code>),逐个背公式没有必要,按「对结果的影响方向」分五族,选的时候先选族:</p>
+<table style="contain-intrinsic-size:auto 302px">
+<thead><tr><th class="nw">族</th><th class="nw">模式</th><th>效果与判据</th></tr></thead>
+<tbody>
+<tr><td class="nw">变暗</td><td class="nw"><code>multiply</code>、<code>darken</code>、<code>color-burn</code></td><td>结果只会更暗;<code>multiply</code> 里白色消失、黑色保留——扫描件去白底、给纸纹上压字选这族</td></tr>
+<tr><td class="nw">变亮</td><td class="nw"><code>screen</code>、<code>lighten</code>、<code>color-dodge</code></td><td>结果只会更亮;<code>screen</code> 里黑色消失——黑底光效、星空叠加选这族</td></tr>
+<tr><td class="nw">对比</td><td class="nw"><code>overlay</code>、<code>soft-light</code>、<code>hard-light</code></td><td>暗处更暗、亮处更亮;质感叠加、把纹理「揉进」照片</td></tr>
+<tr><td class="nw">差值</td><td class="nw"><code>difference</code>、<code>exclusion</code></td><td>相同处变黑、相反处高亮;白色等于反色——光标反色、对比两张图的差异</td></tr>
+<tr><td class="nw">成分</td><td class="nw"><code>hue</code>、<code>saturation</code>、<code>color</code>、<code>luminosity</code></td><td>只取上层的某一个成分;单色调染色用 <code>color</code>/<code>luminosity</code></td></tr>
+</tbody>
+</table>
+<h3>mix-blend-mode:与谁混,边界在哪个上下文</h3>
+<p><code>mix-blend-mode</code> 的混合对象是元素的<strong>背幕</strong>(backdrop):画它时它身后已经画好的一切——父元素背景、更早绘制的兄弟、再往下的页面背景。范围有一条硬边界:<strong>背幕只算到所在层叠上下文为止</strong>。这带来两个必须知道的联动:声明了非 <code>normal</code> 混合的元素自己会创建层叠上下文(<a href="#f3-display">5.2</a> 清单里的一员);而它的<strong>祖先</strong>一旦因为 <code>opacity</code>、<code>filter</code>、<code>transform</code> 等原因创建了层叠上下文,那层就成了新的「地板」,混合穿不下去。</p>
+<figure style="contain-intrinsic-size:auto 369px">
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<rect x="16" y="16" width="330" height="218" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="28" y="38">默认:混到页面底色为止</text>
+<rect x="40" y="54" width="280" height="160" rx="6" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgmuted" x="50" y="72" font-size="11">页面背景(参与混合)</text>
+<rect x="60" y="84" width="240" height="60" rx="6" fill="var(--svg-soft2)" stroke="var(--muted)"/>
+<text class="svgmuted" x="70" y="102" font-size="11">先画的兄弟(参与混合)</text>
+<rect x="100" y="120" width="180" height="72" rx="6" fill="var(--svg-fill)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgtext" x="112" y="142">h1 mix-blend-mode:</text>
+<text class="svgtext" x="112" y="160">multiply</text>
+<text class="svgmuted" x="112" y="182" font-size="11">背幕 = 下面画过的全部</text>
+<rect x="374" y="16" width="330" height="218" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="386" y="38">祖先建了层叠上下文:混合被截住</text>
+<rect x="398" y="54" width="280" height="160" rx="6" fill="var(--svg-fill)" stroke="var(--muted)"/>
+<text class="svgmuted" x="408" y="72" font-size="11">页面背景(不再参与)</text>
+<rect x="418" y="84" width="240" height="120" rx="6" fill="var(--svg-soft2)" stroke="var(--dead-fg)" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text class="svgmuted" x="428" y="102" font-size="11">父元素 opacity: .99 / isolation: isolate</text>
+<text class="svgmuted" x="428" y="118" font-size="11">→ 新的层叠上下文 = 混合的地板</text>
+<rect x="448" y="130" width="180" height="60" rx="6" fill="var(--svg-fill)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgtext" x="460" y="152">同一个 h1</text>
+<text class="svgmuted" x="460" y="172" font-size="11">只能混到虚线框内</text>
+</svg>
+<figcaption>mix-blend-mode 的作用范围:背幕是同一层叠上下文里已画好的内容;祖先创建层叠上下文(opacity、filter、isolation 等)就把混合截在框内（原创绘制）</figcaption>
+</figure>
+<p><strong>示例</strong>:大标题压在轮播图上,文字用正片叠底「印」进照片;不论下面滚过哪张图,效果都成立。</p>
+<pre style="contain-intrinsic-size:auto 223px"><code>.hero { display: grid; }
+.hero &gt; * { grid-area: 1 / 1; }          /* 同格堆叠,6.5 */
+.hero h1 {
+  place-self: center;
+  font-size: clamp(3rem, 10vw, 8rem); font-weight: 900;
+  color: #e8e0d0; mix-blend-mode: multiply;
+}</code></pre>
+<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 给混合元素的祖先加 opacity 或 filter,混合效果会突然变浅或消失</span><p>症状:压在图上的 multiply 标题一直正常,某次给整块区域加了进场动画(<code>opacity</code> 渐显),动画结束后混合只剩下与父块背景的部分。根因是动画属性让祖先建了层叠上下文,背幕不再包含照片。排查按 <a href="#f3-display">5.2</a> 的层叠上下文清单逐层找;修法是把混合元素与被混对象放进同一个最小容器里,别指望隔着几层结构去混。</p></div>
+<h3>background-blend-mode:元素内部的暗房</h3>
+<p><code>background-blend-mode</code> 不看背幕,只在<strong>本元素的背景栈</strong>内部工作:多层 <code>background-image</code> 从上到下两两混合,最后一起与 <code>background-color</code> 混。因为一切发生在元素内部,它不建层叠上下文、不受祖先影响,行为完全可预测——能用它解决的不要动 <code>mix-blend-mode</code>。最常用的配方是<strong>双色调</strong>(duotone):灰度照片与主题色一混,整站配图立刻统一色系,不需要出第二套图。</p>
+<pre style="contain-intrinsic-size:auto 386px"><code>/* 双色调:照片先去色,再用 luminosity 保留明暗、换成品牌色 */
+.card-cover {
+  background-image: url(team.jpg);
+  background-color: #1a5fb4;
+  background-size: cover;
+  background-blend-mode: luminosity;
+  filter: grayscale(1) contrast(1.1);   /* 8.1:先压成灰度更可控 */
+}
+/* 纹理揉进底色:两层背景互混,不涉及外界 */
+.paper {
+  background-image: url(noise.png), linear-gradient(#f5efe0, #eadfc8);
+  background-blend-mode: overlay, normal;
+}</code></pre>
+<h3>isolation:主动画一道隔离墙</h3>
+<p><code>isolation: isolate</code> 只做一件事:让元素创建层叠上下文,从而成为其后代混合的「地板」。它是上面那条事故规则的<strong>正用</strong>:徽标用 <code>difference</code> 做反色效果时,把徽标和它的底一起包进 <code>isolation: isolate</code> 的容器,混合就被锁在容器内,不会把页面背景也反了色。比起「随便找个属性触发层叠上下文」(顺带改了透明度或几何),<code>isolation</code> 语义明确、没有副作用,是唯一以「建上下文」为本职的属性。</p>
+<h3>边界:颜色空间、对比度与打印</h3>
+<p>三条使用边界。其一,混合公式默认在 sRGB 里逐通道算,与 <a href="#f3-color-bg">8.1</a> 讲的渐变插值同理,深色底上的 <code>color-dodge</code>/<code>burn</code> 容易出突兀的色阶。其二,混合结果随下层内容变化,<strong>文字的对比度不再由你控制</strong>——正文永远不要靠混合模式着色,装饰性大标题混完也要在最亮与最暗的背景样本上各测一次对比度(<a href="#f2-a11y-keyboard">3.7</a> 的工具直接量)。其三,打印时混合基本不可靠(背景本身默认就不打印,<a href="#fcss-print">10.6</a>),打印样式里把混合元素退回实色。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 167px"><span class="t">🟢 能进背景栈的混合,不要用 mix-blend-mode</span><p>判据:被混的两样东西如果都能塞进同一个元素的背景栈(图 + 色、图 + 渐变、图 + 纹理),用 <code>background-blend-mode</code>——无层叠上下文牵连、不受祖先动画影响、不会误伤别的内容。只有「元素要与页面上另一个独立元素互动」(文字压图、光标反色)才值得引入 <code>mix-blend-mode</code> 及其作用域问题。</p></div>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 17038px;--thin-h:12514px">
@@ -5887,10 +6618,10 @@ dialog 过渡结束,open = <span class="kw">false</span></code></pre>
 <p>弹窗 <code>transitionend</code> 触发了两次:打开时 <code>@starting-style</code> 提供了起点所以有过渡,关闭时 <code>allow-discrete</code> 把 <code>display: none</code> 推迟到过渡结束,所以能淡出。去掉 <code>@starting-style</code> 那段,打开时会瞬间出现;去掉 <code>display .25s allow-discrete</code>,关闭时会瞬间消失。</p></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 40613px;--thin-h:26714px">
+<section class="chapter" style="contain-intrinsic-size:auto 47125px;--thin-h:33227px">
 <h1 id="a10"><span class="part">CSS</span>现代 CSS、体验细节与样式架构</h1>
-<p>前面几章回答的是「一个效果怎么写出来」,这一章回答「一整套样式怎么活得久」。四节各解一层:语言这几年补上的能力(自定义属性、原生嵌套、<code>:is()</code>/<code>:where()</code>/<code>:has()</code>、<code>@layer</code>、逻辑属性、<code>aspect-ratio</code>、<code>scroll-snap</code>),界面里那些不做就显得业余的细节(可点区域够不够大、光标说没说清能不能点、弹层背后要不要变惰性、可滚动区域有没有提示、垂直居中到底该用哪一种、页脚怎么贴住底部),一套让编号跟着文档结构自动算出来的计数器机制(<code>counter-reset</code>/<code>counter-increment</code>/<code>counter-set</code>、<code>counter()</code> 与 <code>counters()</code>、<code>@counter-style</code>),以及一个团队几万行样式的组织方式(命名约定、CSS Modules、原子化、CSS-in-JS、设计令牌、层叠分层)。</p>
-<p>顺序是从工具到用法再到秩序。</p>
+<p>前面几章回答的是「一个效果怎么写出来」,这一章回答「一整套样式怎么活得久」。前四节各解一层:语言这几年补上的能力(自定义属性、原生嵌套、<code>:is()</code>/<code>:where()</code>/<code>:has()</code>、<code>@layer</code>、逻辑属性、<code>aspect-ratio</code>、<code>scroll-snap</code>),界面里那些不做就显得业余的细节(可点区域够不够大、光标说没说清能不能点、弹层背后要不要变惰性、可滚动区域有没有提示、垂直居中到底该用哪一种、页脚怎么贴住底部),一套让编号跟着文档结构自动算出来的计数器机制(<code>counter-reset</code>/<code>counter-increment</code>/<code>counter-set</code>、<code>counter()</code> 与 <code>counters()</code>、<code>@counter-style</code>),以及一个团队几万行样式的组织方式(命名约定、CSS Modules、原子化、CSS-in-JS、设计令牌、层叠分层)。</p>
+<p>顺序是从工具到用法再到秩序。秩序之后还有两笔账:<a href="#fcss-perf">10.5</a> 算性能账——一条改动触发流水线的哪几段、布局抖动怎么发生、<code>contain</code> 与 <code>content-visibility</code> 怎么把渲染范围圈小;<a href="#fcss-print">10.6</a> 算另一种媒体的账——页面被导出成 PDF 或打印时,页面盒、分页点与颜色该怎么声明。</p>
 <ul>
 <li><a href="#f4-modern">10.1</a> 先给能力,因为后两节都建立在它上面:主题切换、令牌体系、组件的局部覆盖全靠自定义属性,而 <code>@layer</code> 直接是架构一节的结论之一。</li>
 <li><a href="#fcss-counter">10.2</a> 单拎出计数器这一族——它不属于「新特性」,却是唯一能让编号、图表序号、多级目录跟着结构走的机制,它的值只能落在 <code>content</code> 里,而 <code>content</code> 本身的能力面在 <a href="#f3-counter">4.3</a>,同一套语法还撑着 <a href="#fcss-typo">7.3</a> 的引号。</li>
@@ -5938,7 +6669,7 @@ JS:getComputedStyle(el).getPropertyValue(<span>'--brand'</span>)    <span class=
 <p>嵌套把「同一个组件的规则写在一起」从 Sass 搬进了浏览器。规则与 Sass 有几处不同要记住:<code>&amp;</code> 不能做字符串拼接,<code>&amp;-title</code> 写不出 <code>.card-title</code>;嵌套规则的优先级等于把父选择器包进 <code>:is()</code>——父选择器列表 <code>.a, #b { &amp; .x {} }</code> 展开后,<code>.a .x</code> 的优先级也按 <code>#b</code> 算(取列表里最高的那个),这是和 Sass 展开结果真正不一样的地方;嵌套 <code>@media</code> 时块里的声明直接属于外层元素,不需要再写一遍选择器。嵌套层级别超过两三层——生成的选择器越长,优先级越高,后面越难覆盖,这条在 Sass 时代就成立。</p>
 <h3>:is()、:where() 与 :has()</h3>
 <p><code>:is(a, b, c)</code> 匹配列表里任一选择器,优先级取<strong>列表里最高的那个</strong>;<code>:where()</code> 与它完全相同,但优先级<strong>永远是 0</strong>——这使它成为写「可被轻易覆盖的默认样式」的工具:重置样式、组件库的基础层用 <code>:where()</code> 包住,使用者一个普通类选择器就能盖过去,不用和库比权重。两者都是「宽容的」选择器列表:里面有一个选择器浏览器不认识(比如某个新伪类),只忽略那一个,整条规则仍然生效;普通的逗号列表则是一个坏了整条废。支持:Chrome 88+ / Firefox 78+ / Safari 14+,Baseline 2021。</p>
-<p><code>:has()</code> 是等了二十年的「父选择器」,准确说是<strong>关系选择器</strong>:<code>a:has(b)</code> 选的是 <code>a</code>,条件是 <code>a</code> 的子树里(或用组合器指定的位置上)有 <code>b</code> 能匹配。<code>.card:has(img)</code> 选含图片的卡片;<code>form:has(:invalid) button[type=submit]</code> 选表单里有无效控件时的提交按钮;<code>label:has(+ input:focus)</code> 选紧跟着的输入框处于焦点时的标签;<code>body:has(dialog[open])</code> 在弹窗打开时锁住页面滚动。</p>
+<p><code>:has()</code> 是等了二十年的「父选择器」,准确说是<strong>关系选择器</strong>:<code>a:has(b)</code> 选的是 <code>a</code>,条件是 <code>a</code> 的子树里(或用组合器指定的位置上)有 <code>b</code> 能匹配。<code>.card:has(img)</code> 选含图片的卡片;<code>form:has(:invalid) button[type=submit]</code> 选表单里有无效控件时的提交按钮;<code>label:has(+ input:focus)</code> 选紧跟着的输入框处于焦点时的标签;<code>body:has(dialog[open])</code> 在弹窗打开时锁住页面滚动。三者的优先级算法、宽容解析与 <code>:has()</code> 的失效范围代价,深入版在 <a href="#fcss-newsel">4.6</a>。</p>
 <p>它的优先级同 <code>:is()</code>,取参数里最高的;它不宽容,参数里有无法解析的选择器整条作废;不能嵌套 <code>:has()</code>,也不能放伪元素。支持:Chrome 105+ / Firefox 121+ / Safari 15.4+,Baseline 2023。性能上浏览器对它做了针对性优化,但 <code>:has()</code> 写在 <code>*</code> 或 <code>body</code> 这类大范围元素上并配合动态 DOM 更新时要留意样式重算的成本。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 238px"><code>/* :where 做可覆盖的基础层,:has 做状态联动 */
 :where(button, [type=<span>"button"</span>], [type=<span>"submit"</span>]) { font: inherit; cursor: pointer; }   /* 优先级 0,任何类都能盖过 */
@@ -5969,9 +6700,9 @@ JS:getComputedStyle(el).getPropertyValue(<span>'--brand'</span>)    <span class=
 <tr><td class="nw"><code>border-top-left-radius</code></td><td><code>border-start-start-radius</code></td><td>块起点-行内起点</td></tr>
 </tbody>
 </table>
-<p>逻辑属性按<strong>书写方向</strong>而不是物理方向描述盒子:<code>margin-inline-start</code> 在从左到右的语言里是左外边距,在阿拉伯语、希伯来语(<code>dir="rtl"</code>)里自动变成右外边距,竖排日文里变成上外边距。做多语言产品时用它们可以让一套样式自动适配 RTL,不需要再维护一份镜像 CSS;即使只做中文,<code>margin-inline: auto</code>、<code>padding-block</code>、<code>inset: 0</code> 这几个简写也比物理写法短。支持:Chrome 87+ / Firefox 66+ / Safari 14.1+,2021 年起可以全面使用。</p>
-<p><code>aspect-ratio: 16 / 9</code> 让盒子在只给宽或只给高时按比例算另一边:视频占位、图片卡片、正方形头像(<code>aspect-ratio: 1</code>)都不再需要「padding-top 百分比撑高」的老技巧;宽高都明确给出时它被忽略;<code>&lt;img&gt;</code> 带 <code>width</code>/<code>height</code> 属性时浏览器已自动推出比例用于预留空间(见 <a href="#f2-text">3.1</a>、<a href="前端框架与工程化手册.html#f11-vitals">《前端框架与工程化手册》7.1</a> 的 CLS)。支持 Chrome 88+ / Firefox 89+ / Safari 15+,Baseline 2021。</p>
-<p><code>scroll-snap</code> 让滚动容器在停下时对齐到子元素的边:容器写 <code>scroll-snap-type: x mandatory</code>(或 <code>proximity</code>,只在靠近时吸附),子元素写 <code>scroll-snap-align: start | center | end</code>,<code>scroll-padding</code> 给容器留出吸附时的内边距(比如顶部有固定导航),<code>scroll-snap-stop: always</code> 禁止一次惯性滚动跳过多个;轮播、分页式画廊、全屏分节页都靠它而不是 JS。Chrome 69+ / Firefox 68+ / Safari 11+,早已普及。</p>
+<p>逻辑属性按<strong>书写方向</strong>而不是物理方向描述盒子:<code>margin-inline-start</code> 在从左到右的语言里是左外边距,在阿拉伯语、希伯来语(<code>dir="rtl"</code>)里自动变成右外边距,竖排日文里变成上外边距。做多语言产品时用它们可以让一套样式自动适配 RTL,不需要再维护一份镜像 CSS;即使只做中文,<code>margin-inline: auto</code>、<code>padding-block</code>、<code>inset: 0</code> 这几个简写也比物理写法短。支持:Chrome 87+ / Firefox 66+ / Safari 14.1+,2021 年起可以全面使用。完整的轴模型、属性对照与「哪些东西仍是物理的」见 <a href="#fcss-logical">5.7</a>。</p>
+<p><code>aspect-ratio: 16 / 9</code> 让盒子在只给宽或只给高时按比例算另一边:视频占位、图片卡片、正方形头像(<code>aspect-ratio: 1</code>)都不再需要「padding-top 百分比撑高」的老技巧;宽高都明确给出时它被忽略;<code>&lt;img&gt;</code> 带 <code>width</code>/<code>height</code> 属性时浏览器已自动推出比例用于预留空间(见 <a href="#f2-text">3.1</a>、<a href="前端框架与工程化手册.html#f11-vitals">《前端框架与工程化手册》7.1</a> 的 CLS)。支持 Chrome 88+ / Firefox 89+ / Safari 15+,Baseline 2021;它与 <code>object-fit</code>、内在尺寸的配合见 <a href="#fcss-replaced">5.6</a>。</p>
+<p><code>scroll-snap</code> 让滚动容器在停下时对齐到子元素的边:容器写 <code>scroll-snap-type: x mandatory</code>(或 <code>proximity</code>,只在靠近时吸附),子元素写 <code>scroll-snap-align: start | center | end</code>,<code>scroll-padding</code> 给容器留出吸附时的内边距(比如顶部有固定导航),<code>scroll-snap-stop: always</code> 禁止一次惯性滚动跳过多个;轮播、分页式画廊、全屏分节页都靠它而不是 JS。Chrome 69+ / Firefox 68+ / Safari 11+,早已普及;mandatory 的适用边界与滚动链、滚动条样式一起见 <a href="#fcss-scroll">5.5</a>。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 156px"><code>.carousel { display: flex; gap: 16px; overflow-x: <span class="kw">auto</span>; scroll-snap-type: x mandatory; scroll-padding-<span class="kw">inline</span>: 16px; }
 .carousel &gt; * { flex: 0 0 80%; scroll-snap-align: start; aspect-ratio: 16 / 9; }
 .avatar    { <span class="kw">inline</span>-size: 48px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; }
@@ -6682,6 +7413,148 @@ export <span class="kw">const</span> variant = styleVariants({ primary: {}, seco
 <li>类名由工具生成且有 TypeScript 类型,<code>vars.color.action</code> 拼错会在编译期报错,这是它相对 CSS Modules 的增量价值。</li>
 </ul>
 <p>四种里令牌都来自同一处(自定义属性),主题切换对四种写法都是改 <code>[data-theme]</code> 上的变量,这正是「令牌与方案解耦」的意义——换方案不用重做主题。</p></div>
+<h2 id="fcss-perf">10.5 渲染性能:重排、重绘与 contain、content-visibility</h2>
+<p>一条样式改动的代价,取决于它把渲染流水线从哪一段开始重跑。<a href="#f4-motion">9.1</a> 已经给出结论「动画只动 <code>transform</code> 与 <code>opacity</code>」;这一节把结论背后的流水线讲全,再讲三件事:脚本怎么在一帧里反复触发布局(布局抖动,长列表页面卡顿的头号原因),<code>contain</code> 怎么把一次改动的波及范围围起来,<code>content-visibility</code> 怎么让屏幕外的内容整段跳过渲染。前两者关乎「别做无用功」,后两者关乎「把必须做的功圈小」。</p>
+<h3>一帧的四段:样式、布局、绘制、合成</h3>
+<p>每一帧里,渲染引擎最多做四段工作:<strong>样式计算</strong>(哪些元素的计算值变了,<a href="#fcss-value">4.5</a>)、<strong>布局</strong>(重算几何——俗称重排)、<strong>绘制</strong>(把盒画成像素——重绘)、<strong>合成</strong>(把已画好的层贴到一起)。改动的属性决定入场点,入场越早,连带的后续段越多:</p>
+<table style="contain-intrinsic-size:auto 151px">
+<thead><tr><th class="nw">改了什么</th><th class="nw">从哪段开始重跑</th><th>典型属性</th></tr></thead>
+<tbody>
+<tr><td class="nw">几何</td><td class="nw">布局 → 绘制 → 合成</td><td><code>width</code>、<code>font-size</code>、<code>margin</code>、<code>top</code>、插删 DOM</td></tr>
+<tr><td class="nw">外观</td><td class="nw">绘制 → 合成</td><td><code>color</code>、<code>background</code>、<code>box-shadow</code>、<code>border-radius</code></td></tr>
+<tr><td class="nw">层变换</td><td class="nw">仅合成</td><td><code>transform</code>、<code>opacity</code>(已提升为合成层时)</td></tr>
+</tbody>
+</table>
+<figure style="contain-intrinsic-size:auto 324px">
+<svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<defs><marker id="ar-fperf" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--muted)"/></marker></defs>
+<rect x="20" y="60" width="150" height="52" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="44" y="82">样式计算</text>
+<text class="svgmuted" x="32" y="100" font-size="11">选择器匹配、算值</text>
+<rect x="196" y="60" width="150" height="52" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="230" y="82">布局(重排)</text>
+<text class="svgmuted" x="208" y="100" font-size="11">几何:位置与尺寸</text>
+<rect x="372" y="60" width="150" height="52" rx="8" fill="var(--svg-soft)" stroke="var(--muted)"/>
+<text class="svgtext" x="406" y="82">绘制(重绘)</text>
+<text class="svgmuted" x="384" y="100" font-size="11">像素:颜色与阴影</text>
+<rect x="548" y="60" width="150" height="52" rx="8" fill="var(--svg-soft2)" stroke="var(--accent)" stroke-width="1.5"/>
+<text class="svgtext" x="592" y="82">合成</text>
+<text class="svgmuted" x="560" y="100" font-size="11">贴层:GPU 上完成</text>
+<line x1="170" y1="86" x2="192" y2="86" stroke="var(--muted)" marker-end="url(#ar-fperf)"/>
+<line x1="346" y1="86" x2="368" y2="86" stroke="var(--muted)" marker-end="url(#ar-fperf)"/>
+<line x1="522" y1="86" x2="544" y2="86" stroke="var(--muted)" marker-end="url(#ar-fperf)"/>
+<line x1="95" y1="130" x2="95" y2="116" stroke="var(--accent)" marker-end="url(#ar-fperf)"/>
+<text class="svgmuted" x="30" y="148" font-size="11">width / font-size 从这里进场</text>
+<line x1="447" y1="130" x2="447" y2="116" stroke="var(--accent)" marker-end="url(#ar-fperf)"/>
+<text class="svgmuted" x="392" y="148" font-size="11">color / shadow 从这里进场</text>
+<line x1="623" y1="160" x2="623" y2="116" stroke="var(--accent)" marker-end="url(#ar-fperf)"/>
+<text class="svgmuted" x="536" y="178" font-size="11">transform / opacity 只走这段</text>
+<text class="svgmuted" x="20" y="34" font-size="11">一帧的预算约 16.7ms(60Hz):JS + 这四段必须全部挤进去,超了就是掉帧</text>
+</svg>
+<figcaption>渲染流水线的四段与三类属性的入场点:入场越靠前,后续连带的段越多;transform 与 opacity 只触发合成,所以动画只动它们（原创绘制）</figcaption>
+</figure>
+<p>布局还有<strong>波及范围</strong>问题:一个元素的几何变化会传染——子元素要重新排、依赖它尺寸的祖先要重新算,正常流里牵一发动全身。这正是 <code>contain</code> 存在的理由(见下文)。用 Performance 面板录一段交互(<a href="#f1-devtools">1.2</a>),紫色 Layout 与绿色 Paint 条的长度直接显示每段的耗时;Layout 条上带红色角标的,就是下一小节的强制同步布局。</p>
+<h3>布局抖动:读写交替是怎么把一帧写爆的</h3>
+<p>样式改动是<strong>惰性</strong>的:脚本写 <code>style.width</code> 时浏览器只记账,攒到下一帧统一重排。但脚本一旦<strong>读</strong>几何信息(<code>offsetWidth</code>、<code>getBoundingClientRect()</code>、<code>getComputedStyle()</code> 的布局属性),账就必须立刻结清——这叫<strong>强制同步布局</strong>。单次无害;致命的是循环里读写交替,每一轮读都作废上一轮的账,重排次数从 1 次变成 N 次:</p>
+<pre style="contain-intrinsic-size:auto 250px"><code>// 反例:100 个元素,100 次强制同步布局
+boxes.forEach(b =&gt; {
+  const w = b.parentNode.offsetWidth;   // 读:结账,触发重排
+  b.style.width = w / 2 + 'px';         // 写:记账,弄脏布局
+});
+// 正解:先读完,再写完 —— 全程 1 次重排
+const widths = boxes.map(b =&gt; b.parentNode.offsetWidth);
+boxes.forEach((b, i) =&gt; { b.style.width = widths[i] / 2 + 'px'; });</code></pre>
+<p>在一台中档手机上给 300 行的表格跑这两段,反例约 120ms(肉眼可见的卡),正解不到 5ms。规矩由此推出:<strong>批量读与批量写分开;写放进 <code>requestAnimationFrame</code>;布局信息能缓存就缓存</strong>。滚动处理器里连续读 <code>scrollTop</code> 不算抖动——只读不写不弄脏布局;读一下、改个 class、再读,才是事故写法。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 131px"><span class="t">🔴 循环里交替读写布局属性,重排次数等于循环次数</span><p>症状:表格排序、无限滚动加载一批新行时页面冻住零点几秒;Performance 面板里一排紫色 Layout 条,每条带「Forced reflow」警告,调用栈指向同一行代码。把读挪到循环外或先收集后应用,一般当场降一个数量级。</p></div>
+<h3>contain:把波及范围围起来</h3>
+<p><code>contain</code> 写在容器上,是作者对引擎的一份承诺:「这个子树是独立的,里面的变化不影响外面」。引擎凭这份承诺把重排与重绘<strong>锁死在容器内</strong>。四个可组合的值各承诺一件事:<code>layout</code>(内部布局与外部互不影响)、<code>paint</code>(后代不会画出容器,顺带建层叠上下文与格式化上下文)、<code>style</code>(计数器等作用域不外泄)、<code>size</code>(尺寸不看内容,必须自己给尺寸,否则塌成零)。</p>
+<p>简写 <code>content</code> 等于 <code>layout paint style</code>,是评论列表、卡片流里每个条目的合理默认;<code>strict</code> 再加 <code>size</code>。</p>
+<p>另一个成员 <code>contain: inline-size</code> 单独锁住内联轴尺寸,它是容器查询的地基——<code>container-type: inline-size</code> 内部就是它(<a href="#f4-responsive">6.3</a>)。副作用清单要记住:<code>paint</code>/<code>content</code> 会裁溢出、建层叠上下文,里面的 <code>position: fixed</code> 会变成相对容器定位,与 <a href="#fcss-flow">5.4</a> 的 transform 陷阱同型。</p>
+<h3>content-visibility:屏幕外整段不渲染</h3>
+<p><code>content-visibility: auto</code> 让元素在<strong>离开视口时跳过整个子树的布局与绘制</strong>,滚近了再渲染。长页面(文档、信息流、本书这样的单页手册)首屏渲染时间可以降到原来的几分之一。它依赖 <code>size</code> 类的包含,所以屏外元素没有内容高度,必须用 <code>contain-intrinsic-size</code> 报一个<strong>估计尺寸</strong>占位,否则滚动条会随渲染进度跳动:</p>
+<pre style="contain-intrinsic-size:auto 169px"><code>.chapter {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 4000px;
+  /* auto 关键字:渲染过一次后记住真实高度,回滚时用真值 */
+}</code></pre>
+<p>本书自己就是这样发布的:每个 <code>section.chapter</code> 都带这两条声明,五十多节的单页文件才能瞬间打开。两条边界:页内查找与锚点跳转仍然可用(引擎会为此渲染目标),但跳转瞬间可能引发一次大重排;估高离谱时滚动条长度失真——所以本书的构建流程里有「测高回写」一步,把每章真实高度写回 <code>contain-intrinsic-size</code>。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 长列表先上 content-visibility: auto,再考虑虚拟滚动</span><p>判据:条目是静态内容(文档、评论、商品卡)时,两行 CSS 的 <code>content-visibility</code> 能拿到虚拟滚动八成的收益,而且不破坏页内查找、无障碍树与 SEO;JS 虚拟滚动(只保留可视区 DOM)留给上万条、条目本身还带复杂交互的场景。先量再上:Performance 面板对比首屏 Rendering 耗时,没有数字支撑不引入复杂度。</p></div>
+<h3>will-change:预告,不是加速按钮</h3>
+<p><code>will-change: transform</code> 的语义是「这个属性马上要变,请提前准备」——引擎通常提前把元素提成合成层,动画开始时不用现做。它的成本在内存与显存:每个合成层是一张实打实的位图。</p>
+<p><a href="#f4-motion">9.1</a> 给过使用姿势,这里补机制推出的三条规矩:只加在<strong>即将动</strong>的少数元素上,动完(<code>transitionend</code>/<code>animationend</code>)移除;全局撒 <code>will-change</code> 等于把整页拆成位图,低端机直接内存告急;能用 <code>transform</code> 动画解决的,多数场景引擎自己会提层,<code>will-change</code> 只在 Performance 录到「动画首帧掉帧」时才值得加。</p>
+<h2 id="fcss-print">10.6 打印样式:print 媒体、@page 与分页控制</h2>
+<p>「打印」在今天的主要形态是<strong>导出 PDF</strong>:报表、工单、简历、文章存档。打印是另一种媒体——没有视口滚动,内容被切成一页页纸;没有交互,<code>:hover</code> 与固定定位失去意义;浏览器还默认抹掉背景色。不写打印样式的页面在这套规则下的样子完全失控:导航栏占掉半页、深色主题印出一片黑、表格被拦腰切断。这一节给出最小而完整的一套打印方案:怎么进入打印媒体、页面盒怎么定、分页点怎么控、颜色怎么保住。</p>
+<table style="contain-intrinsic-size:auto 226px">
+<thead><tr><th class="nw">屏幕上的习惯</th><th>打印时的问题</th><th class="nw">对策</th></tr></thead>
+<tbody>
+<tr><td class="nw">固定导航、侧栏、悬浮按钮</td><td><code>fixed</code> 在每一页重复,占掉版面</td><td class="nw"><code>display: none</code></td></tr>
+<tr><td class="nw">深色主题、背景色承载状态</td><td>背景默认被抹掉,状态信息消失</td><td class="nw">回浅色 + 文字/边框替身</td></tr>
+<tr><td class="nw">内容整块流动</td><td>卡片、表格被拦腰切断</td><td class="nw"><code>break-inside: avoid</code></td></tr>
+<tr><td class="nw">链接靠点击</td><td>纸上点不了,目标地址不可见</td><td class="nw"><code>::after</code> 展开 <code>href</code></td></tr>
+<tr><td class="nw">滚动看长内容</td><td>没有滚动,只有分页</td><td class="nw"><code>@page</code> + <code>break-*</code> 声明分页点</td></tr>
+</tbody>
+</table>
+<h3>进入打印:两种写法与一种调试姿势</h3>
+<p>打印样式有两个挂载点:独立文件 <code>&lt;link rel="stylesheet" media="print" href="print.css"&gt;</code>(不阻塞屏幕渲染,<a href="#f2-doc">2.1</a>),或主样式表里的 <code>@media print { … }</code> 块。规模小用后者,规则多、要单独维护时用前者。</p>
+<p>调试不需要反复按打印预览:DevTools 的 Rendering 面板里把 Emulate CSS media type 切到 print,页面立即按打印样式渲染,Elements 里照常检查每条声明。脚本侧有 <code>beforeprint</code>/<code>afterprint</code> 事件,用于打印前展开折叠内容(本书的样式就用它把 <code>content-visibility</code> 的跳过全部展开)。</p>
+<h3>@page:页面盒、纸张与页边距</h3>
+<p><code>@page</code> 描述的不是元素,是<strong>页面盒</strong>——每一张纸的模型:纸张尺寸(<code>size</code>)、页边距(<code>margin</code>),内容在页边距围出的页区里流动,满一页就进下一张。<code>:first</code>、<code>:left</code>/<code>:right</code>、<code>:blank</code> 伪类区分首页与左右页,书籍式排版用得上。</p>
+<figure style="contain-intrinsic-size:auto 329px">
+<svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" font-size="13">
+<defs><marker id="ar-fprint" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs>
+<rect x="60" y="20" width="150" height="200" fill="var(--svg-fill)" stroke="var(--fg)"/>
+<rect x="78" y="44" width="114" height="152" fill="var(--svg-soft)" stroke="var(--muted)" stroke-dasharray="4 3"/>
+<text class="svgmuted" x="86" y="66" font-size="11">页区:内容</text>
+<text class="svgmuted" x="86" y="82" font-size="11">在这里流动</text>
+<text class="svgmuted" x="86" y="120" font-size="11">@page 的</text>
+<text class="svgmuted" x="86" y="136" font-size="11">margin 圈出</text>
+<text class="svgmuted" x="86" y="152" font-size="11">这道白边</text>
+<text class="svgmuted" x="64" y="36" font-size="11">size: A4</text>
+<rect x="260" y="20" width="150" height="200" fill="var(--svg-fill)" stroke="var(--fg)"/>
+<rect x="278" y="44" width="114" height="152" fill="var(--svg-soft)" stroke="var(--muted)" stroke-dasharray="4 3"/>
+<text class="svgmuted" x="286" y="66" font-size="11">第 2 页</text>
+<rect x="278" y="150" width="114" height="30" fill="var(--svg-soft2)" stroke="var(--dead-fg)"/>
+<text class="svgmuted" x="284" y="169" font-size="10">卡片被拦腰切断</text>
+<rect x="460" y="20" width="150" height="200" fill="var(--svg-fill)" stroke="var(--fg)"/>
+<rect x="478" y="44" width="114" height="152" fill="var(--svg-soft)" stroke="var(--muted)" stroke-dasharray="4 3"/>
+<text class="svgmuted" x="486" y="66" font-size="11">第 3 页</text>
+<rect x="478" y="76" width="114" height="42" fill="var(--svg-soft2)" stroke="var(--ok-fg)"/>
+<text class="svgmuted" x="484" y="94" font-size="10">break-inside: avoid</text>
+<text class="svgmuted" x="484" y="108" font-size="10">整块挪来这页</text>
+<line x1="352" y1="166" x2="474" y2="94" stroke="var(--accent)" stroke-dasharray="5 4" marker-end="url(#ar-fprint)"/>
+<text class="svgtext" x="20" y="236">内容流按页区高度分片;不许被切的块用 break-inside: avoid 整体挪进下一页</text>
+</svg>
+<figcaption>打印的页面盒:@page 定义纸张与页边距,内容在页区里分片;分片规则与 multicol 分栏共用同一套 break-* 属性（原创绘制）</figcaption>
+</figure>
+<pre style="contain-intrinsic-size:auto 87px"><code>@page { size: A4; margin: 20mm 16mm; }
+@page :first { margin-block-start: 40mm; }   /* 首页给标题留空 */</code></pre>
+<p><code>@page</code> 的边距盒(<code>@top-center</code> 等,用来放页眉页码)长期只有分页排版引擎(Paged.js、Prince)与部分 Chromium 版本支持,网页端不要依赖;页码需求交给「浏览器自带的页眉页脚」或导出工具。</p>
+<h3>分页控制:与分栏共用的一套 break-*</h3>
+<p>分页点的控制属性与 <a href="#fcss-multicol">6.6</a> 的分栏完全同族,值换成页语义:<code>break-inside: avoid</code> 禁止切开(卡片、图表、发票行);<code>break-before: page</code> 强制起新页(每章一页);<code>break-after: avoid</code> 用在标题上,禁止「标题在上页末、正文在下页首」;<code>orphans</code>/<code>widows</code> 管段落残行。老代码里的 <code>page-break-inside</code> 一族是它们的前身别名,浏览器仍然认,新代码写无前缀版。</p>
+<p>表格打印有一条专属福利:<code>thead</code> 在每一页顶部<strong>自动重复</strong>——又一个「结构语义换来免费行为」的例子(<a href="#f2-table-list">3.5</a>)。</p>
+<h3>颜色与背景:默认全被抹掉</h3>
+<p>浏览器打印时默认丢弃背景色与背景图(省墨),文字色可能被压成纯黑。靠背景色区分的斑马纹表格、用背景图做的图标,打出来就是空白——<strong>凡是承载语义的视觉信息,打印时必须有非背景的替身</strong>(边框、符号、文字)。</p>
+<p>确要保留背景时,对具体元素声明 <code>print-color-adjust: exact</code>(Chromium/Safari 带 <code>-webkit-</code> 前缀),用户仍可在打印对话框里覆盖,所以它是「请求」不是保证。深色主题的页面要在打印里强制回浅色:纸上的大面积深底既费墨又难读。</p>
+<div class="note dead" style="contain-intrinsic-size:auto 164px"><span class="t">🔴 别让背景色独自承载语义,打印默认不出背景</span><p>症状:审批单里「红底 = 驳回、绿底 = 通过」,打印出来两种行一模一样,拿纸质单据办事的人无从分辨。修法双轨:状态加文字或符号(同时解决色盲用户,<a href="#f2-a11y-keyboard">3.7</a>);确需底色的行补 <code>print-color-adjust: exact</code> 并实际打印验证一次。</p></div>
+<h3>完整示例:一份可以直接抄的打印样式</h3>
+<pre style="contain-intrinsic-size:auto 468px"><code>@media print {
+  /* 1. 去掉屏幕专属的部分 */
+  nav, aside, .toolbar, video, dialog { display: none !important; }
+  /* 2. 版面回到单栏文档流,深色主题回浅色 */
+  body { background: #fff; color: #000; font-size: 11pt; }
+  main { display: block; max-inline-size: none; }
+  /* 3. 分页规矩 */
+  h2, h3 { break-after: avoid; }
+  figure, table, .card { break-inside: avoid; }
+  p { orphans: 3; widows: 3; }
+  /* 4. 链接展开地址(4.3 的生成内容) */
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; }
+  /* 5. 图片不超页宽 */
+  img { max-inline-size: 100% !important; }
+}
+@page { size: A4; margin: 20mm 16mm; }</code></pre>
+<p>五段各自独立,任何项目都能按需裁剪。验证方式:Rendering 面板切 print 逐条检查,再真的导出一次 PDF——分页位置只有真分页时才看得到。这份骨架里大量使用 <code>!important</code> 是合理例外:打印规则要压过屏幕样式里各种具体度很高的声明,而它自己不会再被覆盖(层叠的取舍见 <a href="#f3-cascade">4.1</a>)。</p>
+<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 会被用户导出或打印的页面,交付清单里加一条「印一页看看」</span><p>报表、订单、文章页在交付前用打印预览过一遍,五分钟能抓住九成问题:导航占版面、背景丢失、表格切断、链接失效(纸上点不了,地址要展开)。不会被打印的应用界面(仪表盘、编辑器)则明确跳过,不为它维护打印样式。</p></div>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 38776px;--thin-h:21422px">
@@ -6794,7 +7667,7 @@ let 2</code></pre>
 <table style="contain-intrinsic-size:auto 1194px">
 <thead><tr><th>书 / 资源</th><th>取什么</th><th>什么时候读</th><th>对应本书系</th></tr></thead>
 <tbody>
-<tr><td>Dan Vanderkam《Effective TypeScript》(第 2 版)</td><td>83 条「做/别做」,类型是值的集合、结构类型、收窄、声明文件的取舍</td><td>读完 C 书、写了一个月 TS 之后</td><td><a href="TypeScript手册.html#f9-mental">《TypeScript 手册》2.1</a>、<a href="TypeScript手册.html#f9-design">6.1</a></td></tr>
+<tr><td>Dan Vanderkam《Effective TypeScript》(第 2 版)</td><td>83 条「做/别做」,类型是值的集合、结构类型、收窄、声明文件的取舍</td><td>读完 C 书、写了一个月 TS 之后</td><td><a href="TypeScript手册.html#f9-mental">《TypeScript 手册》3.1</a>、<a href="TypeScript手册.html#f9-design">7.1</a></td></tr>
 <tr><td class="nw">react.dev(React 官方文档)</td><td>「用 React 思考」、Hook 的心智模型、可交互示例;是学 React 唯一必读</td><td>读 E 书前四章的同时</td><td><a href="前端框架与工程化手册.html#f10-components">《前端框架与工程化手册》1.2</a>、<a href="前端框架与工程化手册.html#f10-state">2.1</a></td></tr>
 <tr><td class="nw">卡颂《React 设计原理》</td><td>Fiber 架构、调度、reconcile、Hook 实现;读 React 源码的导读</td><td>读完 E 书前四章并写过一个 SPA 之后</td><td><a href="前端框架与工程化手册.html#f10-concurrent">《前端框架与工程化手册》4.1</a>、<a href="前端框架与工程化手册.html#f10-perf">4.4</a></td></tr>
 <tr><td>Michael Fogus《JavaScript 函数式编程》</td><td>一等函数、闭包、高阶函数、纯函数与不可变数据在 JS 里的落地</td><td>读完 <a href="JavaScript语言手册.html#f5-func">《JavaScript 语言手册》2.1</a> 之后;写 React 前读它理解「UI = f(state)」</td><td><a href="JavaScript语言手册.html#f5-func">《JavaScript 语言手册》2.1</a>、<a href="前端框架与工程化手册.html#f10-why">1.1</a></td></tr>
@@ -6838,7 +7711,7 @@ let 2</code></pre>
 </table>
 <p>三条判据照《全栈工程师知识体系》的形式写,每一条都是一件可验证的事,不是一种感觉。判据写得具体是为了能打分:对着每一句问自己「现在做得到吗」,做不到的那半句就是下一步该读的节。</p>
 <div class="note ok" style="contain-intrinsic-size:auto 228px"><span class="t">🟢 基础层掌握判据</span><p>拿到一张设计稿,能不查资料说出每一块用 Flex 还是 Grid、为什么这条样式没生效(优先级/层叠/继承/盒模型中的哪一个,见 <a href="#f3-cascade">4.1</a>、<a href="#f3-box">5.1</a>);能写一段混合了 setTimeout、Promise、await 的代码并说出精确执行顺序(<a href="JavaScript语言手册.html#f6-loop">《JavaScript 语言手册》8.1</a>);能不用框架用事件委托 + 状态对象 + 渲染函数写一个列表的增删改查并把状态存进 localStorage(<a href="浏览器API与工作原理手册.html#f7-dom">《浏览器 API 与工作原理手册》1.1</a>、<a href="浏览器API与工作原理手册.html#f7-events">2.1</a>、<a href="浏览器API与工作原理手册.html#f7-storage">3.3</a>);能在 DevTools 里五分钟内定位一个元素的样式来源、一次请求的耗时分段、一个闭包里的变量值(<a href="#f1-devtools">1.2</a>)。</p></div>
-<div class="note ok" style="contain-intrinsic-size:auto 260px"><span class="t">🟢 进阶层掌握判据</span><p>图片底部多出几像素、inline-block 对不齐、margin 穿透父元素,能说出是内联格式化的哪条规则(<a href="#fcss-inline">7.2</a>、<a href="#fcss-flow">5.4</a>)并给出不止一种修法;能解释一次页面卡顿是长任务还是布局抖动并用 Performance 面板指出那一段(<a href="浏览器API与工作原理手册.html#f8-render">《浏览器 API 与工作原理手册》9.2</a>、<a href="浏览器API与工作原理手册.html#f8-reflow">9.3</a>);CORS 报错能在五分钟内说出缺哪个响应头、谁该改(<a href="浏览器API与工作原理手册.html#f8-origin">《浏览器 API 与工作原理手册》11.1</a>);能给一个既有 JS 库写最小的 .d.ts,能读懂一段带条件类型与 infer 的工具类型(<a href="TypeScript手册.html#f9-generics">《TypeScript 手册》4.1</a>、<a href="TypeScript手册.html#f9-advanced">5.1</a>);正则、Intl、Proxy、TypedArray 用到时知道去标准库找而不是手写(B 书 5–7 章);看到一段拼 HTML 或存令牌的代码,能指出注入面在哪、修法是什么(<a href="浏览器API与工作原理手册.html#f12-xss">《浏览器 API 与工作原理手册》11.3</a>、<a href="浏览器API与工作原理手册.html#f12-csrf">11.4</a>)。</p></div>
+<div class="note ok" style="contain-intrinsic-size:auto 260px"><span class="t">🟢 进阶层掌握判据</span><p>图片底部多出几像素、inline-block 对不齐、margin 穿透父元素,能说出是内联格式化的哪条规则(<a href="#fcss-inline">7.2</a>、<a href="#fcss-flow">5.4</a>)并给出不止一种修法;能解释一次页面卡顿是长任务还是布局抖动并用 Performance 面板指出那一段(<a href="浏览器API与工作原理手册.html#f8-render">《浏览器 API 与工作原理手册》9.2</a>、<a href="浏览器API与工作原理手册.html#f8-reflow">9.3</a>);CORS 报错能在五分钟内说出缺哪个响应头、谁该改(<a href="浏览器API与工作原理手册.html#f8-origin">《浏览器 API 与工作原理手册》11.1</a>);能给一个既有 JS 库写最小的 .d.ts,能读懂一段带条件类型与 infer 的工具类型(<a href="TypeScript手册.html#f9-generics">《TypeScript 手册》5.1</a>、<a href="TypeScript手册.html#f9-advanced">6.1</a>);正则、Intl、Proxy、TypedArray 用到时知道去标准库找而不是手写(B 书 5–7 章);看到一段拼 HTML 或存令牌的代码,能指出注入面在哪、修法是什么(<a href="浏览器API与工作原理手册.html#f12-xss">《浏览器 API 与工作原理手册》11.3</a>、<a href="浏览器API与工作原理手册.html#f12-csrf">11.4</a>)。</p></div>
 <div class="note ok" style="contain-intrinsic-size:auto 260px"><span class="t">🟢 工程层掌握判据</span><p>能独立完成一个带路由、服务端状态、表单、认证的 React + TS 应用并部署到线上(E 书 1–4 章、<a href="前端框架与工程化手册.html#f11-deploy">《前端框架与工程化手册》7.3</a>、<a href="浏览器API与工作原理手册.html#f12-auth">12.1</a>);能用 Profiler 解释「为什么这个组件重渲染了」并用正确的边界修掉(<a href="前端框架与工程化手册.html#f10-perf">《前端框架与工程化手册》4.4</a>);能把一个 LCP 4 秒的页面按数据而不是感觉优化到 2.5 秒内(<a href="前端框架与工程化手册.html#f11-vitals">《前端框架与工程化手册》7.1</a>、<a href="前端框架与工程化手册.html#f11-opt">7.2</a>);能从零搭一个带 lint、类型检查、单元 + 组件 + 端到端测试、CI 的工程(<a href="前端框架与工程化手册.html#f11-quality">《前端框架与工程化手册》6.1</a>、<a href="前端框架与工程化手册.html#ftest-pyramid">8.1</a>–<a href="前端框架与工程化手册.html#ftest-a11y">9.4</a>);能说清一次登录后的会话存在哪、为什么这么存(<a href="浏览器API与工作原理手册.html#f12-auth">《浏览器 API 与工作原理手册》12.1</a>);线上报错能从 source map 还原到源码行(<a href="浏览器API与工作原理手册.html#f12-monitor">《浏览器 API 与工作原理手册》12.5</a>)。</p></div>
 <h3>常见卡点与对策</h3>
 <p>下面这张表是读者最常在哪一层被卡住、卡住时的症状、根因在哪一节,以及绕过去的办法。卡点的共同模式是:症状出现在一层,原因在更底下一层——CSS 布局写不对多数是层叠与盒模型没过,React 写不对多数是闭包与异步没过。所以对策通常不是在症状那一层多练,而是退一层把机制补上。</p>
@@ -6852,7 +7725,7 @@ let 2</code></pre>
 <tr><td class="nw">「CORS 报错」</td><td>在前端改 headers、加 mode: 'no-cors',越改越糟</td><td><a href="浏览器API与工作原理手册.html#f8-origin">《浏览器 API 与工作原理手册》11.1</a> 同源与 CORS:是服务端的响应头决定的</td><td>读 <a href="浏览器API与工作原理手册.html#f8-origin">《浏览器 API 与工作原理手册》11.1</a>,看懂报错的每个词;开发时用 Vite 代理(<a href="前端框架与工程化手册.html#f11-vite">《前端框架与工程化手册》5.1</a>),生产让服务端加 Access-Control-*</td></tr>
 <tr><td class="nw">「页面卡 / 动画掉帧」</td><td>怪浏览器、怪机器,用 setTimeout 拆任务碰运气</td><td><a href="浏览器API与工作原理手册.html#f8-render">《浏览器 API 与工作原理手册》9.2</a> 渲染管线、<a href="浏览器API与工作原理手册.html#f8-reflow">《浏览器 API 与工作原理手册》9.3</a> 重排重绘、<a href="JavaScript语言手册.html#f6-timers">《JavaScript 语言手册》9.1</a> rAF</td><td>用 Performance 面板录一段找长任务与紫色布局块;只动 transform/opacity;大计算进 Worker(<a href="JavaScript语言手册.html#f6-worker">《JavaScript 语言手册》9.3</a>)</td></tr>
 <tr><td>「React 组件无故重渲染 / 闭包里拿到旧值」</td><td>到处 useMemo/useCallback,依赖数组乱填</td><td><a href="前端框架与工程化手册.html#f10-state">《前端框架与工程化手册》2.1</a> 状态与渲染时机、<a href="JavaScript语言手册.html#f5-scope">《JavaScript 语言手册》1.3</a> 闭包、<a href="前端框架与工程化手册.html#f10-perf">《前端框架与工程化手册》4.4</a> 性能</td><td>先用 Profiler 看是谁触发的;理解「每次渲染都是一次新的函数调用,捕获那一次的变量」;再决定 memo 的边界</td></tr>
-<tr><td class="nw">「TypeScript 报错看不懂」</td><td>用 any 或 as 把错压下去</td><td><a href="TypeScript手册.html#f9-basics">《TypeScript 手册》1.1</a> 类型是值的集合、<a href="TypeScript手册.html#f9-narrow">《TypeScript 手册》3.1</a> 收窄、<a href="TypeScript手册.html#f9-advanced">《TypeScript 手册》5.1</a> 高级类型</td><td>从报错的最后一行往上读;把报错的类型写成两个集合问「哪个值在左不在右」;先收窄再断言</td></tr>
+<tr><td class="nw">「TypeScript 报错看不懂」</td><td>用 any 或 as 把错压下去</td><td><a href="TypeScript手册.html#f9-basics">《TypeScript 手册》1.1</a> 类型是值的集合、<a href="TypeScript手册.html#f9-narrow">《TypeScript 手册》4.1</a> 收窄、<a href="TypeScript手册.html#f9-advanced">《TypeScript 手册》6.1</a> 高级类型</td><td>从报错的最后一行往上读;把报错的类型写成两个集合问「哪个值在左不在右」;先收窄再断言</td></tr>
 <tr><td class="nw">「构建 / 部署一团黑盒」</td><td>复制别人的 vite.config、nginx.conf,出问题不会改</td><td><a href="前端框架与工程化手册.html#f11-vite">《前端框架与工程化手册》5.1</a> Vite 两条路、<a href="前端框架与工程化手册.html#f11-deploy">《前端框架与工程化手册》7.3</a> 部署、<a href="浏览器API与工作原理手册.html#f8-load">《浏览器 API 与工作原理手册》10.1</a> HTTP 缓存</td><td>读 <a href="前端框架与工程化手册.html#f11-vite">《前端框架与工程化手册》5.1</a> 的 build 输出;亲手写一份 nginx.conf 并用 curl -I 验证缓存头</td></tr>
 <tr><td class="nw">「学了框架,离开框架什么都不会」</td><td>换个框架从零学;原生 API 不认识;排查问题只会搜框架关键词</td><td>基础层整体(尤其 D1–D3)与 D9–D11 的原理</td><td>用原生 JS 重写一遍项目 ②;每个框架特性问「它底下是哪个平台能力」</td></tr>
 </tbody>
@@ -7114,7 +7987,7 @@ Application → Local Storage → kanban:v1
 <li>登录/登出(HttpOnly Cookie 会话或 JWT + 刷新令牌,<a href="浏览器API与工作原理手册.html#f12-auth">《浏览器 API 与工作原理手册》12.1</a>)。</li>
 <li>列表页、详情页、编辑页三条路由加一个共享布局与 404(<a href="前端框架与工程化手册.html#f10-router-data">《前端框架与工程化手册》3.1</a>)。</li>
 <li>列表与详情的服务端状态用 TanStack Query 管,含缓存、失效与一次乐观更新(<a href="前端框架与工程化手册.html#f10-eco">《前端框架与工程化手册》3.2</a>)。</li>
-<li>编辑页用 react-hook-form + zod 校验(<a href="前端框架与工程化手册.html#f10-eco">《前端框架与工程化手册》3.2</a>、<a href="TypeScript手册.html#f9-runtime">《TypeScript 手册》7.1</a>)。</li>
+<li>编辑页用 react-hook-form + zod 校验(<a href="前端框架与工程化手册.html#f10-eco">《前端框架与工程化手册》3.2</a>、<a href="TypeScript手册.html#f9-runtime">《TypeScript 手册》8.1</a>)。</li>
 <li>一个实时日志视图用 SSE 或 WebSocket(<a href="浏览器API与工作原理手册.html#fapi-realtime">《浏览器 API 与工作原理手册》7.3</a>)。</li>
 <li>错误边界与全局错误上报、web-vitals 上报到你自己的接口(<a href="浏览器API与工作原理手册.html#f12-monitor">《浏览器 API 与工作原理手册》12.5</a>、<a href="浏览器API与工作原理手册.html#fapi-perf">8.1</a>)。</li>
 <li>路由级代码分割(<a href="前端框架与工程化手册.html#f11-opt">《前端框架与工程化手册》7.2</a>)。</li>
