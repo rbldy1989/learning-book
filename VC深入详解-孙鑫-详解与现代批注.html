@@ -435,126 +435,40 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 19343px;--thin-h:19343px">
+<section class="chapter" style="contain-intrinsic-size:auto 15260px;--thin-h:15260px">
 <h1 id="c1"><span class="part">第 1 章</span>Windows 程序内部运行机制</h1>
 <h2 id="c1-open">1.0 导读</h2>
-<p>本书对照孙鑫《VC++ 深入详解》重讲。原书的路线是从裸 Win32 的消息机制起步,补一段 C++,再进 MFC 框架,然后横向铺开绘图、文件、网络、多线程、进程间通信、COM 与数据库。<strong>这条路线保留,代码、API 与开发环境全部按现代 Visual Studio 与现代 C++ 重写</strong>,并在每一块技术后面标出它今天落在什么位置。基线取 64 位、Unicode 与 Windows 10 以上。</p>
-
-<h3>这个领域有哪些资料</h3>
-<p>这条学习线上,中文教材以孙鑫与侯捷两本为主,机制层的深度依赖英文经典,接口的一手事实只在官方文档与 SDK 里。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 1117px">
-<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<p>本书对照孙鑫《VC++ 深入详解》重讲。原书的路线是从裸 Win32 的消息机制起步,补一段 C++,再进 MFC 框架,然后横向铺开绘图、文件、网络、多线程、进程间通信、COM 与数据库,覆盖面在同类中文教材里最宽。<strong>这条路线保留,代码、API 与开发环境全部按现代 Visual Studio 与现代 C++ 重写</strong>,并在每一块技术后面标出它今天落在什么位置。基线取 64 位、Unicode 与 Windows 10 以上。</p>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 537px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>孙鑫《VC++ 深入详解》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>本书对照重讲的原著。从 Win32 到 MFC 循序渐进,覆盖面在同类中文教材里最宽,配套视频完整。<strong>局限</strong>:成书较早,开发环境、字符处理与网络、数据库三块的接口形态已与今天出入较大</td></tr>
-<tr><td>侯捷《深入浅出 MFC》</td><td class="nw">经典教材</td><td class="nw">参考</td><td>MFC 内部机制剖到源码一级,六大关键技术的推导最完整,是本书第 3 章结论的来源之一。<strong>局限</strong>:基于较早的 MFC 版本;只讲框架,不涉及网络与数据库</td></tr>
-<tr><td>Charles Petzold《Windows 程序设计》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>窗口、消息、GDI 三块的原典,第 1、4、5 章讲的正是这一层。<strong>局限</strong>:成书较早,不含 64 位与现代必修项</td></tr>
-<tr><td>Jeffrey Richter《Windows 核心编程》</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>进程、线程、同步、DLL 与内存的机制讲得最透,规则都从内核对象的语义推出来。<strong>局限</strong>:不涉及界面与 MFC;成书较早,新增的同步原语与线程池不在其中</td></tr>
-<tr><td>Russinovich 等《深入解析 Windows 操作系统》</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>句柄表、调度与内存管理的权威描述,第 15 到 17 章的事实来源。<strong>局限</strong>:面向系统实现,篇幅远超应用开发所需</td></tr>
-<tr><td class="nw">Microsoft Learn 的 Win32 与 MFC 文档</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>一手来源。函数签名、类的继承关系、最低系统版本与线程要求都在这里,随系统更新。<strong>局限</strong>:回答「怎么用」,极少回答「什么时候不该用」</td></tr>
-<tr><td>MFC 源码与 Windows SDK 头文件(随 Visual Studio 分发)</td><td class="nw">官方源码</td><td class="nw">锚定</td><td>行为的最终事实。消息映射表的结构、命令绕行的顺序、宏在 <code>UNICODE</code> 下怎么展开都能读出来。<strong>局限</strong>:实现随版本改动,读出的结论不能当接口承诺</td></tr>
-<tr><td class="nw">Microsoft Learn 的 Winsock 与 ODBC 文档</td><td class="nw">官方文档</td><td class="nw">参考</td><td>第 14、16、20 章的接口以它为准,包含已弃用标记与替代建议。<strong>局限</strong>:按接口罗列,不给选型判断</td></tr>
-<tr><td>Stevens 等《UNIX 网络编程》</td><td class="nw">进阶与专题</td><td class="nw">推荐</td><td>套接字编程的原理原典,I/O 模型那一章的分类今天仍在用。<strong>局限</strong>:以 POSIX 为主,Winsock 的差异要自己折算</td></tr>
-<tr><td class="nw">《Win32 程序设计》(本书系)</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>补齐第 1、4、5 章之外的裸 Win32 内容:控件全集、资源、高 DPI 与深色模式。<strong>局限</strong>:不讲框架层</td></tr>
-<tr><td class="nw">《深入浅出 MFC》(本书系)</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>把第 3 章的框架结论展开到宏与源码一级。<strong>局限</strong>:不涉及网络、数据库与 COM</td></tr>
-<tr><td class="nw">《Windows API 手册》(本书系)</td><td class="nw">参考手册</td><td class="nw">推荐</td><td>214 张函数详解卡,各配原型、参数表、返回值与最小示例。<strong>局限</strong>:按函数组织,不讲机制</td></tr>
+<tr><td>孙鑫《VC++ 深入详解》原书</td><td>本书对照重讲的原著,从 Win32 到 MFC 循序渐进,配套视频完整,成书较早,开发环境与网络、数据库两块的接口形态已与今天出入较大</td></tr>
+<tr><td>侯捷《深入浅出 MFC》</td><td>MFC 内部机制剖到源码一级,六大关键技术的推导最完整,只讲框架,不涉及网络与数据库</td></tr>
+<tr><td>Charles Petzold《Windows 程序设计》</td><td>窗口、消息、GDI 三块的原典,成书较早,不含 64 位与现代必修项</td></tr>
+<tr><td>Jeffrey Richter《Windows 核心编程》</td><td>进程、线程、同步、DLL 与内存的机制讲得最透,不涉及界面与 MFC</td></tr>
+<tr><td>Stevens 等《UNIX 网络编程》</td><td>套接字编程的原理原典,I/O 模型的分类今天仍在用,以 POSIX 为主,Winsock 的差异要自己折算</td></tr>
+<tr><td>Microsoft Learn 的 Win32 与 MFC 文档</td><td>一手来源,函数签名、类的继承关系与最低系统版本都在这里,随系统更新</td></tr>
+<tr><td>Microsoft Learn 的 Winsock 与 ODBC 文档</td><td>网络与数据库两块接口的一手出处,包含已弃用标记与替代建议</td></tr>
+<tr><td>MFC 源码与 Windows SDK 头文件(随 Visual Studio 分发)</td><td>行为的最终事实,消息映射表的结构、宏在 <code>UNICODE</code> 下怎么展开都能读出来,实现随版本改动</td></tr>
 </tbody>
 </table>
-<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 目录照原书二十章对齐,代码与开发环境全部重写</span><p>保留章号与讲解顺序,是为了让读者能对着原书或配套视频逐章比照。已经作废的是外壳:向导步骤与菜单路径、按 <code>TCHAR</code> 组织的字符处理、只在 32 位下成立的指针存取、以及网络与数据库两块的接口形态。本书每一段代码都在现代 Visual Studio 上按 64 位与 Unicode 编译通过。</p></div>
-
-<h3>锚定的五样各借鉴了什么</h3>
-<p>借鉴的都是具体手法,标为「参考」「推荐」的不进这张表。</p>
-<table style="contain-intrinsic-size:auto 452px">
-<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴原著与 Petzold、Richter、官方文档四样,事实层一律以 Microsoft Learn 与随 Visual Studio 分发的源码、头文件为准。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 375px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td>孙鑫《VC++ 深入详解》</td><td>章节骨架与讲解顺序:二十章一一对应,连每章内部「先提出问题、再给最小可运行程序、再拆开讲」的推进方式也保留。原书用一个涂鸦程序把绘图、参数设置与重绘三章串起来的做法同样沿用</td></tr>
-<tr><td class="nw">Microsoft Learn 的 Win32 与 MFC 文档</td><td>事实准绳:函数签名、类的继承关系与最低系统版本一律以它为准。函数与类的说明表照它划分字段——参数、类型、含义、失败时的返回值各占一列</td></tr>
-<tr><td class="nw">MFC 源码与 SDK 头文件</td><td>文档没写明的边界从声明里读出来再写:消息映射表怎么串成链、命令沿哪条路线上溯、哪些名字在 <code>UNICODE</code> 下展开成 W 版。第 3、6 章的路径按实际分派顺序画</td></tr>
-<tr><td>Petzold 的教材</td><td>第 1、4、5 章的组织:先讲清窗口与消息这套反转的控制流,再讲设备上下文与 GDI 对象的借还,最后才讲文字与字体。每处都从一个能编译运行的完整程序切入</td></tr>
-<tr><td>Richter《Windows 核心编程》</td><td>第 15 到 17 章的组织:先说清进程、线程与内核对象各是什么,再讲同步原语,最后落到「界面只能在主线程更新」这条规矩;规矩都能顺着内核对象的语义自己推出来</td></tr>
+<tr><td>二十章的目录与讲解顺序</td><td>孙鑫原著:章号一一对应,便于对着原书或配套视频逐章比照;每章「先提出问题、再给最小可运行程序、再拆开讲」的推进方式,以及用一个涂鸦程序串起绘图、参数设置与重绘三章的做法,都照原著保留</td></tr>
+<tr><td class="nw">第 1、4、5 章的组织</td><td>Petzold:先讲窗口与消息这套反转的控制流,再讲设备上下文与 GDI 对象的借还,每处从一个能编译运行的完整程序切入</td></tr>
+<tr><td>第 3、6 章的框架结论与路径图</td><td>侯捷原著与 MFC 源码:消息映射表怎么串成链、命令沿哪条路线上溯,路径按实际分派顺序画</td></tr>
+<tr><td class="nw">第 15 到 17 章的组织</td><td>Richter:先说清进程、线程与内核对象各是什么,再讲同步原语,最后落到「界面只能在主线程更新」这条规矩</td></tr>
+<tr><td class="nw">函数与类的说明表</td><td>Microsoft Learn 的字段划分:参数、类型、含义、失败时的返回值各占一列;签名与最低系统版本一律以它为准</td></tr>
 </tbody>
 </table>
-
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>原书划定的那条从 Windows 机制到系统编程的完整路线</strong>,20 章 196 节分五段推进。</p>
-<table style="contain-intrinsic-size:auto 298px">
-<thead><tr><th class="nw">段落</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">机制与框架</td><td class="nw">第 1 到 3 章,33 节</td><td>Windows 程序靠什么运转、C++ 提供了哪些性质、MFC 怎么把这两者接起来</td></tr>
-<tr><td class="nw">界面与绘图</td><td class="nw">第 4 到 11 章,79 节</td><td>怎么画、怎么写字、菜单与命令怎么走、对话框与控件怎么用、外观怎么改、画下去的东西怎么在遮挡后还在</td></tr>
-<tr><td class="nw">数据落盘</td><td class="nw">第 12 到 13 章,20 节</td><td>文件的四层接口怎么选、注册表与配置写在哪、文档怎么序列化成文件</td></tr>
-<tr><td class="nw">并发与通信</td><td class="nw">第 14 到 17 章,37 节</td><td>套接字怎么用、线程怎么开与怎么同步、界面怎么不被网络调用冻住、进程之间怎么传数据</td></tr>
-<tr><td class="nw">组件与外部系统</td><td class="nw">第 18 到 20 章,27 节</td><td>COM 与 ActiveX 的二进制复用怎么成立、钩子怎么插进消息流、DLL 怎么导出、数据库怎么连上去</td></tr>
-</tbody>
-</table>
-<p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 398px">
-<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td>裸 Win32 的完整机制:控件全集、资源、位图、高 DPI 与深色模式</td><td class="nw">《Win32 程序设计》</td><td>第 1、4、5 章只讲到原书对应的深度</td></tr>
-<tr><td>MFC 六大关键技术的源码级推导</td><td class="nw">《深入浅出 MFC》</td><td>第 3 章给结论与骨架,不逐个宏展开</td></tr>
-<tr><td>C++ 语言的完整体系</td><td class="nw">《C++ 语言》</td><td>第 2 章只讲原书列出的那些性质,末节补现代写法对照</td></tr>
-<tr><td>逐个 API 的参数细目</td><td class="nw">《Windows API 手册》</td><td>本书讲机制,那本按 DLL 分类速查</td></tr>
-<tr><td>数据库本身:SQL 调优、索引与事务隔离级别</td><td class="nw">不在本书系范围</td><td>第 20 章只讲从程序里怎么连上去、怎么读写</td></tr>
-<tr><td>内核实现与驱动开发</td><td class="nw">《深入解析 Windows 操作系统》</td><td>本书讲到内核对象在用户态的语义为止</td></tr>
-<tr><td>跨平台 GUI 与跨平台网络库</td><td class="nw">《Qt 核心与 Widget》</td><td>本书的接口都绑定在 Windows 上</td></tr>
-</tbody>
-</table>
-
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 同一个话题只在一本书展开,其余各书给结论与指向</span><p>四本 Windows 桌面书覆盖面互相重叠,分界按机制归属定:裸 Win32 归《Win32 程序设计》,框架内部归《深入浅出 MFC》,函数细目归《Windows API 手册》。遇到本书只给结论的地方,按上表的指向去查。</p></div>
-
-<h3>Win32、MFC 与 Qt:三条路线怎么选</h3>
-<p>三条路线在本书系里各有归属。</p>
-<table style="contain-intrinsic-size:auto 301px">
-<thead><tr><th class="nw">路线</th><th>什么时候选它</th><th>代价</th><th class="nw">归哪本</th></tr></thead>
-<tbody>
-<tr><td class="nw">MFC</td><td>维护既有的 MFC 工程;需要文档/视图、打印预览、序列化这几套现成骨架,且程序只在 Windows 上跑</td><td>框架的约定要先学一遍才动得了;界面风格与配套控件停在较早的年代</td><td class="nw">本书与《深入浅出 MFC》</td></tr>
-<tr><td class="nw">直接写 Win32</td><td>要控制到消息一级;发布包与依赖要最小;写钩子、注入一类贴近系统的程序</td><td>界面要一行行搭,控件外观、高 DPI 与深色模式全部自己兜底</td><td class="nw">《Win32 程序设计》</td></tr>
-<tr><td class="nw">Qt</td><td>同一份代码要在 Windows、Linux、macOS 上跑;需要成套的现代控件、布局与样式</td><td>引入一整套运行时与构建体系,发布包变大,许可条款要先看清</td><td class="nw">《Qt 核心与 Widget》</td></tr>
-</tbody>
-</table>
-<p>第 14 章之后的内容与界面路线无关:套接字、线程与同步、进程间通信、DLL 与 COM 这几块,不论界面用哪条路线都成立。</p>
-
-<h3>读之前要会什么</h3>
-<p>前置分两档,每条给自测方式——「学过 C 语言」无法自测,也就无法用来判断该不该现在读。</p>
-<table style="contain-intrinsic-size:auto 412px">
-<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>能独立写出并编译一个 C 程序</td><td>不借助 IDE,用命令行把两个 <code>.c</code> 编成一个可执行文件,并说清声明与定义为何分开放</td></tr>
-<tr><td class="nw">必须</td><td>说得清指针与内存的归属</td><td>指出一段代码里的越界写在哪一行,并说出栈上数组与堆上缓冲区在生命周期上的差别</td></tr>
-<tr><td class="nw">必须</td><td>装好 Visual Studio 并建过桌面项目</td><td>用向导新建一个 MFC 应用,编译运行,并在 <code>InitInstance</code> 里下一个断点停住</td></tr>
-<tr><td class="nw">必须</td><td>认得十六进制与位运算</td><td>说出 <code>style &amp; WS_VISIBLE</code> 与 <code>style |= WS_VISIBLE</code> 各做了什么</td></tr>
-<tr><td class="nw">最好有</td><td>写过 C++ 的类与继承</td><td>说出虚函数与普通成员函数在调用上的差别。第 2 章会补,先有更省力</td></tr>
-<tr><td class="nw">最好有</td><td>知道 Win32 的消息循环</td><td>说出 <code>GetMessage</code> 返回 0 意味着什么。第 1 章会补,先有更省力</td></tr>
-<tr><td class="nw">最好有</td><td>了解进程与线程的区别</td><td>说出同一进程的两条线程共享什么、不共享什么,并举一个数据竞争的例子</td></tr>
-<tr><td class="nw">最好有</td><td>读过一点网络基础</td><td>说清 TCP 建立连接的几步在套接字接口上分别对应哪个调用</td></tr>
-</tbody>
-</table>
-
-<h3>与原著和那些资料相比,本书多给了什么</h3>
-<ul>
-<li><strong>与原著的关系逐块交代。</strong>保留的是二十章的目录与讲解顺序,便于对着原书或配套视频查;重写的是全部代码、API 与开发环境;网络、数据库、COM 三块另加了今天的接口对照。</li>
-<li><strong>15 个小节专门写现代批注。</strong>它们不是附在章末的一句感想,而是把这一章的技术放回今天的位置:哪些仍是首选、哪些只在维护旧代码时才碰、替代物是什么、迁移从哪一步开始。</li>
-<li><strong>218 个批注按四色分工。</strong>108 条蓝色给现代替代与迁移顺序,42 条黄色标出「能用但别选」的老写法,55 条绿色是能直接执行的判据,13 条红色写会出事的失效模式。</li>
-<li><strong>横向覆盖最宽的一本。</strong>四本 Windows 桌面书里只有这一本把网络、多线程、进程间通信、COM、DLL 与数据库放在同一条线上讲,并给出选型分界。</li>
-<li><strong>21 张图与 107 张表分工明确。</strong>图画结构与路径,表承担横向对比:文件四层接口怎么选、六种进程间通信方式怎么选、四种同步原语各解决什么。</li>
-</ul>
-
-<h3>两条读法:顺读与按需查</h3>
-<p>第一次学走顺读,手上已经有具体问题走按需查。</p>
-<table style="contain-intrinsic-size:auto 236px">
-<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
-<tbody>
-<tr><td class="nw">跟着原书或配套视频学</td><td>按章号对读,每章先看它的现代批注节再回头看正文</td><td class="nw">第 1、3、7、11、13、15 章</td><td class="nw">第 20 章</td></tr>
-<tr><td class="nw">只想补 MFC 框架部分</td><td>第 3 章,再第 6、7、13 章</td><td class="nw">第 3、6、7、13 章</td><td class="nw">第 14、16、17、20 章</td></tr>
-<tr><td class="nw">只想补系统编程部分</td><td>第 15、17、19 章,网络另加第 14、16 章</td><td class="nw">第 15、17、19 章</td><td class="nw">第 4 到 11 章</td></tr>
-<tr><td class="nw">手上有具体问题</td><td>按章直接查,每章的现代批注节先看</td><td>—</td><td>—</td></tr>
-</tbody>
-</table>
-<p><strong>第 1 章与第 3 章必须先读,而且要按顺序。</strong>第 1 章讲清消息循环与窗口过程这套反转的控制流,第 3 章讲清 MFC 用什么顶替了它们。后面每一章都在用这两章的结论:第 6 章的命令路由、第 9 章的外观定制、第 11 章的重绘、第 15 章的界面更新规矩,推导起点全在这里。</p>
-<p>第 7 章与第 11 章是第二层主干。第 7 章的对话框与数据交换是所有界面工作的公共形态;第 11 章讲「画下去的是痕迹不是数据」,这个区分决定了程序的数据结构该怎么设计,第 13 章的序列化直接建在它之上。</p>
-<p>第 20 章的数据库可以先放过,它与前面各章没有依赖关系。第 8、9、10 章偏控件与外观的具体做法,需要时按节查更省力。</p>
-<p>读完前三章,能说清一条消息从队列走到你写的成员函数之间经过了哪几步;读完界面八章,能做出带菜单、工具栏、状态栏、对话框与自定义绘图的程序,并且遮挡后画面不丢;读完第 12、13 章,它能把数据存成文件再读回来;读完并发与通信四章,它能开线程干活、能收发网络数据而不冻住界面、能与另一个进程交换数据;读完最后三章,它能加载 DLL、挂钩子、连数据库。</p>
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 每章的现代批注节标出这一章的技术今天落在哪里</span><p>全书有 15 个这样的小节,分布在绘图、文本、菜单、外观、重绘、文件、序列化、网络、并发、进程间通信、COM 与数据库各章。它们回答的是同一个问题:这一章的做法今天是首选、是仅供维护旧代码、还是已有明确替代。评估技术选型时可以只读这 15 节。</p></div>
+<h3>前提与读法</h3>
+<p>读之前要能独立写出并编译 C 程序,说得清指针与内存的归属,认得十六进制与位运算,装好 Visual Studio 并建过桌面项目;C++ 与消息循环不必先会,第 1、2 章会补。读法上第 1 章与第 3 章必须先读且按顺序——前者讲清消息循环与窗口过程这套反转的控制流,后者讲清 MFC 用什么顶替了它们,第 6 章的命令路由、第 11 章的重绘、第 15 章的界面更新规矩,推导起点全在这两章;之后跟着原书或配套视频按章号对读,每章先看它的现代批注节;只补某一块时按章直接查,第 20 章的数据库与前面各章没有依赖。</p>
+<h3>读完之后</h3>
+<p>读完能说清一条消息从队列走到你写的成员函数之间经过了哪几步,能做出带菜单、对话框与自定义绘图、遮挡后画面不丢的程序,能把数据序列化成文件再读回来,能开线程、收发网络数据而不冻住界面,也能加载 DLL、挂钩子、连数据库。进阶方向有二:界面一侧向下补齐裸 Win32 的完整机制,或转向跨平台框架;系统一侧顺着内核对象的语义读进内核实现,把网络、并发与进程间通信这套判断力迁到服务端编程上。</p>
 <h2 id="c1-overview">1.1 先看清这一章在全书里的位置</h2>
 <p>你打开这本书，多半是冲着"用 VC++ 快速写出界面程序"来的。那为什么第一章不教你拖控件、不教你双击按钮写代码，反而要啃"内部运行机制"这种听起来很底层的东西？因为你后面要学的 MFC，本质上是对 Win32 API 的一层封装；封装的意思是"把机制藏起来、让你少写代码"，但机制并没有消失，它只是躲到了幕后。你如果不知道幕后在跑什么，MFC 对你就永远是一堆"记住就行"的魔法，一出错就无从下手。</p>
 <p>打个比方：这就像学开车。自动挡（MFC）确实好上手，你不用管离合和挡位。但真正让你成为好司机的，是你脑子里有一幅发动机、离合、变速箱如何咬合的图。手动挡（Win32 原始 API）虽然笨重，却能让你亲手摸到每一个齿轮。本章就是带你把手动挡开一遍，把"一个窗口从无到有、如何响应你的鼠标键盘"这条主线彻底看穿。</p>
