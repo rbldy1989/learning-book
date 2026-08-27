@@ -197,7 +197,6 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 <nav id="sidebar">
 <div class="booktitle">深入浅出 MFC</div>
 
-<a class="part" href="#intro" style="display:block;border-top:none;margin-top:.2em;padding-top:0;text-decoration:none">前言 · 怎么用这份文档</a>
 <details><summary><a class="ch" href="#ch0">第 0 章 你一定要知道（导读）</a></summary>
 <a class="sec" href="#ch0-open">0.0 导读</a>
 <a class="sec" href="#ch0-map">0.1 全书路线图</a>
@@ -405,137 +404,41 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 
 <main><div class="inner">
 
-<!-- ===================== 前言 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 477px;--thin-h:477px">
-<h1 id="intro"><span class="part">前言</span>怎么用这份文档</h1>
-<div class="disclaimer">
-<strong>版权说明：</strong>本文档不是《深入浅出 MFC》的电子版，不含原书正文、插图、代码清单。它是一份<strong>原创导读</strong>——章节结构对照原书目录，但每一节的讲解、代码示例、示意图全部由我重新撰写。原书请阅读你手上的正版；本文用于帮你「用现代眼光读懂这本经典」。
-</div><p>全书 16 章 + 附录已<strong>逐章详讲完毕</strong>，每章配原创示意图与 🟢🟡🔴🔵 现代标注，详实度对齐前三章。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 131px">
-<span class="t">🟢 阅读建议</span>
-<p>建议对照纸质原书一起看：<strong>原书读「细节与代码」，本文读「现代视角、机制图解、哪些已过时」。</strong>两者互补，效率最高。</p>
-</div>
-</section>
 
 <!-- ===================== 第 0 章 ===================== -->
-<section class="chapter" style="contain-intrinsic-size:auto 8394px;--thin-h:8394px">
+<section class="chapter" style="contain-intrinsic-size:auto 4470px;--thin-h:4470px">
 <h1 id="ch0"><span class="part">第 0 章</span>你一定要知道（导读）</h1>
 <h2 id="ch0-open">0.0 导读</h2>
-<p>MFC 是架在 Win32 之上的一层 C++ 类库,它把窗口句柄包成对象、把窗口过程换成一张消息映射表、把程序骨架固定成文档与视图两半。<strong>本书对照侯捷《深入浅出 MFC》重讲这套框架内部怎么运作</strong>——不是「MFC 有哪些类和函数」,那查类参考更快;而是一条消息从队列走到你写的那个成员函数之间,框架替你做了什么。基线取现代 Visual Studio 随附的 MFC 与现代 C++。</p>
-
-<h3>这个领域有哪些资料</h3>
-<p>MFC 的资料几乎全部成于较早的年代,今天仍在更新的只有官方类参考与随 Visual Studio 分发的源码。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 875px">
-<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<p>MFC 是架在 Win32 之上的一层 C++ 类库,它把窗口句柄包成对象、把窗口过程换成一张消息映射表、把程序骨架固定成文档与视图两半。<strong>本书对照侯捷《深入浅出 MFC》重讲这套框架内部怎么运作,代码与开发环境全部按现代工具链重写。</strong>讲的不是「MFC 有哪些类和函数」——那查类参考更快,而是一条消息从队列走到你写的那个成员函数之间,框架替你做了什么。基线取现代 Visual Studio 随附的 MFC 与现代 C++。</p>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 475px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>侯捷《深入浅出 MFC》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>本书对照重讲的原著。把框架剖到源码一级,六大关键技术与消息映射的推导是同类书里最完整的。<strong>局限</strong>:基于较早的 MFC 版本与当时的 Visual C++,开发环境、AppWizard 定制与 ActiveX 三块已不对应今天的工程形态</td></tr>
-<tr><td>Jeff Prosise《Programming Windows with MFC》</td><td class="nw">经典教材</td><td class="nw">参考</td><td>应用向覆盖更全,控件与视图的用法示例多。<strong>局限</strong>:同为较早版本;偏「怎么用」,少讲内部怎么运作</td></tr>
-<tr><td>孙鑫《VC++ 深入详解》</td><td class="nw">经典教材</td><td class="nw">推荐</td><td>从 Win32 一路讲到 MFC,配套视频完整,入门坡度平缓。<strong>局限</strong>:同样成书较早;本书系另有对照它重讲的一本</td></tr>
-<tr><td>Charles Petzold《Windows 程序设计》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>MFC 封装的正是这一层。不懂裸 Win32 去看 MFC,只能背结论。<strong>局限</strong>:成书较早,字符处理与 64 位部分需另补</td></tr>
-<tr><td>Jeffrey Richter《Windows 核心编程》</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>第 14 章讲线程时的底座,内核对象与同步原语的语义以它为准。<strong>局限</strong>:完全不涉及 MFC</td></tr>
-<tr><td class="nw">Microsoft Learn 的 MFC 类参考</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>一手来源。类的继承关系、成员函数签名、可重写点与消息映射宏都在这里。<strong>局限</strong>:多数条目只给用法,不写「框架在什么时刻调用它」</td></tr>
-<tr><td>MFC 源码与 <code>afxwin.h</code> 一类头文件(随 Visual Studio 分发)</td><td class="nw">官方源码</td><td class="nw">锚定</td><td>行为的最终事实。消息映射表怎么串成链、命令绕行的分派顺序、序列化的字节格式都能读出来。<strong>局限</strong>:实现随版本改动,读出的结论不能当接口承诺</td></tr>
-<tr><td>Visual Studio 的 MFC 应用向导生成物</td><td class="nw">官方源码</td><td class="nw">锚定</td><td>今天 MFC 工程的实际形态,类名、文件划分与项目属性都在里面。<strong>局限</strong>:注释与命名沿用旧约定,不解释为什么这么生成</td></tr>
-<tr><td class="nw">《Win32 程序设计》(本书系)</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>补齐 MFC 之下的窗口、消息、GDI、控件与现代必修项。<strong>局限</strong>:不讲框架层</td></tr>
-<tr><td class="nw">《Qt 核心与 Widget》(本书系)</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>跨平台 GUI 的另一条路;它的对象树与信号槽可与 MFC 的消息映射对照着读。<strong>局限</strong>:与 Windows 平台接口无关</td></tr>
-<tr><td class="nw">《C++ 语言》(本书系)</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>第 2 章点到为止的 C++ 内容,完整版本都在里面。<strong>局限</strong>:不含 MFC</td></tr>
+<tr><td>侯捷《深入浅出 MFC》原书</td><td>本书对照重讲的原著,把框架剖到源码一级,六大关键技术与消息映射的推导在同类书里最完整,基于较早的 MFC 版本与当时的 Visual C++</td></tr>
+<tr><td>Jeff Prosise《Programming Windows with MFC》</td><td>应用向覆盖更全,控件与视图的用法示例多,偏「怎么用」,少讲内部怎么运作</td></tr>
+<tr><td>Charles Petzold《Windows 程序设计》</td><td>MFC 封装的正是这一层,不懂裸 Win32 去看 MFC 只能背结论</td></tr>
+<tr><td>Jeffrey Richter《Windows 核心编程》</td><td>线程与内核对象的语义以它为准,完全不涉及 MFC</td></tr>
+<tr><td>Microsoft Learn 的 MFC 类参考</td><td>一手来源,类的继承关系、成员函数签名与消息映射宏都在这里,多数条目不写「框架在什么时刻调用它」</td></tr>
+<tr><td>MFC 源码与 <code>afxwin.h</code> 一类头文件(随 Visual Studio 分发)</td><td>行为的最终事实,消息映射表怎么串成链、命令绕行的分派顺序都能读出来,实现随版本改动</td></tr>
+<tr><td>Visual Studio 的 MFC 应用向导生成物</td><td>今天 MFC 工程的实际形态,类名、文件划分与项目属性都在里面</td></tr>
 </tbody>
 </table>
-<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 原著的六大技术主线保留,代码与开发环境全部重写</span><p>原著讲机制的推导今天依然成立:消息映射表的静态结构、命令沿窗口链的绕行顺序、动态创建靠一张类型登记表这些结论与版本无关。已经作废的是它们的外壳——菜单路径、向导步骤、类名与项目文件格式。本书保留推导的骨架,把所有代码换成现代 Visual Studio 实际生成与实际编译的形态。</p></div>
-
-<h3>锚定的五样各借鉴了什么</h3>
-<p>借鉴的都是具体手法,标为「参考」「推荐」的不进这张表。</p>
-<table style="contain-intrinsic-size:auto 377px">
-<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴原著、MFC 源码、类参考与向导生成物四样,行为与文档对不上时一律以随 Visual Studio 分发的源码为准。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 299px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td>侯捷《深入浅出 MFC》</td><td>章节骨架与讲解顺序:先补 Win32 与 C++ 两块底子,再用六大关键技术贯穿全书,最后进 Document/View、消息映射与命令绕行。第 3 章「先自己造一个小框架,再回头看真身」的逐版演进讲法也照原著保留</td></tr>
-<tr><td class="nw">MFC 源码与头文件</td><td>机制层的结论从声明与实现里读出来再写:<code>AFX_MSGMAP</code> 的链式结构、<code>OnCmdMsg</code> 的分派顺序、<code>CWinApp::Run</code> 的循环体、<code>CArchive</code> 的读写格式。第 9 章的绕行路径按实际分派顺序画</td></tr>
-<tr><td class="nw">Microsoft Learn 的 MFC 类参考</td><td>类说明表的字段划分:基类、职责、常用可重写点、对应的消息映射宏各占一列</td></tr>
-<tr><td>Petzold 的教材</td><td>「先讲被封装的那一层,再讲封装」这条顺序。第 1 章把窗口类注册、消息循环、窗口过程讲完,此后每讲一处 MFC 机制都指回它顶替了 Win32 的哪一步</td></tr>
-<tr><td>Visual Studio 的 MFC 应用向导生成物</td><td>第 7 章骨干程序的形态照今天向导实际生成的代码写,不照原著当年的输出;第 4 章讲开发环境时,工具链的四样核心工具按现在的构建流程重排</td></tr>
+<tr><td>全书骨架与六大关键技术主线</td><td>侯捷原著:先补 Win32 与 C++ 两块底子,再用六大关键技术贯穿全书,最后进 Document/View 与命令绕行;第 3 章「先自己造一个小框架,再回头看真身」的逐版演进讲法也照原著保留</td></tr>
+<tr><td class="nw">第 3、9 章的机制结论</td><td>MFC 源码与头文件:<code>AFX_MSGMAP</code> 的链式结构、<code>OnCmdMsg</code> 的分派顺序、<code>CWinApp::Run</code> 的循环体,命令绕行路径按实际分派顺序画</td></tr>
+<tr><td class="nw">各章的类说明表</td><td>Microsoft Learn 的字段划分:基类、职责、常用可重写点、对应的消息映射宏各占一列</td></tr>
+<tr><td class="nw">第 1 章的位置与写法</td><td>Petzold:先讲被封装的那一层,再讲封装;此后每讲一处 MFC 机制都指回它顶替了 Win32 的哪一步</td></tr>
+<tr><td class="nw">第 4、7 章的工程形态</td><td>Visual Studio 向导生成物:骨干程序照今天向导实际生成的代码写,不照原著当年的输出</td></tr>
 </tbody>
 </table>
-
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>读懂并改动一个 MFC 程序所需要的全部框架机制</strong>,21 章 154 节分五段推进。</p>
-<table style="contain-intrinsic-size:auto 286px">
-<thead><tr><th class="nw">段落</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">底子</td><td class="nw">第 0 到 2 章,31 节</td><td>Win32 程序靠什么运转,以及 MFC 用到了 C++ 的哪几样性质</td></tr>
-<tr><td class="nw">六大关键技术</td><td class="nw">第 3 章,9 节</td><td>生死因果、RTTI、动态创建、序列化、消息映射、命令绕行各自怎么实现</td></tr>
-<tr><td class="nw">开发环境</td><td class="nw">第 4 章,8 节</td><td>构建工具链、项目组织、向导与资源编辑器各自负责什么</td></tr>
-<tr><td class="nw">框架真身</td><td class="nw">第 5 到 9 章,42 节</td><td>类库怎么分族,<code>CWinApp</code> 与 <code>CFrameWnd</code> 如何顶替 <code>WinMain</code> 和窗口过程,消息与命令怎么走到你的函数</td></tr>
-<tr><td class="nw">应用层</td><td class="nw">第 10 到 14 章,42 节</td><td>对话框与 DDX、多视图与重绘、打印预览、多文档、多线程</td></tr>
-<tr><td class="nw">扩展与收尾</td><td class="nw">第 15 到 16 章与附录,22 节</td><td>向导定制、组件复用,以及 MFC 今天的处境与替代方案对照</td></tr>
-</tbody>
-</table>
-<p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 398px">
-<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td>裸 Win32 的完整机制:GDI、控件全集、资源、高 DPI 与深色模式</td><td class="nw">《Win32 程序设计》</td><td>第 1 章只补到能看懂 MFC 封装为止</td></tr>
-<tr><td>C++ 语言的完整体系</td><td class="nw">《C++ 语言》</td><td>第 2 章只讲框架机制用到的那几样:虚函数表、静态成员、RTTI、动态创建</td></tr>
-<tr><td>网络、数据库与进程间通信的 MFC 用法</td><td class="nw">《VC++ 深入详解》第 14、17、20 章</td><td>两本对照的原著分工不同,不重复</td></tr>
-<tr><td>逐个 API 的参数细目</td><td class="nw">《Windows API 手册》</td><td>本书讲框架,那本按 DLL 分类速查</td></tr>
-<tr><td>MFC 功能区与特性包的完整控件集</td><td class="nw">Microsoft Learn 的 MFC 类参考</td><td>本书讲机制,控件的属性与方法查类参考更快</td></tr>
-<tr><td>ATL、WTL 与 COM 的接口模型</td><td class="nw">《VC++ 深入详解》第 18 章</td><td>第 16 章只讲到容器与控件怎么对话为止</td></tr>
-<tr><td>跨平台 GUI</td><td class="nw">《Qt 核心与 Widget》</td><td>MFC 只在 Windows 上跑</td></tr>
-</tbody>
-</table>
-
-<h3>Win32、MFC 与 Qt:三条路线怎么选</h3>
-<p>读者最常犹豫的是该从哪条路线进去。三条路线在本书系里各有归属。</p>
-<table style="contain-intrinsic-size:auto 301px">
-<thead><tr><th class="nw">路线</th><th>什么时候选它</th><th>代价</th><th class="nw">归哪本</th></tr></thead>
-<tbody>
-<tr><td class="nw">MFC</td><td>维护既有的 MFC 工程;需要文档/视图、打印预览、序列化这几套现成骨架,且程序只在 Windows 上跑</td><td>框架的约定要先学一遍才动得了;界面风格与配套控件停在较早的年代</td><td class="nw">本书与《VC++ 深入详解》</td></tr>
-<tr><td class="nw">直接写 Win32</td><td>要控制到消息一级;发布包与依赖要最小;写钩子、注入一类贴近系统的程序</td><td>界面要一行行搭,控件外观、高 DPI 与深色模式全部自己兜底</td><td class="nw">《Win32 程序设计》</td></tr>
-<tr><td class="nw">Qt</td><td>同一份代码要在 Windows、Linux、macOS 上跑;需要成套的现代控件、布局与样式</td><td>引入一整套运行时与构建体系,发布包变大,许可条款要先看清</td><td class="nw">《Qt 核心与 Widget》</td></tr>
-</tbody>
-</table>
-<p>MFC 仍随 Visual Studio 以可选组件分发,既有工程还能继续编译与维护。判断新项目要不要用它,依据是三条:程序是否只跑在 Windows 上、团队是否已有 MFC 经验、界面是否需要现代的视觉规范。第 0.2 节与附录 E 把这三条逐一展开。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 学 MFC 的收益在机制,不在类库清单</span><p>把窗口句柄映射回 C++ 对象、用一张静态表代替长长的 <code>switch</code>、让命令沿窗口链向上找处理者、用一张类型登记表从名字造出对象——这四件事在后来的框架里换了名字继续存在。读懂它们,换到别的框架也知道该找什么;只背类名与函数名,离开 MFC 就带不走。</p></div>
-
-<h3>读之前要会什么</h3>
-<p>前置分两档,每条给自测方式——「熟悉 C++」无法自测,也就无法用来判断该不该现在读。</p>
-<table style="contain-intrinsic-size:auto 463px">
-<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>写过 C++ 的类与继承</td><td>说出虚函数与普通成员函数在调用上的差别,并画出带虚函数的对象里虚表指针的位置</td></tr>
-<tr><td class="nw">必须</td><td>知道 Win32 程序靠什么运转</td><td>说出 <code>GetMessage</code> 返回 0 意味着什么,以及这个 0 是被谁塞进队列的</td></tr>
-<tr><td class="nw">必须</td><td>能在 Visual Studio 里建一个跑得起来的桌面项目</td><td>用向导新建一个 MFC 应用,编译运行,并在 <code>InitInstance</code> 里下一个断点停住</td></tr>
-<tr><td class="nw">必须</td><td>读得懂宏展开</td><td>用预处理输出把一处 <code>DECLARE_MESSAGE_MAP</code> 展开成实际的声明,指出它声明了哪几个成员</td></tr>
-<tr><td class="nw">最好有</td><td>用过任意一种界面框架</td><td>说出在那个框架里,「按钮被按下」是怎么走到你写的函数里的</td></tr>
-<tr><td class="nw">最好有</td><td>了解函数指针与查表分派</td><td>说清一张「消息号到函数指针」的表该怎么查,以及查不到时该往哪里继续找</td></tr>
-<tr><td class="nw">最好有</td><td>知道进程与线程的区别</td><td>说出为什么界面只能在一条线程上更新,以及工作线程该用什么方式把结果送回去</td></tr>
-<tr><td class="nw">最好有</td><td>读过一点 GDI</td><td>说清设备上下文是什么,以及为什么画笔用完要换回原来那支</td></tr>
-</tbody>
-</table>
-
-<h3>与原著和那些资料相比,本书多给了什么</h3>
-<ul>
-<li><strong>与原著的关系逐块交代。</strong>保留的是章节骨架与六大关键技术这条主线;重写的是全部代码、开发环境与工程形态;第 4、15、16 章保留结构但改写成「这套观念今天落在哪里」。</li>
-<li><strong>189 个批注里 99 条是蓝色的现代替代。</strong>原著里每一处已经变化的写法都配了今天的对应物与迁移顺序,不是笼统地说「这个过时了」。</li>
-<li><strong>六大技术拆到宏展开一级。</strong>第 3 章与第 9 章把 <code>DECLARE_MESSAGE_MAP</code>、<code>BEGIN_MESSAGE_MAP</code> 与 <code>ON_COMMAND</code> 展开成实际生成的结构,消息映射不是黑盒。</li>
-<li><strong>19 张图画的是结构与路径。</strong>类别阶层、消息与命令的绕行路线、文档与视图与框架窗口的三角关系,一律配图。</li>
-<li><strong>附录 E 不回避选型问题。</strong>MFC 今天的处境、现代替代方案对照、哪些知识值得带走,三节给出可执行的判断依据。</li>
-</ul>
-
-<h3>两条读法:顺读与按需查</h3>
-<p>第一次接触 MFC 走顺读,手上已经有工程走按需查。</p>
-<table style="contain-intrinsic-size:auto 236px">
-<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
-<tbody>
-<tr><td class="nw">第一次接触 MFC</td><td>第 1、2 章补底子,再顺读第 3、5、6、7 章</td><td class="nw">第 3、6、7、8、9 章</td><td class="nw">第 4、15 章</td></tr>
-<tr><td class="nw">在维护一份 MFC 工程</td><td>直接读第 6、9、10 章;遇到文档与视图再补第 7、8 章</td><td class="nw">第 6、9、10 章</td><td class="nw">第 1、2、4、15 章</td></tr>
-<tr><td class="nw">想弄懂框架内部</td><td>第 3 章一次读完,再读第 6、9 章,对着随 Visual Studio 分发的源码看</td><td class="nw">第 3、9 章</td><td class="nw">第 4、15、16 章</td></tr>
-<tr><td class="nw">在判断要不要继续用 MFC</td><td>第 0.2 节与附录 E</td><td class="nw">附录 E</td><td>—</td></tr>
-</tbody>
-</table>
-<p><strong>第 3 章是全书的枢纽,必须一次读完。</strong>六大关键技术在这一章集中出现,后面每一章都在用它们的结论:第 6 章的启动过程用生死因果,第 8 章的序列化用永久保存,第 9 章的命令绕行用消息映射,第 10 章的对话框用动态创建。跳过它去读后面,表现是每章看得懂字面却记不住为什么这样写。</p>
-<p>第 4 章讲开发环境、第 15 章讲向导定制,这两章的具体操作与今天的 Visual Studio 出入最大,可以先放过,需要时再回来看它们保留的观念部分。第 16 章的 ActiveX 部分同理,其中第 16.8 节给出今天的替代做法,值得单独读。</p>
-<p>读完第 3、6 章,能说清一条消息从队列到你写的那个成员函数之间经过了哪几步;读完第 7、8、11 章,能搭出带菜单、工具栏、多视图与文件读写的桌面程序;读完第 9 章,能自己排查「菜单项为什么是灰的」「命令为什么没有被响应」;读完第 12、13、14 章,这个程序能打印预览、开多个文档窗口、把耗时任务放进工作线程而不卡界面。</p>
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 行为与文档对不上时,以随 Visual Studio 分发的源码为准</span><p>类参考写的是接口承诺,原著写的是当年版本的实现,而实际编译进你程序的是本机那一份源码。三者冲突时的顺序是:先看类参考有没有明确承诺,没有就去源码看当前实现,并假定这个实现可能随版本改动,不要把它当接口依赖。</p></div>
+<h3>前提与读法</h3>
+<p>读之前要写过 C++ 的类与继承并说得清虚函数的分派,知道 Win32 程序靠消息循环与窗口过程运转,能在 Visual Studio 里建一个跑得起来的桌面项目,读得懂宏展开。读法上第 1、2 章先补 Win32 与 C++ 两块底子;第 3 章是全书枢纽,必须一次读完——六大关键技术在这一章集中出现,第 6 章的启动过程、第 8 章的序列化、第 9 章的命令绕行、第 10 章的对话框用的都是它的结论;之后顺读第 5 到 9 章看框架真身,手上已有工程要改时直接查第 6、9、10 章。</p>
+<h3>读完之后</h3>
+<p>读完能说清一条消息从队列走到你写的那个成员函数之间经过了哪几步,能搭出带菜单、工具栏、多视图、文件读写与打印预览的桌面程序,能自己排查「菜单项为什么是灰的」「命令为什么没有被响应」。进阶方向有二:向下补齐裸 Win32 与内核对象那一层,把框架封装掉的机制看全;向外对照后来的界面框架——把句柄映射回对象、用一张静态表代替长 <code>switch</code>、让命令沿窗口链上溯,这几件事在它们身上换了名字继续存在,读懂一处,处处认得。</p>
 <h2 id="ch0-map">0.1 全书路线图</h2>
 <p>用一张原创示意图，把原书四篇的逻辑关系讲清楚：</p>
 <figure style="contain-intrinsic-size:auto 283px">
