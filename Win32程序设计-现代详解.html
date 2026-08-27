@@ -428,125 +428,39 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 8675px;--thin-h:8675px">
+<section class="chapter" style="contain-intrinsic-size:auto 4265px;--thin-h:4265px">
 <h1 id="w0"><span class="part">第 0 章</span>环境搭建与预备</h1>
 <h2 id="w0-open">0.0 导读</h2>
 <p>Win32 是 Windows 的原生编程接口:一组由系统 DLL 导出的 C 函数,外加一套「系统回调你」的运行模型——程序从队列里取出消息交还给系统,系统再转手调用你注册的窗口过程。<strong>本书讲清这套模型怎么运作,以及每一处接口在今天该怎么写。</strong>基线取 64 位、Unicode、Windows 10 以上与现代 Visual Studio;旧写法与今天的写法有出入时,两侧都给出来。</p>
-
-<h3>这个领域有哪些资料</h3>
-<p>Win32 的资料分布并不平均:成体系的书大多停在 Windows 2000 前后,接口的一手事实在官方文档与 SDK 头文件里,「为什么是这个样子」只散落在少数几个人的文章中。</p>
-<p><strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 1067px">
-<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 449px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>Charles Petzold《Windows 程序设计》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>窗口与消息、GDI、控件三块讲得最完整,每章都从一个能编译运行的完整程序切入。<strong>局限</strong>:成书较早,字符处理按 TCHAR 组织,64 位、高 DPI、深色模式与现代通用控件一概没有</td></tr>
-<tr><td>Jeffrey Richter《Windows 核心编程》</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>进程、线程、内存、DLL 的机制讲得最透,规则都从内核对象的语义推出来。<strong>局限</strong>:界面部分几乎不涉及;成书较早,此后新增的同步原语与线程池接口不在其中</td></tr>
-<tr><td>Russinovich 等《深入解析 Windows 操作系统》</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>句柄表、调度、内存管理与对象管理器的权威描述,是本书讲内核对象时的事实来源。<strong>局限</strong>:面向系统实现而非应用开发,篇幅远超写界面程序所需</td></tr>
-<tr><td class="nw">Microsoft Learn 的 Win32 API 参考</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>一手来源。函数签名、参数语义、最低系统版本与线程要求都在这里,随系统更新。<strong>局限</strong>:回答「怎么用」,极少回答「什么时候不该用」;示例常省略错误处理</td></tr>
-<tr><td>Windows SDK 头文件(<code>winuser.h</code>、<code>wingdi.h</code>、<code>winbase.h</code> 等)</td><td class="nw">官方源码</td><td class="nw">锚定</td><td>宏、结构体与常量的最终事实。文档与实际签名冲突时以它为准,A 版与 W 版怎么展开也只能在这里看清。<strong>局限</strong>:只有声明没有实现,注释稀少</td></tr>
-<tr><td>Raymond Chen 的 The Old New Thing</td><td class="nw">在线资料</td><td class="nw">锚定</td><td>把接口今天的形态与它受过的兼容性约束对上号,讲清常见误解从哪来。<strong>局限</strong>:按篇发布,不成体系,需要自己检索</td></tr>
-<tr><td>Spy++ 与 Sysinternals 工具集</td><td class="nw">官方工具</td><td class="nw">参考</td><td>Spy++ 能看到真实的窗口树、窗口类与消息流,Process Explorer 能看句柄与已加载的 DLL,用来核对书上的说法。<strong>局限</strong>:只呈现现象,不解释成因</td></tr>
-<tr><td class="nw">Microsoft Learn 的 Windows 应用开发总览</td><td class="nw">官方文档</td><td class="nw">推荐</td><td>WinUI 与 Windows App SDK 的入口,新建桌面项目时的选型依据。<strong>局限</strong>:与 Win32 是两套模型,不能拿来解释本书讲的机制</td></tr>
-<tr><td class="nw">《Windows API 手册》(本书系)</td><td class="nw">参考手册</td><td class="nw">推荐</td><td>按 DLL 分类的速查,214 张函数详解卡各配原型、参数表与最小示例。<strong>局限</strong>:按函数组织,不讲机制的来龙去脉</td></tr>
-<tr><td class="nw">《C++ 语言》(本书系)</td><td class="nw">相邻领域</td><td class="nw">推荐</td><td>本书代码用到的 C++ 基础都在里面:RAII、智能指针、移动语义。<strong>局限</strong>:不含任何 Windows 内容</td></tr>
+<tr><td>Charles Petzold《Windows 程序设计》</td><td>窗口与消息、GDI、控件三块讲得最完整的经典教材,每章从一个能编译运行的完整程序切入,但成书较早,64 位、高 DPI 与深色模式一概没有</td></tr>
+<tr><td>Jeffrey Richter《Windows 核心编程》</td><td>进程、线程、内存与 DLL 的机制讲得最透,规则都从内核对象的语义推出来,界面部分几乎不涉及</td></tr>
+<tr><td>Russinovich 等《深入解析 Windows 操作系统》</td><td>句柄表、调度与内存管理的权威描述,面向系统实现而非应用开发,篇幅远超写界面程序所需</td></tr>
+<tr><td>Microsoft Learn 的 Win32 API 参考</td><td>一手来源,函数签名、参数语义与最低系统版本都在这里,回答「怎么用」,极少回答「什么时候不该用」</td></tr>
+<tr><td>Windows SDK 头文件(<code>winuser.h</code>、<code>wingdi.h</code> 等)</td><td>宏、结构体与常量的最终事实,文档与实际签名冲突时以它为准</td></tr>
+<tr><td>Raymond Chen 的 The Old New Thing</td><td>把接口今天的形态与它受过的兼容性约束对上号,讲清常见误解从哪来,按篇发布不成体系</td></tr>
+<tr><td>Spy++ 与 Sysinternals 工具集</td><td>能看到真实的窗口树、消息流、句柄与已加载的 DLL,用来核对书上的说法</td></tr>
 </tbody>
 </table>
-<div class="note old" style="contain-intrinsic-size:auto 167px"><span class="t">🟡 Petzold 的例子只取骨架,代码按 64 位与 Unicode 重写</span><p>原书的例子多数仍能编译通过,问题推迟到运行期才暴露:用 <code>LOWORD(lParam)</code> 取鼠标坐标在多显示器负坐标下会取错,窗口附加数据用 <code>SetWindowLong</code> 在 64 位下存不下一个指针。本书一律直接写 W 版函数、用 <code>GET_X_LPARAM</code> 取坐标、用 <code>SetWindowLongPtr</code> 存指针。</p></div>
-
-<h3>锚定的五样各借鉴了什么</h3>
-<p>借鉴的都是具体手法,标为「参考」「推荐」的不进这张表。</p>
-<table style="contain-intrinsic-size:auto 452px">
-<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴 Petzold、Richter、官方文档、SDK 头文件与 Raymond Chen 五样,事实层一律以 Microsoft Learn 与头文件的实际声明为准。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 376px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">Microsoft Learn 的 Win32 API 参考</td><td>事实准绳:函数签名、参数语义与最低系统版本一律以它为准。函数说明表的字段划分也照它定——参数、类型、含义、失败时的返回值各占一列</td></tr>
-<tr><td>Windows SDK 头文件</td><td>文档没写明的边界从声明里读出来再写:哪个结构体字段必须先填自身大小、哪些名字在 <code>UNICODE</code> 下展开成 W 版、哪些常量是可以按位或的标志。第 2 章与第 9 章的判断都出自头文件</td></tr>
-<tr><td>Petzold 的教材</td><td>章节骨架与讲解顺序:窗口与消息、GDI、文字与字体、键盘、鼠标、定时器、控件、资源与对话框、位图、打印这条主线,以及每章从一个能编译运行的完整程序切入。代码与 API 全部现代重写</td></tr>
-<tr><td>Richter《Windows 核心编程》</td><td>第 14 章的组织方式:先说清进程、线程与内核对象各是什么,再讲同步原语,最后才落到「界面线程与工作线程怎么分工」这条规矩;每条规矩都能顺着内核对象的语义自己推出来</td></tr>
-<tr><td>Raymond Chen 的 The Old New Thing</td><td>「历史包袱」这一类内容的写法:先说今天看到的现象,再说它被什么约束逼成这样,最后给今天该怎么写。第 2 章的 TCHAR、第 9 章的通用控件版本、第 17 章的清单文件都按这个顺序展开</td></tr>
+<tr><td class="nw">全书的章节骨架</td><td>Petzold:窗口与消息、GDI、文字、键盘、鼠标、定时器、控件、资源与对话框、位图、打印这条主线,以及每章从一个能编译运行的完整程序切入;代码与 API 全部现代重写</td></tr>
+<tr><td class="nw">各章的函数说明表</td><td>Microsoft Learn 的字段划分:参数、类型、含义、失败时的返回值各占一列;签名与最低系统版本一律以它为准</td></tr>
+<tr><td>第 2 章字符编码、第 9 章控件的边界判断</td><td>SDK 头文件:哪个结构体字段必须先填自身大小、哪些名字在 <code>UNICODE</code> 下展开成 W 版、哪些常量可以按位或</td></tr>
+<tr><td class="nw">第 14 章 DLL 与多线程</td><td>Richter:先说清进程、线程与内核对象各是什么,再讲同步原语,最后落到界面线程与工作线程的分工,每条规矩都能顺着内核对象的语义推出来</td></tr>
+<tr><td>第 2、9、17 章的「历史包袱」写法</td><td>Raymond Chen:先说今天看到的现象,再说它被什么约束逼成这样,最后给今天该怎么写</td></tr>
 </tbody>
 </table>
-
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>用 C 与 C++ 直接调用 Win32 写桌面程序所需要的全部机制</strong>,19 章 188 节分四段推进。</p>
-<table style="contain-intrinsic-size:auto 236px">
-<thead><tr><th class="nw">段落</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">底座</td><td class="nw">第 0 到 3 章,39 节</td><td>环境怎么立起来,一个窗口程序凭什么活着:消息从哪来、窗口过程被谁调用、字符按什么编码</td></tr>
-<tr><td class="nw">绘制与输入</td><td class="nw">第 4 到 8 章,47 节</td><td>画面怎么画出来、文字怎么排、键盘与鼠标的两条输入流怎么进来、时间从哪里来</td></tr>
-<tr><td class="nw">界面构件</td><td class="nw">第 9 到 13 章,57 节</td><td>控件、菜单与资源、对话框、位图与双缓冲、打印各自怎么用,以及它们如何回到你的窗口过程</td></tr>
-<tr><td class="nw">系统与工程</td><td class="nw">第 14 到 18 章,45 节</td><td>DLL 与多线程、文件注册表剪贴板、调试排错、现代必修补遗,最后是四个完整实例</td></tr>
-</tbody>
-</table>
-<p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 461px">
-<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td>MFC 的类库、文档/视图架构与消息映射</td><td class="nw">《深入浅出 MFC》</td><td>本书讲的正是被 MFC 封装掉的那一层</td></tr>
-<tr><td>COM 的接口模型、引用计数与组件注册</td><td class="nw">《VC++ 深入详解》第 18 章</td><td>本书只在第 11 章用到 <code>IFileDialog</code> 时给出必需的调用步骤</td></tr>
-<tr><td>逐个 API 的参数细目与返回值全表</td><td class="nw">《Windows API 手册》</td><td>本书讲机制,那本按 DLL 分类速查</td></tr>
-<tr><td>Direct2D、DirectWrite 与 Direct3D 的绘制管线</td><td class="nw">不在本书系范围</td><td>在 GDI 力所不及处指出替代方向,不展开管线</td></tr>
-<tr><td>WinUI、Windows App SDK 与 XAML</td><td class="nw">不在本书系范围</td><td>与 Win32 是两套模型,机制不通用</td></tr>
-<tr><td>内核实现:调度器、内存管理器、对象管理器</td><td class="nw">《深入解析 Windows 操作系统》</td><td>本书讲到内核对象在用户态的语义为止</td></tr>
-<tr><td>网络与数据库编程</td><td class="nw">《VC++ 深入详解》第 14、16、20 章</td><td>原著覆盖了这几块,本书不重复</td></tr>
-<tr><td>C++ 语言本身</td><td class="nw">《C++ 语言》</td><td>本书用到的现代 C++ 只做就地说明</td></tr>
-</tbody>
-</table>
-
-<h3>Win32、MFC 与 Qt:三条路线怎么选</h3>
-<p>读者最常犹豫的是该从哪条路线进去。三条路线在本书系里各有归属。</p>
-<table style="contain-intrinsic-size:auto 352px">
-<thead><tr><th class="nw">路线</th><th>什么时候选它</th><th>代价</th><th class="nw">归哪本</th></tr></thead>
-<tbody>
-<tr><td class="nw">直接写 Win32</td><td>要控制到消息一级;发布包与依赖要最小;维护既有的 Win32 代码;写钩子、注入一类贴近系统的程序</td><td>界面要一行行搭,控件外观、高 DPI 与深色模式全部自己兜底</td><td class="nw">本书</td></tr>
-<tr><td class="nw">MFC</td><td>维护既有的 MFC 工程;需要文档/视图、打印预览、序列化这几套现成骨架,且程序只在 Windows 上跑</td><td>框架的约定要先学一遍才动得了;界面风格与配套控件停在较早的年代</td><td class="nw">《深入浅出 MFC》与《VC++ 深入详解》两本</td></tr>
-<tr><td class="nw">Qt</td><td>同一份代码要在 Windows、Linux、macOS 上跑;需要成套的现代控件、布局与样式</td><td>引入一整套运行时与构建体系,发布包变大,许可条款要先看清</td><td class="nw">《Qt 核心与 Widget》</td></tr>
-</tbody>
-</table>
-<p>三条路线并不互斥。MFC 与 Qt 在 Windows 上的底下都是同一套窗口与消息机制,本书得到的判断力在另外两条路线上同样有效:界面卡住是因为消息循环被占住,从工作线程直接改控件会出问题。这些结论与用哪个框架无关。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 路线在第一天就该定下来,三条路线的代码不要混着写</span><p>同一个程序里既手写窗口过程又挂 MFC 的消息映射,消息会有两个入口,出了问题很难判断是哪一侧吞掉了。确实需要混用时,分界画在窗口一级:某个窗口整体归 Win32 或整体归框架,不要在同一个窗口过程里两边都插一脚。</p></div>
-
-<h3>读之前要会什么</h3>
-<p>前置分两档,每条给自测方式——「熟悉 C 语言」无法自测,也就无法用来判断该不该现在读。</p>
-<table style="contain-intrinsic-size:auto 463px">
-<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>能独立写出并编译一个 C 程序</td><td>不借助 IDE,用命令行把两个 <code>.c</code> 编成一个可执行文件,并说清声明与定义为何分开放</td></tr>
-<tr><td class="nw">必须</td><td>说得清指针与内存的归属</td><td>指出一段代码里的越界写在哪一行,并说出栈上数组与堆上缓冲区在生命周期上的差别</td></tr>
-<tr><td class="nw">必须</td><td>知道回调函数是什么</td><td>写一个接受函数指针的排序函数,说清调用方与被调方各自负责什么</td></tr>
-<tr><td class="nw">必须</td><td>认得十六进制与位运算</td><td>说出 <code>style &amp; WS_VISIBLE</code> 与 <code>style |= WS_VISIBLE</code> 各做了什么,并徒手判断 <code>0x00CF0000</code> 置了哪几位</td></tr>
-<tr><td class="nw">最好有</td><td>用过 Visual Studio 的调试器</td><td>在一个断点处打开调用栈,说出栈顶往下第三帧是谁调进来的</td></tr>
-<tr><td class="nw">最好有</td><td>了解进程与线程的区别</td><td>说出同一进程的两条线程共享什么、不共享什么,并举一个数据竞争的例子</td></tr>
-<tr><td class="nw">最好有</td><td>读过一点 C++</td><td>说清构造与析构分别在什么时刻发生,以及为什么句柄适合用一个类包起来管</td></tr>
-<tr><td class="nw">最好有</td><td>知道字符编码是怎么回事</td><td>说出同一个汉字在 UTF-8 与 UTF-16 下各占几个字节,以及为什么长度不等于字符数</td></tr>
-</tbody>
-</table>
-<p>两样不在前置里:不需要有 Windows 编程经验,第 0 章从装 Visual Studio 开始;不需要懂图形学,第 4 章从画一条线开始。</p>
-
-<h3>与那些资料相比,本书多给了什么</h3>
-<ul>
-<li><strong>代码全部按 64 位与 Unicode 重写。</strong>正文一律直接写 W 版函数名——<code>CreateWindowExW</code>、<code>GetMessageW</code>、<code>wWinMain</code>;<code>TCHAR</code> 与 <code>_T</code> 只在第 2.7 节作为历史交代出现;窗口附加数据用 <code>SetWindowLongPtr</code>,鼠标坐标用 <code>GET_X_LPARAM</code>。</li>
-<li><strong>233 个批注按四色分工。</strong>85 条蓝色给现代替代与迁移顺序,93 条绿色是能直接执行的判据,33 条黄色标出「能用但别选」的老写法,22 条红色写会出事的失效模式。</li>
-<li><strong>73 张图覆盖结构、流程与几何三类。</strong>「消息怎么走到窗口过程」「GDI 对象选入与换出的对应关系」「逻辑坐标怎么换算成像素」一律配图。</li>
-<li><strong>第 17 章补的是旧教材里一条都没有的必修项。</strong>高 DPI 与 <code>WM_DPICHANGED</code>、视觉样式清单、深色模式、<code>IFileDialog</code>、拖放、托盘图标与长路径,共 9 节。今天交付的程序缺任何一项都会被用户看见。</li>
-<li><strong>与四本姊妹书边界清楚。</strong>上面「不讲什么」那张表里每一项都指明了归属,同一个话题不会两本各讲一半。</li>
-</ul>
-
-<h3>两条读法:顺读与按需查</h3>
-<p>第一次学 Win32 走顺读,手上已经有具体问题走按需查。</p>
-<table style="contain-intrinsic-size:auto 211px">
-<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
-<tbody>
-<tr><td class="nw">第一次学 Windows 编程</td><td>第 0 到 3 章按顺序读完,每个例子都编译跑一遍,再往后挑</td><td class="nw">第 1、3、4、9 章</td><td class="nw">第 13、18 章</td></tr>
-<tr><td class="nw">写过一些 Win32,想补机制</td><td>直接读第 3 章,再看第 9、12、14 章</td><td class="nw">第 3、9、14 章</td><td class="nw">第 0、2 章</td></tr>
-<tr><td class="nw">在维护一份旧代码</td><td>先读第 2 章与第 17 章,把字符处理与现代必修项过一遍</td><td class="nw">第 2、17 章</td><td class="nw">第 5、13 章</td></tr>
-<tr><td class="nw">程序已经出问题</td><td>第 16 章的五节工具与崩溃速查表</td><td class="nw">第 16 章</td><td>—</td></tr>
-</tbody>
-</table>
-<p><strong>第 1 章与第 3 章必须按顺序读完</strong>,后面每一章都建立在它们之上。第 1 章讲清「系统调用你」这个反转,第 3 章把窗口类注册、窗口创建、消息来源、消息循环、窗口过程、重绘与销毁串成一条完整的链。这两章没读透,后面每章都看得懂字面却记不住为什么。</p>
-<p>第 4 章的 GDI 与第 9 章的控件是第二层主干:前者是所有绘制内容的公共底座,后者决定界面能做到多复杂。第 14 章的「工作线程干活、<code>PostMessage</code> 汇报」是全书复用率最高的一节。</p>
-<p>第 5、13 章可以先放过:文字排版与打印在需要时再读,与其它章没有依赖关系。第 18 章是四个完整实例,适合在读完前面之后当作合成练习,也适合直接抄来做项目起点。</p>
-<p>读完底座四章,能自己解释「窗口为什么不刷新」「程序为什么退不出去」;读完绘制与输入五章,能写出一个响应键鼠、会自绘、不闪烁的窗口;读完界面构件五章,能搭出带菜单、工具栏、状态栏、对话框与列表视图的完整界面;读完系统与工程五章,这个程序能开线程干活而不卡界面、能读写文件与注册表、能在高 DPI 与深色模式下正常显示,并且到别人机器上跑得起来。</p>
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 第 17 章的九节要在交付之前逐条对一遍</span><p>高 DPI、视觉样式清单、深色模式、现代文件对话框、拖放、托盘、长路径,这七项在旧教材里都没有,却全都是用户第一眼就能看见的差别:窗口发糊、控件长得像十几年前、文件对话框缺侧边栏。这一章不必按顺序读,当作交付前的检查单用。</p></div>
+<h3>前提与读法</h3>
+<p>读之前要能独立写出并编译 C 程序,说得清指针与内存的归属,知道回调函数是什么,认得十六进制与位运算;不需要任何 Windows 编程经验,第 0 章从装 Visual Studio 开始。读法上第 0 到 3 章要按顺序读完并把每个例子编译跑一遍——第 1 章讲清「系统调用你」这个反转,第 3 章把注册窗口类到销毁窗口串成一条完整的链,后面每章都建立在这两章之上;此后按需要挑章,程序已经出问题时直接翻第 16 章的排错工具与崩溃速查表。</p>
+<h3>读完之后</h3>
+<p>读完能自己解释「窗口为什么不刷新」「程序为什么退不出去」,能写出响应键鼠、自绘不闪烁、带菜单工具栏与对话框的完整界面,能让程序开线程干活而不卡界面,并在高 DPI 与深色模式下正常显示。进阶方向有二:向下补内核一侧,把句柄表、调度与内存管理的实现接上;向上进框架,MFC 与 Qt 在 Windows 上封装的正是本书这一层,消息循环与线程规矩的判断力可以直接带过去。</p>
 <h2 id="w0-install">0.1 安装 Visual Studio</h2>
 <p>下载免费的 <strong>Visual Studio Community</strong>，安装器里勾选工作负载<strong>「使用 C++ 的桌面开发」</strong>——它会自动带上 MSVC 编译器和 <strong>Windows SDK</strong>，也就是 Win32 开发需要的全部头文件(windows.h 等)、导入库(user32.lib 等)和工具。其余组件一概不用勾，MFC 组件也不需要。</p>
 <p>装完可以顺手确认一件事：<code>C:\Program Files (x86)\Windows Kits\10\Include\&lt;版本号&gt;\um\</code> 下能找到 <code>WinUser.h</code>、<code>fileapi.h</code>——这就是 Win32 API 声明的实际所在地。</p>
