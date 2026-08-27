@@ -255,108 +255,43 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 23453px;--thin-h:16617px">
+<section class="chapter" style="contain-intrinsic-size:auto 20290px;--thin-h:13453px">
 <h1 id="e1"><span class="part">框架</span>为什么需要框架:组件与 JSX</h1>
 <p>前面几本书给的是原材料:一棵能读能改的 DOM 树(<a href="浏览器API与工作原理手册.html#f7-dom">《浏览器 API 与工作原理手册》1.1</a>)、会沿树传播的事件(<a href="浏览器API与工作原理手册.html#f7-events">《浏览器 API 与工作原理手册》2.1</a>)、CSS、JavaScript 与类型。原材料齐了照样能把一个几十个交互点的界面写成谁也不敢动的一团——因为界面的真相被存了两份,一份在 JS 变量里,一份在 DOM 节点的文本和属性上,靠你手写的每一行赋值同步。这一章讲的就是框架用来消掉第二份真相的那个等式:<strong><code>UI = f(state)</code></strong>。你只维护状态,DOM 的差异由框架落地;Vue 是同一个等式的另一种写法(<a href="#f10-vue">4.5</a>),学会等式本身,换框架只是换语法。</p>
 <p>两节按「为什么」到「怎么写」排。<a href="#f10-why">1.1</a> 先摆出手写 DOM 的三个痛点——状态与视图不同步、事件绑定散落、列表更新代价——再给出声明式的定义和它推出的三条规矩,最后交代虚拟 DOM 与细粒度响应式两条实现路线;这条分界线是后面所有「React 要替换、Vue 能原地改」差异的根,不先讲清楚,不可变更新看起来就只是没道理的规矩。<a href="#f10-components">1.2</a> 讲 <code>f</code> 本身怎么写:函数组件的两条硬规矩、JSX 编译成 <code>_jsx()</code> 之后那些「和 HTML 不一样」的地方为什么必须不一样、props 为什么只读、<code>key</code> 为什么不能用下标。读完这两节,任何 React 代码的结构你都能读懂;状态怎么变、副作用往哪放是 <a href="#f10-state">2.1</a> 的事,组件之间怎么摆布状态在 <a href="#f10-patterns">2.3</a>。</p>
 <h2 id="e1-open">1.0 导读</h2>
-<p>本书讲<strong>框架用什么等式消掉手写的同步代码,以及把一个项目从开发交付到线上要哪几条工程链路</strong>:组件与状态、路由与数据、并发与服务端渲染、构建与转译、依赖与发布、指标与部署、三层测试与门禁。前四本给的是原材料,这一本讲怎么把它们组织成能长期维护、能持续交付的项目。</p>
-<h3>这个领域有哪些经典与主要资料</h3>
-<p>这个领域的资料最新,也最容易过期:框架与工具链按月发版,成体系的书往往写完就对不上默认配置,所以<strong>官方文档是唯一可靠的一手来源</strong>。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 788px">
-<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<p>手写 DOM 的痛点在于状态与界面要人工保持同步,改一处状态就得记着改几处界面;框架用「界面是状态的函数」这个等式把同步代码整体消掉,代价是一套必须遵守的规矩。工程化接着回答另一半问题:代码怎么变成产物、依赖怎么管、指标怎么测、质量怎么守。这一层是前端过时最快的一层,框架与工具链按月发版,但等式与机制常年不变。<strong>本书讲组件与状态、路由与数据、并发与服务端渲染这条框架主线,以及构建、依赖、发布、部署与三层测试、质量门禁的完整工程链路。</strong></p>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 536px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>React 官方文档</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>新版教程从「用 React 思考」讲到 Hook 的心智模型,示例可以直接在页面上改了跑。局限:只讲框架本身,路由、数据请求与构建各看各自文档</td></tr>
-<tr><td>Vue 官方文档</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>同一个等式的另一种写法,响应式原理与组合式接口讲得清楚,中文版由官方维护。局限:同样只覆盖框架本身</td></tr>
-<tr><td>Vite 官方指南与配置参考</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>开发服务器与生产构建的一手说明,插件接口与每个配置项的默认值以它为准。局限:底层打包器仍在换代,产物细节随版本变,照抄旧教程多半起不来</td></tr>
-<tr><td>npm 与 Node 官方文档</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>包清单的字段契约、版本范围语义、依赖与模块解析规则,第 6 章以它为准。局限:字段多、交叉引用多,单读很碎,看不出字段之间怎么配合</td></tr>
-<tr><td>web.dev 与 Core Web Vitals 文档</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>指标的定义、阈值与测量方式,第 7 章的口径全部照它。局限:Chrome 视角,部分工具与建议在其他引擎上没有对应物</td></tr>
-<tr><td>刘博文《深入浅出 Vue.js》</td><td class="nw">进阶专题</td><td class="nw">参考</td><td>把响应式系统、虚拟 DOM 与差异比对从零实现一遍,理解「框架做了什么」最直接的一本。局限:对应较早的版本,实现已换过一轮,读思路不读代码</td></tr>
-<tr><td>各框架与构建工具的源码</td><td class="nw">源码</td><td class="nw">参考</td><td>文档说不清时的仲裁者:更新怎么排队、依赖怎么被收集、产物怎么切分。局限:内部实现随版本改动,读出的结论不能当接口承诺</td></tr>
-<tr><td>Testing Library 与 Playwright 官方文档</td><td class="nw">官方文档</td><td class="nw">参考</td><td>查询优先级与「按用户能看到的东西断言」,第 8、9 章的写法从它来。局限:只讲工具怎么用,不回答该测什么</td></tr>
-<tr><td>Kent C. Dodds 关于测试比例的文章</td><td class="nw">在线资料</td><td class="nw">参考</td><td>三层测试各投入多少的一种主流主张,8.1 以它为对照。局限:是一家之言,团队规模与交付节奏不同,结论会变</td></tr>
-<tr><td>《JavaScript 语言手册》与《浏览器 API 与工作原理手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>框架替你省掉的那些手写代码在那两本。局限:都不讲框架与工程</td></tr>
+<tr><td>React 官方文档</td><td>新版教程从「用 React 思考」讲到 Hook 的心智模型,示例可直接在页面上改了跑;只讲框架本身,路由与构建各看各自文档</td></tr>
+<tr><td>Vue 官方文档</td><td>同一个等式的另一种写法,响应式原理与组合式接口讲得清楚,中文版由官方维护;同样只覆盖框架本身</td></tr>
+<tr><td>Vite 官方指南与配置参考</td><td>开发服务器与生产构建的一手说明,插件接口与配置默认值以它为准;底层打包器仍在换代,照抄旧教程多半起不来</td></tr>
+<tr><td>npm 与 Node 官方文档</td><td>包清单的字段契约、版本范围语义与依赖解析规则的权威出处;字段多、交叉引用多,看不出字段之间怎么配合</td></tr>
+<tr><td>web.dev 与 Core Web Vitals 文档</td><td>性能指标的定义、阈值与测量方式的官方口径;Chrome 视角,部分工具与建议在其他引擎上没有对应物</td></tr>
+<tr><td>Testing Library 与 Playwright 官方文档</td><td>查询优先级与「按用户能看到的东西断言」的一手出处;只讲工具怎么用,不回答该测什么</td></tr>
+<tr><td>刘博文《深入浅出 Vue.js》</td><td>把响应式系统、虚拟 DOM 与差异比对从零实现一遍,理解「框架做了什么」最直接的一本;对应较早版本,读思路不读代码</td></tr>
+<tr><td>Kent C. Dodds 关于测试比例的文章</td><td>三层测试各投入多少的一种主流主张;是一家之言,团队规模与交付节奏不同,结论会变</td></tr>
 </tbody>
 </table>
-<div class="note new" style="contain-intrinsic-size:auto 163px"><span class="t">🔵 工具链换代最快,配置一律以官方文档的当前版为准</span><p>这一层的知识分两半:等式与机制不变,配置格式与默认值按月变。判断办法是看你要抄的东西属于哪一半——「状态变了为什么要生成新对象」属于机制,任何时候都成立;「这个选项写在哪个字段下」属于配置,只有官方文档的当前版说了算。</p></div>
-<h3>锚定的五样各借鉴了什么</h3>
-<p>下表只收标为「锚定」的,借鉴的内容具体到手法。</p>
-<table style="contain-intrinsic-size:auto 375px">
-<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴前六样;配置项当前叫什么、默认值是多少,一律以官方文档的当前版为准。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 412px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td>React 官方文档</td><td>第 1 到 4 章的骨架与心智模型:界面是状态的函数这个等式、「把依赖删掉而不是关掉规则」这条处理副作用的判据、并发特性按优先级与过渡与挂起三组来讲的分法。术语与官方中文文档一致</td></tr>
-<tr><td>Vue 官方文档</td><td>4.5 与 4.6 的对照方式:同一个模型的两种写法逐条并排,而不是分开各讲一遍;响应式与组合式函数的术语照它,便于两边切换</td></tr>
-<tr><td>Vite 官方指南</td><td>第 5 章的组织顺序:开发服务器、配置与环境变量、生产构建与产物切分、转译与目标浏览器;配置项的字段划分照它的配置参考排</td></tr>
-<tr><td>npm 与 Node 官方文档</td><td>第 6 章把包清单当成一份契约来讲:每个字段固定说清谁读它、什么时候读、写错了症状是什么;版本范围与依赖解析照官方规则讲,不凭经验总结</td></tr>
-<tr><td>web.dev 与 Core Web Vitals 文档</td><td>第 7 章的指标口径与阈值一律用官方定义,不自造名词;每个优化手段固定配一句「改完之后在哪个指标上能看到变化」</td></tr>
+<tr><td>第 1 到 4 章的骨架与心智模型</td><td>React 官方文档:界面是状态的函数这个等式、「把依赖删掉而不是关掉规则」的判据、并发特性按优先级、过渡与挂起分组的讲法</td></tr>
+<tr><td>4.5 与 4.6 的对照方式</td><td>Vue 官方文档:同一个模型的两种写法逐条并排而不是分开各讲一遍,响应式与组合式函数的术语照它,便于两边切换</td></tr>
+<tr><td>第 5 章的组织顺序</td><td>Vite 官方指南:开发服务器、配置与环境变量、生产构建与产物切分、转译与目标浏览器,配置项的字段划分照它的配置参考排</td></tr>
+<tr><td>6.2 到 6.5 的依赖与发布</td><td>npm 与 Node 官方文档:把包清单当一份契约讲,每个字段说清谁读它、什么时候读、写错了症状是什么</td></tr>
+<tr><td>第 7 章的指标口径</td><td>web.dev 与 Core Web Vitals 文档:指标定义与阈值一律用官方口径,每个优化手段配一句「改完在哪个指标上能看到变化」</td></tr>
+<tr><td>第 8、9 章的测试写法</td><td>Testing Library 与 Playwright 文档:查询优先级与「按用户能看到的东西断言」,先定测试形态再选工具</td></tr>
 </tbody>
 </table>
-<p>这个领域有一条别处没有的情况必须写清:<strong>框架与工具链是全书系里过时最快的一层,书出版即滞后</strong>。所以本书系把事实层与组织层分开——书讲等式、机制与判据,而某个配置项当前叫什么、默认值是多少,一律以官方文档为准。上表里五份官方文档标为锚定而非「参考」,原因就在这里。</p>
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>把一个项目从组件写起、交付到线上并守住质量</strong>所需要的全部内容,三部分各回答一个问题。</p>
-<table style="contain-intrinsic-size:auto 174px">
-<thead><tr><th class="nw">部分</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">框架</td><td class="nw">第 1 到 4 章,15 节</td><td>框架消掉了什么、状态怎么摆、副作用往哪放、路由与数据怎么接、并发与服务端渲染各解决什么、两种框架怎么选</td></tr>
-<tr><td class="nw">工程化</td><td class="nw">第 5 到 7 章,12 节</td><td>代码怎么变成产物、依赖怎么管、包怎么发、指标怎么测、站点怎么部署</td></tr>
-<tr><td class="nw">质量</td><td class="nw">第 8 到 9 章,9 节</td><td>该测什么、三层测试各怎么写、门禁怎么在流水线里卡住不合格的提交</td></tr>
-</tbody>
-</table>
-<p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 485px">
-<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td>JavaScript 语言本体:闭包、异步、原型与模块语义</td><td class="nw">《JavaScript 语言手册》</td><td>本书不重讲语言;组件里那些「为什么拿到的是旧值」的问题,根在闭包</td></tr>
-<tr><td>DOM 与事件、浏览器 API、渲染管线与网络</td><td class="nw">《浏览器 API 与工作原理手册》</td><td>本书讲框架替你做了什么,底下是什么在那本;两边合起来才解释得通框架的规矩</td></tr>
-<tr><td>HTML 语义与 CSS 布局本身</td><td class="nw">《HTML 与 CSS 手册》</td><td>本书只讲样式在构建链里怎么被处理、在组件里怎么限定作用域</td></tr>
-<tr><td>类型系统的原理:泛型、条件类型、声明文件</td><td class="nw">《TypeScript 手册》</td><td>本书示例用 TypeScript 写,但只用到日常标注</td></tr>
-<tr><td>服务端框架、数据库与后端部署</td><td class="nw">不在本书系范围</td><td>7.3 只讲静态托管、内容分发与反向代理</td></tr>
-<tr><td>框架的源码级实现:调度器与编译器内部</td><td class="nw">不展开</td><td>第 4 章讲到能解释行为与优化手段的层次就停</td></tr>
-<tr><td>其他框架的完整讲解</td><td class="nw">各自官方文档</td><td>4.5 与 4.6 给的是对照坐标:同一个等式换一种语法之后哪些规矩跟着变</td></tr>
-<tr><td>移动端与跨端方案、桌面壳</td><td class="nw">不在本书系范围</td><td>各有独立的运行时与构建链</td></tr>
-</tbody>
-</table>
-<h3>读之前要会什么</h3>
-<p>前置分两档,每条给自测方式。门槛不在框架语法,而在前四本手册的基础:框架的每条规矩都是为了绕开语言或 DOM 层的某个代价,基础不牢就只能把规矩当清单背。</p>
-<table style="contain-intrinsic-size:auto 384px">
-<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>会写 JavaScript,包括闭包与异步</td><td>说清闭包捕获的是变量还是它当时的值;说出一段混合定时器与 Promise 的代码的输出顺序</td></tr>
-<tr><td class="nw">必须</td><td>会用 DOM 与事件手写交互</td><td>不用框架写一个「输入框内容实时显示在下方」的页面,并指出你在哪几处手工同步了状态</td></tr>
-<tr><td class="nw">必须</td><td>读得懂 HTML 与基本的 CSS</td><td>看一个组件渲染出来的标记,说出哪些元素会生成盒子、样式从哪条规则来</td></tr>
-<tr><td class="nw">必须</td><td>会用命令行装包并跑脚本</td><td>新建一个项目,装上依赖,起开发服务器,再打出一份生产产物并在本地打开它</td></tr>
-<tr><td class="nw">必须</td><td>用过版本控制</td><td>说出你上一次解决冲突时,判断该保留哪一边的依据是什么</td></tr>
-<tr><td class="nw">最好有</td><td>一点 TypeScript</td><td>说清接口与类型别名各适合什么场合,以及泛型参数是在哪个位置被确定的</td></tr>
-<tr><td class="nw">最好有</td><td>写过服务端接口</td><td>说出前端拿到一个错误响应时,该怎么区分「用户输入不对」与「服务出问题」</td></tr>
-<tr><td class="nw">最好有</td><td>写过测试</td><td>说出你上一条断言检查的是行为还是实现,并说清两者为什么不能混</td></tr>
-</tbody>
-</table>
-<h3>与那些资料相比,本书多给了什么</h3>
-<ul>
-<li><strong>讲的是等式,不是接口清单。</strong>界面是状态的函数这个等式贯穿第 1 到 4 章:不可变更新、依赖数组、键的规矩、受控与非受控,每一条都能从等式推出来。4.5 与 4.6 用另一种框架逐条对照同一个模型,换语法不换认知。</li>
-<li><strong>80 个批注里有 44 个红色。</strong>重渲染的成因、依赖数组写错的症状、受控与非受控的切换、锁文件与安装脚本的风险——每个红色批注固定给症状与排查手段,另有 26 个绿色写成一句能直接执行的判据。</li>
-<li><strong>35 个「完整示例」都可运行。</strong>示例是能跑起来的完整片段,不是截取的几行。</li>
-<li><strong>时效性有固定对策。</strong>正文讲机制与判据,不罗列参数;涉及版本处标出基线并给迁移对照;配置一律指向官方文档,并给出「写对了怎么验证」的动作,而不是只贴一份配置文件。</li>
-<li><strong>质量两章不止讲工具。</strong>先回答该测什么与三层各投入多少,再讲工具怎么用;末节把可访问性检查、视觉回归与性能预算编排成一条能卡住不合格提交的流水线。</li>
-</ul>
-<h3>两条读法:顺读与按需查</h3>
-<p>第一次学框架走顺读,手上已经有具体任务走按需查。工程化与质量五章是典型的按需查,第一遍不必读。</p>
-<table style="contain-intrinsic-size:auto 335px">
-<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
-<tbody>
-<tr><td class="nw">会 JavaScript 与 DOM,第一次学框架</td><td>第 1、2 章顺读,再进第 3 章,先不碰第 4 章</td><td class="nw">第 1、2、3 章</td><td class="nw">第 4、6、9 章</td></tr>
-<tr><td class="nw">写过组件,常被重渲染与依赖困住</td><td>2.1 与 2.2 精读,再读 2.3 与 4.4</td><td class="nw">2.1、2.2、4.4</td><td class="nw">第 5 到 9 章</td></tr>
-<tr><td class="nw">要给新项目搭工程</td><td>第 5、6 章顺读,配 7.3 的部署</td><td class="nw">5.1、5.2、6.2</td><td class="nw">第 4、9 章</td></tr>
-<tr><td class="nw">首屏慢或交互卡</td><td>第 7 章顺读,配 4.4 的渲染开销与 4.2 的服务端渲染</td><td class="nw">7.1、7.2</td><td class="nw">第 8、9 章</td></tr>
-<tr><td class="nw">要把测试与门禁建起来</td><td>第 8 章顺读到第 9 章,先定形态再选工具</td><td class="nw">8.1、8.2、9.1、9.6</td><td class="nw">第 4 章</td></tr>
-<tr><td class="nw">手上有具体问题</td><td>先按目录定位到对应的节,签名与配置以官方文档当前版为准</td><td class="nw">—</td><td class="nw">—</td></tr>
-</tbody>
-</table>
-<p><strong>第 1、2 章是全书地基,必须按顺序读完</strong>,其中 2.1 最要紧:状态什么时候变、变了之后哪些组件重新执行、副作用落在这条时间线的哪个位置。后面每一章都在用这三个答案——第 3 章的数据获取、第 4 章的并发与服务端渲染、第 7 章的性能优化全部建立在它上面。</p>
-<p>第 4 章可以整章推迟到项目遇到卡顿或需要服务端渲染时再读,但 4.5、4.6 两节例外:如果团队用的是另一种框架,这两节应该紧接着第 2 章读,它们把同一个模型的两种写法逐条对上了。</p>
-<p>读完第 1 到 3 章,能独立写出一个带路由与数据获取的应用,并说清每一次重渲染是怎么来的;读完第 4 章,能在两种框架之间做选型并说出依据;读完第 5 到 7 章,能从零搭起一条从开发到部署的构建链,并把一个包正确地发布出去;读完第 8、9 章,能给一个项目建起三层测试与质量门禁,独立交付上线。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 跳过前四本直接抄框架代码,卡点会落在语言与 DOM 那一层</span><p>常见的两处卡点都不是框架问题:2.1 里「这个组件为什么重新执行了」,根在闭包捕获的是变量而不是值;2.3 里「受控与非受控」,根在表单控件自己也存着一份值。症状是照文档抄能跑通,一改就坏,且查不出坏在哪。这两处卡住时,回《JavaScript 语言手册》1.4 与《浏览器 API 与工作原理手册》2.3 补,比反复读框架文档快。</p></div>
-<div class="note ok" style="contain-intrinsic-size:auto 131px"><span class="t">🟢 先把「界面是状态的函数」吃透,再按任务挑章节</span><p>判断自己吃透了没有,回答三问:为什么更新状态要生成新对象而不是改原来那个;为什么列表的键不能用下标;为什么副作用不能直接写在渲染过程里。三问都能从等式推出来,推不出来就回 1.1 与 2.1,而不是去记规矩。</p></div>
+<h3>前提与读法</h3>
+<p>门槛不在框架语法,而在语言与浏览器的基础:要会写 JavaScript 包括闭包与异步,会用 DOM 与事件手写交互,读得懂 HTML 与基本的 CSS,会用命令行装包跑脚本,用过版本控制——框架的每条规矩都是为了绕开语言或 DOM 层的某个代价,基础不牢就只能把规矩当清单背。读法有两种:第一次学从第 1、2 章按顺序读起,其中 2.1 最要紧,第 4 章可以推迟到遇到卡顿或需要服务端渲染时再读,4.5、4.6 两节例外——团队用另一种框架时应紧接第 2 章读;工程化与质量五章按需查,搭工程、调性能、建测试时再进对应章。</p>
+<h3>读完之后</h3>
+<p>读完能独立写出一个带路由与数据获取的应用,并说清每一次重渲染是怎么来的;能在两种框架之间做选型并说出依据;能从零搭起一条从开发到部署的构建链,把一个包正确地发布出去;能给项目建起三层测试与质量门禁,独立交付上线。进阶方向有二:向下读框架与构建工具的源码,把「框架替你做了什么」落到实现;向外把同一个等式带到服务端渲染框架与跨端方案,覆盖更多运行时。</p>
 <h2 id="f10-why">1.1 为什么需要框架:从手写 DOM 到状态驱动</h2>
 <p><a href="浏览器API与工作原理手册.html#d1">《浏览器 API 与工作原理手册》第 1–3 章</a>的 DOM API 足够写出任何界面:<code>createElement</code>、<code>textContent</code>、<code>addEventListener</code>,三样东西在手,一个待办列表、一个表单、一个表格都能做出来。问题不在「能不能」,在「界面长到多大以后你还能不能说清它现在为什么长这样」。手写 DOM 的程序里,<strong>界面的真相存在两个地方</strong>:一份在 JS 变量里,一份在 DOM 节点的属性和文本里,两份靠你手写的每一行赋值保持一致。交互点一多,这种一致性就靠不住了。</p>
 <p>框架解决的正是这个问题,而且只解决这个问题:<strong>把「真相」收回到一份数据里,界面变成这份数据的函数</strong>。这一节先把手写 DOM 的痛点摆到桌面上,再给出状态驱动的定义,最后用同一个计数器的两种写法对照,看框架到底替你做了什么、没做什么。</p>
@@ -1961,7 +1896,7 @@ onError: HTTP 500 → 回滚
 缓存里的数据: [<span class="kw">true</span>,<span class="kw">false</span>]</code></pre>
 <p>React 19 自带的 <code>useOptimistic(state, updateFn)</code> 解决同一个问题,但作用域是一个组件内、配合 <code>&lt;form action&gt;</code> 使用;Query 的乐观更新作用在共享缓存上,所有用这个 key 的组件一起变。两者不冲突:用 Query 管服务端状态的项目,乐观更新就在 Query 里做。</p>
 <h3>表单:react-hook-form</h3>
-<p>表单是「受控 vs 非受控」选择的主战场。全受控写法(每个字段一对 <code>useState</code> + <code>onChange</code>)在 30 个字段的表单上意味着每敲一个字整个表单组件重渲染一次,还要自己写校验、错误信息、脏检查、提交中状态。<strong>react-hook-form</strong> 的思路是<strong>默认非受控</strong>:<code>register('email')</code> 返回 <code>{ name, ref, onChange, onBlur }</code> 挂到原生 <code>&lt;input&gt;</code> 上,值留在 DOM 里由 ref 读取,只在校验结果或提交状态变化时才触发渲染;校验规则内联在 <code>register</code> 里,或用 <code>zodResolver</code> 接一份 zod schema(和 <a href="TypeScript手册.html#f9-runtime-ex">《TypeScript 手册》7.3</a> 的运行时校验是同一份)。</p>
+<p>表单是「受控 vs 非受控」选择的主战场。全受控写法(每个字段一对 <code>useState</code> + <code>onChange</code>)在 30 个字段的表单上意味着每敲一个字整个表单组件重渲染一次,还要自己写校验、错误信息、脏检查、提交中状态。<strong>react-hook-form</strong> 的思路是<strong>默认非受控</strong>:<code>register('email')</code> 返回 <code>{ name, ref, onChange, onBlur }</code> 挂到原生 <code>&lt;input&gt;</code> 上,值留在 DOM 里由 ref 读取,只在校验结果或提交状态变化时才触发渲染;校验规则内联在 <code>register</code> 里,或用 <code>zodResolver</code> 接一份 zod schema(和 <a href="TypeScript手册.html#f9-runtime-ex">《TypeScript 手册》8.3</a> 的运行时校验是同一份)。</p>
 <p><strong>函数原型</strong></p><pre style="contain-intrinsic-size:auto 184px"><code>import { useForm } from <span>'react-hook-form'</span>;
 <span class="kw">const</span> { <span class="kw">register</span>, handleSubmit, formState: { errors, isSubmitting, isDirty, submitCount }, watch, setValue, reset, control } = useForm({ defaultValues, mode: <span>'onSubmit'</span> | <span>'onBlur'</span> | <span>'onChange'</span>, resolver? });
 <span class="kw">register</span>(name, { required, min, max, minLength, maxLength, pattern, validate, valueAsNumber, valueAsDate })   <span class="cm">// 返回 { name, ref, onChange, onBlur },展开到 &lt;input&gt;</span>
@@ -2515,7 +2450,7 @@ import { cache } from <span>'react'</span>;
 <span class="cm">// 请求结束缓存即丢弃 —— 它不是跨请求的缓存,更不是 CDN 缓存</span>
 <span class="cm">// 键是「函数引用 + 参数」,所以 cache() 要在模块顶层调一次,别在组件里现包</span></code></pre>
 <p><code>cache()</code> 存在的理由是 RSC 拿掉了「把数据从上往下传」的必要:每个服务端组件想要什么就自己去取,不用为了避免重复请求而把数据提到父组件再 props 传下去。代价是同一份数据会被取很多次,<code>cache()</code> 把这个代价抹平。它和 <code>useMemo</code> 的区别要分清:<code>useMemo</code> 是一个组件实例内、跨渲染的缓存;<code>cache()</code> 是一次请求内、跨组件的去重。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 服务端函数是公开端点,不是「私有方法」</span><p>打上 <code>'use server'</code> 的函数,构建器会为它生成一个可以从浏览器调用的入口。<strong>任何人都能构造请求直接调它</strong>,参数完全由调用方控制,和你写的那个表单长什么样毫无关系。所以三件事一样都不能省:鉴权(当前用户是谁、有没有权限)、参数校验(用 zod 这类 schema 校验,见 <a href="TypeScript手册.html#f9-runtime-ex">《TypeScript 手册》7.3</a>)、以及不要把「客户端已经检查过了」当成理由。另一条:<strong>不要在服务端函数里读客户端的东西</strong>——它跑在服务器上,没有 <code>window</code>,也不共享客户端的 React 状态;它能拿到的只有你显式传进去的参数和服务端自己的上下文(cookie、session)。</p></div>
+<div class="note dead" style="contain-intrinsic-size:auto 230px"><span class="t">🔴 服务端函数是公开端点,不是「私有方法」</span><p>打上 <code>'use server'</code> 的函数,构建器会为它生成一个可以从浏览器调用的入口。<strong>任何人都能构造请求直接调它</strong>,参数完全由调用方控制,和你写的那个表单长什么样毫无关系。所以三件事一样都不能省:鉴权(当前用户是谁、有没有权限)、参数校验(用 zod 这类 schema 校验,见 <a href="TypeScript手册.html#f9-runtime-ex">《TypeScript 手册》8.3</a>)、以及不要把「客户端已经检查过了」当成理由。另一条:<strong>不要在服务端函数里读客户端的东西</strong>——它跑在服务器上,没有 <code>window</code>,也不共享客户端的 React 状态;它能拿到的只有你显式传进去的参数和服务端自己的上下文(cookie、session)。</p></div>
 <div class="deep"><h3 class="deep">Action 与过渡是同一件事的两个名字</h3>
 <p>Action 不是一套独立的机制,它是<strong>过渡</strong>(<a href="#f10-actions">4.3</a>)的一个应用:<code>&lt;form action={fn}&gt;</code> 触发提交时,React 内部就是把 <code>fn</code> 放进了一次 <code>startTransition</code>。React 19 为此扩展了 <code>startTransition</code>:回调可以是 async 函数,并且 <code>await</code> 之后再调的 <code>setState</code> <strong>仍然算在这次过渡里</strong>——18 里 <code>await</code> 之后就掉回紧急更新了,这正是当年没法用 transition 表达「异步提交」的原因。这条扩展一到位,「一次异步操作的整个过程算作一次更新」才第一次可以表达,pending 态、排队、乐观状态作废这些才有地方挂。</p>
 <p>从这个角度看,三个 Hook 的位置就清楚了:<code>useTransition</code> 的 <code>isPending</code> 和 <code>useActionState</code> 的 <code>isPending</code> 是同一个东西,只是后者顺手把「上一次的结果」也存了;<code>useFormStatus</code> 是把这个 pending 通过 DOM 表单的上下文广播给子组件;<code>useOptimistic</code> 是「在这次过渡期间显示另一个值」,过渡一结束这个值就没有存在的理由了。反过来也能推出一条实用规则:<strong>不是表单的异步操作,直接用 <code>startTransition(async () =&gt; …)</code></strong>,同样能拿到排队与 pending,不必为了用上 Actions 而硬套一个 <code>&lt;form&gt;</code>。</p></div>
@@ -6264,7 +6199,7 @@ All files     |   97.67 |      100 |   93.33 |   96.87 |
 </tbody>
 </table>
 <div class="deep"><h3 class="deep">与 TypeScript 的配合:类型错误不会让测试失败</h3>
-<p>Vitest 用 esbuild 转译 TS,而 esbuild <strong>只去类型不查类型</strong>——一个类型错误的测试文件照样能跑、能通过。这是刻意的取舍(快),代价是类型检查必须另起一条线:CI 里单独跑 <code>tsc --noEmit</code>(见 <a href="TypeScript手册.html#f9-config">《TypeScript 手册》8.1</a>),或者用 <code>vitest --typecheck</code>,它会对 <code>*.test-d.ts</code> 文件调用 tsc,配合 <code>expectTypeOf&lt;T&gt;().toEqualTypeOf&lt;U&gt;()</code> / <code>assertType</code> 写纯类型断言——这对工具类型库有用,普通业务项目只需要 tsc。</p>
+<p>Vitest 用 esbuild 转译 TS,而 esbuild <strong>只去类型不查类型</strong>——一个类型错误的测试文件照样能跑、能通过。这是刻意的取舍(快),代价是类型检查必须另起一条线:CI 里单独跑 <code>tsc --noEmit</code>(见 <a href="TypeScript手册.html#f9-config">《TypeScript 手册》9.1</a>),或者用 <code>vitest --typecheck</code>,它会对 <code>*.test-d.ts</code> 文件调用 tsc,配合 <code>expectTypeOf&lt;T&gt;().toEqualTypeOf&lt;U&gt;()</code> / <code>assertType</code> 写纯类型断言——这对工具类型库有用,普通业务项目只需要 tsc。</p>
 <p>几个 TS 相关的细节:</p>
 <ul>
 <li><code>globals: true</code> 时要在 tsconfig 的 <code>types</code> 里加 <code>"vitest/globals"</code>,否则 <code>describe</code> 在编辑器里标红。</li>
