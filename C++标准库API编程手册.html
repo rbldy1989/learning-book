@@ -326,118 +326,44 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 38857px;--thin-h:36031px">
+<section class="chapter" style="contain-intrinsic-size:auto 35262px;--thin-h:32435px">
 <h1 id="c1"><span class="part">分类 1</span>序列容器</h1>
 <h2 id="c1-open">1.0 导读</h2>
-<p>本手册按<strong>机制</strong>分组速查 C++ 标准库,不按字母序排列。每个条目回答同一组问题:这个设施解决什么问题、内部怎么组织内存、接口怎么用、复杂度与异常保证是什么、迭代器与引用什么时候失效、以及什么时候不该用它。</p>
-<p>标准基线取 <strong>C++17</strong>,C++20 与 C++23 的设施逐处标出最低版本,并在有更好写法时给出对照。实现覆盖 libstdc++、libc++ 与 MSVC STL,三家行为不同处分别说明。</p>
+<p>C++ 标准库把容器、算法、字符串、智能指针与并发这些每个工程都要用的设施定成了语言标准的一部分,接口之下是复杂度、异常保证与迭代器失效规则三套成文的约定。<strong>本手册按机制分组速查标准库,不按字母序;每个条目回答同一组问题:这个设施解决什么问题、内部怎么组织内存、接口怎么用、复杂度与异常保证是什么、迭代器与引用什么时候失效、什么时候不该用它。</strong>标准基线取 C++17,C++20 与 C++23 的设施逐处标出最低版本;实现覆盖 libstdc++、libc++ 与 MSVC STL,三家行为不同处分别说明。</p>
 
-<h3>这个领域有哪些经典与主要资料</h3>
-<p>标准库的资料有一个共同的时间问题:成体系的书大多停在 C++11,而 C++17 与 C++20 恰好改动了最常用的那几块——字符串、算法、并发与错误处理。下表先给全景。<strong>锚定</strong>指本手册的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本手册无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 938px">
-<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">与本书的关系</th><th>特点与局限</th></tr></thead>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 460px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>Josuttis《C++ 标准库》(第 2 版)</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>标准库最全的参考,逐个设施给出接口、行为与用法。<strong>局限</strong>:第 2 版止于 C++11,此后新增的部分要另查</td></tr>
-<tr><td>Stroustrup《C++ 程序设计语言》(第 4 版)</td><td class="nw">经典教材</td><td class="nw">推荐</td><td>标准库那几章给出设计意图,回答「为什么接口长这样」。<strong>局限</strong>:极厚,内容止于 C++11</td></tr>
-<tr><td>Meyers《Effective STL》与《Effective Modern C++》</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>前者讲容器与算法「该选哪个」,后者讲智能指针、移动与 lambda 的现代用法。<strong>局限</strong>:前者成书于 C++03 之前,涉及分配器与拷贝的结论要用移动语义修正;后者不覆盖 ranges 与 concepts</td></tr>
-<tr><td>侯捷《STL 源码剖析》</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>从实现看容器与迭代器是怎么搭出来的。<strong>局限</strong>:基于早期的 SGI STL,与现在三家实现的差别不小</td></tr>
-<tr><td>Josuttis 的 C++17 与 C++20 专题书</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>逐个新特性讲清语义与边界情形,补的正是老书缺的那几年。<strong>局限</strong>:按特性组织,不成体系,不适合当速查手册</td></tr>
-<tr><td>Williams《C++ Concurrency in Action》(第 2 版)</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>标准线程库与内存模型,含无锁数据结构。<strong>局限</strong>:内存序部分需要反复读,与容器、算法无交集</td></tr>
-<tr><td>cppreference</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>签名、复杂度保证、异常保证与版本差异查得最快,随标准更新。<strong>局限</strong>:给规则不给取舍,不回答「两个设施该选哪个」;中文版更新滞后</td></tr>
-<tr><td>ISO C++ 标准工作草案</td><td class="nw">官方文档与规范</td><td class="nw">锚定</td><td>复杂度、异常保证与迭代器失效规则的原始出处,实现之间有分歧时的仲裁依据。<strong>局限</strong>:不是顺序阅读用的,只能按条款号查</td></tr>
-<tr><td>libstdc++、libc++ 与 MSVC STL 的源码</td><td class="nw">官方文档与规范</td><td class="nw">锚定</td><td>标准没规定的那部分行为,只能从这里读出来。<strong>局限</strong>:实现细节随版本改动,读出的结论不能当接口承诺</td></tr>
-<tr><td>C++ Core Guidelines</td><td class="nw">官方文档与规范</td><td class="nw">参考</td><td>每条带编号的使用规矩,适合作团队规范的依据。<strong>局限</strong>:是清单不是教材,不解释背景</td></tr>
-<tr><td>Compiler Explorer</td><td class="nw">在线资料</td><td class="nw">参考</td><td>看一次调用生成了什么代码、三家实现各走了哪条分支。<strong>局限</strong>:看得到生成代码,测不出真实耗时</td></tr>
-<tr><td>在线微基准平台</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>两种写法的耗时对比,不用在本地搭环境。<strong>局限</strong>:云端机器噪声大,结论只能看量级,不能当准确数字</td></tr>
+<tr><td>Josuttis《C++ 标准库》(第 2 版)</td><td>标准库最全的参考书,逐个设施给出接口、行为与用法,第 2 版止于 C++11</td></tr>
+<tr><td>Meyers《Effective STL》与《Effective Modern C++》</td><td>前者讲容器与算法「该选哪个」,后者讲智能指针、移动与 lambda 的现代用法,涉及拷贝的老结论要按移动语义修正</td></tr>
+<tr><td>cppreference</td><td>签名、复杂度保证、异常保证与版本差异查得最快,随标准更新,给规则不给取舍</td></tr>
+<tr><td>ISO C++ 标准工作草案</td><td>复杂度、异常保证与迭代器失效规则的原始出处,实现之间有分歧时的仲裁依据</td></tr>
+<tr><td>libstdc++、libc++ 与 MSVC STL 的源码</td><td>标准没规定的那部分行为只能从这里读出来,实现细节随版本改动,不能当接口承诺</td></tr>
+<tr><td>Stroustrup《C++ 程序设计语言》(第 4 版)</td><td>标准库那几章给出设计意图,回答「接口为什么长这样」,内容止于 C++11</td></tr>
+<tr><td>侯捷《STL 源码剖析》</td><td>从实现看容器与迭代器是怎么搭出来的,基于早期的 SGI STL,与现在三家实现差别不小</td></tr>
+<tr><td>Williams《C++ Concurrency in Action》(第 2 版)</td><td>标准线程库与内存模型讲得最完整的一本,含无锁数据结构,内存序部分需要反复读</td></tr>
 </tbody>
 </table>
-<div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">🟡 经典的选型判据仍然成立,涉及拷贝与分配器的结论要修正</span><p>《Effective STL》里「按迭代器稳定性选容器」「优先用算法而不是手写循环」这类判据至今成立。要修正的是三类:凡是为了避免拷贝而设计的写法,在移动语义之后多数不再必要;老式分配器的用法已被 <code>pmr</code> 取代(第 18 章);「不要用 <code>vector&lt;bool&gt;</code>」的理由没有变,替代仍然是 <code>vector&lt;char&gt;</code> 或 <code>bitset</code>(1.8 节)。本手册在需要修正处会明确标出。</p></div>
+<p>本手册主要借鉴前五样,接口事实与版本标注一律以 cppreference 与标准草案的口径为准。</p>
 
-<h3>锚定的五样各借鉴了什么</h3>
-<p>借鉴的都是具体手法,不是笼统的风格。</p>
+<h3>本书借鉴了什么</h3>
 <table style="contain-intrinsic-size:auto 350px">
-<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<thead><tr><th>本书分类/条目形态</th><th>借鉴了哪份资料的什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">Josuttis《C++ 标准库》</td><td>条目的字段划分:声明、常用操作、复杂度、异常保证、示例;以及按设施分组的章节主线——容器、迭代器、算法、字符串、内存、工具类型</td></tr>
-<tr><td class="nw">Meyers</td><td>「该选哪个」的写法:先给一句判据,再给理由与反例。区别在于不逐条对应条款号,而是聚合进各章开头的速览节,让选型判据出现在读者查具体接口之前</td></tr>
-<tr><td class="nw">cppreference</td><td>接口事实与版本标注的准绳。每个设施标出最低标准版本,复杂度与异常保证按它的口径写;二手资料与它冲突时以它为准</td></tr>
-<tr><td class="nw">ISO C++ 标准工作草案</td><td>「标准保证的」与「某家实现恰好如此」这条分界线。复杂度、异常保证与迭代器失效规则一律按标准原文核对,两者在书里分开写,不混为一谈</td></tr>
-<tr><td class="nw">三家实现的源码</td><td>标准没规定处的事实来源:小字符串优化的阈值、<code>shared_ptr</code> 控制块的布局、<code>deque</code> 的分段大小、无序容器的桶策略。三家不一致的地方逐项列出,并注明这是实现细节而非承诺</td></tr>
+<tr><td>条目的字段划分与全书主线</td><td>Josuttis《C++ 标准库》:声明、常用操作、复杂度、异常保证、示例五段;容器、迭代器、算法、字符串、内存、工具类型的分组主线</td></tr>
+<tr><td>各章速览节的选型判据</td><td>Meyers:先给一句判据,再给理由与反例的「该选哪个」写法,聚合进各章开头,出现在读者查具体接口之前</td></tr>
+<tr><td>版本与复杂度的标注口径</td><td>cppreference:每个设施标出最低标准版本,复杂度与异常保证按它的口径写,二手资料与它冲突时以它为准</td></tr>
+<tr><td>「标准保证」与「实现恰好如此」的分界</td><td>ISO C++ 标准工作草案:复杂度、异常保证与迭代器失效规则按标准原文核对,两类结论在书里分开写,不混为一谈</td></tr>
+<tr><td>实现细节的事实来源</td><td>三家实现的源码:小字符串优化的阈值、<code>shared_ptr</code> 控制块的布局、<code>deque</code> 的分段大小、无序容器的桶策略,逐项注明这是实现细节而非承诺</td></tr>
 </tbody>
 </table>
 
-<h3>讲什么、不讲什么</h3>
-<p>本手册覆盖 <strong>C++ 标准库的常用部分</strong>,20 章 87 节按机制分组。</p>
-<table style="contain-intrinsic-size:auto 370px">
-<thead><tr><th class="nw">章</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">第 1、2 章</td><td>按内存布局选容器,以及迭代器、指针、引用各自什么时候失效</td></tr>
-<tr><td class="nw">第 3、4 章</td><td>算法要求哪一级迭代器,ranges 与惰性视图改变了什么</td></tr>
-<tr><td class="nw">第 5 章</td><td>字符串这一块的四个设施各管哪一段:存储、只读视图、格式化、数值转换</td></tr>
-<tr><td class="nw">第 6、7 章</td><td>所有权怎么表达,以及怎么把「可能没有值」「可能失败」写进类型</td></tr>
-<tr><td class="nw">第 8 到 10 章</td><td>时间、文件系统与输入输出流:各自的抽象是什么,今天还剩什么用</td></tr>
-<tr><td class="nw">第 11 章</td><td>并发的三个层次与选择顺序,一直到原子量与内存序</td></tr>
-<tr><td class="nw">第 12 到 15 章</td><td>类型工具与错误处理、随机数、可调用对象、位运算与浮点</td></tr>
-<tr><td class="nw">第 16 到 18 章</td><td>比较与排序语义、运行期类型设施、内存资源与分配器</td></tr>
-<tr><td class="nw">第 19、20 章</td><td>协程与惰性序列,以及异常安全的三级保证与 RAII</td></tr>
-</tbody>
-</table>
-<p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 386px">
-<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td>语言机制本身:值类别、模板实例化、重载决议、对象布局</td><td class="nw">《C++ 语言》</td><td>本手册讲接口与用法,只在接口的行为由某条语言规则决定时提一句</td></tr>
-<tr><td>性能的测量、剖析与调优流程</td><td class="nw">《C++ 性能优化》</td><td>本手册给复杂度与代价来源,不给测量步骤与优化顺序</td></tr>
-<tr><td>C 标准库函数的逐个用法</td><td class="nw">《C 标准库 API 手册》</td><td>只在与 C 接口混用时给出分界与转换写法</td></tr>
-<tr><td>系统调用与平台专有接口</td><td class="nw">《Linux 系统编程手册》与《Windows API 手册》</td><td>本手册的边界停在标准保证的设施</td></tr>
-<tr><td>第三方库</td><td class="nw">不在本手册范围</td><td>只在标准里尚无对应设施、而某个库已成事实标准时提一句</td></tr>
-<tr><td>冷门设施与完整清单</td><td class="nw">cppreference</td><td>本手册收日常会用到的部分,查完整清单去在线参考</td></tr>
-</tbody>
-</table>
+<h3>前提与读法</h3>
+<p>读之前要读得懂模板代码与模板报错,说得清移动与拷贝的差别,知道 RAII 与析构的时机。手上有具体设施要查时,从该章开头的速览节定位,再点进条目;系统补一遍标准库时从第 1 章顺读到第 7 章,其中第 1、3、4 章不能跳也不能颠倒——第 1 章确立「按内存布局理解容器」的视角,第 3 章的迭代器类别决定一个算法能不能作用于某个容器,第 4 章的算法建立在前两章之上;第 6、7 章的所有权与错误表达是现代 C++ 的日常写法,写任何新代码都会用到。</p>
 
-<h3>读之前要会什么</h3>
-<p>前置分两档,每条都给自测方式——「熟悉 C++」无法自测,也就无法用来判断该不该现在读。</p>
-<table style="contain-intrinsic-size:auto 462px">
-<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>读得懂模板代码</td><td>说出 <code>template&lt;class T&gt; void f(const T&amp;)</code> 在调用 <code>f("abc")</code> 时 <code>T</code> 被推导成什么</td></tr>
-<tr><td class="nw">必须</td><td>说得清移动与拷贝的差别</td><td>说出 <code>std::move</code> 做了什么、没做什么,以及一个被移动之后的 <code>string</code> 处于什么状态</td></tr>
-<tr><td class="nw">必须</td><td>知道 RAII 与析构的时机</td><td>说出一个局部对象在函数中途抛出异常时会不会被析构,并解释依据</td></tr>
-<tr><td class="nw">必须</td><td>读得懂模板报错</td><td>拿到一段几十行的模板错误,能指出第一条真正有用的信息在哪一行,以及它指向哪个类型不满足要求</td></tr>
-<tr><td class="nw">最好有</td><td>用过迭代器与范围 <code>for</code></td><td>说出 <code>begin()</code> 与 <code>end()</code> 各指向哪里,以及为什么 <code>end()</code> 不能解引用</td></tr>
-<tr><td class="nw">最好有</td><td>对堆分配的代价有量级概念</td><td>说出一次 <code>new</code> 大致是哪个量级,以及 <code>vector</code> 为什么要成倍扩容而不是每次加一</td></tr>
-<tr><td class="nw">最好有</td><td>写过一次多线程代码</td><td>说出数据竞争与死锁各自的成因,并举一个加了锁仍然出错的例子</td></tr>
-<tr><td class="nw">最好有</td><td>听说过异常安全的分级</td><td>说出「基本保证」与「强保证」的差别,以及哪一级更贵</td></tr>
-</tbody>
-</table>
-
-<h3>与那些资料相比,本手册多给了什么</h3>
-<ul>
-<li><strong>按机制分组,不按字母序。</strong>容器一章按内存布局排:连续、分段连续、链式;并发一章按抽象层次排:任务、锁、原子量。查一个设施时,它的替代品就在相邻小节。</li>
-<li><strong>每个设施都给复杂度之外的四样东西。</strong>实际内存布局、迭代器与引用的失效规则、异常保证、线程安全边界——这四样决定了它能不能用在你的场景里,而复杂度表决定不了。</li>
-<li><strong>二十八张原创图。</strong>凡是「谁指向谁」「为什么会失效」「两种结构差在哪」的地方一律配图,包括 <code>vector</code> 扩容、<code>shared_ptr</code> 的两块内存、协程栈帧在堆上这类只靠文字说不清的结构。</li>
-<li><strong>批注以失效与误用为主。</strong>两百二十条以上的批注里红色接近一半,写的是具体事故:比较器写成 <code>&lt;=</code> 会让排序越界写内存、<code>map</code> 的下标访问会插入元素、<code>string_view</code> 指向的临时量已经销毁。</li>
-<li><strong>四百段以上的示例都是最小可编译形态。</strong>每段配预期输出或注释说明关键一行,可以直接抄进工程再改。</li>
-</ul>
-<div class="note ok" style="contain-intrinsic-size:auto 198px"><span class="t">🟢 先按迭代器与引用的稳定性选容器,复杂度表放第二位</span><p>复杂度只算「操作本身」那一步,不算走到位置的代价,也不体现连续内存与指针跳转在缓存上的差距(1.1 节)。可靠的选型顺序是:先确定别处会不会长期持有指向元素的迭代器、指针或引用,这一条直接决定能不能用 <code>vector</code>;再看访问模式是顺序遍历还是随机查找;最后才用复杂度排除明显不合适的。说不出理由时默认 <code>vector</code>,换掉它要拿实测数据。</p></div>
-
-<h3>两条读法:按需查与顺读前七章</h3>
-<p>手上有具体设施要查走按需查,系统补一遍标准库走顺读。</p>
-<table style="contain-intrinsic-size:auto 259px">
-<thead><tr><th>你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
-<tbody>
-<tr><td>要选一个容器或算法</td><td>该章开头的速览节,再点进具体条目</td><td class="nw">—</td><td class="nw">—</td></tr>
-<tr><td>系统补一遍标准库</td><td>第 1 章顺读到第 7 章,其余按需取</td><td class="nw">第 1、3、4、6、7 章</td><td class="nw">第 13 到 19 章</td></tr>
-<tr><td>写多线程代码</td><td>第 11 章,配 17.2 与 20.2</td><td class="nw">第 11 章</td><td class="nw">第 8、9 章</td></tr>
-<tr><td>处理文本、解析与输出</td><td>第 5 章,配 15.3 的浮点</td><td class="nw">第 5 章</td><td class="nw">第 10 章</td></tr>
-<tr><td>写库或对分配敏感</td><td>第 6、18 章,配 1.1 与 14.1</td><td class="nw">第 6、18 章</td><td class="nw">第 10、13 章</td></tr>
-<tr><td>维护用旧写法的代码</td><td>第 10 章与 20.3</td><td class="nw">—</td><td class="nw">第 19 章</td></tr>
-</tbody>
-</table>
-<p><strong>顺读时第 1、3、4 章不能跳,也不能颠倒顺序。</strong>第 1 章确立「按内存布局理解容器」这个视角,后面所有选型判据都从它推出来;第 3 章的迭代器类别决定了一个算法能不能作用于某个容器,也解释了为什么 <code>list</code> 用不了 <code>std::sort</code>;第 4 章的算法建立在前两章之上。第 6、7 章是现代 C++ 的日常写法,写任何新代码都会用到。</p>
-<p>其余各章按需取用。第 8、9 章在处理时间或路径时读,第 12 章在写模板约束或设计错误处理时读,第 16 章在自定义比较器时必须读——比较器写错不是排序结果不对,而是未定义行为。第 10 章的流只在维护旧代码时读,第 13 章随机数、第 18 章内存资源、第 19 章协程都属于确有需要时才翻的专题。</p>
-<div class="note new" style="contain-intrinsic-size:auto 198px"><span class="t">🔵 有更好写法的地方逐处给出 C++20 与 C++23 的对照</span><p>本手册以 C++17 打底,凡是新标准提供了更安全或更直接写法的地方都用蓝色批注给出对照:格式化用 <code>std::format</code> 代替流操纵符,算法用 <code>ranges</code> 版本代替成对迭代器,失败结果用 <code>std::expected</code> 代替错误码加输出参数,线程用 <code>jthread</code> 代替手工汇合。项目基线达不到时,条目里同时给出等价的 C++17 写法与它多付出的代价。</p></div>
-<p>读完之后应当能做到三件事:面对一个存储需求,说得出该选哪个容器以及理由,而不是默认全用 <code>map</code> 与 <code>vector</code>;拿到一段用了标准库的代码,能指出其中哪几处存在迭代器失效、悬垂视图或异常安全的隐患;写新代码时能在 C++17 与更新标准的写法之间做出取舍,并说清这次取舍换来了什么。</p>
+<h3>读完之后</h3>
+<p>读完能面对一个存储需求说出该选哪个容器以及理由,而不是默认全用 <code>map</code> 与 <code>vector</code>;拿到一段用了标准库的代码,能指出其中哪几处存在迭代器失效、悬垂视图或异常安全的隐患;写新代码时能在 C++17 与更新标准的写法之间做出取舍,并说清取舍换来了什么。进阶方向有二:向下读三家实现的源码,把「接口为什么这样」补上;向外把并发、内存资源与协程这些专题设施用进真实工程,并走向性能的测量与调优。</p>
 
 <p>序列容器是标准库里被误用最多的一块,原因是大多数教程只给了一张复杂度表,而复杂度表在现代硬件上<strong>会误导人</strong>。这一章按「内存布局」而不是「渐进复杂度」来组织:连续(<code>vector</code>、<code>array</code>)、分段连续(<code>deque</code>)、链式(<code>list</code>、<code>forward_list</code>)。理解了布局,选型和性能问题就都有了依据。</p>
 <h2 id="c1-overview">1.1 速览:为什么复杂度表会骗人</h2>
