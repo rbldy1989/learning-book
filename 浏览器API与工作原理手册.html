@@ -278,110 +278,43 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 45523px;--thin-h:31520px">
+<section class="chapter" style="contain-intrinsic-size:auto 42128px;--thin-h:28125px">
 <h1 id="d1"><span class="part">DOM 与事件</span>DOM:树、查询、增删改与选区</h1>
 <p>《JavaScript 语言手册》讲的是语言本身,那些代码搬到 Node 里一样能跑;从这一章起,讲的是<strong>只有浏览器才给的对象</strong>,而它们的地基只有一个——DOM。浏览器把 HTML 字节解析成一棵节点树,页面上看得见的每一个字、每一个框都对应树上的一个节点;「用 JS 改页面」的准确说法是改这棵树,渲染引擎再按树和 CSSOM 算出像素(见 <a href="#f8-render">9.2</a>)。所以这一章自始至终只回答三个问题:怎么在树上<strong>找到</strong>节点、怎么<strong>改</strong>它、每种改法<strong>要付出什么代价</strong>。最后一个问题是这一章和一般 API 手册最大的差别:同一份 2000 条数据,五种渲染写法的耗时能差 50 倍,而差别全在几个不起眼的写法上。</p>
 <p>两节讲操作,两节讲操作之外的两块对象模型。<a href="#f7-dom">1.1</a> 是「找」:节点类型与两套遍历属性、<code>querySelector</code> 家族与 <code>getElementsBy</code> 家族的静态/动态之别、以及 <code>TreeWalker</code> 这种选择器管不到的遍历方式。<a href="#f7-dom-edit">1.2</a> 是「改」:创建、插入、替换、删除的现代 API,<code>innerHTML</code>/<code>textContent</code>/<code>innerText</code> 的三方对照,属性与样式的读写,滚动定位,以及为什么「改完样式立刻读 <code>offsetHeight</code>」会把浏览器的惰性批处理打断——同一份 2000 条数据、五种写法的真实耗时就在这一节末尾。</p>
 <p><a href="#f7-dom-range">1.3</a> 讲用户划出的选区(<code>Range</code> 与 <code>Selection</code> 不是节点而是区间),<a href="#f7-dom-cssom">1.4</a> 讲样式表自己的对象模型与动态插入的脚本为什么默认是 async。往后 <a href="#f7-events">2.1</a> 讲事件怎么沿着这棵树传播,<a href="#f7-bom">3.1</a> 讲树之外的那个窗口;而 <a href="前端框架与工程化手册.html#f10-why">《前端框架与工程化手册》1.1</a> 里框架替你省掉的,正是这几节里手写的那些 <code>createElement</code> 与 <code>append</code>——知道底下是什么,才解释得通框架为什么要 key、为什么要受控输入。</p>
 <h2 id="d1-open">1.0 导读</h2>
-<p>本书讲<strong>浏览器这个运行时能给你什么,以及它内部怎么跑</strong>:只有浏览器才提供的那批对象——DOM、事件、存储、观察者、图形、文件与实时通信;以及它们底下的机制——进程与线程、渲染管线、加载与缓存、网络协议与安全。判断一段内容归不归本书只看一条——<strong>把这段代码搬到浏览器之外还跑不跑得起来</strong>。跑不起来的归本书,跑得起来的归《JavaScript 语言手册》。</p>
-<h3>这个领域有哪些经典与主要资料</h3>
-<p>这个领域接口多、演进快、成体系的书少:讲机制的中文书大多对应较早的代码基线,而规范与官方文档一直在动。下表先给全景。<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指查证过但没有影响结构,<strong>推荐</strong>指与本书无直接关系、读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 737px">
-<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">关系</th><th>特点与局限</th></tr></thead>
+<p>浏览器既是前端代码的运行时,也是一整套只有它才提供的接口:DOM、事件、存储、观察者、图形、文件与实时通信,底下压着进程与线程、渲染管线、加载与缓存、网络协议与安全模型。这一层与语言层的最大差别是失效多数不报错——观察者没触发、拦截没生效、权限没拿到,页面照常运行,只是想要的事情没发生。<strong>本书讲这批接口的用法与代价,以及解释它们为什么这样表现所需要的内部机制。</strong>内容归属只看一条:把代码搬到浏览器之外就跑不起来的,才归本书。</p>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 536px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>MDN 的 Web API 分区</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>每个接口给构造方式、属性、方法、事件、示例与规范链接,并标 Baseline。局限:是参考不是教程,接口之间的关系要自己接;中文页滞后于 en-US</td></tr>
-<tr><td>WHATWG 的 DOM、HTML、Fetch、Streams 等规范</td><td class="nw">官方规范</td><td class="nw">锚定</td><td>接口行为、事件分发算法、请求与响应模型的最终裁判。局限:写给实现者读,不给用法建议,也不写各引擎实现到哪一步</td></tr>
-<tr><td>Ilya Grigorik《Web 性能权威指南》</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>从延迟与带宽讲到 TCP、TLS 与协议演进,给的全是可量化的数字与优化清单,是理解「为什么慢」的底座。局限:成书较早,QUIC 与 HTTP/3 要看规范与发布说明补;无线网络几章知道结论即可</td></tr>
-<tr><td>Chrome 的渲染与性能文档、web.dev</td><td class="nw">官方文档</td><td class="nw">锚定</td><td>渲染管线的分阶段说明、性能指标的定义与阈值、测量工具的用法都以它为准。局限:Chrome 视角,其他引擎的合成与任务调度策略不同,结论不要直接外推</td></tr>
-<tr><td>OWASP 的攻击面分类与各类速查表</td><td class="nw">官方来源</td><td class="nw">锚定</td><td>攻击怎么成立、防御该放在哪一层,分类完整且持续更新。局限:面向通用 Web 应用,浏览器侧的具体机制仍要回规范查</td></tr>
-<tr><td>《WebKit 技术内幕》</td><td class="nw">进阶专题</td><td class="nw">参考</td><td>渲染引擎内部的模块划分与数据流,中文里少有的成体系材料。局限:对应较早的代码基线,多进程与合成架构已有变化,当结构参考读、不要当现状读</td></tr>
-<tr><td>Chromium 的设计文档与源码</td><td class="nw">源码</td><td class="nw">参考</td><td>进程模型、站点隔离、合成器的实际做法,文档说不清时的仲裁者。局限:实现不是规范承诺,读出的结论换一个引擎可能不成立</td></tr>
-<tr><td>HTTP 相关的 RFC</td><td class="nw">官方规范</td><td class="nw">参考</td><td>语义与状态码、缓存、连接管理与多路复用的定义,第 10 章的协议结论以它们为准。局限:分散在多份文档,交叉引用多,读起来慢</td></tr>
-<tr><td>《JavaScript 语言手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>本书假定的语言基础:异步、闭包、原型与模块。局限:不含浏览器对象</td></tr>
-<tr><td>《HTML 与 CSS 手册》</td><td class="nw">姊妹书</td><td class="nw">推荐</td><td>这棵树与这份样式表本身怎么写。局限:不讲脚本操作</td></tr>
+<tr><td>MDN 的 Web API 分区</td><td>每个接口给构造方式、属性、方法、事件、示例与规范链接并标 Baseline;是参考不是教程,接口之间的关系要自己接</td></tr>
+<tr><td>WHATWG 的 DOM、HTML、Fetch、Streams 等规范</td><td>接口行为、事件分发算法、请求与响应模型的最终裁判;写给实现者读,不写各引擎实现到哪一步</td></tr>
+<tr><td>Ilya Grigorik《Web 性能权威指南》</td><td>从延迟与带宽讲到 TCP、TLS 与协议演进,给的全是可量化的数字与优化清单;成书较早,QUIC 与 HTTP/3 要看规范补</td></tr>
+<tr><td>Chrome 的渲染与性能文档、web.dev</td><td>渲染管线的分阶段说明、性能指标的定义与阈值以它为准;Chrome 视角,结论不要直接外推到其他引擎</td></tr>
+<tr><td>OWASP 的攻击面分类与各类速查表</td><td>攻击怎么成立、防御该放在哪一层,分类完整且持续更新;面向通用 Web 应用,浏览器侧机制仍要回规范查</td></tr>
+<tr><td>《WebKit 技术内幕》</td><td>渲染引擎内部的模块划分与数据流,中文里少有的成体系材料;对应较早的代码基线,当结构参考读、不要当现状读</td></tr>
+<tr><td>Chromium 的设计文档与源码</td><td>进程模型、站点隔离与合成器的实际做法,文档说不清时的仲裁者;实现不是规范承诺,换一个引擎可能不成立</td></tr>
+<tr><td>HTTP 相关的 RFC</td><td>语义与状态码、缓存、连接管理与多路复用的定义;分散在多份文档,交叉引用多,读起来慢</td></tr>
 </tbody>
 </table>
-<div class="note old" style="contain-intrinsic-size:auto 163px"><span class="t">🟡 讲引擎结构的书读结构,别读版本;接口一律回规范核对</span><p>渲染引擎的模块划分与数据流变化不大,老书在这一层仍然可读;但进程模型、合成策略与任务调度已经改过好几轮,书上的具体做法不能当现状。接口层更甚:一个方法有没有、参数叫什么、返回什么,只有 MDN 与规范说了算。</p></div>
-<h3>锚定的五样各借鉴了什么</h3>
-<p>下表只收标为「锚定」的,借鉴的内容具体到手法。</p>
-<table style="contain-intrinsic-size:auto 375px">
-<thead><tr><th class="nw">锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴前五样;某个接口当前长什么样、能不能上线,一律以规范、MDN 与 Baseline 为准。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 349px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">WHATWG 各份规范</td><td>事实层的准绳。事件按规范的分发算法讲成捕获、目标、冒泡三个阶段,而不是只说「会冒泡」;请求按 Fetch 规范讲成模式、凭据、缓存三组开关,而不是罗列参数。1.1、2.1、11.1 的推导照规范条目走</td></tr>
-<tr><td>MDN 的 Web API 分区</td><td>参考面的字段划分:接口、成员、参数、返回值、Baseline 逐项交代;术语与 MDN 中文页一致,便于交叉查阅</td></tr>
-<tr><td>《Web 性能权威指南》</td><td>网络两节的分层顺序(延迟与带宽、TCP、TLS、协议演进),以及「每条结论配一个能自己量出来的数字」这条写法。10.5 与 10.6 整节按它的分层组织</td></tr>
-<tr><td>Chrome 渲染文档与 web.dev</td><td>渲染管线按阶段拆开这条主线:解析、样式计算、布局、绘制、合成,第 9 章按这个顺序排;性能指标一律用官方定义的口径与阈值,不自造名词</td></tr>
-<tr><td class="nw">OWASP</td><td>第 11、12 章的组织:按攻击面分类,每一类固定给三段——攻击怎么成立、防御该放在哪一层、怎么验证已经防住</td></tr>
+<tr><td>1.1、2.1、11.1 的推导主线</td><td>WHATWG 各份规范:事件按分发算法讲成捕获、目标、冒泡三个阶段,请求按 Fetch 规范讲成模式、凭据、缓存三组开关</td></tr>
+<tr><td>参考面的字段划分</td><td>MDN 的 Web API 分区:接口、成员、参数、返回值、Baseline 逐项交代,术语与 MDN 中文页保持一致</td></tr>
+<tr><td>10.5 与 10.6 的网络分层</td><td>《Web 性能权威指南》:延迟与带宽、TCP、TLS、协议演进的分层顺序,以及每条结论配一个能自己量出来的数字</td></tr>
+<tr><td>第 9 章的渲染管线主线</td><td>Chrome 渲染文档与 web.dev:按解析、样式计算、布局、绘制、合成分阶段排开,指标一律用官方定义的口径与阈值</td></tr>
+<tr><td>第 11、12 章的安全组织</td><td>OWASP 的攻击面分类:每类固定给三段——攻击怎么成立、防御该放在哪一层、怎么验证已经防住</td></tr>
 </tbody>
 </table>
-<p>这个领域有一条别处没有的情况必须写清:<strong>浏览器接口与网络协议都在快速演进,书出版即滞后</strong>。所以本书系把事实层与组织层分开——书给章节骨架与推导路径,而某个接口当前长什么样、能不能上线,一律以规范、MDN 与 Baseline 为准。上表里四份官方来源标为锚定而非「参考」,原因就在这里。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 163px"><span class="t">🔴 浏览器接口失效多数不报错,只是悄悄不生效</span><p>这一层与语言层的最大差别:类型错了会抛异常,而一个观察者没触发、一次拦截没生效、一个权限没拿到,页面照常运行,只是想要的事情没发生。所以本书每个接口除了用法,还固定写清两件事:什么条件下不生效,以及不生效时在哪个面板能看出来。</p></div>
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>浏览器提供的接口,加上解释这些接口为什么这样表现所需要的内部机制</strong>,四部分各回答一个问题。</p>
-<table style="contain-intrinsic-size:auto 236px">
-<thead><tr><th class="nw">部分</th><th class="nw">章与节</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">DOM 与事件</td><td class="nw">第 1 到 3 章,13 节</td><td>怎么在树上找到节点、怎么改、每种改法的代价;事件怎么传播;窗口对象与本地存储能存什么</td></tr>
-<tr><td class="nw">浏览器 API</td><td class="nw">第 4 到 8 章,21 节</td><td>观察者与自定义元素、Canvas 与 SVG、文件与媒体与流、离线与实时通信、性能测量与加密</td></tr>
-<tr><td class="nw">浏览器原理</td><td class="nw">第 9 到 10 章,9 节</td><td>一个页面从字节变成像素经过哪些阶段,一次加载的时间花在哪一段</td></tr>
-<tr><td class="nw">安全与排错</td><td class="nw">第 11 到 12 章,10 节</td><td>同源怎么划、请求为什么被拦、常见攻击怎么成立;线上出问题怎么定位</td></tr>
-</tbody>
-</table>
-<p>不讲的部分同样要说清楚,并指明归谁。</p>
-<table style="contain-intrinsic-size:auto 398px">
-<thead><tr><th>不讲什么</th><th class="nw">归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td>JavaScript 语言本体:类型、作用域、原型、模块、Promise 的语义</td><td class="nw">《JavaScript 语言手册》</td><td>那本讲的代码离开浏览器照样跑;本书的每一节都离不开浏览器</td></tr>
-<tr><td>HTML 元素与 CSS 属性本身怎么写</td><td class="nw">《HTML 与 CSS 手册》</td><td>本书讲怎么用脚本操作它们,以及操作的代价</td></tr>
-<tr><td>框架怎么封装这些接口、构建、打包与部署</td><td class="nw">《前端框架与工程化手册》</td><td>本书讲底下是什么,那本讲框架替你做了什么;两边合起来才解释得通框架的规矩</td></tr>
-<tr><td>服务端实现:跨源响应头怎么配、令牌怎么签发与校验</td><td class="nw">各自框架的文档</td><td>本书只讲前端要看懂的那一半:请求为什么被拦、该改哪一头</td></tr>
-<tr><td>WebGL、WebGPU 与 WebAssembly</td><td class="nw">不展开</td><td>只在图形与媒体两章交代它们的位置</td></tr>
-<tr><td>浏览器扩展开发、无头浏览器与自动化</td><td class="nw">不在本书系范围</td><td>各有独立的接口面与权限模型</td></tr>
-<tr><td>渲染引擎与网络栈的源码级实现</td><td class="nw">不展开</td><td>只讲到能解释现象、能推出优化手段的层次,再往下随版本变</td></tr>
-</tbody>
-</table>
-<h3>读之前要会什么</h3>
-<p>前置分两档,每条给自测方式。这是五本手册里前置最多的一本,语言、标记与网络三边的基础都要用到。</p>
-<table style="contain-intrinsic-size:auto 537px">
-<thead><tr><th class="nw">档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>会写 JavaScript,包括异步</td><td>说出一段混合定时器、Promise 与 <code>await</code> 的代码的输出顺序,并说清任务与微任务的区别</td></tr>
-<tr><td class="nw">必须</td><td>读得懂 HTML 与基本的 CSS</td><td>给一段三层嵌套的标记,说出哪些元素会生成盒子,并写出能选中第三个列表项的选择器</td></tr>
-<tr><td class="nw">必须</td><td>知道一次 HTTP 请求与响应由哪几部分构成</td><td>说出请求方法、状态码与两个常见缓存头各起什么作用,并说清 304 与 200 的区别</td></tr>
-<tr><td class="nw">必须</td><td>会用开发者工具的元素与网络两个面板</td><td>在任意页面上量出一个请求的耗时构成,并找到某个元素当前生效的样式是哪条规则给的</td></tr>
-<tr><td class="nw">必须</td><td>知道进程与线程的区别</td><td>说出「一段计算把单线程占满」在用户那里表现成什么样,以及多进程为什么能改善</td></tr>
-<tr><td class="nw">最好有</td><td>了解 TCP 与 TLS 的建立过程</td><td>说出建立一条加密连接大致要几个往返,并解释往返次数为什么常常比带宽更影响首屏</td></tr>
-<tr><td class="nw">最好有</td><td>写过服务端接口</td><td>说出你上一次给一个接口加跨源支持时改了哪几个响应头,以及浏览器凭什么放行</td></tr>
-<tr><td class="nw">最好有</td><td>了解常见的 Web 攻击</td><td>说清注入型攻击与伪造请求型攻击各自利用了什么,以及两者的防御手段为什么不能互换</td></tr>
-</tbody>
-</table>
-<h3>与那些资料相比,本书多给了什么</h3>
-<ul>
-<li><strong>每个接口都写代价,不只写用法。</strong>同一份数据五种渲染写法的耗时差多少、读一次几何信息会打断什么批处理、一次布局抖动怎么攒出来——都给在开发者工具里量到的数字,可以照着复现。</li>
-<li><strong>132 个批注里有 72 个红色。</strong>原因在上面那条:这一层的失效多数不抛异常。每个红色批注固定给两样——什么条件下不生效、在哪个面板能看出来。另有 44 个绿色写判据,12 个蓝色写现代替代。</li>
-<li><strong>52 个「完整示例」可运行,17 张图覆盖结构、流程与时序三类。</strong>进程与线程怎么分工、一帧经过哪些阶段、事件沿树走了哪条路、一次连接建立花了几个往返,一律配图而不是靠文字描述。</li>
-<li><strong>安全两章按攻击面组织,每类给三段。</strong>攻击怎么成立、防御该放在哪一层、怎么验证已经防住。最后一段是多数资料缺的,没有验证手段的防御等于没做。</li>
-<li><strong>时效性有固定对策,不写死浏览器版本号。</strong>接口标 Baseline 并指向 MDN 与规范,能不能上线以 Can I Use 加自己的目标浏览器区间为准;协议部分以 RFC 与发布说明为准;涉及实现的结论都写明它属于哪个引擎的当前做法。</li>
-<li><strong>134 个「深入」块把主线之外的内容分了出去。</strong>规范条文、引擎实现与历史演进折进「深入」,顺读时不打断主线。</li>
-</ul>
-<h3>两条读法:顺读与按需查</h3>
-<p>第一次系统学浏览器走顺读,手上已经有具体问题走按需查。全书 53 节,不建议从头读到尾。</p>
-<table style="contain-intrinsic-size:auto 259px">
-<thead><tr><th class="nw">你的情形</th><th>从哪读起</th><th class="nw">主干</th><th class="nw">可以先放过</th></tr></thead>
-<tbody>
-<tr><td class="nw">第一次系统学浏览器</td><td>第 1、2 章顺读,补第 3 章,然后直接跳到第 9 章</td><td class="nw">第 1、2、9、11 章</td><td class="nw">第 5、6 章</td></tr>
-<tr><td class="nw">页面卡顿或首屏慢</td><td>第 9 章顺读到第 10 章,配 8.1 的测量方法</td><td class="nw">9.2、9.3、10.1、10.3</td><td class="nw">第 4 到 7 章</td></tr>
-<tr><td class="nw">要写组件库</td><td>第 4 章整章,配 1.1 与 2.1 打底</td><td class="nw">4.3、4.4、4.5</td><td class="nw">第 9 到 12 章</td></tr>
-<tr><td class="nw">做离线、上传或实时功能</td><td>第 7 章,配 3.3 的存储与 6.6 的流</td><td class="nw">7.1、7.2、7.3</td><td class="nw">第 5 章</td></tr>
-<tr><td class="nw">要做安全评审</td><td>第 11 章顺读到第 12 章,配 3.3 的凭据存放</td><td class="nw">11.1、11.2、12.1</td><td class="nw">第 4 到 8 章</td></tr>
-<tr><td class="nw">手上有具体问题</td><td>先按目录定位到对应章节;报错读不懂查 12.4</td><td class="nw">—</td><td class="nw">—</td></tr>
-</tbody>
-</table>
-<p><strong>第 1、2 章是全书地基,必须按顺序读完。</strong>后面每一章都在用它们的结论:观察者观察的是这棵树上的节点,自定义元素接的是这套生命周期与事件,渲染管线算的是这棵树加样式,安全两章拦的是这棵树发出去的请求。另两处枢纽是第 9 章与第 11 章:前者回答「为什么慢」,后者回答「为什么被拦」,是真实项目里出现最多的两类问题。</p>
-<p>中间的接口五章(第 4 到 8 章)按需取,顺读价值不大。它们共用一套问法:这个接口解决什么问题、什么条件下不生效、代价在哪、怎么验证生效了。读通其中一章,遇到没见过的接口也能按同一套问法自己读懂 MDN。</p>
-<p>读完第 1 到 3 章,能不用框架写出有交互的页面并说清每次改动的代价;读完第 4 到 8 章,能自己读懂一个没见过的浏览器接口;读完第 9、10 章,能说出一次卡顿是长任务还是布局抖动、一次慢加载卡在哪一段;读完第 11、12 章,能读懂一条跨源或内容安全策略的报错该谁改,并给页面做基本的安全评审。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 第 1、2 章顺序读完,再按问题挑第 9 章或第 11 章</span><p>这两章之外都可以跳着读,唯独它们不行:后面所有接口都建立在「节点树」与「事件沿树传播」这两件事上。判断读到位了没有,回答两问即可:同一份数据五种写法为什么能差出几十倍;一个绑在父元素上的处理函数,为什么点子元素也会触发、什么情况下不会。</p></div>
+<h3>前提与读法</h3>
+<p>这是五本手册里前置最多的一本:要会写 JavaScript 包括异步,读得懂 HTML 与基本的 CSS,知道一次 HTTP 请求与响应由哪几部分构成,会用开发者工具的元素与网络面板,知道进程与线程的区别。读法有两种:第一次系统学先把第 1、2 章按顺序读完——后面每一章都建立在「节点树」与「事件沿树传播」这两件事上——再按手上的问题挑第 9 章(为什么慢)或第 11 章(为什么被拦);中间的接口五章按需取,它们共用一套问法,读通一章,遇到没见过的接口也能按同一套问法读懂 MDN。</p>
+<h3>读完之后</h3>
+<p>读完能不用框架写出有交互的页面并说清每次改动的代价,能判断一次卡顿是长任务还是布局抖动、一次慢加载卡在哪一段,能读懂一条跨源或内容安全策略的报错该谁改,并给页面做基本的安全评审。进阶方向有二:向下读规范条文与引擎的设计文档,把「实现为什么这样」补上;向外把渲染与网络的机制用到性能治理、离线化与安全加固的工程实践里。</p>
 <h2 id="f7-dom">1.1 DOM:树、节点与查询</h2>
 <p>DOM(Document Object Model)是浏览器把 HTML 文档解析后在内存里建成的<strong>一棵对象树</strong>,以及操作这棵树的一组接口。HTML 源码是字符串,DOM 是对象;JS 不能改「源码」,只能改树,渲染引擎根据树(加上 CSSOM)画出像素(见 <a href="#f8-render">9.2</a>)。所以「用 JS 改页面」这句话的准确说法是:找到树上的某个节点,改它的属性、内容或位置,浏览器在下一帧把变化画出来。</p>
 <p>要解决的只有第一个问题:<strong>怎么在树上找到你要的那个节点</strong>。先认清树上都有哪些种类的节点(以及为什么源码里的换行会变成节点),再看两套遍历属性的差别,然后是两个查询家族——它们返回的集合一个是快照、一个是活的,这个差别会直接决定你的循环删不删得干净。选择器管不到的场景(只要文本节点、按运行时条件取舍)留给 <code>NodeIterator</code> 与 <code>TreeWalker</code>。找到之后怎么改、改的代价是多少,在 <a href="#f7-dom-edit">1.2</a>。</p>
@@ -8815,7 +8748,7 @@ content-encoding: br
 vary: Accept-Encoding</code></pre></div>
 </section>
 
-<section class="chapter" style="contain-intrinsic-size:auto 48615px;--thin-h:28224px">
+<section class="chapter" style="contain-intrinsic-size:auto 48614px;--thin-h:28223px">
 <h1 id="d11"><span class="part">安全</span>同源、CORS、CSP 与常见攻击</h1>
 <p>前端代码跑在用户的浏览器里,这意味着两件事同时成立:攻击者能看到你的全部代码、能让浏览器替他发请求;而浏览器又替你守着一道道边界——同源策略、CORS、CSP、Cookie 的 SameSite。这一章讲清这些边界各自拦什么、怎么配置,以及你自己写的哪一行会把它们打开。读完能做到三件事:看到 CORS 报错知道该谁改、怎么在三分钟内定位;审一段渲染用户内容的代码时,能指出哪个 API 会把字符串当代码;给一个改状态的接口做防护时,说得出该上 SameSite、token 还是来源核对,以及各自的盲区在哪。</p>
 <p>五节的顺序是「边界 → 改变边界的两个头 → 边界内的注入 → 边界外的借用 → 剩下的」。<a href="#f8-origin">11.1</a> 先把地基铺好:源由什么组成、它和站点差在哪、同源策略限制读不限制发(不限制的那一栏才是事故高发区),以及 Spectre 之后加上的跨源隔离。<a href="#f8-cors">11.2</a> 讲两种用响应头改变默认边界的机制,方向相反:CORS 是数据的主人把门开一条缝,CSP 是页面自己把门收紧;两者都由服务端写、浏览器执行,所以最重要的能力是「看报错知道该谁改」。</p>
@@ -9683,7 +9616,7 @@ console.log(`改写后,10 万个 a:${(performance.now() - t0).toFixed(1)} ms`);<
 26 个 a:744 ms
 28 个 a:2971 ms            ← 再加几个字符就是几十秒,页面在这段时间里完全无响应
 改写后,10 万个 a:0.3 ms   ← 语义相同,复杂度从指数变成线性</code></pre>
-<div class="note dead" style="contain-intrinsic-size:auto 404px"><span class="t">🔴 写正则前先看有没有嵌套量词</span><p>自查三步:</p>
+<div class="note dead" style="contain-intrinsic-size:auto 403px"><span class="t">🔴 写正则前先看有没有嵌套量词</span><p>自查三步:</p>
 <ul>
 <li><strong>看形状</strong>——量词里套量词(<code>(x+)+</code>、<code>(x*)*</code>、<code>(x+)*</code>)、分支之间能匹配同一段文本(<code>(a|ab)+</code>),这两类立刻改写;多数情况下 <code>(a+)+</code> 直接写成 <code>a+</code> 就够。</li>
 <li><strong>上工具</strong>——<code>safe-regex</code>、<code>recheck</code> 这类库能静态检出可疑正则,ESLint 也有对应规则,放进 CI 比人眼可靠。</li>
