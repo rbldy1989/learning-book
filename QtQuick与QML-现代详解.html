@@ -299,141 +299,42 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 45119px;--thin-h:45119px">
+<section class="chapter" style="contain-intrinsic-size:auto 38330px;--thin-h:38330px">
 <h1 id="q0"><span class="part">第 0 章</span>预备:Quick 工程、工具链与第一个 QML 程序</h1>
 <h2 id="q0-open">0.0 导读</h2>
-<p>QML 不是 C++ 界面之上的一层脚本。它有独立的类型系统、独立的对象创建与销毁规则,以及一套「写下关系、由引擎决定何时重算」的求值模型;界面的最终像素由一份场景描述在渲染线程上交给 GPU 产出,而不是由某个函数一笔一笔画出来。</p>
-<p><strong>本书讲清这套系统怎么运作,以及它在什么条件下不成立。</strong>基线取 Qt 6.5 以上,行为随版本变动处标出分界;构建以 CMake 与 <code>qt_add_qml_module</code> 为主,不使用 qmake;平台覆盖桌面的 Linux 与 Windows,移动端与嵌入式只在结论会变的地方提示。</p>
-<h3>这个领域有哪些资料</h3>
-<p>Qt Quick 的资料分布有一个与别的领域不同的特点:<strong>纸质书几乎全部停在 Qt 5 之前,而 Qt 6 恰好把模块系统、类型注册与着色器工具链整体换过一遍。</strong>结果是书里的问题清单仍然成立,书里的写法大面积失效,可信的事实层只剩官方文档、源码,以及少数持续更新的开源材料。</p>
-<p>下表把资料按三档标注关系。<strong>锚定</strong>指本书的骨架或事实层真的建立在它上面,<strong>参考</strong>指写某几章时查过、对照过但没有影响结构,<strong>推荐</strong>指它是好东西、读者迟早用得上,而本书没有直接用。三档要分开,否则「值得知道的资料」会被当成「本书都用过的资料」。</p>
-<table style="contain-intrinsic-size:auto 1509px">
-<thead><tr><th>资料</th><th>类型</th><th>关系</th><th>特点与局限</th></tr></thead>
+<p>QML 不是 C++ 界面之上的一层脚本:它有独立的类型系统与对象创建销毁规则,以及一套「写下关系、由引擎决定何时重算」的求值模型;界面的最终像素由一份场景描述在渲染线程上交给 GPU 产出,而不是由某个函数一笔一笔画出来。<strong>本书讲清这套系统怎么运作,以及它在什么条件下不成立。</strong>基线取 Qt 6.5 以上,行为随版本变动处标出分界;构建以 CMake 与 <code>qt_add_qml_module</code> 为主,不使用 qmake;平台覆盖桌面的 Linux 与 Windows。</p>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 486px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>《Qt6 QML Book》(Cadaques,开源,持续更新)</td><td>经典教材</td><td>锚定</td><td>少数跟着 Qt 6 走的系统教材,章节次序完整,示例可直接编译。局限:各章深浅不均,绑定的求值时机、委托的生命周期、场景图的线程规则三处只给结论不给机制;以在线版为准,离线快照与当前 Qt 行为会脱节,判断新旧要看它最近一年的提交</td></tr>
-<tr><td>Qt 官方 QML Reference(语言部分)</td><td>官方文档</td><td>锚定</td><td>语法、类型系统、名字解析与模块定义的权威出处,每个特性标注引入版本。局限:按语言构件分页组织,「绑定什么时候被打断」这类跨构件的问题要自己把几页拼起来</td></tr>
-<tr><td>Qt Quick 与 Quick Controls 类型文档</td><td>参考手册</td><td>锚定</td><td>每个类型的属性、信号、方法与引入版本齐全,附加属性归属写得清楚。局限:回答「这个属性是什么」,不回答「什么时候不该动它」;示例片段常省略根项与尺寸,照抄进空工程会看不到东西</td></tr>
-<tr><td class="nw">Qt Quick Scene Graph 文档</td><td>官方文档</td><td>锚定</td><td>把一帧拆成同步、渲染、动画三段,写明哪一段允许触碰 QML 对象。局限:以线程化渲染循环为默认叙述,其余模式的差异散在多页;自定义节点部分默认读者已经懂图形管线</td></tr>
-<tr><td>Integrating QML and C++(官方主题页)</td><td>官方文档</td><td>锚定</td><td>注册类型、单例、上下文属性三条路的写法与各自限制都在这里。局限:三条路平铺展示,不给选择判据;上下文属性至今仍以正文示例出现,可维护性代价没有写</td></tr>
-<tr><td class="nw">Qt 源码(<code>qtdeclarative</code> 仓库)</td><td>源码</td><td>锚定</td><td>文档与实际行为冲突时唯一的仲裁者;<code>Basic</code> 样式的实现是自定义样式最完整的范本。局限:私有实现随小版本变动,读出的结论只能当当前行为,不能当接口承诺</td></tr>
-<tr><td class="nw">KDAB 与 ICS 的 QML 实践文章</td><td>在线资料</td><td>锚定</td><td>失效形态记录得最具体:绑定循环、委托里放重活、上下文属性造成的耦合都有真实工程的现场。局限:单篇成文,彼此不衔接;跨 Qt 5 与 Qt 6 两代,着色器与渲染循环部分要按发表时间折算</td></tr>
-<tr><td>Best Practices for QML and Qt Quick(官方)</td><td>官方文档</td><td>参考</td><td>官方汇总的写法建议,条目短,适合直接改写成团队规范的初稿。局限:只给做法不给理由,也不说明违反之后会以什么形式暴露,无法据此排查</td></tr>
-<tr><td class="nw"><code>qmllint</code> 与 <code>qmlformat</code> 文档</td><td>参考手册</td><td>参考</td><td>列出每条检查的编号、含义与关闭方式,是把写作规范落进持续集成的接口。局限:检查能力取决于类型信息是否完整,遇到未注册的 C++ 类型与 <code>var</code> 属性会大片失效</td></tr>
-<tr><td>Qt 官方示例仓库(<code>qtdeclarative</code> 的 examples 目录)</td><td>在线资料</td><td>参考</td><td>与当前版本同步、能直接构建运行,是接口用法最可靠的对照物。局限:为展示单个功能而写,错误处理、模块划分与性能取舍普遍被简化,不能当工程模板</td></tr>
-<tr><td class="nw">Qt 官方博客与发布说明的 Quick 条目</td><td>在线资料</td><td>推荐</td><td>新接口、行为变更与已知问题最早出现在这里,发布说明还能反查某个行为是哪一版改的。局限:按时间排列,不成体系;结论的适用版本要自己从发表时间回推</td></tr>
-<tr><td class="nw">《JavaScript 语言手册》</td><td>相邻领域</td><td>推荐</td><td>QML 的表达式与函数用的是 JavaScript,语义边界在那里说得清楚。局限:面向浏览器环境,DOM、模块加载与部分定时器接口在 QML 里不存在</td></tr>
-<tr><td class="nw">《Qt 核心与 Widget》</td><td>相邻领域</td><td>参考</td><td><code>QObject</code>、对象树、信号槽与属性系统的机制在那本书里,本书第 9、13 章与它逐点对照过。局限:不含 QML 引擎与场景图,Quick 侧的问题在那里查不到</td></tr>
+<tr><td>《Qt6 QML Book》(Cadaques,开源)</td><td>少数跟着 Qt 6 走的系统教材,示例可直接编译,绑定、委托、场景图三处只给结论不给机制</td></tr>
+<tr><td>Qt 官方 QML Reference(语言部分)</td><td>语法、类型系统与名字解析的权威出处,按语言构件分页,跨构件的问题要自己拼</td></tr>
+<tr><td>Qt Quick 与 Quick Controls 类型文档</td><td>属性、信号、方法与引入版本齐全,回答「是什么」,不回答「什么时候不该动」</td></tr>
+<tr><td class="nw">Qt Quick Scene Graph 文档</td><td>把一帧拆成同步、渲染、动画三段并写明线程归属,以线程化渲染循环为默认叙述</td></tr>
+<tr><td>Integrating QML and C++(官方主题页)</td><td>注册类型、单例、上下文属性三条路的写法与限制都在这里,平铺不给选择判据</td></tr>
+<tr><td class="nw">Qt 源码(<code>qtdeclarative</code> 仓库)</td><td>文档与实际行为冲突时唯一的仲裁者,读出的是当前行为,不是接口承诺</td></tr>
+<tr><td class="nw">KDAB 与 ICS 的 QML 实践文章</td><td>绑定循环、委托里放重活这类失效形态记录得最具体,单篇成文</td></tr>
+<tr><td>Best Practices for QML and Qt Quick(官方)</td><td>官方写法建议汇总,条目短,只给做法不给理由</td></tr>
 </tbody>
 </table>
-<div class="note old" style="contain-intrinsic-size:auto 197px"><span class="t">🟡 Qt 5 时代的 QML 资料只取问题清单,写法要整体重来</span><p>它们提出的问题至今成立:界面为什么不更新、列表为什么卡、C++ 侧的数据怎么送进来。写法部分已经整段作废——导入语句带版本号、类型注册靠运行期调用注册函数、模块靠手写 <code>qmldir</code> 组织、着色器直接写图形接口的源码、嵌入部件的组件只能跑软件后端。这些写法多数仍能通过编译,代价推迟到运行期或者换一台机器时才暴露。</p></div>
-<p>判断一篇在线资料还能不能用,有一个不依赖发表时间的做法:看它的导入语句写不写版本号、类型注册用的是构建期声明还是运行期调用、着色器给出的是源码还是编译产物。三处只要有一处是旧形态,整篇的工程结论都要重新验证;单独的语法说明与机制解释则通常仍然成立,可以照读。</p>
-<h3>锚定的七样各借鉴了什么</h3>
-<p>借鉴写成具体手法才可核对:章节的编排顺序、某个概念的讲法、某张表的列划分、某条结论的来源。凡是能写成「参考了它的思路」的,都说明没有真正借到东西。</p>
-<table style="contain-intrinsic-size:auto 627px">
-<thead><tr><th>锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴前七样,机制层有分歧时按官方文档、源码、实践文章的顺序取信。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 476px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">《Qt6 QML Book》</td><td>章节的编排顺序:先语言与类型系统、再绑定、再信号与状态、再布局与视图、最后互操作与部署,第 2 到 12 章按这条线排。另一处是「一个 <code>.qml</code> 文件就是一个类型」这个讲法,第 2.6 节沿用,并把它接到第 12 章的模块系统上</td></tr>
-<tr><td class="nw">Qt 官方 QML Reference</td><td>事实的准绳:凡二手资料与它冲突,一律以它为准。另借了它对绑定的定义方式——绑定是一个会被反复求值的表达式,而不是一次赋值,第 3.1 节从这个定义出发推出后面全部失效形态</td></tr>
-<tr><td>Qt Quick 与 Quick Controls 类型文档</td><td>接口表的列划分:类型或属性、含义、默认值、引入版本、能否被绑定各占一列,全书的类型对照表都按这几列写。附加属性「挂在谁身上」的说明方式也照它</td></tr>
-<tr><td class="nw">Qt Quick Scene Graph 文档</td><td>第 10.1 节的三阶段划分与线程归属直接取自它:同步阶段两个线程互锁、渲染阶段 GUI 线程可以继续、动画的驱动来源随渲染循环模式变化。第 10.6 节比较五条自定义渲染路线时,也以它给出的节点类型作轴</td></tr>
-<tr><td class="nw">Integrating QML and C++</td><td>第 9 章的分节顺序:先「什么该放 C++」,再注册类型,再属性与方法的暴露,再模型,最后单例与上下文属性。它把三条路平铺,本书在第 9.5 节补上了它没有给的那张三选一判据表</td></tr>
-<tr><td class="nw">Qt 源码(<code>qtdeclarative</code>)</td><td>文档没写明边界的地方,结论从源码读出来再写:绑定的依赖在哪一步被登记、属性写入在什么条件下打断绑定、委托实例在什么时刻被销毁。第 3、8 章的时序图按实际调用顺序画,不按文档的叙述顺序</td></tr>
-<tr><td class="nw">KDAB 与 ICS 的实践文章</td><td>失效形态的分类来自它们的现场记录:第 3.4 节把绑定循环归成四种形态并给三种拆解手法,第 8.3 与 8.5 节把委托的问题拆成「存了状态」与「放了重活」两类,第 9.5 节把上下文属性的代价写成可判断的三条</td></tr>
+<tr><td>第 2 到 12 章的编排顺序与 2.6 节的讲法</td><td>《Qt6 QML Book》:先语言、再绑定、再状态与视图、最后互操作与部署;「一个 <code>.qml</code> 文件就是一个类型」沿用它</td></tr>
+<tr><td class="nw">3.1 节绑定的定义方式</td><td>QML Reference:绑定是被反复求值的表达式而不是一次赋值,全部失效形态从这个定义推出</td></tr>
+<tr><td class="nw">全书类型对照表的列划分</td><td>Quick 类型文档:类型或属性、含义、默认值、引入版本、能否被绑定各占一列</td></tr>
+<tr><td>10.1 节的三阶段划分与 10.6 节的路线比较</td><td>Scene Graph 文档:三段与线程归属照它,五条自定义渲染路线以它的节点类型作轴</td></tr>
+<tr><td class="nw">第 9 章的分节顺序</td><td>Integrating QML and C++:先「什么该放 C++」再注册、暴露、模型、单例;9.5 节的三选一判据表是本书补的</td></tr>
+<tr><td class="nw">第 3、8 章的时序图</td><td><code>qtdeclarative</code> 源码:依赖在哪一步登记、属性写入何时打断绑定、委托何时销毁,按实际调用顺序画</td></tr>
+<tr><td>3.4 节绑定循环四形态、8.3 与 8.5 节委托问题两类</td><td>KDAB 与 ICS 的现场记录:拆解手法与「存了状态」「放了重活」的分类由此归出</td></tr>
 </tbody>
 </table>
-<p>三类资料在本书里的分工是固定的:<strong>官方文档给承诺,源码给当前行为,实践文章给症状。</strong>症状最容易过期,因为它绑在具体版本上;承诺最稳,但覆盖不到边界;当前行为介于两者之间,可信但不可依赖。全书凡是写「某某情况下会怎样」的地方,都能追到这三者之一。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 机制层有分歧时按官方文档、源码、实践文章的顺序取信</span><p>官方 Reference 与主题页写的是设计意图与接口承诺,是唯一能当准绳的一层;<code>qtdeclarative</code> 的源码是行为的最终事实,但读出来的是这一版的实现,不是承诺;实践文章记录的是真实事故,价值在症状而不在结论。三者冲突时,先查主题页有没有明确承诺,没有就读源码确认当前行为,并假定它会随版本变。</p></div>
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>用 QML 与 Qt Quick 写一个桌面程序界面所需要的全部机制</strong>,三组内容各回答一个问题。分组不是阅读顺序,而是问题的归类。</p>
-<table style="contain-intrinsic-size:auto 225px">
-<thead><tr><th>组</th><th>章与节</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">语言与机制</td><td class="nw">第 0 到 4 章,27 节</td><td>QML 是一种什么语言,绑定为什么会自己重算、什么时候停止工作,JavaScript 在其中的边界划在哪里</td></tr>
-<tr><td class="nw">界面构成</td><td class="nw">第 5 到 8 章,19 节</td><td>状态、布局、输入、列表这四件事各自的模型是什么,做错时界面会呈现成什么样子</td></tr>
-<tr><td class="nw">与 C++ 和平台对接</td><td>第 9 到 13 章,24 节</td><td>C++ 与 QML 的接缝在哪、自己画一个东西有几条路、模块怎么组织与交付、与 Widget 怎么共处</td></tr>
-</tbody>
-</table>
-<p>合计 14 章 70 节。三组之间是单向依赖:后两组都在用第一组的结论,第一组不用任何后面的内容。因此语言与机制这一组是唯一必须按顺序读完的部分,其余两组可以按手上的任务挑着读。</p>
-<p>有一章的位置与其余十三章不同。第 0 章交付的是一个能跑通的最小工程,读完能配置、构建、运行并看到窗口,它本身不承担机制。这一章任何时候单独读都成立,不受前后依赖约束。</p>
-<p>不讲的部分同样要说清楚,并且指明归谁。<strong>边界写成一句可以当场判断的话</strong>,遇到一个话题时能立刻知道该翻哪本书。</p>
-<table style="contain-intrinsic-size:auto 462px">
-<thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td><code>QObject</code>、信号槽与属性系统的 C++ 侧机制,以及 <code>QWidget</code> 体系</td><td>《Qt 核心与 Widget》</td><td>本书讲一个 C++ 对象怎么被 QML 看见和使用,那本讲这个对象自身怎么运作</td></tr>
-<tr><td class="nw">第三方组件、图表、三维、数据库接入、打包与分发</td><td class="nw">《Qt 组件与生态》</td><td>本书讲怎么自己画一个东西,那本讲什么时候不必自己画</td></tr>
-<tr><td class="nw">渲染与绑定的性能细账、剖析工具的用法</td><td class="nw">《Qt 性能优化》</td><td>本书讲绑定为什么会重算,那本讲一次重算要多少微秒</td></tr>
-<tr><td>JavaScript 语言本身:语法、原型、闭包与异步模型</td><td>《JavaScript 语言手册》</td><td>本书只讲 JavaScript 在 QML 里哪些能用、哪些被引擎改了语义</td></tr>
-<tr><td>移动端与嵌入式的平台适配,以及 Qt for MCUs</td><td class="nw">不在本书系范围</td><td>它们各有独立的运行时与受限的类型集合,本书的写法结论不能直接搬过去</td></tr>
-<tr><td>Qt Design Studio 的设计流程与设计师交接</td><td class="nw">不在本书系范围</td><td>本书写的是手写 QML 的工程,设计工具生成的文件另有一套组织约定</td></tr>
-</tbody>
-</table>
-<p>有一类边界值得单独说明:<strong>本书与性能那本在同一个话题上分的是不同的问题,不是把内容切成两半。</strong>第 8 章讲委托里不能放什么、为什么,性能那本讲同一份列表在不同写法下的帧时间分布;两本都读过之后,判据与数字才对得上。</p>
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 新工程按构建期声明组织模块,不再手写 qmldir 与导入版本号</span><p>Qt 6 把 QML 模块的定义搬进了构建系统:<code>qt_add_qml_module</code> 从一个 CMake 目标生成 <code>qmldir</code>、登记类型、编译资源并接上字节码缓存;类型注册改成在 C++ 类里写宏、由构建期扫描收集。导入语句也不必再写版本号,不写即取模块的当前版本。第 12 章按这条路径讲模块与部署,旧做法只在读旧工程时作为对照出现。</p></div>
-<h3>读之前要会什么</h3>
-<p>前置分两档,每一条都给出可执行的自测动作。「熟悉 JavaScript」这样的说法无法自测,也就无法用来判断该不该现在读这本书;能不能在十分钟内做出下表右列那件事,才是判据。</p>
-<table style="contain-intrinsic-size:auto 542px">
-<thead><tr><th>档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>读得懂并写得出 JavaScript 的表达式与函数</td><td>写一个接受数组、返回过滤后新数组的函数,说清其中 <code>var</code>、<code>let</code>、<code>const</code> 三者的作用域差别;不需要碰任何 DOM 接口</td></tr>
-<tr><td class="nw">必须</td><td>说得清 <code>QObject</code> 的信号槽是怎么连起来的</td><td>说出一次信号发射从发出到槽被执行经过哪几步,并举一个连接语句写法正确、运行时却不生效的情形</td></tr>
-<tr><td class="nw">必须</td><td>用过 CMake 配置并构建一个 C++ 工程</td><td>读一份三十行的 <code>CMakeLists.txt</code>,指出哪几行定义目标、哪几行声明依赖,说清 <code>PRIVATE</code> 与 <code>PUBLIC</code> 的差别</td></tr>
-<tr><td class="nw">必须</td><td>能在命令行把一个 Qt 程序编出来并跑起来</td><td>不借助 IDE 完成配置、构建、运行三步,并说出这个可执行文件启动时到哪些路径去找 Qt 的动态库</td></tr>
-<tr><td class="nw">必须</td><td>写过命令式的界面代码,任何框架都行</td><td>说出在你写过的程序里,「按钮被按下之后标签的文字变了」这件事依次经过了哪几行代码</td></tr>
-<tr><td class="nw">最好有</td><td>写过 Qt Widget 程序</td><td>说出一个部件的尺寸是谁算出来的,以及一次重绘是被什么触发的、在哪个函数里完成</td></tr>
-<tr><td class="nw">最好有</td><td class="nw">读过一份带通知信号的属性声明</td><td>写出一个带 <code>NOTIFY</code> 的属性声明,说清去掉 <code>NOTIFY</code> 之后它仍然能读、但不能再做什么</td></tr>
-<tr><td class="nw">最好有</td><td class="nw">了解 GPU 绘制的基本概念</td><td>说出一次绘制里顶点数据与纹理各自承担什么,以及为什么把同样的图形合并成一批更划算</td></tr>
-</tbody>
-</table>
-<p>「学过 Widget」放在最好有这一档,<strong>是加分项而不是门槛</strong>。第 1 章与第 13 章都建立在与 Widget 的对照上,但两章的写法都不假定读者写过部件代码:第 1.2 节的六维对照表两侧各自写全,不靠读者补另一半;第 13 章面向已有 Widget 工程的迁移与混用,手上没有这类工程时可以整章放过,不影响其余十三章。</p>
-<p>两样明确不在前置里。<strong>不需要有 QML 或者其他声明式框架的经验</strong>,第 0 章从装配模块与配置构建开始,第 2 章从最小的对象声明开始。<strong>不需要懂图形学</strong>,第 10 章只用到二维坐标、矩形裁剪与「一批绘制」这个概念,不涉及矩阵推导与光照模型。</p>
-<p>前置缺了某一条时不必先补全再开始。缺 CMake 的从第 0.2 节读起,那一节把一个 Quick 工程用得到的部分讲全;缺信号槽机制的先读《Qt 核心与 Widget》的对应章节,再回到第 9 章;缺 JavaScript 的可以边读边补,第 4.3 节划出了 QML 里实际用得到的那一小块,范围比整门语言小得多。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 197px"><span class="t">🔴 跳过第 2、3 章直接读视图与互操作,问题会一律归错因</span><p>第 2 章讲清一个 <code>.qml</code> 文件就是一个类型、名字沿哪条链解析,第 3 章讲清绑定何时重算、何时被打断。缺了这两章,后面的现象都会被归到错误的原因上:列表不刷新被当成视图的问题,实际是模型没有发出变更通知;界面停在旧值被当成绑定失效,实际是一次命令式赋值把绑定拆掉了。表现是每一章都看得懂字面,遇到没见过的现象却推不出原因。</p></div>
-<h3>与那些资料相比,本书多给了什么</h3>
-<p>每一条特点都配了可以当场翻到的位置。不能指到具体节的特点无法核对,也就不必写。</p>
-<table style="contain-intrinsic-size:auto 375px">
-<thead><tr><th>本书的做法</th><th>到哪里去看</th></tr></thead>
-<tbody>
-<tr><td class="nw">绑定、委托、渲染这三处各有专章写失效形态</td><td>3.4 节把绑定循环归成四种形态、给三种拆解手法;8.3 与 8.5 节写委托里不能存什么、不能放什么;10.1 与 10.4 节写渲染的两类卡顿各自来自哪一段</td></tr>
-<tr><td>与 Widget 的对照贯穿全书,先立分界再给迁移路径</td><td>1.2 节按六个维度对照两套体系,1.5 节给选型结论;13.2 节给六个判据,13.3 节写能迁什么、不能迁什么</td></tr>
-<tr><td class="nw">25 张原创插图,结构与流程分开画</td><td>例如 10.1 节的场景图三阶段、3.4 节的绑定循环成环过程、6.1 节的七条锚线、8.3 节的委托创建销毁窗口</td></tr>
-<tr><td class="nw">按症状反查的入口放在导读里</td><td>0.0 节末尾的症状对照表,按现象指到章,每行还给出第一件要确认的事</td></tr>
-<tr><td class="nw">每个结论标出适用的 Qt 版本区间</td><td>基线是 Qt 6.5,书中点名过的版本分界包括默认样式在 6.5 变更、嵌入部件的组件后端限制在 6.4 放开、矢量图形的曲线渲染器在 6.6 加入、颜色方案的请求接口在 6.8 加入</td></tr>
-</tbody>
-</table>
-<p>这些做法指向同一件事:<strong>让每一条「应该这么写」都能追溯到它是从哪条机制推出来的。</strong>推不出来的结论只能背,背下来的结论遇到没见过的情形就失效;推得出来的结论,即使 Qt 换了版本,也知道该去确认哪一处。</p>
-<h3>三条读法与一张症状对照表</h3>
-<p>读法按角色分,差别在起点与主干,不在读得多不多。三条路线的共同点是都从第 2、3 章取走同一批结论,分歧在于接下来先补哪一块。</p>
-<table style="contain-intrinsic-size:auto 185px">
-<thead><tr><th>你的情形</th><th>从哪读起</th><th>主干</th><th>可以先放过</th></tr></thead>
-<tbody>
-<tr><td class="nw">从 Widget 转过来</td><td>1 → 2 → 3 → 13,其余按需</td><td>第 1、2、3、13 章</td><td>第 10、11 章</td></tr>
-<tr><td class="nw">完全新手</td><td>0 → 2 → 3 → 6 → 8,其余按需</td><td>第 2、3、6、8 章</td><td>第 9、10、12 章</td></tr>
-<tr><td class="nw">只负责 C++ 侧、界面由别人写</td><td>9 → 2 → 3 → 12</td><td>第 9、2、3、12 章</td><td>第 5、6、7、11 章</td></tr>
-<tr><td class="nw">手上已经有具体问题</td><td>直接查本节末尾的症状对照表</td><td>—</td><td>—</td></tr>
-</tbody>
-</table>
-<p>三条路线各有一处容易走错。从 Widget 转过来的人最常见的是<strong>把第 1 章当成导言快速翻过去</strong>,结果后面每读到一处差异都要回头重建对照;这一章是分界的定义,不是铺垫。完全新手的风险相反,<strong>容易在第 0 章的工具链上停留过久</strong>,配置能跑通即可推进,第 0.4 节的工具在遇到具体问题时再回来查。</p>
-<p>只负责 C++ 侧的人要注意一个顺序问题:<strong>先读第 9 章会看到三条互操作路径,但选择判据依赖第 3 章的绑定机制。</strong>因此第 9 章读完一遍后必须回到第 2、3 章,再回来重读 9.5 节的单例与上下文属性,那时三选一才有依据。第 12 章放在最后,它决定的是交付形态,与写法无关。</p>
-<p>手上已经有具体问题时不必顺读,走反查更快。下表按现象指到章,每一行还给出第一件要确认的事——多数情况下确认完这一件,就已经知道问题出在哪一层。</p>
-<table style="contain-intrinsic-size:auto 311px">
-<thead><tr><th>现象</th><th>先看哪一章</th><th>要确认的第一件事</th></tr></thead>
-<tbody>
-<tr><td class="nw">数据改了,界面不更新</td><td>第 3 章;数据在 C++ 侧的看第 9 章</td><td>绑定是不是已经被一次命令式赋值打断,或者 C++ 属性有没有变更通知信号</td></tr>
-<tr><td class="nw">长列表滚动发卡</td><td class="nw">第 8 章</td><td>委托里有没有放解码、复杂布局计算或者同步读取</td></tr>
-<tr><td class="nw">窗口出来了,内容一片空白</td><td>第 12 章;嵌在部件里的看第 13 章</td><td>加载有没有失败而没有被检查,以及根对象的类型对不对</td></tr>
-<tr><td class="nw">某块区域收不到键盘输入</td><td class="nw">第 7 章</td><td>焦点范围是怎么划分的,焦点当前落在哪个对象上</td></tr>
-<tr><td class="nw">换一台机器启动就报模块找不到</td><td class="nw">第 12 章</td><td>模块目录与 <code>qmldir</code> 有没有进入实际生效的导入路径</td></tr>
-<tr><td class="nw">界面整体发卡,鼠标也变迟钝</td><td class="nw">第 10 章</td><td>同步阶段有没有被绘制或者计算占住</td></tr>
-</tbody>
-</table>
-<p>与顺读相比,反查有一个前提:<strong>它给的是位置,不是理解。</strong>按表找到章节能解决当下这一个问题,同类问题换个形态出现时仍然要从头查。两条路的正确关系是先反查解决眼前的问题,再回到那一章从头读一遍。</p>
-<ul>
-<li><strong>可以先跳过第 10 章。</strong>不做自定义绘制就用不上;真要做时先读 10.1 节的三阶段,再按 10.6 节的比较表选路线,顺序不能颠倒——五条路线的差别正是落在三阶段的哪一段上。</li>
-<li><strong>可以先跳过第 11 章。</strong>用内置控件的默认样式不受影响;要做定制时它与第 6 章的尺寸传播有依赖,第 6 章要先读。</li>
-<li><strong>可以先跳过第 13 章。</strong>手上没有 Widget 工程时它没有落点;它与前面各章没有反向依赖,任何时候补都可以。</li>
-</ul>
-<p>读完语言与机制这一组,能解释「这个绑定为什么没有重算」「这个属性为什么停在旧值」;读完界面构成这一组,能搭出带状态切换、自适应布局、手势输入与长列表的界面;读完与 C++ 和平台对接这一组,C++ 侧的数据能干净地接进来,自定义绘制有选路依据,工程能作为模块交付出去。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 三条路线都要读完第 2、3 章,这两章不能按需查</span><p>后面每一章都在使用它们的结论:布局用的是属性与隐含尺寸,视图用的是委托里的名字解析,互操作用的是属性变更通知与依赖登记,动画用的是「属性写入会打断绑定」这一条。其余章节可以按手上的任务挑着读,唯独这两章跳过之后,读到的都是结论而不是机制,遇到书里没写过的形态就推不下去。</p></div>
+<h3>前提与读法</h3>
+<p>读之前要写得出 JavaScript 的表达式与函数,说得清信号槽从发射到执行经过哪几步,用 CMake 配置并构建过 C++ 工程;不需要 QML 或其他声明式框架的经验,也不需要懂图形学。读法上语言与机制一组(第 0 到 4 章)必须顺序读完,主干是第 2、3 章(名字沿哪条链解析、绑定何时重算何时被打断);界面构成与 C++ 对接两组可以按手上的任务挑着读,有具体症状时先定位到章,再回头补机制。</p>
+<h3>读完之后</h3>
+<p>读完能解释「这个绑定为什么没有重算」「这个属性为什么停在旧值」,能搭出带状态切换、自适应布局、手势输入与长列表的界面,C++ 侧的数据能干净地接进来,工程能作为模块交付。进阶方向有二:向下读 <code>qtdeclarative</code> 源码与场景图的自定义节点,把引擎与渲染的账补全;向外把 <code>qmllint</code> 与模块化交付落进持续集成。</p>
 <h2 id="q0-setup">0.1 装配:模块、工具链与 Qt Creator 的 QML 支持</h2>
 <p>Widget 程序的装配只有一件事:让 <code>find_package</code> 找到 <code>qtbase</code>,链接 <code>Qt6::Widgets</code>,编过就能跑。Qt Quick 不是这样。它的界面由一份在运行期解析的文档描述,类型来自若干个独立发布的模块,画面由一条依赖 GPU 的渲染路径产出。装配环节因此多出三层前提:模块装没装全、图形后端起不起得来、构建期工具与运行期库是不是同一份 Qt。</p>
 <p>这三层前提有一个共同点:<strong>编译期一律不检查</strong>。出问题的时刻全部在运行期,而报错方式各不相同——缺模块报一行文字,后端起不来可能直接退出,版本不一致往往什么都不报,只是启动变慢。</p>
@@ -8705,7 +8606,7 @@ var comp = Qt.createComponent(<span>"ConfirmDialog.qml"</span>)
 <p>前九章的可见元素最终都变成场景图节点;当内置元素画不出想要的东西时,就要自己向场景图供货。本章先讲清场景图的三个阶段与渲染循环——哪一段允许触碰 QML 对象,是后面一切取舍的依据;然后走五条自定义渲染路线:命令式的 <code>Canvas</code>、声明式矢量的 <code>Shape</code>、接住 <code>QPainter</code> 的 <code>QQuickPaintedItem</code>、直接产出节点的自定义节点,以及着色器,最后按性能、开发成本、动态性三个维度给出选路判据。</p>
 <h2 id="q10-sg">10.1 场景图:三个阶段与渲染循环</h2>
 <p>前面九章里出现的每一个可见元素——<code>Rectangle</code>、<code>Text</code>、<code>Image</code>、<code>ListView</code> 里的每一个委托——最终都变成同一样东西:<strong>场景图里的一个或几个节点</strong>。场景图是一棵由 <code>QSGNode</code> 构成的树,描述「这一帧要画什么」,由渲染器遍历它、合并成批次、下发给图形 API。</p>
-<p>这与《Qt 核心与 Widget》第 14 章讲的 <code>QPainter</code> 模型是两种模型。<code>QPainter</code> 是<strong>命令式</strong>的:重绘时调用一串绘制函数,画完这一帧的信息就不存在了,下一帧从头再来。场景图是<strong>保留模式</strong>的:节点树在两帧之间一直存在,只有被标记为脏的部分才更新。这个差别决定了后面五节所有取舍的方向——凡是每帧都要重新生成一整块像素的做法,都在与保留模式对抗。</p>
+<p>这与《Qt 核心与 Widget》第 15 章讲的 <code>QPainter</code> 模型是两种模型。<code>QPainter</code> 是<strong>命令式</strong>的:重绘时调用一串绘制函数,画完这一帧的信息就不存在了,下一帧从头再来。场景图是<strong>保留模式</strong>的:节点树在两帧之间一直存在,只有被标记为脏的部分才更新。这个差别决定了后面五节所有取舍的方向——凡是每帧都要重新生成一整块像素的做法,都在与保留模式对抗。</p>
 <p>一帧被切成若干阶段,分别跑在 GUI 线程与渲染线程上,渲染循环模式决定了这个分工怎么切。<strong>其中「同步阶段会阻塞 GUI 线程」是全章最重要的一条事实</strong>,后面讲 <code>QQuickPaintedItem</code> 与自定义节点时会反复回到它。</p>
 <h3>场景图是一棵节点树,不是一串绘制命令</h3>
 <p>节点树的形状与 QML 的对象树相关但不相同。一个 <code>QQuickItem</code> 可以对应零个节点(纯容器,如 <code>Item</code>)、一个节点(如 <code>Rectangle</code> 的矩形几何节点)或者一小棵子树(如带边框与圆角的矩形)。<code>Item</code> 的 <code>x</code>、<code>y</code>、<code>scale</code>、<code>rotation</code> 变成变换节点,<code>opacity</code> 变成不透明度节点,<code>clip</code> 变成裁剪节点。</p>
@@ -9116,7 +9017,7 @@ Shape {
 <h2 id="q10-painted">10.4 QQuickPaintedItem:把 QPainter 接进来</h2>
 <p><code>QQuickPaintedItem</code> 是一个 C++ 类,继承自 <code>QQuickItem</code>,派生类只需要重写一个纯虚函数 <code>paint(QPainter *)</code>,就能用 <code>QPainter</code> 的全套接口在条目上绘制。它解决的问题很具体:<strong>已有大量基于 <code>QPainter</code> 的绘制代码,需要在 Quick 界面里继续使用</strong>——从 Widget 工程迁过来的自绘控件、第三方库提供的 <code>QPainter</code> 绘制函数、需要完整文本布局能力的图表标注。</p>
 <p>它与 10.2 节的 <code>Canvas</code> 是同一条实现路线的两个入口:都是先在 CPU 上光栅化成位图,再上传成纹理。差别只在绘制代码写在哪一侧——<code>Canvas</code> 写 JavaScript,<code>QQuickPaintedItem</code> 写 C++。因此 10.2 节关于成本的全部结论在这里同样成立,并且多出一条 <code>Canvas</code> 没有的约束:<strong><code>paint()</code> 落在同步阶段里</strong>。</p>
-<p><code>QPainter</code> 本身的机制、坐标系、画笔画刷与合成模式,主场在《Qt 核心与 Widget》第 14 章,这里不重讲。本节只讲它接进场景图之后多出来的部分。</p>
+<p><code>QPainter</code> 本身的机制、坐标系、画笔画刷与合成模式,主场在《Qt 核心与 Widget》第 15 章,这里不重讲。本节只讲它接进场景图之后多出来的部分。</p>
 <h3>最小可用形态</h3>
 <p>一个可用的 <code>QQuickPaintedItem</code> 派生类需要三样东西:重写 <code>paint()</code>、把会影响绘制的属性的设值函数里加上 <code>update()</code>、以及用 <code>QML_ELEMENT</code> 让它能在 QML 里被使用。</p>
 <p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 930px"><code><span class="cm">// ruleritem.h —— 一把刻度尺,刻度间隔由属性控制</span>
@@ -10892,7 +10793,7 @@ windeployqt --release --qmldir C:\src\acmeapp build\Release\acmeapp.exe</code></
 <tr><td class="nw">打包形态</td><td>目录树、AppImage 或系统包</td><td>目录树或安装程序</td></tr>
 </tbody>
 </table>
-<p>静态构建是另一条路:把 Qt 与 QML 模块全部静态链进可执行文件,交付物只有一个文件。代价是构建时间长、可执行文件体积大、许可条款需要单独确认,并且要在 CMake 里显式调用 <code>qt_import_qml_plugins()</code> 让用到的 QML 插件被链进来。打包、签名与自动更新这些上线阶段的问题,主场在《Qt 组件与生态》第 13 章。</p>
+<p>静态构建是另一条路:把 Qt 与 QML 模块全部静态链进可执行文件,交付物只有一个文件。代价是构建时间长、可执行文件体积大、许可条款需要单独确认,并且要在 CMake 里显式调用 <code>qt_import_qml_plugins()</code> 让用到的 QML 插件被链进来。打包、签名与自动更新这些上线阶段的问题,主场在《Qt 组件与生态》第 16 章。</p>
 </section>
 
 <section class="chapter" style="contain-intrinsic-size:auto 18320px;--thin-h:18320px">
@@ -11198,7 +11099,7 @@ Window {
 <tbody>
 <tr><td class="nw">纯 C++ 业务逻辑</td><td class="nw">能</td><td>不引用 <code>QtWidgets</code> 的部分完全不动</td></tr>
 <tr><td class="nw">网络、文件、数据库、序列化</td><td class="nw">能</td><td>与界面无关</td></tr>
-<tr><td class="nw">线程与并发</td><td class="nw">能</td><td>见《Qt 核心与 Widget》第 17 章</td></tr>
+<tr><td class="nw">线程与并发</td><td class="nw">能</td><td>见《Qt 核心与 Widget》第 18 章</td></tr>
 <tr><td class="nw"><code>QAbstractItemModel</code> 派生的模型</td><td class="nw">能,需补一步</td><td>必须实现 <code>roleNames()</code></td></tr>
 <tr><td class="nw">翻译文件</td><td class="nw">能</td><td><code>tr()</code> 与 <code>qsTr()</code> 使用同一套机制</td></tr>
 <tr><td class="nw">配置与设置</td><td class="nw">能</td><td><code>QSettings</code> 两侧通用</td></tr>
@@ -11328,7 +11229,7 @@ ListView {
 <li><strong>依赖多个第三方 widget 库且没有替代。</strong>这类依赖往往是迁移方案里最难估算的一块。</li>
 <li><strong>没有明确的迁移动因。</strong>「界面看起来旧了」不足以支撑一次迁移;要动画、要触控、要跨到移动端、要按设计稿做深度定制,这些才是动因。</li>
 </ul>
-<p>不迁不等于不做改进。Widget 侧同样可以改善外观与交互,并且第 11 章讲的深色主题在 Widget 侧也有对应做法,详见《Qt 核心与 Widget》第 16 章。</p>
+<p>不迁不等于不做改进。Widget 侧同样可以改善外观与交互,并且第 11 章讲的深色主题在 Widget 侧也有对应做法,详见《Qt 核心与 Widget》第 17 章。</p>
 <div class="note old" style="contain-intrinsic-size:auto 230px"><span class="t">🟡 QGraphicsView 在 Quick 里没有对应件,新界面不要从它起步</span><p><code>QGraphicsView</code> 与 <code>QGraphicsScene</code> 是 Widget 侧做可缩放、可拖动的图形界面的方案,机制上与场景图有相似之处:都是保留模式的对象树,都有变换与裁剪的层级。但两者没有任何迁移通道——图形项类型不同、坐标系不同、事件模型不同,场景里的每一个图形项都要按第 10 章的路线重新实现。已有的 <code>QGraphicsView</code> 界面继续维护没有问题,它仍然可用;新写的可缩放画布类界面则应当直接基于 Quick 的条目与自定义节点起步,不要先在 Widget 侧做一版再考虑迁移。这类界面往往是整个工程里迁移成本最高的一块,提前选对路线的收益最大。</p></div>
 </section>
 
