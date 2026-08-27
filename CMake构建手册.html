@@ -288,153 +288,39 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 34914px;--thin-h:34914px">
+<section class="chapter" style="contain-intrinsic-size:auto 25854px;--thin-h:25854px">
 <h1 id="k0"><span class="part">第 0 章</span>预备:CMake 做什么、不做什么</h1>
 <h2 id="k0-open">0.0 导读</h2>
-<p>CMake 自身不编译任何东西。它读一份用自己的语言写成的工程描述,输出另一个构建系统的输入文件,再由 Ninja、Make 或 MSBuild 去调用编译器与链接器。这层间接换来了跨平台与跨编译器的统一写法,代价是排错时要先分清报错来自三层里的哪一层。</p>
-<p><strong>本书讲清这套描述语言的现代形态:状态挂在哪里、依赖沿什么路径传播、每个值在哪一步确定下来、构建出来的东西怎么交到别人手上。</strong>基线取 CMake 3.20 以上,平台覆盖 Linux、Windows 与 macOS,编译器覆盖 GCC、Clang 与 MSVC。凡是随版本变动的事实,书里给的是查证入口,不是写作当时的取值。</p>
-<p>全书每一章都是同一种形态:<strong>先讲机制,回答为什么;随后的条目节逐条给出本章命令、变量与属性的写法,回答怎么写。</strong>条目与机制同章,凡条目涉及机制的地方一律写「机制见 N.M 节」,不重复推导。长期查阅的入口在第 10 章末尾的三张参照表:命令出场顺序、变量三表、属性变量命令对应。</p>
-<p>CMake 的语言本身很小:命令、字符串列表、几种控制结构,没有类型系统,变量只有字符串与列表两种形态。难的不是语法,是<strong>三件事同时在起作用</strong>——命令在配置期按书写顺序执行,属性到生成期才被收集,而生成出来的文件要到构建期才被读。三者混在一起,是绝大多数「明明写了却没生效」的来源。</p>
-<h3>这个领域有哪些资料</h3>
-<p>CMake 的资料有一个别处少见的分布:<strong>官方文档是完备的参考,却不给判据;博客与演讲给判据,却往往停在某个旧版本上。</strong>官方手册对每条命令、每个属性、每个生成器表达式都给了准确语义与引入版本,但不回答「这件事该不该这么做」;而回答这个问题的材料多是单篇文章或一次演讲,写成之后不再更新。</p>
-<p>这个分布决定了本书的取材方式。事实层一律以官方文档与 <code>cmake --help-command</code> 的输出为准,二手资料与它冲突时不采信;判据层来自少数几样把现代写法归纳成原则的材料;<strong>凡是版本敏感的结论都写成「以 Added in 标注为准」</strong>,不在书里写死某个设施是从哪一版开始有的。</p>
-<p>条目那一半的锚定比机制更窄。章节怎么排、判据怎么收,可以从别人的书里借,借来之后仍然成立;而条目逐条对照的是接口本身,<strong>参数与取值这一层只能锚在官方参考文档与 <code>cmake --help-*</code> 上</strong>——参数写错的代价是配置期直接报错,这一层不接受近似,也没有第二个来源可以核对。二手资料在这一层帮不上忙:一本书的参数表停在成稿那一版,而读者手上的 CMake 是另一个版本。</p>
-<p>下表按三档标注关系。<strong>锚定</strong>指本书的骨架或事实层确实建立在它上面,<strong>参考</strong>指写作时查过、对照过但没有影响结构,<strong>推荐</strong>指它是好东西、读者迟早用得上,而本书没有直接用。三档分开,是为了不让「值得知道的资料」被当成「本书都用过的资料」。</p>
-<table style="contain-intrinsic-size:auto 1804px">
-<thead><tr><th>资料</th><th>类型</th><th>关系</th><th>特点与局限</th></tr></thead>
+<p>CMake 自身不编译任何东西:它读一份用自己的语言写成的工程描述,生成 Ninja、Make 或 MSBuild 的输入文件,由后者调用编译器与链接器。这层间接换来跨平台与跨编译器的统一写法,代价是排错要先分清报错来自哪一层。<strong>本书讲清这套描述语言的现代形态:状态挂在哪里、依赖沿什么路径传播、每个值在哪一步确定下来、构建出来的东西怎么交到别人手上。</strong>基线取 CMake 3.20 以上,平台覆盖 Linux、Windows 与 macOS,编译器覆盖 GCC、Clang 与 MSVC;版本敏感的事实一律给查证入口,不写死取值。</p>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 412px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>Craig Scott《Professional CMake: A Practical Guide》</td><td>经典教材</td><td>锚定</td><td>目前唯一一本系统讲 CMake、并且持续跟随版本更新的教材,命令、属性、工程组织与打包连成一条线。局限:按主题铺开,取一条判据常要跨几章拼;随版本反复修订,不同修订之间章节编号会变,引用时要写清所用的修订</td></tr>
-<tr><td>Henry Schreiner《An Introduction to Modern CMake》</td><td>经典教材</td><td>锚定</td><td>开源文档,入门骨架清楚,最小可跑例子多,读完能写出一份结构正确的 CMakeLists。局限:面向入门,导出与安装、跨平台差异、包管理器几块只开了头;更新节奏取决于维护者,部分页面落后于当前版本</td></tr>
-<tr><td>Daniel Pfeifer「Effective CMake」</td><td>进阶专题</td><td>锚定</td><td>把现代写法归成少数几条原则:目标是主角、配置挂在目标属性上、使用要求靠传播、不要碰目录级命令。局限:一次演讲的材料,给原则不给完整工程;材料本身不再更新,之后新增的设施要自己补上</td></tr>
-<tr><td>CMake 官方文档的参考手册:cmake-buildsystem、cmake-packages 两篇机制手册,以及 cmake-commands、cmake-variables、cmake-properties、cmake-generator-expressions、cmake-modules 五篇逐条参考</td><td>官方文档</td><td>锚定</td><td>命令语义、属性传播规则、生成器表达式求值时机的权威出处,也是全部条目节逐条对照的底本,每条命令与属性都标了引入版本。局限:按名字分页,回答「这一条是什么」而不回答「该不该这么做」;篇幅巨大,不适合顺读</td></tr>
-<tr><td><code>cmake --help-command</code> 与同族的 <code>--help-variable</code>、<code>--help-property</code>、<code>--help-manual</code></td><td>参考手册</td><td>锚定</td><td>与本机 CMake 版本严格一致的内建参考,不联网即可查,回答「这个设施在我这一版里存不存在」最快。局限:只给事实不给判据;要先知道名字,只记得半个名字时得用 <code>--help-command-list</code> 一族先列全表</td></tr>
-<tr><td class="nw">CMake 源码里的 <code>Modules/</code> 目录</td><td>源码</td><td>锚定</td><td><code>FindXxx.cmake</code> 与 <code>XxxConfig.cmake</code> 的真实写法都在这里,随 CMake 一起分发的模块本身就是最大的一批范例。局限:模块之间年代跨度大,老模块保留着已不推荐的写法,不能不加分辨地照抄</td></tr>
-<tr><td class="nw">Kitware 官方博客</td><td>在线资料</td><td>参考</td><td>新设施最早的说明与设计意图,Presets、FetchContent 一类的东西常常先在这里成文。局限:按时间成篇,彼此不衔接;文章写作时的版本与读者手上的版本往往不同,结论要按发表时间折算</td></tr>
-<tr><td class="nw">vcpkg 与 Conan 的官方文档</td><td>官方文档</td><td>参考</td><td>两条主流依赖获取路线各自怎么与 <code>find_package</code> 对接、工具链文件怎么挂进去,一手出处只有这里。局限:各自绑定自家的清单格式与目录约定,两边的术语不通用;集成方式随各自版本调整,旧教程里的步骤常已失效</td></tr>
-<tr><td class="nw">《编译与链接》</td><td>相邻领域</td><td>锚定</td><td>静态库与动态库交出来的东西有什么不同、符号怎么解析、程序启动时按什么顺序找动态库,全在那本书里,本书一律引它,不重讲。局限:不含任何 CMake 内容</td></tr>
-<tr><td class="nw">《C++ 语言》</td><td>相邻领域</td><td>推荐</td><td>本书假定的 C++ 基础都在里面:翻译单元与头文件、模板、各标准版本之间的差别。局限:不讲构建,也不讲标准怎么开到编译命令行上</td></tr>
-<tr><td class="nw">《C++ 性能优化》</td><td>相邻领域</td><td>推荐</td><td>优化级别与各类编译选项对运行速度的实际影响,以及怎么测出来。局限:不讲这些选项该挂在哪一层,也不讲怎么避免它们漏进第三方代码</td></tr>
-<tr><td class="nw">《Qt 组件与生态》</td><td>相邻领域</td><td>推荐</td><td>第三方库的选型判据、维护状态与授权核查在那本书的第 0 章。局限:不讲 CMake 机制,选定之后怎么接进来仍要回到本书第 4 章</td></tr>
+<tr><td>Craig Scott《Professional CMake: A Practical Guide》</td><td>唯一系统讲 CMake 且持续随版本更新的教材,命令、属性、工程组织与打包连成一条线;按主题铺开,取一条判据要跨几章拼</td></tr>
+<tr><td>Henry Schreiner《An Introduction to Modern CMake》</td><td>开源入门文档,骨架清楚、最小可跑例子多;导出与安装、跨平台差异几块只开了头</td></tr>
+<tr><td>Daniel Pfeifer「Effective CMake」</td><td>把现代写法归成少数几条原则:目标是主角、配置挂在目标属性上、使用要求靠传播;一次演讲的材料,不再更新</td></tr>
+<tr><td>CMake 官方参考手册(两篇机制手册与五篇逐条参考)</td><td>命令语义、属性传播与生成器表达式求值时机的权威出处,每条设施标注引入版本;按名字分页,只适合查</td></tr>
+<tr><td><code>cmake --help-command</code> 与同族内建帮助</td><td>与本机版本严格一致的内建参考,不联网即可确认某个设施存不存在;只给事实不给判据</td></tr>
+<tr><td class="nw">CMake 源码里的 <code>Modules/</code> 目录</td><td>随 CMake 分发的模块本身就是最大的一批范例;老模块留着已不推荐的写法,不能照抄</td></tr>
 </tbody>
 </table>
-<p>官方手册在本书里有明确的分工。<code>cmake-buildsystem</code> 讲目标与属性怎么组成一张图,<code>cmake-packages</code> 讲一个包被找到与被使用的完整链路,两篇适合顺读;<code>cmake-commands</code>、<code>cmake-variables</code>、<code>cmake-properties</code>、<code>cmake-generator-expressions</code> 与 <code>cmake-modules</code> 按名字分页,只适合查,本书条目节的事实逐条对照它们写成。</p>
-<p>三类来源在书里的分工是固定的:<strong>官方文档与内建帮助给事实,原则性材料给判据,官方模块与博客给真实写法。</strong>事实最稳,但覆盖不到取舍;判据不随版本变,却要自己落到具体命令上;真实写法最容易过期,因为它绑在某一版的设施上。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 164px"><span class="t">🟢 事实以官方文档与 cmake --help-command 为准</span><p>两者的分工不同:官方手册给的是完整语义与适用范围,<code>cmake --help-command</code> 给的是与本机这一版严格一致的输出。查一条命令在自己这一版里到底存不存在、参数长什么样,内建帮助比任何网页都可靠,而且不需要联网。二手资料的价值在于提示该往哪里看,它给出的结论要回到这两处核对一遍再采信。</p></div>
-<p>判断一篇 CMake 文章还能不能用,有一个不依赖发表时间的做法:看它给的命令是 <code>target_</code> 开头的还是目录级的,看它引第三方库时用的是导入目标还是两个路径变量,看它设标准时用的是 <code>target_compile_features</code> 还是往 <code>CMAKE_CXX_FLAGS</code> 里拼字符串。三处有一处是旧形态,里面的写法都要重新验证。</p>
-<p>判据部分则通常仍然成立,可以照读。目录级命令为什么承担不了使用要求、为什么不要在工程里写死构建类型、为什么生成期才是选项真正定下来的时刻,这些结论建立在 CMake 的求值模型上,与版本无关。<strong>写法会过期,模型不会。</strong></p>
-<div class="note dead" style="contain-intrinsic-size:auto 198px"><span class="t">🔴 照抄博客里的版本结论会在别人的机器上失败</span><p>博客文章记录的是写作当时那一版的行为,而 CMake 的设施是逐版增补的:某个参数、某条属性、某种生成器表达式在文章里能用,在读者的版本里可能还不存在。症状是脚本在作者机器上一次通过,换台机器配置期就报参数不认识,或者报某条命令没有这个选项。修法是在采用一个不常见的设施之前先跑一次 <code>cmake --help-command</code>,确认它的 Added in 标注不高于工程声明的最低版本。</p></div>
-<h3>锚定的资料各借鉴了什么</h3>
-<p>借鉴要写成具体手法才可以核对:某几章的编排顺序、某张表的列划分、某条判据的来源。凡是能写成「参考了它的思路」的,都说明没有真正借到东西。</p>
-<table style="contain-intrinsic-size:auto 756px">
-<thead><tr><th>锚定的资料</th><th>借鉴了什么</th></tr></thead>
+<p>上表六样本书都借鉴了,事实层一律以官方手册与 <code>cmake --help-*</code> 的本机输出为准。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 414px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td>Craig Scott《Professional CMake: A Practical Guide》</td><td>骨架的两处。一是把「目标与它的属性」整章放在全部机制之前,第 1、2 章按这条线排;二是把消费侧与提供侧拆成两章分开处理——第 4 章讲怎么把别人的库引进来,第 5 章讲怎么让自己的库以同样的形态被别人引走</td></tr>
-<tr><td class="nw">CMake 官方文档的参考手册</td><td>事实层的唯一准绳:命令语义、属性名与作用域规则、生成器表达式的求值时机一律以它为准。第 3.9 节生成器表达式的五类分组沿用 <code>cmake-generator-expressions</code> 的编排;第 2.1 节使用要求的属性表按 <code>cmake-buildsystem</code> 里 <code>INTERFACE_</code> 前缀的那一组列;第 5 章导出与配置文件的顺序按 <code>cmake-packages</code> 排;条目节的固定形态——命令形式、参数、它改了什么、最小示例——取自官方参考页的字段划分,但把「它改了什么」单列了出来</td></tr>
-<tr><td><code>cmake --help-command</code> 与同族命令</td><td>全书查证动作的统一出口。凡是「这个设施从哪一版起可用」的问题,正文一概不给数字,而是给一条可以立刻执行的命令;第 1.3 节的头文件集合、第 4.4 节的 FetchContent 参数、第 8.1 节的跨目录规则,三处用的是同一个形态</td></tr>
-<tr><td>Daniel Pfeifer「Effective CMake」</td><td>全书的立足点:目标是主角、配置挂在目标属性上、使用要求沿依赖边传播。第 2.2 节三个作用域关键字的判据——被依赖库的类型或宏是否出现在自己的公开头文件里——是把这条原则收成一句可判断的话;第 10.2 节反模式的取舍标准也从它来</td></tr>
-<tr><td>Henry Schreiner《An Introduction to Modern CMake》</td><td>第 0 章的入口形态:用一份能直接跑的最小 CMakeLists 逐行拆开,而不是先讲语法再拼工程。全书每段示例都在首行注释里写明假设的目录结构与最低版本,这条做法照它</td></tr>
-<tr><td class="nw">CMake 源码里的 <code>Modules/</code> 目录</td><td>第 4.3 节「配置文件里有什么」与第 5.2 节「自己写配置文件与版本文件」,两节的骨架按官方模块的实际写法拆:先处理自己的依赖,再读入导出目标文件,最后按组件逐项检查。第 4.2 节两种模式的差别也照模块的真实分工写</td></tr>
-<tr><td class="nw">《编译与链接》</td><td>一条分界:把 CMake 换成手写 Makefile 之后现象仍然成立的内容,一律不在本书重复推导,只给一个指向。库的形态、符号解析、运行期查找顺序三块因此从本书移出,第 1.1 节与第 9.2 节只保留 CMake 这一侧的写法</td></tr>
+<tr><td>第 1、2 章目标与属性先行,第 4、5 章消费侧与提供侧分开</td><td>Craig Scott:把「目标与它的属性」整章放在全部机制之前;消费与提供两侧拆成对称的两章</td></tr>
+<tr><td>第 2.2 节作用域关键字的判据、第 10.2 节反模式的取舍</td><td>Pfeifer:目标是主角、配置挂在目标属性上、使用要求沿依赖边传播;2.2 节把它收成一句可判断的话</td></tr>
+<tr><td>3.9 节表达式分组、2.1 节属性表、第 5 章导出顺序</td><td>官方手册:分别按 cmake-generator-expressions、cmake-buildsystem 与 cmake-packages 三篇的编排排开</td></tr>
+<tr><td class="nw">全书版本可用性的查证形态</td><td><code>cmake --help-command</code> 一族:正文不写死版本号,一律给一条可立刻执行的查证命令</td></tr>
+<tr><td class="nw">第 0 章的入口形态与示例首行注释</td><td>Schreiner:用一份能直接跑的最小 CMakeLists 逐行拆开;每段示例写明假设的目录结构与最低版本</td></tr>
+<tr><td class="nw">4.3 节与 5.2 节配置文件的骨架</td><td>CMake 源码的 <code>Modules/</code> 目录:按官方模块的真实写法拆:先处理依赖、再读导出目标、最后按组件检查</td></tr>
 </tbody>
 </table>
-<p>七样锚定里有一样与其余六样性质不同。《编译与链接》不提供任何 CMake 事实,它提供的是一条取舍。去掉底层机制这一层之后,剩下的正好是 CMake 这一侧的账,本书的厚度由此定下来。</p>
-<p>官方模块目录的用法也与其余锚定不同:它不提供结论,提供的是范例。第 4 章与第 5 章要回答「一份真实的配置文件里应该有哪几段」,而这个问题的答案不在任何一篇手册里,只在随 CMake 一起分发的那几十个模块的源码里。</p>
-<h3>讲什么、不讲什么</h3>
-<p>本书覆盖<strong>用 CMake 描述一个 C 或 C++ 工程所需要的全部机制</strong>,十一章按四组归类。分组不是阅读顺序,而是四个互相支撑的层次。</p>
-<table style="contain-intrinsic-size:auto 236px">
-<thead><tr><th>组</th><th>章与节</th><th>它回答的问题</th></tr></thead>
-<tbody>
-<tr><td class="nw">世界观</td><td class="nw">第 0 到 2 章,17 节</td><td>CMake 在整条工具链里占哪一段,一个目标由什么构成,配置与依赖怎么沿目标图传给使用者</td></tr>
-<tr><td class="nw">求值与依赖</td><td class="nw">第 3 到 5 章,21 节</td><td>一个值在哪一步定下来,外部的库怎么进来,自己的库怎么以同样的形态出去</td></tr>
-<tr><td class="nw">工具链与产物</td><td class="nw">第 6 到 9 章,22 节</td><td>标准与选项怎么给到三大编译器,生成器与配置怎么选,构建期还要生成与验证什么,装出来的东西怎么在别人机器上跑起来</td></tr>
-<tr><td class="nw">收尾</td><td class="nw">第 10 章,5 节</td><td>工程大了之后怎么拆、怎么加快,十种反模式,以及三张全书参照表</td></tr>
-</tbody>
-</table>
-<p>合计 11 章 65 节,每章由机制小节与条目节两段构成。四组之间是单向依赖:后三组的每一章都在用第一组的结论——目标是唯一的状态载体,使用要求沿依赖边传播。</p>
-<p>全书只有一个立足点:<strong>现代 CMake 的主角是目标</strong>。一个目标带着自己的源文件、包含路径、宏定义、编译选项与依赖,这些信息写在目标属性上而不是变量上;别的目标链接它时,该给的那一部分沿依赖边自动传过去。脚本要做的事只有一件,把这张目标图描述清楚。</p>
-<p>由此得到一条贯穿全书的取舍。<code>include_directories</code>、<code>link_libraries</code>、<code>add_definitions</code> 这类目录级命令写的是目录属性,结构上就承担不了使用要求;它们在正文里一次都不作为可选写法与目标级命令并列,只出现在三个位置:<code>old</code> 批注、第 2.1 节末尾的结构对照表、第 10.2 节的迁移表。</p>
-<div class="note old" style="contain-intrinsic-size:auto 198px"><span class="t">🟡 目录级老命令不作为可选写法,只在 old 批注里出现</span><p><code>include_directories</code> 一类命令把路径与宏挂在当前目录上,作用范围是「本目录及子目录里、这条命令之后创建的全部目标」。两个方向都错:不该拿到的目标拿到了,而库的使用者又拿不到。把它与 <code>target_include_directories</code> 并列成两种风格,等于让读者在一个已经有答案的问题上再选一次。第 2.1 节末尾的对照表给出结构上的原因,第 10.2 节给出逐条的迁移路径,正文其余位置一律只写目标级命令。</p></div>
-<p>基线定在 CMake 3.20 以上。示例代码的首行统一写 <code>cmake_minimum_required(VERSION 3.20)</code>,并在注释里写明假设的目录结构。更新的版本引入的设施照样讲,但一律先给查证入口:属性查 <code>cmake --help-property</code>,命令查 <code>cmake --help-command</code>,生成器表达式查对应的手册页。</p>
-<div class="note new" style="contain-intrinsic-size:auto 164px"><span class="t">🔵 基线取 3.20,更新的设施先给查证入口再用</span><p>3.20 是一条工程上的折中:比它更低的版本缺少本书反复用到的几样东西,而比它更高会把仍在用发行版自带 CMake 的使用者挡在门外。头文件集合、<code>FetchContent</code> 的部分参数、跨目录的自定义命令规则都在 3.20 之后才补齐,书里照讲,但每处都写明可用性以 Added in 标注为准,并给出基线为 3.20 时的替代写法。</p></div>
-<p>分组之外还有一条纵向的线索:全书反复出现的四个问题——这件事挂在哪一层、什么时候求值、传不传给使用者、装出去之后还成不成立。任何一条 CMake 写法都可以放到这四个问题下检查一遍;各章给出的判据,回答的都是其中某一问。</p>
-<p>第 4 章的机制部分比其余各章都厚,六节,另有两节条目。原因是「引入第三方库」在实践里被拆成了互不相同的几条路线:系统里已经装好的库、随工程一起拉下来的源码、包管理器提供的清单、没有配置文件只能自己包装的库。几条路线的失败形态不同,排查手段也不同,合成一节写会互相干扰。</p>
-<p>每一章的形态是统一的:机制小节之后是本章的条目节,给出命令形式、参数与最小示例。照着写时往往只需要条目节;判断某个改法对不对时,才回到机制小节。</p>
-<p>不讲的部分同样要说清楚,并指明归谁。<strong>分界一律写成一句能当场判断的话</strong>,遇到一个话题时可以立刻知道该翻哪一本。</p>
-<table style="contain-intrinsic-size:auto 601px">
-<thead><tr><th>不讲什么</th><th>归谁</th><th>分界在哪</th></tr></thead>
-<tbody>
-<tr><td>符号解析与重定位、动态库在运行期怎么被加载、搜索路径怎么排序</td><td class="nw">《编译与链接》</td><td>本书讲 RPATH 在 install 时怎么设对,那本讲 RPATH 在运行期排第几</td></tr>
-<tr><td>C++ 语言本身:翻译单元与头文件、模板、各标准版本之间的差别</td><td class="nw">《C++ 语言》</td><td>本书只管标准怎么开到目标上,不管开了之后语言多出什么</td></tr>
-<tr><td class="nw">编译器优化的性能细账:哪个选项换来多少</td><td class="nw">《C++ 性能优化》</td><td>本书讲一个选项该挂在哪一层、会不会漏给别人,那本讲这个选项值不值得开</td></tr>
-<tr><td>第三方库的选型:哪个库更合适、维护状态与授权能不能用</td><td>《Qt 组件与生态》第 0 章</td><td>本书讲机制——选定之后怎么接进来、怎么锁版本、怎么随产物一起带走</td></tr>
-<tr><td class="nw">打包之后的签名、公证与自动更新</td><td>《Qt 组件与生态》第 17 章</td><td>本书到「生成一个能装上去的包」为止,交付渠道那一段不讲</td></tr>
-<tr><td class="nw">CI 流水线怎么搭、缓存与构建矩阵怎么配</td><td class="nw">《Git 与工程协作手册》</td><td>本书保证一条命令能在干净机器上跑通,那本讲把这条命令挂到流水线上</td></tr>
-<tr><td>CTest 与 CDash 的服务端、CPack 每种生成器的逐项参数、Fortran 与 CUDA 的语言支持</td><td class="nw">不讲</td><td>每样只给一条判据与一个可跑的例子,再指到对应的官方手册页</td></tr>
-</tbody>
-</table>
-<h3>读之前要会什么</h3>
-<p>前置分两档,每条配一个可以执行的自测动作。「熟悉 C++」这样的说法无法自测,也就无法用来判断该不该现在读。</p>
-<table style="contain-intrinsic-size:auto 511px">
-<thead><tr><th>档次</th><th>要会什么</th><th>怎么自测</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td>在命令行上编译并链接一个多文件的 C 或 C++ 程序</td><td>不借助 IDE,把三个源文件分别编成目标文件再链成可执行文件,写出这四条命令并跑通</td></tr>
-<tr><td class="nw">必须</td><td>说得清头文件与库分别解决什么问题</td><td>指出同一个函数的声明与定义各自在哪一步被用到,并说明少了哪一样会在哪一步报错、报错长什么样</td></tr>
-<tr><td class="nw">必须</td><td>知道静态库与动态库在链接时交出来的东西不一样</td><td>说出链接一个静态库与链接一个动态库之后,可执行文件里各自留下了什么,以及程序启动时还需要什么</td></tr>
-<tr><td class="nw">必须</td><td class="nw">用过任意一种构建工具</td><td>用 Make、Ninja 或 Visual Studio 之一构建过一个不止一个源文件的工程,并说出改一个头文件之后哪些文件会重新编译</td></tr>
-<tr><td class="nw">必须</td><td>读得懂一段 shell 或批处理</td><td>读一段十行左右的脚本,指出哪几行在设环境变量、哪几行在调用外部程序、哪一行的返回值被判断了</td></tr>
-<tr><td class="nw">最好有</td><td class="nw">手写过一份 Makefile</td><td>说清一条规则的目标、依赖与命令三部分各写在哪里,以及改了头文件却没有触发重新编译时该往哪里查</td></tr>
-<tr><td class="nw">最好有</td><td>在两个操作系统上构建过同一份代码</td><td>说出同一段代码在两边分别卡在了哪一步,以及当时是怎么绕过去的</td></tr>
-<tr><td class="nw">最好有</td><td>装过一次别人的开源库并在自己的工程里用起来</td><td>说出那次一共动了几处:头文件路径、库文件路径、运行期的库搜索路径,分别写在什么地方</td></tr>
-</tbody>
-</table>
-<p>前置里没有 CMake 本身,但有构建这件事的基本概念。CMake 描述的是编译与链接的过程,不理解这个过程,读到的每条命令都只能当口诀记;<strong>能不能自测的分界就在这里</strong>——说得出一条编译命令的每个参数在干什么,才算过了必须那一档。</p>
-<p>两样不在前置里:不需要写过 CMake,第 0 章从「它到底产出什么」开始;不需要懂任何一种编译器的内部实现,第 6 章只用到选项名与它们可观察的效果。</p>
-<h3>本书的特点</h3>
-<p>特点要能被当场核对,因此每一条都配了去哪一节验证。</p>
-<table style="contain-intrinsic-size:auto 555px">
-<thead><tr><th>特点</th><th>到哪一节核对</th></tr></thead>
-<tbody>
-<tr><td class="nw">目录级老命令一次都不作为可选写法出现</td><td>第 2.1 节末尾有一张目录级命令与 <code>target_</code> 命令的结构对照表,给出它们承担不了使用要求的原因;其余位置只在 <code>old</code> 批注与第 10.2 节的迁移表里提到它们</td></tr>
-<tr><td>每段 CMake 代码都能直接跑,并写明它假设了什么</td><td>随手翻开任意一段示例,首行注释写着假设的目录结构与最低版本,例如第 0.2 节的七行 CMakeLists 与第 1.1 节的五种目标</td></tr>
-<tr><td class="nw">版本敏感的结论不写死版本号</td><td>第 1.3 节的头文件集合、第 4.4 节的 FetchContent 参数、第 8.1 节的跨目录规则,三处都把可用性交给 <code>cmake --help-command</code> 与官方文档的 Added in 标注</td></tr>
-<tr><td class="nw">第 4 章的机制部分全书最厚,六节机制加两节条目</td><td>其中第 4.5 节单独处理三平台差异:库文件形态、链接时交出什么、运行期怎么找、导出符号怎么处理</td></tr>
-<tr><td>第 10.2 节十种反模式,每条给「症状 → 为什么错 → 正确写法」</td><td>开头先集中列一张十条症状的表,便于对照自己的工程,再逐条给出错误写法与正确写法的完整代码</td></tr>
-<tr><td class="nw">条目与机制同章,不重复推导</td><td>每章的条目节紧跟机制小节,凡条目涉及机制处一律写「机制见 N.M 节」,例如 1.5 节的定义目标指回 1.1 节、3.9 节的生成器表达式一览指回 3.3 节</td></tr>
-<tr><td class="nw">全书 16 张原创插图</td><td>配置期与生成期的分界、三个作用域关键字的落点、<code>find_package</code> 的查找顺序、装完之后库的解析路径都有图</td></tr>
-</tbody>
-</table>
-<p>七条里有两条是负面约束:老命令不并列、版本号不写死。它们决定的不是书里多了什么,而是书里刻意不给什么——多一条可选写法,读者就多一次不必要的选择;多一个写死的版本号,书就多一处会过期的地方。</p>
-<p>16 张插图集中在三类地方:分界,哪些事发生在配置期、哪些到生成期才发生;路径,一次查找或一次解析按什么顺序走;传播,一个属性从哪个目标流到哪个目标。文字讲得清的地方不配图。</p>
-<h3>怎么读</h3>
-<p>三条路线按处境划分,起点不同,主干也不同。</p>
-<table style="contain-intrinsic-size:auto 349px">
-<thead><tr><th>读者的处境</th><th>读法路线</th><th>主干</th><th>可以先放过</th></tr></thead>
-<tbody>
-<tr><td>接手一个已有工程,看不懂它的 CMakeLists</td><td>第 1 章 → 第 2 章 → 第 3 章 → 第 10 章</td><td>第 2 章与第 3.3 节</td><td>第 5、8、9 章</td></tr>
-<tr><td class="nw">从零起一个新工程</td><td>第 0 章 → 第 1 章 → 第 2 章 → 第 4 章 → 第 9 章</td><td>第 2 章与第 4 章</td><td>第 7.3 节与第 10.1 节</td></tr>
-<tr><td class="nw">要把自己的库发出去给别人用</td><td>第 1 章 → 第 2 章 → 第 5 章 → 第 9 章</td><td>第 5 章与第 9.2 节</td><td>第 6、7、8 章</td></tr>
-<tr><td class="nw">手上已经有一个具体报错</td><td>按本节末尾「遇到的现象翻哪一章」那张表进到对应章,再按小节标题收窄</td><td>—</td><td>—</td></tr>
-<tr><td class="nw">只想确认某条命令、变量或属性怎么写</td><td>直接翻该章的条目节;不确定在哪一章时,从第 10.3 至 10.5 节的三张参照表进</td><td>—</td><td>机制小节可后补</td></tr>
-</tbody>
-</table>
-<p>前四条路线的主干都是机制小节。读过一遍之后,长期使用的入口转到各章的条目节与第 10 章的三张参照表:条目按「想查什么」组织,每条给命令形式、参数、它改了什么与最小示例。<strong>机制小节回答为什么,条目节回答怎么写</strong>,条目里凡涉及机制的地方都指回同章的机制小节,不重复推导。</p>
-<p>三条路线有一段公共的地基:第 1 章与第 2 章。目标与属性、使用要求与三个作用域关键字,是后面每一章都在用的东西;跳过它们直接读第 4 章或第 9 章,读到的都是「这里要这么写」,而判断自己是不是那个情形的能力恰好在这两章里。</p>
-<div class="note ok" style="contain-intrinsic-size:auto 163px"><span class="t">🟢 第 1、2 章按顺序读完再挑章节,其余各章可跳</span><p>后面每一章都建立在这两章上:第 4 章引第三方库,引进来的是一个带使用要求的导入目标;第 5 章导出自己的库,导出的是同一组属性;第 6 章的选项要挂在目标上;第 9 章的安装规则按目标写。跳着读的表现是每一节都看得懂字面,却记不住某条命令为什么要加作用域关键字,遇到没见过的现象也推不出原因。</p></div>
-<p>三条路线里都没有把第 7 章排进主干。生成器与配置这一章的内容在单配置生成器上几乎察觉不到,一旦换到多配置生成器上,不读它就会在「为什么原来的判断在这里失效」上停很久。用到那一步再补,补的时候整章读完。</p>
-<p>还有一种处境值得单列:工程能构建,但没有人说得清它为什么能构建。这种情形按第一条路线走,并在读第 3 章时把工程的 <code>CMakeCache.txt</code> 打开对照——缓存里粘住的旧值,是「改了却没反应」这类现象最常见的来源。</p>
-<p>手上已经有一个具体报错时不必从头读。下表按现象指到章,进到章之后再按小节标题收窄。</p>
-<table style="contain-intrinsic-size:auto 222px">
-<thead><tr><th>遇到的现象</th><th>翻哪一章</th></tr></thead>
-<tbody>
-<tr><td class="nw">配置期就停下来,提示找不到某个第三方库</td><td>第 4 章,4.6 节给出固定的排查顺序</td></tr>
-<tr><td class="nw">改了编译选项却不生效</td><td>第 3 章,缓存把旧值粘住;以及第 6 章,选项挂错了层</td></tr>
-<tr><td class="nw">装完之后跑不起来,提示找不到动态库</td><td>第 9 章,9.2 节讲 RPATH 与 RUNPATH</td></tr>
-<tr><td class="nw">换一台机器,同一份代码构建结果不同</td><td>第 7 章,生成器与配置的差别;以及第 3 章,缓存与工具链文件</td></tr>
-<tr><td class="nw">构建太慢</td><td>第 10 章,10.1 节讲拆分、构建时间与编译缓存</td></tr>
-</tbody>
-</table>
-<p>读完第 0 到 2 章,能看懂一份陌生的 CMakeLists 把配置挂在了哪里,并说清某个包含路径是从哪个目标传过来的;读完第 3 到 5 章,能把一个第三方库接进来,也能把自己的库导出成别人一行 <code>find_package</code> 就能用的形态。</p>
-<p>读完第 6 到 9 章,能在三大编译器上把标准与选项给对位置,并把产物装到别人的机器上跑起来;读完第 10 章,能对一份老工程给出可执行的迁移计划,而不只是指出它哪里写得不好。</p>
+<h3>前提与读法</h3>
+<p>读之前要能在命令行上把多个源文件编译并链接成可执行文件,说得清头文件与库、静态库与动态库各自的分工,并用过任意一种构建工具;不需要写过 CMake。读法:第 1、2 章按顺序读完——目标与属性、使用要求与作用域关键字是后面每一章的地基——之后按处境挑章读;长期查阅的入口在各章条目节与第 10 章末尾的三张参照表,机制小节回答为什么,条目节回答怎么写。</p>
+<h3>读完之后</h3>
+<p>读完能看懂一份陌生的 CMakeLists 把配置挂在了哪里,能把一个第三方库接进来、把自己的库导出成别人一行 <code>find_package</code> 就能用的形态,并把产物装到别人的机器上跑起来。进阶方向有二:向下补编译、链接与装载的机制,弄清 CMake 生成的每条命令在做什么;向外把这套工程描述接到包管理、持续集成与发布流程上。</p>
 <h2 id="k0-what">0.1 它不构建,它生成构建系统</h2>
 <p>CMake 的产物是<strong>另一个构建系统的输入文件</strong>。执行一次 CMake,磁盘上多出来的是 <code>build.ninja</code>、<code>Makefile</code> 或 <code>.vcxproj</code>,不是目标文件,不是库,也不是可执行文件。</p>
 <p>一次完整的编译由三方完成。CMake 把「要构建什么」写成规则,构建工具按规则调度并决定哪些步骤可以跳过,编译器与链接器把源文件变成二进制。三方各有自己的输入、自己的日志、自己的报错格式。</p>
@@ -6350,7 +6236,7 @@ endforeach()</code></pre>
 <p>这一族解决的是「不要猜,直接问编译器」这个问题。做法都是在配置期真的编一小段代码,把成败记进一个缓存变量。</p>
 <p><strong>命令形式</strong></p><pre style="contain-intrinsic-size:auto 87px"><code>include(CheckCXXSourceCompiles)
 check_cxx_source_compiles(<span>"源码"</span> 结果变量 [FAIL_REGEX 正则...])</code></pre>
-<p><strong>参数</strong></p><table style="contain-intrinsic-size:auto 150px">
+<p><strong>参数</strong></p><table style="contain-intrinsic-size:auto 149px">
 <thead><tr><th>参数</th><th>取值</th><th>说明</th></tr></thead>
 <tbody>
 <tr><td class="nw">源码</td><td class="nw">一段能独立编译的完整代码</td><td>必须自带 <code>main</code> 函数,通常写成带引号的多行字符串</td></tr>
