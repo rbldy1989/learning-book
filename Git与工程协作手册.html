@@ -270,7 +270,7 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </nav>
 <div class="sb-resizer"></div>
 <main><div class="inner">
-<section class="chapter" style="contain-intrinsic-size:auto 40179px;--thin-h:15149px">
+<section class="chapter" style="contain-intrinsic-size:auto 34854px;--thin-h:9824px">
 <h1 id="g1"><span class="part">机制</span>Git 到底存了什么:对象库、引用与三棵树</h1>
 <p>只会 <code>add</code> / <code>commit</code> / <code>push</code> 的人不是不会用 Git,是脑子里没有 Git 的数据结构。命令背了一大堆,遇到没背过的组合就只能删掉重 clone。这一章把 Git 拆成三样东西——<strong>对象库</strong>(内容按哈希存的一堆不可变对象)、<strong>引用</strong>(一批只装着 40 位哈希的小文件)、<strong>索引</strong>(下一次提交的草稿)。</p>
 <p>所有命令都只是在动这三样里的一样或几样。知道这一点,<code>reset --soft</code> 和 <code>reset --hard</code> 的区别不必硬记,看它动了哪几棵树就够了。</p>
@@ -284,120 +284,37 @@ html[data-depth="thin"] section.chapter{contain-intrinsic-size:auto var(--thin-h
 </ul>
 <p>每条输出都是在 git 2.54.0.windows.1 上真跑出来抄下来的,你照着敲能得到一模一样的哈希。学完这一章再去看 <a href="#g2-status">2.1</a> 的日常命令,会发现它们只是这三样东西的不同组合。</p>
 <h2 id="g1-open">1.0 导读</h2>
-<p>Git 这个领域的资料集中度极高:一本免费的官方书打底,一套 man 页兜底,协作层面另有几本工程经典。资料不难找,难判断的是哪一份该在什么时候翻、哪一份已经跟不上今天的命令。</p>
-<h3>这个领域有哪些经典与主要资料</h3>
-<p>下表按类型分五组,每组两三样。「与本书的关系」分三档:<strong>锚定</strong>指本书的骨架或写法从它来,<strong>参考</strong>指写作时查证过但没有影响结构,<strong>推荐</strong>指与本书没有直接关系、但读者迟早用得上。</p>
-<table style="contain-intrinsic-size:auto 2380px">
-<thead><tr><th>资料</th><th class="nw">类型</th><th class="nw">与本书的关系</th><th>特点与局限</th></tr></thead>
+<p>版本控制解决两个问题:一个人怎么安全地修改与回退代码,一群人怎么在同一份代码上并行工作而不互相覆盖。Git 把这两件事都建在同一个数据结构上——一个内容寻址的对象库,所有命令都只是在它上面移动指针。<strong>本书前半讲清 <code>.git</code> 里的数据结构,再讲日常命令、分支与远程协作;后半讲团队流程:分支模型怎么选、评审看什么、闸门设在哪。</strong>终端输出为实测抄录,版本敏感处注明实测版本。</p>
+<h3>这个领域的经典资料</h3>
+<table style="contain-intrinsic-size:auto 539px">
+<thead><tr><th>资料</th><th>简介与特点</th></tr></thead>
 <tbody>
-<tr><td>Scott Chacon &amp; Ben Straub《Pro Git》第 2 版(git-scm.com/book,免费在线,有中文版)</td><td class="nw">经典教材</td><td class="nw">锚定</td><td>Git 官方钦定的入门到进阶书,「Git 内部原理」一章把对象库、引用、包文件、传输协议全拆开。<strong>局限</strong>:第二版成书较早,<code>switch</code>、<code>restore</code>、<code>--force-with-lease</code> 这批后来的命令要另查 man 页;协作流程只占一章。</td></tr>
-<tr><td class="nw">蒋鑫《Git 权威指南》</td><td class="nw">经典教材</td><td class="nw">参考</td><td>中文世界最厚的一本,选项接近穷举,每章都是「跑一遍看结果」的实验式讲法,换行符、编码、中文路径这些中文语境的坑写得全。<strong>局限</strong>:成书于 Git 1.7 时代,命令输出措辞、默认分支名、默认合并策略都变了,例子照跑会对不上。</td></tr>
-<tr><td>John Wiegley《Git from the Bottom Up》(在线)</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>三十来页,从「Git 是一个内容寻址的对象数据库」一句推出全部命令语义,是把对象模型讲得最紧凑的一份材料。<strong>局限</strong>:只讲机制,不讲协作,不再更新。</td></tr>
-<tr><td>Titus Winters 等《Software Engineering at Google》与 Google Engineering Practices 评审手册(google.github.io/eng-practices)</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>前者的「版本控制与分支管理」「代码评审」两章解释了大规模团队为什么选主干开发、评审为什么要小而快;后者分「怎么做评审」与「怎么写让人好评审的变更」两册。<strong>局限</strong>:Google 的单仓与自有工具链不能照搬到十人团队;手册是英文,术语用 CL 而不是 PR。</td></tr>
-<tr><td class="nw">Jez Humble &amp; David Farley《持续交付》</td><td class="nw">进阶与专题</td><td class="nw">锚定</td><td>部署流水线、构建一次到处部署、发布与上线解耦这几个概念的出处;分支策略一章把长期分支的代价算得最清楚。<strong>局限</strong>:成书较早,书里的工具已经整代换过,读概念不读工具。</td></tr>
-<tr><td>Forsgren / Humble / Kim《Accelerate》与历年 DORA 报告</td><td class="nw">进阶与专题</td><td class="nw">参考</td><td>四个交付指标(部署频率、变更前置时间、变更失败率、恢复时间)与主干开发、小批量提交的相关性,是流程主张里唯一有数据支撑的来源。<strong>局限</strong>:讲的是统计相关,不是单个团队的处方。</td></tr>
-<tr><td>Git man 页与概念页(<code>git help &lt;命令&gt;</code>、<code>git help -g</code>)</td><td class="nw">参考手册</td><td class="nw">锚定</td><td>选项、退出码、配置项以它为准,本机装了 Git 就有。概念页 <code>gitglossary</code>、<code>gitrevisions</code>、<code>githooks</code>、<code>gitattributes</code>、<code>gitignore</code> 解释的是术语与规则,不对应任何单个命令。<strong>局限</strong>:极度精简,不解释设计意图;中文翻译滞后,拿不准时看英文。</td></tr>
-<tr><td>Conventional Commits 与语义化版本(两份规范文本)</td><td class="nw">参考手册</td><td class="nw">参考</td><td>都很短,是自动生成变更日志与自动定版本号的前提。<strong>局限</strong>:是约定不是标准,团队裁剪之后工具链要跟着改。</td></tr>
-<tr><td>Git 源码、随源码发布的 <code>Documentation/technical/</code>,以及本机的 <code>.git</code> 目录</td><td class="nw">官方文档与源码</td><td class="nw">参考</td><td>包文件格式、传输协议、索引格式的逐字节说明只有这里有;<code>.git</code> 目录则是一手证据——第一部的每条结论都能在自己机器上用 <code>ls</code> 与 <code>git cat-file</code> 复核一遍。<strong>局限</strong>:面向实现者,读之前得先有对象模型的概念。</td></tr>
-<tr><td>GitHub / GitLab 官方文档(保护分支、必需检查、代码属主、流水线配置)</td><td class="nw">官方文档与源码</td><td class="nw">参考</td><td>平台侧的规则模型与配置项以各自文档为准,权限与合并策略的边界只有这里写得准。<strong>局限</strong>:界面与配置项变化快,带截图的教程半年就失效;两家术语不同(PR 与 MR、必需检查与流水线阶段)。</td></tr>
-<tr><td>Martin Fowler《Patterns for Managing Source Code Branches》(martinfowler.com)</td><td class="nw">在线资料</td><td class="nw">参考</td><td>把分支策略拆成一组可组合的模式(集成频率、发布分支、环境分支、特性开关),比「Git Flow 还是 GitHub Flow」这种二选一讨论清楚得多。<strong>局限</strong>:长文,没有可操作的命令。</td></tr>
-<tr><td>Git 发行说明(<code>Documentation/RelNotes</code>)</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>确认某个命令或默认值是哪一版改的,这是最快的路径。<strong>局限</strong>:按版本流水记事,不成体系。</td></tr>
-<tr><td>Learn Git Branching(交互式网站)</td><td class="nw">在线资料</td><td class="nw">推荐</td><td>分支、合并与 rebase 的指针移动可以点着看,建立拓扑直觉最快。<strong>局限</strong>:只覆盖分支操作,与索引、远程、真实冲突无关。</td></tr>
+<tr><td>Chacon 与 Straub《Pro Git》第 2 版</td><td>Git 官方钦定的入门到进阶书,「内部原理」一章把对象库、引用、包文件全拆开;成书较早,<code>switch</code>、<code>restore</code> 这批后来的命令要另查</td></tr>
+<tr><td>Git man 页与概念页(<code>git help</code>)</td><td>选项、退出码、配置项的准绳,<code>gitglossary</code>、<code>gitrevisions</code> 这些概念页解释术语与规则;极度精简,不解释设计意图</td></tr>
+<tr><td>Wiegley《Git from the Bottom Up》</td><td>三十来页,从「Git 是一个内容寻址的对象数据库」一句推出全部命令语义,对象模型讲得最紧凑;只讲机制,不讲协作</td></tr>
+<tr><td>Winters 等《Software Engineering at Google》与 Google 评审手册</td><td>解释大规模团队为什么选主干开发、评审为什么要小而快;Google 的单仓与自有工具链不能照搬到小团队</td></tr>
+<tr><td>Humble 与 Farley《持续交付》</td><td>部署流水线与「发布与上线解耦」的出处,长期分支的代价算得最清楚;成书较早,读概念不读工具</td></tr>
+<tr><td>Forsgren 等《Accelerate》与历年 DORA 报告</td><td>四个交付指标与主干开发、小批量提交的相关性,流程主张里唯一有数据支撑的来源</td></tr>
+<tr><td>Fowler《Patterns for Managing Source Code Branches》</td><td>把分支策略拆成一组可组合的模式,比「Git Flow 还是 GitHub Flow」的二选一讨论清楚得多</td></tr>
+<tr><td>Git 源码随附的 <code>Documentation/technical/</code></td><td>包文件格式、传输协议、索引格式的逐字节说明只有这里有;面向实现者,读之前要先有对象模型的概念</td></tr>
 </tbody>
 </table>
-<p>上表的<strong>局限</strong>归起来是两条时间线。一条是命令行界面:<code>checkout</code> 被拆成 <code>switch</code> 与 <code>restore</code>、默认分支名变成可配置项、默认合并策略换代、冲突标记多了一种风格,这些都在近几年发生,老书里的写法读得懂即可,自己写用新的。另一条是对象模型:blob、tree、commit、tag 四种对象与内容寻址的规则从 Git 1.x 至今没有变过。</p>
-<div class="note old" style="contain-intrinsic-size:auto 164px"><span class="t">🟡 老书的机制章可照读,命令与输出要另核</span><p>判断一段老材料会不会过时,看它讲的是<strong>数据结构</strong>还是<strong>命令行界面</strong>:前者稳定,后者一直在动。《Git 权威指南》讲对象库的那几章今天一字不改仍然成立,而同一本书里的终端输出、默认分支名、策略名要拿 <code>git help</code> 重新核对。本书所有版本敏感的输出都注明了实测版本。</p></div>
-<div class="note ok" style="contain-intrinsic-size:auto 132px"><span class="t">🟢 查的顺序是 -h、man 页、Pro Git</span><p>只是忘了选项怎么拼,<code>git rebase -h</code> 一屏就够;要知道某个选项的确切语义与边界,翻 <code>git help rebase</code>;要知道为什么这么设计,才去翻《Pro Git》。反过来先读书会很慢,而且书里不写你这个版本的措辞。</p></div>
-<h3>本书锚定了哪几样,各借鉴了什么</h3>
-<p>下表只收上表里标为「锚定」的五样,写清各自被借鉴的是什么手法。标为「参考」的材料只用于查证,没有进入结构;标为「推荐」的与本书写法无关。</p>
-<table style="contain-intrinsic-size:auto 400px">
-<thead><tr><th class="nw">锚定</th><th>借鉴了什么</th></tr></thead>
+<p>本书主要借鉴前五样,命令行为一律以本机 man 页为准,不一致处注明版本。</p>
+<h3>本书借鉴了什么</h3>
+<table style="contain-intrinsic-size:auto 350px">
+<thead><tr><th>本书章节/知识点</th><th>借鉴了哪本书的什么</th></tr></thead>
 <tbody>
-<tr><td class="nw">《Pro Git》内部原理章</td><td>第一部的编排顺序:先对象库、再引用、再索引与三棵树,命令一律排在机制之后。本书把它的「内部原理」独立成章的做法改成了逐节固定的收尾段——每个命令节最后都有一段「机制:它在 .git 里改了什么」。</td></tr>
-<tr><td class="nw">Git man 页与概念页</td><td>选项表的字段划分(选项、作用、什么时候用、坑),以及「以 man 页为准」这条裁判规则:书里每条选项的语义都与本机 man 页逐条核对过,不一致时以 man 页为准并注明版本。</td></tr>
-<tr><td class="nw">《Git from the Bottom Up》</td><td>把命令语义还原成「对哪个引用、哪棵树做了什么」的表述方式。三棵树一节的讲法与那张「四个动作在三棵树之间搬什么」的对照表,形式取自这里。</td></tr>
-<tr><td class="nw">Google 的两份工程实践材料</td><td>评审章的四个关注层次,以及「谁的批准算数」这个问题的提法。更根本的是流程节的固定骨架:先写这个流程保证什么、不保证什么,再写规模变大之后会发生什么。</td></tr>
-<tr><td class="nw">《持续交付》</td><td>选分支模型的判据形式——按团队规模、发布频率、回滚要求三个维度取值,而不是按流行程度推荐;以及把「发布」与「上线」当成两件事分开讲的做法。</td></tr>
+<tr><td>第 1 章的编排顺序</td><td>《Pro Git》内部原理章:先对象库、再引用、再索引与三棵树,命令一律排在机制之后;它的独立成章在本书改成每个命令节以「它在 <code>.git</code> 里改了什么」收尾</td></tr>
+<tr><td>各命令节的选项表</td><td>Git man 页:选项、作用、什么时候用、坑的字段划分;每条选项的语义与本机 man 页逐条核对,不一致时以 man 页为准并注明版本</td></tr>
+<tr><td>1.4 三棵树与四个动作的对照表</td><td>《Git from the Bottom Up》:把命令语义还原成「对哪个引用、哪棵树做了什么」的表述方式</td></tr>
+<tr><td>8.3 评审的关注层次与流程节的骨架</td><td>Google 的两份工程实践材料:四个关注层次与「谁的批准算数」的提法;流程节先写这个流程保证什么、不保证什么,再写规模变大之后会发生什么</td></tr>
+<tr><td>7.4 分支模型怎么选</td><td>《持续交付》:按团队规模、发布频率、回滚要求三个维度取值的判据形式,而不是按流行程度推荐;把「发布」与「上线」当成两件事分开讲</td></tr>
 </tbody>
 </table>
-<h3>本书讲什么、不讲什么</h3>
-<p>本书讲一个人用 Git 完成工作、以及一群人用 Git 一起完成工作所需要的全部内容:命令背后的数据结构、日常操作、分支与历史、远程协作、排错、团队流程、评审与自动化。</p>
-<table style="contain-intrinsic-size:auto 274px">
-<thead><tr><th class="nw">部分</th><th class="nw">章</th><th>回答什么</th></tr></thead>
-<tbody>
-<tr><td class="nw">机制与日常</td><td class="nw">第 1、2 章</td><td><code>.git</code> 里到底存了什么;一天里用得最多的十个命令各自动了工作区、索引、HEAD 中的哪几样</td></tr>
-<tr><td class="nw">分支与历史</td><td class="nw">第 3、4 章</td><td>分支指针怎么动、冲突从哪来;重写历史的手段有哪些,不可越过的那条线在哪</td></tr>
-<tr><td class="nw">协作与排错</td><td class="nw">第 5、6 章</td><td>本地分支、远程跟踪分支、远端分支三者的区别;push 被拒的四种情形;东西丢了怎么找回来</td></tr>
-<tr><td class="nw">团队流程</td><td class="nw">第 7 至 9 章</td><td>分支模型怎么选、提交信息怎么写、PR 怎么拆、评审看什么、闸门设在哪一层</td></tr>
-<tr><td class="nw">实战与疑难</td><td class="nw">第 10、11 章</td><td>一个任务从需求卡走到线上的完整链路;大仓库、多仓库结构与误操作恢复</td></tr>
-</tbody>
-</table>
-<p>下面这些内容本书不讲,列出它们各自归谁。</p>
-<table style="contain-intrinsic-size:auto 336px">
-<thead><tr><th>不讲的</th><th>归谁</th></tr></thead>
-<tbody>
-<tr><td class="nw">图形客户端与 IDE 内置的 Git 面板</td><td>各客户端自己的文档。本书只讲命令行,机制清楚之后任何客户端的按钮都能对应到某条命令</td></tr>
-<tr><td class="nw">托管平台的界面操作与按钮位置</td><td>GitHub / GitLab 官方文档。本书第 9 章讲的是规则模型——保护分支、必需检查、代码属主各自约束什么——不讲在哪个页面点</td></tr>
-<tr><td class="nw">CI 配置文件的语法</td><td>各平台文档。本书只讲闸门跑在哪个提交上、什么条件下才算通过</td></tr>
-<tr><td class="nw">Git 服务端的搭建、权限系统与备份</td><td>服务端软件自己的文档。本书假设远端已经存在</td></tr>
-<tr><td class="nw">包文件格式与传输协议的逐字节细节</td><td>Git 源码的 <code>Documentation/technical/</code>。本书讲到「传的是什么、为什么能增量传」为止</td></tr>
-<tr><td class="nw">需求怎么拆、迭代怎么排</td><td>项目管理方法自己的范畴。本书从一张需求卡已经进来之后开始</td></tr>
-</tbody>
-</table>
-<h3>前置技能</h3>
-<p>门槛集中在命令行,不在 Git 本身。每条都给了自测方式,答不上来的那条先补。</p>
-<table style="contain-intrinsic-size:auto 403px">
-<thead><tr><th class="nw">档</th><th class="nw">要求</th><th>自测方式</th></tr></thead>
-<tbody>
-<tr><td class="nw">必须</td><td class="nw">命令行能走动</td><td>不借助文件管理器,写出建目录、进目录、新建文件、打印文件内容这四步各自的命令</td></tr>
-<tr><td class="nw">必须</td><td class="nw">装过 Git 并完成过一次提交</td><td>说出 <code>git status</code> 输出里 <code>Changes to be committed</code> 与 <code>Changes not staged for commit</code> 分别对应哪一堆文件</td></tr>
-<tr><td class="nw">必须</td><td class="nw">读得懂用法行</td><td>看到 <code>git commit [-m &lt;msg&gt;] [--amend]</code>,能说出方括号与尖括号各表示什么</td></tr>
-<tr><td class="nw">必须</td><td class="nw">分得清文本与二进制文件</td><td>说出为什么 Git 能给 <code>.txt</code> 显示逐行差异,对 <code>.png</code> 只输出一行 <code>Binary files ... differ</code></td></tr>
-<tr><td class="nw">最好有</td><td class="nw">参与过一次带 PR 的协作</td><td>说出一个 PR 里源分支与目标分支各是什么,合并之后变的是哪一个</td></tr>
-<tr><td class="nw">最好有</td><td class="nw">shell 基础</td><td>写出一个带条件判断并返回非零退出码的 shell 函数——第 9 章的 hooks 全是这个形状</td></tr>
-<tr><td class="nw">最好有</td><td class="nw">见过 CI 挂掉</td><td>说出「本地能跑、CI 挂了」的三种常见原因</td></tr>
-</tbody>
-</table>
-<h3>本书的特点</h3>
-<p>与上面那些资料相比,本书多给的是下面五样,每样都能在书里直接核对。</p>
-<table style="contain-intrinsic-size:auto 351px">
-<thead><tr><th class="nw">特点</th><th>可核对的地方</th></tr></thead>
-<tbody>
-<tr><td class="nw">机制排在命令之前</td><td>第 1 章 6 节全部在讲 <code>.git</code> 里的数据结构,第一条日常命令要到第 2 章才出现;全书 29 张图多数画的是同一件事的「执行前、执行后」两态</td></tr>
-<tr><td class="nw">终端输出是实测抄录,不是重写</td><td>72 处「完整示例」的输出抄自同一环境(<code>git version 2.54.0.windows.1</code>),包括空行与大小写;版本敏感的提示文本都注明了版本</td></tr>
-<tr><td class="nw">会丢东西的操作单独标出</td><td>全书 108 个批注里有 67 个是红色的陷阱类,写的是会真删东西或静默出错的操作,不是泛泛的注意事项</td></tr>
-<tr><td class="nw">命令与流程各占一半</td><td>11 章里第 1 至 6 章是命令与机制,第 7 至 11 章是分支模型、评审、自动化与实战,后半部分不是附录</td></tr>
-<tr><td class="nw">按症状查得动</td><td>47 节、96 张表,选项表与决策树可以脱离正文单独看;11.3 节按「你丢了什么」索引恢复手段</td></tr>
-</tbody>
-</table>
-<h3>怎么读</h3>
-<p>第一次学按第 1 至 6 章顺读,这六章是主干,后面每一章都依赖它们。第 7 至 9 章按团队现状挑着读:已经定好流程的团队,第 7 章可以只看选型判据那一节;不需要自己配 CI 的,第 9 章看规则模型即可。第 10 章把前面串成一条完整链路,第 11 章遇到再翻。</p>
-<p>顺读时每个示例都要在临时仓库里跑一遍,不要拿真实项目做实验。把下面这个函数存进 shell 配置,每次实验一条命令都从干净仓库开始:</p>
-<p><strong>示例</strong></p><pre style="contain-intrinsic-size:auto 250px"><code>lab() {                      # lab 试一下  →  在 /tmp/试一下 里建一个干净仓库并进去
-  local d=<span>"${TMPDIR:-/tmp}/$1"</span>
-  rm -rf <span>"$d"</span> &amp;&amp; mkdir -p <span>"$d"</span> &amp;&amp; cd <span>"$d"</span> || <span class="kw">return</span> 1
-  git init -q -b main .
-  git config user.name  <span>"Lin Wei"</span>
-  git config user.email <span>"lin@example.com"</span>
-  git config core.autocrlf <span class="kw">false</span>          # 让输出跨平台一致,见 2.6
-}</code></pre>
-<p>需要复现书里那些 40 位哈希的例子,还要固定作者与两个时间戳——提交对象把它们一起算进了哈希,不固定就对不上。相关例子会显式给出那几行 <code>export</code>。</p>
-<div class="note dead" style="contain-intrinsic-size:auto 165px"><span class="t">🔴 别在真实项目里练 reset --hard 和 clean</span><p>本书标了危险符号的命令会直接删除数据。练习一律在临时仓库里做,理由不是防止误操作,而是<strong>只有在能随便毁掉的仓库里,你才敢把它毁掉一次,并且亲眼看清丢的是什么、救得回哪些</strong>。看十遍描述,不如自己 <code>reset --hard</code> 掉一处未暂存的改动,再确认它确实找不回来。</p></div>
-<p>已经在用 Git、只是遇到具体问题的,按症状直接跳。</p>
-<table style="contain-intrinsic-size:auto 333px">
-<thead><tr><th>症状</th><th class="nw">去哪一节</th></tr></thead>
-<tbody>
-<tr><td>改完不知道该撤销到哪一步,不确定用哪个命令</td><td class="nw">2.4</td></tr>
-<tr><td>合并时冲突不知道从哪下手</td><td class="nw">3.3、10.2</td></tr>
-<tr><td>pull 之后历史里多出一串合并提交</td><td class="nw">5.2</td></tr>
-<tr><td>push 被拒绝</td><td class="nw">5.3</td></tr>
-<tr><td>提交或改动找不到了</td><td class="nw">6.4、11.3</td></tr>
-<tr><td>密钥或大文件推上去了</td><td class="nw">6.5</td></tr>
-<tr><td>PR 太大,评审排不上</td><td class="nw">8.2</td></tr>
-<tr><td>仓库操作越来越慢</td><td class="nw">11.2</td></tr>
-</tbody>
-</table>
-<p>顺读一遍之后应当能做到三件事:说出任意一条日常命令动了工作区、索引、HEAD 里的哪几样;把一串杂乱的本地提交整理成一组可评审的提交并安全地推上去;仓库出问题时按症状选工具(reflog、bisect、blame),而不是把报错原文丢进搜索框。</p>
+<h3>前提与读法</h3>
+<p>读之前要能在命令行上建目录、进目录、新建与查看文件,装过 Git 并完成过一次提交,看到 <code>git commit [-m &lt;msg&gt;]</code> 这样的用法行能说出方括号与尖括号各表示什么。读法有两种:第一次学按第 1 至 6 章顺读,这六章是主干,后面每一章都依赖它们,每个示例在临时仓库里跑一遍,不要拿真实项目做实验;已经在用 Git、手上有具体问题时按症状直接翻对应章——撤销在 2.4,push 被拒在 5.3,东西丢了在 6.4 与 11.3——查到之后再回正文看机制。</p>
+<h3>读完之后</h3>
+<p>读完能说出任意一条日常命令动了工作区、索引、HEAD 里的哪几样,能把一串杂乱的本地提交整理成一组可评审的提交并安全地推上去,仓库出问题时按症状选工具(reflog、bisect、blame),而不是把报错原文丢进搜索框。进阶方向有二:向下读 Git 源码随附的技术文档,把包文件与传输协议补上;向外把第 7 至 9 章的判据用到自己团队上,定下分支模型、评审约定与自动化闸门。</p>
 <h2 id="g1-why">1.1 为什么先讲机制:三板斧用户的四个典型症状</h2>
 <p>「先讲命令,用熟了自然懂」这条路在 Git 上走不通,因为 Git 的命令名和它干的事之间几乎没有对应关系:<code>checkout</code> 既能切分支又能丢改动,<code>reset</code> 既能挪分支又能取消暂存,<code>revert</code> 和 <code>reset</code> 名字像意思完全不同。这些命名是历史包袱,不是设计。想靠名字推语义,必然背了忘、忘了再查。反过来,只要知道每条命令动的是对象库、引用、索引里的哪几样,语义就是推出来的。</p>
 <p>命名混乱有历史原因。Git 最初是 Linus 为 Linux 内核仓库写的一组<strong>底层工具</strong>(Git 自己的术语叫 plumbing,管道),<code>hash-object</code>、<code>write-tree</code>、<code>commit-tree</code>、<code>update-ref</code> 这些名字准确得像 API。</p>
